@@ -4,7 +4,7 @@ comment|// Regression test. Disabler should not depend on TSD validity.
 end_comment
 
 begin_comment
-comment|// RUN: LSAN_BASE="report_objects=1:use_registers=0:use_stacks=0:use_globals=0:use_tls=1"
+comment|// RUN: LSAN_BASE="report_objects=1:use_registers=0:use_stacks=0:use_globals=0:use_tls=1:use_ld_allocations=0"
 end_comment
 
 begin_comment

@@ -16,7 +16,7 @@ comment|// Disable other interceptors because strlen may be called inside strstr
 end_comment
 
 begin_comment
-comment|// RUN: %env_asan_opts=intercept_strstr=false:replace_str=false %run %t 2>&1
+comment|// RUN: %env_asan_opts=intercept_strstr=false:replace_str=false:intercept_strlen=false %run %t 2>&1
 end_comment
 
 begin_include

@@ -58,21 +58,21 @@ end_typedef
 begin_function_decl
 name|ProfBufferIO
 modifier|*
-name|llvmCreateBufferIOInternal
+name|lprofCreateBufferIOInternal
 parameter_list|(
-name|FILE
+name|void
 modifier|*
 name|File
 parameter_list|,
 name|uint32_t
-name|DefaultBufferSz
+name|BufferSz
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|llvmDeleteBufferIO
+name|lprofDeleteBufferIO
 parameter_list|(
 name|ProfBufferIO
 modifier|*
@@ -83,7 +83,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 parameter_list|(
 name|ProfBufferIO
 modifier|*
@@ -102,7 +102,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|llvmBufferIOFlush
+name|lprofBufferIOFlush
 parameter_list|(
 name|ProfBufferIO
 modifier|*
@@ -293,7 +293,7 @@ literal|1
 return|;
 name|BufferIO
 operator|=
-name|llvmCreateBufferIOInternal
+name|lprofCreateBufferIOInternal
 argument_list|(
 name|File
 index|[
@@ -306,7 +306,7 @@ name|J
 index|]
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -332,7 +332,7 @@ name|I
 operator|++
 control|)
 block|{
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -345,7 +345,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -371,7 +371,7 @@ name|I
 operator|++
 control|)
 block|{
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -384,7 +384,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -410,7 +410,7 @@ name|I
 operator|++
 control|)
 block|{
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -423,7 +423,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -449,7 +449,7 @@ name|I
 operator|++
 control|)
 block|{
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -461,7 +461,7 @@ name|MediumData
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -474,7 +474,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -486,7 +486,7 @@ literal|"Endings:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -498,7 +498,7 @@ literal|"END\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -510,7 +510,7 @@ literal|"ENDEND\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -522,7 +522,7 @@ literal|"ENDENDEND\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOWrite
+name|lprofBufferIOWrite
 argument_list|(
 name|BufferIO
 argument_list|,
@@ -534,12 +534,12 @@ literal|"ENDENDENDEND\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|llvmBufferIOFlush
+name|lprofBufferIOFlush
 argument_list|(
 name|BufferIO
 argument_list|)
 expr_stmt|;
-name|llvmDeleteBufferIO
+name|lprofDeleteBufferIO
 argument_list|(
 name|BufferIO
 argument_list|)

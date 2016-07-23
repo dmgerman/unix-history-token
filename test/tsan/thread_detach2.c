@@ -96,8 +96,10 @@ operator|&
 name|barrier
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"PASS\n"
 argument_list|)
 expr_stmt|;

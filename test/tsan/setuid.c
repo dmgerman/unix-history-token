@@ -3,6 +3,30 @@ begin_comment
 comment|// RUN: %clang_tsan -O1 %s -o %t&& %run %t 2>&1 | FileCheck %s
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// setuid(0) hangs on powerpc64 big endian.  When this is fixed remove
+end_comment
+
+begin_comment
+comment|// the unsupported flag.
+end_comment
+
+begin_comment
+comment|// https://llvm.org/bugs/show_bug.cgi?id=25799
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// UNSUPPORTED: powerpc64-unknown-linux-gnu
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_profgen -O2 -o %t %s
+comment|// RUN: %clang_profgen -mllvm -vp-static-alloc=false  -O2 -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t.profraw %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t.profraw %run %t
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-2.profraw %run %t
+comment|// RUN: env LLVM_PROFILE_FILE=%t-2.profraw %run %t DO_NOT_INSTRUMENT
 end_comment
 
 begin_comment
@@ -40,23 +40,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-3.profraw LLVM_VP_BUFFER_SIZE=1 %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t-3.profraw LLVM_VP_BUFFER_SIZE=1 %run %t
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-4.profraw LLVM_VP_BUFFER_SIZE=8 %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t-4.profraw LLVM_VP_BUFFER_SIZE=8 %run %t
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-5.profraw LLVM_VP_BUFFER_SIZE=128 %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t-5.profraw LLVM_VP_BUFFER_SIZE=128 %run %t
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-6.profraw LLVM_VP_BUFFER_SIZE=1024 %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t-6.profraw LLVM_VP_BUFFER_SIZE=1024 %run %t
 end_comment
 
 begin_comment
-comment|// RUN: env LLVM_PROFILE_FILE=%t-7.profraw LLVM_VP_BUFFER_SIZE=102400 %run %t 1
+comment|// RUN: env LLVM_PROFILE_FILE=%t-7.profraw LLVM_VP_BUFFER_SIZE=102400 %run %t
 end_comment
 
 begin_comment
@@ -532,8 +532,19 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|<
+operator|>=
 literal|2
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"DO_NOT_INSTRUMENT"
+argument_list|)
 condition|)
 name|doInstrument
 operator|=
@@ -597,7 +608,7 @@ argument_list|,
 name|cmpaddr
 argument_list|)
 expr_stmt|;
-comment|/* We will synthesis value profile data for 128 callers functions.    * The number of * value sites. The number values for each value site    * ranges from 0 to 8.  */
+comment|/* We will synthesis value profile data for 128 callers functions declared.    * The number of value sites for each caller function is recorded in    * the NS field of the CallerInfo object. For each value site, the number of    * callee values is determined by the site index (modulo 8). The frequency    * of each callee target synthesized is equal to V + 1, in which V is the    * index of the target value for the callsite. */
 name|Data
 operator|=
 name|__llvm_profile_begin_data

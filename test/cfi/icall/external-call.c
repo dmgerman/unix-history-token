@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clangxx_cfi -o %t1 %s
+comment|// RUN: %clang_cfi -lm -o %t1 %s
 end_comment
 
 begin_comment

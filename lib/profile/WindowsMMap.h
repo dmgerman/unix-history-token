@@ -60,46 +60,12 @@ name|PROT_WRITE
 value|0x2
 end_define
 
-begin_comment
-comment|/* This flag is only available in WinXP+ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FILE_MAP_EXECUTE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PROT_EXEC
-value|0x4
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|PROT_EXEC
 value|0x0
 end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_MAP_EXECUTE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

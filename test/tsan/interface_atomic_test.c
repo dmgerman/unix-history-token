@@ -4,7 +4,7 @@ comment|// Test that we can include header with TSan atomic interface.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_tsan %s -o %t&& %run %t | FileCheck %s
+comment|// RUN: %clang_tsan %s -o %t&& %run %t 2>&1 | FileCheck %s
 end_comment
 
 begin_include
@@ -56,8 +56,10 @@ literal|100
 condition|)
 block|{
 comment|// CHECK: PASS
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"PASS\n"
 argument_list|)
 expr_stmt|;

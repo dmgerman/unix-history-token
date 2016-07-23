@@ -799,10 +799,7 @@ elif|#
 directive|elif
 name|SANITIZER_LINUX
 operator|&&
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
+name|SANITIZER_PPC64
 end_elif
 
 begin_decl_stmt
@@ -2014,7 +2011,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|if (&__sanitizer_malloc_hook) __sanitizer_malloc_hook(ptr, size)
+value|do {                                    \     if (&__sanitizer_malloc_hook) {       \       UnpoisonParam(2);                   \       __sanitizer_malloc_hook(ptr, size); \     }                                     \     RunMallocHooks(ptr, size);            \   } while (false)
 end_define
 
 begin_define
@@ -2025,7 +2022,7 @@ parameter_list|(
 name|ptr
 parameter_list|)
 define|\
-value|if (&__sanitizer_free_hook) __sanitizer_free_hook(ptr)
+value|do {                            \     if (&__sanitizer_free_hook) { \       UnpoisonParam(1);           \       __sanitizer_free_hook(ptr); \     }                             \     RunFreeHooks(ptr);            \   } while (false)
 end_define
 
 begin_endif

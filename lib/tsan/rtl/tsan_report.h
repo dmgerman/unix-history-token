@@ -98,6 +98,8 @@ name|ReportTypeMutexDestroyLocked
 block|,
 name|ReportTypeMutexDoubleLock
 block|,
+name|ReportTypeMutexInvalidAccess
+block|,
 name|ReportTypeMutexBadUnlock
 block|,
 name|ReportTypeMutexBadReadLock
@@ -247,7 +249,7 @@ name|int
 name|id
 decl_stmt|;
 name|uptr
-name|pid
+name|os_id
 decl_stmt|;
 name|bool
 name|running

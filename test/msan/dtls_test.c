@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %clang_msan -g %s -o %t    RUN: %clang_msan -g %s -DBUILD_SO -fPIC -o %t-so.so -shared    RUN: %run %t 2>&1     Regression test for a bug in msan/glibc integration,    see https://sourceware.org/bugzilla/show_bug.cgi?id=16291    and https://code.google.com/p/memory-sanitizer/issues/detail?id=44 */
+comment|/* RUN: %clang_msan -g %s -o %t    RUN: %clang_msan -g %s -DBUILD_SO -fPIC -o %t-so.so -shared    RUN: %run %t 2>&1     Regression test for a bug in msan/glibc integration,    see https://sourceware.org/bugzilla/show_bug.cgi?id=16291    and https://github.com/google/sanitizers/issues/547 */
 end_comment
 
 begin_ifndef

@@ -224,7 +224,7 @@ comment|// in "initialized data section".
 end_comment
 
 begin_comment
-comment|// REQUIRES: x86_64-supported-target,i386-supported-target,asan-static-runtime
+comment|// REQUIRES: x86-target-arch,asan-static-runtime
 end_comment
 
 begin_function

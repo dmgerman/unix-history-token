@@ -80,6 +80,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|__llvm_profile_merge_from_buffer
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|write_buffer
 parameter_list|(
@@ -155,10 +169,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|__llvm_profile_write_buffer
-argument_list|(
-name|Buffer
-argument_list|)
+name|Write
 condition|)
 return|return
 name|Write
@@ -168,6 +179,14 @@ directive|ifdef
 name|CHECK_SYMBOLS
 comment|// Don't write it out.  Since we're checking the symbols, we don't have libc
 comment|// available.
+comment|// Call merge function to make sure it does not bring in libc deps:
+name|__llvm_profile_merge_from_buffer
+argument_list|(
+name|Buffer
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -230,67 +249,67 @@ comment|// CHECK: ![[PD1]] = !{!"branch_weights", i32 1, i32 2}
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: ___cxx_global_var_init
+comment|// CHECK-SYMBOLS-NOT: {{ }}___cxx_global_var_init
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: ___llvm_profile_register_write_file_atexit
+comment|// CHECK-SYMBOLS-NOT: {{ }}___llvm_profile_register_write_file_atexit
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: ___llvm_profile_set_filename
+comment|// CHECK-SYMBOLS-NOT: {{ }}___llvm_profile_set_filename
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: ___llvm_profile_write_file
+comment|// CHECK-SYMBOLS-NOT: {{ }}___llvm_profile_write_file
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _fdopen
+comment|// CHECK-SYMBOLS-NOT: {{ }}_fdopen
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _fopen
+comment|// CHECK-SYMBOLS-NOT: {{ }}_fopen
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _fwrite
+comment|// CHECK-SYMBOLS-NOT: {{ }}_fwrite
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _getenv
+comment|// CHECK-SYMBOLS-NOT: {{ }}_getenv
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: getenv
+comment|// CHECK-SYMBOLS-NOT: {{ }}getenv
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _malloc
+comment|// CHECK-SYMBOLS-NOT: {{ }}_malloc
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: malloc
+comment|// CHECK-SYMBOLS-NOT: {{ }}malloc
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _calloc
+comment|// CHECK-SYMBOLS-NOT: {{ }}_calloc
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: calloc
+comment|// CHECK-SYMBOLS-NOT: {{ }}calloc
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _free
+comment|// CHECK-SYMBOLS-NOT: {{ }}_free
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: free
+comment|// CHECK-SYMBOLS-NOT: {{ }}free
 end_comment
 
 begin_comment
-comment|// CHECK-SYMBOLS-NOT: _open
+comment|// CHECK-SYMBOLS-NOT: {{ }}_open
 end_comment
 
 end_unit

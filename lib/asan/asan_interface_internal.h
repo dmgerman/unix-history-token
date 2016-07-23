@@ -176,8 +176,33 @@ name|location
 decl_stmt|;
 comment|// Source location of a global,
 comment|// or NULL if it is unknown.
+name|uptr
+name|odr_indicator
+decl_stmt|;
+comment|// The address of the ODR indicator symbol.
 block|}
 struct|;
+comment|// These functions can be called on some platforms to find globals in the same
+comment|// loaded image as `flag' and apply __asan_(un)register_globals to them,
+comment|// filtering out redundant calls.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__asan_register_image_globals
+parameter_list|(
+name|uptr
+modifier|*
+name|flag
+parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__asan_unregister_image_globals
+parameter_list|(
+name|uptr
+modifier|*
+name|flag
+parameter_list|)
+function_decl|;
 comment|// These two functions should be called by the instrumented code.
 comment|// 'globals' is an array of structures describing 'n' globals.
 name|SANITIZER_INTERFACE_ATTRIBUTE

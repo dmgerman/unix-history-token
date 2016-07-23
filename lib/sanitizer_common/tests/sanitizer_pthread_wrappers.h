@@ -290,6 +290,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DWORD
+name|err
+init|=
+name|GetLastError
+argument_list|()
+decl_stmt|;
 name|ASSERT_NE
 argument_list|(
 name|nullptr
@@ -298,7 +304,13 @@ operator|*
 name|thread
 argument_list|)
 operator|<<
-literal|"Failed to create a thread."
+literal|"Failed to create a thread, got error 0x"
+operator|<<
+name|std
+operator|::
+name|hex
+operator|<<
+name|err
 expr_stmt|;
 block|}
 end_function

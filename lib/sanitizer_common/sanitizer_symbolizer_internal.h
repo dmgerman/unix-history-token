@@ -162,7 +162,7 @@ function_decl|;
 specifier|const
 name|char
 modifier|*
-name|DemangleCXXABI
+name|DemangleSwiftAndCXX
 parameter_list|(
 specifier|const
 name|char

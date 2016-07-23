@@ -112,6 +112,8 @@ name|MutexTypeFired
 block|,
 name|MutexTypeRacy
 block|,
+name|MutexTypeGlobalProc
+block|,
 comment|// This must be the last.
 name|MutexTypeCount
 block|}

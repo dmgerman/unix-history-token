@@ -101,6 +101,17 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
+comment|// Tell the tools to write their reports to the provided file descriptor
+comment|// (casted to void *).
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__sanitizer_set_report_fd
+parameter_list|(
+name|void
+modifier|*
+name|fd
+parameter_list|)
+function_decl|;
 typedef|typedef
 struct|struct
 block|{

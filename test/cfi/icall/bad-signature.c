@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clangxx -o %t1 %s
+comment|// RUN: %clang -o %t1 %s
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN: %t1 2>&1 | FileCheck --check-prefix=NCFI %s
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx_cfi -o %t2 %s
+comment|// RUN: %clang_cfi -o %t2 %s
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: %expect_crash %t2 2>&1 | FileCheck --check-prefix=CFI %s
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx_cfi_diag -g -o %t3 %s
+comment|// RUN: %clang_cfi_diag -g -o %t3 %s
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ literal|"1\n"
 argument_list|)
 expr_stmt|;
 comment|// CFI-DIAG: runtime error: control flow integrity check for type 'void (int)' failed during indirect function call
-comment|// CFI-DIAG: f() defined here
+comment|// CFI-DIAG: f defined here
 operator|(
 operator|(
 name|void

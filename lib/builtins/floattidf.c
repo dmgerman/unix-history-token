@@ -20,7 +20,7 @@ comment|/* Returns: convert a to a double, rounding toward even.*/
 end_comment
 
 begin_comment
-comment|/* Assumption: double is a IEEE 64 bit floating point type   *            ti_int is a 128 bit integral type  */
+comment|/* Assumption: double is a IEEE 64 bit floating point type  *            ti_int is a 128 bit integral type  */
 end_comment
 
 begin_comment

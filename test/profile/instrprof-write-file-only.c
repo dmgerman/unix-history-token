@@ -81,7 +81,7 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|1
+literal|42
 condition|)
 return|return
 literal|1

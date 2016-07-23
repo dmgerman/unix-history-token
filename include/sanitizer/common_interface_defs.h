@@ -143,6 +143,16 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
+comment|// Tell the tools to write their reports to the provided file descriptor
+comment|// (casted to void *).
+name|void
+name|__sanitizer_set_report_fd
+parameter_list|(
+name|void
+modifier|*
+name|fd
+parameter_list|)
+function_decl|;
 comment|// Notify the tools that the sandbox is going to be turned on. The reserved
 comment|// parameter will be used in the future to hold a structure with functions
 comment|// that the tools may call to bypass the sandbox.
@@ -407,6 +417,30 @@ name|result
 parameter_list|)
 function_decl|;
 name|void
+name|__sanitizer_weak_hook_strncasecmp
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+name|int
+name|result
+parameter_list|)
+function_decl|;
+name|void
 name|__sanitizer_weak_hook_strcmp
 parameter_list|(
 name|void
@@ -425,6 +459,151 @@ name|s2
 parameter_list|,
 name|int
 name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_strcasecmp
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|int
+name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_strstr
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|char
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_strcasestr
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|char
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_weak_hook_memmem
+parameter_list|(
+name|void
+modifier|*
+name|called_pc
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|s1
+parameter_list|,
+name|size_t
+name|len1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|s2
+parameter_list|,
+name|size_t
+name|len2
+parameter_list|,
+name|void
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+comment|// Prints stack traces for all live heap allocations ordered by total
+comment|// allocation size until `top_percent` of total live heap is shown.
+comment|// `top_percent` should be between 1 and 100.
+comment|// Experimental feature currently available only with asan on Linux/x86_64.
+name|void
+name|__sanitizer_print_memory_profile
+parameter_list|(
+name|size_t
+name|top_percent
+parameter_list|)
+function_decl|;
+comment|// Fiber annotation interface.
+comment|// Before switching to a different stack, one must call
+comment|// __sanitizer_start_switch_fiber with a pointer to the bottom of the
+comment|// destination stack and its size. When code starts running on the new stack,
+comment|// it must call __sanitizer_finish_switch_fiber to finalize the switch.
+comment|// The start_switch function takes a void** to store the current fake stack if
+comment|// there is one (it is needed when detect_stack_use_after_return is enabled).
+comment|// When restoring a stack, this pointer must be given to the finish_switch
+comment|// function. In most cases, this void* can be stored on the stack just before
+comment|// switching.  When leaving a fiber definitely, null must be passed as first
+comment|// argument to the start_switch function so that the fake stack is destroyed.
+comment|// If you do not want support for stack use-after-return detection, you can
+comment|// always pass null to these two functions.
+comment|// Note that the fake stack mechanism is disabled during fiber switch, so if a
+comment|// signal callback runs during the switch, it will not benefit from the stack
+comment|// use-after-return detection.
+name|void
+name|__sanitizer_start_switch_fiber
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|fake_stack_save
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|bottom
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_finish_switch_fiber
+parameter_list|(
+name|void
+modifier|*
+name|fake_stack_save
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -4,7 +4,7 @@ comment|// RUN: %clang_profgen -o %t -O3 %s
 end_comment
 
 begin_comment
-comment|// RUN: LLVM_PROFILE_VERBOSE_ERRORS=1 %run %t 1 2>&1 | FileCheck %s
+comment|// RUN: %run %t 1 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: LLVM Profile: runtime and instrumentation version mismatch
+comment|// CHECK: LLVM Profile Error: Runtime and instrumentation version mismatch
 end_comment
 
 end_unit

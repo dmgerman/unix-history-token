@@ -3,18 +3,6 @@ begin_comment
 comment|// RUN: %clang_tsan -O1 %s -o %t&& %deflake %run %t | FileCheck %s
 end_comment
 
-begin_comment
-comment|// This test fails on powerpc64 (VMA=46).
-end_comment
-
-begin_comment
-comment|// The size of the write reported by Tsan for T1 is 8 instead of 1.
-end_comment
-
-begin_comment
-comment|// XFAIL: powerpc64-unknown-linux-gnu
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -36,6 +24,48 @@ end_decl_stmt
 begin_function
 name|void
 modifier|*
+name|Thread2
+parameter_list|(
+name|void
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|barrier_wait
+argument_list|(
+operator|&
+name|barrier
+argument_list|)
+expr_stmt|;
+comment|// CHECK:      WARNING: ThreadSanitizer: data race
+comment|// CHECK-NEXT:   Atomic read of size 1 at {{.*}} by thread T2:
+comment|// CHECK-NEXT:     #0 pthread_mutex_lock
+comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:[[@LINE+1]]{{(:3)?}} ({{.*}})
+name|pthread_mutex_lock
+argument_list|(
+operator|&
+name|Mtx
+argument_list|)
+expr_stmt|;
+name|Global
+operator|=
+literal|43
+expr_stmt|;
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|Mtx
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
 name|Thread1
 parameter_list|(
 name|void
@@ -43,6 +73,9 @@ modifier|*
 name|x
 parameter_list|)
 block|{
+comment|// CHECK:        Previous write of size {{[0-9]+}} at {{.*}} by thread T1:
+comment|// CHECK:          #{{[0-9]+}} {{.*}}pthread_mutex_init {{.*}} ({{.*}})
+comment|// CHECK-NEXT:     #{{[0-9]+}} Thread1{{.*}} {{.*}}race_on_mutex.c:[[@LINE+1]]{{(:3)?}} ({{.*}})
 name|pthread_mutex_init
 argument_list|(
 operator|&
@@ -71,44 +104,6 @@ name|barrier_wait
 argument_list|(
 operator|&
 name|barrier
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|Thread2
-parameter_list|(
-name|void
-modifier|*
-name|x
-parameter_list|)
-block|{
-name|barrier_wait
-argument_list|(
-operator|&
-name|barrier
-argument_list|)
-expr_stmt|;
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|Mtx
-argument_list|)
-expr_stmt|;
-name|Global
-operator|=
-literal|43
-expr_stmt|;
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|Mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -197,34 +192,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// CHECK:      WARNING: ThreadSanitizer: data race
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:   Atomic read of size 1 at {{.*}} by thread T2:
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:     #0 pthread_mutex_lock
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:     #1 Thread2{{.*}} {{.*}}race_on_mutex.c:21{{(:3)?}} ({{.*}})
-end_comment
-
-begin_comment
-comment|// CHECK:        Previous write of size 1 at {{.*}} by thread T1:
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:     #0 pthread_mutex_init {{.*}} ({{.*}})
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:     #1 Thread1{{.*}} {{.*}}race_on_mutex.c:11{{(:3)?}} ({{.*}})
-end_comment
 
 end_unit
 

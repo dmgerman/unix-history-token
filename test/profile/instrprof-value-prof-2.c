@@ -12,7 +12,31 @@ comment|// RUN: llvm-profdata merge -o %t.profdata %t.profraw
 end_comment
 
 begin_comment
-comment|// RUN: llvm-profdata show --all-functions -ic-targets  %t.profdata |  FileCheck  %s
+comment|// RUN: llvm-profdata show --all-functions -ic-targets  %t.profdata> %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-1< %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-2< %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-3< %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-4< %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-5< %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s --check-prefix=CHECK --check-prefix=CHECK-6< %t.out
 end_comment
 
 begin_include
@@ -179,6 +203,48 @@ parameter_list|()
 block|{}
 end_function
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|callee1Ptr
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|callee2Ptr
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|noinline
+operator|)
+argument_list|)
+name|setFunctionPointers
+argument_list|()
+block|{
+name|callee1Ptr
+operator|=
+name|callee1
+expr_stmt|;
+name|callee2Ptr
+operator|=
+name|callee2
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -210,6 +276,9 @@ decl_stmt|,
 modifier|*
 name|DataEnd
 decl_stmt|;
+name|setFunctionPointers
+argument_list|()
+expr_stmt|;
 name|Data
 operator|=
 name|__llvm_profile_begin_data
@@ -330,8 +399,7 @@ argument_list|(
 operator|(
 name|uint64_t
 operator|)
-operator|&
-name|callee1
+name|callee1Ptr
 argument_list|,
 operator|(
 name|void
@@ -355,8 +423,7 @@ argument_list|(
 operator|(
 name|uint64_t
 operator|)
-operator|&
-name|callee2
+name|callee2Ptr
 argument_list|,
 operator|(
 name|void
@@ -374,307 +441,307 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL:   caller_with_value_site_never_called2:
+comment|// CHECK-1-LABEL:   caller_with_value_site_never_called2:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-1-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-1-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count
+comment|// CHECK-1-NEXT:    Function count
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 10
+comment|// CHECK-1-NEXT:    Indirect Call Site Count: 10
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-1-NEXT:    Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL:   caller_with_vp2:
+comment|// CHECK-2-LABEL:   caller_with_vp2:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-2-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-2-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count:
+comment|// CHECK-2-NEXT:    Function count:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 10
+comment|// CHECK-2-NEXT:    Indirect Call Site Count: 10
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-2-NEXT:    Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 0, callee1, 1 ]
+comment|// CHECK-2-NEXT:	[ 0, callee1, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 0, callee2, 1 ]
+comment|// CHECK-2-NEXT:	[ 0, callee2, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 1, callee1, 2 ]
+comment|// CHECK-2-NEXT:	[ 1, callee1, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 1, callee2, 1 ]
+comment|// CHECK-2-NEXT:	[ 1, callee2, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 2, callee1, 3 ]
+comment|// CHECK-2-NEXT:	[ 2, callee1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 2, callee2, 2 ]
+comment|// CHECK-2-NEXT:	[ 2, callee2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 3, callee1, 4 ]
+comment|// CHECK-2-NEXT:	[ 3, callee1, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 3, callee2, 2 ]
+comment|// CHECK-2-NEXT:	[ 3, callee2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 4, callee1, 5 ]
+comment|// CHECK-2-NEXT:	[ 4, callee1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 4, callee2, 3 ]
+comment|// CHECK-2-NEXT:	[ 4, callee2, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 5, callee1, 6 ]
+comment|// CHECK-2-NEXT:	[ 5, callee1, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 5, callee2, 3 ]
+comment|// CHECK-2-NEXT:	[ 5, callee2, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 6, callee1, 7 ]
+comment|// CHECK-2-NEXT:	[ 6, callee1, 7 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 6, callee2, 4 ]
+comment|// CHECK-2-NEXT:	[ 6, callee2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 7, callee1, 8 ]
+comment|// CHECK-2-NEXT:	[ 7, callee1, 8 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 7, callee2, 4 ]
+comment|// CHECK-2-NEXT:	[ 7, callee2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 8, callee1, 9 ]
+comment|// CHECK-2-NEXT:	[ 8, callee1, 9 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 8, callee2, 5 ]
+comment|// CHECK-2-NEXT:	[ 8, callee2, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 9, callee1, 10 ]
+comment|// CHECK-2-NEXT:	[ 9, callee1, 10 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 9, callee2, 5 ]
+comment|// CHECK-2-NEXT:	[ 9, callee2, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL:   caller_with_vp1:
+comment|// CHECK-3-LABEL:   caller_with_vp1:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-3-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-3-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count
+comment|// CHECK-3-NEXT:    Function count
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 10
+comment|// CHECK-3-NEXT:    Indirect Call Site Count: 10
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-3-NEXT:    Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 0, callee1, 1 ]
+comment|// CHECK-3-NEXT:	[ 0, callee1, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 0, callee2, 1 ]
+comment|// CHECK-3-NEXT:	[ 0, callee2, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 1, callee1, 2 ]
+comment|// CHECK-3-NEXT:	[ 1, callee1, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 1, callee2, 1 ]
+comment|// CHECK-3-NEXT:	[ 1, callee2, 1 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 2, callee1, 3 ]
+comment|// CHECK-3-NEXT:	[ 2, callee1, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 2, callee2, 2 ]
+comment|// CHECK-3-NEXT:	[ 2, callee2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 3, callee1, 4 ]
+comment|// CHECK-3-NEXT:	[ 3, callee1, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 3, callee2, 2 ]
+comment|// CHECK-3-NEXT:	[ 3, callee2, 2 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 4, callee1, 5 ]
+comment|// CHECK-3-NEXT:	[ 4, callee1, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 4, callee2, 3 ]
+comment|// CHECK-3-NEXT:	[ 4, callee2, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 5, callee1, 6 ]
+comment|// CHECK-3-NEXT:	[ 5, callee1, 6 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 5, callee2, 3 ]
+comment|// CHECK-3-NEXT:	[ 5, callee2, 3 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 6, callee1, 7 ]
+comment|// CHECK-3-NEXT:	[ 6, callee1, 7 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 6, callee2, 4 ]
+comment|// CHECK-3-NEXT:	[ 6, callee2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 7, callee1, 8 ]
+comment|// CHECK-3-NEXT:	[ 7, callee1, 8 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 7, callee2, 4 ]
+comment|// CHECK-3-NEXT:	[ 7, callee2, 4 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 8, callee1, 9 ]
+comment|// CHECK-3-NEXT:	[ 8, callee1, 9 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 8, callee2, 5 ]
+comment|// CHECK-3-NEXT:	[ 8, callee2, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 9, callee1, 10 ]
+comment|// CHECK-3-NEXT:	[ 9, callee1, 10 ]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:	[ 9, callee2, 5 ]
+comment|// CHECK-3-NEXT:	[ 9, callee2, 5 ]
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL:   caller_with_value_site_never_called1:
+comment|// CHECK-4-LABEL:   caller_with_value_site_never_called1:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-4-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-4-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count:
+comment|// CHECK-4-NEXT:    Function count:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 10
+comment|// CHECK-4-NEXT:    Indirect Call Site Count: 10
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-4-NEXT:    Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL:   caller_without_value_site2:
+comment|// CHECK-5-LABEL:   caller_without_value_site2:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-5-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-5-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count:
+comment|// CHECK-5-NEXT:    Function count:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 0
+comment|// CHECK-5-NEXT:    Indirect Call Site Count: 0
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-5-NEXT:    Indirect Target Results:
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL:   caller_without_value_site1:
+comment|// CHECK-6-LABEL:   caller_without_value_site1:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Hash: 0x0000000000000000
+comment|// CHECK-6-NEXT:    Hash: 0x0000000000000000
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Counters:
+comment|// CHECK-6-NEXT:    Counters:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Function count:
+comment|// CHECK-6-NEXT:    Function count:
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Call Site Count: 0
+comment|// CHECK-6-NEXT:    Indirect Call Site Count: 0
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:    Indirect Target Results:
+comment|// CHECK-6-NEXT:    Indirect Target Results:
 end_comment
 
 end_unit

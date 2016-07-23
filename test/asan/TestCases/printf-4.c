@@ -4,23 +4,15 @@ comment|// RUN: %clang_asan -O2 %s -o %t
 end_comment
 
 begin_comment
-comment|// We need replace_str=0 and replace_intrin=0 to avoid reporting errors in
+comment|// RUN: %env_asan_opts=check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
 end_comment
 
 begin_comment
-comment|// strlen() and memcpy() called by puts().
+comment|// RUN: not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
 end_comment
 
 begin_comment
-comment|// RUN: %env_asan_opts=replace_str=0:replace_intrin=0:check_printf=1 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
-end_comment
-
-begin_comment
-comment|// RUN: %env_asan_opts=replace_str=0:replace_intrin=0 not %run %t 2>&1 | FileCheck --check-prefix=CHECK-ON %s
-end_comment
-
-begin_comment
-comment|// FIXME: printf is not intercepted on Windows yet.
+comment|// FIXME: sprintf is not intercepted on Windows yet.
 end_comment
 
 begin_comment
@@ -70,6 +62,13 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|fputs
+argument_list|(
+literal|"before sprintf\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 operator|(
@@ -89,7 +88,14 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|puts
+name|fputs
+argument_list|(
+literal|"after sprintf"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
 argument_list|(
 operator|(
 specifier|const
@@ -97,12 +103,16 @@ name|char
 operator|*
 operator|)
 name|buf
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 comment|// Check that size of output buffer is sanitized.
+comment|// CHECK-ON: before sprintf
+comment|// CHECK-ON-NOT: after sprintf
 comment|// CHECK-ON: stack-buffer-overflow
 comment|// CHECK-ON-NOT: 0 12 1.239 34
 block|}
