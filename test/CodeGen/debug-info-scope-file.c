@@ -24,11 +24,11 @@ comment|// CHECK: [[F1:![0-9]*]] = distinct !DISubprogram(name: "f1",{{.*}} isDe
 end_comment
 
 begin_comment
-comment|// CHECK: [[F2:![0-9]*]] = distinct !DISubprogram(name: "f2",{{.*}} isDefinition: true
+comment|// CHECK: [[F1_LINE]] = !DILocation({{.*}}, scope: [[F1]])
 end_comment
 
 begin_comment
-comment|// CHECK: [[F1_LINE]] = !DILocation({{.*}}, scope: [[F1]])
+comment|// CHECK: [[F2:![0-9]*]] = distinct !DISubprogram(name: "f2",{{.*}} isDefinition: true
 end_comment
 
 begin_comment

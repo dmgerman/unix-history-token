@@ -124,7 +124,7 @@ comment|// The same goes for "moviAsm".
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target shave-myriad -c -### %s -isystem somewhere -Icommon -Wa,-yippee 2>&1 \
+comment|// RUN: %clang -target shave-myriad -mcpu=myriad2.2 -c -### %s -isystem somewhere -Icommon -Wa,-yippee 2>&1 \
 end_comment
 
 begin_comment
@@ -132,11 +132,11 @@ comment|// RUN:   | FileCheck %s -check-prefix=MOVICOMPILE
 end_comment
 
 begin_comment
-comment|// MOVICOMPILE: moviCompile{{(.exe)?}}" "-S" "-fno-exceptions" "-mcpu=myriad2" "-DMYRIAD2" "-isystem" "somewhere" "-I" "common"
+comment|// MOVICOMPILE: moviCompile{{(.exe)?}}" "-S" "-fno-exceptions" "-DMYRIAD2" "-mcpu=myriad2.2" "-isystem" "somewhere" "-I" "common"
 end_comment
 
 begin_comment
-comment|// MOVICOMPILE: moviAsm{{(.exe)?}}" "-no6thSlotCompression" "-cv:myriad2" "-noSPrefixing" "-a"
+comment|// MOVICOMPILE: moviAsm{{(.exe)?}}" "-no6thSlotCompression" "-cv:myriad2.2" "-noSPrefixing" "-a"
 end_comment
 
 begin_comment
@@ -196,11 +196,11 @@ comment|// RUN:   | FileCheck %s -check-prefix=MDMF
 end_comment
 
 begin_comment
-comment|// MDMF: "-S" "-fno-exceptions" "-mcpu=myriad2" "-DMYRIAD2" "-MD" "-MF" "dep.d" "-MT" "foo.o"
+comment|// MDMF: "-S" "-fno-exceptions" "-DMYRIAD2" "-MD" "-MF" "dep.d" "-MT" "foo.o"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target shave-myriad -std=gnu++11 -S %s -o foo.o -### 2>&1 \
+comment|// RUN: %clang -target shave-myriad -std=gnu++11 -mcpu=anothercpu -S %s -o foo.o -### 2>&1 \
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ comment|// RUN:   | FileCheck %s -check-prefix=STDEQ
 end_comment
 
 begin_comment
-comment|// STDEQ: "-S" "-fno-exceptions" "-mcpu=myriad2" "-DMYRIAD2" "-std=gnu++11"
+comment|// STDEQ: "-S" "-fno-exceptions" "-DMYRIAD2" "-std=gnu++11" "-mcpu=anothercpu"
 end_comment
 
 begin_comment
@@ -220,7 +220,7 @@ comment|// RUN:   | FileCheck %s -check-prefix=PREPROCESS
 end_comment
 
 begin_comment
-comment|// PREPROCESS: "-E" "-mcpu=myriad2" "-DMYRIAD2" "-I" "foo"
+comment|// PREPROCESS: "-E" "-DMYRIAD2" "-I" "foo"
 end_comment
 
 begin_comment
@@ -249,6 +249,18 @@ end_comment
 
 begin_comment
 comment|// G_SPARC: "-debug-info-kind=limited" "-dwarf-version=2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -c %s -target sparc-myriad-elf -fuse-init-array 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=USE-INIT-ARRAY %s
+end_comment
+
+begin_comment
+comment|// USE-INIT-ARRAY-NOT: argument unused
 end_comment
 
 end_unit

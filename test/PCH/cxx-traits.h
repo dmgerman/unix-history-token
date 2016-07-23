@@ -79,6 +79,11 @@ block|{}
 struct|;
 comment|// expected-warning {{made available}}
 struct|struct
+name|__is_assignable
+block|{}
+struct|;
+comment|// expected-warning {{made available}}
+struct|struct
 name|__is_base_of
 block|{}
 struct|;

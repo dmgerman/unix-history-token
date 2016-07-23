@@ -445,6 +445,9 @@ comment|/// \param Filename The file to look up relative to the search paths.
 comment|///
 comment|/// \param HS The header search instance to search with.
 comment|///
+comment|/// \param IncludeLoc the source location of the #include or #import
+comment|/// directive.
+comment|///
 comment|/// \param SearchPath If not NULL, will be set to the search path relative
 comment|/// to which the file was found.
 comment|///
@@ -477,6 +480,9 @@ argument_list|,
 name|HeaderSearch
 operator|&
 name|HS
+argument_list|,
+name|SourceLocation
+name|IncludeLoc
 argument_list|,
 name|SmallVectorImpl
 operator|<

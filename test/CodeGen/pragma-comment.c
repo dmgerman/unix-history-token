@@ -4,7 +4,15 @@ comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumbv7-windows -fms-extensions -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumbv7-linux-gnueabihf -fms-extensions -emit-llvm -o - | FileCheck -check-prefix LINUX %s
 end_comment
 
 begin_comment

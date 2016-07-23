@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu \
 end_comment
 
 begin_comment
-comment|// RUN:   -O3 -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN:   -S -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_function

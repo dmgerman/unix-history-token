@@ -133,6 +133,10 @@ comment|// CHECK: define internal void @"\01?fin$0@0@basic_finally@@"({{.*}})
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs:#[0-9]+]]
+end_comment
+
+begin_comment
 comment|// CHECK: call void @cleanup()
 end_comment
 
@@ -232,6 +236,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: define internal void @"\01?fin$0@0@label_in_finally@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
 end_comment
 
 begin_comment
@@ -353,6 +361,10 @@ comment|// CHECK: define internal void @"\01?fin$0@0@use_abnormal_termination@@"
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
 comment|// CHECK: %[[abnormal_zext:[^ ]*]] = zext i8 %[[abnormal]] to i32
 end_comment
 
@@ -398,6 +410,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_noop_finally@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
 end_comment
 
 begin_comment
@@ -481,6 +497,10 @@ comment|// CHECK: define internal void @"\01?fin$0@0@noreturn_finally@@"({{.*}})
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
 comment|// CHECK: call void @abort()
 end_comment
 
@@ -518,6 +538,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: define internal void @"\01?fin$0@0@finally_with_return@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
 end_comment
 
 begin_comment
@@ -611,11 +635,19 @@ comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___fi
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
 comment|// CHECK: ret void
 end_comment
 
 begin_comment
 comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___finally@@"({{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
 end_comment
 
 begin_comment
@@ -757,6 +789,10 @@ comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@nested___finally___fi
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
 comment|// CHECK: ret void
 end_comment
 
@@ -765,7 +801,96 @@ comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@nested___finally___fi
 end_comment
 
 begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
 comment|// CHECK: unreachable
+end_comment
+
+begin_function
+name|void
+name|finally_within_finally
+parameter_list|()
+block|{
+name|__try
+block|{
+name|might_crash
+argument_list|()
+expr_stmt|;
+block|}
+name|__finally
+block|{
+name|__try
+block|{
+name|might_crash
+argument_list|()
+expr_stmt|;
+block|}
+name|__finally
+block|{     }
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @finally_within_finally(
+end_comment
+
+begin_comment
+comment|// CHECK: invoke void @might_crash(
+end_comment
+
+begin_comment
+comment|// CHECK: call void @"\01?fin$0@0@finally_within_finally@@"(
+end_comment
+
+begin_comment
+comment|// CHECK: call void @"\01?fin$0@0@finally_within_finally@@"({{.*}}) [ "funclet"(
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define internal void @"\01?fin$0@0@finally_within_finally@@"({{[^)]*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
+comment|// CHECK: invoke void @might_crash(
+end_comment
+
+begin_comment
+comment|// CHECK: call void @"\01?fin$1@0@finally_within_finally@@"(
+end_comment
+
+begin_comment
+comment|// CHECK: call void @"\01?fin$1@0@finally_within_finally@@"({{.*}}) [ "funclet"(
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define internal void @"\01?fin$1@0@finally_within_finally@@"({{[^)]*}})
+end_comment
+
+begin_comment
+comment|// CHECK-SAME: [[finally_attrs]]
+end_comment
+
+begin_comment
+comment|// Look for the absence of noinline. Enum attributes come first, so check that
+end_comment
+
+begin_comment
+comment|// a string attribute is the first to verify that no enum attributes are
+end_comment
+
+begin_comment
+comment|// present.
+end_comment
+
+begin_comment
+comment|// CHECK: attributes [[finally_attrs]] = { "{{.*}}" }
 end_comment
 
 end_unit

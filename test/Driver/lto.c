@@ -175,5 +175,37 @@ begin_comment
 comment|// CHECK-LINK-NOLTO-ACTION-NOT: "-plugin" "{{.*}}/LLVMgold.so"
 end_comment
 
+begin_comment
+comment|// -flto passes along an explicit debugger tuning argument.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s -flto -glldb 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-TUNING-LLDB< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-linux -### %s -flto -g 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-NO-TUNING< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-TUNING-LLDB:   "-plugin-opt=-debugger-tune=lldb"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-TUNING-NOT: "-plugin-opt=-debugger-tune
+end_comment
+
 end_unit
 

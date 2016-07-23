@@ -20,7 +20,7 @@ comment|// CHECK-NO-PIC-NOT: "-pic-level"
 end_comment
 
 begin_comment
-comment|// CHECK-NO-PIC-NOT: "-pie-level"
+comment|// CHECK-NO-PIC-NOT: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -36,6 +36,10 @@ comment|// CHECK-PIC1: "-pic-level" "1"
 end_comment
 
 begin_comment
+comment|// CHECK-PIC1-NOT: "-pic-is-pie"
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -45,6 +49,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-PIC2: "-pic-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-PIC2-NOT: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -72,7 +80,7 @@ comment|// CHECK-PIE1: "-pic-level" "1"
 end_comment
 
 begin_comment
-comment|// CHECK-PIE1: "-pie-level" "1"
+comment|// CHECK-PIE1: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -88,7 +96,7 @@ comment|// CHECK-PIE2: "-pic-level" "2"
 end_comment
 
 begin_comment
-comment|// CHECK-PIE2: "-pie-level" "2"
+comment|// CHECK-PIE2: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -132,7 +140,7 @@ comment|// CHECK-DYNAMIC-NO-PIC-32-NOT: "-pic-level"
 end_comment
 
 begin_comment
-comment|// CHECK-DYNAMIC-NO-PIC-32-NOT: "-pie-level"
+comment|// CHECK-DYNAMIC-NO-PIC-32-NOT: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -148,7 +156,7 @@ comment|// CHECK-DYNAMIC-NO-PIC-64: "-pic-level" "2"
 end_comment
 
 begin_comment
-comment|// CHECK-DYNAMIC-NO-PIC-64-NOT: "-pie-level"
+comment|// CHECK-DYNAMIC-NO-PIC-64-NOT: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -608,19 +616,15 @@ comment|// Darwin is a beautiful and unique snowflake when it comes to these fla
 end_comment
 
 begin_comment
-comment|// When targeting a 32-bit darwin system, the -fno-* flag variants work and
+comment|// When targeting a 32-bit darwin system, only level 2 is supported. On 64-bit
 end_comment
 
 begin_comment
-comment|// disable PIC, but any other flag enables PIC (*not* PIE) even if the flag
+comment|// targets, there is simply nothing you can do, there is no PIE, there is only
 end_comment
 
 begin_comment
-comment|// specifies PIE. On 64-bit targets, there is simply nothing you can do, there
-end_comment
-
-begin_comment
-comment|// is no PIE, there is only PIC when it comes to compilation.
+comment|// PIC when it comes to compilation.
 end_comment
 
 begin_comment
@@ -652,7 +656,7 @@ comment|// RUN: %clang -c %s -target i386-apple-darwin -fpie -### 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
 end_comment
 
 begin_comment
@@ -660,7 +664,7 @@ comment|// RUN: %clang -c %s -target i386-apple-darwin -fPIE -### 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
 end_comment
 
 begin_comment
@@ -692,7 +696,7 @@ comment|// RUN: %clang -c %s -target i386-apple-darwin -fno-PIC -fPIE -### 2>&1 
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
 end_comment
 
 begin_comment

@@ -108,5 +108,27 @@ name|f
 argument_list|()
 end_macro
 
+begin_comment
+comment|// CHECK: #pragma omp parallel for
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOO
+value|parallel
+end_define
+
+begin_define
+define|#
+directive|define
+name|Streaming
+value|_Pragma("omp FOO for")
+end_define
+
+begin_macro
+name|Streaming
+end_macro
+
 end_unit
 

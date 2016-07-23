@@ -12,7 +12,7 @@ comment|// RUN: cp %S/Inputs/case-insensitive-include.h %T
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s -include %s -I %T -verify
+comment|// RUN: %clang_cc1 -Wno-nonportable-include-path -fsyntax-only %s -include %s -I %T -verify
 end_comment
 
 begin_comment

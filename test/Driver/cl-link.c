@@ -16,6 +16,10 @@ comment|// RUN: %clang_cl /Tc%s -### /link foo bar baz 2>&1 | FileCheck --check-
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /Tc%s -### /linkfoo bar baz 2>&1 | FileCheck --check-prefix=LINK %s
+end_comment
+
+begin_comment
 comment|// LINK: link.exe
 end_comment
 
@@ -149,6 +153,34 @@ end_comment
 
 begin_comment
 comment|// DEBUG: "-debug"
+end_comment
+
+begin_comment
+comment|// PR27234
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Tc%s nonexistent.obj -### /link /libpath:somepath 2>&1 | FileCheck --check-prefix=NONEXISTENT %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Tc%s nonexistent.lib -### /link /libpath:somepath 2>&1 | FileCheck --check-prefix=NONEXISTENT %s
+end_comment
+
+begin_comment
+comment|// NONEXISTENT-NOT: no such file
+end_comment
+
+begin_comment
+comment|// NONEXISTENT: link.exe
+end_comment
+
+begin_comment
+comment|// NONEXISTENT: "/libpath:somepath"
+end_comment
+
+begin_comment
+comment|// NONEXISTENT: nonexistent
 end_comment
 
 end_unit

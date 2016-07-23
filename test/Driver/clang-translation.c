@@ -852,11 +852,51 @@ comment|// MIPSEL-ANDROID: "-cc1"
 end_comment
 
 begin_comment
-comment|// MIPSEL-ANDROID: "-target-cpu" "mips32r2"
+comment|// MIPSEL-ANDROID: "-target-cpu" "mips32"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: "-target-feature" "+nooddspreg"
 end_comment
 
 begin_comment
 comment|// MIPSEL-ANDROID: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-android -### -S %s -mcpu=mips32r6 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPSEL-ANDROID-R6 %s
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: clang
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: "-target-cpu" "mips32r6"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: "-target-feature" "+fp64"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: "-target-feature" "+nooddspreg"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID-R6: "-mfloat-abi" "hard"
 end_comment
 
 begin_comment

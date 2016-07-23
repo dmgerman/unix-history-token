@@ -23,6 +23,16 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|int
+name|a
+decl_stmt|;
+pragma|#
+directive|pragma
+name|omp
+name|target
+name|data
+comment|// expected-error {{expected at least one map clause for '#pragma omp target data'}}
+block|{}
 name|L1
 label|:
 name|foo
@@ -33,6 +43,10 @@ directive|pragma
 name|omp
 name|target
 name|data
+name|map
+name|(
+name|a
+name|)
 block|{
 name|foo
 argument_list|()
@@ -51,6 +65,10 @@ directive|pragma
 name|omp
 name|target
 name|data
+name|map
+name|(
+name|a
+name|)
 name|L2
 label|:
 name|foo
@@ -61,6 +79,10 @@ directive|pragma
 name|omp
 name|target
 name|data
+name|map
+name|(
+name|a
+name|)
 name|(
 name|i
 name|)

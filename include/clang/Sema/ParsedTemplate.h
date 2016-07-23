@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- ParsedTemplate.h - Template Parsing Data Types -------------------===//
+comment|//===--- ParsedTemplate.h - Template Parsing Data Types ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -66,6 +66,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/OperatorKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TemplateKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/DeclSpec.h"
 end_include
 
@@ -78,7 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<new>
 end_include
 
 begin_decl_stmt
@@ -362,8 +398,8 @@ name|KindType
 name|Kind
 decl_stmt|;
 comment|/// \brief The actual template argument representation, which may be
-comment|/// an \c ActionBase::TypeTy* (for a type), an Expr* (for an
-comment|/// expression), or an ActionBase::TemplateTy (for a template).
+comment|/// an \c Sema::TypeTy* (for a type), an Expr* (for an
+comment|/// expression), or an Sema::TemplateTy (for a template).
 name|void
 modifier|*
 name|Arg
@@ -596,10 +632,18 @@ function_decl|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// end namespace clang
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_SEMA_PARSEDTEMPLATE_H
+end_comment
 
 end_unit
 

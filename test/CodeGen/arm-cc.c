@@ -20,6 +20,18 @@ comment|// RUN: %clang_cc1 -triple arm-none-linux-gnueabi -target-abi aapcs  -em
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple arm-none-linux-musleabi -target-abi apcs-gnu -emit-llvm -w -o - %s | FileCheck -check-prefix=LINUX-APCS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm-none-linux-musleabi -target-abi aapcs  -emit-llvm -w -o - %s | FileCheck -check-prefix=LINUX-AAPCS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv7-none-eabihf -target-abi aapcs-vfp -emit-llvm -w -o - %s | FileCheck -check-prefix=BAREMETAL-AAPCS_VFP %s
+end_comment
+
+begin_comment
 comment|// DARWIN-APCS-LABEL: define void @f()
 end_comment
 
@@ -49,6 +61,18 @@ end_comment
 
 begin_comment
 comment|// LINUX-AAPCS: call void @g
+end_comment
+
+begin_comment
+comment|// BAREMETAL-AAPCS_VFP-LABEL: define void @f()
+end_comment
+
+begin_comment
+comment|// BAREMETAL-AAPCS_VFP: call void @g
+end_comment
+
+begin_comment
+comment|// BAREMETAL-AAPCS_VFP: declare void @g()
 end_comment
 
 begin_function_decl

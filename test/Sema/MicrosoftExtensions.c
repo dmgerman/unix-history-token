@@ -18,6 +18,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|PR28407
+block|{
+name|int
+label|:
+literal|1
+expr_stmt|;
+name|int
+name|a
+index|[]
+decl_stmt|;
+comment|/* expected-warning {{flexible array member 'a' in otherwise empty struct is a Microsoft extension}} */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|C
 block|{
 name|int
@@ -832,6 +849,53 @@ expr_stmt|;
 comment|// expected-warning {{incompatible pointer types passing 'my_va_list'}}
 block|}
 block|}
+end_function
+
+begin_comment
+comment|// __unaligned handling
+end_comment
+
+begin_function
+name|void
+name|test_unaligned
+parameter_list|()
+block|{
+name|__unaligned
+name|int
+modifier|*
+name|p1
+init|=
+literal|0
+decl_stmt|;
+name|int
+modifier|*
+name|p2
+init|=
+name|p1
+decl_stmt|;
+comment|// expected-warning {{initializing 'int *' with an expression of type '__unaligned int *' discards qualifiers}}
+name|__unaligned
+name|int
+modifier|*
+name|p3
+init|=
+name|p2
+decl_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_unaligned2
+parameter_list|(
+name|int
+name|x
+index|[
+name|__unaligned
+literal|4
+index|]
+parameter_list|)
+block|{}
 end_function
 
 end_unit

@@ -1795,7 +1795,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: define [1 x<3 x float>] @func_v3f1(<3 x float> inreg %x.coerce)
+comment|// CHECK: define [1 x<4 x float>] @func_v3f1(<3 x float> inreg %x.coerce)
 end_comment
 
 begin_function
@@ -1815,7 +1815,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [2 x<3 x float>] @func_v3f2([2 x<3 x float>] %x.coerce)
+comment|// CHECK: define [2 x<4 x float>] @func_v3f2([2 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1835,7 +1835,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [3 x<3 x float>] @func_v3f3([3 x<3 x float>] %x.coerce)
+comment|// CHECK: define [3 x<4 x float>] @func_v3f3([3 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1855,7 +1855,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [4 x<3 x float>] @func_v3f4([4 x<3 x float>] %x.coerce)
+comment|// CHECK: define [4 x<4 x float>] @func_v3f4([4 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1875,7 +1875,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [5 x<3 x float>] @func_v3f5([5 x<3 x float>] %x.coerce)
+comment|// CHECK: define [5 x<4 x float>] @func_v3f5([5 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1895,7 +1895,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [6 x<3 x float>] @func_v3f6([6 x<3 x float>] %x.coerce)
+comment|// CHECK: define [6 x<4 x float>] @func_v3f6([6 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1915,7 +1915,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [7 x<3 x float>] @func_v3f7([7 x<3 x float>] %x.coerce)
+comment|// CHECK: define [7 x<4 x float>] @func_v3f7([7 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1935,7 +1935,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [8 x<3 x float>] @func_v3f8([8 x<3 x float>] %x.coerce)
+comment|// CHECK: define [8 x<4 x float>] @func_v3f8([8 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1975,7 +1975,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [2 x<3 x float>] @func_v3fab([2 x<3 x float>] %x.coerce)
+comment|// CHECK: define [2 x<4 x float>] @func_v3fab([2 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -1995,7 +1995,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define [3 x<3 x float>] @func_v3fabc([3 x<3 x float>] %x.coerce)
+comment|// CHECK: define [3 x<4 x float>] @func_v3fabc([3 x<4 x float>] %x.coerce)
 end_comment
 
 begin_function
@@ -2023,7 +2023,7 @@ comment|// CHECK: %[[TMP:[^ ]+]] = load<3 x float>,<3 x float>* getelementptr in
 end_comment
 
 begin_comment
-comment|// CHECK: call [1 x<3 x float>] @func_v3f1(<3 x float> inreg %[[TMP]])
+comment|// CHECK: call [1 x<4 x float>] @func_v3f1(<3 x float> inreg %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2055,11 +2055,11 @@ comment|// CHECK-LABEL: @call_v3f2
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>], [2 x<3 x float>]* getelementptr inbounds (%struct.v3f2, %struct.v3f2* @global_v3f2, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x float>], [2 x<4 x float>]* bitcast (%struct.v3f2* @global_v3f2 to [2 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [2 x<3 x float>] @func_v3f2([2 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [2 x<4 x float>] @func_v3f2([2 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2091,11 +2091,11 @@ comment|// CHECK-LABEL: @call_v3f3
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>], [3 x<3 x float>]* getelementptr inbounds (%struct.v3f3, %struct.v3f3* @global_v3f3, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x float>], [3 x<4 x float>]* bitcast (%struct.v3f3* @global_v3f3 to [3 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [3 x<3 x float>] @func_v3f3([3 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [3 x<4 x float>] @func_v3f3([3 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2127,11 +2127,11 @@ comment|// CHECK-LABEL: @call_v3f4
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<3 x float>], [4 x<3 x float>]* getelementptr inbounds (%struct.v3f4, %struct.v3f4* @global_v3f4, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<4 x float>], [4 x<4 x float>]* bitcast (%struct.v3f4* @global_v3f4 to [4 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [4 x<3 x float>] @func_v3f4([4 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [4 x<4 x float>] @func_v3f4([4 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2163,11 +2163,11 @@ comment|// CHECK-LABEL: @call_v3f5
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<3 x float>], [5 x<3 x float>]* getelementptr inbounds (%struct.v3f5, %struct.v3f5* @global_v3f5, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<4 x float>], [5 x<4 x float>]* bitcast (%struct.v3f5* @global_v3f5 to [5 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [5 x<3 x float>] @func_v3f5([5 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [5 x<4 x float>] @func_v3f5([5 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2199,11 +2199,11 @@ comment|// CHECK-LABEL: @call_v3f6
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<3 x float>], [6 x<3 x float>]* getelementptr inbounds (%struct.v3f6, %struct.v3f6* @global_v3f6, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<4 x float>], [6 x<4 x float>]* bitcast (%struct.v3f6* @global_v3f6 to [6 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [6 x<3 x float>] @func_v3f6([6 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [6 x<4 x float>] @func_v3f6([6 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2235,11 +2235,11 @@ comment|// CHECK-LABEL: @call_v3f7
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<3 x float>], [7 x<3 x float>]* getelementptr inbounds (%struct.v3f7, %struct.v3f7* @global_v3f7, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<4 x float>], [7 x<4 x float>]* bitcast (%struct.v3f7* @global_v3f7 to [7 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [7 x<3 x float>] @func_v3f7([7 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [7 x<4 x float>] @func_v3f7([7 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2271,11 +2271,11 @@ comment|// CHECK-LABEL: @call_v3f8
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<3 x float>], [8 x<3 x float>]* getelementptr inbounds (%struct.v3f8, %struct.v3f8* @global_v3f8, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<4 x float>], [8 x<4 x float>]* bitcast (%struct.v3f8* @global_v3f8 to [8 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [8 x<3 x float>] @func_v3f8([8 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [8 x<4 x float>] @func_v3f8([8 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2339,11 +2339,11 @@ comment|// CHECK-LABEL: @call_v3fab
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>], [2 x<3 x float>]* bitcast (%struct.v3fab* @global_v3fab to [2 x<3 x float>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x float>], [2 x<4 x float>]* bitcast (%struct.v3fab* @global_v3fab to [2 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [2 x<3 x float>] @func_v3fab([2 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [2 x<4 x float>] @func_v3fab([2 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt
@@ -2375,11 +2375,11 @@ comment|// CHECK-LABEL: @call_v3fabc
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>], [3 x<3 x float>]* bitcast (%struct.v3fabc* @global_v3fabc to [3 x<3 x float>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x float>], [3 x<4 x float>]* bitcast (%struct.v3fabc* @global_v3fabc to [3 x<4 x float>]*), align 16
 end_comment
 
 begin_comment
-comment|// CHECK: call [3 x<3 x float>] @func_v3fabc([3 x<3 x float>] %[[TMP]])
+comment|// CHECK: call [3 x<4 x float>] @func_v3fabc([3 x<4 x float>] %[[TMP]])
 end_comment
 
 begin_decl_stmt

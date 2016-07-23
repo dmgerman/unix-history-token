@@ -148,7 +148,7 @@ comment|// CHECK012: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK012-DAG-NOT: "-internal-isystem"
+comment|// CHECK012-NOT: "-internal-isystem"
 end_comment
 
 begin_comment
@@ -184,11 +184,11 @@ comment|// CHECK013: "-cc1"
 end_comment
 
 begin_comment
-comment|// CHECK013-DAG-NOT: "-internal-isystem"
+comment|// CHECK013-NOT: "-internal-isystem"
 end_comment
 
 begin_comment
-comment|// CHECK013-DAG-NOT: "-internal-externc-isystem"
+comment|// CHECK013-NOT: "-internal-externc-isystem"
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ comment|// CHECK020: "-cc1" {{.*}} "-target-cpu" "hexagonv4"
 end_comment
 
 begin_comment
-comment|// CHECK020: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v4/crt0
+comment|// CHECK020: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v4/crt0
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ comment|// CHECK021: "-cc1" {{.*}} "-target-cpu" "hexagonv5"
 end_comment
 
 begin_comment
-comment|// CHECK021: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v5/crt0
+comment|// CHECK021: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v5/crt0
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ comment|// CHECK022: "-cc1" {{.*}} "-target-cpu" "hexagonv55"
 end_comment
 
 begin_comment
-comment|// CHECK022: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v55/crt0
+comment|// CHECK022: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v55/crt0
 end_comment
 
 begin_comment
@@ -312,7 +312,7 @@ comment|// CHECK023: "-cc1" {{.*}} "-target-cpu" "hexagonv60"
 end_comment
 
 begin_comment
-comment|// CHECK023: "hexagon-link" {{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0
+comment|// CHECK023: hexagon-link{{.*}}/Inputs/hexagon_tree/Tools/bin/../target/hexagon/lib/v60/crt0
 end_comment
 
 begin_comment

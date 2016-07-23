@@ -2941,5 +2941,22 @@ comment|// no warning
 block|}
 end_function
 
+begin_function
+name|void
+name|testVolatile
+parameter_list|()
+block|{
+specifier|volatile
+name|int
+name|v
+decl_stmt|;
+name|v
+operator|=
+literal|0
+expr_stmt|;
+comment|// no warning
+block|}
+end_function
+
 end_unit
 

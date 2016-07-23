@@ -62,19 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OperatorKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/SourceLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TemplateKinds.h"
 end_include
 
 begin_include
@@ -92,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstdlib>
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -211,6 +199,11 @@ literal|0x100
 block|,
 comment|// This string or character literal is formed by
 comment|// macro stringizing or charizing operator.
+name|CommaAfterElided
+init|=
+literal|0x200
+block|,
+comment|// The comma following this token was elided (MS).
 block|}
 enum|;
 name|tok
@@ -944,6 +937,25 @@ operator||=
 name|Flag
 expr_stmt|;
 block|}
+comment|/// \brief Get the specified flag.
+name|bool
+name|getFlag
+argument_list|(
+name|TokenFlags
+name|Flag
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|Flag
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// \brief Unset the specified flag.
 name|void
 name|clearFlag
@@ -1006,15 +1018,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|StartOfLine
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if this token has whitespace before it.
@@ -1025,15 +1032,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|LeadingSpace
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if this identifier token should never
@@ -1044,15 +1046,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|DisableExpand
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if we have an ObjC keyword identifier.
@@ -1081,15 +1078,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|NeedsCleaning
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if this token has an empty macro before it.
@@ -1100,15 +1092,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|LeadingEmptyMacro
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// \brief Return true if this token is a string or character literal which
@@ -1119,15 +1106,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|HasUDSuffix
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// Returns true if this token contains a universal character name.
@@ -1137,15 +1119,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|HasUCN
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
 return|;
 block|}
 comment|/// Returns true if this token is formed by macro by stringizing or charizing
@@ -1156,15 +1133,23 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|Flags
-operator|&
+name|getFlag
+argument_list|(
 name|StringifiedInMacro
-operator|)
-operator|?
-name|true
-operator|:
-name|false
+argument_list|)
+return|;
+block|}
+comment|/// Returns true if the comma after this token was elided.
+name|bool
+name|commaAfterElided
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlag
+argument_list|(
+name|CommaAfterElided
+argument_list|)
 return|;
 block|}
 block|}
@@ -1251,6 +1236,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LEX_TOKEN_H
+end_comment
 
 end_unit
 

@@ -8,7 +8,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/func-entry.proftext -o %t.profdata
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -o - -mllvm -disable-llvm-optzns -emit-llvm -S -fprofile-instr-use=%t.profdata | FileCheck %s
+comment|// RUN: %clang_cc1 %s -o - -disable-llvm-optzns -emit-llvm -fprofile-instrument-use-path=%t.profdata | FileCheck %s
 end_comment
 
 begin_function_decl

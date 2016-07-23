@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|OPENCL_CONSTANT
-value|16776962
+value|8388354
 end_define
 
 begin_decl_stmt

@@ -983,6 +983,46 @@ name|N
 operator|)
 argument_list|)
 expr_stmt|;
+comment|// CHECK: @llvm.bitreverse.i8
+comment|// CHECK: @llvm.bitreverse.i16
+comment|// CHECK: @llvm.bitreverse.i32
+comment|// CHECK: @llvm.bitreverse.i64
+name|P
+argument_list|(
+name|bitreverse8
+argument_list|,
+operator|(
+name|N
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|bitreverse16
+argument_list|,
+operator|(
+name|N
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|bitreverse32
+argument_list|,
+operator|(
+name|N
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|bitreverse64
+argument_list|,
+operator|(
+name|N
+operator|)
+argument_list|)
+expr_stmt|;
 comment|// FIXME
 comment|// V(clear_cache, (&N,&N+1));
 name|V
@@ -1278,10 +1318,8 @@ argument_list|(
 name|F
 argument_list|)
 expr_stmt|;
-comment|// CHECK: fcmp oeq float
 comment|// CHECK: call float @llvm.fabs.f32(float
-comment|// CHECK: fcmp une float {{.*}}, 0x7FF0000000000000
-comment|// CHECK: and i1
+comment|// CHECK: fcmp one float {{.*}}, 0x7FF0000000000000
 name|res
 operator|=
 name|__builtin_isnormal
@@ -1384,6 +1422,288 @@ expr_stmt|;
 comment|// CHECK: call float @llvm.fabs.f32(float
 comment|// CHECK: call double @llvm.fabs.f64(double
 comment|// CHECK: call x86_fp80 @llvm.fabs.f80(x86_fp80
+name|resf
+operator|=
+name|__builtin_canonicalizef
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+name|resd
+operator|=
+name|__builtin_canonicalize
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+name|resld
+operator|=
+name|__builtin_canonicalizel
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.canonicalize.f32(float
+comment|// CHECK: call double @llvm.canonicalize.f64(double
+comment|// CHECK: call x86_fp80 @llvm.canonicalize.f80(x86_fp80
+name|resf
+operator|=
+name|__builtin_fminf
+argument_list|(
+name|F
+argument_list|,
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.minnum.f32
+name|resd
+operator|=
+name|__builtin_fmin
+argument_list|(
+name|D
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.minnum.f64
+name|resld
+operator|=
+name|__builtin_fminl
+argument_list|(
+name|LD
+argument_list|,
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.minnum.f80
+name|resf
+operator|=
+name|__builtin_fmaxf
+argument_list|(
+name|F
+argument_list|,
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.maxnum.f32
+name|resd
+operator|=
+name|__builtin_fmax
+argument_list|(
+name|D
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.maxnum.f64
+name|resld
+operator|=
+name|__builtin_fmaxl
+argument_list|(
+name|LD
+argument_list|,
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.maxnum.f80
+name|resf
+operator|=
+name|__builtin_fabsf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.fabs.f32
+name|resd
+operator|=
+name|__builtin_fabs
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.fabs.f64
+name|resld
+operator|=
+name|__builtin_fabsl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.fabs.f80
+name|resf
+operator|=
+name|__builtin_copysignf
+argument_list|(
+name|F
+argument_list|,
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.copysign.f32
+name|resd
+operator|=
+name|__builtin_copysign
+argument_list|(
+name|D
+argument_list|,
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.copysign.f64
+name|resld
+operator|=
+name|__builtin_copysignl
+argument_list|(
+name|LD
+argument_list|,
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.copysign.f80
+name|resf
+operator|=
+name|__builtin_ceilf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.ceil.f32
+name|resd
+operator|=
+name|__builtin_ceil
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.ceil.f64
+name|resld
+operator|=
+name|__builtin_ceill
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.ceil.f80
+name|resf
+operator|=
+name|__builtin_floorf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.floor.f32
+name|resd
+operator|=
+name|__builtin_floor
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.floor.f64
+name|resld
+operator|=
+name|__builtin_floorl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.floor.f80
+name|resf
+operator|=
+name|__builtin_truncf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.trunc.f32
+name|resd
+operator|=
+name|__builtin_trunc
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.trunc.f64
+name|resld
+operator|=
+name|__builtin_truncl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.trunc.f80
+name|resf
+operator|=
+name|__builtin_rintf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.rint.f32
+name|resd
+operator|=
+name|__builtin_rint
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.rint.f64
+name|resld
+operator|=
+name|__builtin_rintl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.rint.f80
+name|resf
+operator|=
+name|__builtin_nearbyintf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.nearbyint.f32
+name|resd
+operator|=
+name|__builtin_nearbyint
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.nearbyint.f64
+name|resld
+operator|=
+name|__builtin_nearbyintl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.nearbyint.f80
+name|resf
+operator|=
+name|__builtin_roundf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.round.f32
+name|resd
+operator|=
+name|__builtin_round
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.round.f64
+name|resld
+operator|=
+name|__builtin_roundl
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call x86_fp80 @llvm.round.f80
 block|}
 end_function
 

@@ -23,11 +23,11 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|__builtin_wasm_memory_size
+name|__builtin_wasm_current_memory
 argument_list|()
 return|;
-comment|// WEBASSEMBLY32: call {{i.*}} @llvm.wasm.memory.size.i32()
-comment|// WEBASSEMBLY64: call {{i.*}} @llvm.wasm.memory.size.i64()
+comment|// WEBASSEMBLY32: call {{i.*}} @llvm.wasm.current.memory.i32()
+comment|// WEBASSEMBLY64: call {{i.*}} @llvm.wasm.current.memory.i64()
 block|}
 end_function
 

@@ -157,7 +157,14 @@ end_macro
 begin_for
 for|for single-line asm
 asm|__asm {}
-asm|__asm int 4
+asm|__asm {
+asm|int 5
+asm|}
+asm|__asm int 6
+asm|__asm int 7
+asm|__asm {
+asm|int 8
+asm|}
 for|return 10
 empty_stmt|;
 end_for
@@ -167,7 +174,23 @@ comment|// CHECK: t8
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 asm sideeffect inteldialect "int $$4\0A\09int $$4", "={eax},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call i32 asm sideeffect inteldialect "int $$4", "={eax},~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 asm sideeffect inteldialect "", "={eax},~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 asm sideeffect inteldialect "int $$5", "={eax},~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 asm sideeffect inteldialect "int $$6\0A\09int $$7", "={eax},~{dirflag},~{fpsr},~{flags}"()
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 asm sideeffect inteldialect "int $$8", "={eax},~{dirflag},~{fpsr},~{flags}"()
 end_comment
 
 begin_comment
@@ -192,7 +215,7 @@ asm|pop ebx
 asm|}
 asm|}
 comment|// CHECK: t9
-comment|// CHECK: call void asm sideeffect inteldialect "push ebx\0A\09mov ebx, $$0x07\0A\09pop ebx", "~{ebx},~{esp},~{dirflag},~{fpsr},~{flags}"()
+comment|// CHECK: call void asm sideeffect inteldialect "push ebx\0A\09mov ebx, $$0x07\0A\09pop ebx\0A\09", "~{ebx},~{esp},~{dirflag},~{fpsr},~{flags}"()
 block|}
 end_block
 

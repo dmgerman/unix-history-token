@@ -345,6 +345,53 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(availability(ios,introduced=
+literal|9_0
+argument|,deprecated=
+literal|9_0
+argument|,message=
+literal|""
+argument|))
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-note{{previous attribute is here}} \
+end_comment
+
+begin_comment
+comment|// expected-note{{previous attribute is here}}
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(availability(ios,introduced=
+literal|7_0
+argument|))
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-warning{{availability does not match previous declaration}} \
+end_comment
+
+begin_comment
+comment|// expected-warning{{availability does not match previous declaration}}
+end_comment
+
+begin_function_decl
+name|void
+name|f10
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Test tvOS specific attributes.
 end_comment

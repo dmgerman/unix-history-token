@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: aarch64-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:   -ffp-contract=fast -S -O3 -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_comment
@@ -21,6 +17,22 @@ directive|include
 file|<arm_neon.h>
 end_include
 
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl1_s8(<8 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %a,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL11_I]]
+end_comment
+
 begin_function
 name|int8x8_t
 name|test_vtbl1_s8
@@ -32,7 +44,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl1_s8
 return|return
 name|vtbl1_s8
 argument_list|(
@@ -41,9 +52,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl1_s8(<16 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> %a,<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -56,7 +78,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1_s8
 return|return
 name|vqtbl1_s8
 argument_list|(
@@ -65,9 +86,80 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl2_s8([2 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[A]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL13_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -80,7 +172,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl2_s8
 return|return
 name|vtbl2_s8
 argument_list|(
@@ -89,9 +180,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl2_s8([2 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -104,7 +262,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2_s8
 return|return
 name|vqtbl2_s8
 argument_list|(
@@ -113,9 +270,96 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl3_s8([3 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[A]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL26_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -128,7 +372,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl3_s8
 return|return
 name|vtbl3_s8
 argument_list|(
@@ -137,9 +380,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl3_s8([3 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl3.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -152,7 +474,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3_s8
 return|return
 name|vqtbl3_s8
 argument_list|(
@@ -161,9 +482,108 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl4_s8([4 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[A]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL27_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL28_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -176,7 +596,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl4_s8
 return|return
 name|vtbl4_s8
 argument_list|(
@@ -185,9 +604,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl4_s8([4 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl4.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -200,7 +710,6 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4_s8
 return|return
 name|vqtbl4_s8
 argument_list|(
@@ -209,9 +718,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl1q_s8(<16 x i8> %a,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl1.v16i8(<16 x i8> %a,<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -224,7 +744,6 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1q_s8
 return|return
 name|vqtbl1q_s8
 argument_list|(
@@ -233,9 +752,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl2q_s8([2 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl2.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -248,7 +834,6 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2q_s8
 return|return
 name|vqtbl2q_s8
 argument_list|(
@@ -257,9 +842,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl3q_s8([3 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl3.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -272,7 +936,6 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3q_s8
 return|return
 name|vqtbl3q_s8
 argument_list|(
@@ -281,9 +944,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl4q_s8([4 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl4.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -296,7 +1050,6 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4q_s8
 return|return
 name|vqtbl4q_s8
 argument_list|(
@@ -305,9 +1058,48 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx1_s8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %b,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = icmp uge<8 x i8> %c,<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = sext<8 x i1> [[TMP0]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = and<8 x i8> [[TMP1]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = xor<8 x i8> [[TMP1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = and<8 x i8> [[TMP3]], [[VTBL11_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP2]], [[TMP4]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -323,7 +1115,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx1_s8
 return|return
 name|vtbx1_s8
 argument_list|(
@@ -334,13 +1125,80 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx2_s8(<8 x i8> %a, [2 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[B]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x2_t, %struct.int8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> [[VTBX1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX13_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -356,7 +1214,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx2_s8
 return|return
 name|vtbx2_s8
 argument_list|(
@@ -367,9 +1224,120 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx3_s8(<8 x i8> %a, [3 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[B]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x8x3_t, %struct.int8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = icmp uge<8 x i8> %c,<i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP5:%.*]] = sext<8 x i1> [[TMP4]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP6:%.*]] = and<8 x i8> [[TMP5]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP7:%.*]] = xor<8 x i8> [[TMP5]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP8:%.*]] = and<8 x i8> [[TMP7]], [[VTBL26_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP6]], [[TMP8]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -385,7 +1353,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx3_s8
 return|return
 name|vtbx3_s8
 argument_list|(
@@ -396,13 +1363,108 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx4_s8(<8 x i8> %a, [4 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[B]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x8x4_t, %struct.int8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[VTBX2_I]],<16 x i8> [[VTBX27_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX28_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -418,7 +1480,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx4_s8
 return|return
 name|vtbx4_s8
 argument_list|(
@@ -429,9 +1490,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx1_s8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -447,7 +1519,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1_s8
 return|return
 name|vqtbx1_s8
 argument_list|(
@@ -458,9 +1529,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx2_s8(<8 x i8> %a, [2 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -476,7 +1614,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2_s8
 return|return
 name|vqtbx2_s8
 argument_list|(
@@ -487,9 +1624,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx3_s8(<8 x i8> %a, [3 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx3.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -505,7 +1721,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3_s8
 return|return
 name|vqtbx3_s8
 argument_list|(
@@ -516,9 +1731,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx4_s8(<8 x i8> %a, [4 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx4.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|int8x8_t
@@ -534,7 +1840,6 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4_s8
 return|return
 name|vqtbx4_s8
 argument_list|(
@@ -545,9 +1850,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx1q_s8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx1.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -563,7 +1879,6 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1q_s8
 return|return
 name|vqtbx1q_s8
 argument_list|(
@@ -574,9 +1889,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx2q_s8(<16 x i8> %a, [2 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x2_t, %struct.int8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx2.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -592,7 +1974,6 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2q_s8
 return|return
 name|vqtbx2q_s8
 argument_list|(
@@ -603,9 +1984,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx3q_s8(<16 x i8> %a, [3 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x3_t, %struct.int8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx3.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -621,7 +2081,6 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3q_s8
 return|return
 name|vqtbx3q_s8
 argument_list|(
@@ -632,9 +2091,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx4q_s8(<16 x i8> %a, [4 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.int8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.int8x16x4_t, %struct.int8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx4.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|int8x16_t
@@ -650,7 +2200,6 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4q_s8
 return|return
 name|vqtbx4q_s8
 argument_list|(
@@ -661,9 +2210,24 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl1_u8(<8 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %a,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL11_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -676,7 +2240,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl1_u8
 return|return
 name|vtbl1_u8
 argument_list|(
@@ -685,9 +2248,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl1_u8(<16 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> %a,<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -700,7 +2274,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1_u8
 return|return
 name|vqtbl1_u8
 argument_list|(
@@ -709,9 +2282,80 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl2_u8([2 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[A]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL13_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -724,7 +2368,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl2_u8
 return|return
 name|vtbl2_u8
 argument_list|(
@@ -733,9 +2376,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl2_u8([2 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -748,7 +2458,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2_u8
 return|return
 name|vqtbl2_u8
 argument_list|(
@@ -757,9 +2466,96 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl3_u8([3 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[A]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL26_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -772,7 +2568,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl3_u8
 return|return
 name|vtbl3_u8
 argument_list|(
@@ -781,9 +2576,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl3_u8([3 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl3.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -796,7 +2670,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3_u8
 return|return
 name|vqtbl3_u8
 argument_list|(
@@ -805,9 +2678,108 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl4_u8([4 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[A]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL27_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL28_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -820,7 +2792,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl4_u8
 return|return
 name|vtbl4_u8
 argument_list|(
@@ -829,9 +2800,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl4_u8([4 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl4.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -844,7 +2906,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4_u8
 return|return
 name|vqtbl4_u8
 argument_list|(
@@ -853,9 +2914,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl1q_u8(<16 x i8> %a,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl1.v16i8(<16 x i8> %a,<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -868,7 +2940,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1q_u8
 return|return
 name|vqtbl1q_u8
 argument_list|(
@@ -877,9 +2948,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl2q_u8([2 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl2.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -892,7 +3030,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2q_u8
 return|return
 name|vqtbl2q_u8
 argument_list|(
@@ -901,9 +3038,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl3q_u8([3 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl3.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -916,7 +3132,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3q_u8
 return|return
 name|vqtbl3q_u8
 argument_list|(
@@ -925,9 +3140,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl4q_u8([4 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl4.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -940,7 +3246,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4q_u8
 return|return
 name|vqtbl4q_u8
 argument_list|(
@@ -949,9 +3254,48 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx1_u8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %b,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = icmp uge<8 x i8> %c,<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = sext<8 x i1> [[TMP0]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = and<8 x i8> [[TMP1]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = xor<8 x i8> [[TMP1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = and<8 x i8> [[TMP3]], [[VTBL11_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP2]], [[TMP4]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -967,7 +3311,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx1_u8
 return|return
 name|vtbx1_u8
 argument_list|(
@@ -978,13 +3321,80 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx2_u8(<8 x i8> %a, [2 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[B]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x2_t, %struct.uint8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> [[VTBX1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX13_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1000,7 +3410,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx2_u8
 return|return
 name|vtbx2_u8
 argument_list|(
@@ -1011,9 +3420,120 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx3_u8(<8 x i8> %a, [3 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[B]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x8x3_t, %struct.uint8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = icmp uge<8 x i8> %c,<i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP5:%.*]] = sext<8 x i1> [[TMP4]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP6:%.*]] = and<8 x i8> [[TMP5]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP7:%.*]] = xor<8 x i8> [[TMP5]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP8:%.*]] = and<8 x i8> [[TMP7]], [[VTBL26_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP6]], [[TMP8]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1029,7 +3549,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx3_u8
 return|return
 name|vtbx3_u8
 argument_list|(
@@ -1040,13 +3559,108 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx4_u8(<8 x i8> %a, [4 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[B]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x8x4_t, %struct.uint8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[VTBX2_I]],<16 x i8> [[VTBX27_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX28_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1062,7 +3676,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx4_u8
 return|return
 name|vtbx4_u8
 argument_list|(
@@ -1073,9 +3686,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx1_u8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1091,7 +3715,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1_u8
 return|return
 name|vqtbx1_u8
 argument_list|(
@@ -1102,9 +3725,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx2_u8(<8 x i8> %a, [2 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1120,7 +3810,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2_u8
 return|return
 name|vqtbx2_u8
 argument_list|(
@@ -1131,9 +3820,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx3_u8(<8 x i8> %a, [3 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx3.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1149,7 +3917,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3_u8
 return|return
 name|vqtbx3_u8
 argument_list|(
@@ -1160,9 +3927,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx4_u8(<8 x i8> %a, [4 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx4.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|uint8x8_t
@@ -1178,7 +4036,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4_u8
 return|return
 name|vqtbx4_u8
 argument_list|(
@@ -1189,9 +4046,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx1q_u8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx1.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -1207,7 +4075,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1q_u8
 return|return
 name|vqtbx1q_u8
 argument_list|(
@@ -1218,9 +4085,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx2q_u8(<16 x i8> %a, [2 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x2_t, %struct.uint8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx2.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -1236,7 +4170,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2q_u8
 return|return
 name|vqtbx2q_u8
 argument_list|(
@@ -1247,9 +4180,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx3q_u8(<16 x i8> %a, [3 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x3_t, %struct.uint8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx3.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -1265,7 +4277,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3q_u8
 return|return
 name|vqtbx3q_u8
 argument_list|(
@@ -1276,9 +4287,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx4q_u8(<16 x i8> %a, [4 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.uint8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.uint8x16x4_t, %struct.uint8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx4.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|uint8x16_t
@@ -1294,7 +4396,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4q_u8
 return|return
 name|vqtbx4q_u8
 argument_list|(
@@ -1305,9 +4406,24 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl1_p8(<8 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %a,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL11_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1320,7 +4436,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl1_p8
 return|return
 name|vtbl1_p8
 argument_list|(
@@ -1329,9 +4444,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl1_p8(<16 x i8> %a,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> %a,<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1344,7 +4470,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1_p8
 return|return
 name|vqtbl1_p8
 argument_list|(
@@ -1353,9 +4478,80 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl2_p8([2 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[A]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL13_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1368,7 +4564,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl2_p8
 return|return
 name|vtbl2_p8
 argument_list|(
@@ -1377,9 +4572,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl2_p8([2 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1392,7 +4654,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2_p8
 return|return
 name|vqtbl2_p8
 argument_list|(
@@ -1401,9 +4662,96 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl3_p8([3 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[A]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL26_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1416,7 +4764,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl3_p8
 return|return
 name|vtbl3_p8
 argument_list|(
@@ -1425,9 +4772,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl3_p8([3 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl3.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1440,7 +4866,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3_p8
 return|return
 name|vqtbl3_p8
 argument_list|(
@@ -1449,9 +4874,108 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbl4_p8([4 x<8 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[A]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL27_I]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL28_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1464,7 +4988,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbl4_p8
 return|return
 name|vtbl4_p8
 argument_list|(
@@ -1473,9 +4996,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbl4_p8([4 x<16 x i8>] %a.coerce,<8 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl4.v8i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1488,7 +5102,6 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4_p8
 return|return
 name|vqtbl4_p8
 argument_list|(
@@ -1497,9 +5110,20 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl1q_p8(<16 x i8> %a,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl1.v16i8(<16 x i8> %a,<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL1_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1512,7 +5136,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl1q_p8
 return|return
 name|vqtbl1q_p8
 argument_list|(
@@ -1521,9 +5144,76 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl2q_p8([2 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[A]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl2.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL2_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1536,7 +5226,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl2q_p8
 return|return
 name|vqtbl2q_p8
 argument_list|(
@@ -1545,9 +5234,88 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl3q_p8([3 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[A]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl3.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL3_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1560,7 +5328,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl3q_p8
 return|return
 name|vqtbl3q_p8
 argument_list|(
@@ -1569,9 +5336,100 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbl4q_p8([4 x<16 x i8>] %a.coerce,<16 x i8> %b) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P0_I:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[A:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[A]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[A]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P0_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbl4.v16i8(<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %b) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBL4_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1584,7 +5442,6 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbl4q_p8
 return|return
 name|vqtbl4q_p8
 argument_list|(
@@ -1593,9 +5450,48 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx1_p8(<8 x i8> %a,<8 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL1_I:%.*]] = shufflevector<8 x i8> %b,<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL11_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl1.v8i8(<16 x i8> [[VTBL1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = icmp uge<8 x i8> %c,<i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8, i8 8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = sext<8 x i1> [[TMP0]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = and<8 x i8> [[TMP1]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = xor<8 x i8> [[TMP1]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = and<8 x i8> [[TMP3]], [[VTBL11_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP2]], [[TMP4]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1611,7 +5507,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx1_p8
 return|return
 name|vtbx1_p8
 argument_list|(
@@ -1622,13 +5517,80 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx2_p8(<8 x i8> %a, [2 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x8x2_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[B]].coerce, [2 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<8 x i8>], [2 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<8 x i8>] [[TMP0]], [2 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x2_t, %struct.poly8x8x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<8 x i8>], [2 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX13_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> [[VTBX1_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX13_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1644,7 +5606,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx2_p8
 return|return
 name|vtbx2_p8
 argument_list|(
@@ -1655,9 +5616,120 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx3_p8(<8 x i8> %a, [3 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x8x3_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[B]].coerce, [3 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<8 x i8>], [3 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<8 x i8>] [[TMP0]], [3 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x8x3_t, %struct.poly8x8x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<8 x i8>], [3 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL25_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> zeroinitializer,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBL26_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbl2.v8i8(<16 x i8> [[VTBL2_I]],<16 x i8> [[VTBL25_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = icmp uge<8 x i8> %c,<i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24, i8 24>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP5:%.*]] = sext<8 x i1> [[TMP4]] to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP6:%.*]] = and<8 x i8> [[TMP5]], %a
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP7:%.*]] = xor<8 x i8> [[TMP5]],<i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP8:%.*]] = and<8 x i8> [[TMP7]], [[VTBL26_I]]
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX_I:%.*]] = or<8 x i8> [[TMP6]], [[TMP8]]
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1673,7 +5745,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx3_p8
 return|return
 name|vtbx3_p8
 argument_list|(
@@ -1684,13 +5755,108 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
-comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
-comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vtbx4_p8(<8 x i8> %a, [4 x<8 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x8x4_t, align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[B]].coerce, [4 x<8 x i8>]* [[COERCE_DIVE]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<8 x i8>], [4 x<8 x i8>]* [[COERCE_DIVE1]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<8 x i8>] [[TMP0]], [4 x<8 x i8>]* [[COERCE_DIVE_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX2_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX4_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x8x4_t, %struct.poly8x8x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<8 x i8>], [4 x<8 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<8 x i8>,<8 x i8>* [[ARRAYIDX6_I]], align 8
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = shufflevector<8 x i8> [[TMP1]],<8 x i8> [[TMP2]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX27_I:%.*]] = shufflevector<8 x i8> [[TMP3]],<8 x i8> [[TMP4]],<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX28_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[VTBX2_I]],<16 x i8> [[VTBX27_I]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX28_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1706,7 +5872,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vtbx4_p8
 return|return
 name|vtbx4_p8
 argument_list|(
@@ -1717,9 +5882,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx1_p8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx1.v8i8(<8 x i8> %a,<16 x i8> %b,<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1735,7 +5911,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1_p8
 return|return
 name|vqtbx1_p8
 argument_list|(
@@ -1746,9 +5921,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx2_p8(<8 x i8> %a, [2 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx2.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1764,7 +6006,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2_p8
 return|return
 name|vqtbx2_p8
 argument_list|(
@@ -1775,9 +6016,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx3_p8(<8 x i8> %a, [3 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx3.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1793,7 +6113,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3_p8
 return|return
 name|vqtbx3_p8
 argument_list|(
@@ -1804,9 +6123,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<8 x i8> @test_vqtbx4_p8(<8 x i8> %a, [4 x<16 x i8>] %b.coerce,<8 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<8 x i8> @llvm.aarch64.neon.tbx4.v8i8(<8 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<8 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<8 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|poly8x8_t
@@ -1822,7 +6232,6 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4_p8
 return|return
 name|vqtbx4_p8
 argument_list|(
@@ -1833,9 +6242,20 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx1q_p8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX1_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx1.v16i8(<16 x i8> %a,<16 x i8> %b,<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX1_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1851,7 +6271,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx1q_p8
 return|return
 name|vqtbx1q_p8
 argument_list|(
@@ -1862,9 +6281,76 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx2q_p8(<16 x i8> %a, [2 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x2_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[B]].coerce, [2 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [2 x<16 x i8>], [2 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [2 x<16 x i8>] [[TMP0]], [2 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x2_t, %struct.poly8x16x2_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [2 x<16 x i8>], [2 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX2_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx2.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX2_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1880,7 +6366,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx2q_p8
 return|return
 name|vqtbx2q_p8
 argument_list|(
@@ -1891,9 +6376,88 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx3q_p8(<16 x i8> %a, [3 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x3_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[B]].coerce, [3 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [3 x<16 x i8>], [3 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [3 x<16 x i8>] [[TMP0]], [3 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x3_t, %struct.poly8x16x3_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [3 x<16 x i8>], [3 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX3_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx3.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX3_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1909,7 +6473,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx3q_p8
 return|return
 name|vqtbx3q_p8
 argument_list|(
@@ -1920,9 +6483,100 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
+
+begin_comment
+comment|// CHECK-LABEL: define<16 x i8> @test_vqtbx4q_p8(<16 x i8> %a, [4 x<16 x i8>] %b.coerce,<16 x i8> %c) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[__P1_I:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[B:%.*]] = alloca %struct.poly8x16x4_t, align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[B]].coerce, [4 x<16 x i8>]* [[COERCE_DIVE]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE1:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[B]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = load [4 x<16 x i8>], [4 x<16 x i8>]* [[COERCE_DIVE1]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[COERCE_DIVE_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   store [4 x<16 x i8>] [[TMP0]], [4 x<16 x i8>]* [[COERCE_DIVE_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL_I]], i64 0, i64 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL1_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX2_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL1_I]], i64 0, i64 1
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP2:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX2_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL3_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX4_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL3_I]], i64 0, i64 2
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP3:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX4_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VAL5_I:%.*]] = getelementptr inbounds %struct.poly8x16x4_t, %struct.poly8x16x4_t* [[__P1_I]], i32 0, i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   [[ARRAYIDX6_I:%.*]] = getelementptr inbounds [4 x<16 x i8>], [4 x<16 x i8>]* [[VAL5_I]], i64 0, i64 3
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP4:%.*]] = load<16 x i8>,<16 x i8>* [[ARRAYIDX6_I]], align 16
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VTBX4_I:%.*]] = call<16 x i8> @llvm.aarch64.neon.tbx4.v16i8(<16 x i8> %a,<16 x i8> [[TMP1]],<16 x i8> [[TMP2]],<16 x i8> [[TMP3]],<16 x i8> [[TMP4]],<16 x i8> %c) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret<16 x i8> [[VTBX4_I]]
+end_comment
 
 begin_function
 name|poly8x16_t
@@ -1938,7 +6592,6 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vqtbx4q_p8
 return|return
 name|vqtbx4q_p8
 argument_list|(
@@ -1949,7 +6602,6 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 

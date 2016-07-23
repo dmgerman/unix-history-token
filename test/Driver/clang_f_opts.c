@@ -224,7 +224,7 @@ comment|// CHECK-NO-PROFILE-ARCS-NOT: "-femit-coverage-data"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -fprofile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE %s
+comment|// RUN: %clang -### -S -fprofile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-PROFILE-GENERATE-LLVM %s
 end_comment
 
 begin_comment
@@ -308,15 +308,15 @@ comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fno-profile-instr-
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -fprofile-instr-generate=file -fno-profile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GENERATE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fprofile-instr-generate -fprofile-generate=file %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MIX-GENERATE %s
 end_comment
 
 begin_comment
 comment|// RUN: %clang -### -S -fprofile-generate=dir -fno-profile-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -### -S -fprofile-generate=dir -fno-profile-instr-generate %s 2>&1 | FileCheck -check-prefix=CHECK-DISABLE-GEN %s
 end_comment
 
 begin_comment
@@ -348,15 +348,19 @@ comment|// RUN: %clang -### -S -fprofile-instr-generate -fcoverage-mapping -fno-
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-GENERATE: "-fprofile-instr-generate"
+comment|// CHECK-PROFILE-GENERATE: "-fprofile-instrument=clang"
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-GENERATE-DIR: "-fprofile-instr-generate=/some/dir{{/|\\\\}}default.profraw"
+comment|// CHECK-PROFILE-GENERATE-LLVM: "-fprofile-instrument=llvm"
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-GENERATE-FILE: "-fprofile-instr-generate=/tmp/somefile.profraw"
+comment|// CHECK-PROFILE-GENERATE-DIR: "-fprofile-instrument-path=/some/dir{{/|\\\\}}default.profraw"
+end_comment
+
+begin_comment
+comment|// CHECK-PROFILE-GENERATE-FILE: "-fprofile-instrument-path=/tmp/somefile.profraw"
 end_comment
 
 begin_comment
@@ -364,7 +368,11 @@ comment|// CHECK-NO-MIX-GEN-USE: '{{[a-z=-]*}}' not allowed with '{{[a-z=-]*}}'
 end_comment
 
 begin_comment
-comment|// CHECK-DISABLE-GEN-NOT: "-fprofile-instr-generate"
+comment|// CHECK-NO-MIX-GENERATE: '{{[a-z=-]*}}' not allowed with '{{[a-z=-]*}}'
+end_comment
+
+begin_comment
+comment|// CHECK-DISABLE-GEN-NOT: "-fprofile-instrument=clang"
 end_comment
 
 begin_comment
@@ -400,15 +408,15 @@ comment|// RUN: %clang -### -S -fprofile-instr-use=/tmp/somefile.prof %s 2>&1 | 
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-USE: "-fprofile-instr-use=default.profdata"
+comment|// CHECK-PROFILE-USE: "-fprofile-instrument-use-path=default.profdata"
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-USE-DIR: "-fprofile-instr-use={{.*}}.d/some/dir{{/|\\\\}}default.profdata"
+comment|// CHECK-PROFILE-USE-DIR: "-fprofile-instrument-use-path={{.*}}.d/some/dir{{/|\\\\}}default.profdata"
 end_comment
 
 begin_comment
-comment|// CHECK-PROFILE-USE-FILE: "-fprofile-instr-use=/tmp/somefile.prof"
+comment|// CHECK-PROFILE-USE-FILE: "-fprofile-instrument-use-path=/tmp/somefile.prof"
 end_comment
 
 begin_comment
@@ -1048,10 +1056,6 @@ comment|// RUN: -fno-defer-pop                                                  
 end_comment
 
 begin_comment
-comment|// RUN: -finline-functions                                                    \
-end_comment
-
-begin_comment
 comment|// RUN: -fkeep-inline-functions                                               \
 end_comment
 
@@ -1317,10 +1321,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-WARNING-DAG: optimization flag '-fno-defer-pop' is not supported
-end_comment
-
-begin_comment
-comment|// CHECK-WARNING-DAG: optimization flag '-finline-functions' is not supported
 end_comment
 
 begin_comment

@@ -84,7 +84,7 @@ comment|// RUN: echo "fun:foo"> %t.blacklist
 end_comment
 
 begin_comment
-comment|// RUN: %clang -MD -MF - %s -fsyntax-only -fsanitize=cfi-vcall -flto -fsanitize-blacklist=%t.blacklist -I ./ | FileCheck -check-prefix=CHECK-SEVEN %s
+comment|// RUN: %clang -MD -MF - %s -fsyntax-only -fsanitize=cfi-vcall -flto -fvisibility=hidden -fsanitize-blacklist=%t.blacklist -I ./ | FileCheck -check-prefix=CHECK-SEVEN %s
 end_comment
 
 begin_comment

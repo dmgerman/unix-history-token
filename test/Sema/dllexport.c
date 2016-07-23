@@ -34,7 +34,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -49,7 +49,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -64,7 +64,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -82,7 +82,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_function
@@ -101,7 +101,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_struct
@@ -116,7 +116,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_comment

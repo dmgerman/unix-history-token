@@ -251,5 +251,30 @@ block|; }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|ClassWithVBases
+range|:
+name|HasFriends
+decl_stmt|,
+name|virtual
+name|HasNontrivialDefaultConstructor
+block|{
+name|int
+name|n
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|ClassWithVBases
+struct_decl|;
+end_struct_decl
+
 end_unit
 

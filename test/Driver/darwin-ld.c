@@ -528,6 +528,34 @@ comment|// LINK_NO_IOS_ARM64_CRT1-NOT: crt
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-ios6.0 -miphoneos-version-min=6.0 -fprofile-instr-generate -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IOSSIM_PROFILE %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_PROFILE: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_PROFILE: libclang_rt.profile_iossim.a
+end_comment
+
+begin_comment
+comment|// FIXME: Currently the builtin library is only added to the command line if it,
+end_comment
+
+begin_comment
+comment|// so we can't check for it here
+end_comment
+
+begin_comment
+comment|// FIXME_LINK_IOSSIM_PROFILE: libclang_rt.ios.a
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target arm64-apple-tvos8.3 -mtvos-version-min=8.3 -### %t.o 2> %t.log
 end_comment
 
@@ -1029,6 +1057,98 @@ end_comment
 
 begin_comment
 comment|// LINK-IFRAMEWORK: "-FBar"
+end_comment
+
+begin_comment
+comment|// Check ld64 accepts up to 5 digits with no extra characters
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0.1 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0.1.2 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0.1.2.6 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0.1.a 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin12 %s -### -o %t \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=133.3.0.1a 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_VERSION_DIGITS %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS-NOT: invalid version number in '-mlinker-version=133.3'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS-NOT: invalid version number in '-mlinker-version=133.3.0'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS-NOT: invalid version number in '-mlinker-version=133.3.0.1'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS-NOT: invalid version number in '-mlinker-version=133.3.0.1.2'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS: invalid version number in '-mlinker-version=133.3.0.1.2.6'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS: invalid version number in '-mlinker-version=133.3.0.1.a'
+end_comment
+
+begin_comment
+comment|// LINK_VERSION_DIGITS: invalid version number in '-mlinker-version=133.3.0.1a'
 end_comment
 
 end_unit

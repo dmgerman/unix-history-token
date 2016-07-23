@@ -92,7 +92,10 @@ name|LambdaCaptureKind
 block|{
 name|LCK_This
 block|,
-comment|///< Capturing the \c this pointer
+comment|///< Capturing the \c *this object by reference
+name|LCK_StarThis
+block|,
+comment|///< Capturing the \c *this object by copy
 name|LCK_ByCopy
 block|,
 comment|///< Capturing by copy (a.k.a., by value)

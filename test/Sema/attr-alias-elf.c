@@ -525,7 +525,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{alias will always resolve to test2_bar even if weak definition of alias test2_foo is overridden}}
+comment|// expected-warning {{alias will always resolve to test2_bar even if weak definition of test2_foo is overridden}}
 end_comment
 
 begin_function

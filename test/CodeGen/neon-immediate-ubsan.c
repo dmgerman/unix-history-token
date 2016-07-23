@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple armv7s-linux-gnu -emit-llvm -O1 -o - %s \
+comment|// RUN: %clang_cc1 -triple armv7s-linux-gnu -emit-llvm -o - %s \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK --check-prefix=ARMV7
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -emit-llvm -O1 -o - %s \
+comment|// RUN: %clang_cc1 -triple aarch64-unknown-unknown -emit-llvm -o - %s \
 end_comment
 
 begin_comment

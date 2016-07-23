@@ -28,7 +28,7 @@ comment|// CHECK-NO-PIC-NOT: "-pic-level"
 end_comment
 
 begin_comment
-comment|// CHECK-NO-PIC-NOT: "-pie-level"
+comment|// CHECK-NO-PIC-NOT: "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// CHECK-PIE2: "-mrelocation-model" "pic"
 end_comment
 
 begin_comment
-comment|// CHECK-PIE2: "-pie-level" "2"
+comment|// CHECK-PIE2: "-pic-is-pie"
 end_comment
 
 begin_comment

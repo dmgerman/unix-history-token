@@ -160,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -376,7 +382,12 @@ argument_list|)
 block|,
 name|State
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|state
+argument_list|)
 argument_list|)
 block|,
 name|Succs
@@ -1080,6 +1091,28 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// \brief Create a node for a (Location, State) pair,
+comment|///  but don't store it for deduplication later.  This
+comment|///  is useful when copying an already completed
+comment|///  ExplodedGraph for further processing.
+name|ExplodedNode
+modifier|*
+name|createUncachedNode
+parameter_list|(
+specifier|const
+name|ProgramPoint
+modifier|&
+name|L
+parameter_list|,
+name|ProgramStateRef
+name|State
+parameter_list|,
+name|bool
+name|IsSink
+init|=
+name|false
+parameter_list|)
+function_decl|;
 name|std
 operator|::
 name|unique_ptr
@@ -1193,6 +1226,21 @@ block|{
 return|return
 name|NumNodes
 return|;
+block|}
+name|void
+name|reserve
+parameter_list|(
+name|unsigned
+name|NodeCount
+parameter_list|)
+block|{
+name|Nodes
+operator|.
+name|reserve
+argument_list|(
+name|NodeCount
+argument_list|)
+expr_stmt|;
 block|}
 comment|// Iterators.
 typedef|typedef

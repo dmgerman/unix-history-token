@@ -166,5 +166,34 @@ name|ppsp32
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: __attribute__((availability(macos, strict, introduced=10.6)));
+end_comment
+
+begin_function_decl
+name|void
+name|f6
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(availability
+parameter_list|(
+name|macosx
+parameter_list|,
+name|strict
+parameter_list|,
+name|introduced
+init|=
+literal|10.6
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 end_unit
 

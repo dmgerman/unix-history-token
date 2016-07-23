@@ -545,6 +545,34 @@ argument_list|(
 argument|BitOffset
 argument_list|)
 block|{ }
+name|SourceLocation
+name|getBegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Begin
+argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|End
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 comment|/// \brief Source range/offset of a preprocessed entity.
@@ -605,6 +633,20 @@ operator|.
 name|getRawEncoding
 argument_list|()
 block|;       }
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Loc
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 comment|/// \brief The number of predefined preprocessed entity IDs.
@@ -958,15 +1000,7 @@ name|PENDING_IMPLICIT_INSTANTIATIONS
 init|=
 literal|26
 block|,
-comment|/// \brief Record code for a decl replacement block.
-comment|///
-comment|/// If a declaration is modified after having been deserialized, and then
-comment|/// written to a dependent AST file, its ID and offset must be added to
-comment|/// the replacement block.
-name|DECL_REPLACEMENTS
-init|=
-literal|27
-block|,
+comment|// ID 27 used to be for a list of replacement decls.
 comment|/// \brief Record code for an update to a decl context's lookup table.
 comment|///
 comment|/// In practice, this should only be used for the TU and namespaces.
@@ -980,18 +1014,9 @@ name|DECL_UPDATE_OFFSETS
 init|=
 literal|29
 block|,
-comment|/// \brief Record of updates for a declaration that was modified after
-comment|/// being deserialized.
-name|DECL_UPDATES
-init|=
-literal|30
-block|,
-comment|/// \brief Record code for the table of offsets to CXXBaseSpecifier
-comment|/// sets.
-name|CXX_BASE_SPECIFIER_OFFSETS
-init|=
-literal|31
-block|,
+comment|// ID 30 used to be a decl update record. These are now in the DECLTYPES
+comment|// block.
+comment|// ID 31 used to be a list of offsets to DECL_CXX_BASE_SPECIFIERS records.
 comment|/// \brief Record code for \#pragma diagnostic mappings.
 name|DIAG_PRAGMA_MAPPINGS
 init|=
@@ -1107,16 +1132,21 @@ name|UNUSED_LOCAL_TYPEDEF_NAME_CANDIDATES
 init|=
 literal|52
 block|,
-comment|/// \brief Record code for the table of offsets to CXXCtorInitializers
-comment|/// lists.
-name|CXX_CTOR_INITIALIZERS_OFFSETS
-init|=
-literal|53
-block|,
+comment|// ID 53 used to be a table of constructor initializer records.
 comment|/// \brief Delete expressions that will be analyzed later.
 name|DELETE_EXPRS_TO_ANALYZE
 init|=
 literal|54
+block|,
+comment|/// \brief Record code for \#pragma ms_struct options.
+name|MSSTRUCT_PRAGMA_OPTIONS
+init|=
+literal|55
+block|,
+comment|/// \brief Record code for \#pragma ms_struct options.
+name|POINTERS_TO_MEMBERS_PRAGMA_OPTIONS
+init|=
+literal|56
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1143,11 +1173,17 @@ name|SM_SLOC_BUFFER_BLOB
 init|=
 literal|3
 block|,
+comment|/// \brief Describes a zlib-compressed blob that contains the data for
+comment|/// a buffer entry.
+name|SM_SLOC_BUFFER_BLOB_COMPRESSED
+init|=
+literal|4
+block|,
 comment|/// \brief Describes a source location entry (SLocEntry) for a
 comment|/// macro expansion.
 name|SM_SLOC_EXPANSION_ENTRY
 init|=
-literal|4
+literal|5
 block|}
 enum|;
 comment|/// \brief Record types used within a preprocessor block.
@@ -1510,100 +1546,66 @@ name|PREDEF_TYPE_BUILTIN_FN
 init|=
 literal|36
 block|,
-comment|/// \brief OpenCL 1d image type.
-name|PREDEF_TYPE_IMAGE1D_ID
-init|=
-literal|37
-block|,
-comment|/// \brief OpenCL 1d image array type.
-name|PREDEF_TYPE_IMAGE1D_ARR_ID
-init|=
-literal|38
-block|,
-comment|/// \brief OpenCL 1d image buffer type.
-name|PREDEF_TYPE_IMAGE1D_BUFF_ID
-init|=
-literal|39
-block|,
-comment|/// \brief OpenCL 2d image type.
-name|PREDEF_TYPE_IMAGE2D_ID
-init|=
-literal|40
-block|,
-comment|/// \brief OpenCL 2d image array type.
-name|PREDEF_TYPE_IMAGE2D_ARR_ID
-init|=
-literal|41
-block|,
-comment|/// \brief OpenCL 2d image depth type.
-name|PREDEF_TYPE_IMAGE2D_DEP_ID
-init|=
-literal|42
-block|,
-comment|/// \brief OpenCL 2d image array depth type.
-name|PREDEF_TYPE_IMAGE2D_ARR_DEP_ID
-init|=
-literal|43
-block|,
-comment|/// \brief OpenCL 2d image MSAA type.
-name|PREDEF_TYPE_IMAGE2D_MSAA_ID
-init|=
-literal|44
-block|,
-comment|/// \brief OpenCL 2d image array MSAA type.
-name|PREDEF_TYPE_IMAGE2D_ARR_MSAA_ID
-init|=
-literal|45
-block|,
-comment|/// \brief OpenCL 2d image MSAA depth type.
-name|PREDEF_TYPE_IMAGE2D_MSAA_DEP_ID
-init|=
-literal|46
-block|,
-comment|/// \brief OpenCL 2d image array MSAA depth type.
-name|PREDEF_TYPE_IMAGE2D_ARR_MSAA_DEPTH_ID
-init|=
-literal|47
-block|,
-comment|/// \brief OpenCL 3d image type.
-name|PREDEF_TYPE_IMAGE3D_ID
-init|=
-literal|48
-block|,
 comment|/// \brief OpenCL event type.
 name|PREDEF_TYPE_EVENT_ID
 init|=
-literal|49
+literal|37
 block|,
 comment|/// \brief OpenCL clk event type.
 name|PREDEF_TYPE_CLK_EVENT_ID
 init|=
-literal|50
+literal|38
 block|,
 comment|/// \brief OpenCL sampler type.
 name|PREDEF_TYPE_SAMPLER_ID
 init|=
-literal|51
+literal|39
 block|,
 comment|/// \brief OpenCL queue type.
 name|PREDEF_TYPE_QUEUE_ID
 init|=
-literal|52
+literal|40
 block|,
 comment|/// \brief OpenCL ndrange type.
 name|PREDEF_TYPE_NDRANGE_ID
 init|=
-literal|53
+literal|41
 block|,
 comment|/// \brief OpenCL reserve_id type.
 name|PREDEF_TYPE_RESERVE_ID_ID
 init|=
-literal|54
+literal|42
 block|,
 comment|/// \brief The placeholder type for OpenMP array section.
 name|PREDEF_TYPE_OMP_ARRAY_SECTION
 init|=
-literal|55
+literal|43
+block|,
+comment|/// \brief The '__float128' type
+name|PREDEF_TYPE_FLOAT128_ID
+init|=
+literal|44
+block|,
+comment|/// \brief OpenCL image types with auto numeration
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+define|\
+value|PREDEF_TYPE_##Id##_ID,
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1622,7 +1624,7 @@ comment|///
 comment|/// These constants describe the type records that can occur within a
 comment|/// block identified by DECLTYPES_BLOCK_ID in the AST file. Each
 comment|/// constant describes a record for a specific type class in the
-comment|/// AST.
+comment|/// AST. Note that DeclCode values share this code space.
 enum|enum
 name|TypeCode
 block|{
@@ -1971,6 +1973,21 @@ comment|/// \brief The internal '__make_integer_seq' template.
 name|PREDEF_DECL_MAKE_INTEGER_SEQ_ID
 init|=
 literal|13
+block|,
+comment|/// \brief The internal '__NSConstantString' typedef.
+name|PREDEF_DECL_CF_CONSTANT_STRING_ID
+init|=
+literal|14
+block|,
+comment|/// \brief The internal '__NSConstantString' tag type.
+name|PREDEF_DECL_CF_CONSTANT_STRING_TAG_ID
+init|=
+literal|15
+block|,
+comment|/// \brief The internal '__type_pack_element' template.
+name|PREDEF_DECL_TYPE_PACK_ELEMENT_ID
+init|=
+literal|16
 block|,     }
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
@@ -1982,9 +1999,19 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|14
+literal|17
+decl_stmt|;
+comment|/// \brief Record of updates for a declaration that was modified after
+comment|/// being deserialized. This can occur within DECLTYPES_BLOCK_ID.
+specifier|const
+name|unsigned
+name|int
+name|DECL_UPDATES
+init|=
+literal|49
 decl_stmt|;
 comment|/// \brief Record code for a list of local redeclarations of a declaration.
+comment|/// This can occur within DECLTYPES_BLOCK_ID.
 specifier|const
 name|unsigned
 name|int
@@ -1995,9 +2022,9 @@ decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
 comment|/// These constants describe the declaration records that can occur within
-comment|/// a declarations block (identified by DECLS_BLOCK_ID). Each
+comment|/// a declarations block (identified by DECLTYPES_BLOCK_ID). Each
 comment|/// constant describes a record for a specific declaration class
-comment|/// in the AST.
+comment|/// in the AST. Note that TypeCode values share this code space.
 enum|enum
 name|DeclCode
 block|{
@@ -2112,6 +2139,9 @@ block|,
 comment|/// \brief A UsingShadowDecl record.
 name|DECL_USING_SHADOW
 block|,
+comment|/// \brief A ConstructorUsingShadowDecl record.
+name|DECL_CONSTRUCTOR_USING_SHADOW
+block|,
 comment|/// \brief A UsingDirecitveDecl record.
 name|DECL_USING_DIRECTIVE
 block|,
@@ -2132,6 +2162,9 @@ name|DECL_CXX_METHOD
 block|,
 comment|/// \brief A CXXConstructorDecl record.
 name|DECL_CXX_CONSTRUCTOR
+block|,
+comment|/// \brief A CXXConstructorDecl record for an inherited constructor.
+name|DECL_CXX_INHERITED_CONSTRUCTOR
 block|,
 comment|/// \brief A CXXDestructorDecl record.
 name|DECL_CXX_DESTRUCTOR
@@ -2216,6 +2249,18 @@ name|DECL_EMPTY
 block|,
 comment|/// \brief An ObjCTypeParamDecl record.
 name|DECL_OBJC_TYPE_PARAM
+block|,
+comment|/// \brief An OMPCapturedExprDecl record.
+name|DECL_OMP_CAPTUREDEXPR
+block|,
+comment|/// \brief A PragmaCommentDecl record.
+name|DECL_PRAGMA_COMMENT
+block|,
+comment|/// \brief A PragmaDetectMismatchDecl record.
+name|DECL_PRAGMA_DETECT_MISMATCH
+block|,
+comment|/// \brief An OMPDeclareReductionDecl record.
+name|DECL_OMP_DECLARE_REDUCTION
 block|,     }
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -2475,8 +2520,11 @@ block|,
 comment|/// \brief An ObjCAutoreleasePoolStmt record.
 name|STMT_OBJC_AUTORELEASE_POOL
 block|,
-comment|/// \brief A ObjCBoolLiteralExpr record.
+comment|/// \brief An ObjCBoolLiteralExpr record.
 name|EXPR_OBJC_BOOL_LITERAL
+block|,
+comment|/// \brief An ObjCAvailabilityCheckExpr record.
+name|EXPR_OBJC_AVAILABILITY_CHECK
 block|,
 comment|// C++
 comment|/// \brief A CXXCatchStmt record.
@@ -2496,6 +2544,9 @@ name|EXPR_CXX_MEMBER_CALL
 block|,
 comment|/// \brief A CXXConstructExpr record.
 name|EXPR_CXX_CONSTRUCT
+block|,
+comment|/// \brief A CXXInheritedCtorInitExpr record.
+name|EXPR_CXX_INHERITED_CTOR_INIT
 block|,
 comment|/// \brief A CXXTemporaryObjectExpr record.
 name|EXPR_CXX_TEMPORARY_OBJECT
@@ -2693,6 +2744,14 @@ name|STMT_OMP_TARGET_DIRECTIVE
 block|,
 name|STMT_OMP_TARGET_DATA_DIRECTIVE
 block|,
+name|STMT_OMP_TARGET_ENTER_DATA_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_EXIT_DATA_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_PARALLEL_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_PARALLEL_FOR_DIRECTIVE
+block|,
 name|STMT_OMP_TEAMS_DIRECTIVE
 block|,
 name|STMT_OMP_TASKGROUP_DIRECTIVE
@@ -2706,6 +2765,16 @@ block|,
 name|STMT_OMP_TASKLOOP_SIMD_DIRECTIVE
 block|,
 name|STMT_OMP_DISTRIBUTE_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_UPDATE_DIRECTIVE
+block|,
+name|STMT_OMP_DISTRIBUTE_PARALLEL_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_DISTRIBUTE_PARALLEL_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_DISTRIBUTE_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_PARALLEL_FOR_SIMD_DIRECTIVE
 block|,
 name|EXPR_OMP_ARRAY_SECTION
 block|,

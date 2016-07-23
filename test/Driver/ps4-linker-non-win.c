@@ -12,15 +12,15 @@ comment|// RUN: mkdir -p %T/Output
 end_comment
 
 begin_comment
-comment|// RUN: rm -f %T/Output/ps4-ld
+comment|// RUN: rm -f %T/Output/orbis-ld
 end_comment
 
 begin_comment
-comment|// RUN: touch %T/Output/ps4-ld
+comment|// RUN: touch %T/Output/orbis-ld
 end_comment
 
 begin_comment
-comment|// RUN: chmod +x %T/Output/ps4-ld
+comment|// RUN: chmod +x %T/Output/orbis-ld
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN:     -fuse-ld=ps4 2>&1 | FileCheck --check-prefix=CHECK-PS4-LINKE
 end_comment
 
 begin_comment
-comment|// CHECK-PS4-LINKER: Output/ps4-ld
+comment|// CHECK-PS4-LINKER: /orbis-ld
 end_comment
 
 end_unit

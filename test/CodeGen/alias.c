@@ -141,7 +141,7 @@ comment|// CHECKASM-DAG: __mod_usb_device_table = wacom_usb_ids
 end_comment
 
 begin_comment
-comment|// CHECKASM-DAG-NOT: .size __mod_usb_device_table
+comment|// CHECKASM-NOT: .size __mod_usb_device_table
 end_comment
 
 begin_decl_stmt
@@ -180,7 +180,7 @@ comment|// CHECKASM-DAG: g1 = g0
 end_comment
 
 begin_comment
-comment|// CHECKASM-DAG-NOT: .size g1
+comment|// CHECKASM-NOT: .size g1
 end_comment
 
 begin_decl_stmt
@@ -213,7 +213,7 @@ comment|// CHECKASM-DAG: __libc_errno = TL_WITH_ALIAS
 end_comment
 
 begin_comment
-comment|// CHECKASM-DAG-NOT: .size __libc_errno
+comment|// CHECKASM-NOT: .size __libc_errno
 end_comment
 
 begin_function

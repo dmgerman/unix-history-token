@@ -3574,5 +3574,109 @@ return|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(__ext_vector_type__(
+literal|3
+argument|))
+argument_list|)
+name|float
+name|float32x3_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|float32x3_t
+name|arr
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|HFAv3
+typedef|;
+end_typedef
+
+begin_function
+name|float32x3_t
+name|test_hva_v3
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define<3 x float> @test_hva_v3(i32 %n, ...)
+comment|// CHECK: [[THELIST:%.*]] = alloca i8*
+comment|// CHECK: [[CURLIST:%.*]] = load i8*, i8** [[THELIST]]
+comment|// HVA is not indirect, so occupies its full 16 bytes on the stack. but it
+comment|// must be properly aligned.
+comment|// CHECK: [[ALIGN0:%.*]] = ptrtoint i8* [[CURLIST]] to i64
+comment|// CHECK: [[ALIGN1:%.*]] = add i64 [[ALIGN0]], 15
+comment|// CHECK: [[ALIGN2:%.*]] = and i64 [[ALIGN1]], -16
+comment|// CHECK: [[ALIGNED_LIST:%.*]] = inttoptr i64 [[ALIGN2]] to i8*
+comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr inbounds i8, i8* [[ALIGNED_LIST]], i64 64
+comment|// CHECK: store i8* [[NEXTLIST]], i8** [[THELIST]]
+comment|// CHECK: bitcast i8* [[ALIGNED_LIST]] to %struct.HFAv3*
+name|__builtin_va_list
+name|l
+decl_stmt|;
+name|__builtin_va_start
+argument_list|(
+name|l
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|HFAv3
+name|r
+init|=
+name|__builtin_va_arg
+argument_list|(
+name|l
+argument_list|,
+name|HFAv3
+argument_list|)
+decl_stmt|;
+return|return
+name|r
+operator|.
+name|arr
+index|[
+literal|2
+index|]
+return|;
+block|}
+end_function
+
+begin_function
+name|float32x3_t
+name|test_hva_v3_call
+parameter_list|(
+name|HFAv3
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: define<3 x float> @test_hva_v3_call(%struct.HFAv3* %a)
+comment|// CHECK: call<3 x float> (i32, ...) @test_hva_v3(i32 1, [4 x<4 x float>] {{.*}})
+return|return
+name|test_hva_v3
+argument_list|(
+literal|1
+argument_list|,
+operator|*
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

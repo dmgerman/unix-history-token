@@ -4,7 +4,7 @@ comment|// RUN: %clang -c %s -Wa,--compress-debug-sections 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -c %s -Wa,--compress-debug-sections -Wa,--nocompress-debug-sections 2>&1 | FileCheck --check-prefix=NOWARN %s
+comment|// RUN: %clang -c %s -Wa,--compress-debug-sections -Wa,--nocompress-debug-sections 2>&1 | FileCheck --allow-empty --check-prefix=NOWARN %s
 end_comment
 
 begin_comment

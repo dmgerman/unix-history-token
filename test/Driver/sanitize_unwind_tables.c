@@ -32,6 +32,14 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=dataflow %s -### 2>&1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag %s -### 2>&1 |  FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set %s -### 2>&1 |  FileCheck %s
+end_comment
+
+begin_comment
 comment|// CHECK: -munwind-tables
 end_comment
 

@@ -115,6 +115,12 @@ directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -170,6 +176,76 @@ decl_stmt|;
 name|class
 name|CallEventManager
 decl_stmt|;
+comment|/// This class represents a description of a function call using the number of
+comment|/// arguments and the name of the function.
+name|class
+name|CallDescription
+block|{
+name|friend
+name|CallEvent
+decl_stmt|;
+name|mutable
+name|IdentifierInfo
+modifier|*
+name|II
+decl_stmt|;
+name|StringRef
+name|FuncName
+decl_stmt|;
+name|unsigned
+name|RequiredArgs
+decl_stmt|;
+name|public
+label|:
+specifier|const
+specifier|static
+name|unsigned
+name|NoArgRequirement
+init|=
+operator|~
+literal|0
+decl_stmt|;
+comment|/// \brief Constructs a CallDescription object.
+comment|///
+comment|/// @param FuncName The name of the function that will be matched.
+comment|///
+comment|/// @param RequiredArgs The number of arguments that is expected to match a
+comment|/// call. Omit this parameter to match every occurance of call with a given
+comment|/// name regardless the number of arguments.
+name|CallDescription
+argument_list|(
+argument|StringRef FuncName
+argument_list|,
+argument|unsigned RequiredArgs = NoArgRequirement
+argument_list|)
+block|:
+name|II
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|FuncName
+argument_list|(
+name|FuncName
+argument_list|)
+operator|,
+name|RequiredArgs
+argument_list|(
+argument|RequiredArgs
+argument_list|)
+block|{}
+comment|/// \brief Get the name of the function that this object matches.
+name|StringRef
+name|getFunctionName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FuncName
+return|;
+block|}
+block|}
+empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -507,7 +583,12 @@ argument_list|)
 operator|:
 name|State
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|state
+argument_list|)
 argument_list|)
 block|,
 name|LCtx
@@ -536,7 +617,12 @@ argument_list|)
 operator|:
 name|State
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|state
+argument_list|)
 argument_list|)
 block|,
 name|LCtx
@@ -866,6 +952,21 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Returns true if the CallEvent is a call to a function that matches
+comment|/// the CallDescription.
+comment|///
+comment|/// Note that this function is not intended to be used to match Obj-C method
+comment|/// calls.
+name|bool
+name|isCalled
+argument_list|(
+specifier|const
+name|CallDescription
+operator|&
+name|CD
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Returns a source range for the entire call, suitable for
 comment|/// outputting in diagnostics.
 name|virtual
@@ -3622,6 +3723,16 @@ literal|"Unknown message kind"
 argument_list|)
 expr_stmt|;
 block|}
+comment|// Returns the property accessed by this method, either explicitly via
+comment|// property syntax or implicitly via a getter or setter method. Returns
+comment|// nullptr if the call is not a prooperty access.
+specifier|const
+name|ObjCPropertyDecl
+operator|*
+name|getAccessedProperty
+argument_list|()
+specifier|const
+block|;
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()

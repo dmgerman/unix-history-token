@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple=x86_64-unknown-unknown -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-unknown-unknown -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s -check-prefix=GCC -check-prefix=CHECK
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple=x86_64-scei-ps4 -target-feature +3dnowa -emit-llvm -o - -Werror | FileCheck %s -check-prefix=PS4 -check-prefix=CHECK
 end_comment
 
 begin_comment
@@ -30,7 +34,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pavgusb
+comment|// PS4-LABEL: define i64 @test_m_pavgusb
+comment|// GCC-LABEL: define double @test_m_pavgusb
 comment|// CHECK: @llvm.x86.3dnow.pavgusb
 return|return
 name|_m_pavgusb
@@ -51,7 +56,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pf2id
+comment|// PS4-LABEL: define i64 @test_m_pf2id
+comment|// GCC-LABEL: define double @test_m_pf2id
 comment|// CHECK: @llvm.x86.3dnow.pf2id
 return|return
 name|_m_pf2id
@@ -73,7 +79,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfacc
+comment|// PS4-LABEL: define i64 @test_m_pfacc
+comment|// GCC-LABEL: define double @test_m_pfacc
 comment|// CHECK: @llvm.x86.3dnow.pfacc
 return|return
 name|_m_pfacc
@@ -97,7 +104,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfadd
+comment|// PS4-LABEL: define i64 @test_m_pfadd
+comment|// GCC-LABEL: define double @test_m_pfadd
 comment|// CHECK: @llvm.x86.3dnow.pfadd
 return|return
 name|_m_pfadd
@@ -121,7 +129,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfcmpeq
+comment|// PS4-LABEL: define i64 @test_m_pfcmpeq
+comment|// GCC-LABEL: define double @test_m_pfcmpeq
 comment|// CHECK: @llvm.x86.3dnow.pfcmpeq
 return|return
 name|_m_pfcmpeq
@@ -145,7 +154,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfcmpge
+comment|// PS4-LABEL: define i64 @test_m_pfcmpge
+comment|// GCC-LABEL: define double @test_m_pfcmpge
 comment|// CHECK: @llvm.x86.3dnow.pfcmpge
 return|return
 name|_m_pfcmpge
@@ -169,7 +179,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfcmpgt
+comment|// PS4-LABEL: define i64 @test_m_pfcmpgt
+comment|// GCC-LABEL: define double @test_m_pfcmpgt
 comment|// CHECK: @llvm.x86.3dnow.pfcmpgt
 return|return
 name|_m_pfcmpgt
@@ -193,7 +204,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfmax
+comment|// PS4-LABEL: define i64 @test_m_pfmax
+comment|// GCC-LABEL: define double @test_m_pfmax
 comment|// CHECK: @llvm.x86.3dnow.pfmax
 return|return
 name|_m_pfmax
@@ -217,7 +229,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfmin
+comment|// PS4-LABEL: define i64 @test_m_pfmin
+comment|// GCC-LABEL: define double @test_m_pfmin
 comment|// CHECK: @llvm.x86.3dnow.pfmin
 return|return
 name|_m_pfmin
@@ -241,7 +254,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfmul
+comment|// PS4-LABEL: define i64 @test_m_pfmul
+comment|// GCC-LABEL: define double @test_m_pfmul
 comment|// CHECK: @llvm.x86.3dnow.pfmul
 return|return
 name|_m_pfmul
@@ -262,7 +276,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfrcp
+comment|// PS4-LABEL: define i64 @test_m_pfrcp
+comment|// GCC-LABEL: define double @test_m_pfrcp
 comment|// CHECK: @llvm.x86.3dnow.pfrcp
 return|return
 name|_m_pfrcp
@@ -284,7 +299,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfrcpit1
+comment|// PS4-LABEL: define i64 @test_m_pfrcpit1
+comment|// GCC-LABEL: define double @test_m_pfrcpit1
 comment|// CHECK: @llvm.x86.3dnow.pfrcpit1
 return|return
 name|_m_pfrcpit1
@@ -308,7 +324,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfrcpit2
+comment|// PS4-LABEL: define i64 @test_m_pfrcpit2
+comment|// GCC-LABEL: define double @test_m_pfrcpit2
 comment|// CHECK: @llvm.x86.3dnow.pfrcpit2
 return|return
 name|_m_pfrcpit2
@@ -329,7 +346,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfrsqrt
+comment|// PS4-LABEL: define i64 @test_m_pfrsqrt
+comment|// GCC-LABEL: define double @test_m_pfrsqrt
 comment|// CHECK: @llvm.x86.3dnow.pfrsqrt
 return|return
 name|_m_pfrsqrt
@@ -351,7 +369,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfrsqrtit1
+comment|// PS4-LABEL: define i64 @test_m_pfrsqrtit1
+comment|// GCC-LABEL: define double @test_m_pfrsqrtit1
 comment|// CHECK: @llvm.x86.3dnow.pfrsqit1
 return|return
 name|_m_pfrsqrtit1
@@ -375,7 +394,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfsub
+comment|// PS4-LABEL: define i64 @test_m_pfsub
+comment|// GCC-LABEL: define double @test_m_pfsub
 comment|// CHECK: @llvm.x86.3dnow.pfsub
 return|return
 name|_m_pfsub
@@ -399,7 +419,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfsubr
+comment|// PS4-LABEL: define i64 @test_m_pfsubr
+comment|// GCC-LABEL: define double @test_m_pfsubr
 comment|// CHECK: @llvm.x86.3dnow.pfsubr
 return|return
 name|_m_pfsubr
@@ -420,7 +441,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pi2fd
+comment|// PS4-LABEL: define i64 @test_m_pi2fd
+comment|// GCC-LABEL: define double @test_m_pi2fd
 comment|// CHECK: @llvm.x86.3dnow.pi2fd
 return|return
 name|_m_pi2fd
@@ -442,7 +464,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pmulhrw
+comment|// PS4-LABEL: define i64 @test_m_pmulhrw
+comment|// GCC-LABEL: define double @test_m_pmulhrw
 comment|// CHECK: @llvm.x86.3dnow.pmulhrw
 return|return
 name|_m_pmulhrw
@@ -463,7 +486,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pf2iw
+comment|// PS4-LABEL: define i64 @test_m_pf2iw
+comment|// GCC-LABEL: define double @test_m_pf2iw
 comment|// CHECK: @llvm.x86.3dnowa.pf2iw
 return|return
 name|_m_pf2iw
@@ -485,7 +509,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfnacc
+comment|// PS4-LABEL: define i64 @test_m_pfnacc
+comment|// GCC-LABEL: define double @test_m_pfnacc
 comment|// CHECK: @llvm.x86.3dnowa.pfnacc
 return|return
 name|_m_pfnacc
@@ -509,7 +534,8 @@ name|__m64
 name|m2
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pfpnacc
+comment|// PS4-LABEL: define i64 @test_m_pfpnacc
+comment|// GCC-LABEL: define double @test_m_pfpnacc
 comment|// CHECK: @llvm.x86.3dnowa.pfpnacc
 return|return
 name|_m_pfpnacc
@@ -530,7 +556,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pi2fw
+comment|// PS4-LABEL: define i64 @test_m_pi2fw
+comment|// GCC-LABEL: define double @test_m_pi2fw
 comment|// CHECK: @llvm.x86.3dnowa.pi2fw
 return|return
 name|_m_pi2fw
@@ -549,7 +576,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pswapdsf
+comment|// PS4-LABEL: define i64 @test_m_pswapdsf
+comment|// GCC-LABEL: define double @test_m_pswapdsf
 comment|// CHECK: @llvm.x86.3dnowa.pswapd
 return|return
 name|_m_pswapdsf
@@ -568,7 +596,8 @@ name|__m64
 name|m
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define i64 @test_m_pswapdsi
+comment|// PS4-LABEL: define i64 @test_m_pswapdsi
+comment|// GCC-LABEL: define double @test_m_pswapdsi
 comment|// CHECK: @llvm.x86.3dnowa.pswapd
 return|return
 name|_m_pswapdsi

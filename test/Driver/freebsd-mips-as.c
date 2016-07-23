@@ -188,26 +188,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-unknown-freebsd -mabi=eabi -### \
-end_comment
-
-begin_comment
-comment|// RUN:   -no-integrated-as -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=MIPS-EABI %s
-end_comment
-
-begin_comment
-comment|// MIPS-EABI: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "eabi" "-EB"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target mips64-unknown-freebsd -mabi=n32 -### \
 end_comment
 

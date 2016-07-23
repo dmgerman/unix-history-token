@@ -264,6 +264,18 @@ comment|// WEBASSEMBLY64: target datalayout = "e-m:e-p:64:64-i64:64-n32:64-S128"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple lanai-unknown-unknown -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=LANAI
+end_comment
+
+begin_comment
+comment|// LANAI: target datalayout = "E-m:e-p:32:32-i64:64-a:0:32-n32-S64"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple powerpc-unknown -o - -emit-llvm %s | \
 end_comment
 
@@ -392,7 +404,7 @@ comment|// RUN: | FileCheck %s -check-prefix=R600SI
 end_comment
 
 begin_comment
-comment|// R600SI: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32-p24:64:64-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64"
+comment|// R600SI: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64"
 end_comment
 
 begin_comment
@@ -408,7 +420,7 @@ comment|// RUN: | FileCheck %s -check-prefix=R600SIDefault
 end_comment
 
 begin_comment
-comment|// R600SIDefault: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32-p24:64:64-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64"
+comment|// R600SIDefault: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64"
 end_comment
 
 begin_comment
@@ -420,7 +432,7 @@ comment|// RUN: FileCheck %s -check-prefix=AARCH64
 end_comment
 
 begin_comment
-comment|// AARCH64: target datalayout = "e-m:e-i64:64-i128:128-n32:64-S128"
+comment|// AARCH64: target datalayout = "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 end_comment
 
 begin_comment
@@ -480,7 +492,7 @@ comment|// RUN: FileCheck %s -check-prefix=HEXAGON
 end_comment
 
 begin_comment
-comment|// HEXAGON: target datalayout = "e-m:e-p:32:32:32-i64:64:64-i32:32:32-i16:16:16-i1:8:8-f64:64:64-f32:32:32-v64:64:64-v32:32:32-a:0-n16:32"
+comment|// HEXAGON: target datalayout = "e-m:e-p:32:32:32-a:0-n16:32-i64:64:64-i32:32:32-i16:16:16-i1:8:8-f32:32:32-f64:64:64-v32:32:32-v64:64:64-v512:512:512-v1024:1024:1024-v2048:2048:2048"
 end_comment
 
 begin_comment

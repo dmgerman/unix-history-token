@@ -37,7 +37,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning{{feature cannot be deprecated in OS X version 10.2 before it was introduced in version 10.4; attribute ignored}}
+comment|// expected-warning{{feature cannot be deprecated in macOS version 10.2 before it was introduced in version 10.4; attribute ignored}}
 end_comment
 
 begin_function_decl
@@ -275,20 +275,20 @@ argument_list|(
 literal|"Hello"
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{'ATSFontGetName' is deprecated: first deprecated in OS X 9.0 - use CTFontCopyFullName}}
+comment|// expected-warning {{'ATSFontGetName' is deprecated: first deprecated in macOS 9.0 - use CTFontCopyFullName}}
 name|ATSFontGetPostScriptName
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{'ATSFontGetPostScriptName' is unavailable: obsoleted in OS X 9.0 - use ATSFontGetFullPostScriptName}}
+comment|// expected-error {{'ATSFontGetPostScriptName' is unavailable: obsoleted in macOS 9.0 - use ATSFontGetFullPostScriptName}}
 if|#
 directive|if
 name|defined
 argument_list|(
 name|WARN_PARTIAL
 argument_list|)
-comment|// expected-warning@+2 {{is partial: introduced in OS X 10.8}} expected-note@+2 {{explicitly redeclare 'PartiallyAvailable' to silence this warning}}
+comment|// expected-warning@+2 {{is partial: introduced in macOS 10.8}} expected-note@+2 {{explicitly redeclare 'PartiallyAvailable' to silence this warning}}
 endif|#
 directive|endif
 name|PartiallyAvailable

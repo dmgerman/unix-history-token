@@ -291,6 +291,212 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Class that handles pre-initialization statement for some clauses, like
+comment|/// 'shedule', 'firstprivate' etc.
+name|class
+name|OMPClauseWithPreInit
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+decl_stmt|;
+comment|/// Pre-initialization statement for the clause.
+name|Stmt
+modifier|*
+name|PreInit
+decl_stmt|;
+name|protected
+label|:
+comment|/// Set pre-initialization statement for the clause.
+name|void
+name|setPreInitStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+block|{
+name|PreInit
+operator|=
+name|S
+expr_stmt|;
+block|}
+name|OMPClauseWithPreInit
+argument_list|(
+specifier|const
+name|OMPClause
+operator|*
+name|This
+argument_list|)
+operator|:
+name|PreInit
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|get
+argument_list|(
+name|This
+argument_list|)
+operator|&&
+literal|"get is not tuned for pre-init."
+argument_list|)
+block|;   }
+name|public
+operator|:
+comment|/// Get pre-initialization statement for the clause.
+specifier|const
+name|Stmt
+operator|*
+name|getPreInitStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreInit
+return|;
+block|}
+comment|/// Get pre-initialization statement for the clause.
+name|Stmt
+modifier|*
+name|getPreInitStmt
+parameter_list|()
+block|{
+return|return
+name|PreInit
+return|;
+block|}
+specifier|static
+name|OMPClauseWithPreInit
+modifier|*
+name|get
+parameter_list|(
+name|OMPClause
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|const
+name|OMPClauseWithPreInit
+modifier|*
+name|get
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// Class that handles post-update expression for some clauses, like
+comment|/// 'lastprivate', 'reduction' etc.
+name|class
+name|OMPClauseWithPostUpdate
+range|:
+name|public
+name|OMPClauseWithPreInit
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// Post-update expression for the clause.
+name|Expr
+operator|*
+name|PostUpdate
+block|;
+name|protected
+operator|:
+comment|/// Set pre-initialization statement for the clause.
+name|void
+name|setPostUpdateExpr
+argument_list|(
+argument|Expr *S
+argument_list|)
+block|{
+name|PostUpdate
+operator|=
+name|S
+block|; }
+name|OMPClauseWithPostUpdate
+argument_list|(
+specifier|const
+name|OMPClause
+operator|*
+name|This
+argument_list|)
+operator|:
+name|OMPClauseWithPreInit
+argument_list|(
+name|This
+argument_list|)
+block|,
+name|PostUpdate
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|get
+argument_list|(
+name|This
+argument_list|)
+operator|&&
+literal|"get is not tuned for post-update."
+argument_list|)
+block|;   }
+name|public
+operator|:
+comment|/// Get post-update expression for the clause.
+specifier|const
+name|Expr
+operator|*
+name|getPostUpdateExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PostUpdate
+return|;
+block|}
+comment|/// Get post-update expression for the clause.
+name|Expr
+operator|*
+name|getPostUpdateExpr
+argument_list|()
+block|{
+return|return
+name|PostUpdate
+return|;
+block|}
+specifier|static
+name|OMPClauseWithPostUpdate
+operator|*
+name|get
+argument_list|(
+name|OMPClause
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|OMPClauseWithPostUpdate
+operator|*
+name|get
+argument_list|(
+specifier|const
+name|OMPClause
+operator|*
+name|C
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// \brief This represents clauses with the list of variables like 'private',
 comment|/// 'firstprivate', 'copyin', 'shared', or 'reduction' clauses in the
 comment|/// '#pragma omp ...' directives.
@@ -2273,6 +2479,9 @@ name|OMPScheduleClause
 operator|:
 name|public
 name|OMPClause
+block|,
+name|public
+name|OMPClauseWithPreInit
 block|{
 name|friend
 name|class
@@ -2317,23 +2526,10 @@ comment|/// \brief Location of ',' (if any).
 name|SourceLocation
 name|CommaLoc
 block|;
-comment|/// \brief Chunk size and a reference to pseudo variable for combined
-comment|/// directives.
-block|enum
-block|{
-name|CHUNK_SIZE
-block|,
-name|HELPER_CHUNK_SIZE
-block|,
-name|NUM_EXPRS
-block|}
-block|;
-name|Stmt
+comment|/// \brief Chunk size.
+name|Expr
 operator|*
-name|ChunkSizes
-index|[
-name|NUM_EXPRS
-index|]
+name|ChunkSize
 block|;
 comment|/// \brief Set schedule kind.
 comment|///
@@ -2512,27 +2708,7 @@ argument_list|(
 argument|Expr *E
 argument_list|)
 block|{
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
-operator|=
-name|E
-block|; }
-comment|/// \brief Set helper chunk size.
-comment|///
-comment|/// \param E Helper chunk size.
-comment|///
-name|void
-name|setHelperChunkSize
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|ChunkSizes
-index|[
-name|HELPER_CHUNK_SIZE
-index|]
+name|ChunkSize
 operator|=
 name|E
 block|; }
@@ -2570,7 +2746,7 @@ argument|OpenMPScheduleClauseKind Kind
 argument_list|,
 argument|Expr *ChunkSize
 argument_list|,
-argument|Expr *HelperChunkSize
+argument|Stmt *HelperChunkSize
 argument_list|,
 argument|OpenMPScheduleClauseModifier M1
 argument_list|,
@@ -2590,6 +2766,11 @@ argument_list|,
 name|EndLoc
 argument_list|)
 block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|LParenLoc
 argument_list|(
 name|LParenLoc
@@ -2607,22 +2788,18 @@ argument_list|)
 block|,
 name|CommaLoc
 argument_list|(
-argument|CommaLoc
+name|CommaLoc
+argument_list|)
+block|,
+name|ChunkSize
+argument_list|(
+argument|ChunkSize
 argument_list|)
 block|{
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
-operator|=
-name|ChunkSize
-block|;
-name|ChunkSizes
-index|[
-name|HELPER_CHUNK_SIZE
-index|]
-operator|=
+name|setPreInitStmt
+argument_list|(
 name|HelperChunkSize
+argument_list|)
 block|;
 name|Modifiers
 index|[
@@ -2669,25 +2846,21 @@ name|SourceLocation
 argument_list|()
 argument_list|)
 block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|Kind
 argument_list|(
-argument|OMPC_SCHEDULE_unknown
+name|OMPC_SCHEDULE_unknown
+argument_list|)
+block|,
+name|ChunkSize
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
-operator|=
-name|nullptr
-block|;
-name|ChunkSizes
-index|[
-name|HELPER_CHUNK_SIZE
-index|]
-operator|=
-name|nullptr
-block|;
 name|Modifiers
 index|[
 name|FIRST
@@ -2807,20 +2980,12 @@ name|getChunkSize
 argument_list|()
 block|{
 return|return
-name|dyn_cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
-operator|)
+name|ChunkSize
 return|;
 block|}
 comment|/// \brief Get chunk size.
 comment|///
+specifier|const
 name|Expr
 operator|*
 name|getChunkSize
@@ -2828,57 +2993,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|dyn_cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
-operator|)
-return|;
-block|}
-comment|/// \brief Get helper chunk size.
-comment|///
-name|Expr
-operator|*
-name|getHelperChunkSize
-argument_list|()
-block|{
-return|return
-name|dyn_cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|ChunkSizes
-index|[
-name|HELPER_CHUNK_SIZE
-index|]
-operator|)
-return|;
-block|}
-comment|/// \brief Get helper chunk size.
-comment|///
-name|Expr
-operator|*
-name|getHelperChunkSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|dyn_cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|ChunkSizes
-index|[
-name|HELPER_CHUNK_SIZE
-index|]
-operator|)
+name|ChunkSize
 return|;
 block|}
 specifier|static
@@ -2904,17 +3019,27 @@ block|{
 return|return
 name|child_range
 argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
 operator|&
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
+name|ChunkSize
+operator|)
 argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
 operator|&
-name|ChunkSizes
-index|[
-name|CHUNK_SIZE
-index|]
+name|ChunkSize
+operator|)
 operator|+
 literal|1
 argument_list|)
@@ -4126,6 +4251,9 @@ operator|<
 name|OMPFirstprivateClause
 operator|>
 block|,
+name|public
+name|OMPClauseWithPreInit
+block|,
 name|private
 name|llvm
 operator|::
@@ -4180,6 +4308,11 @@ name|EndLoc
 expr|,
 name|N
 operator|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+argument|this
+argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
 comment|///
@@ -4209,6 +4342,11 @@ argument_list|()
 expr|,
 name|N
 operator|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+argument|this
+argument_list|)
 block|{}
 comment|/// \brief Sets the list of references to private copies with initializers for
 comment|/// new private variables.
@@ -4353,6 +4491,8 @@ comment|/// \param PrivateVL List of references to private copies with initializ
 comment|/// \param InitVL List of references to auto generated variables used for
 comment|/// initialization of a single array element. Used if firstprivate variable is
 comment|/// of array type.
+comment|/// \param PreInit Statement that must be executed before entering the OpenMP
+comment|/// region with this clause.
 comment|///
 specifier|static
 name|OMPFirstprivateClause
@@ -4372,6 +4512,8 @@ argument_list|,
 argument|ArrayRef<Expr *> PrivateVL
 argument_list|,
 argument|ArrayRef<Expr *> InitVL
+argument_list|,
+argument|Stmt *PreInit
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -4620,6 +4762,9 @@ operator|<
 name|OMPLastprivateClause
 operator|>
 block|,
+name|public
+name|OMPClauseWithPostUpdate
+block|,
 name|private
 name|llvm
 operator|::
@@ -4691,6 +4836,11 @@ name|EndLoc
 expr|,
 name|N
 operator|)
+block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+argument|this
+argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
 comment|///
@@ -4720,6 +4870,11 @@ argument_list|()
 expr|,
 name|N
 operator|)
+block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+argument|this
+argument_list|)
 block|{}
 comment|/// \brief Get the list of helper expressions for initialization of private
 comment|/// copies for lastprivate variables.
@@ -4994,7 +5149,10 @@ comment|/// DstExprs = SrcExprs;
 comment|/// \endcode
 comment|/// Required for proper codegen of final assignment performed by the
 comment|/// lastprivate clause.
-comment|///
+comment|/// \param PreInit Statement that must be executed before entering the OpenMP
+comment|/// region with this clause.
+comment|/// \param PostUpdate Expression that must be executed after exit from the
+comment|/// OpenMP region with this clause.
 comment|///
 specifier|static
 name|OMPLastprivateClause
@@ -5016,6 +5174,10 @@ argument_list|,
 argument|ArrayRef<Expr *> DstExprs
 argument_list|,
 argument|ArrayRef<Expr *> AssignmentOps
+argument_list|,
+argument|Stmt *PreInit
+argument_list|,
+argument|Expr *PostUpdate
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -5513,6 +5675,9 @@ operator|<
 name|OMPReductionClause
 operator|>
 block|,
+name|public
+name|OMPClauseWithPostUpdate
+block|,
 name|private
 name|llvm
 operator|::
@@ -5589,6 +5754,11 @@ expr|,
 name|N
 operator|)
 block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|ColonLoc
 argument_list|(
 name|ColonLoc
@@ -5632,6 +5802,11 @@ argument_list|()
 expr|,
 name|N
 operator|)
+block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
 block|,
 name|ColonLoc
 argument_list|()
@@ -5970,6 +6145,10 @@ comment|///<CutomReduction>(LHSExpr, RHSExpr);
 comment|/// \endcode
 comment|/// Required for proper codegen of final reduction operation performed by the
 comment|/// reduction clause.
+comment|/// \param PreInit Statement that must be executed before entering the OpenMP
+comment|/// region with this clause.
+comment|/// \param PostUpdate Expression that must be executed after exit from the
+comment|/// OpenMP region with this clause.
 comment|///
 specifier|static
 name|OMPReductionClause
@@ -5999,6 +6178,10 @@ argument_list|,
 argument|ArrayRef<Expr *> RHSExprs
 argument_list|,
 argument|ArrayRef<Expr *> ReductionOps
+argument_list|,
+argument|Stmt *PreInit
+argument_list|,
+argument|Expr *PostUpdate
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -6327,6 +6510,9 @@ operator|<
 name|OMPLinearClause
 operator|>
 block|,
+name|public
+name|OMPClauseWithPostUpdate
+block|,
 name|private
 name|llvm
 operator|::
@@ -6439,6 +6625,11 @@ expr|,
 name|NumVars
 operator|)
 block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
+block|,
 name|Modifier
 argument_list|(
 name|Modifier
@@ -6482,6 +6673,11 @@ argument_list|()
 expr|,
 name|NumVars
 operator|)
+block|,
+name|OMPClauseWithPostUpdate
+argument_list|(
+name|this
+argument_list|)
 block|,
 name|Modifier
 argument_list|(
@@ -6754,6 +6950,10 @@ comment|/// \param PL List of private copies of original variables.
 comment|/// \param IL List of initial values for the variables.
 comment|/// \param Step Linear step.
 comment|/// \param CalcStep Calculation of the linear step.
+comment|/// \param PreInit Statement that must be executed before entering the OpenMP
+comment|/// region with this clause.
+comment|/// \param PostUpdate Expression that must be executed after exit from the
+comment|/// OpenMP region with this clause.
 specifier|static
 name|OMPLinearClause
 operator|*
@@ -6782,6 +6982,10 @@ argument_list|,
 argument|Expr *Step
 argument_list|,
 argument|Expr *CalcStep
+argument_list|,
+argument|Stmt *PreInit
+argument_list|,
+argument|Expr *PostUpdate
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
@@ -9461,7 +9665,6 @@ comment|/// \param DepKind Dependency type.
 comment|/// \param DepLoc Location of the dependency type.
 comment|/// \param ColonLoc Colon location.
 comment|/// \param VL List of references to the variables.
-comment|///
 specifier|static
 name|OMPDependClause
 operator|*
@@ -9533,6 +9736,30 @@ return|return
 name|ColonLoc
 return|;
 block|}
+comment|/// Set the loop counter value for the depend clauses with 'sink|source' kind
+comment|/// of dependency. Required for codegen.
+name|void
+name|setCounterValue
+parameter_list|(
+name|Expr
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// Get the loop counter value.
+name|Expr
+modifier|*
+name|getCounterValue
+parameter_list|()
+function_decl|;
+comment|/// Get the loop counter value.
+specifier|const
+name|Expr
+operator|*
+name|getCounterValue
+argument_list|()
+specifier|const
+expr_stmt|;
 name|child_range
 name|children
 parameter_list|()
@@ -9981,123 +10208,2502 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents clause 'map' in the '#pragma omp ...'
-comment|/// directives.
-comment|///
-comment|/// \code
-comment|/// #pragma omp target map(a,b)
-comment|/// \endcode
-comment|/// In this example directive '#pragma omp target' has clause 'map'
-comment|/// with the variables 'a' and 'b'.
-comment|///
+comment|/// \brief Struct that defines common infrastructure to handle mappable
+comment|/// expressions used in OpenMP clauses.
 name|class
-name|OMPMapClause
-name|final
+name|OMPClauseMappableExprCommon
+block|{
+name|public
+operator|:
+comment|// \brief Class that represents a component of a mappable expression. E.g.
+comment|// for an expression S.a, the first component is a declaration reference
+comment|// expression associated with 'S' and the second is a member expression
+comment|// associated with the field declaration 'a'. If the expression is an array
+comment|// subscript it may not have any associated declaration. In that case the
+comment|// associated declaration is set to nullptr.
+name|class
+name|MappableComponent
+block|{
+comment|// \brief Expression associated with the component.
+name|Expr
+operator|*
+name|AssociatedExpression
+operator|=
+name|nullptr
+block|;
+comment|// \brief Declaration associated with the declaration. If the component does
+comment|// not have a declaration (e.g. array subscripts or section), this is set to
+comment|// nullptr.
+name|ValueDecl
+operator|*
+name|AssociatedDeclaration
+operator|=
+name|nullptr
+block|;
+name|public
+operator|:
+name|explicit
+name|MappableComponent
+argument_list|()
+block|{}
+name|explicit
+name|MappableComponent
+argument_list|(
+name|Expr
+operator|*
+name|AssociatedExpression
+argument_list|,
+name|ValueDecl
+operator|*
+name|AssociatedDeclaration
+argument_list|)
+operator|:
+name|AssociatedExpression
+argument_list|(
+name|AssociatedExpression
+argument_list|)
+block|,
+name|AssociatedDeclaration
+argument_list|(
+argument|AssociatedDeclaration                   ? cast<ValueDecl>(AssociatedDeclaration->getCanonicalDecl())                   : nullptr
+argument_list|)
+block|{}
+name|Expr
+operator|*
+name|getAssociatedExpression
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AssociatedExpression
+return|;
+block|}
+name|ValueDecl
+operator|*
+name|getAssociatedDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AssociatedDeclaration
+return|;
+block|}
+expr|}
+block|;
+comment|// \brief List of components of an expression. This first one is the whole
+comment|// expression and the last one is the base expression.
+typedef|typedef
+name|SmallVector
+operator|<
+name|MappableComponent
+operator|,
+literal|8
+operator|>
+name|MappableExprComponentList
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+name|MappableComponent
+operator|>
+name|MappableExprComponentListRef
+expr_stmt|;
+comment|// \brief List of all component lists associated to the same base declaration.
+comment|// E.g. if both 'S.a' and 'S.b' are a mappable expressions, each will have
+comment|// their component list but the same base declaration 'S'.
+typedef|typedef
+name|SmallVector
+operator|<
+name|MappableExprComponentList
+operator|,
+literal|8
+operator|>
+name|MappableExprComponentLists
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+name|MappableExprComponentList
+operator|>
+name|MappableExprComponentListsRef
+expr_stmt|;
+name|protected
+operator|:
+comment|// \brief Return the total number of elements in a list of component lists.
+specifier|static
+name|unsigned
+name|getComponentsTotalNumber
+argument_list|(
+argument|MappableExprComponentListsRef ComponentLists
+argument_list|)
+block|;
+comment|// \brief Return the total number of elements in a list of declarations. All
+comment|// declarations are expected to be canonical.
+specifier|static
+name|unsigned
+name|getUniqueDeclarationsTotalNumber
+argument_list|(
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|Declarations
+argument_list|)
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief This represents clauses with a list of expressions that are mappable.
+end_comment
+
+begin_comment
+comment|/// Examples of these clauses are 'map' in
+end_comment
+
+begin_comment
+comment|/// '#pragma omp target [enter|exit] [data]...' directives, and  'to' and 'from
+end_comment
+
+begin_comment
+comment|/// in '#pragma omp target update...' directives.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|OMPMappableExprListClause
 operator|:
 name|public
 name|OMPVarListClause
 operator|<
-name|OMPMapClause
+name|T
 operator|>
-block|,
-name|private
-name|llvm
-operator|::
-name|TrailingObjects
-operator|<
-name|OMPMapClause
-block|,
-name|Expr
-operator|*
-operator|>
+operator|,
+name|public
+name|OMPClauseMappableExprCommon
 block|{
-name|friend
-name|TrailingObjects
-block|;
-name|friend
-name|OMPVarListClause
-block|;
 name|friend
 name|class
 name|OMPClauseReader
 block|;
+comment|/// \brief Number of unique declarations in this clause.
+name|unsigned
+name|NumUniqueDeclarations
+block|;
+comment|/// \brief Number of component lists in this clause.
+name|unsigned
+name|NumComponentLists
+block|;
+comment|/// \brief Total number of components in this clause.
+name|unsigned
+name|NumComponents
+block|;
+name|protected
+operator|:
+comment|/// \brief Get the unique declarations that are in the trailing objects of the
+comment|/// class.
+name|MutableArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|getUniqueDeclsRef
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumUniqueDeclarations
+operator|)
+return|;
+block|}
+comment|/// \brief Get the unique declarations that are in the trailing objects of the
+comment|/// class.
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|getUniqueDeclsRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumUniqueDeclarations
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the unique declarations that are in the trailing objects of the
+end_comment
+
+begin_comment
+comment|/// class.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setUniqueDecls
+argument_list|(
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|UDs
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|UDs
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumUniqueDeclarations
+operator|&&
+literal|"Unexpected amount of unique declarations."
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|UDs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|UDs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getUniqueDeclsRef
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Get the number of lists per declaration that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class.
+end_comment
+
+begin_expr_stmt
+name|MutableArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getDeclNumListsRef
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumUniqueDeclarations
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the number of lists per declaration that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getDeclNumListsRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumUniqueDeclarations
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the number of lists per declaration that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setDeclNumLists
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|DNLs
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|DNLs
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumUniqueDeclarations
+operator|&&
+literal|"Unexpected amount of list numbers."
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|DNLs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|DNLs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getDeclNumListsRef
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Get the cumulative component lists sizes that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class. They are appended after the number of lists.
+end_comment
+
+begin_expr_stmt
+name|MutableArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getComponentListSizesRef
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+operator|+
+name|NumUniqueDeclarations
+operator|,
+name|NumComponentLists
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the cumulative component lists sizes that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class. They are appended after the number of lists.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|getComponentListSizesRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+operator|+
+name|NumUniqueDeclarations
+operator|,
+name|NumComponentLists
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the cumulative component lists sizes that are in the trailing
+end_comment
+
+begin_comment
+comment|/// objects of the class.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setComponentListSizes
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|CLSs
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|CLSs
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumComponentLists
+operator|&&
+literal|"Unexpected amount of component lists."
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|CLSs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|CLSs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getComponentListSizesRef
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Get the components that are in the trailing objects of the class.
+end_comment
+
+begin_expr_stmt
+name|MutableArrayRef
+operator|<
+name|MappableComponent
+operator|>
+name|getComponentsRef
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|MappableComponent
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|MappableComponent
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumComponents
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the components that are in the trailing objects of the class.
+end_comment
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|MappableComponent
+operator|>
+name|getComponentsRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|MappableComponent
+operator|>
+operator|(
+name|static_cast
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|template
+name|getTrailingObjects
+operator|<
+name|MappableComponent
+operator|>
+operator|(
+operator|)
+operator|,
+name|NumComponents
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the components that are in the trailing objects of the class.
+end_comment
+
+begin_comment
+comment|/// This requires the list sizes so that it can also fill the original
+end_comment
+
+begin_comment
+comment|/// expressions, which are the first component of each list.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setComponents
+argument_list|(
+name|ArrayRef
+operator|<
+name|MappableComponent
+operator|>
+name|Components
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|CLSs
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Components
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumComponents
+operator|&&
+literal|"Unexpected amount of component lists."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|CLSs
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumComponentLists
+operator|&&
+literal|"Unexpected amount of list sizes."
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|Components
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Components
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getComponentsRef
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Fill the clause information from the list of declarations and
+end_comment
+
+begin_comment
+comment|/// associated component lists.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setClauseInfo
+argument_list|(
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|Declarations
+argument_list|,
+name|MappableExprComponentListsRef
+name|ComponentLists
+argument_list|)
+block|{
+comment|// Perform some checks to make sure the data sizes are consistent with the
+comment|// information available when the clause was created.
+name|assert
+argument_list|(
+name|getUniqueDeclarationsTotalNumber
+argument_list|(
+name|Declarations
+argument_list|)
+operator|==
+name|NumUniqueDeclarations
+operator|&&
+literal|"Unexpected number of mappable expression info entries!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|getComponentsTotalNumber
+argument_list|(
+name|ComponentLists
+argument_list|)
+operator|==
+name|NumComponents
+operator|&&
+literal|"Unexpected total number of components!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Declarations
+operator|.
+name|size
+argument_list|()
+operator|==
+name|ComponentLists
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Declaration and component lists size is not consistent!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Declarations
+operator|.
+name|size
+argument_list|()
+operator|==
+name|NumComponentLists
+operator|&&
+literal|"Unexpected declaration and component lists size!"
+argument_list|)
+expr_stmt|;
+comment|// Organize the components by declaration and retrieve the original
+comment|// expression. Original expressions are always the first component of the
+comment|// mappable component list.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|ValueDecl
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|MappableExprComponentListRef
+operator|,
+literal|8
+operator|>>
+name|ComponentListMap
+expr_stmt|;
+block|{
+name|auto
+name|CI
+init|=
+name|ComponentLists
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+for|for
+control|(
+name|auto
+name|DI
+init|=
+name|Declarations
+operator|.
+name|begin
+argument_list|()
+init|,
+name|DE
+init|=
+name|Declarations
+operator|.
+name|end
+argument_list|()
+init|;
+name|DI
+operator|!=
+name|DE
+condition|;
+operator|++
+name|DI
+operator|,
+operator|++
+name|CI
+control|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CI
+operator|->
+name|empty
+argument_list|()
+operator|&&
+literal|"Invalid component list!"
+argument_list|)
+expr_stmt|;
+name|ComponentListMap
+index|[
+operator|*
+name|DI
+index|]
+operator|.
+name|push_back
+argument_list|(
+operator|*
+name|CI
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|// Iterators of the target storage.
+name|auto
+name|UniqueDeclarations
+init|=
+name|getUniqueDeclsRef
+argument_list|()
+decl_stmt|;
+name|auto
+name|UDI
+init|=
+name|UniqueDeclarations
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+name|auto
+name|DeclNumLists
+init|=
+name|getDeclNumListsRef
+argument_list|()
+decl_stmt|;
+name|auto
+name|DNLI
+init|=
+name|DeclNumLists
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+name|auto
+name|ComponentListSizes
+init|=
+name|getComponentListSizesRef
+argument_list|()
+decl_stmt|;
+name|auto
+name|CLSI
+init|=
+name|ComponentListSizes
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+name|auto
+name|Components
+init|=
+name|getComponentsRef
+argument_list|()
+decl_stmt|;
+name|auto
+name|CI
+init|=
+name|Components
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+comment|// Variable to compute the accumulation of the number of components.
+name|unsigned
+name|PrevSize
+init|=
+literal|0u
+decl_stmt|;
+comment|// Scan all the declarations and associated component lists.
+for|for
+control|(
+name|auto
+operator|&
+name|M
+operator|:
+name|ComponentListMap
+control|)
+block|{
+comment|// The declaration.
+name|auto
+operator|*
+name|D
+operator|=
+name|M
+operator|.
+name|first
+expr_stmt|;
+comment|// The component lists.
+name|auto
+name|CL
+init|=
+name|M
+operator|.
+name|second
+decl_stmt|;
+comment|// Initialize the entry.
+operator|*
+name|UDI
+operator|=
+name|D
+expr_stmt|;
+operator|++
+name|UDI
+expr_stmt|;
+operator|*
+name|DNLI
+operator|=
+name|CL
+operator|.
+name|size
+argument_list|()
+expr_stmt|;
+operator|++
+name|DNLI
+expr_stmt|;
+comment|// Obtain the cumulative sizes and concatenate all the components in the
+comment|// reserved storage.
+for|for
+control|(
+name|auto
+name|C
+range|:
+name|CL
+control|)
+block|{
+comment|// Accumulate with the previous size.
+name|PrevSize
+operator|+=
+name|C
+operator|.
+name|size
+argument_list|()
+expr_stmt|;
+comment|// Save the size.
+operator|*
+name|CLSI
+operator|=
+name|PrevSize
+expr_stmt|;
+operator|++
+name|CLSI
+expr_stmt|;
+comment|// Append components after the current components iterator.
+name|CI
+operator|=
+name|std
+operator|::
+name|copy
+argument_list|(
+name|C
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|C
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|CI
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Build a clause for \a NumUniqueDeclarations declarations, \a
+end_comment
+
+begin_comment
+comment|/// NumComponentLists total component lists, and \a NumComponents total
+end_comment
+
+begin_comment
+comment|/// components.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param K Kind of the clause.
+end_comment
+
+begin_comment
+comment|/// \param StartLoc Starting location of the clause (the clause keyword).
+end_comment
+
+begin_comment
+comment|/// \param LParenLoc Location of '('.
+end_comment
+
+begin_comment
+comment|/// \param EndLoc Ending location of the clause.
+end_comment
+
+begin_comment
+comment|/// \param NumVars Number of expressions listed in the clause.
+end_comment
+
+begin_comment
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+end_comment
+
+begin_comment
+comment|/// clause.
+end_comment
+
+begin_comment
+comment|/// \param NumComponentLists Number of component lists in this clause - one
+end_comment
+
+begin_comment
+comment|/// list for each expression in the clause.
+end_comment
+
+begin_comment
+comment|/// \param NumComponents Total number of expression components in the clause.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_macro
+name|OMPMappableExprListClause
+argument_list|(
+argument|OpenMPClauseKind K
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+end_macro
+
+begin_expr_stmt
+unit|:
+name|OMPVarListClause
+operator|<
+name|T
+operator|>
+operator|(
+name|K
+operator|,
+name|StartLoc
+operator|,
+name|LParenLoc
+operator|,
+name|EndLoc
+operator|,
+name|NumVars
+operator|)
+operator|,
+name|NumUniqueDeclarations
+argument_list|(
+name|NumUniqueDeclarations
+argument_list|)
+operator|,
+name|NumComponentLists
+argument_list|(
+name|NumComponentLists
+argument_list|)
+operator|,
+name|NumComponents
+argument_list|(
+argument|NumComponents
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Return the number of unique base declarations in this clause.
+name|unsigned
+name|getUniqueDeclarationsNum
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumUniqueDeclarations
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return the number of lists derived from the clause expressions.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getTotalComponentListNum
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumComponentLists
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return the total number of components in all lists derived from the
+end_comment
+
+begin_comment
+comment|/// clause.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getTotalComponentsNum
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumComponents
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Iterator that browse the components by lists. It also allows
+end_comment
+
+begin_comment
+comment|/// browsing components of a single declaration.
+end_comment
+
+begin_decl_stmt
+name|class
+name|const_component_lists_iterator
+range|:
+name|public
+name|llvm
+operator|::
+name|iterator_adaptor_base
+operator|<
+name|const_component_lists_iterator
+decl_stmt|,
+name|MappableExprComponentListRef
+decl|::
+name|const_iterator
+decl_stmt|,
+name|std
+decl|::
+name|forward_iterator_tag
+decl_stmt|,
+name|MappableComponent
+decl_stmt|,
+name|ptrdiff_t
+decl_stmt|,
+name|MappableComponent
+decl_stmt|,
+name|MappableComponent
+decl|>
+block|{
+comment|// The declaration the iterator currently refers to.
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|::
+name|iterator
+name|DeclCur
+expr_stmt|;
+comment|// The list number associated with the current declaration.
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|iterator
+name|NumListsCur
+expr_stmt|;
+comment|// Remaining lists for the current declaration.
+name|unsigned
+name|RemainingLists
+decl_stmt|;
+comment|// The cumulative size of the previous list, or zero if there is no previous
+comment|// list.
+name|unsigned
+name|PrevListSize
+decl_stmt|;
+comment|// The cumulative sizes of the current list - it will delimit the remaining
+comment|// range of interest.
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|const_iterator
+name|ListSizeCur
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|const_iterator
+name|ListSizeEnd
+expr_stmt|;
+comment|// Iterator to the end of the components storage.
+name|MappableExprComponentListRef
+operator|::
+name|const_iterator
+name|End
+expr_stmt|;
+name|public
+label|:
+comment|/// \brief Construct an iterator that scans all lists.
+name|explicit
+name|const_component_lists_iterator
+argument_list|(
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|UniqueDecls
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|DeclsListNum
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|CumulativeListSizes
+argument_list|,
+name|MappableExprComponentListRef
+name|Components
+argument_list|)
+range|:
+name|const_component_lists_iterator
+operator|::
+name|iterator_adaptor_base
+argument_list|(
+name|Components
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+decl_stmt|,
+name|DeclCur
+argument_list|(
+name|UniqueDecls
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+decl_stmt|,
+name|NumListsCur
+argument_list|(
+name|DeclsListNum
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+decl_stmt|,
+name|RemainingLists
+argument_list|(
+literal|0u
+argument_list|)
+decl_stmt|,
+name|PrevListSize
+argument_list|(
+literal|0u
+argument_list|)
+decl_stmt|,
+name|ListSizeCur
+argument_list|(
+name|CumulativeListSizes
+operator|.
+name|begin
+argument_list|()
+argument_list|)
+decl_stmt|,
+name|ListSizeEnd
+argument_list|(
+name|CumulativeListSizes
+operator|.
+name|end
+argument_list|()
+argument_list|)
+decl_stmt|,
+name|End
+argument_list|(
+name|Components
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|UniqueDecls
+operator|.
+name|size
+argument_list|()
+operator|==
+name|DeclsListNum
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Inconsistent number of declarations and list sizes!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DeclsListNum
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|RemainingLists
+operator|=
+operator|*
+name|NumListsCur
+expr_stmt|;
+block|}
+comment|/// \brief Construct an iterator that scan lists for a given declaration \a
+comment|/// Declaration.
+name|explicit
+name|const_component_lists_iterator
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|Declaration
+argument_list|,
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+name|UniqueDecls
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|DeclsListNum
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|CumulativeListSizes
+argument_list|,
+name|MappableExprComponentListRef
+name|Components
+argument_list|)
+range|:
+name|const_component_lists_iterator
+argument_list|(
+argument|UniqueDecls
+argument_list|,
+argument|DeclsListNum
+argument_list|,
+argument|CumulativeListSizes
+argument_list|,
+argument|Components
+argument_list|)
+block|{
+comment|// Look for the desired declaration. While we are looking for it, we
+comment|// update the state so that we know the component where a given list
+comment|// starts.
+for|for
+control|(
+init|;
+name|DeclCur
+operator|!=
+name|UniqueDecls
+operator|.
+name|end
+argument_list|()
+condition|;
+operator|++
+name|DeclCur
+incr|,
+operator|++
+name|NumListsCur
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|DeclCur
+operator|==
+name|Declaration
+condition|)
+break|break;
+name|assert
+argument_list|(
+operator|*
+name|NumListsCur
+operator|>
+literal|0
+operator|&&
+literal|"No lists associated with declaration??"
+argument_list|)
+expr_stmt|;
+comment|// Skip the lists associated with the current declaration, but save the
+comment|// last list size that was skipped.
+name|std
+operator|::
+name|advance
+argument_list|(
+name|ListSizeCur
+argument_list|,
+operator|*
+name|NumListsCur
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|PrevListSize
+operator|=
+operator|*
+name|ListSizeCur
+expr_stmt|;
+operator|++
+name|ListSizeCur
+expr_stmt|;
+block|}
+comment|// If we didn't find any declaration, advance the iterator to after the
+comment|// last component and set remaining lists to zero.
+if|if
+condition|(
+name|ListSizeCur
+operator|==
+name|CumulativeListSizes
+operator|.
+name|end
+argument_list|()
+condition|)
+block|{
+name|this
+operator|->
+name|I
+operator|=
+name|End
+expr_stmt|;
+name|RemainingLists
+operator|=
+literal|0u
+expr_stmt|;
+return|return;
+block|}
+comment|// Set the remaining lists with the total number of lists of the current
+comment|// declaration.
+name|RemainingLists
+operator|=
+operator|*
+name|NumListsCur
+expr_stmt|;
+comment|// Adjust the list size end iterator to the end of the relevant range.
+name|ListSizeEnd
+operator|=
+name|ListSizeCur
+decl_stmt|;
+name|std
+operator|::
+name|advance
+argument_list|(
+name|ListSizeEnd
+argument_list|,
+name|RemainingLists
+argument_list|)
+expr_stmt|;
+comment|// Given that the list sizes are cumulative, the index of the component
+comment|// that start the list is the size of the previous list.
+name|std
+operator|::
+name|advance
+argument_list|(
+name|this
+operator|->
+name|I
+argument_list|,
+name|PrevListSize
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// Return the array with the current list. The sizes are cumulative, so the
+end_comment
+
+begin_comment
+comment|// array size is the difference between the current size and previous one.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+operator|,
+name|MappableExprComponentListRef
+operator|>
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ListSizeCur
+operator|!=
+name|ListSizeEnd
+operator|&&
+literal|"Invalid iterator!"
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+operator|*
+name|DeclCur
+argument_list|,
+name|MappableExprComponentListRef
+argument_list|(
+operator|&
+operator|*
+name|this
+operator|->
+name|I
+argument_list|,
+operator|*
+name|ListSizeCur
+operator|-
+name|PrevListSize
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|ValueDecl
+operator|*
+operator|,
+name|MappableExprComponentListRef
+operator|>
+name|operator
+operator|->
+expr|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|)
+specifier|const
+block|{
+return|return
+operator|*
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Skip the components of the current list.
+end_comment
+
+begin_expr_stmt
+name|const_component_lists_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|ListSizeCur
+operator|!=
+name|ListSizeEnd
+operator|&&
+name|RemainingLists
+operator|&&
+literal|"Invalid iterator!"
+argument_list|)
+block|;
+comment|// If we don't have more lists just skip all the components. Otherwise,
+comment|// advance the iterator by the number of components in the current list.
+if|if
+condition|(
+name|std
+operator|::
+name|next
+argument_list|(
+name|ListSizeCur
+argument_list|)
+operator|==
+name|ListSizeEnd
+condition|)
+block|{
+name|this
+operator|->
+name|I
+operator|=
+name|End
+expr_stmt|;
+name|RemainingLists
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+name|std
+operator|::
+name|advance
+argument_list|(
+name|this
+operator|->
+name|I
+argument_list|,
+operator|*
+name|ListSizeCur
+operator|-
+name|PrevListSize
+argument_list|)
+expr_stmt|;
+name|PrevListSize
+operator|=
+operator|*
+name|ListSizeCur
+expr_stmt|;
+comment|// We are done with a declaration, move to the next one.
+if|if
+condition|(
+operator|!
+operator|(
+operator|--
+name|RemainingLists
+operator|)
+condition|)
+block|{
+operator|++
+name|DeclCur
+expr_stmt|;
+operator|++
+name|NumListsCur
+expr_stmt|;
+name|RemainingLists
+operator|=
+operator|*
+name|NumListsCur
+expr_stmt|;
+name|assert
+argument_list|(
+name|RemainingLists
+operator|&&
+literal|"No lists in the following declaration??"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_else
+
+begin_expr_stmt
+operator|++
+name|ListSizeCur
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_empty_stmt
+unit|}   }
+empty_stmt|;
+end_empty_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_component_lists_iterator
+operator|>
+name|const_component_lists_range
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Iterators for all component lists.
+end_comment
+
+begin_expr_stmt
+name|const_component_lists_iterator
+name|component_lists_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_component_lists_iterator
+argument_list|(
+name|getUniqueDeclsRef
+argument_list|()
+argument_list|,
+name|getDeclNumListsRef
+argument_list|()
+argument_list|,
+name|getComponentListSizesRef
+argument_list|()
+argument_list|,
+name|getComponentsRef
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|const_component_lists_iterator
+name|component_lists_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_component_lists_iterator
+argument_list|(
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|MappableExprComponentListRef
+argument_list|(
+name|getComponentsRef
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|getComponentsRef
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|const_component_lists_range
+name|component_lists
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|component_lists_begin
+argument_list|()
+block|,
+name|component_lists_end
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Iterators for component lists associated with the provided
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_decl_stmt
+name|const_component_lists_iterator
+name|decl_component_lists_begin
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_component_lists_iterator
+argument_list|(
+name|VD
+argument_list|,
+name|getUniqueDeclsRef
+argument_list|()
+argument_list|,
+name|getDeclNumListsRef
+argument_list|()
+argument_list|,
+name|getComponentListSizesRef
+argument_list|()
+argument_list|,
+name|getComponentsRef
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|const_component_lists_iterator
+name|decl_component_lists_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|component_lists_end
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|const_component_lists_range
+name|decl_component_lists
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+block|{
+return|return
+block|{
+name|decl_component_lists_begin
+argument_list|(
+name|VD
+argument_list|)
+block|,
+name|decl_component_lists_end
+argument_list|()
+block|}
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Iterators to access all the declarations, number of lists, list sizes, and
+end_comment
+
+begin_comment
+comment|/// components.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+operator|::
+name|iterator
+name|const_all_decls_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_all_decls_iterator
+operator|>
+name|const_all_decls_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|const_all_decls_range
+name|all_decls
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|A
+operator|=
+name|getUniqueDeclsRef
+argument_list|()
+block|;
+return|return
+name|const_all_decls_range
+argument_list|(
+name|A
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|A
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|iterator
+name|const_all_num_lists_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_all_num_lists_iterator
+operator|>
+name|const_all_num_lists_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|const_all_num_lists_range
+name|all_num_lists
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|A
+operator|=
+name|getDeclNumListsRef
+argument_list|()
+block|;
+return|return
+name|const_all_num_lists_range
+argument_list|(
+name|A
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|A
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|::
+name|iterator
+name|const_all_lists_sizes_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_all_lists_sizes_iterator
+operator|>
+name|const_all_lists_sizes_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|const_all_lists_sizes_range
+name|all_lists_sizes
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|A
+operator|=
+name|getComponentListSizesRef
+argument_list|()
+block|;
+return|return
+name|const_all_lists_sizes_range
+argument_list|(
+name|A
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|A
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+name|MappableComponent
+operator|>
+operator|::
+name|iterator
+name|const_all_components_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_all_components_iterator
+operator|>
+name|const_all_components_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|const_all_components_range
+name|all_components
+argument_list|()
+specifier|const
+block|{
+name|auto
+name|A
+operator|=
+name|getComponentsRef
+argument_list|()
+block|;
+return|return
+name|const_all_components_range
+argument_list|(
+name|A
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|A
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// \brief This represents clause 'map' in the '#pragma omp ...'
+end_comment
+
+begin_comment
+comment|/// directives.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// #pragma omp target map(a,b)
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|/// In this example directive '#pragma omp target' has clause 'map'
+end_comment
+
+begin_comment
+comment|/// with the variables 'a' and 'b'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|OMPMapClause
+name|final
+range|:
+name|public
+name|OMPMappableExprListClause
+operator|<
+name|OMPMapClause
+operator|>
+decl_stmt|,
+name|private
+name|llvm
+decl|::
+name|TrailingObjects
+decl|<
+name|OMPMapClause
+decl_stmt|,
+name|Expr
+modifier|*
+decl_stmt|,
+name|ValueDecl
+modifier|*
+decl_stmt|,
+name|unsigned
+decl_stmt|,
+name|OMPClauseMappableExprCommon
+decl|::
+name|MappableComponent
+decl|>
+block|{
+name|friend
+name|TrailingObjects
+decl_stmt|;
+name|friend
+name|OMPVarListClause
+decl_stmt|;
+name|friend
+name|OMPMappableExprListClause
+decl_stmt|;
+name|friend
+name|class
+name|OMPClauseReader
+decl_stmt|;
+comment|/// Define the sizes of each trailing object array except the last one. This
+comment|/// is required for TrailingObjects to work properly.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|Expr
+operator|*
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|varlist_size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|ValueDecl
+operator|*
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+name|OverloadToken
+operator|<
+name|unsigned
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+operator|+
+name|getTotalComponentListNum
+argument_list|()
+return|;
+block|}
 comment|/// \brief Map type modifier for the 'map' clause.
 name|OpenMPMapClauseKind
 name|MapTypeModifier
-block|;
+decl_stmt|;
 comment|/// \brief Map type for the 'map' clause.
 name|OpenMPMapClauseKind
 name|MapType
-block|;
+decl_stmt|;
+comment|/// \brief Is this an implicit map type or not.
+name|bool
+name|MapTypeIsImplicit
+decl_stmt|;
 comment|/// \brief Location of the map type.
 name|SourceLocation
 name|MapLoc
-block|;
+decl_stmt|;
 comment|/// \brief Colon location.
 name|SourceLocation
 name|ColonLoc
-block|;
+decl_stmt|;
 comment|/// \brief Set type modifier for the clause.
 comment|///
 comment|/// \param T Type Modifier for the clause.
 comment|///
 name|void
 name|setMapTypeModifier
-argument_list|(
-argument|OpenMPMapClauseKind T
-argument_list|)
+parameter_list|(
+name|OpenMPMapClauseKind
+name|T
+parameter_list|)
 block|{
 name|MapTypeModifier
 operator|=
 name|T
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set type for the clause.
 comment|///
 comment|/// \param T Type for the clause.
 comment|///
 name|void
 name|setMapType
-argument_list|(
-argument|OpenMPMapClauseKind T
-argument_list|)
+parameter_list|(
+name|OpenMPMapClauseKind
+name|T
+parameter_list|)
 block|{
 name|MapType
 operator|=
 name|T
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set type location.
 comment|///
 comment|/// \param TLoc Type location.
 comment|///
 name|void
 name|setMapLoc
-argument_list|(
-argument|SourceLocation TLoc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|TLoc
+parameter_list|)
 block|{
 name|MapLoc
 operator|=
 name|TLoc
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Set colon location.
 name|void
 name|setColonLoc
-argument_list|(
-argument|SourceLocation Loc
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
 block|{
 name|ColonLoc
 operator|=
 name|Loc
-block|; }
-comment|/// \brief Build clause with number of variables \a N.
+expr_stmt|;
+block|}
+comment|/// \brief Build a clause for \a NumVars listed expressions, \a
+comment|/// NumUniqueDeclarations declarations, \a NumComponentLists total component
+comment|/// lists, and \a NumComponents total expression components.
 comment|///
 comment|/// \param MapTypeModifier Map type modifier.
 comment|/// \param MapType Map type.
+comment|/// \param MapTypeIsImplicit Map type is inferred implicitly.
 comment|/// \param MapLoc Location of the map type.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param N Number of the variables in the clause.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 name|explicit
 name|OMPMapClause
@@ -10105,6 +12711,8 @@ argument_list|(
 argument|OpenMPMapClauseKind MapTypeModifier
 argument_list|,
 argument|OpenMPMapClauseKind MapType
+argument_list|,
+argument|bool MapTypeIsImplicit
 argument_list|,
 argument|SourceLocation MapLoc
 argument_list|,
@@ -10114,35 +12722,49 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
-operator|:
-name|OMPVarListClause
-operator|<
-name|OMPMapClause
-operator|>
-operator|(
+block|:
+name|OMPMappableExprListClause
+argument_list|(
 name|OMPC_map
-expr|,
+argument_list|,
 name|StartLoc
-expr|,
+argument_list|,
 name|LParenLoc
-expr|,
+argument_list|,
 name|EndLoc
-expr|,
-name|N
-operator|)
-block|,
+argument_list|,
+name|NumVars
+argument_list|,
+name|NumUniqueDeclarations
+argument_list|,
+name|NumComponentLists
+argument_list|,
+name|NumComponents
+argument_list|)
+operator|,
 name|MapTypeModifier
 argument_list|(
 name|MapTypeModifier
 argument_list|)
-block|,
+operator|,
 name|MapType
 argument_list|(
 name|MapType
 argument_list|)
-block|,
+operator|,
+name|MapTypeIsImplicit
+argument_list|(
+name|MapTypeIsImplicit
+argument_list|)
+operator|,
 name|MapLoc
 argument_list|(
 argument|MapLoc
@@ -10150,43 +12772,61 @@ argument_list|)
 block|{}
 comment|/// \brief Build an empty clause.
 comment|///
-comment|/// \param N Number of variables.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 name|explicit
 name|OMPMapClause
 argument_list|(
-argument|unsigned N
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
 argument_list|)
 operator|:
-name|OMPVarListClause
-operator|<
-name|OMPMapClause
-operator|>
-operator|(
+name|OMPMappableExprListClause
+argument_list|(
 name|OMPC_map
-expr|,
+argument_list|,
 name|SourceLocation
 argument_list|()
-expr|,
+argument_list|,
 name|SourceLocation
 argument_list|()
-expr|,
+argument_list|,
 name|SourceLocation
 argument_list|()
-expr|,
-name|N
-operator|)
-block|,
+argument_list|,
+name|NumVars
+argument_list|,
+name|NumUniqueDeclarations
+argument_list|,
+name|NumComponentLists
+argument_list|,
+name|NumComponents
+argument_list|)
+operator|,
 name|MapTypeModifier
 argument_list|(
 name|OMPC_MAP_unknown
 argument_list|)
-block|,
+operator|,
 name|MapType
 argument_list|(
 name|OMPC_MAP_unknown
 argument_list|)
-block|,
+operator|,
+name|MapTypeIsImplicit
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|MapLoc
 argument_list|()
 block|{}
@@ -10197,9 +12837,12 @@ comment|///
 comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
+comment|/// \param Vars The original expression used in the clause.
+comment|/// \param Declarations Declarations used in the clause.
+comment|/// \param ComponentLists Component lists used in the clause.
 comment|/// \param TypeModifier Map type modifier.
 comment|/// \param Type Map type.
+comment|/// \param TypeIsImplicit Map type is inferred implicitly.
 comment|/// \param TypeLoc Location of the map type.
 comment|///
 specifier|static
@@ -10215,30 +12858,56 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|ArrayRef<Expr *> VL
+argument|ArrayRef<Expr *> Vars
+argument_list|,
+argument|ArrayRef<ValueDecl *> Declarations
+argument_list|,
+argument|MappableExprComponentListsRef ComponentLists
 argument_list|,
 argument|OpenMPMapClauseKind TypeModifier
 argument_list|,
 argument|OpenMPMapClauseKind Type
 argument_list|,
+argument|bool TypeIsImplicit
+argument_list|,
 argument|SourceLocation TypeLoc
 argument_list|)
-block|;
-comment|/// \brief Creates an empty clause with the place for \a N variables.
+expr_stmt|;
+comment|/// \brief Creates an empty clause with the place for for \a NumVars original
+comment|/// expressions, \a NumUniqueDeclarations declarations, \NumComponentLists
+comment|/// lists, and \a NumComponents expression components.
 comment|///
 comment|/// \param C AST context.
-comment|/// \param N The number of variables.
+comment|/// \param NumVars Number of expressions listed in the clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
 comment|///
 specifier|static
 name|OMPMapClause
-operator|*
+modifier|*
 name|CreateEmpty
-argument_list|(
-argument|const ASTContext&C
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|NumVars
+parameter_list|,
+name|unsigned
+name|NumUniqueDeclarations
+parameter_list|,
+name|unsigned
+name|NumComponentLists
+parameter_list|,
+name|unsigned
+name|NumComponents
+parameter_list|)
+function_decl|;
 comment|/// \brief Fetches mapping kind for the clause.
 name|OpenMPMapClauseKind
 name|getMapType
@@ -10248,6 +12917,21 @@ name|LLVM_READONLY
 block|{
 return|return
 name|MapType
+return|;
+block|}
+comment|/// \brief Is this an implicit map type?
+comment|/// We have to capture 'IsMapTypeImplicit' from the parser for more
+comment|/// informative error messages.  It helps distinguish map(r) from
+comment|/// map(tofrom: r), which is important to print more helpful error
+comment|/// messages for some target directives.
+name|bool
+name|isImplicitMapType
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|MapTypeIsImplicit
 return|;
 block|}
 comment|/// \brief Fetches the map type modifier for the clause.
@@ -10285,9 +12969,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const OMPClause *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|OMPClause
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -10300,7 +12987,7 @@ return|;
 block|}
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|child_range
@@ -10329,20 +13016,53 @@ operator|)
 argument_list|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief This represents 'num_teams' clause in the '#pragma omp ...'
+end_comment
+
+begin_comment
 comment|/// directive.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \code
+end_comment
+
+begin_comment
 comment|/// #pragma omp teams num_teams(n)
+end_comment
+
+begin_comment
 comment|/// \endcode
+end_comment
+
+begin_comment
 comment|/// In this example directive '#pragma omp teams' has clause 'num_teams'
+end_comment
+
+begin_comment
 comment|/// with single expression 'n'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|OMPNumTeamsClause
-operator|:
+range|:
 name|public
 name|OMPClause
 block|{
@@ -11538,7 +14258,1583 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+comment|/// \brief This represents 'dist_schedule' clause in the '#pragma omp ...'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp distribute dist_schedule(static, 3)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp distribute' has 'dist_schedule'
+comment|/// clause with arguments 'static' and '3'.
+comment|///
+name|class
+name|OMPDistScheduleClause
+operator|:
+name|public
+name|OMPClause
+block|,
+name|public
+name|OMPClauseWithPreInit
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief A kind of the 'schedule' clause.
+name|OpenMPDistScheduleClauseKind
+name|Kind
+block|;
+comment|/// \brief Start location of the schedule kind in source code.
+name|SourceLocation
+name|KindLoc
+block|;
+comment|/// \brief Location of ',' (if any).
+name|SourceLocation
+name|CommaLoc
+block|;
+comment|/// \brief Chunk size.
+name|Expr
+operator|*
+name|ChunkSize
+block|;
+comment|/// \brief Set schedule kind.
+comment|///
+comment|/// \param K Schedule kind.
+comment|///
+name|void
+name|setDistScheduleKind
+argument_list|(
+argument|OpenMPDistScheduleClauseKind K
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|K
+block|; }
+comment|/// \brief Sets the location of '('.
+comment|///
+comment|/// \param Loc Location of '('.
+comment|///
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set schedule kind start location.
+comment|///
+comment|/// \param KLoc Schedule kind location.
+comment|///
+name|void
+name|setDistScheduleKindLoc
+argument_list|(
+argument|SourceLocation KLoc
+argument_list|)
+block|{
+name|KindLoc
+operator|=
+name|KLoc
+block|; }
+comment|/// \brief Set location of ','.
+comment|///
+comment|/// \param Loc Location of ','.
+comment|///
+name|void
+name|setCommaLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|CommaLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set chunk size.
+comment|///
+comment|/// \param E Chunk size.
+comment|///
+name|void
+name|setChunkSize
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|ChunkSize
+operator|=
+name|E
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'dist_schedule' clause with schedule kind \a Kind and chunk
+comment|/// size expression \a ChunkSize.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param KLoc Starting location of the argument.
+comment|/// \param CommaLoc Location of ','.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param Kind DistSchedule kind.
+comment|/// \param ChunkSize Chunk size.
+comment|/// \param HelperChunkSize Helper chunk size for combined directives.
+comment|///
+name|OMPDistScheduleClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation KLoc
+argument_list|,
+argument|SourceLocation CommaLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDistScheduleClauseKind Kind
+argument_list|,
+argument|Expr *ChunkSize
+argument_list|,
+argument|Stmt *HelperChunkSize
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_dist_schedule
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+block|,
+name|KindLoc
+argument_list|(
+name|KLoc
+argument_list|)
+block|,
+name|CommaLoc
+argument_list|(
+name|CommaLoc
+argument_list|)
+block|,
+name|ChunkSize
+argument_list|(
+argument|ChunkSize
+argument_list|)
+block|{
+name|setPreInitStmt
+argument_list|(
+name|HelperChunkSize
+argument_list|)
+block|;   }
+comment|/// \brief Build an empty clause.
+comment|///
+name|explicit
+name|OMPDistScheduleClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_dist_schedule
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|OMPClauseWithPreInit
+argument_list|(
+name|this
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|OMPC_DIST_SCHEDULE_unknown
+argument_list|)
+block|,
+name|ChunkSize
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+comment|/// \brief Get kind of the clause.
+comment|///
+name|OpenMPDistScheduleClauseKind
+name|getDistScheduleKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// \brief Get location of '('.
+comment|///
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Get kind location.
+comment|///
+name|SourceLocation
+name|getDistScheduleKindLoc
+argument_list|()
+block|{
+return|return
+name|KindLoc
+return|;
+block|}
+comment|/// \brief Get location of ','.
+comment|///
+name|SourceLocation
+name|getCommaLoc
+argument_list|()
+block|{
+return|return
+name|CommaLoc
+return|;
+block|}
+comment|/// \brief Get chunk size.
+comment|///
+name|Expr
+operator|*
+name|getChunkSize
+argument_list|()
+block|{
+return|return
+name|ChunkSize
+return|;
+block|}
+comment|/// \brief Get chunk size.
+comment|///
+specifier|const
+name|Expr
+operator|*
+name|getChunkSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChunkSize
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_dist_schedule
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+operator|&
+name|ChunkSize
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+operator|&
+name|ChunkSize
+operator|)
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'defaultmap' clause in the '#pragma omp ...' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target defaultmap(tofrom: scalar)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target' has 'defaultmap' clause of kind
+comment|/// 'scalar' with modifier 'tofrom'.
+comment|///
+name|class
+name|OMPDefaultmapClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// \brief Location of '('.
+name|SourceLocation
+name|LParenLoc
+block|;
+comment|/// \brief Modifiers for 'defaultmap' clause.
+name|OpenMPDefaultmapClauseModifier
+name|Modifier
+block|;
+comment|/// \brief Locations of modifiers.
+name|SourceLocation
+name|ModifierLoc
+block|;
+comment|/// \brief A kind of the 'defaultmap' clause.
+name|OpenMPDefaultmapClauseKind
+name|Kind
+block|;
+comment|/// \brief Start location of the defaultmap kind in source code.
+name|SourceLocation
+name|KindLoc
+block|;
+comment|/// \brief Set defaultmap kind.
+comment|///
+comment|/// \param K Defaultmap kind.
+comment|///
+name|void
+name|setDefaultmapKind
+argument_list|(
+argument|OpenMPDefaultmapClauseKind K
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|K
+block|; }
+comment|/// \brief Set the defaultmap modifier.
+comment|///
+comment|/// \param M Defaultmap modifier.
+comment|///
+name|void
+name|setDefaultmapModifier
+argument_list|(
+argument|OpenMPDefaultmapClauseModifier M
+argument_list|)
+block|{
+name|Modifier
+operator|=
+name|M
+block|;   }
+comment|/// \brief Set location of the defaultmap modifier.
+comment|///
+name|void
+name|setDefaultmapModifierLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|ModifierLoc
+operator|=
+name|Loc
+block|;   }
+comment|/// \brief Sets the location of '('.
+comment|///
+comment|/// \param Loc Location of '('.
+comment|///
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|LParenLoc
+operator|=
+name|Loc
+block|; }
+comment|/// \brief Set defaultmap kind start location.
+comment|///
+comment|/// \param KLoc Defaultmap kind location.
+comment|///
+name|void
+name|setDefaultmapKindLoc
+argument_list|(
+argument|SourceLocation KLoc
+argument_list|)
+block|{
+name|KindLoc
+operator|=
+name|KLoc
+block|; }
+name|public
+operator|:
+comment|/// \brief Build 'defaultmap' clause with defaultmap kind \a Kind
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param KLoc Starting location of the argument.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param Kind Defaultmap kind.
+comment|/// \param M The modifier applied to 'defaultmap' clause.
+comment|/// \param MLoc Location of the modifier
+comment|///
+name|OMPDefaultmapClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation MLoc
+argument_list|,
+argument|SourceLocation KLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|OpenMPDefaultmapClauseKind Kind
+argument_list|,
+argument|OpenMPDefaultmapClauseModifier M
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_defaultmap
+argument_list|,
+name|StartLoc
+argument_list|,
+name|EndLoc
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|Modifier
+argument_list|(
+name|M
+argument_list|)
+block|,
+name|ModifierLoc
+argument_list|(
+name|MLoc
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+block|,
+name|KindLoc
+argument_list|(
+argument|KLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|explicit
+name|OMPDefaultmapClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+name|OMPC_defaultmap
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+block|,
+name|Modifier
+argument_list|(
+name|OMPC_DEFAULTMAP_MODIFIER_unknown
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+argument|OMPC_DEFAULTMAP_unknown
+argument_list|)
+block|{}
+comment|/// \brief Get kind of the clause.
+comment|///
+name|OpenMPDefaultmapClauseKind
+name|getDefaultmapKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// \brief Get the modifier of the clause.
+comment|///
+name|OpenMPDefaultmapClauseModifier
+name|getDefaultmapModifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Modifier
+return|;
+block|}
+comment|/// \brief Get location of '('.
+comment|///
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Get kind location.
+comment|///
+name|SourceLocation
+name|getDefaultmapKindLoc
+argument_list|()
+block|{
+return|return
+name|KindLoc
+return|;
+block|}
+comment|/// \brief Get the modifier location.
+comment|///
+name|SourceLocation
+name|getDefaultmapModifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifierLoc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_defaultmap
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents clause 'to' in the '#pragma omp ...'
+comment|/// directives.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target update to(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target update' has clause 'to'
+comment|/// with the variables 'a' and 'b'.
+comment|///
+name|class
+name|OMPToClause
+name|final
+operator|:
+name|public
+name|OMPMappableExprListClause
+operator|<
+name|OMPToClause
+operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPToClause
+block|,
+name|Expr
+operator|*
+block|,
+name|ValueDecl
+operator|*
+block|,
+name|unsigned
+block|,
+name|OMPClauseMappableExprCommon
+operator|::
+name|MappableComponent
+operator|>
+block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
+name|friend
+name|OMPMappableExprListClause
+block|;
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// Define the sizes of each trailing object array except the last one. This
+comment|/// is required for TrailingObjects to work properly.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Expr *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|varlist_size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<ValueDecl *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<unsigned>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+operator|+
+name|getTotalComponentListNum
+argument_list|()
+return|;
+block|}
+comment|/// \brief Build clause with number of variables \a NumVars.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+name|explicit
+name|OMPToClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+operator|:
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_to
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|LParenLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+name|explicit
+name|OMPToClause
+argument_list|(
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+operator|:
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_to
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates clause with a list of variables \a Vars.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param Vars The original expression used in the clause.
+comment|/// \param Declarations Declarations used in the clause.
+comment|/// \param ComponentLists Component lists used in the clause.
+comment|///
+specifier|static
+name|OMPToClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> Vars
+argument_list|,
+argument|ArrayRef<ValueDecl *> Declarations
+argument_list|,
+argument|MappableExprComponentListsRef ComponentLists
+argument_list|)
+block|;
+comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumVars Number of expressions listed in the clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+specifier|static
+name|OMPToClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_to
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents clause 'from' in the '#pragma omp ...'
+comment|/// directives.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target update from(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target update' has clause 'from'
+comment|/// with the variables 'a' and 'b'.
+comment|///
+name|class
+name|OMPFromClause
+name|final
+operator|:
+name|public
+name|OMPMappableExprListClause
+operator|<
+name|OMPFromClause
+operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPFromClause
+block|,
+name|Expr
+operator|*
+block|,
+name|ValueDecl
+operator|*
+block|,
+name|unsigned
+block|,
+name|OMPClauseMappableExprCommon
+operator|::
+name|MappableComponent
+operator|>
+block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
+name|friend
+name|OMPMappableExprListClause
+block|;
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// Define the sizes of each trailing object array except the last one. This
+comment|/// is required for TrailingObjects to work properly.
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<Expr *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|varlist_size
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<ValueDecl *>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+return|;
+block|}
+name|size_t
+name|numTrailingObjects
+argument_list|(
+argument|OverloadToken<unsigned>
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getUniqueDeclarationsNum
+argument_list|()
+operator|+
+name|getTotalComponentListNum
+argument_list|()
+return|;
+block|}
+comment|/// \brief Build clause with number of variables \a NumVars.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+name|explicit
+name|OMPFromClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+operator|:
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_from
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|LParenLoc
+argument_list|,
+argument|EndLoc
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param NumVars Number of expressions listed in this clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of component lists in this clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+name|explicit
+name|OMPFromClause
+argument_list|(
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+operator|:
+name|OMPMappableExprListClause
+argument_list|(
+argument|OMPC_from
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|NumVars
+argument_list|,
+argument|NumUniqueDeclarations
+argument_list|,
+argument|NumComponentLists
+argument_list|,
+argument|NumComponents
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// \brief Creates clause with a list of variables \a Vars.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param Vars The original expression used in the clause.
+comment|/// \param Declarations Declarations used in the clause.
+comment|/// \param ComponentLists Component lists used in the clause.
+comment|///
+specifier|static
+name|OMPFromClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> Vars
+argument_list|,
+argument|ArrayRef<ValueDecl *> Declarations
+argument_list|,
+argument|MappableExprComponentListsRef ComponentLists
+argument_list|)
+block|;
+comment|/// \brief Creates an empty clause with the place for \a NumVars variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param NumVars Number of expressions listed in the clause.
+comment|/// \param NumUniqueDeclarations Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponentLists Number of unique base declarations in this
+comment|/// clause.
+comment|/// \param NumComponents Total number of expression components in the clause.
+comment|///
+specifier|static
+name|OMPFromClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned NumVars
+argument_list|,
+argument|unsigned NumUniqueDeclarations
+argument_list|,
+argument|unsigned NumComponentLists
+argument_list|,
+argument|unsigned NumComponents
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_from
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents clause 'use_device_ptr' in the '#pragma omp ...'
+comment|/// directives.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target data use_device_ptr(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target data' has clause
+comment|/// 'use_device_ptr' with the variables 'a' and 'b'.
+comment|///
+name|class
+name|OMPUseDevicePtrClause
+name|final
+operator|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPUseDevicePtrClause
+operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPUseDevicePtrClause
+block|,
+name|Expr
+operator|*
+operator|>
+block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// Build clause with number of variables \a N.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param N Number of the variables in the clause.
+comment|///
+name|OMPUseDevicePtrClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPUseDevicePtrClause
+operator|>
+operator|(
+name|OMPC_use_device_ptr
+expr|,
+name|StartLoc
+expr|,
+name|LParenLoc
+expr|,
+name|EndLoc
+expr|,
+name|N
+operator|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+comment|/// \param N Number of variables.
+comment|///
+name|explicit
+name|OMPUseDevicePtrClause
+argument_list|(
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPUseDevicePtrClause
+operator|>
+operator|(
+name|OMPC_use_device_ptr
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|N
+operator|)
+block|{}
+name|public
+operator|:
+comment|/// Creates clause with a list of variables \a VL.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param VL List of references to the variables.
+comment|///
+specifier|static
+name|OMPUseDevicePtrClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> VL
+argument_list|)
+block|;
+comment|/// Creates an empty clause with the place for \a N variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of variables.
+comment|///
+specifier|static
+name|OMPUseDevicePtrClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_use_device_ptr
+return|;
+block|}
+expr|}
+block|;
+comment|/// This represents clause 'is_device_ptr' in the '#pragma omp ...'
+comment|/// directives.
+comment|///
+comment|/// \code
+comment|/// #pragma omp target is_device_ptr(a,b)
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp target' has clause
+comment|/// 'is_device_ptr' with the variables 'a' and 'b'.
+comment|///
+name|class
+name|OMPIsDevicePtrClause
+name|final
+operator|:
+name|public
+name|OMPVarListClause
+operator|<
+name|OMPIsDevicePtrClause
+operator|>
+block|,
+name|private
+name|llvm
+operator|::
+name|TrailingObjects
+operator|<
+name|OMPIsDevicePtrClause
+block|,
+name|Expr
+operator|*
+operator|>
+block|{
+name|friend
+name|TrailingObjects
+block|;
+name|friend
+name|OMPVarListClause
+block|;
+name|friend
+name|class
+name|OMPClauseReader
+block|;
+comment|/// Build clause with number of variables \a N.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param N Number of the variables in the clause.
+comment|///
+name|OMPIsDevicePtrClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPIsDevicePtrClause
+operator|>
+operator|(
+name|OMPC_is_device_ptr
+expr|,
+name|StartLoc
+expr|,
+name|LParenLoc
+expr|,
+name|EndLoc
+expr|,
+name|N
+operator|)
+block|{}
+comment|/// Build an empty clause.
+comment|///
+comment|/// \param N Number of variables.
+comment|///
+name|explicit
+name|OMPIsDevicePtrClause
+argument_list|(
+argument|unsigned N
+argument_list|)
+operator|:
+name|OMPVarListClause
+operator|<
+name|OMPIsDevicePtrClause
+operator|>
+operator|(
+name|OMPC_is_device_ptr
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|SourceLocation
+argument_list|()
+expr|,
+name|N
+operator|)
+block|{}
+name|public
+operator|:
+comment|/// Creates clause with a list of variables \a VL.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param LParenLoc Location of '('.
+comment|/// \param EndLoc Ending location of the clause.
+comment|/// \param VL List of references to the variables.
+comment|///
+specifier|static
+name|OMPIsDevicePtrClause
+operator|*
+name|Create
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|,
+argument|ArrayRef<Expr *> VL
+argument_list|)
+block|;
+comment|/// Creates an empty clause with the place for \a N variables.
+comment|///
+comment|/// \param C AST context.
+comment|/// \param N The number of variables.
+comment|///
+specifier|static
+name|OMPIsDevicePtrClause
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned N
+argument_list|)
+block|;
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_begin
+argument_list|()
+operator|)
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_is_device_ptr
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

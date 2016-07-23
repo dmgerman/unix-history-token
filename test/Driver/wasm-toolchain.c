@@ -72,7 +72,7 @@ comment|// A basic C link command-line.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -no-canonical-prefixes -target wasm32-unknown-unknown %s 2>&1 | FileCheck -check-prefix=LINK %s
+comment|// RUN: %clang -### -no-canonical-prefixes -target wasm32-unknown-unknown --sysroot=/foo %s 2>&1 | FileCheck -check-prefix=LINK %s
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ comment|// LINK: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// LINK: lld{{.*}}" "-flavor" "ld" "[[temp]]" "-o" "a.out"
+comment|// LINK: lld{{.*}}" "-flavor" "ld" "-L/foo/lib32" "crt1.o" "crti.o" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// special in enabling --gc-sections by default.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -O2 -no-canonical-prefixes -target wasm32-unknown-unknown %s 2>&1 | FileCheck -check-prefix=LINK_OPT %s
+comment|// RUN: %clang -### -O2 -no-canonical-prefixes -target wasm32-unknown-unknown --sysroot=/foo %s 2>&1 | FileCheck -check-prefix=LINK_OPT %s
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// LINK_OPT: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// LINK_OPT: lld{{.*}}" "-flavor" "ld" "--gc-sections" "[[temp]]" "-o" "a.out"
+comment|// LINK_OPT: lld{{.*}}" "-flavor" "ld" "--gc-sections" "-L/foo/lib32" "crt1.o" "crti.o" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ comment|// default --gc-sections.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -O2 -no-canonical-prefixes -target wasm32-unknown-unknown -Wl,--no-gc-sections %s 2>&1 | FileCheck -check-prefix=NO_GC_SECTIONS %s
+comment|// RUN: %clang -### -O2 -no-canonical-prefixes -target wasm32-unknown-unknown --sysroot=/foo -Wl,--no-gc-sections %s 2>&1 | FileCheck -check-prefix=NO_GC_SECTIONS %s
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// NO_GC_SECTIONS: clang{{.*}}" "-cc1" {{.*}} "-o" "[[temp:[^"]*]]"
 end_comment
 
 begin_comment
-comment|// NO_GC_SECTIONS: lld{{.*}}" "-flavor" "ld" "--gc-sections" "--no-gc-sections" "[[temp]]" "-o" "a.out"
+comment|// NO_GC_SECTIONS: lld{{.*}}" "-flavor" "ld" "--gc-sections" "-L/foo/lib32" "crt1.o" "crti.o" "--no-gc-sections" "[[temp]]" "-lc" "-lcompiler_rt" "crtn.o" "-o" "a.out"
 end_comment
 
 end_unit

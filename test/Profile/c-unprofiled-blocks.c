@@ -12,7 +12,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/c-unprofiled-blocks.proftext -o %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-unprofiled-blocks.c %s -o - -emit-llvm -fprofile-instr-use=%t.profdata | FileCheck -check-prefix=PGOUSE %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-unprofiled-blocks.c %s -o - -emit-llvm -fprofile-instrument-use-path=%t.profdata | FileCheck -check-prefix=PGOUSE %s
 end_comment
 
 begin_comment

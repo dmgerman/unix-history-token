@@ -523,11 +523,13 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+comment|// expected-warning{{ignoring return value of function declared with pure attribute}}
 name|isdigit
 argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|// expected-warning{{ignoring return value of function declared with pure attribute}}
 ifndef|#
 directive|ifndef
 name|CODEGEN
@@ -1204,6 +1206,59 @@ init|=
 name|f4
 function_decl|;
 comment|// expected-error{{cannot take address of function 'f4' becuase it has one or more non-tautological enable_if conditions}}
+block|}
+end_function
+
+begin_function_decl
+name|void
+name|regular_enable_if
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(enable_if
+parameter_list|(
+name|a
+parameter_list|,
+function_decl|""
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-note 3{{declared here}}
+end_comment
+
+begin_function
+name|void
+name|PR27122_ext
+parameter_list|()
+block|{
+name|regular_enable_if
+argument_list|(
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{too many arguments}}
+name|regular_enable_if
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{too many arguments}}
+name|regular_enable_if
+argument_list|()
+expr_stmt|;
+comment|// expected-error{{too few arguments}}
 block|}
 end_function
 

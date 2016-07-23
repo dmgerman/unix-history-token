@@ -758,6 +758,27 @@ name|deprecated
 typedef|));
 end_typedef
 
+begin_comment
+comment|// Redefining a typedef is a C11 feature.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|<=
+literal|199901L
+end_if
+
+begin_comment
+comment|// expected-note@-3 {{'test23_ty' has been explicitly marked deprecated here}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|int
@@ -768,6 +789,11 @@ end_typedef
 begin_comment
 comment|// expected-note {{'test23_ty' has been explicitly marked deprecated here}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|test23_ty

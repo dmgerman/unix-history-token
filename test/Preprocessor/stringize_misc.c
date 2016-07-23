@@ -1,6 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST1
+end_ifdef
+
 begin_comment
-comment|// RUN: %clang_cc1 -E %s | FileCheck -strict-whitespace %s
+comment|// RUN: %clang_cc1 -E %s -DTEST1 | FileCheck -strict-whitespace %s
 end_comment
 
 begin_define
@@ -141,6 +147,45 @@ end_macro
 begin_comment
 comment|// CHECK: "a COMMA b" "(a, b)"
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST2
+end_ifdef
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s -DTEST2
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASH
+value|#
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID
+parameter_list|()
+value|#
+end_define
+
+begin_comment
+comment|// expected-error@-1{{'#' is not followed by a macro parameter}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -S -emit-llvm -o - %s -finstrument-functions | FileCheck %s
+comment|// RUN: %clang_cc1 -S -debug-info-kind=standalone -emit-llvm -o - %s -finstrument-functions | FileCheck %s
 end_comment
 
 begin_comment
@@ -15,8 +15,8 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: __cyg_profile_func_enter
-comment|// CHECK: __cyg_profile_func_exit
+comment|// CHECK: call void @__cyg_profile_func_enter({{.*}}, !dbg
+comment|// CHECK: call void @__cyg_profile_func_exit({{.*}}, !dbg
 comment|// CHECK: ret
 return|return
 name|x

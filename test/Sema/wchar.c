@@ -40,7 +40,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__PS4__
+name|__ORBIS__
 argument_list|)
 operator|||
 name|defined

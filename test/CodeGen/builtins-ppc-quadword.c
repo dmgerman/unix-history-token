@@ -31,6 +31,12 @@ begin_comment
 comment|// RUN: -emit-llvm %s -o - 2>&1 | FileCheck %s -check-prefix=CHECK-PPC
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<altivec.h>
+end_include
+
 begin_comment
 comment|// CHECK-PPC: error: __int128 is not supported on this target
 end_comment

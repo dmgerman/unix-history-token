@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-win32 -fms-extensions -emit-llvm -o - \
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X64
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -o - \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=X86
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i686-pc-windows-gnu -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple i686-pc-windows-gnu -fms-extensions -emit-llvm -o - \
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN:         | FileCheck %s --check-prefix=X86-GNU
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple x86_64-pc-windows-gnu -fms-extensions -fnew-ms-eh -emit-llvm -o - \
+comment|// RUN: %clang_cc1 %s -triple x86_64-pc-windows-gnu -fms-extensions -emit-llvm -o - \
 end_comment
 
 begin_comment

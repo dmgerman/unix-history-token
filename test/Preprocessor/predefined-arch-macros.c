@@ -16,7 +16,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I386_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I386_M32
 end_comment
 
 begin_comment
@@ -44,11 +44,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I386_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I386_M64
 end_comment
 
 begin_comment
-comment|// CHECK_I386_M64: error:
+comment|// CHECK_I386_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I486_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I486_M32
 end_comment
 
 begin_comment
@@ -100,11 +100,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I486_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I486_M64
 end_comment
 
 begin_comment
-comment|// CHECK_I486_M64: error:
+comment|// CHECK_I486_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I586_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I586_M32
 end_comment
 
 begin_comment
@@ -168,11 +168,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I586_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I586_M64
 end_comment
 
 begin_comment
-comment|// CHECK_I586_M64: error:
+comment|// CHECK_I586_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_M32
 end_comment
 
 begin_comment
@@ -236,11 +236,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM_M64: error:
+comment|// CHECK_PENTIUM_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_MMX_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_MMX_M32
 end_comment
 
 begin_comment
@@ -316,11 +316,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_MMX_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_MMX_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM_MMX_M64: error:
+comment|// CHECK_PENTIUM_MMX_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -336,7 +336,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_WINCHIP_C6_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_WINCHIP_C6_M32
 end_comment
 
 begin_comment
@@ -376,11 +376,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_WINCHIP_C6_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_WINCHIP_C6_M64
 end_comment
 
 begin_comment
-comment|// CHECK_WINCHIP_C6_M64: error:
+comment|// CHECK_WINCHIP_C6_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -396,7 +396,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_WINCHIP2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_WINCHIP2_M32
 end_comment
 
 begin_comment
@@ -440,11 +440,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_WINCHIP2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_WINCHIP2_M64
 end_comment
 
 begin_comment
-comment|// CHECK_WINCHIP2_M64: error:
+comment|// CHECK_WINCHIP2_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -460,7 +460,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_C3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_C3_M32
 end_comment
 
 begin_comment
@@ -504,11 +504,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_C3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_C3_M64
 end_comment
 
 begin_comment
-comment|// CHECK_C3_M64: error:
+comment|// CHECK_C3_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -524,7 +524,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_C3_2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_C3_2_M32
 end_comment
 
 begin_comment
@@ -584,11 +584,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_C3_2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_C3_2_M64
 end_comment
 
 begin_comment
-comment|// CHECK_C3_2_M64: error:
+comment|// CHECK_C3_2_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -604,7 +604,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I686_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I686_M32
 end_comment
 
 begin_comment
@@ -644,11 +644,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_I686_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_I686_M64
 end_comment
 
 begin_comment
-comment|// CHECK_I686_M64: error:
+comment|// CHECK_I686_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -664,7 +664,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUMPRO_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUMPRO_M32
 end_comment
 
 begin_comment
@@ -712,11 +712,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUMPRO_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUMPRO_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUMPRO_M64: error:
+comment|// CHECK_PENTIUMPRO_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -732,7 +732,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM2_M32
 end_comment
 
 begin_comment
@@ -788,11 +788,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM2_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM2_M64: error:
+comment|// CHECK_PENTIUM2_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -808,7 +808,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM3_M32
 end_comment
 
 begin_comment
@@ -872,11 +872,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM3_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM3_M64: error:
+comment|// CHECK_PENTIUM3_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -892,7 +892,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM3M_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM3M_M32
 end_comment
 
 begin_comment
@@ -948,11 +948,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM3M_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM3M_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM3M_M64: error:
+comment|// CHECK_PENTIUM3M_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -968,7 +968,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_M_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_M_M32
 end_comment
 
 begin_comment
@@ -1028,11 +1028,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM_M_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM_M_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM_M_M64: error:
+comment|// CHECK_PENTIUM_M_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -1048,7 +1048,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM4_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM4_M32
 end_comment
 
 begin_comment
@@ -1096,11 +1096,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM4_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM4_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM4_M64: error:
+comment|// CHECK_PENTIUM4_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -1116,7 +1116,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM4M_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM4M_M32
 end_comment
 
 begin_comment
@@ -1164,11 +1164,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PENTIUM4M_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PENTIUM4M_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PENTIUM4M_M64: error:
+comment|// CHECK_PENTIUM4M_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -1184,7 +1184,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PRESCOTT_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PRESCOTT_M32
 end_comment
 
 begin_comment
@@ -1236,11 +1236,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PRESCOTT_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PRESCOTT_M64
 end_comment
 
 begin_comment
-comment|// CHECK_PRESCOTT_M64: error:
+comment|// CHECK_PRESCOTT_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -1256,7 +1256,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_NOCONA_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_NOCONA_M32
 end_comment
 
 begin_comment
@@ -1308,7 +1308,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_NOCONA_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_NOCONA_M64
 end_comment
 
 begin_comment
@@ -1376,7 +1376,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE2_M32
 end_comment
 
 begin_comment
@@ -1432,7 +1432,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE2_M64
 end_comment
 
 begin_comment
@@ -1504,7 +1504,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_COREI7_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_COREI7_M32
 end_comment
 
 begin_comment
@@ -1572,7 +1572,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_COREI7_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_COREI7_M64
 end_comment
 
 begin_comment
@@ -1656,7 +1656,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_COREI7_AVX_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_COREI7_AVX_M32
 end_comment
 
 begin_comment
@@ -1748,7 +1748,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_COREI7_AVX_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_COREI7_AVX_M64
 end_comment
 
 begin_comment
@@ -1856,7 +1856,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE_AVX_I_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE_AVX_I_M32
 end_comment
 
 begin_comment
@@ -1948,7 +1948,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE_AVX_I_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE_AVX_I_M64
 end_comment
 
 begin_comment
@@ -2056,7 +2056,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE_AVX2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE_AVX2_M32
 end_comment
 
 begin_comment
@@ -2176,7 +2176,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_CORE_AVX2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CORE_AVX2_M64
 end_comment
 
 begin_comment
@@ -2312,7 +2312,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BROADWELL_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BROADWELL_M32
 end_comment
 
 begin_comment
@@ -2440,7 +2440,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BROADWELL_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BROADWELL_M64
 end_comment
 
 begin_comment
@@ -2576,6 +2576,258 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -march=skylake -m32 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SKL_M32
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __ADX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __RDSEED__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __XSAVEC__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __XSAVES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M32: #define i386 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=skylake -m64 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SKL_M64
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __ADX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __RDSEED__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __XSAVEC__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __XSAVES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __amd64 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __amd64__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __x86_64 1
+end_comment
+
+begin_comment
+comment|// CHECK_SKL_M64: #define __x86_64__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -march=knl -m32 -E -dM %s -o - 2>&1 \
 end_comment
 
@@ -2584,7 +2836,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_KNL_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_KNL_M32
 end_comment
 
 begin_comment
@@ -2720,7 +2972,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_KNL_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_KNL_M64
 end_comment
 
 begin_comment
@@ -2864,7 +3116,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -march=skx -m32 -E -dM %s -o - 2>&1 \
+comment|// RUN: %clang -march=skylake-avx512 -m32 -E -dM %s -o - 2>&1 \
 end_comment
 
 begin_comment
@@ -2872,7 +3124,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SKX_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SKX_M32
 end_comment
 
 begin_comment
@@ -3012,7 +3264,7 @@ comment|// CHECK_SKX_M32: #define i386 1
 end_comment
 
 begin_comment
-comment|// RUN: %clang -march=skx -m64 -E -dM %s -o - 2>&1 \
+comment|// RUN: %clang -march=skylake-avx512 -m64 -E -dM %s -o - 2>&1 \
 end_comment
 
 begin_comment
@@ -3020,7 +3272,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SKX_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SKX_M64
 end_comment
 
 begin_comment
@@ -3176,6 +3428,310 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -march=cannonlake -m32 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CNL_M32
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512CD__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512DQ__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512IFMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512VBMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX512VL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SHA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __XSAVEC__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __XSAVES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __i386 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define __i386__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M32: #define i386 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=cannonlake -m64 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_CNL_M64
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512BW__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512CD__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512DQ__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512F__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512IFMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512VBMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX512VL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __AVX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __BMI2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __BMI__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __F16C__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __FMA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __LZCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __PCLMUL__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __POPCNT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __RDRND__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __RTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SHA__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSE4_2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __SSSE3__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __XSAVEC__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __XSAVEOPT__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __XSAVES__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __XSAVE__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __amd64 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __amd64__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __x86_64 1
+end_comment
+
+begin_comment
+comment|// CHECK_CNL_M64: #define __x86_64__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -march=atom -m32 -E -dM %s -o - 2>&1 \
 end_comment
 
@@ -3184,7 +3740,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATOM_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATOM_M32
 end_comment
 
 begin_comment
@@ -3240,7 +3796,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATOM_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATOM_M64
 end_comment
 
 begin_comment
@@ -3312,7 +3868,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SLM_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SLM_M32
 end_comment
 
 begin_comment
@@ -3376,7 +3932,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SLM_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SLM_M64
 end_comment
 
 begin_comment
@@ -3448,6 +4004,54 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -march=lakemont -m32 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_LMT_M32
+end_comment
+
+begin_comment
+comment|// CHECK_LMT_M32: #define __i386 1
+end_comment
+
+begin_comment
+comment|// CHECK_LMT_M32: #define __i386__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_LMT_M32: #define __tune_lakemont__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_LMT_M32: #define i386 1
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -march=lakemont -m64 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_LMT_M64
+end_comment
+
+begin_comment
+comment|// CHECK_LMT_M64: error:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -march=geode -m32 -E -dM %s -o - 2>&1 \
 end_comment
 
@@ -3456,7 +4060,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_GEODE_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_GEODE_M32
 end_comment
 
 begin_comment
@@ -3504,11 +4108,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_GEODE_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_GEODE_M64
 end_comment
 
 begin_comment
-comment|// CHECK_GEODE_M64: error:
+comment|// CHECK_GEODE_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3524,7 +4128,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_M32
 end_comment
 
 begin_comment
@@ -3564,11 +4168,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_M64
 end_comment
 
 begin_comment
-comment|// CHECK_K6_M64: error:
+comment|// CHECK_K6_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3584,7 +4188,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_2_M32
 end_comment
 
 begin_comment
@@ -3636,11 +4240,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_2_M64
 end_comment
 
 begin_comment
-comment|// CHECK_K6_2_M64: error:
+comment|// CHECK_K6_2_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3656,7 +4260,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_3_M32
 end_comment
 
 begin_comment
@@ -3708,11 +4312,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K6_3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K6_3_M64
 end_comment
 
 begin_comment
-comment|// CHECK_K6_3_M64: error:
+comment|// CHECK_K6_3_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3728,7 +4332,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_M32
 end_comment
 
 begin_comment
@@ -3776,11 +4380,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_M64
 end_comment
 
 begin_comment
-comment|// CHECK_ATHLON_M64: error:
+comment|// CHECK_ATHLON_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3796,7 +4400,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_TBIRD_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_TBIRD_M32
 end_comment
 
 begin_comment
@@ -3844,11 +4448,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_TBIRD_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_TBIRD_M64
 end_comment
 
 begin_comment
-comment|// CHECK_ATHLON_TBIRD_M64: error:
+comment|// CHECK_ATHLON_TBIRD_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3864,7 +4468,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_4_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_4_M32
 end_comment
 
 begin_comment
@@ -3924,11 +4528,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_4_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_4_M64
 end_comment
 
 begin_comment
-comment|// CHECK_ATHLON_4_M64: error:
+comment|// CHECK_ATHLON_4_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -3944,7 +4548,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_XP_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_XP_M32
 end_comment
 
 begin_comment
@@ -4004,11 +4608,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_XP_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_XP_M64
 end_comment
 
 begin_comment
-comment|// CHECK_ATHLON_XP_M64: error:
+comment|// CHECK_ATHLON_XP_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -4024,7 +4628,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_MP_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_MP_M32
 end_comment
 
 begin_comment
@@ -4084,11 +4688,11 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_MP_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_MP_M64
 end_comment
 
 begin_comment
-comment|// CHECK_ATHLON_MP_M64: error:
+comment|// CHECK_ATHLON_MP_M64: error: {{.*}}
 end_comment
 
 begin_comment
@@ -4104,7 +4708,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_X86_64_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_X86_64_M32
 end_comment
 
 begin_comment
@@ -4148,7 +4752,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_X86_64_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_X86_64_M64
 end_comment
 
 begin_comment
@@ -4208,7 +4812,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K8_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K8_M32
 end_comment
 
 begin_comment
@@ -4264,7 +4868,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K8_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K8_M64
 end_comment
 
 begin_comment
@@ -4336,7 +4940,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K8_SSE3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K8_SSE3_M32
 end_comment
 
 begin_comment
@@ -4396,7 +5000,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_K8_SSE3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_K8_SSE3_M64
 end_comment
 
 begin_comment
@@ -4472,7 +5076,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_OPTERON_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_OPTERON_M32
 end_comment
 
 begin_comment
@@ -4528,7 +5132,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_OPTERON_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_OPTERON_M64
 end_comment
 
 begin_comment
@@ -4600,7 +5204,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_OPTERON_SSE3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_OPTERON_SSE3_M32
 end_comment
 
 begin_comment
@@ -4660,7 +5264,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_OPTERON_SSE3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_OPTERON_SSE3_M64
 end_comment
 
 begin_comment
@@ -4736,7 +5340,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON64_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON64_M32
 end_comment
 
 begin_comment
@@ -4792,7 +5396,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON64_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON64_M64
 end_comment
 
 begin_comment
@@ -4864,7 +5468,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON64_SSE3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON64_SSE3_M32
 end_comment
 
 begin_comment
@@ -4924,7 +5528,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON64_SSE3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON64_SSE3_M64
 end_comment
 
 begin_comment
@@ -5000,7 +5604,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_FX_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_FX_M32
 end_comment
 
 begin_comment
@@ -5056,7 +5660,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_ATHLON_FX_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_ATHLON_FX_M64
 end_comment
 
 begin_comment
@@ -5124,7 +5728,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_AMDFAM10_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_AMDFAM10_M32
 end_comment
 
 begin_comment
@@ -5200,7 +5804,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_AMDFAM10_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_AMDFAM10_M64
 end_comment
 
 begin_comment
@@ -5284,7 +5888,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BTVER1_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BTVER1_M32
 end_comment
 
 begin_comment
@@ -5340,10 +5944,6 @@ comment|// CHECK_BTVER1_M32: #define __SSSE3__ 1
 end_comment
 
 begin_comment
-comment|// CHECK_BTVER1_M32: #define __XSAVE__ 1
-end_comment
-
-begin_comment
 comment|// CHECK_BTVER1_M32: #define __btver1 1
 end_comment
 
@@ -5372,7 +5972,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BTVER1_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BTVER1_M64
 end_comment
 
 begin_comment
@@ -5428,10 +6028,6 @@ comment|// CHECK_BTVER1_M64: #define __SSSE3__ 1
 end_comment
 
 begin_comment
-comment|// CHECK_BTVER1_M64: #define __XSAVE__ 1
-end_comment
-
-begin_comment
 comment|// CHECK_BTVER1_M64: #define __amd64 1
 end_comment
 
@@ -5468,7 +6064,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BTVER2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BTVER2_M32
 end_comment
 
 begin_comment
@@ -5580,7 +6176,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BTVER2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BTVER2_M64
 end_comment
 
 begin_comment
@@ -5700,7 +6296,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER1_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER1_M32
 end_comment
 
 begin_comment
@@ -5816,7 +6412,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER1_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER1_M64
 end_comment
 
 begin_comment
@@ -5940,7 +6536,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER2_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER2_M32
 end_comment
 
 begin_comment
@@ -6072,7 +6668,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER2_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER2_M64
 end_comment
 
 begin_comment
@@ -6212,7 +6808,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER3_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER3_M32
 end_comment
 
 begin_comment
@@ -6352,7 +6948,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER3_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER3_M64
 end_comment
 
 begin_comment
@@ -6500,7 +7096,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER4_M32
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER4_M32
 end_comment
 
 begin_comment
@@ -6644,7 +7240,7 @@ comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_BDVER4_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_BDVER4_M64
 end_comment
 
 begin_comment
@@ -6808,7 +7404,7 @@ comment|// RUN:     -target powerpc64-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_VSX_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_VSX_M64
 end_comment
 
 begin_comment
@@ -6816,7 +7412,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_VSX_M64: #define __VSX__
+comment|// CHECK_PPC_VSX_M64: #define __VSX__ 1
 end_comment
 
 begin_comment
@@ -6832,7 +7428,7 @@ comment|// RUN:     -target powerpc64-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_POWER8_VECTOR_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_POWER8_VECTOR_M64
 end_comment
 
 begin_comment
@@ -6840,7 +7436,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_POWER8_VECTOR_M64: #define __POWER8_VECTOR__
+comment|// CHECK_PPC_POWER8_VECTOR_M64: #define __POWER8_VECTOR__ 1
 end_comment
 
 begin_comment
@@ -6856,7 +7452,7 @@ comment|// RUN:     -target powerpc64-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_CRYPTO_M64
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_CRYPTO_M64
 end_comment
 
 begin_comment
@@ -6864,7 +7460,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_CRYPTO_M64: #define __CRYPTO__
+comment|// CHECK_PPC_CRYPTO_M64: #define __CRYPTO__ 1
 end_comment
 
 begin_comment
@@ -6880,7 +7476,7 @@ comment|// RUN:     -target powerpc64-unknown-unknown \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_GCC_ATOMICS
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_GCC_ATOMICS
 end_comment
 
 begin_comment
@@ -6892,7 +7488,7 @@ comment|// RUN:     -target powerpc64-unknown-unknown \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_GCC_ATOMICS
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_GCC_ATOMICS
 end_comment
 
 begin_comment
@@ -6904,7 +7500,7 @@ comment|// RUN:     -target powerpc64le-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_GCC_ATOMICS
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_PPC_GCC_ATOMICS
 end_comment
 
 begin_comment
@@ -6912,19 +7508,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -6952,7 +7548,7 @@ comment|// RUN:     -target sparc-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARC
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SPARC
 end_comment
 
 begin_comment
@@ -6964,7 +7560,7 @@ comment|// RUN:     -target sparc-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARC-V9
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SPARC-V9
 end_comment
 
 begin_comment
@@ -7032,15 +7628,51 @@ comment|// RUN:     -target sparcel-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARCEL
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SPARCEL
 end_comment
 
 begin_comment
-comment|//
+comment|// RUN: %clang -E -dM %s -o - -target sparcel-myriad -mcpu=myriad2 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_MYRIAD2-1 -check-prefix=CHECK_SPARCEL
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - -target sparcel-myriad -mcpu=myriad2.1 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_MYRIAD2-1 -check-prefix=CHECK_SPARCEL
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - -target sparcel-myriad -mcpu=myriad2.2 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_MYRIAD2-2 -check-prefix=CHECK_SPARCEL
 end_comment
 
 begin_comment
 comment|// CHECK_SPARCEL: #define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_MYRIAD2-1: #define __myriad2 1
+end_comment
+
+begin_comment
+comment|// CHECK_MYRIAD2-1: #define __myriad2__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_MYRIAD2-2: #define __myriad2 2
+end_comment
+
+begin_comment
+comment|// CHECK_MYRIAD2-2: #define __myriad2__ 2
 end_comment
 
 begin_comment
@@ -7068,7 +7700,7 @@ comment|// RUN:     -target sparcv9-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARCV9
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SPARCV9
 end_comment
 
 begin_comment
@@ -7120,7 +7752,7 @@ comment|// RUN:     -target s390x-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_Z10
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_Z10
 end_comment
 
 begin_comment
@@ -7128,19 +7760,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK_SYSTEMZ_Z10: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -7172,7 +7804,7 @@ comment|// RUN:     -target s390x-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZEC12
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_ZEC12
 end_comment
 
 begin_comment
@@ -7180,19 +7812,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK_SYSTEMZ_ZEC12: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -7228,7 +7860,7 @@ comment|// RUN:     -target s390x-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_HTM
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_HTM
 end_comment
 
 begin_comment
@@ -7252,7 +7884,7 @@ comment|// RUN:     -target s390x-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
 end_comment
 
 begin_comment
@@ -7264,7 +7896,7 @@ comment|// RUN:     -target s390x-unknown-linux \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_SYSTEMZ_ZVECTOR
 end_comment
 
 begin_comment
@@ -7273,6 +7905,54 @@ end_comment
 
 begin_comment
 comment|// CHECK_SYSTEMZ_ZVECTOR: #define __VEC__ 10301
+end_comment
+
+begin_comment
+comment|// Begin amdgcn tests ----------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=amdgcn -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target amdgcn-unknown-unknown \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_AMDGCN
+end_comment
+
+begin_comment
+comment|// CHECK_AMDGCN: #define __AMDGCN__ 1
+end_comment
+
+begin_comment
+comment|// Begin r600 tests ----------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=amdgcn -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target r600-unknown-unknown \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s -check-prefix=CHECK_R600
+end_comment
+
+begin_comment
+comment|// CHECK_R600: #define __R600__ 1
 end_comment
 
 end_unit

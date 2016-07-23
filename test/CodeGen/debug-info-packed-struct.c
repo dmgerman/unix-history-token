@@ -87,7 +87,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l0_ofs16",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 128)
+comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 128, flags: DIFlagBitField, extraData: i64 128)
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l1_ofs9",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72)
+comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72, flags: DIFlagBitField, extraData: i64 72)
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l2_ofs9",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72)
+comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 72, flags: DIFlagBitField, extraData: i64 72)
 end_comment
 
 begin_comment
@@ -332,7 +332,7 @@ comment|// CHECK: !DIDerivedType(tag: DW_TAG_member, name: "l3_ofs12",
 end_comment
 
 begin_comment
-comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 96)
+comment|// CHECK-SAME:     {{.*}}size: 1, align: 32, offset: 96, flags: DIFlagBitField, extraData: i64 96)
 end_comment
 
 begin_decl_stmt

@@ -444,21 +444,11 @@ operator|::
 name|string
 name|TempFilename
 block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|raw_ostream
-operator|>
-name|OS
-block|;
 name|OutputFile
 argument_list|(
 argument|std::string filename
 argument_list|,
 argument|std::string tempFilename
-argument_list|,
-argument|std::unique_ptr<raw_ostream> OS
 argument_list|)
 operator|:
 name|Filename
@@ -473,55 +463,9 @@ argument_list|)
 block|,
 name|TempFilename
 argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|tempFilename
+argument|std::move(tempFilename)
 argument_list|)
-argument_list|)
-block|,
-name|OS
-argument_list|(
-argument|std::move(OS)
-argument_list|)
-block|{}
-name|OutputFile
-argument_list|(
-name|OutputFile
-operator|&&
-name|O
-argument_list|)
-operator|:
-name|Filename
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|O
-operator|.
-name|Filename
-argument_list|)
-argument_list|)
-block|,
-name|TempFilename
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|O
-operator|.
-name|TempFilename
-argument_list|)
-argument_list|)
-block|,
-name|OS
-argument_list|(
-argument|std::move(O.OS)
-argument_list|)
-block|{}
+block|{     }
 block|}
 block|;
 comment|/// If the output doesn't support seeking (terminal, pipe). we switch
@@ -1136,7 +1080,12 @@ argument_list|)
 block|{
 name|VirtualFileSystem
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|FS
+argument_list|)
 block|;   }
 comment|/// }
 comment|/// @name File Manager
@@ -1783,8 +1732,8 @@ operator|&&
 name|OutFile
 argument_list|)
 block|;
-comment|/// clearOutputFiles - Clear the output file list, destroying the contained
-comment|/// output streams.
+comment|/// clearOutputFiles - Clear the output file list. The underlying output
+comment|/// streams must have been closed beforehand.
 comment|///
 comment|/// \param EraseFiles - If true, attempt to erase the files from disk.
 name|void
@@ -1983,8 +1932,12 @@ comment|/// their result (that is, the data is written to a temporary file which
 comment|/// atomically replace the target output on success).
 comment|///
 comment|/// \return - Null on error.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|raw_pwrite_stream
-operator|*
+operator|>
 name|createDefaultOutputFile
 argument_list|(
 argument|bool Binary = true
@@ -2000,8 +1953,12 @@ comment|/// Create a new output file and add it to the list of tracked output fi
 comment|/// optionally deriving the output path name.
 comment|///
 comment|/// \return - Null on error.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|raw_pwrite_stream
-operator|*
+operator|>
 name|createOutputFile
 argument_list|(
 argument|StringRef OutputPath
@@ -2073,10 +2030,12 @@ argument_list|,
 argument|std::string *TempPathName
 argument_list|)
 block|;
-name|llvm
+name|std
 operator|::
-name|raw_null_ostream
-operator|*
+name|unique_ptr
+operator|<
+name|raw_pwrite_stream
+operator|>
 name|createNullOutputFile
 argument_list|()
 block|;
@@ -2120,6 +2079,14 @@ argument_list|,
 name|SourceManager
 operator|&
 name|SourceMgr
+argument_list|,
+name|HeaderSearch
+operator|*
+name|HS
+argument_list|,
+name|DependencyOutputOptions
+operator|&
+name|DepOpts
 argument_list|,
 specifier|const
 name|FrontendOptions

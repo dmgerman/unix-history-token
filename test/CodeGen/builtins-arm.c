@@ -1,11 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: arm-registered-target
+comment|// RUN: %clang_cc1 -Wall -Werror -triple thumbv7-eabi -target-cpu cortex-a8 -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
-begin_comment
-comment|// RUN: %clang_cc1 -Wall -Werror -triple thumbv7-eabi -target-cpu cortex-a8 -O3 -emit-llvm -o - %s | FileCheck %s
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
 
 begin_function
 name|void
@@ -274,12 +276,260 @@ block|}
 end_function
 
 begin_function
+name|void
+name|ldc
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @ldc(i8* %i)
+comment|// CHECK: call void @llvm.arm.ldc(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_ldc
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ldcl
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @ldcl(i8* %i)
+comment|// CHECK: call void @llvm.arm.ldcl(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_ldcl
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ldc2
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @ldc2(i8* %i)
+comment|// CHECK: call void @llvm.arm.ldc2(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_ldc2
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ldc2l
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @ldc2l(i8* %i)
+comment|// CHECK: call void @llvm.arm.ldc2l(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_ldc2l
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|stc
+parameter_list|(
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @stc(i8* %i)
+comment|// CHECK: call void @llvm.arm.stc(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_stc
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|stcl
+parameter_list|(
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @stcl(i8* %i)
+comment|// CHECK: call void @llvm.arm.stcl(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_stcl
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|stc2
+parameter_list|(
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @stc2(i8* %i)
+comment|// CHECK: call void @llvm.arm.stc2(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_stc2
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|stc2l
+parameter_list|(
+name|void
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK: define void @stc2l(i8* %i)
+comment|// CHECK: call void @llvm.arm.stc2l(i32 1, i32 2, i8* %i)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_stc2l
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cdp
+parameter_list|()
+block|{
+comment|// CHECK: define void @cdp()
+comment|// CHECK: call void @llvm.arm.cdp(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_cdp
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cdp2
+parameter_list|()
+block|{
+comment|// CHECK: define void @cdp2()
+comment|// CHECK: call void @llvm.arm.cdp2(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6)
+comment|// CHECK-NEXT: ret void
+name|__builtin_arm_cdp2
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|,
+literal|5
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|unsigned
 name|mrc
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @mrc()
-comment|// CHECK: [[R:%.*]] = {{.*}} call i32 @llvm.arm.mrc(i32 15, i32 0, i32 13, i32 0, i32 3)
+comment|// CHECK: [[R:%.*]] = call i32 @llvm.arm.mrc(i32 15, i32 0, i32 13, i32 0, i32 3)
 comment|// CHECK-NEXT: ret i32 [[R]]
 return|return
 name|__builtin_arm_mrc
@@ -304,7 +554,7 @@ name|mrc2
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @mrc2()
-comment|// CHECK: [[R:%.*]] = {{.*}} call i32 @llvm.arm.mrc2(i32 15, i32 0, i32 13, i32 0, i32 3)
+comment|// CHECK: [[R:%.*]] = call i32 @llvm.arm.mrc2(i32 15, i32 0, i32 13, i32 0, i32 3)
 comment|// CHECK-NEXT: ret i32 [[R]]
 return|return
 name|__builtin_arm_mrc2
@@ -383,15 +633,12 @@ begin_function
 name|void
 name|mcrr
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|a
-parameter_list|,
-name|unsigned
-name|b
 parameter_list|)
 block|{
-comment|// CHECK: define void @mcrr(i32 [[A:%.*]], i32 [[B:%.*]])
-comment|// CHECK: call void @llvm.arm.mcrr(i32 15, i32 0, i32 [[A]], i32 [[B]], i32 0)
+comment|// CHECK: define void @mcrr(i64 %{{.*}})
+comment|// CHECK: call void @llvm.arm.mcrr(i32 15, i32 0, i32 %{{[0-9]+}}, i32 %{{[0-9]+}}, i32 0)
 name|__builtin_arm_mcrr
 argument_list|(
 literal|15
@@ -399,8 +646,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|a
-argument_list|,
-name|b
 argument_list|,
 literal|0
 argument_list|)
@@ -412,15 +657,12 @@ begin_function
 name|void
 name|mcrr2
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|a
-parameter_list|,
-name|unsigned
-name|b
 parameter_list|)
 block|{
-comment|// CHECK: define void @mcrr2(i32 [[A:%.*]], i32 [[B:%.*]])
-comment|// CHECK: call void @llvm.arm.mcrr2(i32 15, i32 0, i32 [[A]], i32 [[B]], i32 0)
+comment|// CHECK: define void @mcrr2(i64 %{{.*}})
+comment|// CHECK: call void @llvm.arm.mcrr2(i32 15, i32 0, i32 %{{[0-9]+}}, i32 %{{[0-9]+}}, i32 0)
 name|__builtin_arm_mcrr2
 argument_list|(
 literal|15
@@ -429,11 +671,49 @@ literal|0
 argument_list|,
 name|a
 argument_list|,
-name|b
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|mrrc
+parameter_list|()
+block|{
+comment|// CHECK: define i64 @mrrc()
+comment|// CHECK: call { i32, i32 } @llvm.arm.mrrc(i32 15, i32 0, i32 0)
+return|return
+name|__builtin_arm_mrrc
+argument_list|(
+literal|15
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|mrrc2
+parameter_list|()
+block|{
+comment|// CHECK: define i64 @mrrc2()
+comment|// CHECK: call { i32, i32 } @llvm.arm.mrrc2(i32 15, i32 0, i32 0)
+return|return
+name|__builtin_arm_mrrc2
+argument_list|(
+literal|15
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -442,7 +722,7 @@ name|unsigned
 name|rsr
 parameter_list|()
 block|{
-comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i32 @llvm.read_register.i32(metadata !7)
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = call i32 @llvm.read_register.i32(metadata ![[M0:.*]])
 comment|// CHECK-NEXT: ret i32 [[V0]]
 return|return
 name|__builtin_arm_rsr
@@ -460,7 +740,7 @@ name|long
 name|rsr64
 parameter_list|()
 block|{
-comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i64 @llvm.read_register.i64(metadata !8)
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = call i64 @llvm.read_register.i64(metadata ![[M1:.*]])
 comment|// CHECK-NEXT: ret i64 [[V0]]
 return|return
 name|__builtin_arm_rsr64
@@ -477,7 +757,7 @@ modifier|*
 name|rsrp
 parameter_list|()
 block|{
-comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i32 @llvm.read_register.i32(metadata !9)
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = call i32 @llvm.read_register.i32(metadata ![[M2:.*]])
 comment|// CHECK-NEXT: [[V1:[%A-Za-z0-9.]+]] = inttoptr i32 [[V0]] to i8*
 comment|// CHECK-NEXT: ret i8* [[V1]]
 return|return
@@ -497,7 +777,7 @@ name|unsigned
 name|v
 parameter_list|)
 block|{
-comment|// CHECK: call void @llvm.write_register.i32(metadata !7, i32 %v)
+comment|// CHECK: call void @llvm.write_register.i32(metadata ![[M0]], i32 %v)
 name|__builtin_arm_wsr
 argument_list|(
 literal|"cp1:2:c3:c4:5"
@@ -518,7 +798,7 @@ name|long
 name|v
 parameter_list|)
 block|{
-comment|// CHECK: call void @llvm.write_register.i64(metadata !8, i64 %v)
+comment|// CHECK: call void @llvm.write_register.i64(metadata ![[M1]], i64 %v)
 name|__builtin_arm_wsr64
 argument_list|(
 literal|"cp1:2:c3"
@@ -539,7 +819,7 @@ name|v
 parameter_list|)
 block|{
 comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = ptrtoint i8* %v to i32
-comment|// CHECK-NEXT: call void @llvm.write_register.i32(metadata !9, i32 [[V0]])
+comment|// CHECK-NEXT: call void @llvm.write_register.i32(metadata ![[M2]], i32 [[V0]])
 name|__builtin_arm_wsrp
 argument_list|(
 literal|"sysreg"
@@ -551,15 +831,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: !7 = !{!"cp1:2:c3:c4:5"}
+comment|// CHECK: ![[M0]] = !{!"cp1:2:c3:c4:5"}
 end_comment
 
 begin_comment
-comment|// CHECK: !8 = !{!"cp1:2:c3"}
+comment|// CHECK: ![[M1]] = !{!"cp1:2:c3"}
 end_comment
 
 begin_comment
-comment|// CHECK: !9 = !{!"sysreg"}
+comment|// CHECK: ![[M2]] = !{!"sysreg"}
 end_comment
 
 end_unit

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/Token.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -86,9 +92,6 @@ name|MacroInfo
 decl_stmt|;
 name|class
 name|Preprocessor
-decl_stmt|;
-name|class
-name|Token
 decl_stmt|;
 name|class
 name|SourceLocation

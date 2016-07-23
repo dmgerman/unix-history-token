@@ -19,6 +19,10 @@ directive|include
 file|<x86intrin.h>
 end_include
 
+begin_comment
+comment|// NOTE: This should match the tests in llvm/test/CodeGen/X86/sse4a-intrinsics-fast-isel.ll
+end_comment
+
 begin_function
 name|__m128i
 name|test_mm_extracti_si64
@@ -131,7 +135,8 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_stream_sd
-comment|// CHECK: call void @llvm.x86.sse4a.movnt.sd(i8* %{{[^,]+}},<2 x double> %{{[^,]+}})
+comment|// CHECK: extractelement<2 x double> %{{.*}}, i64 0
+comment|// CHECK: store double %{{.*}}, double* %{{.*}}, align 1, !nontemporal
 name|_mm_stream_sd
 argument_list|(
 name|p
@@ -155,7 +160,8 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_stream_ss
-comment|// CHECK: call void @llvm.x86.sse4a.movnt.ss(i8* %{{[^,]+}},<4 x float> %{{[^,]+}})
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i64 0
+comment|// CHECK: store float %{{.*}}, float* %{{.*}}, align 1, !nontemporal
 name|_mm_stream_ss
 argument_list|(
 name|p

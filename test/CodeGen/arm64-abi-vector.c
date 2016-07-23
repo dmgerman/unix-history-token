@@ -3,11 +3,28 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-apple-ios7 -target-abi darwinpcs -emit-llvm -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple aarch64-linux-android -emit-llvm -o - %s | FileCheck -check-prefix=ANDROID %s
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|2
+argument|) )
+argument_list|)
+name|char
+name|__char2
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -138,6 +155,94 @@ name|double
 name|__double3
 typedef|;
 end_typedef
+
+begin_comment
+comment|// Passing legal vector types as varargs. Check that we've allocated the appropriate size
+end_comment
+
+begin_function
+name|double
+name|varargs_vec_2c
+parameter_list|(
+name|int
+name|fixed
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+comment|// ANDROID: varargs_vec_2c
+comment|// ANDROID: [[VAR:%.*]] = alloca<2 x i8>, align 2
+comment|// ANDROID: [[AP_NEXT:%.*]] = getelementptr inbounds i8, i8* [[AP_CUR:%.*]], i64 8
+comment|// ANDROID: bitcast i8* [[AP_CUR]] to<2 x i8>*
+name|va_list
+name|ap
+decl_stmt|;
+name|double
+name|sum
+init|=
+name|fixed
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fixed
+argument_list|)
+expr_stmt|;
+name|__char2
+name|c3
+init|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|__char2
+argument_list|)
+decl_stmt|;
+name|sum
+operator|=
+name|sum
+operator|+
+name|c3
+operator|.
+name|x
+operator|+
+name|c3
+operator|.
+name|y
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|sum
+return|;
+block|}
+end_function
+
+begin_function
+name|double
+name|test_2c
+parameter_list|(
+name|__char2
+modifier|*
+name|in
+parameter_list|)
+block|{
+comment|// ANDROID: call double (i32, ...) @varargs_vec_2c(i32 3, i16 {{%.*}})
+return|return
+name|varargs_vec_2c
+argument_list|(
+literal|3
+argument_list|,
+operator|*
+name|in
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|double

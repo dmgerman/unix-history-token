@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ExternalASTSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -194,7 +200,7 @@ modifier|&
 name|CGM
 decl_stmt|;
 specifier|const
-name|CodeGenOptions
+name|codegenoptions
 operator|::
 name|DebugInfoKind
 name|DebugKind
@@ -221,6 +227,11 @@ name|ClangModuleMap
 init|=
 name|nullptr
 decl_stmt|;
+name|ExternalASTSource
+operator|::
+name|ASTSourceDescriptor
+name|PCHDescriptor
+expr_stmt|;
 name|SourceLocation
 name|CurLoc
 decl_stmt|;
@@ -256,102 +267,25 @@ name|SelTy
 operator|=
 name|nullptr
 expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage1dDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage1dArrayDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage1dBufferDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dArrayDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dDepthDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dArrayDepthDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dMSAADITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dArrayMSAADITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dMSAADepthDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage2dArrayMSAADepthDITy
-operator|=
-name|nullptr
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-operator|*
-name|OCLImage3dDITy
-operator|=
-name|nullptr
-expr_stmt|;
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+define|\
+value|llvm::DIType *SingletonId = nullptr;
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 name|llvm
 operator|::
 name|DIType
@@ -534,7 +468,7 @@ name|TrackingMDRef
 operator|>>
 name|ReplaceMap
 expr_stmt|;
-comment|/// Cache of replaceable forward declarartions (functions and
+comment|/// Cache of replaceable forward declarations (functions and
 comment|/// variables) to RAUW at the end of compilation.
 name|std
 operator|::
@@ -1404,8 +1338,6 @@ argument|StringRef name
 argument_list|,
 argument|QualType type
 argument_list|,
-argument|uint64_t sizeInBitsOverride
-argument_list|,
 argument|SourceLocation loc
 argument_list|,
 argument|AccessSpecifier AS
@@ -1417,6 +1349,30 @@ argument_list|,
 argument|llvm::DIScope *scope
 argument_list|,
 argument|const RecordDecl *RD = nullptr
+argument_list|)
+expr_stmt|;
+comment|/// Create new bit field member.
+name|llvm
+operator|::
+name|DIType
+operator|*
+name|createBitFieldType
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|BitFieldDecl
+argument_list|,
+name|llvm
+operator|::
+name|DIScope
+operator|*
+name|RecordTy
+argument_list|,
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
 argument_list|)
 expr_stmt|;
 comment|/// Helpers for collecting fields of a record.
@@ -1592,6 +1548,8 @@ name|void
 name|finalize
 parameter_list|()
 function_decl|;
+comment|/// Module debugging: Support for building PCMs.
+comment|/// @{
 comment|/// Set the main CU's DwoId field to \p Signature.
 name|void
 name|setDwoId
@@ -1617,6 +1575,24 @@ operator|&
 name|MMap
 expr_stmt|;
 block|}
+comment|/// When generating debug information for a clang module or
+comment|/// precompiled header, this module map will be used to determine
+comment|/// the module of origin of each Decl.
+name|void
+name|setPCHDescriptor
+argument_list|(
+name|ExternalASTSource
+operator|::
+name|ASTSourceDescriptor
+name|PCH
+argument_list|)
+block|{
+name|PCHDescriptor
+operator|=
+name|PCH
+expr_stmt|;
+block|}
+comment|/// @}
 comment|/// Update the current source location. If \arg loc is invalid it is
 comment|/// ignored.
 name|void

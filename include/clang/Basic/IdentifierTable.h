@@ -235,6 +235,14 @@ decl_stmt|;
 comment|// True if identifier has changed from the
 comment|// definition loaded from an AST file.
 name|bool
+name|FEChangedAfterLoad
+range|:
+literal|1
+decl_stmt|;
+comment|// True if identifier's frontend information
+comment|// has changed from the definition loaded
+comment|// from an AST file.
+name|bool
 name|RevertedTokenID
 range|:
 literal|1
@@ -256,7 +264,7 @@ literal|1
 decl_stmt|;
 comment|// True if this is the 'import' contextual
 comment|// keyword.
-comment|// 30 bit left in 64-bit word.
+comment|// 29 bit left in 64-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -1327,6 +1335,46 @@ name|setChangedSinceDeserialization
 parameter_list|()
 block|{
 name|ChangedAfterLoad
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether the frontend token information for this
+end_comment
+
+begin_comment
+comment|/// identifier has changed since it was loaded from an AST file.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasFETokenInfoChangedSinceDeserialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FEChangedAfterLoad
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note that the frontend token information for this identifier has
+end_comment
+
+begin_comment
+comment|/// changed since it was loaded from an AST file.
+end_comment
+
+begin_function
+name|void
+name|setFETokenInfoChangedSinceDeserialization
+parameter_list|()
+block|{
+name|FEChangedAfterLoad
 operator|=
 name|true
 expr_stmt|;

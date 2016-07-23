@@ -223,6 +223,29 @@ return|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|target
+argument_list|(
+literal|"arch=lakemont"
+argument_list|)
+operator|)
+argument_list|)
+name|lake
+argument_list|(
+name|int
+name|a
+argument_list|)
+block|{
+return|return
+literal|4
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|// Check that we emit the additional subtarget and cpu features for foo and not for baz or bar.
 end_comment
@@ -276,27 +299,35 @@ comment|// CHECK: qq{{.*}} #5
 end_comment
 
 begin_comment
-comment|// CHECK: #0 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2"
+comment|// CHECK: lake{{.*}} #6
 end_comment
 
 begin_comment
-comment|// CHECK: #1 = {{.*}}"target-cpu"="ivybridge" "target-features"="+aes,+avx,+cx16,+f16c,+fsgsbase,+fxsr,+mmx,+pclmul,+popcnt,+rdrnd,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3,+xsave,+xsaveopt"
+comment|// CHECK: #0 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87"
 end_comment
 
 begin_comment
-comment|// CHECK: #2 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,-aes,-avx,-avx2,-avx512bw,-avx512cd,-avx512dq,-avx512er,-avx512f,-avx512pf,-avx512vl,-f16c,-fma,-fma4,-pclmul,-sha,-sse2,-sse3,-sse4.1,-sse4.2,-sse4a,-ssse3,-xop,-xsave,-xsaveopt"
+comment|// CHECK: #1 = {{.*}}"target-cpu"="ivybridge" "target-features"="+aes,+avx,+cx16,+f16c,+fsgsbase,+fxsr,+mmx,+pclmul,+popcnt,+rdrnd,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3,+x87,+xsave,+xsaveopt"
 end_comment
 
 begin_comment
-comment|// CHECK: #3 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+popcnt,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3"
+comment|// CHECK: #2 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+x87,-aes,-avx,-avx2,-avx512bw,-avx512cd,-avx512dq,-avx512er,-avx512f,-avx512ifma,-avx512pf,-avx512vbmi,-avx512vl,-f16c,-fma,-fma4,-pclmul,-sha,-sse2,-sse3,-sse4.1,-sse4.2,-sse4a,-ssse3,-xop,-xsave,-xsaveopt"
 end_comment
 
 begin_comment
-comment|// CHECK: #4 = {{.*}}"target-cpu"="ivybridge" "target-features"="+avx,+cx16,+f16c,+fsgsbase,+fxsr,+mmx,+pclmul,+popcnt,+rdrnd,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3,+xsave,+xsaveopt,-aes"
+comment|// CHECK: #3 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+popcnt,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3,+x87"
 end_comment
 
 begin_comment
-comment|// CHECK: #5 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+sse,+sse2,-3dnow,-3dnowa,-mmx"
+comment|// CHECK: #4 = {{.*}}"target-cpu"="ivybridge" "target-features"="+avx,+cx16,+f16c,+fsgsbase,+fxsr,+mmx,+pclmul,+popcnt,+rdrnd,+sse,+sse2,+sse3,+sse4.1,+sse4.2,+ssse3,+x87,+xsave,+xsaveopt,-aes"
+end_comment
+
+begin_comment
+comment|// CHECK: #5 = {{.*}}"target-cpu"="x86-64" "target-features"="+fxsr,+sse,+sse2,+x87,-3dnow,-3dnowa,-mmx"
+end_comment
+
+begin_comment
+comment|// CHECK: #6 = {{.*}}"target-cpu"="lakemont" "target-features"="+mmx,+sse,+sse2"
 end_comment
 
 end_unit

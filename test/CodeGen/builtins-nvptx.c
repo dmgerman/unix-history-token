@@ -4,11 +4,19 @@ comment|// REQUIRES: nvptx-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple nvptx-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple nvptx-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple nvptx64-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | FileCheck %s
+comment|// RUN:   FileCheck -check-prefix=CHECK -check-prefix=LP32 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple nvptx64-unknown-unknown -fcuda-is-device -S -emit-llvm -o - -x cuda %s | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck -check-prefix=CHECK -check-prefix=LP64 %s
 end_comment
 
 begin_define
@@ -45,32 +53,32 @@ name|int
 name|read_tid
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.tid.x()
-comment|// CHECK: call i32 @llvm.ptx.read.tid.y()
-comment|// CHECK: call i32 @llvm.ptx.read.tid.z()
-comment|// CHECK: call i32 @llvm.ptx.read.tid.w()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.tid.y()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.tid.z()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.tid.w()
 name|int
 name|x
 init|=
-name|__builtin_ptx_read_tid_x
+name|__nvvm_read_ptx_sreg_tid_x
 argument_list|()
 decl_stmt|;
 name|int
 name|y
 init|=
-name|__builtin_ptx_read_tid_y
+name|__nvvm_read_ptx_sreg_tid_y
 argument_list|()
 decl_stmt|;
 name|int
 name|z
 init|=
-name|__builtin_ptx_read_tid_z
+name|__nvvm_read_ptx_sreg_tid_z
 argument_list|()
 decl_stmt|;
 name|int
 name|w
 init|=
-name|__builtin_ptx_read_tid_w
+name|__nvvm_read_ptx_sreg_tid_w
 argument_list|()
 decl_stmt|;
 return|return
@@ -91,32 +99,32 @@ name|int
 name|read_ntid
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.ntid.x()
-comment|// CHECK: call i32 @llvm.ptx.read.ntid.y()
-comment|// CHECK: call i32 @llvm.ptx.read.ntid.z()
-comment|// CHECK: call i32 @llvm.ptx.read.ntid.w()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ntid.y()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ntid.z()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ntid.w()
 name|int
 name|x
 init|=
-name|__builtin_ptx_read_ntid_x
+name|__nvvm_read_ptx_sreg_ntid_x
 argument_list|()
 decl_stmt|;
 name|int
 name|y
 init|=
-name|__builtin_ptx_read_ntid_y
+name|__nvvm_read_ptx_sreg_ntid_y
 argument_list|()
 decl_stmt|;
 name|int
 name|z
 init|=
-name|__builtin_ptx_read_ntid_z
+name|__nvvm_read_ptx_sreg_ntid_z
 argument_list|()
 decl_stmt|;
 name|int
 name|w
 init|=
-name|__builtin_ptx_read_ntid_w
+name|__nvvm_read_ptx_sreg_ntid_w
 argument_list|()
 decl_stmt|;
 return|return
@@ -137,32 +145,32 @@ name|int
 name|read_ctaid
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.ctaid.x()
-comment|// CHECK: call i32 @llvm.ptx.read.ctaid.y()
-comment|// CHECK: call i32 @llvm.ptx.read.ctaid.z()
-comment|// CHECK: call i32 @llvm.ptx.read.ctaid.w()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ctaid.x()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ctaid.y()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ctaid.z()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.ctaid.w()
 name|int
 name|x
 init|=
-name|__builtin_ptx_read_ctaid_x
+name|__nvvm_read_ptx_sreg_ctaid_x
 argument_list|()
 decl_stmt|;
 name|int
 name|y
 init|=
-name|__builtin_ptx_read_ctaid_y
+name|__nvvm_read_ptx_sreg_ctaid_y
 argument_list|()
 decl_stmt|;
 name|int
 name|z
 init|=
-name|__builtin_ptx_read_ctaid_z
+name|__nvvm_read_ptx_sreg_ctaid_z
 argument_list|()
 decl_stmt|;
 name|int
 name|w
 init|=
-name|__builtin_ptx_read_ctaid_w
+name|__nvvm_read_ptx_sreg_ctaid_w
 argument_list|()
 decl_stmt|;
 return|return
@@ -183,32 +191,32 @@ name|int
 name|read_nctaid
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.nctaid.x()
-comment|// CHECK: call i32 @llvm.ptx.read.nctaid.y()
-comment|// CHECK: call i32 @llvm.ptx.read.nctaid.z()
-comment|// CHECK: call i32 @llvm.ptx.read.nctaid.w()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nctaid.x()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nctaid.y()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nctaid.z()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nctaid.w()
 name|int
 name|x
 init|=
-name|__builtin_ptx_read_nctaid_x
+name|__nvvm_read_ptx_sreg_nctaid_x
 argument_list|()
 decl_stmt|;
 name|int
 name|y
 init|=
-name|__builtin_ptx_read_nctaid_y
+name|__nvvm_read_ptx_sreg_nctaid_y
 argument_list|()
 decl_stmt|;
 name|int
 name|z
 init|=
-name|__builtin_ptx_read_nctaid_z
+name|__nvvm_read_ptx_sreg_nctaid_z
 argument_list|()
 decl_stmt|;
 name|int
 name|w
 init|=
-name|__builtin_ptx_read_nctaid_w
+name|__nvvm_read_ptx_sreg_nctaid_w
 argument_list|()
 decl_stmt|;
 return|return
@@ -229,46 +237,46 @@ name|int
 name|read_ids
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.laneid()
-comment|// CHECK: call i32 @llvm.ptx.read.warpid()
-comment|// CHECK: call i32 @llvm.ptx.read.nwarpid()
-comment|// CHECK: call i32 @llvm.ptx.read.smid()
-comment|// CHECK: call i32 @llvm.ptx.read.nsmid()
-comment|// CHECK: call i32 @llvm.ptx.read.gridid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.laneid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.warpid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nwarpid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.smid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.nsmid()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.gridid()
 name|int
 name|a
 init|=
-name|__builtin_ptx_read_laneid
+name|__nvvm_read_ptx_sreg_laneid
 argument_list|()
 decl_stmt|;
 name|int
 name|b
 init|=
-name|__builtin_ptx_read_warpid
+name|__nvvm_read_ptx_sreg_warpid
 argument_list|()
 decl_stmt|;
 name|int
 name|c
 init|=
-name|__builtin_ptx_read_nwarpid
+name|__nvvm_read_ptx_sreg_nwarpid
 argument_list|()
 decl_stmt|;
 name|int
 name|d
 init|=
-name|__builtin_ptx_read_smid
+name|__nvvm_read_ptx_sreg_smid
 argument_list|()
 decl_stmt|;
 name|int
 name|e
 init|=
-name|__builtin_ptx_read_nsmid
+name|__nvvm_read_ptx_sreg_nsmid
 argument_list|()
 decl_stmt|;
 name|int
 name|f
 init|=
-name|__builtin_ptx_read_gridid
+name|__nvvm_read_ptx_sreg_gridid
 argument_list|()
 decl_stmt|;
 return|return
@@ -293,39 +301,39 @@ name|int
 name|read_lanemasks
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.lanemask.eq()
-comment|// CHECK: call i32 @llvm.ptx.read.lanemask.le()
-comment|// CHECK: call i32 @llvm.ptx.read.lanemask.lt()
-comment|// CHECK: call i32 @llvm.ptx.read.lanemask.ge()
-comment|// CHECK: call i32 @llvm.ptx.read.lanemask.gt()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.lanemask.eq()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.lanemask.le()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.lanemask.lt()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.lanemask.ge()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.lanemask.gt()
 name|int
 name|a
 init|=
-name|__builtin_ptx_read_lanemask_eq
+name|__nvvm_read_ptx_sreg_lanemask_eq
 argument_list|()
 decl_stmt|;
 name|int
 name|b
 init|=
-name|__builtin_ptx_read_lanemask_le
+name|__nvvm_read_ptx_sreg_lanemask_le
 argument_list|()
 decl_stmt|;
 name|int
 name|c
 init|=
-name|__builtin_ptx_read_lanemask_lt
+name|__nvvm_read_ptx_sreg_lanemask_lt
 argument_list|()
 decl_stmt|;
 name|int
 name|d
 init|=
-name|__builtin_ptx_read_lanemask_ge
+name|__nvvm_read_ptx_sreg_lanemask_ge
 argument_list|()
 decl_stmt|;
 name|int
 name|e
 init|=
-name|__builtin_ptx_read_lanemask_gt
+name|__nvvm_read_ptx_sreg_lanemask_gt
 argument_list|()
 decl_stmt|;
 return|return
@@ -349,19 +357,19 @@ name|long
 name|read_clocks
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.clock()
-comment|// CHECK: call i64 @llvm.ptx.read.clock64()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.clock()
+comment|// CHECK: call i64 @llvm.nvvm.read.ptx.sreg.clock64()
 name|int
 name|a
 init|=
-name|__builtin_ptx_read_clock
+name|__nvvm_read_ptx_sreg_clock
 argument_list|()
 decl_stmt|;
 name|long
 name|long
 name|b
 init|=
-name|__builtin_ptx_read_clock64
+name|__nvvm_read_ptx_sreg_clock64
 argument_list|()
 decl_stmt|;
 return|return
@@ -378,32 +386,32 @@ name|int
 name|read_pms
 parameter_list|()
 block|{
-comment|// CHECK: call i32 @llvm.ptx.read.pm0()
-comment|// CHECK: call i32 @llvm.ptx.read.pm1()
-comment|// CHECK: call i32 @llvm.ptx.read.pm2()
-comment|// CHECK: call i32 @llvm.ptx.read.pm3()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.pm0()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.pm1()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.pm2()
+comment|// CHECK: call i32 @llvm.nvvm.read.ptx.sreg.pm3()
 name|int
 name|a
 init|=
-name|__builtin_ptx_read_pm0
+name|__nvvm_read_ptx_sreg_pm0
 argument_list|()
 decl_stmt|;
 name|int
 name|b
 init|=
-name|__builtin_ptx_read_pm1
+name|__nvvm_read_ptx_sreg_pm1
 argument_list|()
 decl_stmt|;
 name|int
 name|c
 init|=
-name|__builtin_ptx_read_pm2
+name|__nvvm_read_ptx_sreg_pm2
 argument_list|()
 decl_stmt|;
 name|int
 name|d
 init|=
-name|__builtin_ptx_read_pm3
+name|__nvvm_read_ptx_sreg_pm3
 argument_list|()
 decl_stmt|;
 return|return
@@ -424,8 +432,8 @@ name|void
 name|sync
 parameter_list|()
 block|{
-comment|// CHECK: call void @llvm.ptx.bar.sync(i32 0)
-name|__builtin_ptx_bar_sync
+comment|// CHECK: call void @llvm.nvvm.bar.sync(i32 0)
+name|__nvvm_bar_sync
 argument_list|(
 literal|0
 argument_list|)
@@ -567,7 +575,7 @@ name|__nvvm_membar_sys
 argument_list|()
 expr_stmt|;
 comment|// CHECK: call void @llvm.nvvm.barrier0()
-name|__nvvm_bar0
+name|__syncthreads
 argument_list|()
 expr_stmt|;
 block|}
@@ -643,6 +651,14 @@ name|ip
 parameter_list|,
 name|int
 name|i
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|uip
+parameter_list|,
+name|unsigned
+name|ui
 parameter_list|,
 name|long
 modifier|*
@@ -996,7 +1012,480 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+comment|// CHECK: call i32 @llvm.nvvm.atomic.load.inc.32.p0i32
+name|__nvvm_atom_inc_gen_ui
+argument_list|(
+name|uip
+argument_list|,
+name|ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i32 @llvm.nvvm.atomic.load.dec.32.p0i32
+name|__nvvm_atom_dec_gen_ui
+argument_list|(
+name|uip
+argument_list|,
+name|ui
+argument_list|)
+expr_stmt|;
 comment|// CHECK: ret
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: nvvm_ldg
+end_comment
+
+begin_function
+name|__device__
+name|void
+name|nvvm_ldg
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK: call i8 @llvm.nvvm.ldg.global.i.i8.p0i8(i8* {{%[0-9]+}}, i32 1)
+comment|// CHECK: call i8 @llvm.nvvm.ldg.global.i.i8.p0i8(i8* {{%[0-9]+}}, i32 1)
+name|__nvvm_ldg_c
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_uc
+argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i16 @llvm.nvvm.ldg.global.i.i16.p0i16(i16* {{%[0-9]+}}, i32 2)
+comment|// CHECK: call i16 @llvm.nvvm.ldg.global.i.i16.p0i16(i16* {{%[0-9]+}}, i32 2)
+name|__nvvm_ldg_s
+argument_list|(
+operator|(
+specifier|const
+name|short
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_us
+argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|short
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call i32 @llvm.nvvm.ldg.global.i.i32.p0i32(i32* {{%[0-9]+}}, i32 4)
+comment|// CHECK: call i32 @llvm.nvvm.ldg.global.i.i32.p0i32(i32* {{%[0-9]+}}, i32 4)
+name|__nvvm_ldg_i
+argument_list|(
+operator|(
+specifier|const
+name|int
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_ui
+argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|int
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// LP32: call i32 @llvm.nvvm.ldg.global.i.i32.p0i32(i32* {{%[0-9]+}}, i32 4)
+comment|// LP32: call i32 @llvm.nvvm.ldg.global.i.i32.p0i32(i32* {{%[0-9]+}}, i32 4)
+comment|// LP64: call i64 @llvm.nvvm.ldg.global.i.i64.p0i64(i64* {{%[0-9]+}}, i32 8)
+comment|// LP64: call i64 @llvm.nvvm.ldg.global.i.i64.p0i64(i64* {{%[0-9]+}}, i32 8)
+name|__nvvm_ldg_l
+argument_list|(
+operator|(
+specifier|const
+name|long
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_ul
+argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|long
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call float @llvm.nvvm.ldg.global.f.f32.p0f32(float* {{%[0-9]+}}, i32 4)
+name|__nvvm_ldg_f
+argument_list|(
+operator|(
+specifier|const
+name|float
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call double @llvm.nvvm.ldg.global.f.f64.p0f64(double* {{%[0-9]+}}, i32 8)
+name|__nvvm_ldg_d
+argument_list|(
+operator|(
+specifier|const
+name|double
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// In practice, the pointers we pass to __ldg will be aligned as appropriate
+comment|// for the CUDA<type>N vector types (e.g. short4), which are not the same as
+comment|// the LLVM vector types.  However, each LLVM vector type has an alignment
+comment|// less than or equal to its corresponding CUDA type, so we're OK.
+comment|//
+comment|// PTX Interoperability section 2.2: "For a vector with an even number of
+comment|// elements, its alignment is set to number of elements times the alignment of
+comment|// its member: n*alignof(t)."
+comment|// CHECK: call<2 x i8> @llvm.nvvm.ldg.global.i.v2i8.p0v2i8(<2 x i8>* {{%[0-9]+}}, i32 2)
+comment|// CHECK: call<2 x i8> @llvm.nvvm.ldg.global.i.v2i8.p0v2i8(<2 x i8>* {{%[0-9]+}}, i32 2)
+typedef|typedef
+name|char
+name|char2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+typedef|typedef
+name|unsigned
+name|char
+name|uchar2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_c2
+argument_list|(
+operator|(
+specifier|const
+name|char2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_uc2
+argument_list|(
+operator|(
+specifier|const
+name|uchar2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i8> @llvm.nvvm.ldg.global.i.v4i8.p0v4i8(<4 x i8>* {{%[0-9]+}}, i32 4)
+comment|// CHECK: call<4 x i8> @llvm.nvvm.ldg.global.i.v4i8.p0v4i8(<4 x i8>* {{%[0-9]+}}, i32 4)
+typedef|typedef
+name|char
+name|char4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+typedef|typedef
+name|unsigned
+name|char
+name|uchar4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+name|__nvvm_ldg_c4
+argument_list|(
+operator|(
+specifier|const
+name|char4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_uc4
+argument_list|(
+operator|(
+specifier|const
+name|uchar4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i16> @llvm.nvvm.ldg.global.i.v2i16.p0v2i16(<2 x i16>* {{%[0-9]+}}, i32 4)
+comment|// CHECK: call<2 x i16> @llvm.nvvm.ldg.global.i.v2i16.p0v2i16(<2 x i16>* {{%[0-9]+}}, i32 4)
+typedef|typedef
+name|short
+name|short2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+typedef|typedef
+name|unsigned
+name|short
+name|ushort2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_s2
+argument_list|(
+operator|(
+specifier|const
+name|short2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_us2
+argument_list|(
+operator|(
+specifier|const
+name|ushort2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i16> @llvm.nvvm.ldg.global.i.v4i16.p0v4i16(<4 x i16>* {{%[0-9]+}}, i32 8)
+comment|// CHECK: call<4 x i16> @llvm.nvvm.ldg.global.i.v4i16.p0v4i16(<4 x i16>* {{%[0-9]+}}, i32 8)
+typedef|typedef
+name|short
+name|short4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+typedef|typedef
+name|unsigned
+name|short
+name|ushort4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+name|__nvvm_ldg_s4
+argument_list|(
+operator|(
+specifier|const
+name|short4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_us4
+argument_list|(
+operator|(
+specifier|const
+name|ushort4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i32> @llvm.nvvm.ldg.global.i.v2i32.p0v2i32(<2 x i32>* {{%[0-9]+}}, i32 8)
+comment|// CHECK: call<2 x i32> @llvm.nvvm.ldg.global.i.v2i32.p0v2i32(<2 x i32>* {{%[0-9]+}}, i32 8)
+typedef|typedef
+name|int
+name|int2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+typedef|typedef
+name|unsigned
+name|int
+name|uint2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_i2
+argument_list|(
+operator|(
+specifier|const
+name|int2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_ui2
+argument_list|(
+operator|(
+specifier|const
+name|uint2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x i32> @llvm.nvvm.ldg.global.i.v4i32.p0v4i32(<4 x i32>* {{%[0-9]+}}, i32 16)
+comment|// CHECK: call<4 x i32> @llvm.nvvm.ldg.global.i.v4i32.p0v4i32(<4 x i32>* {{%[0-9]+}}, i32 16)
+typedef|typedef
+name|int
+name|int4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+typedef|typedef
+name|unsigned
+name|int
+name|uint4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+name|__nvvm_ldg_i4
+argument_list|(
+operator|(
+specifier|const
+name|int4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_ui4
+argument_list|(
+operator|(
+specifier|const
+name|uint4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x i64> @llvm.nvvm.ldg.global.i.v2i64.p0v2i64(<2 x i64>* {{%[0-9]+}}, i32 16)
+comment|// CHECK: call<2 x i64> @llvm.nvvm.ldg.global.i.v2i64.p0v2i64(<2 x i64>* {{%[0-9]+}}, i32 16)
+typedef|typedef
+name|long
+name|long
+name|longlong2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|ulonglong2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_ll2
+argument_list|(
+operator|(
+specifier|const
+name|longlong2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+name|__nvvm_ldg_ull2
+argument_list|(
+operator|(
+specifier|const
+name|ulonglong2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x float> @llvm.nvvm.ldg.global.f.v2f32.p0v2f32(<2 x float>* {{%[0-9]+}}, i32 8)
+typedef|typedef
+name|float
+name|float2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_f2
+argument_list|(
+operator|(
+specifier|const
+name|float2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x float> @llvm.nvvm.ldg.global.f.v4f32.p0v4f32(<4 x float>* {{%[0-9]+}}, i32 16)
+typedef|typedef
+name|float
+name|float4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+name|__nvvm_ldg_f4
+argument_list|(
+operator|(
+specifier|const
+name|float4
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<2 x double> @llvm.nvvm.ldg.global.f.v2f64.p0v2f64(<2 x double>* {{%[0-9]+}}, i32 16)
+typedef|typedef
+name|double
+name|double2
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(2)));
+name|__nvvm_ldg_d2
+argument_list|(
+operator|(
+specifier|const
+name|double2
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

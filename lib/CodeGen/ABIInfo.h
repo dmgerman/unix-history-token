@@ -74,6 +74,9 @@ decl_stmt|;
 name|class
 name|DataLayout
 decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -107,6 +110,15 @@ name|CodeGenFunction
 decl_stmt|;
 name|class
 name|CodeGenTypes
+decl_stmt|;
+name|class
+name|SwiftABIInfo
+decl_stmt|;
+name|namespace
+name|swiftcall
+block|{
+name|class
+name|SwiftAggLowering
 decl_stmt|;
 block|}
 comment|// FIXME: All of this stuff should be part of the target interface
@@ -177,6 +189,16 @@ operator|~
 name|ABIInfo
 argument_list|()
 expr_stmt|;
+name|virtual
+name|bool
+name|supportsSwift
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|CodeGen
 operator|::
 name|CGCXXABI
@@ -280,6 +302,11 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|bool
+name|isAndroid
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Emit the target dependent code to load a value of
 comment|/// \arg Ty from the \c __builtin_ms_va_list pointed to by \arg VAListAddr.
 name|virtual
@@ -376,6 +403,87 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// A refining implementation of ABIInfo for targets that support swiftcall.
+comment|///
+comment|/// If we find ourselves wanting multiple such refinements, they'll probably
+comment|/// be independent refinements, and we should probably find another way
+comment|/// to do it than simple inheritance.
+name|class
+name|SwiftABIInfo
+range|:
+name|public
+name|ABIInfo
+block|{
+name|public
+operator|:
+name|SwiftABIInfo
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenTypes
+operator|&
+name|cgt
+argument_list|)
+operator|:
+name|ABIInfo
+argument_list|(
+argument|cgt
+argument_list|)
+block|{}
+name|bool
+name|supportsSwift
+argument_list|()
+specifier|const
+name|final
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|shouldPassIndirectlyForSwift
+argument_list|(
+argument|CharUnits totalSize
+argument_list|,
+argument|ArrayRef<llvm::Type*> types
+argument_list|,
+argument|bool asReturnValue
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|isLegalVectorTypeForSwift
+argument_list|(
+argument|CharUnits totalSize
+argument_list|,
+argument|llvm::Type *eltTy
+argument_list|,
+argument|unsigned elts
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ABIInfo *info
+argument_list|)
+block|{
+return|return
+name|info
+operator|->
+name|supportsSwift
+argument_list|()
+return|;
+block|}
+expr|}
+block|;  }
+comment|// end namespace CodeGen
 block|}
 end_decl_stmt
 

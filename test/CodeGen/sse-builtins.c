@@ -1,44 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +sse -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<xmmintrin.h>
-end_include
+begin_comment
+comment|// Don't include mm_malloc.h, it's system specific.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MM_MALLOC_H
+end_define
 
 begin_include
 include|#
 directive|include
-file|<emmintrin.h>
+file|<x86intrin.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<smmintrin.h>
-end_include
+begin_comment
+comment|// NOTE: This should match the tests in llvm/test/CodeGen/X86/sse-intrinsics-fast-isel.ll
+end_comment
 
 begin_function
 name|__m128
-name|test_rsqrt_ss
+name|test_mm_add_ps
 parameter_list|(
 name|__m128
-name|x
+name|A
+parameter_list|,
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK: define {{.*}} @test_rsqrt_ss
-comment|// CHECK: call<4 x float> @llvm.x86.sse.rsqrt.ss
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+comment|// CHECK-LABEL: test_mm_add_ps
+comment|// CHECK: fadd<4 x float>
 return|return
-name|_mm_rsqrt_ss
+name|_mm_add_ps
 argument_list|(
-name|x
+name|A
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -46,22 +49,26 @@ end_function
 
 begin_function
 name|__m128
-name|test_rcp_ss
+name|test_mm_add_ss
 parameter_list|(
 name|__m128
-name|x
+name|A
+parameter_list|,
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK: define {{.*}} @test_rcp_ss
-comment|// CHECK: call<4 x float> @llvm.x86.sse.rcp.ss
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+comment|// CHECK-LABEL: test_mm_add_ss
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fadd float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
 return|return
-name|_mm_rcp_ss
+name|_mm_add_ss
 argument_list|(
-name|x
+name|A
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -69,49 +76,23 @@ end_function
 
 begin_function
 name|__m128
-name|test_sqrt_ss
+name|test_mm_and_ps
 parameter_list|(
 name|__m128
-name|x
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_sqrt_ss
-comment|// CHECK: call<4 x float> @llvm.x86.sse.sqrt.ss
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
-comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
-return|return
-name|_mm_sqrt_ss
-argument_list|(
-name|x
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_loadl_pi
-parameter_list|(
-name|__m128
-name|x
+name|A
 parameter_list|,
-name|void
-modifier|*
-name|y
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK: define {{.*}} @test_loadl_pi
-comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
-comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
-comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 4, i32 5, i32 2, i32 3>
+comment|// CHECK-LABEL: test_mm_and_ps
+comment|// CHECK: and<4 x i32>
 return|return
-name|_mm_loadl_pi
+name|_mm_and_ps
 argument_list|(
-name|x
+name|A
 argument_list|,
-name|y
+name|B
 argument_list|)
 return|;
 block|}
@@ -119,26 +100,24 @@ end_function
 
 begin_function
 name|__m128
-name|test_loadh_pi
+name|test_mm_andnot_ps
 parameter_list|(
 name|__m128
-name|x
+name|A
 parameter_list|,
-name|void
-modifier|*
-name|y
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK: define {{.*}} @test_loadh_pi
-comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
-comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
-comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK-LABEL: test_mm_andnot_ps
+comment|// CHECK: xor<4 x i32> %{{.*}},<i32 -1, i32 -1, i32 -1, i32 -1>
+comment|// CHECK: and<4 x i32>
 return|return
-name|_mm_loadh_pi
+name|_mm_andnot_ps
 argument_list|(
-name|x
+name|A
 argument_list|,
-name|y
+name|B
 argument_list|)
 return|;
 block|}
@@ -146,440 +125,28 @@ end_function
 
 begin_function
 name|__m128
-name|test_load_ss
-parameter_list|(
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_load_ss
-comment|// CHECK: load float, float* {{.*}}, align 1{{$}}
-return|return
-name|_mm_load_ss
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_load1_ps
-parameter_list|(
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_load1_ps
-comment|// CHECK: load float, float* {{.*}}, align 1{{$}}
-return|return
-name|_mm_load1_ps
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_store_ss
+name|test_mm_cmpeq_ps
 parameter_list|(
 name|__m128
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_store_ss
-comment|// CHECK: store {{.*}} float* {{.*}}, align 1{{$}}
-name|_mm_store_ss
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_load1_pd
-parameter_list|(
-name|__m128
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_load1_pd
-comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
-return|return
-name|_mm_load1_pd
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_loadr_pd
-parameter_list|(
-name|__m128
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_loadr_pd
-comment|// CHECK: load<2 x double>,<2 x double>* {{.*}}, align 16{{$}}
-return|return
-name|_mm_loadr_pd
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_load_sd
-parameter_list|(
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_load_sd
-comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
-return|return
-name|_mm_load_sd
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_loadh_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_loadh_pd
-comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
-return|return
-name|_mm_loadh_pd
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_loadl_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_loadl_pd
-comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
-return|return
-name|_mm_loadl_pd
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_store_sd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_store_sd
-comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
-name|_mm_store_sd
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_store1_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_store1_pd
-comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
-comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
-name|_mm_store1_pd
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_storer_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_storer_pd
-comment|// CHECK: store {{.*}}<2 x double>* {{.*}}, align 16{{$}}
-name|_mm_storer_pd
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_storeh_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_storeh_pd
-comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
-name|_mm_storeh_pd
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_storel_pd
-parameter_list|(
-name|__m128d
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_storel_pd
-comment|// CHECK: store {{.*}} double* {{.*}}, align 1{{$}}
-name|_mm_storel_pd
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|__m128i
-name|test_loadl_epi64
-parameter_list|(
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK: define {{.*}} @test_loadl_epi64
-comment|// CHECK: load i64, i64* {{.*}}, align 1{{$}}
-return|return
-name|_mm_loadl_epi64
-argument_list|(
-name|y
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_storel_epi64
-parameter_list|(
-name|__m128i
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_storel_epi64
-comment|// CHECK: store {{.*}} i64* {{.*}}, align 1{{$}}
-name|_mm_storel_epi64
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_stream_si32
-parameter_list|(
-name|int
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_stream_si32
-comment|// CHECK: store {{.*}} i32* {{.*}}, align 1, !nontemporal
-name|_mm_stream_si32
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_stream_si64
-parameter_list|(
-name|long
-name|long
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_stream_si64
-comment|// CHECK: store {{.*}} i64* {{.*}}, align 1, !nontemporal
-name|_mm_stream_si64
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_stream_si128
-parameter_list|(
-name|__m128i
-name|x
-parameter_list|,
-name|void
-modifier|*
-name|y
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: define void @test_stream_si128
-comment|// CHECK: store {{.*}}<2 x i64>* {{.*}}, align 16, !nontemporal
-name|_mm_stream_si128
-argument_list|(
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_extract_epi16
-parameter_list|(
-name|__m128i
 name|__a
+parameter_list|,
+name|__m128
+name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: define void @test_extract_epi16
-comment|// CHECK: [[x:%.*]] = and i32 %{{.*}}, 7
-comment|// CHECK: extractelement<8 x i16> %{{.*}}, i32 [[x]]
-name|_mm_extract_epi16
+comment|// CHECK-LABEL: @test_mm_cmpeq_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp oeq<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpeq_ps
 argument_list|(
 name|__a
 argument_list|,
-literal|8
+name|__b
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -609,7 +176,7 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmplt_ss
+name|test_mm_cmpge_ps
 parameter_list|(
 name|__m128
 name|__a
@@ -618,10 +185,117 @@ name|__m128
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmplt_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
+comment|// CHECK-LABEL: @test_mm_cmpge_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp ole<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
 return|return
-name|_mm_cmplt_ss
+name|_mm_cmpge_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpge_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpge_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 2)
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 2, i32 3>
+return|return
+name|_mm_cmpge_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpgt_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpgt_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp olt<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpgt_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpgt_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpgt_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 2, i32 3>
+return|return
+name|_mm_cmpgt_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmple_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmple_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp ole<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmple_ps
 argument_list|(
 name|__a
 argument_list|,
@@ -657,7 +331,7 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpunord_ss
+name|test_mm_cmplt_ps
 parameter_list|(
 name|__m128
 name|__a
@@ -666,10 +340,64 @@ name|__m128
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpunord_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 3)
+comment|// CHECK-LABEL: @test_mm_cmplt_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp olt<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
 return|return
-name|_mm_cmpunord_ss
+name|_mm_cmplt_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmplt_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmplt_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
+return|return
+name|_mm_cmplt_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpneq_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpneq_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp une<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpneq_ps
 argument_list|(
 name|__a
 argument_list|,
@@ -705,7 +433,7 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpnlt_ss
+name|test_mm_cmpnge_ps
 parameter_list|(
 name|__m128
 name|__a
@@ -714,10 +442,117 @@ name|__m128
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpnlt_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
+comment|// CHECK-LABEL: @test_mm_cmpnge_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp ugt<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
 return|return
-name|_mm_cmpnlt_ss
+name|_mm_cmpnge_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpnge_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpnge_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 6)
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 2, i32 3>
+return|return
+name|_mm_cmpnge_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpngt_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpngt_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp uge<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpngt_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpngt_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpngt_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 2, i32 3>
+return|return
+name|_mm_cmpngt_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpnle_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpnle_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp ugt<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpnle_ps
 argument_list|(
 name|__a
 argument_list|,
@@ -753,6 +588,84 @@ end_function
 
 begin_function
 name|__m128
+name|test_mm_cmpnlt_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpnlt_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp uge<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpnlt_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpnlt_ss
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpnlt_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
+return|return
+name|_mm_cmpnlt_ss
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_cmpord_ps
+parameter_list|(
+name|__m128
+name|__a
+parameter_list|,
+name|__m128
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_cmpord_ps
+comment|// CHECK:         [[CMP:%.*]] = fcmp ord<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
+return|return
+name|_mm_cmpord_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
 name|test_mm_cmpord_ss
 parameter_list|(
 name|__m128
@@ -777,174 +690,6 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpgt_ss
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpgt_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
-return|return
-name|_mm_cmpgt_ss
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmpge_ss
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpge_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 2)
-return|return
-name|_mm_cmpge_ss
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmpngt_ss
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpngt_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
-return|return
-name|_mm_cmpngt_ss
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmpnge_ss
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnge_ss
-comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnge_ss
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmpeq_ps
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpeq_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 0)
-return|return
-name|_mm_cmpeq_ps
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmplt_ps
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmplt_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
-return|return
-name|_mm_cmplt_ps
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmple_ps
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmple_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 2)
-return|return
-name|_mm_cmple_ps
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
 name|test_mm_cmpunord_ps
 parameter_list|(
 name|__m128
@@ -955,7 +700,10 @@ name|__b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm_cmpunord_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 3)
+comment|// CHECK:         [[CMP:%.*]] = fcmp uno<4 x float>
+comment|// CHECK-NEXT:    [[SEXT:%.*]] = sext<4 x i1> [[CMP]] to<4 x i32>
+comment|// CHECK-NEXT:    [[BC:%.*]] = bitcast<4 x i32> [[SEXT]] to<4 x float>
+comment|// CHECK-NEXT:    ret<4 x float> [[BC]]
 return|return
 name|_mm_cmpunord_ps
 argument_list|(
@@ -969,7 +717,7 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpneq_ps
+name|test_mm_cmpunord_ss
 parameter_list|(
 name|__m128
 name|__a
@@ -978,14 +726,177 @@ name|__m128
 name|__b
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpneq_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 4)
+comment|// CHECK-LABEL: @test_mm_cmpunord_ss
+comment|// CHECK: @llvm.x86.sse.cmp.ss(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 3)
 return|return
-name|_mm_cmpneq_ps
+name|_mm_cmpunord_ss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comieq_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comieq_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comieq.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comieq_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comige_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comige_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comige.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comige_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comigt_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comigt_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comigt.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comigt_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comile_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comile_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comile.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comile_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comilt_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comilt_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comilt.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comilt_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_comineq_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_comineq_ss
+comment|// CHECK: call i32 @llvm.x86.sse.comineq.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_comineq_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_cvt_ss2si
+parameter_list|(
+name|__m128
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_cvt_ss2si
+comment|// CHECK: call i32 @llvm.x86.sse.cvtss2si(<4 x float> %{{.*}})
+return|return
+name|_mm_cvt_ss2si
+argument_list|(
+name|A
 argument_list|)
 return|;
 block|}
@@ -993,47 +904,24 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpnlt_ps
+name|test_mm_cvtsi32_ss
 parameter_list|(
 name|__m128
-name|__a
+name|A
 parameter_list|,
-name|__m128
-name|__b
+name|int
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpnlt_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
+comment|// CHECK-LABEL: test_mm_cvtsi32_ss
+comment|// CHECK: sitofp i32 %{{.*}} to float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
 return|return
-name|_mm_cmpnlt_ps
+name|_mm_cvtsi32_ss
 argument_list|(
-name|__a
+name|A
 argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128
-name|test_mm_cmpnle_ps
-parameter_list|(
-name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnle_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnle_ps
-argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|B
 argument_list|)
 return|;
 block|}
@@ -1041,695 +929,144 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_cmpord_ps
+name|test_mm_cvtsi64_ss
 parameter_list|(
 name|__m128
-name|__a
+name|A
 parameter_list|,
-name|__m128
-name|__b
+name|long
+name|long
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpord_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 7)
+comment|// CHECK-LABEL: test_mm_cvtsi64_ss
+comment|// CHECK: sitofp i64 %{{.*}} to float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
 return|return
-name|_mm_cmpord_ps
+name|_mm_cvtsi64_ss
 argument_list|(
-name|__a
+name|A
 argument_list|,
-name|__b
+name|B
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m128
-name|test_mm_cmpgt_ps
+name|float
+name|test_mm_cvtss_f32
 parameter_list|(
 name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
+name|A
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpgt_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 1)
+comment|// CHECK-LABEL: test_mm_cvtss_f32
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
 return|return
-name|_mm_cmpgt_ps
+name|_mm_cvtss_f32
 argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|A
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m128
-name|test_mm_cmpge_ps
+name|int
+name|test_mm_cvtss_si32
 parameter_list|(
 name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
+name|A
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpge_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 2)
+comment|// CHECK-LABEL: test_mm_cvtss_si32
+comment|// CHECK: call i32 @llvm.x86.sse.cvtss2si(<4 x float> %{{.*}})
 return|return
-name|_mm_cmpge_ps
+name|_mm_cvtss_si32
 argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|A
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m128
-name|test_mm_cmpngt_ps
+name|long
+name|long
+name|test_mm_cvtss_si64
 parameter_list|(
 name|__m128
-name|__a
-parameter_list|,
-name|__m128
-name|__b
+name|A
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpngt_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 5)
+comment|// CHECK-LABEL: test_mm_cvtss_si64
+comment|// CHECK: call i64 @llvm.x86.sse.cvtss2si64(<4 x float> %{{.*}})
 return|return
-name|_mm_cmpngt_ps
+name|_mm_cvtss_si64
 argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|A
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m128
-name|test_mm_cmpnge_ps
+name|int
+name|test_mm_cvtt_ss2si
 parameter_list|(
 name|__m128
-name|__a
-parameter_list|,
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_cvtt_ss2si
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fptosi float %{{.*}} to i32
+return|return
+name|_mm_cvtt_ss2si
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_cvttss_si32
+parameter_list|(
 name|__m128
-name|__b
+name|A
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpnge_ps
-comment|// CHECK: @llvm.x86.sse.cmp.ps(<4 x float> %{{.*}},<4 x float> %{{.*}}, i8 6)
+comment|// CHECK-LABEL: test_mm_cvttss_si32
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fptosi float %{{.*}} to i32
 return|return
-name|_mm_cmpnge_ps
+name|_mm_cvttss_si32
 argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|A
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m128d
-name|test_mm_cmpeq_sd
+name|long
+name|long
+name|test_mm_cvttss_si64
 parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
+name|__m128
+name|A
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_cmpeq_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 0)
+comment|// CHECK-LABEL: test_mm_cvttss_si64
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fptosi float %{{.*}} to i64
 return|return
-name|_mm_cmpeq_sd
+name|_mm_cvttss_si64
 argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmplt_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmplt_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 1)
-return|return
-name|_mm_cmplt_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmple_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmple_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 2)
-return|return
-name|_mm_cmple_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpunord_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpunord_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 3)
-return|return
-name|_mm_cmpunord_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpneq_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpneq_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 4)
-return|return
-name|_mm_cmpneq_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnlt_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnlt_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 5)
-return|return
-name|_mm_cmpnlt_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnle_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnle_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnle_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpord_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpord_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 7)
-return|return
-name|_mm_cmpord_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpgt_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpgt_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 1)
-return|return
-name|_mm_cmpgt_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpge_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpge_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 2)
-return|return
-name|_mm_cmpge_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpngt_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpngt_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 5)
-return|return
-name|_mm_cmpngt_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnge_sd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnge_sd
-comment|// CHECK: @llvm.x86.sse2.cmp.sd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnge_sd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpeq_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpeq_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 0)
-return|return
-name|_mm_cmpeq_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmplt_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmplt_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 1)
-return|return
-name|_mm_cmplt_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmple_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmple_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 2)
-return|return
-name|_mm_cmple_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpunord_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpunord_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 3)
-return|return
-name|_mm_cmpunord_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpneq_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpneq_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 4)
-return|return
-name|_mm_cmpneq_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnlt_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnlt_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 5)
-return|return
-name|_mm_cmpnlt_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnle_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnle_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnle_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpord_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpord_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 7)
-return|return
-name|_mm_cmpord_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpgt_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpgt_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 1)
-return|return
-name|_mm_cmpgt_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpge_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpge_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 2)
-return|return
-name|_mm_cmpge_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpngt_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpngt_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 5)
-return|return
-name|_mm_cmpngt_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128d
-name|test_mm_cmpnge_pd
-parameter_list|(
-name|__m128d
-name|__a
-parameter_list|,
-name|__m128d
-name|__b
-parameter_list|)
-block|{
-comment|// CHECK-LABEL: @test_mm_cmpnge_pd
-comment|// CHECK: @llvm.x86.sse2.cmp.pd(<2 x double> %{{.*}},<2 x double> %{{.*}}, i8 6)
-return|return
-name|_mm_cmpnge_pd
-argument_list|(
-name|__a
-argument_list|,
-name|__b
+name|A
 argument_list|)
 return|;
 block|}
@@ -1737,20 +1074,23 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_slli_si128
+name|test_mm_div_ps
 parameter_list|(
 name|__m128
-name|a
+name|A
+parameter_list|,
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_slli_si128
-comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26>
+comment|// CHECK-LABEL: test_mm_div_ps
+comment|// CHECK: fdiv<4 x float>
 return|return
-name|_mm_slli_si128
+name|_mm_div_ps
 argument_list|(
-name|a
+name|A
 argument_list|,
-literal|5
+name|B
 argument_list|)
 return|;
 block|}
@@ -1758,20 +1098,126 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_bslli_si128
+name|test_mm_div_ss
 parameter_list|(
 name|__m128
-name|a
+name|A
+parameter_list|,
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_bslli_si128
-comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26>
+comment|// CHECK-LABEL: test_mm_div_ss
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fdiv float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
 return|return
-name|_mm_bslli_si128
+name|_mm_div_ss
 argument_list|(
-name|a
+name|A
 argument_list|,
-literal|5
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|int
+name|test_MM_GET_EXCEPTION_MASK
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_MM_GET_EXCEPTION_MASK
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* %{{.*}})
+comment|// CHECK: and i32 %{{.*}}, 8064
+return|return
+name|_MM_GET_EXCEPTION_MASK
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|int
+name|test_MM_GET_EXCEPTION_STATE
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_MM_GET_EXCEPTION_STATE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* %{{.*}})
+comment|// CHECK: and i32 %{{.*}}, 63
+return|return
+name|_MM_GET_EXCEPTION_STATE
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|int
+name|test_MM_GET_FLUSH_ZERO_MODE
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_MM_GET_FLUSH_ZERO_MODE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* %{{.*}})
+comment|// CHECK: and i32 %{{.*}}, 32768
+return|return
+name|_MM_GET_FLUSH_ZERO_MODE
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|int
+name|test_MM_GET_ROUNDING_MODE
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_MM_GET_ROUNDING_MODE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* %{{.*}})
+comment|// CHECK: and i32 %{{.*}}, 24576
+return|return
+name|_MM_GET_ROUNDING_MODE
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|int
+name|test_mm_getcsr
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_mm_getcsr
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* %{{.*}})
+comment|// CHECK: load i32
+return|return
+name|_mm_getcsr
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_load_ps
+parameter_list|(
+name|float
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_load_ps
+comment|// CHECK: load<4 x float>,<4 x float>* {{.*}}, align 16
+return|return
+name|_mm_load_ps
+argument_list|(
+name|y
 argument_list|)
 return|;
 block|}
@@ -1779,20 +1225,23 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_srli_si128
+name|test_mm_load_ps1
 parameter_list|(
-name|__m128
-name|a
+name|float
+modifier|*
+name|y
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_srli_si128
-comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20>
+comment|// CHECK-LABEL: test_mm_load_ps1
+comment|// CHECK: load float, float* %{{.*}}, align 4
+comment|// CHECK: insertelement<4 x float> undef, float %{{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 3
 return|return
-name|_mm_srli_si128
+name|_mm_load_ps1
 argument_list|(
-name|a
-argument_list|,
-literal|5
+name|y
 argument_list|)
 return|;
 block|}
@@ -1800,20 +1249,1341 @@ end_function
 
 begin_function
 name|__m128
-name|test_mm_bsrli_si128
+name|test_mm_load_ss
 parameter_list|(
-name|__m128
-name|a
+name|float
+modifier|*
+name|y
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_bsrli_si128
-comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20>
+comment|// CHECK-LABEL: test_mm_load_ss
+comment|// CHECK: load float, float* {{.*}}, align 1{{$}}
+comment|// CHECK: insertelement<4 x float> undef, float %{{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float 0.000000e+00, i32 1
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float 0.000000e+00, i32 2
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float 0.000000e+00, i32 3
 return|return
-name|_mm_bsrli_si128
+name|_mm_load_ss
 argument_list|(
-name|a
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_load1_ps
+parameter_list|(
+name|float
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_load1_ps
+comment|// CHECK: load float, float* %{{.*}}, align 4
+comment|// CHECK: insertelement<4 x float> undef, float %{{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 3
+return|return
+name|_mm_load1_ps
+argument_list|(
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_loadh_pi
+parameter_list|(
+name|__m128
+name|x
+parameter_list|,
+name|__m64
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_loadh_pi
+comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
+comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
+comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1, i32 4, i32 5>
+return|return
+name|_mm_loadh_pi
+argument_list|(
+name|x
 argument_list|,
-literal|5
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_loadl_pi
+parameter_list|(
+name|__m128
+name|x
+parameter_list|,
+name|__m64
+modifier|*
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_loadl_pi
+comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
+comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
+comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 4, i32 5, i32 2, i32 3>
+return|return
+name|_mm_loadl_pi
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_loadr_ps
+parameter_list|(
+name|float
+modifier|*
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_loadr_ps
+comment|// CHECK: load<4 x float>,<4 x float>* %{{.*}}, align 16
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+return|return
+name|_mm_loadr_ps
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_loadu_ps
+parameter_list|(
+name|float
+modifier|*
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_loadu_ps
+comment|// CHECK: load<4 x float>,<4 x float>* %{{.*}}, align 1{{$}}
+return|return
+name|_mm_loadu_ps
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_max_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_max_ps
+comment|// CHECK: @llvm.x86.sse.max.ps(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_max_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_max_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_max_ss
+comment|// CHECK: @llvm.x86.sse.max.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_max_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_min_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_min_ps
+comment|// CHECK: @llvm.x86.sse.min.ps(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_min_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_min_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_min_ss
+comment|// CHECK: @llvm.x86.sse.min.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_min_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_move_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_move_ss
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 2, i32 3>
+return|return
+name|_mm_move_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_movehl_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_movehl_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 6, i32 7, i32 2, i32 3>
+return|return
+name|_mm_movehl_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_movelh_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_movelh_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+return|return
+name|_mm_movelh_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_movemask_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_movemask_ps
+comment|// CHECK: call i32 @llvm.x86.sse.movmsk.ps(<4 x float> %{{.*}})
+return|return
+name|_mm_movemask_ps
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_mul_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_mul_ps
+comment|// CHECK: fmul<4 x float>
+return|return
+name|_mm_mul_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_mul_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_mul_ss
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fmul float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
+return|return
+name|_mm_mul_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_or_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_or_ps
+comment|// CHECK: or<4 x i32>
+return|return
+name|_mm_or_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_prefetch
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|p
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_prefetch
+comment|// CHECK: call void @llvm.prefetch(i8* {{.*}}, i32 0, i32 0, i32 1)
+name|_mm_prefetch
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_rcp_ps
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_rcp_ps
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rcp.ps(<4 x float> {{.*}})
+return|return
+name|_mm_rcp_ps
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_rcp_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_rcp_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rcp.ss(<4 x float> {{.*}})
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_rcp_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_rsqrt_ps
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_rsqrt_ps
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rsqrt.ps(<4 x float> {{.*}})
+return|return
+name|_mm_rsqrt_ps
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_rsqrt_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_rsqrt_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.rsqrt.ss(<4 x float> {{.*}})
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_rsqrt_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_MM_SET_EXCEPTION_MASK
+parameter_list|(
+name|unsigned
+name|int
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_MM_SET_EXCEPTION_MASK
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* {{.*}})
+comment|// CHECK: load i32
+comment|// CHECK: and i32 {{.*}}, -8065
+comment|// CHECK: or i32
+comment|// CHECK: store i32
+comment|// CHECK: call void @llvm.x86.sse.ldmxcsr(i8* {{.*}})
+name|_MM_SET_EXCEPTION_MASK
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_MM_SET_EXCEPTION_STATE
+parameter_list|(
+name|unsigned
+name|int
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_MM_SET_EXCEPTION_STATE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* {{.*}})
+comment|// CHECK: load i32
+comment|// CHECK: and i32 {{.*}}, -64
+comment|// CHECK: or i32
+comment|// CHECK: store i32
+comment|// CHECK: call void @llvm.x86.sse.ldmxcsr(i8* {{.*}})
+name|_MM_SET_EXCEPTION_STATE
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_MM_SET_FLUSH_ZERO_MODE
+parameter_list|(
+name|unsigned
+name|int
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_MM_SET_FLUSH_ZERO_MODE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* {{.*}})
+comment|// CHECK: load i32
+comment|// CHECK: and i32 {{.*}}, -32769
+comment|// CHECK: or i32
+comment|// CHECK: store i32
+comment|// CHECK: call void @llvm.x86.sse.ldmxcsr(i8* {{.*}})
+name|_MM_SET_FLUSH_ZERO_MODE
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_set_ps
+parameter_list|(
+name|float
+name|A
+parameter_list|,
+name|float
+name|B
+parameter_list|,
+name|float
+name|C
+parameter_list|,
+name|float
+name|D
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_ps
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_set_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|,
+name|C
+argument_list|,
+name|D
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_set_ps1
+parameter_list|(
+name|float
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_ps1
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_set_ps1
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_MM_SET_ROUNDING_MODE
+parameter_list|(
+name|unsigned
+name|int
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_MM_SET_ROUNDING_MODE
+comment|// CHECK: call void @llvm.x86.sse.stmxcsr(i8* {{.*}})
+comment|// CHECK: load i32
+comment|// CHECK: and i32 {{.*}}, -24577
+comment|// CHECK: or i32
+comment|// CHECK: store i32
+comment|// CHECK: call void @llvm.x86.sse.ldmxcsr(i8* {{.*}})
+name|_MM_SET_ROUNDING_MODE
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_set_ss
+parameter_list|(
+name|float
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set_ss
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, float 0.000000e+00, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float 0.000000e+00, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float 0.000000e+00, i32 3
+return|return
+name|_mm_set_ss
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_set1_ps
+parameter_list|(
+name|float
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_set1_ps
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_set1_ps
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_setcsr
+parameter_list|(
+name|unsigned
+name|int
+name|A
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_setcsr
+comment|// CHECK: store i32
+comment|// CHECK: call void @llvm.x86.sse.ldmxcsr(i8* {{.*}})
+name|_mm_setcsr
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_setr_ps
+parameter_list|(
+name|float
+name|A
+parameter_list|,
+name|float
+name|B
+parameter_list|,
+name|float
+name|C
+parameter_list|,
+name|float
+name|D
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_setr_ps
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_setr_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|,
+name|C
+argument_list|,
+name|D
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_setzero_ps
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_mm_setzero_ps
+comment|// CHECK: store<4 x float> zeroinitializer
+return|return
+name|_mm_setzero_ps
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_sfence
+parameter_list|()
+block|{
+comment|// CHECK-LABEL: test_mm_sfence
+comment|// CHECK: call void @llvm.x86.sse.sfence()
+name|_mm_sfence
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_shuffle_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_shuffle_ps
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 0, i32 0, i32 4, i32 4>
+return|return
+name|_mm_shuffle_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_sqrt_ps
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_sqrt_ps
+comment|// CHECK: call<4 x float> @llvm.x86.sse.sqrt.ps(<4 x float> {{.*}})
+return|return
+name|_mm_sqrt_ps
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_sqrt_ss
+parameter_list|(
+name|__m128
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: define {{.*}} @test_sqrt_ss
+comment|// CHECK: call<4 x float> @llvm.x86.sse.sqrt.ss
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> undef, float {{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 1
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 2
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 3
+comment|// CHECK: insertelement<4 x float> {{.*}}, float {{.*}}, i32 3
+return|return
+name|_mm_sqrt_ss
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_store_ps
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_store_ps
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* {{.*}}, align 16
+name|_mm_store_ps
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_store_ps1
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_store_ps1
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32> zeroinitializer
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 16
+name|_mm_store_ps1
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_store_ss
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_store_ss
+comment|// CHECK: extractelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: store float %{{.*}}, float* {{.*}}, align 1{{$}}
+name|_mm_store_ss
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_store1_ps
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_store1_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32> zeroinitializer
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 16
+name|_mm_store1_ps
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_storeh_pi
+parameter_list|(
+name|__m64
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_storeh_pi
+comment|// CHECK: bitcast<4 x float> %{{.*}} to<2 x i64>
+comment|// CHECK: extractelement<2 x i64> %{{.*}}, i64 1
+comment|// CHECK: store i64 %{{.*}}, i64* {{.*}}
+name|_mm_storeh_pi
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_storel_pi
+parameter_list|(
+name|__m64
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_storel_pi
+comment|// CHECK: bitcast<4 x float> %{{.*}} to<2 x i64>
+comment|// CHECK: extractelement<2 x i64> %{{.*}}, i64 0
+comment|// CHECK: store i64 %{{.*}}, i64* {{.*}}
+name|_mm_storel_pi
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_storer_ps
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_storer_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 3, i32 2, i32 1, i32 0>
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* {{.*}}, align 16
+name|_mm_storer_ps
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_storeu_ps
+parameter_list|(
+name|float
+modifier|*
+name|x
+parameter_list|,
+name|__m128
+name|y
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_storeu_ps
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 1{{$}}
+comment|// CHECK-NEXT: ret void
+name|_mm_storeu_ps
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_mm_stream_ps
+parameter_list|(
+name|float
+modifier|*
+name|A
+parameter_list|,
+name|__m128d
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_stream_ps
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* %{{.*}}, align 16, !nontemporal
+name|_mm_stream_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_sub_ps
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_sub_ps
+comment|// CHECK: fsub<4 x float>
+return|return
+name|_mm_sub_ps
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_sub_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_sub_ss
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
+comment|// CHECK: fsub float
+comment|// CHECK: insertelement<4 x float> %{{.*}}, float %{{.*}}, i32 0
+return|return
+name|_mm_sub_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test_MM_TRANSPOSE4_PS
+parameter_list|(
+name|__m128
+modifier|*
+name|A
+parameter_list|,
+name|__m128
+modifier|*
+name|B
+parameter_list|,
+name|__m128
+modifier|*
+name|C
+parameter_list|,
+name|__m128
+modifier|*
+name|D
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_MM_TRANSPOSE4_PS
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 0, i32 4, i32 1, i32 5>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 0, i32 4, i32 1, i32 5>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 2, i32 6, i32 3, i32 7>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 2, i32 6, i32 3, i32 7>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 6, i32 7, i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 0, i32 1, i32 4, i32 5>
+comment|// CHECK: shufflevector<4 x float> {{.*}},<4 x float> {{.*}},<4 x i32><i32 6, i32 7, i32 2, i32 3>
+name|_MM_TRANSPOSE4_PS
+argument_list|(
+operator|*
+name|A
+argument_list|,
+operator|*
+name|B
+argument_list|,
+operator|*
+name|C
+argument_list|,
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomieq_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomieq_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomieq.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomieq_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomige_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomige_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomige.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomige_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomigt_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomigt_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomigt.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomigt_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomile_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomile_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomile.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomile_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomilt_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomilt_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomilt.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomilt_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|test_mm_ucomineq_ss
+parameter_list|(
+name|__m128
+name|A
+parameter_list|,
+name|__m128
+name|B
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_ucomineq_ss
+comment|// CHECK: call i32 @llvm.x86.sse.ucomineq.ss(<4 x float> %{{.*}},<4 x float> %{{.*}})
+return|return
+name|_mm_ucomineq_ss
+argument_list|(
+name|A
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -1834,115 +2604,73 @@ block|}
 end_function
 
 begin_function
-name|__m128d
-name|test_mm_undefined_pd
-parameter_list|()
-block|{
-comment|// CHECK-LABEL: @test_mm_undefined_pd
-comment|// CHECK: ret<2 x double> undef
-return|return
-name|_mm_undefined_pd
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-name|__m128i
-name|test_mm_undefined_si128
-parameter_list|()
-block|{
-comment|// CHECK-LABEL: @test_mm_undefined_si128
-comment|// CHECK: ret<2 x i64> undef
-return|return
-name|_mm_undefined_si128
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-name|__m64
-name|test_mm_add_si64
+name|__m128
+name|test_mm_unpackhi_ps
 parameter_list|(
-name|__m64
-name|__a
+name|__m128
+name|A
 parameter_list|,
-name|__m64
-name|__b
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_add_si64
-comment|// CHECK @llvm.x86.mmx.padd.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+comment|// CHECK-LABEL: test_mm_unpackhi_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 2, i32 6, i32 3, i32 7>
 return|return
-name|_mm_add_si64
+name|_mm_unpackhi_ps
 argument_list|(
-name|__a
+name|A
 argument_list|,
-name|__b
+name|B
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m64
-name|test_mm_sub_si64
+name|__m128
+name|test_mm_unpacklo_ps
 parameter_list|(
-name|__m64
-name|__a
+name|__m128
+name|A
 parameter_list|,
-name|__m64
-name|__b
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_sub_si64
-comment|// CHECK @llvm.x86.mmx.psub.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+comment|// CHECK-LABEL: test_mm_unpacklo_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 0, i32 4, i32 1, i32 5>
 return|return
-name|_mm_sub_si64
+name|_mm_unpacklo_ps
 argument_list|(
-name|__a
+name|A
 argument_list|,
-name|__b
+name|B
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|__m64
-name|test_mm_mul_su32
+name|__m128
+name|test_mm_xor_ps
 parameter_list|(
-name|__m64
-name|__a
+name|__m128
+name|A
 parameter_list|,
-name|__m64
-name|__b
+name|__m128
+name|B
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: @test_mm_mul_su32
-comment|// CHECK @llvm.x86.mmx.pmulu.dq(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+comment|// CHECK-LABEL: test_mm_xor_ps
+comment|// CHECK: xor<4 x i32>
 return|return
-name|_mm_mul_su32
+name|_mm_xor_ps
 argument_list|(
-name|__a
+name|A
 argument_list|,
-name|__b
+name|B
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|test_mm_pause
-parameter_list|()
-block|{
-comment|// CHECK-LABEL: @test_mm_pause
-comment|// CHECK @llvm.x86.sse2.pause()
-return|return
-name|_mm_pause
-argument_list|()
 return|;
 block|}
 end_function

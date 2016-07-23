@@ -24,7 +24,7 @@ comment|// the subtarget feature won't be available.
 end_comment
 
 begin_function
-name|__m256d
+name|__m128
 name|wombat
 parameter_list|(
 name|__m128i
@@ -39,25 +39,34 @@ literal|"avx"
 argument_list|)
 condition|)
 return|return
-name|__builtin_ia32_cvtdq2pd256
+name|__builtin_ia32_vpermilvarps
 argument_list|(
+operator|(
+name|__v4sf
+operator|)
+block|{
+literal|0.0f
+block|,
+literal|1.0f
+block|,
+literal|2.0f
+block|,
+literal|3.0f
+block|}
+argument_list|,
 operator|(
 name|__v4si
 operator|)
 name|a
 argument_list|)
 return|;
-comment|// expected-error {{'__builtin_ia32_cvtdq2pd256' needs target feature avx}}
+comment|// expected-error {{'__builtin_ia32_vpermilvarps' needs target feature avx}}
 else|else
 return|return
 operator|(
-name|__m256d
+name|__m128
 operator|)
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0

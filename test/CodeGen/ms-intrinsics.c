@@ -36,7 +36,7 @@ comment|// RUN:         | FileCheck %s --check-prefix=CHECK --check-prefix=CHECK
 end_comment
 
 begin_comment
-comment|// Intrin.h needs size_t, but -ffreestanding prevents us from getting it from
+comment|// intrin.h needs size_t, but -ffreestanding prevents us from getting it from
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ end_typedef
 begin_include
 include|#
 directive|include
-file|<Intrin.h>
+file|<intrin.h>
 end_include
 
 begin_function
@@ -84,7 +84,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define{{.*}}i8* @test_InterlockedExchangePointer(i8** %Target, i8* %Value){{.*}}{
+comment|// CHECK: define{{.*}}i8* @test_InterlockedExchangePointer(i8** {{[a-z_ ]*}}%Target, i8* {{[a-z_ ]*}}%Value){{.*}}{
 end_comment
 
 begin_comment
@@ -145,7 +145,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define{{.*}}i8* @test_InterlockedCompareExchangePointer(i8** %Destination, i8* %Exchange, i8* %Comparand){{.*}}{
+comment|// CHECK: define{{.*}}i8* @test_InterlockedCompareExchangePointer(i8** {{[a-z_ ]*}}%Destination, i8* {{[a-z_ ]*}}%Exchange, i8* {{[a-z_ ]*}}%Comparand){{.*}}{
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define{{.*}}i32 @test_InterlockedExchange(i32* %Target, i32 %Value){{.*}}{
+comment|// CHECK: define{{.*}}i32 @test_InterlockedExchange(i32* {{[a-z_ ]*}}%Target, i32 %Value){{.*}}{
 end_comment
 
 begin_comment

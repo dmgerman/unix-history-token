@@ -36,7 +36,7 @@ comment|// CHECK-NOT: DW_TAG_base_type
 end_comment
 
 begin_comment
-comment|// But llvm.dbg.cu should be missing (to prevent writing debug info to
+comment|// The CU should be marked NoDebug (to prevent writing debug info to
 end_comment
 
 begin_comment
@@ -44,7 +44,11 @@ comment|// the final output).
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: !llvm.dbg.cu = !{
+comment|// CHECK: !llvm.dbg.cu = !{![[CU:.*]]}
+end_comment
+
+begin_comment
+comment|// CHECK: ![[CU]] = distinct !DICompileUnit({{.*}}emissionKind: NoDebug
 end_comment
 
 begin_function

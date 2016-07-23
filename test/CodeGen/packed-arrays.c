@@ -132,7 +132,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @align0 = global i32 1
+comment|// CHECK: @align0 = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -148,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align1 = global i32 4
+comment|// CHECK: @align1 = local_unnamed_addr global i32 4
 end_comment
 
 begin_decl_stmt
@@ -164,7 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align2 = global i32 1
+comment|// CHECK: @align2 = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -180,7 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align3 = global i32 1
+comment|// CHECK: @align3 = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -196,7 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align0_x = global i32 1
+comment|// CHECK: @align0_x = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -224,7 +224,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: @align1_x = global i32 1
+comment|// CHECK: @align1_x = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -248,7 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align2_x = global i32 1
+comment|// CHECK: @align2_x = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -272,7 +272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align3_x = global i32 1
+comment|// CHECK: @align3_x = local_unnamed_addr global i32 1
 end_comment
 
 begin_decl_stmt
@@ -296,7 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align0_x0 = global i32 4
+comment|// CHECK: @align0_x0 = local_unnamed_addr global i32 4
 end_comment
 
 begin_decl_stmt
@@ -323,7 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align1_x0 = global i32 4
+comment|// CHECK: @align1_x0 = local_unnamed_addr global i32 4
 end_comment
 
 begin_decl_stmt
@@ -350,7 +350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align2_x0 = global i32 4
+comment|// CHECK: @align2_x0 = local_unnamed_addr global i32 4
 end_comment
 
 begin_decl_stmt
@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @align3_x0 = global i32 4
+comment|// CHECK: @align3_x0 = local_unnamed_addr global i32 4
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fprofile-instr-generate -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name switch.c %s | FileCheck %s
+comment|// RUN: %clang_cc1 -fprofile-instrument=clang -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name switch.c %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -21,6 +21,7 @@ condition|(
 name|i
 condition|)
 block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+5]]:4 = #1
 case|case
 literal|1
 case|:
@@ -37,7 +38,6 @@ name|x
 init|=
 literal|0
 decl_stmt|;
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:2 = #1
 block|}
 end_function
 
@@ -65,6 +65,7 @@ switch|switch
 condition|(
 name|i
 condition|)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:6 = #1
 empty_stmt|;
 comment|// CHECK-NEXT: File 0, [[@LINE]]:5 -> [[@LINE]]:6 = 0
 switch|switch
@@ -72,13 +73,13 @@ condition|(
 name|i
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+16]]:2 = #1
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:4 = #2
 block|}
 switch|switch
 condition|(
 name|i
 condition|)
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+13]]:2 = #2
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #3
 name|nop
 argument_list|()
 expr_stmt|;
@@ -87,7 +88,7 @@ switch|switch
 condition|(
 name|i
 condition|)
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+10]]:2 = #3
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:10 = #4
 case|case
 literal|1
 case|:
@@ -100,7 +101,7 @@ condition|(
 name|i
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+6]]:2 = #4
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+4]]:4 = #6
 name|nop
 argument_list|()
 expr_stmt|;
@@ -116,7 +117,6 @@ block|}
 name|nop
 argument_list|()
 expr_stmt|;
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:2 = #6
 block|}
 end_function
 
@@ -140,6 +140,7 @@ condition|(
 name|i
 condition|)
 block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+9]]:4 = #1
 case|case
 literal|0
 case|:
@@ -167,7 +168,7 @@ condition|(
 name|i
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+22]]:2 = #1
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+8]]:4 = #5
 case|case
 literal|0
 case|:
@@ -194,7 +195,7 @@ condition|(
 name|i
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+12]]:2 = #5
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+7]]:4 = #9
 case|case
 literal|1
 case|:
@@ -225,7 +226,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:11 = #9
 name|bar
 argument_list|(
 literal|1

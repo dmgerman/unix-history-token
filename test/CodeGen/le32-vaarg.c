@@ -39,7 +39,15 @@ comment|// CHECK: [[RESULT:%[a-z_0-9]+]] = va_arg {{.*}}, i32{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK: ret i32 [[RESULT]]
+comment|// CHECK: store i32 [[RESULT]], i32* [[LOC:%[a-z_0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: [[RESULT2:%[a-z_0-9]+]] = load i32, i32* [[LOC]]
+end_comment
+
+begin_comment
+comment|// CHECK: ret i32 [[RESULT2]]
 end_comment
 
 begin_struct
@@ -92,7 +100,15 @@ comment|// CHECK: [[RESULT:%[a-z_0-9]+]] = va_arg {{.*}}, %struct.Foo{{$}}
 end_comment
 
 begin_comment
-comment|// CHECK: store %struct.Foo [[RESULT]], %struct.Foo* @dest
+comment|// CHECK: store %struct.Foo [[RESULT]], %struct.Foo* [[LOC:%[a-z_0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: [[LOC2:%[a-z_0-9]+]] = bitcast {{.*}} [[LOC]] to i8*
+end_comment
+
+begin_comment
+comment|// CHECK: call void @llvm.memcpy{{.*}}@dest{{.*}}, i8* [[LOC2]]
 end_comment
 
 begin_function

@@ -40,6 +40,27 @@ begin_comment
 comment|// Parse nullability type specifiers.
 end_comment
 
+begin_comment
+comment|// This note requires C11.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
+
+begin_comment
+comment|// expected-note@+2{{'_Nonnull' specified here}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|int
@@ -48,10 +69,6 @@ name|_Nonnull
 name|nonnull_int_ptr
 typedef|;
 end_typedef
-
-begin_comment
-comment|// expected-note{{'_Nonnull' specified here}}
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -137,6 +154,18 @@ begin_comment
 comment|// Conflicting nullability specifiers via a typedef are not.
 end_comment
 
+begin_comment
+comment|// Some of these errors require C11.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
+
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr
@@ -149,12 +178,25 @@ begin_comment
 comment|// expected-error{{nullability specifier '_Nullable' conflicts with existing specifier '_Nonnull'}}
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|nonnull_int_ptr
 name|nonnull_int_ptr_typedef
 typedef|;
 end_typedef
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
 
 begin_typedef
 typedef|typedef
@@ -167,6 +209,11 @@ end_typedef
 begin_comment
 comment|// expected-error{{nullability specifier '_Nullable' conflicts with existing specifier '_Nonnull'}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -518,6 +565,18 @@ name|ambiguous_int_ptr
 typedef|;
 end_typedef
 
+begin_comment
+comment|// Redefining a typedef is a C11 feature.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
+
 begin_typedef
 typedef|typedef
 name|int
@@ -534,6 +593,11 @@ name|_Nullable
 name|ambiguous_int_ptr
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Printing of nullability.

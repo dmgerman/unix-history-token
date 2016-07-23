@@ -192,7 +192,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{ormat string is not a string literal}}
+comment|// expected-warning{{format string is not a string literal}}
 name|scanf
 argument_list|(
 literal|"%0d"
@@ -1269,6 +1269,138 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format specifies type 'int *' but the argument has type 'cip_t' (aka 'const int *')}}
+block|}
+end_function
+
+begin_function
+name|void
+name|check_conditional_literal
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+modifier|*
+name|i
+parameter_list|)
+block|{
+name|scanf
+argument_list|(
+literal|0
+condition|?
+literal|"%s"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|scanf
+argument_list|(
+literal|1
+condition|?
+literal|"%s"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'char *'}}
+name|scanf
+argument_list|(
+literal|0
+condition|?
+literal|"%d %d"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|scanf
+argument_list|(
+literal|1
+condition|?
+literal|"%d %d"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+name|scanf
+argument_list|(
+literal|0
+condition|?
+literal|"%d %d"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used}}
+name|scanf
+argument_list|(
+literal|1
+condition|?
+literal|"%d %s"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|scanf
+argument_list|(
+name|i
+condition|?
+literal|"%d %s"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no warning
+name|scanf
+argument_list|(
+name|i
+condition|?
+literal|"%d"
+else|:
+literal|"%d"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used}}
+name|scanf
+argument_list|(
+name|i
+condition|?
+literal|"%s"
+else|:
+literal|"%d"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'int *'}}
 block|}
 end_function
 

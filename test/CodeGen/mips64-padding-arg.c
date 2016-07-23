@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target mipsel-unknown-linux -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
+comment|// RUN: %clang_cc1 -triple mipsel-unknown-linux -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips64el-unknown-linux -O3 -S -mabi=n64 -o - -emit-llvm %s | FileCheck %s -check-prefix=N64
+comment|// RUN: %clang_cc1 -triple mips64el-unknown-linux -O3 -S -target-abi n64 -o - -emit-llvm %s | FileCheck %s -check-prefix=N64
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mipsel-unknown-linux -mfp64 -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
+comment|// RUN: %clang_cc1 -triple mipsel-unknown-linux -target-feature "+fp64" -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
 end_comment
 
 begin_typedef

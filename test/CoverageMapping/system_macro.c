@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fprofile-instr-generate -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name system_macro.c -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -fprofile-instrument=clang -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name system_macro.c -o - %s | FileCheck %s
 end_comment
 
 begin_ifdef
@@ -68,9 +68,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|// CHECK: Expansion,File 0, [[@LINE]]:3 -> [[@LINE]]:7
 return|return;
-comment|// CHECK: Expansion,File 0, [[@LINE+1]]:3 -> [[@LINE+1]]:11
 name|SomeType
 modifier|*
 name|f

@@ -16,7 +16,7 @@ comment|// RUN:   -fno-inline -fno-inline-functions -### -fsyntax-only %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK< %t %s
+comment|// RUN: FileCheck< %t %s
 end_comment
 
 begin_comment

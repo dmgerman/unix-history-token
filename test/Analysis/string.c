@@ -3963,6 +3963,105 @@ end_function_decl
 
 begin_function
 name|void
+name|strcmp_check_modelling
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|x
+init|=
+literal|"aa"
+decl_stmt|;
+name|char
+modifier|*
+name|y
+init|=
+literal|"a"
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|<=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|<
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|<
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|void
 name|strcmp_constant0
 parameter_list|()
 block|{
@@ -4094,8 +4193,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4127,9 +4226,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4217,9 +4315,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4251,9 +4348,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4285,8 +4381,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4318,9 +4414,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4373,6 +4468,82 @@ comment|// expected-warning{{TRUE}}
 block|}
 end_function
 
+begin_union
+union|union
+name|argument
+block|{
+name|char
+modifier|*
+name|f
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_function
+name|void
+name|function_pointer_cast_helper
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|a
+parameter_list|)
+block|{
+name|strcmp
+argument_list|(
+literal|"Hi"
+argument_list|,
+operator|*
+name|a
+argument_list|)
+expr_stmt|;
+comment|// PR24951 crash
+block|}
+end_function
+
+begin_function
+name|void
+name|strcmp_union_function_pointer_cast
+parameter_list|(
+name|union
+name|argument
+name|a
+parameter_list|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|fPtr
+function_decl|)
+parameter_list|(
+name|union
+name|argument
+modifier|*
+parameter_list|)
+init|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+operator|(
+call|union
+name|argument
+operator|*
+operator|)
+operator|)
+name|function_pointer_cast_helper
+function_decl|;
+name|fPtr
+argument_list|(
+operator|&
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|//===----------------------------------------------------------------------===
 end_comment
@@ -4411,6 +4582,117 @@ name|n
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|strncmp_check_modelling
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|x
+init|=
+literal|"aa"
+decl_stmt|;
+name|char
+modifier|*
+name|y
+init|=
+literal|"a"
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|<=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|<
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|<
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
 
 begin_function
 name|void
@@ -4555,8 +4837,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4590,9 +4872,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4686,9 +4967,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4722,9 +5002,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4758,8 +5037,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4793,9 +5072,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4864,9 +5142,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4900,8 +5177,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -4966,6 +5243,105 @@ name|s2
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|strcasecmp_check_modelling
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|x
+init|=
+literal|"aa"
+decl_stmt|;
+name|char
+modifier|*
+name|y
+init|=
+literal|"a"
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|<=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|<
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strcasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|)
+operator|<
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
 
 begin_function
 name|void
@@ -5100,8 +5476,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5133,9 +5509,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5223,9 +5598,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5257,9 +5631,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5291,8 +5664,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5324,9 +5697,8 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5392,6 +5764,117 @@ name|n
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+name|void
+name|strncasecmp_check_modelling
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|x
+init|=
+literal|"aa"
+decl_stmt|;
+name|char
+modifier|*
+name|y
+init|=
+literal|"a"
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|<=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|,
+literal|2
+argument_list|)
+operator|>
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|<
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+name|strncasecmp
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+literal|2
+argument_list|)
+operator|<
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
 
 begin_function
 name|void
@@ -5536,8 +6019,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5571,9 +6054,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5667,9 +6149,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5703,9 +6184,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5739,8 +6219,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5774,9 +6254,8 @@ name|y
 argument_list|,
 literal|5
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5845,9 +6324,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}
@@ -5881,8 +6359,8 @@ name|y
 argument_list|,
 literal|3
 argument_list|)
-operator|==
-literal|1
+operator|>
+literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}

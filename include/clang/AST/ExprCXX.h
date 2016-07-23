@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -115,15 +121,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|CXXConstructorDecl
-decl_stmt|;
-name|class
-name|CXXDestructorDecl
-decl_stmt|;
-name|class
-name|CXXMethodDecl
-decl_stmt|;
 name|class
 name|CXXTemporary
 decl_stmt|;
@@ -207,8 +204,6 @@ argument_list|,
 name|CXXOperatorCallExprClass
 argument_list|,
 name|fn
-argument_list|,
-literal|0
 argument_list|,
 name|args
 argument_list|,
@@ -431,8 +426,6 @@ argument|CXXMemberCallExprClass
 argument_list|,
 argument|fn
 argument_list|,
-literal|0
-argument_list|,
 argument|args
 argument_list|,
 argument|t
@@ -486,12 +479,45 @@ name|getRecordDecl
 argument_list|()
 specifier|const
 block|;
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+name|SourceLocation
+name|CLoc
+operator|=
+name|getCallee
+argument_list|()
+operator|->
+name|getExprLoc
+argument_list|()
+block|;
+if|if
+condition|(
+name|CLoc
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|CLoc
+return|;
+return|return
+name|getLocStart
+argument_list|()
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -502,12 +528,21 @@ operator|==
 name|CXXMemberCallExprClass
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Represents a call to a CUDA kernel function.
+end_comment
+
+begin_decl_stmt
 name|class
 name|CUDAKernelCallExpr
-operator|:
+range|:
 name|public
 name|CallExpr
 block|{
@@ -547,7 +582,7 @@ argument|CUDAKernelCallExprClass
 argument_list|,
 argument|fn
 argument_list|,
-argument|END_PREARG
+argument|Config
 argument_list|,
 argument|args
 argument_list|,
@@ -557,12 +592,7 @@ argument|VK
 argument_list|,
 argument|RP
 argument_list|)
-block|{
-name|setConfig
-argument_list|(
-name|Config
-argument_list|)
-block|;   }
+block|{}
 name|CUDAKernelCallExpr
 argument_list|(
 argument|ASTContext&C
@@ -619,19 +649,54 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Sets the kernel configuration expression.
+comment|///
+comment|/// Note that this method cannot be called if config has already been set to a
+comment|/// non-null value.
 name|void
 name|setConfig
 argument_list|(
 argument|CallExpr *E
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|getConfig
+argument_list|()
+operator|&&
+literal|"Cannot call setConfig if config is not null"
+argument_list|)
+block|;
 name|setPreArg
 argument_list|(
 name|CONFIG
 argument_list|,
 name|E
 argument_list|)
-block|; }
+block|;
+name|setInstantiationDependent
+argument_list|(
+name|isInstantiationDependent
+argument_list|()
+operator|||
+name|E
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|)
+block|;
+name|setContainsUnexpandedParameterPack
+argument_list|(
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|E
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|;   }
 specifier|static
 name|bool
 name|classof
@@ -1482,8 +1547,6 @@ argument_list|,
 name|UserDefinedLiteralClass
 argument_list|,
 name|Fn
-argument_list|,
-literal|0
 argument_list|,
 name|Args
 argument_list|,
@@ -3187,6 +3250,9 @@ operator|*
 operator|>
 name|Operand
 block|;
+name|StringRef
+name|UuidStr
+block|;
 name|SourceRange
 name|Range
 block|;
@@ -3197,6 +3263,8 @@ argument_list|(
 argument|QualType Ty
 argument_list|,
 argument|TypeSourceInfo *Operand
+argument_list|,
+argument|StringRef UuidStr
 argument_list|,
 argument|SourceRange R
 argument_list|)
@@ -3243,16 +3311,23 @@ argument_list|(
 name|Operand
 argument_list|)
 block|,
+name|UuidStr
+argument_list|(
+name|UuidStr
+argument_list|)
+block|,
 name|Range
 argument_list|(
 argument|R
 argument_list|)
-block|{ }
+block|{}
 name|CXXUuidofExpr
 argument_list|(
 argument|QualType Ty
 argument_list|,
 argument|Expr *Operand
+argument_list|,
+argument|StringRef UuidStr
 argument_list|,
 argument|SourceRange R
 argument_list|)
@@ -3290,11 +3365,16 @@ argument_list|(
 name|Operand
 argument_list|)
 block|,
+name|UuidStr
+argument_list|(
+name|UuidStr
+argument_list|)
+block|,
 name|Range
 argument_list|(
 argument|R
 argument_list|)
-block|{ }
+block|{}
 name|CXXUuidofExpr
 argument_list|(
 argument|EmptyShell Empty
@@ -3455,13 +3535,25 @@ name|Operand
 operator|=
 name|E
 block|;   }
-name|StringRef
-name|getUuidAsStringRef
+name|void
+name|setUuidStr
 argument_list|(
-argument|ASTContext&Context
+argument|StringRef US
 argument_list|)
+block|{
+name|UuidStr
+operator|=
+name|US
+block|; }
+name|StringRef
+name|getUuidStr
+argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|UuidStr
+return|;
+block|}
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -3524,19 +3616,6 @@ operator|==
 name|CXXUuidofExprClass
 return|;
 block|}
-comment|/// Grabs __declspec(uuid()) off a type, or returns 0 if we cannot resolve to
-comment|/// a single GUID.
-specifier|static
-specifier|const
-name|UuidAttr
-operator|*
-name|GetUuidAttrOfType
-argument_list|(
-argument|QualType QT
-argument_list|,
-argument|bool *HasMultipleGUIDsPtr = nullptr
-argument_list|)
-block|;
 comment|// Iterators
 name|child_range
 name|children
@@ -4841,27 +4920,27 @@ name|NumArgs
 operator|:
 literal|16
 block|;
-name|bool
+name|unsigned
 name|Elidable
 operator|:
 literal|1
 block|;
-name|bool
+name|unsigned
 name|HadMultipleCandidates
 operator|:
 literal|1
 block|;
-name|bool
+name|unsigned
 name|ListInitialization
 operator|:
 literal|1
 block|;
-name|bool
+name|unsigned
 name|StdInitListInitialization
 operator|:
 literal|1
 block|;
-name|bool
+name|unsigned
 name|ZeroInitialization
 operator|:
 literal|1
@@ -4876,6 +4955,16 @@ operator|*
 operator|*
 name|Args
 block|;
+name|void
+name|setConstructor
+argument_list|(
+argument|CXXConstructorDecl *C
+argument_list|)
+block|{
+name|Constructor
+operator|=
+name|C
+block|; }
 name|protected
 operator|:
 name|CXXConstructExpr
@@ -4888,9 +4977,9 @@ argument|QualType T
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|CXXConstructorDecl *d
+argument|CXXConstructorDecl *Ctor
 argument_list|,
-argument|bool elidable
+argument|bool Elidable
 argument_list|,
 argument|ArrayRef<Expr *> Args
 argument_list|,
@@ -4971,53 +5060,13 @@ argument_list|(
 argument|EmptyShell Empty
 argument_list|)
 operator|:
-name|Expr
+name|CXXConstructExpr
 argument_list|(
-name|CXXConstructExprClass
+argument|CXXConstructExprClass
 argument_list|,
-name|Empty
+argument|Empty
 argument_list|)
-block|,
-name|Constructor
-argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|NumArgs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Elidable
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|HadMultipleCandidates
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ListInitialization
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ZeroInitialization
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|ConstructKind
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Args
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
+block|{}
 specifier|static
 name|CXXConstructExpr
 operator|*
@@ -5029,7 +5078,7 @@ argument|QualType T
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|CXXConstructorDecl *D
+argument|CXXConstructorDecl *Ctor
 argument_list|,
 argument|bool Elidable
 argument_list|,
@@ -5048,6 +5097,7 @@ argument_list|,
 argument|SourceRange ParenOrBraceRange
 argument_list|)
 block|;
+comment|/// \brief Get the constructor that this expression will (ultimately) call.
 name|CXXConstructorDecl
 operator|*
 name|getConstructor
@@ -5058,16 +5108,6 @@ return|return
 name|Constructor
 return|;
 block|}
-name|void
-name|setConstructor
-argument_list|(
-argument|CXXConstructorDecl *C
-argument_list|)
-block|{
-name|Constructor
-operator|=
-name|C
-block|; }
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -5532,6 +5572,252 @@ name|class
 name|ASTStmtReader
 block|; }
 block|;
+comment|/// \brief Represents a call to an inherited base class constructor from an
+comment|/// inheriting constructor. This call implicitly forwards the arguments from
+comment|/// the enclosing context (an inheriting constructor) to the specified inherited
+comment|/// base class constructor.
+name|class
+name|CXXInheritedCtorInitExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|private
+operator|:
+name|CXXConstructorDecl
+operator|*
+name|Constructor
+block|;
+comment|/// The location of the using declaration.
+name|SourceLocation
+name|Loc
+block|;
+comment|/// Whether this is the construction of a virtual base.
+name|unsigned
+name|ConstructsVirtualBase
+operator|:
+literal|1
+block|;
+comment|/// Whether the constructor is inherited from a virtual base class of the
+comment|/// class that we construct.
+name|unsigned
+name|InheritedFromVirtualBase
+operator|:
+literal|1
+block|;
+name|public
+operator|:
+comment|/// \brief Construct a C++ inheriting construction expression.
+name|CXXInheritedCtorInitExpr
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|CXXConstructorDecl *Ctor
+argument_list|,
+argument|bool ConstructsVirtualBase
+argument_list|,
+argument|bool InheritedFromVirtualBase
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|CXXInheritedCtorInitExprClass
+argument_list|,
+name|T
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|Constructor
+argument_list|(
+name|Ctor
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+name|Loc
+argument_list|)
+block|,
+name|ConstructsVirtualBase
+argument_list|(
+name|ConstructsVirtualBase
+argument_list|)
+block|,
+name|InheritedFromVirtualBase
+argument_list|(
+argument|InheritedFromVirtualBase
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|T
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// \brief Construct an empty C++ inheriting construction expression.
+name|explicit
+name|CXXInheritedCtorInitExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|CXXInheritedCtorInitExprClass
+argument_list|,
+name|Empty
+argument_list|)
+block|,
+name|Constructor
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|ConstructsVirtualBase
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|InheritedFromVirtualBase
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|/// \brief Get the constructor that this expression will call.
+name|CXXConstructorDecl
+operator|*
+name|getConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Constructor
+return|;
+block|}
+comment|/// \brief Determine whether this constructor is actually constructing
+comment|/// a base class (rather than a complete object).
+name|bool
+name|constructsVBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConstructsVirtualBase
+return|;
+block|}
+name|CXXConstructExpr
+operator|::
+name|ConstructionKind
+name|getConstructionKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConstructsVirtualBase
+operator|?
+name|CXXConstructExpr
+operator|::
+name|CK_VirtualBase
+operator|:
+name|CXXConstructExpr
+operator|::
+name|CK_NonVirtualBase
+return|;
+block|}
+comment|/// \brief Determine whether the inherited constructor is inherited from a
+comment|/// virtual base of the object we construct. If so, we are not responsible
+comment|/// for calling the inherited constructor (the complete object constructor
+comment|/// does that), and so we don't need to pass any arguments.
+name|bool
+name|inheritedFromVBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InheritedFromVirtualBase
+return|;
+block|}
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|CXXInheritedCtorInitExprClass
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
+block|;
 comment|/// \brief Represents an explicit C++ type conversion that uses "functional"
 comment|/// notation (C++ [expr.type.conv]).
 comment|///
@@ -5961,11 +6247,11 @@ specifier|const
 block|{
 return|return
 name|HasArrayIndexVars
-operator|?
+condition|?
 name|NumCaptures
 operator|+
 literal|1
-operator|:
+else|:
 literal|0
 return|;
 block|}
@@ -6464,10 +6750,22 @@ argument_list|(
 argument|const_capture_init_iterator Iter
 argument_list|)
 specifier|const
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the source range covering the lambda introducer,
+end_comment
+
+begin_comment
 comment|/// which contains the explicit capture list surrounded by square
+end_comment
+
+begin_comment
 comment|/// brackets ([...]).
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getIntroducerRange
 argument_list|()
@@ -6477,34 +6775,76 @@ return|return
 name|IntroducerRange
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the class that corresponds to the lambda.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is the "closure type" (C++1y [expr.prim.lambda]), and stores the
+end_comment
+
+begin_comment
 comment|/// captures in its fields and provides the various operations permitted
+end_comment
+
+begin_comment
 comment|/// on a lambda (copying, calling).
+end_comment
+
+begin_expr_stmt
 name|CXXRecordDecl
 operator|*
 name|getLambdaClass
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the function call operator associated with this
+end_comment
+
+begin_comment
 comment|/// lambda expression.
+end_comment
+
+begin_expr_stmt
 name|CXXMethodDecl
 operator|*
 name|getCallOperator
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief If this is a generic lambda expression, retrieve the template
+end_comment
+
+begin_comment
 comment|/// parameter list associated with it, or else return null.
+end_comment
+
+begin_expr_stmt
 name|TemplateParameterList
 operator|*
 name|getTemplateParameterList
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this is a generic lambda.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isGenericLambda
 argument_list|()
@@ -6515,22 +6855,46 @@ name|getTemplateParameterList
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the body of the lambda.
+end_comment
+
+begin_expr_stmt
 name|CompoundStmt
 operator|*
 name|getBody
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether the lambda is mutable, meaning that any
+end_comment
+
+begin_comment
 comment|/// captures values can be modified.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMutable
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this lambda has an explicit parameter
+end_comment
+
+begin_comment
 comment|/// list vs. an implicit (empty) parameter list.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasExplicitParameters
 argument_list|()
@@ -6540,7 +6904,13 @@ return|return
 name|ExplicitParams
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this lambda had its result type explicitly specified.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasExplicitResultType
 argument_list|()
@@ -6550,12 +6920,18 @@ return|return
 name|ExplicitResultType
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -6566,6 +6942,9 @@ operator|==
 name|LambdaExprClass
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -6579,6 +6958,9 @@ name|getBegin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -6589,9 +6971,12 @@ return|return
 name|ClosingBrace
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|child_range
 name|children
-argument_list|()
+parameter_list|()
 block|{
 comment|// Includes initialization exprs plus body stmt
 return|return
@@ -6609,20 +6994,38 @@ literal|1
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|friend
 name|TrailingObjects
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTStmtReader
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|friend
 name|class
 name|ASTStmtWriter
-block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// An expression "T()" which creates a value-initialized rvalue of type
+end_comment
+
+begin_comment
 comment|/// T, which is a non-class type.  See (C++98 [5.2.3p2]).
+end_comment
+
+begin_decl_stmt
 name|class
 name|CXXScalarValueInitExpr
 range|:
@@ -6815,20 +7218,20 @@ name|SourceRange
 name|DirectInitRange
 block|;
 comment|/// Was the usage ::new, i.e. is the global new to be used?
-name|bool
+name|unsigned
 name|GlobalNew
 operator|:
 literal|1
 block|;
 comment|/// Do we allocate an array? If so, the first SubExpr is the size expression.
-name|bool
+name|unsigned
 name|Array
 operator|:
 literal|1
 block|;
 comment|/// If this is an array allocation, does the usual deallocation
 comment|/// function for the allocated type want to know the allocated size?
-name|bool
+name|unsigned
 name|UsualArrayDeleteWantsSize
 operator|:
 literal|1
@@ -7330,10 +7733,16 @@ typedef|typedef
 name|ExprIterator
 name|arg_iterator
 typedef|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|ConstExprIterator
 name|const_arg_iterator
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|iterator_range
@@ -7356,6 +7765,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|iterator_range
@@ -7379,6 +7791,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|arg_iterator
 name|placement_arg_begin
 parameter_list|()
@@ -7392,6 +7807,9 @@ name|hasInitializer
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|arg_iterator
 name|placement_arg_end
 parameter_list|()
@@ -7408,6 +7826,9 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_arg_iterator
 name|placement_arg_begin
 argument_list|()
@@ -7422,6 +7843,9 @@ name|hasInitializer
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|const_arg_iterator
 name|placement_arg_end
 argument_list|()
@@ -7439,12 +7863,18 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|Stmt
 modifier|*
 modifier|*
 name|raw_arg_iterator
 typedef|;
+end_typedef
+
+begin_function
 name|raw_arg_iterator
 name|raw_arg_begin
 parameter_list|()
@@ -7453,6 +7883,9 @@ return|return
 name|SubExprs
 return|;
 block|}
+end_function
+
+begin_function
 name|raw_arg_iterator
 name|raw_arg_end
 parameter_list|()
@@ -7469,6 +7902,9 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_arg_iterator
 name|raw_arg_begin
 argument_list|()
@@ -7478,6 +7914,9 @@ return|return
 name|SubExprs
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|const_arg_iterator
 name|raw_arg_end
 argument_list|()
@@ -7495,6 +7934,9 @@ name|getNumPlacementArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getStartLoc
 argument_list|()
@@ -7507,6 +7949,9 @@ name|getBegin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getEndLoc
 argument_list|()
@@ -7519,6 +7964,9 @@ name|getEnd
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceRange
 name|getDirectInitRange
 argument_list|()
@@ -7528,6 +7976,9 @@ return|return
 name|DirectInitRange
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -7538,6 +7989,9 @@ return|return
 name|Range
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -7549,6 +8003,9 @@ name|getStartLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -7560,6 +8017,9 @@ name|getEndLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -7579,7 +8039,13 @@ operator|==
 name|CXXNewExprClass
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function
 name|child_range
 name|children
 parameter_list|()
@@ -7595,14 +8061,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// \brief Represents a \c delete expression for memory deallocation and
 end_comment
 
@@ -9077,7 +9539,7 @@ operator|:
 literal|31
 block|;
 comment|/// \brief The value of the type trait. Unspecified if dependent.
-name|bool
+name|unsigned
 name|Value
 operator|:
 literal|1
@@ -9928,21 +10390,40 @@ name|NumTemplateArgs
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getTemplateArgs
+argument_list|()
+block|,
+name|getNumTemplateArgs
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// \brief Copies the template arguments into the given structure.
 end_comment
 
-begin_macro
-unit|void
+begin_decl_stmt
+name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 if|if
 condition|(
@@ -9961,7 +10442,7 @@ name|List
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -10964,8 +11445,28 @@ name|NumTemplateArgs
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getTemplateArgs
+argument_list|()
+block|,
+name|getNumTemplateArgs
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// Note: getLocStart() is the start of the whole DependentScopeDeclRefExpr,
 end_comment
 
@@ -10973,13 +11474,10 @@ begin_comment
 comment|/// and differs from getLocation().getStart().
 end_comment
 
-begin_macro
-unit|SourceLocation
+begin_expr_stmt
+name|SourceLocation
 name|getLocStart
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 name|LLVM_READONLY
 block|{
@@ -11163,17 +11661,13 @@ argument_list|)
 empty_stmt|;
 name|ExprWithCleanups
 argument_list|(
-name|Expr
-operator|*
-name|SubExpr
+argument|Expr *SubExpr
 argument_list|,
-name|ArrayRef
-operator|<
-name|CleanupObject
-operator|>
-name|Objects
+argument|bool CleanupsHaveSideEffects
+argument_list|,
+argument|ArrayRef<CleanupObject> Objects
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|friend
 name|TrailingObjects
 decl_stmt|;
@@ -11213,6 +11707,9 @@ argument_list|,
 name|Expr
 operator|*
 name|subexpr
+argument_list|,
+name|bool
+name|CleanupsHaveSideEffects
 argument_list|,
 name|ArrayRef
 operator|<
@@ -11313,6 +11810,17 @@ operator|>
 operator|(
 name|SubExpr
 operator|)
+return|;
+block|}
+name|bool
+name|cleanupsHaveSideEffects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExprWithCleanupsBits
+operator|.
+name|CleanupsHaveSideEffects
 return|;
 block|}
 comment|/// As with any mutator of the AST, be very careful
@@ -12595,13 +13103,31 @@ name|NumTemplateArgs
 return|;
 end_return
 
-begin_macro
-unit|}    SourceLocation
-name|getLocStart
+begin_expr_stmt
+unit|}    ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|template_arguments
 argument_list|()
-end_macro
+specifier|const
+block|{
+return|return
+block|{
+name|getTemplateArgs
+argument_list|()
+block|,
+name|getNumTemplateArgs
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
+name|SourceLocation
+name|getLocStart
+argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{

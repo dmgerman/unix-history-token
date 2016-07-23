@@ -20,7 +20,7 @@ comment|// number of parameters.
 end_comment
 
 begin_comment
-comment|// RUN: echo "-DTEST">> %t.0.txt
+comment|// RUN: echo "-DTEST"> %t.0.txt
 end_comment
 
 begin_comment

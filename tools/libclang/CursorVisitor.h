@@ -1055,6 +1055,14 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|bool
+name|VisitStaticAssertDecl
+parameter_list|(
+name|StaticAssertDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|// Name visitor
 name|bool
 name|VisitDeclarationNameInfo
@@ -1197,6 +1205,20 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|Optional
+operator|<
+name|bool
+operator|>
+name|handleDeclForVisitation
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

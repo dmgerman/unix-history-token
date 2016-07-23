@@ -95,6 +95,7 @@ operator|)
 operator|+
 literal|1
 decl_stmt|;
+comment|// expected-warning{{Pointer arithmetic on}}
 block|}
 end_function
 

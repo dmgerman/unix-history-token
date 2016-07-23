@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DataLayout.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
@@ -74,21 +80,13 @@ decl_stmt|;
 comment|/// \brief This is an IRBuilder insertion helper that forwards to
 comment|/// CodeGenFunction::InsertHelper, which adds necessary metadata to
 comment|/// instructions.
-name|template
-operator|<
-name|bool
-name|PreserveNames
-operator|>
 name|class
 name|CGBuilderInserter
-operator|:
+range|:
 name|protected
 name|llvm
 operator|::
 name|IRBuilderDefaultInserter
-operator|<
-name|PreserveNames
-operator|>
 block|{
 name|public
 operator|:
@@ -134,37 +132,16 @@ name|CGF
 operator|=
 name|nullptr
 block|; }
-expr_stmt|;
-comment|// Don't preserve names on values in an optimized build.
-ifdef|#
-directive|ifdef
-name|NDEBUG
-define|#
-directive|define
-name|PreserveNames
-value|false
-else|#
-directive|else
-define|#
-directive|define
-name|PreserveNames
-value|true
-endif|#
-directive|endif
+decl_stmt|;
 typedef|typedef
 name|CGBuilderInserter
-operator|<
-name|PreserveNames
-operator|>
 name|CGBuilderInserterTy
-expr_stmt|;
+typedef|;
 typedef|typedef
 name|llvm
 operator|::
 name|IRBuilder
 operator|<
-name|PreserveNames
-operator|,
 name|llvm
 operator|::
 name|ConstantFolder
@@ -1024,6 +1001,47 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+name|Address
+name|CreateStructGEP
+argument_list|(
+argument|Address Addr
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const llvm::StructLayout *Layout
+argument_list|,
+argument|const llvm::Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|auto
+name|Offset
+operator|=
+name|CharUnits
+operator|::
+name|fromQuantity
+argument_list|(
+name|Layout
+operator|->
+name|getElementOffset
+argument_list|(
+name|Index
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|CreateStructGEP
+argument_list|(
+name|Addr
+argument_list|,
+name|Index
+argument_list|,
+name|Offset
+argument_list|,
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// Given
 comment|///   %addr = [n x T]* ...
 comment|/// produce
@@ -1647,9 +1665,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-undef|#
-directive|undef
-name|PreserveNames
 block|}
 end_decl_stmt
 

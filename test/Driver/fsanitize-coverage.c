@@ -16,31 +16,71 @@ comment|// CHECK-SANITIZE-COVERAGE-0-NOT: fsanitize-coverage-type
 end_comment
 
 begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-0: -fsanitize=address
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=bool -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=dataflow -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FUNC: fsanitize-coverage-type=1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=bb %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-BB
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-BB: fsanitize-coverage-type=2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-EDGE
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-EDGE: fsanitize-coverage-type=3
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC_INDIR
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FUNC_INDIR: fsanitize-coverage-type=3
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FUNC_INDIR: fsanitize-coverage-indirect-calls
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=leak -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=undefined -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=bool -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=dataflow -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-1
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-1: fsanitize-coverage-type=1
+comment|// CHECK-SANITIZE-COVERAGE-1: warning: argument '-fsanitize-coverage=1' is deprecated, use '-fsanitize-coverage=func' instead
 end_comment
 
 begin_comment
@@ -48,7 +88,7 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-co
 end_comment
 
 begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-2: fsanitize-coverage-type=2
+comment|// CHECK-SANITIZE-COVERAGE-2: warning: argument '-fsanitize-coverage=2' is deprecated, use '-fsanitize-coverage=bb' instead
 end_comment
 
 begin_comment
@@ -56,19 +96,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-co
 end_comment
 
 begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-3: fsanitize-coverage-type=3
+comment|// CHECK-SANITIZE-COVERAGE-3: warning: argument '-fsanitize-coverage=3' is deprecated, use '-fsanitize-coverage=edge' instead
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=4 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-4
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-4: fsanitize-coverage-type=3
-end_comment
-
-begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-4: fsanitize-coverage-indirect-calls
+comment|//
 end_comment
 
 begin_comment
@@ -80,19 +112,23 @@ comment|// CHECK-SANITIZE-COVERAGE-5: error: unsupported argument '5' to option 
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread   -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread   -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu                     -fsanitize-coverage=1 %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-UNUSED
+comment|// RUN: %clang -target x86_64-linux-gnu                     -fsanitize-coverage=func %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FUNC
 end_comment
 
 begin_comment
-comment|// CHECK-SANITIZE-COVERAGE-UNUSED: argument unused during compilation: '-fsanitize-coverage=1'
+comment|// CHECK-SANITIZE-COVERAGE-UNUSED: argument unused during compilation: '-fsanitize-coverage=func'
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=1 -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-SAN-DISABLED
+comment|// CHECK-SANITIZE-COVERAGE-UNUSED-NOT: -fsanitize-coverage-type=1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=func -fno-sanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-SAN-DISABLED
 end_comment
 
 begin_comment
@@ -100,7 +136,7 @@ comment|// CHECK-SANITIZE-COVERAGE-SAN-DISABLED-NOT: argument unused
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-bb,trace-cmp,8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=edge,indirect-calls,trace-bb,trace-pc,trace-cmp,8bit-counters %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANITIZE-COVERAGE-FEATURES
 end_comment
 
 begin_comment
@@ -121,6 +157,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-8bit-counters
+end_comment
+
+begin_comment
+comment|// CHECK-SANITIZE-COVERAGE-FEATURES: -fsanitize-coverage-trace-pc
 end_comment
 
 begin_comment
@@ -164,6 +204,34 @@ comment|// CHECK-MISSING-TYPE: error: invalid argument '-fsanitize-coverage=8bit
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=trace-pc %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_EDGE
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=edge,trace-pc %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_EDGE
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_EDGE: -fsanitize-coverage-type=3
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_EDGE: -fsanitize-coverage-trace-pc
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-coverage=func,trace-pc %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TRACE_PC_FUNC
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_FUNC: -fsanitize-coverage-type=1
+end_comment
+
+begin_comment
+comment|// CHECK-TRACE_PC_FUNC: -fsanitize-coverage-trace-pc
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=trace-cmp,indirect-calls %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-TYPE-NECESSARY
 end_comment
 
@@ -180,7 +248,7 @@ comment|// CHECK-NO-TYPE-NECESSARY: -fsanitize-coverage-trace-cmp
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=1 -fsanitize-coverage=trace-cmp %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-EXTEND-LEGACY
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-coverage=func -fsanitize-coverage=trace-cmp %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-EXTEND-LEGACY
 end_comment
 
 begin_comment
@@ -192,7 +260,7 @@ comment|// CHECK-EXTEND-LEGACY: -fsanitize-coverage-trace-cmp
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl --target=i386-pc-win32 -fsanitize=address -fsanitize-coverage=1 -c -### -- %s 2>&1 | FileCheck %s -check-prefix=CLANG-CL-COVERAGE
+comment|// RUN: %clang_cl --target=i386-pc-win32 -fsanitize=address -fsanitize-coverage=func -c -### -- %s 2>&1 | FileCheck %s -check-prefix=CLANG-CL-COVERAGE
 end_comment
 
 begin_comment
@@ -212,11 +280,11 @@ comment|// CLANG-CL-COVERAGE-NOT: unknown argument
 end_comment
 
 begin_comment
-comment|// CLANG-CL-COVERAGE: -fsanitize=address
+comment|// CLANG-CL-COVERAGE: -fsanitize-coverage-type=1
 end_comment
 
 begin_comment
-comment|// CLANG-CL-COVERAGE: -fsanitize-coverage-type=1
+comment|// CLANG-CL-COVERAGE: -fsanitize=address
 end_comment
 
 end_unit

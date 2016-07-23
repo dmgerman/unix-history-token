@@ -168,5 +168,108 @@ begin_comment
 comment|// expected-warning {{unknown warning group '-Winvalid-name', ignored}}
 end_comment
 
+begin_comment
+comment|// Testing pragma clang diagnostic with -Weverything
+end_comment
+
+begin_function
+name|void
+name|ppo
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// First test that we do not diagnose on this.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|warning
+literal|"-Weverything"
+end_pragma
+
+begin_function
+name|void
+name|ppp
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-warning {{no previous prototype for function 'ppp'}}
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Weverything"
+end_pragma
+
+begin_comment
+comment|// Reset it.
+end_comment
+
+begin_function
+name|void
+name|ppq
+parameter_list|()
+block|{}
+end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|error
+literal|"-Weverything"
+end_pragma
+
+begin_comment
+comment|// Now set to error
+end_comment
+
+begin_function
+name|void
+name|ppr
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-error {{no previous prototype for function 'ppr'}}
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|warning
+literal|"-Weverything"
+end_pragma
+
+begin_comment
+comment|// This should not be effective
+end_comment
+
+begin_function
+name|void
+name|pps
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-error {{no previous prototype for function 'pps'}}
+end_comment
+
 end_unit
 

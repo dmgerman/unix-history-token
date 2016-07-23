@@ -67,7 +67,7 @@ comment|// expected-error@+2 {{expected string literal in '__has_warning'}}
 end_comment
 
 begin_comment
-comment|// expected-error@+1 {{expected value in expression}}
+comment|// expected-error@+1 {{missing ')'}} expected-note@+1 {{match}}
 end_comment
 
 begin_if
@@ -115,11 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// expected-error@+2 {{builtin warning check macro requires a parenthesized string}}
-end_comment
-
-begin_comment
-comment|// expected-error@+1 {{invalid token}}
+comment|// expected-error@+1 {{missing '(' after '__has_warning'}}
 end_comment
 
 begin_if
@@ -154,7 +150,7 @@ value|"-Wparentheses"
 end_define
 
 begin_comment
-comment|// expected-error@+1 2{{expected}}
+comment|// expected-error@+1 {{expected}}
 end_comment
 
 begin_if

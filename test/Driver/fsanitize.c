@@ -72,19 +72,35 @@ comment|// RUN: %clang -target x86_64-pc-win32 -fsanitize=undefined -x c++ %s -#
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-WIN: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+comment|// CHECK-UNDEFINED-WIN32: "--dependent-lib={{[^"]*}}ubsan_standalone-i386.lib"
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-WIN32-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone-i386.lib"
+comment|// CHECK-UNDEFINED-WIN64: "--dependent-lib={{[^"]*}}ubsan_standalone-x86_64.lib"
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-WIN64-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone-x86_64.lib"
+comment|// CHECK-UNDEFINED-WIN-CXX: "--dependent-lib={{[^"]*}}ubsan_standalone_cxx{{[^"]*}}.lib"
 end_comment
 
 begin_comment
-comment|// CHECK-UNDEFINED-WIN-CXX-SAME: "--dependent-lib={{[^"]*}}ubsan_standalone_cxx{{[^"]*}}.lib"
+comment|// CHECK-UNDEFINED-WIN-SAME: "-fsanitize={{((signed-integer-overflow|integer-divide-by-zero|float-divide-by-zero|shift-base|shift-exponent|unreachable|return|vla-bound|alignment|null|object-size|float-cast-overflow|array-bounds|enum|bool|returns-nonnull-attribute|nonnull-attribute),?){17}"}}
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-pc-win32 -fsanitize-coverage=bb %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-COVERAGE-WIN32
+end_comment
+
+begin_comment
+comment|// CHECK-COVERAGE-WIN32: "--dependent-lib={{[^"]*}}ubsan_standalone-i386.lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32 -fsanitize-coverage=bb %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-COVERAGE-WIN64
+end_comment
+
+begin_comment
+comment|// CHECK-COVERAGE-WIN64: "--dependent-lib={{[^"]*}}ubsan_standalone-x86_64.lib"
 end_comment
 
 begin_comment
@@ -241,6 +257,90 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANKA-SANL: '-fsanitize=kernel-address' not allowed with '-fsanitize=leak'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag,address -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANA
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set,address -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANA
+end_comment
+
+begin_comment
+comment|// CHECK-SANE-SANA: '-fsanitize=efficiency-{{.*}}' not allowed with '-fsanitize=address'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag,leak -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANL
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set,leak -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANL
+end_comment
+
+begin_comment
+comment|// CHECK-SANE-SANL: '-fsanitize=efficiency-{{.*}}' not allowed with '-fsanitize=leak'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag,thread -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANT
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set,thread -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANT
+end_comment
+
+begin_comment
+comment|// CHECK-SANE-SANT: '-fsanitize=efficiency-{{.*}}' not allowed with '-fsanitize=thread'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag,memory -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANM
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set,memory -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANM
+end_comment
+
+begin_comment
+comment|// CHECK-SANE-SANM: '-fsanitize=efficiency-{{.*}}' not allowed with '-fsanitize=memory'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-cache-frag,kernel-address -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANKA
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=efficiency-working-set,kernel-address -pie -fno-rtti %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SANE-SANKA
+end_comment
+
+begin_comment
+comment|// CHECK-SANE-SANKA: '-fsanitize=efficiency-{{.*}}' not allowed with '-fsanitize=kernel-address'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize-address-use-after-scope %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ONLY-USE-AFTER-SCOPE
+end_comment
+
+begin_comment
+comment|// CHECK-ONLY-USE-AFTER-SCOPE: '-fsanitize-address-use-after-scope' only allowed with '-fsanitize=address'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-address-use-after-scope %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-USE-AFTER-SCOPE
+end_comment
+
+begin_comment
+comment|// CHECK-USE-AFTER-SCOPE: -cc1{{.*}}-fsanitize-address-use-after-scope
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ASAN-NO-USE-AFTER-SCOPE
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-NO-USE-AFTER-SCOPE-NOT: -cc1{{.*}}-fsanitize-address-use-after-scope
 end_comment
 
 begin_comment
@@ -464,7 +564,7 @@ comment|// CHECK-NO-PIE-NOT: "-pie"
 end_comment
 
 begin_comment
-comment|// CHECK-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+comment|// CHECK-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pic-is-pie"
 end_comment
 
 begin_comment
@@ -548,11 +648,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu %s -fsanitize=undefined -fsaniti
 end_comment
 
 begin_comment
-comment|// CHECK-DEPRECATED-RECOVER: argument '-fsanitize-recover' is deprecated, use '-fsanitize-recover=undefined,integer' instead
+comment|// CHECK-DEPRECATED-RECOVER: argument '-fsanitize-recover' is deprecated, use '-fsanitize-recover=undefined,integer' or '-fsanitize-recover=all' instead
 end_comment
 
 begin_comment
-comment|// CHECK-DEPRECATED-RECOVER: argument '-fno-sanitize-recover' is deprecated, use '-fno-sanitize-recover=undefined,integer' instead
+comment|// CHECK-DEPRECATED-RECOVER: argument '-fno-sanitize-recover' is deprecated, use '-fno-sanitize-recover=undefined,integer' or '-fno-sanitize-recover=all' instead
 end_comment
 
 begin_comment
@@ -652,6 +752,62 @@ comment|// CHECK-TSAN-MSAN-MSAN-DARWIN-NOT: unsupported option
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-X86-64-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-X86-64-DARWIN-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-iossimulator -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-X86-64-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-X86-64-IOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-tvossimulator -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-X86-64-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-X86-64-TVOSSIMULATOR-NOT: unsupported option
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-I386-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-I386-DARWIN: unsupported option '-fsanitize=thread' for target 'i386-apple-darwin'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-apple-ios -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-ARM-IOS
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-ARM-IOS: unsupported option '-fsanitize=thread' for target 'arm-apple-ios'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-iossimulator -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-I386-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-I386-IOSSIMULATOR: unsupported option '-fsanitize=thread' for target 'i386-apple-iossimulator'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-tvossimulator -fsanitize=thread %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-TSAN-I386-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-I386-TVOSSIMULATOR: unsupported option '-fsanitize=thread' for target 'i386-apple-tvossimulator'
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=function %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-FSAN-DARWIN
 end_comment
 
@@ -688,7 +844,7 @@ comment|// RUN: %clang -target armv7-apple-ios7 -miphoneos-version-min=7.0 -fsan
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-IOS: unsupported option '-fsanitize=address' for target 'arm-apple-ios7'
+comment|// CHECK-ASAN-IOS: -fsanitize=address
 end_comment
 
 begin_comment
@@ -700,27 +856,99 @@ comment|// CHECK-ASAN-OPENBSD: unsupported option '-fsanitize=address' for targe
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+comment|// RUN: %clang -target i686-linux-gnu -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-X86
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+comment|// RUN: %clang -target i686-linux-gnu -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-X86
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-derived-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-DCAST
+comment|// CHECK-ESAN-X86: error: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'i686--linux-gnu'
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi-unrelated-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-UCAST
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-DARWIN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-nvcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NVCALL
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-DARWIN
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-vcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-VCALL
+comment|// CHECK-ESAN-DARWIN: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'x86_64-apple-darwin10'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-DARWIN
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-DARWIN
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-I386-DARWIN: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'i386-apple-darwin'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-apple-ios -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-ARM-IOS
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-apple-ios -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-ARM-IOS
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-ARM-IOS: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'arm-apple-ios'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-iossimulator -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-iossimulator -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-IOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-I386-IOSSIMULATOR: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'i386-apple-iossimulator'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-tvossimulator -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-tvossimulator -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-I386-TVOSSIMULATOR
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-I386-TVOSSIMULATOR: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'i386-apple-tvossimulator'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fvisibility=hidden -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fvisibility=hidden -fsanitize=cfi -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fvisibility=hidden -fsanitize=cfi-derived-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-DCAST
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fvisibility=hidden -fsanitize=cfi-unrelated-cast -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-UCAST
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fvisibility=hidden -fsanitize=cfi-nvcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NVCALL
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fvisibility=hidden -fsanitize=cfi-vcall -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-VCALL
 end_comment
 
 begin_comment
@@ -744,11 +972,35 @@ comment|// CHECK-CFI-VCALL: -emit-llvm-bc{{.*}}-fsanitize=cfi-vcall
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-derived-cast -fno-lto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOLTO
+comment|// RUN: %clang -target x86_64-linux-gnu -fvisibility=hidden -flto -fsanitize=cfi-derived-cast -fno-lto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOLTO
 end_comment
 
 begin_comment
 comment|// CHECK-CFI-NOLTO: '-fsanitize=cfi-derived-cast' only allowed with '-flto'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-derived-cast -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOVIS
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOVIS: '-fsanitize=cfi-derived-cast' only allowed with '-fvisibility='
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32 -flto -fsanitize=cfi-derived-cast -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOVIS-NOERROR
+end_comment
+
+begin_comment
+comment|// RUN: echo> %t.o
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -flto -fsanitize=cfi-derived-cast %t.o -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-NOVIS-NOERROR
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-NOVIS-NOERROR-NOT: only allowed with
 end_comment
 
 begin_comment
@@ -817,6 +1069,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-CFI-NO-CROSS-DSO-NOT: -fsanitize-cfi-cross-dso
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=cfi -fsanitize-stats -flto -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-CFI-STATS
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS: -fsanitize-stats
 end_comment
 
 begin_comment
@@ -892,11 +1152,11 @@ comment|// NOSP-NOT: "-fsanitize=safe-stack"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=NO-SP
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address,safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP-ASAN
+comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address,safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=NO-SP-ASAN
 end_comment
 
 begin_comment
@@ -908,15 +1168,19 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=safe-stack -fstack-pr
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=NO-SP
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target aarch64-linux-android -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=SP
+comment|// RUN: %clang -target aarch64-linux-android -fsanitize=safe-stack -### %s 2>&1 | FileCheck %s -check-prefix=NO-SP
 end_comment
 
 begin_comment
-comment|// SP-NOT: stack-protector
+comment|// NO-SP-NOT: stack-protector
+end_comment
+
+begin_comment
+comment|// NO-SP: "-fsanitize=safe-stack"
 end_comment
 
 begin_comment
@@ -924,11 +1188,23 @@ comment|// SP: "-fsanitize=safe-stack"
 end_comment
 
 begin_comment
-comment|// SP-ASAN-NOT: stack-protector
+comment|// SP: -stack-protector
 end_comment
 
 begin_comment
-comment|// SP-ASAN: "-fsanitize=address,safe-stack"
+comment|// NO-SP-NOT: stack-protector
+end_comment
+
+begin_comment
+comment|// NO-SP-ASAN-NOT: stack-protector
+end_comment
+
+begin_comment
+comment|// NO-SP-ASAN: "-fsanitize=address,safe-stack"
+end_comment
+
+begin_comment
+comment|// NO-SP-ASAN-NOT: stack-protector
 end_comment
 
 begin_comment
@@ -941,6 +1217,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANM: "-fsanitize=memory"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-unknown-cloudabi -fsanitize=safe-stack %s -### 2>&1 | FileCheck %s -check-prefix=SAFESTACK-CLOUDABI
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-unknown-cloudabi -fsanitize=safe-stack %s -### 2>&1 | FileCheck %s -check-prefix=SAFESTACK-CLOUDABI
+end_comment
+
+begin_comment
+comment|// SAFESTACK-CLOUDABI: "-fsanitize=safe-stack"
 end_comment
 
 begin_comment
@@ -989,6 +1277,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-TSAN-PS4: unsupported option '-fsanitize=thread' for target 'x86_64-scei-ps4'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=efficiency-cache-frag %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-PS4
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-scei-ps4 -fsanitize=efficiency-working-set %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ESAN-PS4
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-PS4: unsupported option '-fsanitize=efficiency-{{.*}}' for target 'x86_64-scei-ps4'
 end_comment
 
 begin_comment

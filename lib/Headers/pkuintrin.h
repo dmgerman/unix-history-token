@@ -70,13 +70,13 @@ name|_wrpkru
 parameter_list|(
 name|unsigned
 name|int
-name|val
+name|__val
 parameter_list|)
 block|{
 return|return
 name|__builtin_ia32_wrpkru
 argument_list|(
-name|val
+name|__val
 argument_list|)
 return|;
 block|}

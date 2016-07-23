@@ -84,7 +84,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pie-level 1 -dM -E -o - %s \
+comment|// RUN: %clang_cc1 -pic-level 1 -pic-is-pie -dM -E -o - %s \
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-PIE1 %s
 end_comment
 
 begin_comment
-comment|// CHECK-PIE1-NOT: #define __PIC__
+comment|// CHECK-PIE1: #define __PIC__ 1
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// CHECK-PIE1: #define __PIE__ 1
 end_comment
 
 begin_comment
-comment|// CHECK-PIE1-NOT: #define __pic__
+comment|// CHECK-PIE1: #define __pic__ 1
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pie-level 2 -dM -E -o - %s \
+comment|// RUN: %clang_cc1 -pic-level 2 -pic-is-pie -dM -E -o - %s \
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-PIE2 %s
 end_comment
 
 begin_comment
-comment|// CHECK-PIE2-NOT: #define __PIC__
+comment|// CHECK-PIE2: #define __PIC__ 2
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|// CHECK-PIE2: #define __PIE__ 2
 end_comment
 
 begin_comment
-comment|// CHECK-PIE2-NOT: #define __pic__
+comment|// CHECK-PIE2: #define __pic__ 2
 end_comment
 
 begin_comment

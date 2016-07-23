@@ -49,11 +49,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// ANDROID: @dataLD = global fp128 0xL00000000000000003FFF000000000000, align 16
+comment|// ANDROID: @dataLD = local_unnamed_addr global fp128 0xL00000000000000003FFF000000000000, align 16
 end_comment
 
 begin_comment
-comment|// GNU: @dataLD = global x86_fp80 0xK3FFF8000000000000000, align 16
+comment|// GNU: @dataLD = local_unnamed_addr global x86_fp80 0xK3FFF8000000000000000, align 16
 end_comment
 
 begin_decl_stmt
@@ -71,11 +71,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// ANDROID: @dataLDC = global { fp128, fp128 } { fp128 0xL00000000000000003FFF000000000000, fp128 0xL00000000000000003FFF000000000000 }, align 16
+comment|// ANDROID: @dataLDC = local_unnamed_addr global { fp128, fp128 } { fp128 0xL00000000000000003FFF000000000000, fp128 0xL00000000000000003FFF000000000000 }, align 16
 end_comment
 
 begin_comment
-comment|// GNU: @dataLDC = global { x86_fp80, x86_fp80 } { x86_fp80 0xK3FFF8000000000000000, x86_fp80 0xK3FFF8000000000000000 }, align 16
+comment|// GNU: @dataLDC = local_unnamed_addr global { x86_fp80, x86_fp80 } { x86_fp80 0xK3FFF8000000000000000, x86_fp80 0xK3FFF8000000000000000 }, align 16
 end_comment
 
 begin_function

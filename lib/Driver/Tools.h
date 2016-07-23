@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DebugInfoOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Driver/Util.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Frontend/CodeGenOptions.h"
 end_include
 
 begin_include
@@ -237,8 +237,6 @@ argument_list|,
 argument|const InputInfo&Output
 argument_list|,
 argument|const InputInfoList&Inputs
-argument_list|,
-argument|const ToolChain *AuxToolChain
 argument_list|)
 specifier|const
 block|;
@@ -337,6 +335,15 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|AddLanaiTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddWebAssemblyTargetArgs
 argument_list|(
 argument|const llvm::opt::ArgList&Args
@@ -370,9 +377,11 @@ name|AddClangCLArgs
 argument_list|(
 argument|const llvm::opt::ArgList&Args
 argument_list|,
+argument|types::ID InputType
+argument_list|,
 argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|,
-argument|enum CodeGenOptions::DebugInfoKind *DebugInfoKind
+argument|codegenoptions::DebugInfoKind *DebugInfoKind
 argument_list|,
 argument|bool *EmitCodeView
 argument_list|)
@@ -1265,6 +1274,14 @@ modifier|&
 name|CPU
 parameter_list|)
 function_decl|;
+name|bool
+name|hasCompactBranches
+parameter_list|(
+name|StringRef
+modifier|&
+name|CPU
+parameter_list|)
+function_decl|;
 name|void
 name|getMipsCPUAndABI
 argument_list|(
@@ -1364,6 +1381,20 @@ operator|::
 name|Triple
 operator|&
 name|Triple
+argument_list|)
+decl_stmt|;
+name|bool
+name|isFP64ADefault
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+name|StringRef
+name|CPUName
 argument_list|)
 decl_stmt|;
 name|bool
@@ -3068,6 +3099,8 @@ name|getMSVCVersion
 argument_list|(
 argument|const Driver *D
 argument_list|,
+argument|const ToolChain&TC
+argument_list|,
 argument|const llvm::Triple&Triple
 argument_list|,
 argument|const llvm::opt::ArgList&Args
@@ -3448,6 +3481,38 @@ name|Args
 argument_list|)
 block|; }
 comment|// end namespace ppc
+name|namespace
+name|sparc
+block|{ enum
+name|class
+name|FloatABI
+block|{
+name|Invalid
+block|,
+name|Soft
+block|,
+name|Hard
+block|, }
+block|;
+name|FloatABI
+name|getSparcFloatABI
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|; }
+comment|// end namespace sparc
 name|namespace
 name|XCore
 block|{
@@ -4018,6 +4083,135 @@ name|override
 block|; }
 block|; }
 comment|// end namespace PS4cpu
+name|namespace
+name|NVPTX
+block|{
+comment|// Run ptxas, the NVPTX assembler.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assembler
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assembler
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"NVPTX::Assembler"
+argument_list|,
+literal|"ptxas"
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|,
+argument|llvm::sys::WEM_UTF8
+argument_list|,
+literal|"--options-file"
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+comment|// Runs fatbinary, which combines GPU object files ("cubin" files) and/or PTX
+comment|// assembly into a single output file.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Linker
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Linker
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"NVPTX::Linker"
+argument_list|,
+literal|"fatbinary"
+argument_list|,
+argument|TC
+argument_list|,
+argument|RF_Full
+argument_list|,
+argument|llvm::sys::WEM_UTF8
+argument_list|,
+literal|"--options-file"
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;  }
+comment|// end namespace NVPTX
 block|}
 comment|// end namespace tools
 block|}

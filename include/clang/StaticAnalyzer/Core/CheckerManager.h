@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -364,7 +370,7 @@ argument_list|)
 operator|,
 name|AOptions
 argument_list|(
-argument|AOptions
+argument|std::move(AOptions)
 argument_list|)
 block|{}
 operator|~
@@ -1294,6 +1300,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Run checkers on begining of function.
+end_comment
+
+begin_function_decl
+name|void
+name|runCheckersForBeginFunction
+parameter_list|(
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|BlockEdge
+modifier|&
+name|L
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Run checkers on end of function.
 end_comment
 
@@ -1978,6 +2012,20 @@ name|CheckerContext
 operator|&
 argument_list|)
 operator|>
+name|CheckBeginFunctionFunc
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|CheckerFn
+operator|<
+name|void
+argument_list|(
+name|CheckerContext
+operator|&
+argument_list|)
+operator|>
 name|CheckEndFunctionFunc
 expr_stmt|;
 end_typedef
@@ -2279,6 +2327,16 @@ name|void
 name|_registerForEndAnalysis
 parameter_list|(
 name|CheckEndAnalysisFunc
+name|checkfn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_registerForBeginFunction
+parameter_list|(
+name|CheckEndFunctionFunc
 name|checkfn
 parameter_list|)
 function_decl|;
@@ -2911,6 +2969,17 @@ operator|<
 name|CheckEndAnalysisFunc
 operator|>
 name|EndAnalysisCheckers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|CheckBeginFunctionFunc
+operator|>
+name|BeginFunctionCheckers
 expr_stmt|;
 end_expr_stmt
 

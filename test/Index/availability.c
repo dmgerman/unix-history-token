@@ -101,7 +101,7 @@ comment|// CHECK-1: (ios, introduced=3.2, deprecated=4.1)
 end_comment
 
 begin_comment
-comment|// CHECK-2: (macosx, introduced=10.4, deprecated=10.5, obsoleted=10.7)
+comment|// CHECK-2: (macos, introduced=10.4, deprecated=10.5, obsoleted=10.7)
 end_comment
 
 begin_comment
@@ -109,7 +109,7 @@ comment|// CHECK-2: EnumConstantDecl=old_enum:6:3 (Definition) (deprecated)
 end_comment
 
 begin_comment
-comment|// CHECK-2: EnumConstantDecl=old_enum_plat:10:3 {{.*}} (macosx, introduced=10.4, deprecated=10.5, obsoleted=10.7)
+comment|// CHECK-2: EnumConstantDecl=old_enum_plat:10:3 {{.*}} (macos, introduced=10.4, deprecated=10.5, obsoleted=10.7)
 end_comment
 
 end_unit

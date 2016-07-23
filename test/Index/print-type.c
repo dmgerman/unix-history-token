@@ -129,6 +129,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+name|Enum
+block|{
+name|i
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+name|enum
+name|Enum
+name|elaboratedEnumType
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|Struct
+block|{}
+struct|;
+end_struct
+
+begin_function_decl
+name|struct
+name|Struct
+name|elaboratedStructType
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// RUN: c-index-test -test-print-type %s | FileCheck %s
 end_comment
@@ -259,6 +291,26 @@ end_comment
 
 begin_comment
 comment|// CHECK: ParmDecl=incompletearray:13:12 (Definition) [type=int []] [typekind=IncompleteArray] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: FunctionDecl=elaboratedEnumType:15:25 [type=enum Enum ()] [typekind=FunctionNoProto] [canonicaltype=enum Enum ()] [canonicaltypekind=FunctionNoProto] [resulttype=enum Enum] [resulttypekind=Elaborated] [isPOD=0]
+end_comment
+
+begin_comment
+comment|// CHECK: TypeRef=enum Enum:15:6 [type=enum Enum] [typekind=Enum] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: StructDecl=Struct:16:8 (Definition) [type=struct Struct] [typekind=Record] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: FunctionDecl=elaboratedStructType:16:32 [type=struct Struct ()] [typekind=FunctionNoProto] [canonicaltype=struct Struct ()] [canonicaltypekind=FunctionNoProto] [resulttype=struct Struct] [resulttypekind=Elaborated] [isPOD=0]
+end_comment
+
+begin_comment
+comment|// CHECK: TypeRef=struct Struct:16:8 [type=struct Struct] [typekind=Record] [isPOD=1]
 end_comment
 
 end_unit

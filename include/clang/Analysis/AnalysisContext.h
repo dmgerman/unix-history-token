@@ -675,6 +675,18 @@ name|data
 operator|)
 return|;
 block|}
+comment|/// Returns true if the root namespace of the given declaration is the 'std'
+comment|/// C++ namespace.
+specifier|static
+name|bool
+name|isInStdNamespace
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|ManagedAnalysis

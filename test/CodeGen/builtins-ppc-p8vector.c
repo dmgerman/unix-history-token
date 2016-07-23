@@ -31,6 +31,12 @@ begin_comment
 comment|// it is selected.
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<altivec.h>
+end_include
+
 begin_function
 name|void
 name|dummy
@@ -629,10 +635,10 @@ argument_list|(
 name|vda
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store<2 x i64><i64 9223372036854775807, i64 9223372036854775807>,<2 x i64>*
-comment|// CHECK: and<2 x i64>
-comment|// CHECK-LE: store<2 x i64><i64 9223372036854775807, i64 9223372036854775807>,<2 x i64>*
-comment|// CHECK-LE: and<2 x i64>
+comment|// CHECK: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{.*}})
+comment|// CHECK: store<2 x double> %{{.*}},<2 x double>* @res_vd
+comment|// CHECK-LE: call<2 x double> @llvm.fabs.v2f64(<2 x double> %{{.*}})
+comment|// CHECK-LE: store<2 x double> %{{.*}},<2 x double>* @res_vd
 comment|// CHECK-PPC: error: call to 'vec_abs' is ambiguous
 comment|/* vec_add */
 name|res_vsll

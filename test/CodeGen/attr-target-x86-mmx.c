@@ -106,7 +106,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: "target-features"="+mmx,+sse"
+comment|// CHECK: "target-features"="+mmx,+sse,+x87"
 end_comment
 
 end_unit

@@ -4,23 +4,15 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: true
+comment|// RUN: not %clang_cc1 -triple i386-apple-darwin10 -emit-obj %s -o /dev/null> %t 2>&1
 end_comment
 
 begin_comment
-comment|// UN: not %clang_cc1 -triple i386-apple-darwin10 -emit-obj %s -o /dev/null> %t 2>&1
+comment|// RUN: FileCheck %s< %t
 end_comment
 
 begin_comment
-comment|// UN: FileCheck %s< %t
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -emit-llvm-bc %s -o %t.bc
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -emit-obj %t.bc -o /dev/null 2>&1 | \
+comment|// RUN: not %clang -target i386-apple-darwin10 -fembed-bitcode -c %s -o /dev/null 2>&1 | \
 end_comment
 
 begin_comment
@@ -33,6 +25,10 @@ end_comment
 
 begin_comment
 comment|// CRASH-REPORT: error: invalid instruction mnemonic 'abc'
+end_comment
+
+begin_comment
+comment|// CRASH-REPORT: error: cannot compile inline asm
 end_comment
 
 begin_comment

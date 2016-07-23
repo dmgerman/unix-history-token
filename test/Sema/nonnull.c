@@ -777,6 +777,10 @@ argument|(__nonnull__)
 argument_list|)
 end_macro
 
+begin_comment
+comment|// expected-note 2{{declared 'nonnull' here}}
+end_comment
+
 begin_function
 name|int
 name|evil_nonnull_func
@@ -876,6 +880,10 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-note 2{{declared 'nonnull' here}}
+end_comment
 
 begin_function
 name|int
@@ -986,6 +994,10 @@ argument|(__nonnull__)
 argument_list|)
 end_macro
 
+begin_comment
+comment|// expected-note {{declared 'nonnull' here}}
+end_comment
+
 begin_function
 name|void
 name|yet_another_evil_nonnull_func
@@ -1048,6 +1060,7 @@ operator|*
 name|s
 argument_list|)
 block|{
+comment|// expected-note {{declared 'nonnull' here}}
 if|if
 condition|(
 name|p
@@ -1104,6 +1117,10 @@ name|returns_nonnull_whee
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// expected-note 6{{declared 'returns_nonnull' here}}
+end_comment
 
 begin_function
 name|void

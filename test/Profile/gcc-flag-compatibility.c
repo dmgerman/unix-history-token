@@ -32,7 +32,11 @@ comment|// -fprofile-use=<dir>/file   Uses the profile file<dir>/file
 end_comment
 
 begin_comment
-comment|// Check that -fprofile-generate uses the runtime default profile file.
+comment|// FIXME: IRPGO shouldn't use the override API when no profraw name is given.
+end_comment
+
+begin_comment
+comment|// Check that -fprofile-generate overrides the default profraw.
 end_comment
 
 begin_comment
@@ -40,11 +44,11 @@ comment|// RUN: %clang %s -c -S -o - -emit-llvm -fprofile-generate | FileCheck -
 end_comment
 
 begin_comment
-comment|// PROFILE-GEN-NOT: call void @__llvm_profile_override_default_filename
+comment|// PROFILE-GEN: call void @__llvm_profile_override_default_filename
 end_comment
 
 begin_comment
-comment|// PROFILE-GEN-NOT: declare void @__llvm_profile_override_default_filename(i8*)
+comment|// PROFILE-GEN: declare void @__llvm_profile_override_default_filename(i8*)
 end_comment
 
 begin_comment

@@ -164,9 +164,9 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_add_si64
-comment|// CHECK: call x86_mmx @llvm.x86.mmx.padd.q
+comment|// CHECK: call x86_mmx @llvm.x86.mmx.padd.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
 return|return
-name|__builtin_ia32_paddq
+name|_mm_add_si64
 argument_list|(
 name|a
 argument_list|,
@@ -802,6 +802,27 @@ block|}
 end_function
 
 begin_function
+name|int
+name|test_mm_extract_pi16
+parameter_list|(
+name|__m64
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_extract_pi16
+comment|// CHECK: call i32 @llvm.x86.mmx.pextr.w
+return|return
+name|_mm_extract_pi16
+argument_list|(
+name|a
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|__m64
 name|test_m_from_int
 parameter_list|(
@@ -979,6 +1000,32 @@ argument_list|(
 name|a
 argument_list|,
 name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m64
+name|test_mm_insert_pi16
+parameter_list|(
+name|__m64
+name|a
+parameter_list|,
+name|int
+name|d
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: test_mm_insert_pi16
+comment|// CHECK: call x86_mmx @llvm.x86.mmx.pinsr.w
+return|return
+name|_mm_insert_pi16
+argument_list|(
+name|a
+argument_list|,
+name|d
+argument_list|,
+literal|2
 argument_list|)
 return|;
 block|}
@@ -1188,7 +1235,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_mul_su32
-comment|// CHECK: call x86_mmx @llvm.x86.mmx.pmulu.dq
+comment|// CHECK: call x86_mmx @llvm.x86.mmx.pmulu.dq(x86_mmx %{{.*}}, x86_mmx %{{.*}})
 return|return
 name|_mm_mul_su32
 argument_list|(
@@ -2001,9 +2048,9 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sub_si64
-comment|// CHECK: call x86_mmx @llvm.x86.mmx.psub.q
+comment|// CHECK: call x86_mmx @llvm.x86.mmx.psub.q(x86_mmx %{{.*}}, x86_mmx %{{.*}})
 return|return
-name|__builtin_ia32_psubq
+name|_mm_sub_si64
 argument_list|(
 name|a
 argument_list|,

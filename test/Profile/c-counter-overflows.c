@@ -12,7 +12,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/c-counter-overflows.proftext -o %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-counter-overflows.c %s -o - -emit-llvm -fprofile-instr-use=%t.profdata | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-counter-overflows.c %s -o - -emit-llvm -fprofile-instrument-use-path=%t.profdata | FileCheck %s
 end_comment
 
 begin_typedef

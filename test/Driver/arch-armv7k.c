@@ -20,7 +20,7 @@ comment|// "thumbv7k-apple-ios" is a bit of a weird triple, but since the backen
 end_comment
 
 begin_comment
-comment|// going to choose to use sjlj-based exceptions for it, the front-end needs to
+comment|// going to choose to use dwarf-based exceptions for it, the front-end needs to
 end_comment
 
 begin_comment
@@ -28,11 +28,11 @@ comment|// match.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-macosx10.9 -arch armv7k -miphoneos-version-min=9.0 -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SJLJ
+comment|// RUN: %clang -target x86_64-apple-macosx10.9 -arch armv7k -miphoneos-version-min=9.0 -c %s -### 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK-SJLJ: "-cc1"{{.*}} "-target-cpu" "cortex-a7"
+comment|// RUN: %clang -target x86_64-apple-macosx10.9 -arch armv7 -mwatchos-version-min=9.0 -c %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-SJLJ
 end_comment
 
 begin_comment

@@ -4,34 +4,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Verify defaults
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: %clang -target i686-windows -fms-compatibility -dM -E -</dev/null -o - | FileCheck %s -check-prefix CHECK-NO-MSC-VERSION
-end_comment
-
-begin_comment
-comment|// CHECK-NO-MSC-VERSION: _MSC_BUILD 1
-end_comment
-
-begin_comment
-comment|// CHECK-NO-MSC-VERSION: _MSC_FULL_VER 180000000
-end_comment
-
-begin_comment
-comment|// CHECK-NO-MSC-VERSION: _MSC_VER 1800
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Verify -fms-compatibility-version parsing
 end_comment
 

@@ -80,7 +80,79 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT %s
 end_comment
 
 begin_comment
-comment|// CHECK-SOFT: error: unsupported option '-msoft-float'
+comment|// CHECK-SOFT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=soft
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc-linux-gnu -mfloat-abi=soft \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FLOATABISOFT %s
+end_comment
+
+begin_comment
+comment|// CHECK-FLOATABISOFT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=hard
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc-linux-gnu -mfloat-abi=hard \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FLOATABIHARD %s
+end_comment
+
+begin_comment
+comment|// CHECK-FLOATABIHARD-NOT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// check invalid -mfloat-abi
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc-linux-gnu -mfloat-abi=x \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ERRMSG %s
+end_comment
+
+begin_comment
+comment|// CHECK-ERRMSG: error: invalid float ABI '-mfloat-abi=x'
 end_comment
 
 begin_comment
@@ -156,7 +228,79 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-SOFT-SPARC64 %s
 end_comment
 
 begin_comment
-comment|// CHECK-SOFT-SPARC64: error: unsupported option '-msoft-float'
+comment|// CHECK-SOFT-SPARC64: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=soft
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc64-linux-gnu -mfloat-abi=soft \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FLOATABISOFT64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-FLOATABISOFT64: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfloat-abi=hard
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc64-linux-gnu -mfloat-abi=hard \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FLOATABIHARD64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-FLOATABIHARD64-NOT: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// check invalid -mfloat-abi
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc64-linux-gnu -mfloat-abi=x \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ERRMSG64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ERRMSG64: error: invalid float ABI '-mfloat-abi=x'
 end_comment
 
 end_unit

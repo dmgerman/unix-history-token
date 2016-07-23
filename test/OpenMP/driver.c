@@ -39,5 +39,65 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp | FileCheck --check-prefix=CHECK-DEFAULT-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=1 | FileCheck --check-prefix=CHECK-DEFAULT-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=0 | FileCheck --check-prefix=CHECK-DEFAULT-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=100 | FileCheck --check-prefix=CHECK-DEFAULT-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=31 | FileCheck --check-prefix=CHECK-DEFAULT-VERSION %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEFAULT-VERSION: #define _OPENMP 201107
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=40 | FileCheck --check-prefix=CHECK-40-VERSION %s
+end_comment
+
+begin_comment
+comment|// CHECK-40-VERSION: #define _OPENMP 201307
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp=libomp -fopenmp-version=45 | FileCheck --check-prefix=CHECK-45-VERSION %s
+end_comment
+
+begin_comment
+comment|// CHECK-45-VERSION: #define _OPENMP 201511
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp-version=1 | FileCheck --check-prefix=CHECK-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp-version=31 | FileCheck --check-prefix=CHECK-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp-version=40 | FileCheck --check-prefix=CHECK-VERSION %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -c -E -dM -fopenmp-version=45 | FileCheck --check-prefix=CHECK-VERSION %s
+end_comment
+
+begin_comment
+comment|// CHECK-VERSION-NOT: #define _OPENMP
+end_comment
+
 end_unit
 

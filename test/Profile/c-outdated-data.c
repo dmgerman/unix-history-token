@@ -16,7 +16,7 @@ comment|// RUN: llvm-profdata merge %S/Inputs/c-outdated-data.proftext -o %t.pro
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-outdated-data.c %s -o /dev/null -emit-llvm -fprofile-instr-use=%t.profdata -Wprofile-instr-dropped 2>&1 | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-outdated-data.c %s -o /dev/null -emit-llvm -fprofile-instrument-use-path=%t.profdata -Wprofile-instr-dropped 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

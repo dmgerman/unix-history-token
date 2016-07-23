@@ -81,6 +81,18 @@ comment|// expected-error {{base of member reference is a function; perhaps you 
 block|}
 end_function
 
+begin_comment
+comment|// These errors require C11.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
+
 begin_expr_stmt
 name|void
 name|noreturn_1
@@ -114,6 +126,11 @@ return|return;
 comment|// expected-warning {{should not return}}
 block|}
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

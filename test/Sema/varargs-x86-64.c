@@ -121,7 +121,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{second parameter of 'va_start' not last named argument}}
+comment|// expected-warning {{second argument to 'va_start' is not the last named parameter}}
 name|__builtin_ms_va_start
 argument_list|(
 name|ap
@@ -129,7 +129,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{second parameter of 'va_start' not last named argument}}
+comment|// expected-warning {{second argument to 'va_start' is not the last named parameter}}
 name|__builtin_ms_va_start
 argument_list|(
 name|ap
@@ -156,6 +156,7 @@ argument_list|,
 operator|...
 argument_list|)
 block|{
+comment|// expected-note 2{{parameter of type 'float' is declared here}}
 name|__builtin_ms_va_list
 name|ap
 decl_stmt|;
@@ -166,6 +167,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
 name|__builtin_ms_va_start
 argument_list|(
 name|ap
@@ -175,6 +177,7 @@ name|a
 operator|)
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
 block|}
 end_decl_stmt
 

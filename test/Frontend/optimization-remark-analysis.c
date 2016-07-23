@@ -8,11 +8,11 @@ comment|// RUN: %clang -O1 -fvectorize -target x86_64-unknown-unknown -emit-llvm
 end_comment
 
 begin_comment
-comment|// RPASS: {{.*}}:21:1: remark: loop not vectorized: loop contains a switch statement
+comment|// RPASS: {{.*}}:7:8: remark: loop not vectorized: loop contains a switch statement
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: {{.*}}:21:1: remark: loop not vectorized: loop contains a switch statement
+comment|// CHECK-NOT: {{.*}}:7:8: remark: loop not vectorized: loop contains a switch statement
 end_comment
 
 begin_function

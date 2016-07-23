@@ -7,6 +7,23 @@ begin_typedef
 typedef|typedef
 name|__attribute__
 argument_list|(
+argument|(ext_vector_type(
+literal|8
+argument|))
+argument_list|)
+name|_Bool
+name|BoolVector
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{invalid vector element type '_Bool'}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
 argument|( ext_vector_type(
 literal|2
 argument|) )

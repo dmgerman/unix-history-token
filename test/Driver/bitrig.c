@@ -16,7 +16,7 @@ comment|// CHECK-LD-C: ld{{.*}}" {{.*}} "-lc" "-lclang_rt.amd64"
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -no-canonical-prefixes -target amd64-pc-bitrig %s -### 2>&1 \
+comment|// RUN: %clangxx -stdlib=platform -no-canonical-prefixes -target amd64-pc-bitrig %s -### 2>&1 \
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=%S/Inputs/scei-ps4_tree %clang -target x86_64-scei-ps4 -E -v %s 2>&1 | FileCheck %s --check-prefix=ENVPS4
+comment|// RUN: env SCE_ORBIS_SDK_DIR=%S/Inputs/scei-ps4_tree %clang -target x86_64-scei-ps4 -E -v %s 2>&1 | FileCheck %s --check-prefix=ENVPS4
 end_comment
 
 begin_comment

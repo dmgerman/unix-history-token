@@ -129,5 +129,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_extern
+extern|extern
+literal|"C"
+name|__device__
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_extern
+
 end_unit
 

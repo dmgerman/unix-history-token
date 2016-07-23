@@ -8,11 +8,11 @@ comment|// stream, and also that @file arguments continue to be processed.
 end_comment
 
 begin_comment
-comment|// RUN: echo "%s -D FOO"> %t.args
+comment|// RUN: echo "-D FOO"> %t.args
 end_comment
 
 begin_comment
-comment|// RUN: %clang -rpath @executable_path/../lib @%t.args -### 2>&1 | FileCheck %s
+comment|// RUN: %clang -rpath @executable_path/../lib @%t.args %s -### 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

@@ -558,7 +558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g14 = global i8* inttoptr (i64 100 to i8*)
+comment|// CHECK: @g14 = global i8* inttoptr (i32 100 to i8*)
 end_comment
 
 begin_decl_stmt

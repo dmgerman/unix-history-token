@@ -2752,7 +2752,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECH: store i32 2
+comment|// CHECK: store i32 2
 name|gi
 operator|=
 name|__builtin_object_size

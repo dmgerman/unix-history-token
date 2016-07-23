@@ -6,6 +6,10 @@ name|category_top
 decl_stmt|;
 end_decl_stmt
 
+begin_empty
+empty|#import "category_right_sub.h"
+end_empty
+
 begin_decl_stmt
 unit|@
 name|interface

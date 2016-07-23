@@ -284,6 +284,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vprintf
 argument_list|(
 name|s
@@ -300,6 +301,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vfprintf
 argument_list|(
 name|fp
@@ -319,6 +321,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string lit}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vasprintf
 argument_list|(
 operator|&
@@ -338,6 +341,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|snprintf
 argument_list|(
 name|buf
@@ -348,6 +352,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string lit}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|__builtin___sprintf_chk
 argument_list|(
 name|buf
@@ -361,6 +366,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|__builtin___snprintf_chk
 argument_list|(
 name|buf
@@ -376,6 +382,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string lit}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vsprintf
 argument_list|(
 name|buf
@@ -452,6 +459,25 @@ name|ap
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|fmt
+init|=
+literal|"%d"
+decl_stmt|;
+comment|// FIXME -- defined here
+name|printf
+argument_list|(
+name|fmt
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used}}
 comment|// rdar://6079877
 name|printf
 argument_list|(
@@ -557,6 +583,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vprintf
 argument_list|(
 name|s
@@ -573,6 +600,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vfprintf
 argument_list|(
 name|fp
@@ -592,6 +620,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string lit}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|vasprintf
 argument_list|(
 operator|&
@@ -611,6 +640,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|snprintf
 argument_list|(
 name|buf
@@ -621,6 +651,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string lit}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|__builtin___vsnprintf_chk
 argument_list|(
 name|buf
@@ -714,6 +745,7 @@ literal|"dont know"
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{format string is not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|printf
 argument_list|(
 literal|"yes"
@@ -725,6 +757,162 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+literal|0
+condition|?
+literal|"yes %s"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|0
+condition|?
+literal|"yes %d"
+else|:
+literal|"no %s"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'char *'}}
+name|printf
+argument_list|(
+literal|0
+condition|?
+literal|"yes"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|0
+condition|?
+literal|"yes %d"
+else|:
+literal|"no"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+literal|1
+condition|?
+literal|"yes"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+literal|1
+condition|?
+literal|"yes %d"
+else|:
+literal|"no"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"yes"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"yes %s"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'char *'}}
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"yes"
+else|:
+literal|"no %d"
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"%*s"
+else|:
+literal|"-"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"yes"
+else|:
+literal|0
+condition|?
+literal|"no %*d"
+else|:
+literal|"dont know %d"
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+name|i
+condition|?
+literal|"%i\n"
+else|:
+literal|"%i %s %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
 block|}
 end_function
 
@@ -1371,18 +1559,21 @@ name|s3
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|printf
 argument_list|(
 name|s4
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|printf
 argument_list|(
 name|s5
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{not a string literal}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 block|}
 end_function
 
@@ -1426,6 +1617,7 @@ name|P
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal (potentially insecure)}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 name|printf
 argument_list|(
 name|P
@@ -3509,7 +3701,7 @@ else|:
 literal|"no %d"
 argument_list|)
 expr_stmt|;
-comment|// expected-warning 2{{more '%' conversions than data arguments}}
+comment|// expected-warning{{more '%' conversions than data arguments}}
 specifier|const
 name|char
 name|kFormat17
@@ -4142,6 +4334,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is not a string literal (potentially insecure)}}
+comment|// expected-note@-1{{treat the string as an argument to avoid this}}
 block|}
 end_function
 

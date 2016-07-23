@@ -62,7 +62,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{second parameter of 'va_start' not last named argument}}
+comment|// expected-warning {{second argument to 'va_start' is not the last named parameter}}
 name|__builtin_va_start
 argument_list|(
 name|ap
@@ -70,7 +70,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{second parameter of 'va_start' not last named argument}}
+comment|// expected-warning {{second argument to 'va_start' is not the last named parameter}}
 name|__builtin_va_start
 argument_list|(
 name|ap
@@ -91,6 +91,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+comment|// expected-note 2{{parameter of type 'float' is declared here}}
 name|__builtin_va_list
 name|ap
 decl_stmt|;
@@ -101,6 +102,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
 name|__builtin_va_start
 argument_list|(
 name|ap
@@ -110,6 +112,7 @@ name|a
 operator|)
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
 block|}
 end_function
 
@@ -424,6 +427,67 @@ name|a
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{assigning to 'int' from incompatible type 'void'}}
+name|__builtin_va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f11
+parameter_list|(
+name|short
+name|s
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+comment|// expected-note {{parameter of type 'short' is declared here}}
+name|__builtin_va_list
+name|ap
+decl_stmt|;
+name|__builtin_va_start
+argument_list|(
+name|ap
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{passing an object that undergoes default argument promotion to 'va_start' has undefined behavior}}
+name|__builtin_va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|f12
+parameter_list|(
+specifier|register
+name|int
+name|i
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+comment|// expected-note {{parameter of type 'int' is declared here}}
+name|__builtin_va_list
+name|ap
+decl_stmt|;
+name|__builtin_va_start
+argument_list|(
+name|ap
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{passing a parameter declared with the 'register' keyword to 'va_start' has undefined behavior}}
 name|__builtin_va_end
 argument_list|(
 name|ap

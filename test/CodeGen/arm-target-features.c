@@ -60,6 +60,10 @@ comment|// RUN: %clang_cc1 -triple thumbv7s-apple-ios7.0 -target-cpu cyclone -em
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv8-linux-gnueabihf -target-cpu cortex-a32 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-BASIC-V8
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv8-linux-gnueabihf -target-cpu cortex-a35 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-BASIC-V8
 end_comment
 
@@ -73,6 +77,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv8-linux-gnueabihf -target-cpu cortex-a72 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-BASIC-V8
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv8-linux-gnueabihf -target-cpu cortex-a73 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-BASIC-V8
 end_comment
 
 begin_comment
@@ -101,6 +109,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv7-linux-gnueabi -target-cpu cortex-r7 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-VFP3-D16-FP16-DIV
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple thumbv7-linux-gnueabi -target-cpu cortex-r8 -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK-VFP3-D16-FP16-DIV
 end_comment
 
 begin_comment

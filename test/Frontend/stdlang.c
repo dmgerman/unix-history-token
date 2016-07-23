@@ -4,11 +4,55 @@ comment|// RUN: %clang_cc1 -x cuda -std=c++11 -DCUDA %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x cl -std=c99 -DOPENCL %s
+comment|// RUN: %clang_cc1 -x cl -DOPENCL %s
 end_comment
 
 begin_comment
-comment|// expected-no-diagnostics
+comment|// RUN: %clang_cc1 -x cl -cl-std=cl -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=cl1.1 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=cl1.2 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=cl2.0 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=CL -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=CL1.1 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=CL1.2 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x cl -cl-std=CL2.0 -DOPENCL %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -x cl -std=c99 -DOPENCL %s 2>&1 | FileCheck --check-prefix=CHECK-C99 %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -x cl -cl-std=invalid -DOPENCL %s 2>&1 | FileCheck --check-prefix=CHECK-INVALID %s
+end_comment
+
+begin_comment
+comment|// CHECK-C99: error: invalid argument '-std=c99' not allowed with 'OpenCL'
+end_comment
+
+begin_comment
+comment|// CHECK-INVALID: error: invalid value 'invalid' in '-cl-std=invalid'
 end_comment
 
 begin_if

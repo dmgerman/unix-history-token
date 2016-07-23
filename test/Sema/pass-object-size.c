@@ -561,7 +561,7 @@ parameter_list|)
 init|=
 name|IsOverloaded
 function_decl|;
-comment|//expected-error{{initializing 'void (*)(void *)' with an expression of incompatible type '<overloaded function type>'}} expected-note@-6{{candidate address cannot be taken because parameter 1 has pass_object_size attribute}} expected-note@-5{{type mismatch}}
+comment|//expected-warning{{incompatible pointer types initializing 'void (*)(void *)' with an expression of type '<overloaded function type>'}} expected-note@-6{{candidate address cannot be taken because parameter 1 has pass_object_size attribute}} expected-note@-5{{type mismatch}}
 name|void
 function_decl|(
 modifier|*
@@ -575,7 +575,7 @@ init|=
 operator|&
 name|IsOverloaded
 function_decl|;
-comment|//expected-error{{initializing 'void (*)(void *)' with an expression of incompatible type '<overloaded function type>'}} expected-note@-7{{candidate address cannot be taken because parameter 1 has pass_object_size attribute}} expected-note@-6{{type mismatch}}
+comment|//expected-warning{{incompatible pointer types initializing 'void (*)(void *)' with an expression of type '<overloaded function type>'}} expected-note@-7{{candidate address cannot be taken because parameter 1 has pass_object_size attribute}} expected-note@-6{{type mismatch}}
 name|void
 function_decl|(
 modifier|*

@@ -40,7 +40,7 @@ comment|// Modules:
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source all %s -I %S/Inputs -fmodules -fmodules-cache-path=%t/cache -fmodule-map-file=%S/Inputs/retain-comments-from-system-headers-module.map | FileCheck %s -check-prefix=CHECK
+comment|// RUN: c-index-test -test-load-source all %s -I %S/Inputs -fmodules -fmodules-cache-path=%t/cache -fmodule-map-file=%S/Inputs/retain-comments-from-system-headers-module.map | FileCheck %s
 end_comment
 
 begin_comment

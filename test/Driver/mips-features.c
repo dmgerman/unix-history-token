@@ -472,6 +472,78 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -mcompact-branches=never
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -march=mips32r6 -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mcompact-branches=never 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CBNEVER %s
+end_comment
+
+begin_comment
+comment|// CHECK-CBNEVER: "-mllvm" "-mips-compact-branches=never"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mcompact-branches=optimal
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -march=mips32r6 -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mcompact-branches=optimal 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CBOPTIMAL %s
+end_comment
+
+begin_comment
+comment|// CHECK-CBOPTIMAL: "-mllvm" "-mips-compact-branches=optimal"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mcompact-branches=always
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -march=mips32r6 -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mcompact-branches=always 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CBALWAYS %s
+end_comment
+
+begin_comment
+comment|// CHECK-CBALWAYS: "-mllvm" "-mips-compact-branches=always"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -mxgot
 end_comment
 

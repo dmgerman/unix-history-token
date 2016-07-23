@@ -32,6 +32,54 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("ssse3")))
 end_define
 
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 8-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 8-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PABSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -57,6 +105,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 8-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 8-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPABSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -84,6 +180,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 16-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 16-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PABSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -109,6 +253,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 16-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 16-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPABSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -136,6 +328,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 32-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 32-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PABSD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -161,6 +401,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Computes the absolute value of each of the packed 32-bit signed
+end_comment
+
+begin_comment
+comment|///    integers in the source operand and stores the 32-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    results in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPABSD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the absolute values of the
+end_comment
+
+begin_comment
+comment|///    elements in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -188,6 +476,86 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Concatenates the two 128-bit integer vector operands, and
+end_comment
+
+begin_comment
+comment|///    right-shifts the result by the number of bytes specified in the immediate
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_alignr_epi8(__m128i a, __m128i b, const int n);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PALIGNR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [16 x i8] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param n
+end_comment
+
+begin_comment
+comment|///    An immediate operand specifying how many bytes to right-shift the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the concatenated right-shifted
+end_comment
+
+begin_comment
+comment|///    value.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -202,6 +570,82 @@ parameter_list|)
 value|__extension__ ({ \   (__m128i)__builtin_ia32_palignr128((__v16qi)(__m128i)(a), \                                      (__v16qi)(__m128i)(b), (n)); })
 end_define
 
+begin_comment
+comment|/// \brief Concatenates the two 64-bit integer vector operands, and right-shifts
+end_comment
+
+begin_comment
+comment|///    the result by the number of bytes specified in the immediate operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m64 _mm_alignr_pi8(__m64 a, __m64 b, const int n);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PALIGNR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [8 x i8] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [8 x i8] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param n
+end_comment
+
+begin_comment
+comment|///    An immediate operand specifying how many bytes to right-shift the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the concatenated right-shifted
+end_comment
+
+begin_comment
+comment|///    value.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -215,6 +659,74 @@ name|n
 parameter_list|)
 value|__extension__ ({ \   (__m64)__builtin_ia32_palignr((__v8qi)(__m64)(a), (__v8qi)(__m64)(b), (n)); })
 end_define
+
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHADDW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the horizontal sums of
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -250,6 +762,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [4 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHADDD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] containing the horizontal sums of
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -283,6 +863,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    64-bit vectors of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHADDW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [4 x i16] containing the horizontal sums of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -318,6 +966,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    64-bit vectors of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHADDD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [2 x i32] containing the horizontal sums of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -351,6 +1067,78 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [8 x i16]. Positive sums greater than 7FFFh are
+end_comment
+
+begin_comment
+comment|///    saturated to 7FFFh. Negative sums less than 8000h are saturated to 8000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHADDSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the horizontal saturated
+end_comment
+
+begin_comment
+comment|///    sums of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -386,6 +1174,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in 2 packed
+end_comment
+
+begin_comment
+comment|///    64-bit vectors of [4 x i16]. Positive sums greater than 7FFFh are
+end_comment
+
+begin_comment
+comment|///    saturated to 7FFFh. Negative sums less than 8000h are saturated to 8000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHADDSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the lower bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal sums of the values are stored in the upper bits of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [4 x i16] containing the horizontal saturated
+end_comment
+
+begin_comment
+comment|///    sums of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -419,6 +1279,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 128-bit vectors of [8 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHSUBW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the horizontal differences
+end_comment
+
+begin_comment
+comment|///    of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -454,6 +1382,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 128-bit vectors of [4 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHSUBD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x i32] containing the horizontal differences
+end_comment
+
+begin_comment
+comment|///    of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -487,6 +1483,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 64-bit vectors of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHSUBW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [4 x i16] containing the horizontal differences
+end_comment
+
+begin_comment
+comment|///    of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -522,6 +1586,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 64-bit vectors of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHSUBD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [2 x i32] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [2 x i32] containing the horizontal differences
+end_comment
+
+begin_comment
+comment|///    of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -555,6 +1687,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 128-bit vectors of [8 x i16]. Positive differences greater than
+end_comment
+
+begin_comment
+comment|///    7FFFh are saturated to 7FFFh. Negative differences less than 8000h are
+end_comment
+
+begin_comment
+comment|///    saturated to 8000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPHSUBSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the horizontal saturated
+end_comment
+
+begin_comment
+comment|///    differences of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -590,6 +1798,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in 2
+end_comment
+
+begin_comment
+comment|///    packed 64-bit vectors of [4 x i16]. Positive differences greater than
+end_comment
+
+begin_comment
+comment|///    7FFFh are saturated to 7FFFh. Negative differences less than 8000h are
+end_comment
+
+begin_comment
+comment|///    saturated to 8000h.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PHSUBSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the lower bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands. The
+end_comment
+
+begin_comment
+comment|///    horizontal differences between the values are stored in the upper bits of
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [4 x i16] containing the horizontal saturated
+end_comment
+
+begin_comment
+comment|///    differences of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -623,6 +1907,114 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies corresponding pairs of packed 8-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    values contained in the first source operand and packed 8-bit signed
+end_comment
+
+begin_comment
+comment|///    integer values contained in the second source operand, adds pairs of
+end_comment
+
+begin_comment
+comment|///    contiguous products with signed saturation, and writes the 16-bit sums to
+end_comment
+
+begin_comment
+comment|///    the corresponding bits in the destination. For example, bits [7:0] of
+end_comment
+
+begin_comment
+comment|///    both operands are multiplied, bits [15:8] of both operands are
+end_comment
+
+begin_comment
+comment|///    multiplied, and the sum of both results is written to bits [15:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPMADDUBSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the first source operand.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the second source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the sums of products of both
+end_comment
+
+begin_comment
+comment|///    operands:
+end_comment
+
+begin_comment
+comment|///    R0 := (__a0 * __b0) + (__a1 * __b1)
+end_comment
+
+begin_comment
+comment|///    R1 := (__a2 * __b2) + (__a3 * __b3)
+end_comment
+
+begin_comment
+comment|///    R2 := (__a4 * __b4) + (__a5 * __b5)
+end_comment
+
+begin_comment
+comment|///    R3 := (__a6 * __b6) + (__a7 * __b7)
+end_comment
+
+begin_comment
+comment|///    R4 := (__a8 * __b8) + (__a9 * __b9)
+end_comment
+
+begin_comment
+comment|///    R5 := (__a10 * __b10) + (__a11 * __b11)
+end_comment
+
+begin_comment
+comment|///    R6 := (__a12 * __b12) + (__a13 * __b13)
+end_comment
+
+begin_comment
+comment|///    R7 := (__a14 * __b14) + (__a15 * __b15)
+end_comment
 
 begin_function
 specifier|static
@@ -658,6 +2050,98 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies corresponding pairs of packed 8-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    values contained in the first source operand and packed 8-bit signed
+end_comment
+
+begin_comment
+comment|///    integer values contained in the second source operand, adds pairs of
+end_comment
+
+begin_comment
+comment|///    contiguous products with signed saturation, and writes the 16-bit sums to
+end_comment
+
+begin_comment
+comment|///    the corresponding bits in the destination. For example, bits [7:0] of
+end_comment
+
+begin_comment
+comment|///    both operands are multiplied, bits [15:8] of both operands are
+end_comment
+
+begin_comment
+comment|///    multiplied, and the sum of both results is written to bits [15:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PMADDUBSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the first source operand.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the second source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the sums of products of both
+end_comment
+
+begin_comment
+comment|///    operands:
+end_comment
+
+begin_comment
+comment|///    R0 := (__a0 * __b0) + (__a1 * __b1)
+end_comment
+
+begin_comment
+comment|///    R1 := (__a2 * __b2) + (__a3 * __b3)
+end_comment
+
+begin_comment
+comment|///    R2 := (__a4 * __b4) + (__a5 * __b5)
+end_comment
+
+begin_comment
+comment|///    R3 := (__a6 * __b6) + (__a7 * __b7)
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -691,6 +2175,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies packed 16-bit signed integer values, truncates the 32-bit
+end_comment
+
+begin_comment
+comment|///    products to the 18 most significant bits by right-shifting, rounds the
+end_comment
+
+begin_comment
+comment|///    truncated value by adding 1, and writes bits [16:1] to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPMULHRSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [8 x i16] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [8 x i16] containing the rounded and scaled
+end_comment
+
+begin_comment
+comment|///    products of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -726,6 +2266,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies packed 16-bit signed integer values, truncates the 32-bit
+end_comment
+
+begin_comment
+comment|///    products to the 18 most significant bits by right-shifting, rounds the
+end_comment
+
+begin_comment
+comment|///    truncated value by adding 1, and writes bits [16:1] to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PMULHRSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit vector of [4 x i16] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit vector of [4 x i16] containing the rounded and scaled
+end_comment
+
+begin_comment
+comment|///    products of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -759,6 +2355,86 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Copies the 8-bit integers from a 128-bit integer vector to the
+end_comment
+
+begin_comment
+comment|///    destination or clears 8-bit values in the destination, as specified by
+end_comment
+
+begin_comment
+comment|///    the second source operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSHUFB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing control bytes corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination:
+end_comment
+
+begin_comment
+comment|///    Bit 7:
+end_comment
+
+begin_comment
+comment|///    1: Clear the corresponding byte in the destination.
+end_comment
+
+begin_comment
+comment|///    0: Copy the selected source byte to the corresponding byte in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [6:4] Reserved.
+end_comment
+
+begin_comment
+comment|///    Bits [3:0] select the source byte to be copied.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the copied or cleared values.
+end_comment
 
 begin_function
 specifier|static
@@ -794,6 +2470,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Copies the 8-bit integers from a 64-bit integer vector to the
+end_comment
+
+begin_comment
+comment|///    destination or clears 8-bit values in the destination, as specified by
+end_comment
+
+begin_comment
+comment|///    the second source operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSHUFB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing control bytes corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination:
+end_comment
+
+begin_comment
+comment|///    Bit 7:
+end_comment
+
+begin_comment
+comment|///    1: Clear the corresponding byte in the destination.
+end_comment
+
+begin_comment
+comment|///    0: Copy the selected source byte to the corresponding byte in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [3:0] select the source byte to be copied.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the copied or cleared values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -827,6 +2579,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief For each 8-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    byte in the second source is negative, calculate the two's complement of
+end_comment
+
+begin_comment
+comment|///    the corresponding byte in the first source, and write that value to the
+end_comment
+
+begin_comment
+comment|///    destination. If the byte in the second source is positive, copy the
+end_comment
+
+begin_comment
+comment|///    corresponding byte from the first source to the destination. If the byte
+end_comment
+
+begin_comment
+comment|///    in the second source is zero, clear the corresponding byte in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSIGNB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing control bytes corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the resultant values.
+end_comment
 
 begin_function
 specifier|static
@@ -862,6 +2690,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief For each 16-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    word in the second source is negative, calculate the two's complement of
+end_comment
+
+begin_comment
+comment|///    the corresponding word in the first source, and write that value to the
+end_comment
+
+begin_comment
+comment|///    destination. If the word in the second source is positive, copy the
+end_comment
+
+begin_comment
+comment|///    corresponding word from the first source to the destination. If the word
+end_comment
+
+begin_comment
+comment|///    in the second source is zero, clear the corresponding word in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSIGNW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing control words corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the resultant values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -895,6 +2799,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief For each 32-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    doubleword in the second source is negative, calculate the two's
+end_comment
+
+begin_comment
+comment|///    complement of the corresponding word in the first source, and write that
+end_comment
+
+begin_comment
+comment|///    value to the destination. If the doubleword in the second source is
+end_comment
+
+begin_comment
+comment|///    positive, copy the corresponding word from the first source to the
+end_comment
+
+begin_comment
+comment|///    destination. If the doubleword in the second source is zero, clear the
+end_comment
+
+begin_comment
+comment|///    corresponding word in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSIGND instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing control doublewords corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the resultant values.
+end_comment
 
 begin_function
 specifier|static
@@ -930,6 +2910,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief For each 8-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    byte in the second source is negative, calculate the two's complement of
+end_comment
+
+begin_comment
+comment|///    the corresponding byte in the first source, and write that value to the
+end_comment
+
+begin_comment
+comment|///    destination. If the byte in the second source is positive, copy the
+end_comment
+
+begin_comment
+comment|///    corresponding byte from the first source to the destination. If the byte
+end_comment
+
+begin_comment
+comment|///    in the second source is zero, clear the corresponding byte in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSIGNB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing control bytes corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the resultant values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -964,6 +3020,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief For each 16-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    word in the second source is negative, calculate the two's complement of
+end_comment
+
+begin_comment
+comment|///    the corresponding word in the first source, and write that value to the
+end_comment
+
+begin_comment
+comment|///    destination. If the word in the second source is positive, copy the
+end_comment
+
+begin_comment
+comment|///    corresponding word from the first source to the destination. If the word
+end_comment
+
+begin_comment
+comment|///    in the second source is zero, clear the corresponding word in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSIGNW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing control words corresponding to
+end_comment
+
+begin_comment
+comment|///    positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the resultant values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -997,6 +3129,82 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief For each 32-bit integer in the first source operand, perform one of
+end_comment
+
+begin_comment
+comment|///    the following actions as specified by the second source operand: If the
+end_comment
+
+begin_comment
+comment|///    doubleword in the second source is negative, calculate the two's
+end_comment
+
+begin_comment
+comment|///    complement of the corresponding doubleword in the first source, and
+end_comment
+
+begin_comment
+comment|///    write that value to the destination. If the doubleword in the second
+end_comment
+
+begin_comment
+comment|///    source is positive, copy the corresponding doubleword from the first
+end_comment
+
+begin_comment
+comment|///    source to the destination. If the doubleword in the second source is
+end_comment
+
+begin_comment
+comment|///    zero, clear the corresponding doubleword in the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSIGND instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing the values to be copied.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector containing two control doublewords corresponding
+end_comment
+
+begin_comment
+comment|///    to positions in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the resultant values.
+end_comment
 
 begin_function
 specifier|static

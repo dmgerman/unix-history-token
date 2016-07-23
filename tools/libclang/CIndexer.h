@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -196,9 +202,9 @@ argument_list|)
 operator|,
 name|PCHContainerOps
 argument_list|(
-argument|PCHContainerOps
+argument|std::move(PCHContainerOps)
 argument_list|)
-block|{}
+block|{   }
 comment|/// \brief Whether we only want to see "local" declarations (that did not
 comment|/// come from a previous precompiled header). If false, we want to see all
 comment|/// declarations.

@@ -248,6 +248,7 @@ name|Compilations
 return|;
 block|}
 comment|/// Returns a list of source file paths to process.
+specifier|const
 name|std
 operator|::
 name|vector
@@ -256,8 +257,10 @@ name|std
 operator|::
 name|string
 operator|>
+operator|&
 name|getSourcePathList
 argument_list|()
+specifier|const
 block|{
 return|return
 name|SourcePathList

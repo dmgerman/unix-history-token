@@ -724,8 +724,23 @@ argument|SwitchNodeBuilder& builder
 argument_list|)
 name|override
 block|;
-comment|/// Called by CoreEngine.  Used to generate end-of-path
-comment|/// nodes when the control reaches the end of a function.
+comment|/// Called by CoreEngine.  Used to notify checkers that processing a
+comment|/// function has begun. Called for both inlined and and top-level functions.
+name|void
+name|processBeginOfFunction
+argument_list|(
+argument|NodeBuilderContext&BC
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ExplodedNodeSet&Dst
+argument_list|,
+argument|const BlockEdge&L
+argument_list|)
+name|override
+block|;
+comment|/// Called by CoreEngine.  Used to notify checkers that processing a
+comment|/// function has ended. Called for both inlined and and top-level functions.
 name|void
 name|processEndOfFunction
 argument_list|(
@@ -756,6 +771,8 @@ comment|/// Generate the entry node of the callee.
 name|void
 name|processCallEnter
 argument_list|(
+argument|NodeBuilderContext& BC
+argument_list|,
 argument|CallEnter CE
 argument_list|,
 argument|ExplodedNode *Pred
@@ -1252,6 +1269,24 @@ specifier|const
 name|MemberExpr
 operator|*
 name|M
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+block|;
+comment|/// VisitMemberExpr - Transfer function for builtin atomic expressions
+name|void
+name|VisitAtomicExpr
+argument_list|(
+specifier|const
+name|AtomicExpr
+operator|*
+name|E
 argument_list|,
 name|ExplodedNode
 operator|*

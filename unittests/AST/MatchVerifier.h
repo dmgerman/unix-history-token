@@ -245,6 +245,27 @@ argument_list|,
 argument|Language L
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+name|MatcherType
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|match
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+specifier|const
+name|MatcherType
+operator|&
+name|AMatcher
+argument_list|)
+block|;
 name|protected
 operator|:
 name|void
@@ -504,6 +525,91 @@ name|AssertionSuccess
 argument_list|()
 return|;
 block|}
+comment|/// \brief Runs a matcher over some AST, and returns the result of the
+comment|/// verifier for the matched node.
+name|template
+operator|<
+name|typename
+name|NodeType
+operator|>
+name|template
+operator|<
+name|typename
+name|MatcherType
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|MatchVerifier
+operator|<
+name|NodeType
+operator|>
+operator|::
+name|match
+argument_list|(
+argument|const Decl *D
+argument_list|,
+argument|const MatcherType&AMatcher
+argument_list|)
+block|{
+name|MatchFinder
+name|Finder
+block|;
+name|Finder
+operator|.
+name|addMatcher
+argument_list|(
+name|AMatcher
+operator|.
+name|bind
+argument_list|(
+literal|""
+argument_list|)
+argument_list|,
+name|this
+argument_list|)
+block|;
+name|setFailure
+argument_list|(
+literal|"Could not find match"
+argument_list|)
+block|;
+name|Finder
+operator|.
+name|match
+argument_list|(
+operator|*
+name|D
+argument_list|,
+name|D
+operator|->
+name|getASTContext
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|Verified
+condition|)
+return|return
+name|testing
+operator|::
+name|AssertionFailure
+argument_list|()
+operator|<<
+name|VerifyResult
+return|;
+return|return
+name|testing
+operator|::
+name|AssertionSuccess
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -549,6 +655,9 @@ literal|"Matched node has wrong type"
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 comment|// Callback has been called, default to success.
@@ -564,8 +673,10 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|template
+end_else
+
+begin_expr_stmt
+unit|}  template
 operator|<
 operator|>
 specifier|inline
@@ -624,6 +735,9 @@ literal|"Node was not bound"
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 comment|// Callback has been called, default to success.
@@ -640,12 +754,27 @@ name|second
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+end_else
+
+begin_comment
+unit|}
 comment|/// \brief Verify whether a node has the correct source location.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, Node.getSourceLocation() is checked. This can be changed
+end_comment
+
+begin_comment
 comment|/// by overriding getLocation().
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|NodeType
@@ -798,18 +927,39 @@ name|getLocation
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_decl_stmt
 name|unsigned
 name|ExpectLine
-block|,
+decl_stmt|,
 name|ExpectColumn
-block|; }
-expr_stmt|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Verify whether a node has the correct source range.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, Node.getSourceRange() is checked. This can be changed
+end_comment
+
+begin_comment
 comment|/// by overriding getRange().
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1047,19 +1197,31 @@ name|getSourceRange
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_decl_stmt
 name|unsigned
 name|ExpectBeginLine
-block|,
+decl_stmt|,
 name|ExpectBeginColumn
-block|,
+decl_stmt|,
 name|ExpectEndLine
-block|,
+decl_stmt|,
 name|ExpectEndColumn
-block|; }
-expr_stmt|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Verify whether a node's dump contains a given substring.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DumpVerifier
 range|:
@@ -1186,7 +1348,13 @@ name|string
 name|ExpectSubstring
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Verify whether a node's pretty print matches a given string.
+end_comment
+
+begin_decl_stmt
 name|class
 name|PrintVerifier
 range|:
@@ -1306,10 +1474,10 @@ name|string
 name|ExpectString
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace ast_matchers
 end_comment
 

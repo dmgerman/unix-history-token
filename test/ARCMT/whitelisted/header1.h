@@ -41,5 +41,12 @@ unit|@
 name|end
 end_macro
 
+begin_typedef
+typedef|typedef
+name|long
+name|NSInteger
+typedef|;
+end_typedef
+
 end_unit
 

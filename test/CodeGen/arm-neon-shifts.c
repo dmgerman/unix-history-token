@@ -16,7 +16,7 @@ comment|// RUN:   -ffreestanding \
 end_comment
 
 begin_comment
-comment|// RUN:   -emit-llvm -w -O1 -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -w -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_shift_vsra
 comment|// CHECK: %[[SHR:.*]] = lshr<8 x i8> %b,<i8 5, i8 5, i8 5, i8 5, i8 5, i8 5, i8 5, i8 5>
-comment|// CHECK: %{{.*}} = add<8 x i8> %[[SHR]], %a
+comment|// CHECK: %{{.*}} = add<8 x i8> %a, %[[SHR]]
 return|return
 name|vsra_n_u8
 argument_list|(
@@ -128,7 +128,7 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_shift_vsra_smax
 comment|// CHECK: %[[SHR:.*]] = ashr<8 x i8> %b,<i8 7, i8 7, i8 7, i8 7, i8 7, i8 7, i8 7, i8 7>
-comment|// CHECK: %{{.*}} = add<8 x i8> %[[SHR]], %a
+comment|// CHECK: %{{.*}} = add<8 x i8> %a, %[[SHR]]
 return|return
 name|vsra_n_s8
 argument_list|(
@@ -154,7 +154,8 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_shift_vsra_umax
-comment|// CHECK: ret<8 x i8> %a
+comment|// CHECK: [[RES:%.*]] = add<8 x i8> %a, zeroinitializer
+comment|// CHECK: ret<8 x i8> [[RES]]
 return|return
 name|vsra_n_u8
 argument_list|(

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -87,9 +93,6 @@ name|clang
 block|{
 name|class
 name|ASTContext
-decl_stmt|;
-name|class
-name|Decl
 decl_stmt|;
 name|class
 name|FunctionDecl

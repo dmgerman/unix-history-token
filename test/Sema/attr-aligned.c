@@ -44,6 +44,27 @@ comment|// expected-error {{requested alignment must be 268435456 bytes or small
 end_comment
 
 begin_comment
+comment|// PR26444
+end_comment
+
+begin_decl_stmt
+name|int
+name|y
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|1
+operator|<<
+literal|28
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// PR3254
 end_comment
 

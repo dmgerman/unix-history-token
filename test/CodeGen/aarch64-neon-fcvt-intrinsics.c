@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: aarch64-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:   -ffp-contract=fast -S -O3 -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_comment
@@ -21,6 +17,18 @@ directive|include
 file|<arm_neon.h>
 end_include
 
+begin_comment
+comment|// CHECK-LABEL: define float @test_vcvtxd_f32_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTXD_F32_F64_I:%.*]] = call float @llvm.aarch64.sisd.fcvtxn(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret float [[VCVTXD_F32_F64_I]]
+end_comment
+
 begin_function
 name|float32_t
 name|test_vcvtxd_f32_f64
@@ -29,8 +37,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtxd_f32_f64
-comment|// CHECK: fcvtxn {{s[0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|float32_t
@@ -43,6 +49,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtas_s32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTAS_S32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtas.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTAS_S32_F32_I]]
+end_comment
+
 begin_function
 name|int32_t
 name|test_vcvtas_s32_f32
@@ -51,8 +69,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtas_s32_f32
-comment|// CHECK: fcvtas {{[ws][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|int32_t
@@ -65,6 +81,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_test_vcvtad_s64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTAD_S64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtas.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTAD_S64_F64_I]]
+end_comment
+
 begin_function
 name|int64_t
 name|test_test_vcvtad_s64_f64
@@ -73,8 +101,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_test_vcvtad_s64_f64
-comment|// CHECK: fcvtas {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|int64_t
@@ -87,6 +113,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtas_u32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTAS_U32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtau.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTAS_U32_F32_I]]
+end_comment
+
 begin_function
 name|uint32_t
 name|test_vcvtas_u32_f32
@@ -95,8 +133,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtas_u32_f32
-comment|// CHECK: fcvtau {{[ws][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|uint32_t
@@ -109,6 +145,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtad_u64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTAD_U64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtau.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTAD_U64_F64_I]]
+end_comment
+
 begin_function
 name|uint64_t
 name|test_vcvtad_u64_f64
@@ -117,8 +165,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtad_u64_f64
-comment|// CHECK: fcvtau {{[xd][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|uint64_t
@@ -131,6 +177,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtms_s32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTMS_S32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtms.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTMS_S32_F32_I]]
+end_comment
+
 begin_function
 name|int32_t
 name|test_vcvtms_s32_f32
@@ -139,8 +197,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtms_s32_f32
-comment|// CHECK: fcvtms {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|int32_t
@@ -153,6 +209,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtmd_s64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTMD_S64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtms.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTMD_S64_F64_I]]
+end_comment
+
 begin_function
 name|int64_t
 name|test_vcvtmd_s64_f64
@@ -161,8 +229,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtmd_s64_f64
-comment|// CHECK: fcvtms {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|int64_t
@@ -175,6 +241,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtms_u32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTMS_U32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtmu.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTMS_U32_F32_I]]
+end_comment
+
 begin_function
 name|uint32_t
 name|test_vcvtms_u32_f32
@@ -183,8 +261,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtms_u32_f32
-comment|// CHECK: fcvtmu {{[ws][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|uint32_t
@@ -197,6 +273,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtmd_u64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTMD_U64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtmu.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTMD_U64_F64_I]]
+end_comment
+
 begin_function
 name|uint64_t
 name|test_vcvtmd_u64_f64
@@ -205,8 +293,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtmd_u64_f64
-comment|// CHECK: fcvtmu {{[xd][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|uint64_t
@@ -219,6 +305,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtns_s32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTNS_S32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtns.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTNS_S32_F32_I]]
+end_comment
+
 begin_function
 name|int32_t
 name|test_vcvtns_s32_f32
@@ -227,8 +325,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtns_s32_f32
-comment|// CHECK: fcvtns {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|int32_t
@@ -241,6 +337,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtnd_s64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTND_S64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtns.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTND_S64_F64_I]]
+end_comment
+
 begin_function
 name|int64_t
 name|test_vcvtnd_s64_f64
@@ -249,8 +357,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtnd_s64_f64
-comment|// CHECK: fcvtns {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|int64_t
@@ -263,6 +369,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtns_u32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTNS_U32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtnu.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTNS_U32_F32_I]]
+end_comment
+
 begin_function
 name|uint32_t
 name|test_vcvtns_u32_f32
@@ -271,8 +389,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtns_u32_f32
-comment|// CHECK: fcvtnu {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|uint32_t
@@ -285,6 +401,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtnd_u64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTND_U64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtnu.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTND_U64_F64_I]]
+end_comment
+
 begin_function
 name|uint64_t
 name|test_vcvtnd_u64_f64
@@ -293,8 +421,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtnd_u64_f64
-comment|// CHECK: fcvtnu {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|uint64_t
@@ -307,6 +433,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtps_s32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTPS_S32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtps.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTPS_S32_F32_I]]
+end_comment
+
 begin_function
 name|int32_t
 name|test_vcvtps_s32_f32
@@ -315,8 +453,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtps_s32_f32
-comment|// CHECK: fcvtps {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|int32_t
@@ -329,6 +465,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtpd_s64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTPD_S64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtps.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTPD_S64_F64_I]]
+end_comment
+
 begin_function
 name|int64_t
 name|test_vcvtpd_s64_f64
@@ -337,8 +485,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtpd_s64_f64
-comment|// CHECK: fcvtps {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|int64_t
@@ -351,6 +497,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvtps_u32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTPS_U32_F32_I:%.*]] = call i32 @llvm.aarch64.neon.fcvtpu.i32.f32(float %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VCVTPS_U32_F32_I]]
+end_comment
+
 begin_function
 name|uint32_t
 name|test_vcvtps_u32_f32
@@ -359,8 +517,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtps_u32_f32
-comment|// CHECK: fcvtpu {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|uint32_t
@@ -373,6 +529,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtpd_u64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VCVTPD_U64_F64_I:%.*]] = call i64 @llvm.aarch64.neon.fcvtpu.i64.f64(double %a) #2
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VCVTPD_U64_F64_I]]
+end_comment
+
 begin_function
 name|uint64_t
 name|test_vcvtpd_u64_f64
@@ -381,8 +549,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtpd_u64_f64
-comment|// CHECK: fcvtpu {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|uint64_t
@@ -395,6 +561,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvts_s32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = fptosi float %a to i32
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[TMP0]]
+end_comment
+
 begin_function
 name|int32_t
 name|test_vcvts_s32_f32
@@ -403,8 +581,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvts_s32_f32
-comment|// CHECK: fcvtzs {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|int32_t
@@ -417,6 +593,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtd_s64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = fptosi double %a to i64
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[TMP0]]
+end_comment
+
 begin_function
 name|int64_t
 name|test_vcvtd_s64_f64
@@ -425,8 +613,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtd_s64_f64
-comment|// CHECK: fcvtzs {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|int64_t
@@ -439,6 +625,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i32 @test_vcvts_u32_f32(float %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = fptoui float %a to i32
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[TMP0]]
+end_comment
+
 begin_function
 name|uint32_t
 name|test_vcvts_u32_f32
@@ -447,8 +645,6 @@ name|float32_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvts_u32_f32
-comment|// CHECK: fcvtzu {{[sw][0-9]+}}, {{s[0-9]+}}
 return|return
 operator|(
 name|uint32_t
@@ -461,6 +657,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: define i64 @test_vcvtd_u64_f64(double %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = fptoui double %a to i64
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[TMP0]]
+end_comment
+
 begin_function
 name|uint64_t
 name|test_vcvtd_u64_f64
@@ -469,8 +677,6 @@ name|float64_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vcvtd_u64_f64
-comment|// CHECK: fcvtzu {{[dx][0-9]+}}, {{d[0-9]+}}
 return|return
 operator|(
 name|uint64_t

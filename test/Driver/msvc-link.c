@@ -43,5 +43,21 @@ begin_comment
 comment|// DLL: "-dll"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i686-pc-windows-msvc -L/var/empty -L/usr/lib -### %s 2>&1 | FileCheck --check-prefix LIBPATH %s
+end_comment
+
+begin_comment
+comment|// LIBPATH: "-libpath:/var/empty"
+end_comment
+
+begin_comment
+comment|// LIBPATH: "-libpath:/usr/lib"
+end_comment
+
+begin_comment
+comment|// LIBPATH: "-nologo"
+end_comment
+
 end_unit
 

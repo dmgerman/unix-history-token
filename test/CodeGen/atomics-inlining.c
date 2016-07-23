@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple mips64el-linux-gnu -emit-llvm %s -o - | FileCheck %s -check-prefix=MIPS64
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple sparc-unknown-eabi -emit-llvm %s -o - | FileCheck %s -check-prefix=SPARC
+end_comment
+
 begin_decl_stmt
 name|unsigned
 name|char
@@ -292,6 +296,17 @@ comment|// MIPS64: = load atomic i64, i64* @ll1 seq_cst
 comment|// MIPS64: store atomic i64 {{.*}}, i64* @ll1 seq_cst
 comment|// MIPS64: call void @__atomic_load(i64 zeroext 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0)
 comment|// MIPS64: call void @__atomic_store(i64 zeroext 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
+comment|// SPARC-LABEL: define void @test1
+comment|// SPARC: = load atomic i8, i8* @c1 seq_cst
+comment|// SPARC: store atomic i8 {{.*}}, i8* @c1 seq_cst
+comment|// SPARC: = load atomic i16, i16* @s1 seq_cst
+comment|// SPARC: store atomic i16 {{.*}}, i16* @s1 seq_cst
+comment|// SPARC: = load atomic i32, i32* @i1 seq_cst
+comment|// SPARC: store atomic i32 {{.*}}, i32* @i1 seq_cst
+comment|// SPARC: = load atomic i64, i64* @ll1 seq_cst
+comment|// SPARC: store atomic i64 {{.*}}, i64* @ll1 seq_cst
+comment|// SPARC: call void @__atomic_load(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
+comment|// SPARC: call void @__atomic_store(i32 100, i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a1, i32 0, i32 0), i8* getelementptr inbounds ([100 x i8], [100 x i8]* @a2, i32 0, i32 0)
 block|}
 end_function
 

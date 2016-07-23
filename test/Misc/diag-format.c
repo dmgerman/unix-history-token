@@ -24,10 +24,6 @@ comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fms-compatibilit
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc  %s 2>&1 | FileCheck %s -check-prefix=MSVC
-end_comment
-
-begin_comment
 comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1300 -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC2010
 end_comment
 
@@ -36,11 +32,19 @@ comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fms-compatibilit
 end_comment
 
 begin_comment
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1300 -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC2010
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1800 -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC2013
+end_comment
+
+begin_comment
 comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1300 -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC2010
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1900 -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC2015
 end_comment
 
 begin_comment
@@ -48,7 +52,15 @@ comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fms-compatibilit
 end_comment
 
 begin_comment
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1800 -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC2013
+end_comment
+
+begin_comment
 comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fmsc-version=1900 -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC2015
 end_comment
 
 begin_comment
@@ -64,7 +76,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fno-show-column %s 2>&1 | FileCheck %s -check-prefix=MSVC_ORIG
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -fno-show-column -fmsc-version=1900 %s 2>&1 | FileCheck %s -check-prefix=MSVC2015_ORIG
 end_comment
 
 begin_comment
@@ -88,7 +100,11 @@ comment|// RUN: not %clang -fsyntax-only -Werror -fdiagnostics-format=msvc-fallb
 end_comment
 
 begin_comment
-comment|// RUN: not %clang -fsyntax-only -Werror -fdiagnostics-format=msvc-fallback %s 2>&1 | FileCheck %s -check-prefix=MSVC-FALLBACK
+comment|// RUN: not %clang -fsyntax-only -Werror -fdiagnostics-format=msvc-fallback -fmsc-version=1800 %s 2>&1 | FileCheck %s -check-prefix=MSVC2013-FALLBACK
+end_comment
+
+begin_comment
+comment|// RUN: not %clang -fsyntax-only -Werror -fdiagnostics-format=msvc-fallback -fmsc-version=1900 %s 2>&1 | FileCheck %s -check-prefix=MSVC2015-FALLBACK
 end_comment
 
 begin_ifdef
@@ -116,7 +132,15 @@ comment|// MSVC2010: {{.*}}(36,7) : warning: extra tokens at end of #endif direc
 end_comment
 
 begin_comment
-comment|// MSVC: {{.*}}(36,8) : warning: extra tokens at end of #endif directive [-Wextra-tokens]
+comment|// MSVC2013: {{.*}}(36,8) : warning: extra tokens at end of #endif directive [-Wextra-tokens]
+end_comment
+
+begin_comment
+comment|// MSVC: {{.*}}(36,8){{ ?}}: warning: extra tokens at end of #endif directive [-Wextra-tokens]
+end_comment
+
+begin_comment
+comment|// MSVC2015: {{.*}}(36,8): warning: extra tokens at end of #endif directive [-Wextra-tokens]
 end_comment
 
 begin_comment
@@ -124,7 +148,7 @@ comment|// VI: {{.*}} +36:8: warning: extra tokens at end of #endif directive [-
 end_comment
 
 begin_comment
-comment|// MSVC_ORIG: {{.*}}(36) : warning: extra tokens at end of #endif directive [-Wextra-tokens]
+comment|// MSVC2015_ORIG: {{.*}}(36): warning: extra tokens at end of #endif directive [-Wextra-tokens]
 end_comment
 
 begin_comment
@@ -136,7 +160,11 @@ comment|// MSVC2010-FALLBACK: {{.*}}(36,7) : error(clang): extra tokens at end o
 end_comment
 
 begin_comment
-comment|// MSVC-FALLBACK: {{.*}}(36,8) : error(clang): extra tokens at end of #endif directive
+comment|// MSVC2013-FALLBACK: {{.*}}(36,8) : error(clang): extra tokens at end of #endif directive
+end_comment
+
+begin_comment
+comment|// MSVC2015-FALLBACK: {{.*}}(36,8): error(clang): extra tokens at end of #endif directive
 end_comment
 
 begin_decl_stmt

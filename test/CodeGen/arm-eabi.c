@@ -35,6 +35,38 @@ begin_comment
 comment|// RUN: %clang -target arm-none-gnueabihf -S -meabi 5 -o - %s | FileCheck -check-prefix=CHECK-EABI %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target arm-none-musleabi -S -o - %s \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-GNUEABI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-musleabi -S -o - %s -meabi 5 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-EABI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-musleabihf -S -o - %s \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-GNUEABI %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-musleabihf -S -o - %s -meabi 5 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-EABI %s
+end_comment
+
 begin_struct
 struct|struct
 name|my_s

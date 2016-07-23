@@ -465,7 +465,7 @@ block|}
 comment|/// Test whether this is a multiple of the other value.
 comment|///
 comment|/// Among other things, this promises that
-comment|/// self.RoundUpToAlignment(N) will just return self.
+comment|/// self.alignTo(N) will just return self.
 name|bool
 name|isMultipleOf
 argument_list|(
@@ -505,6 +505,24 @@ argument_list|)
 return|;
 block|}
 name|CharUnits
+operator|&
+name|operator
+operator|*=
+operator|(
+name|QuantityType
+name|N
+operator|)
+block|{
+name|Quantity
+operator|*=
+name|N
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CharUnits
 name|operator
 operator|/
 operator|(
@@ -520,6 +538,24 @@ name|Quantity
 operator|/
 name|N
 argument_list|)
+return|;
+block|}
+name|CharUnits
+operator|&
+name|operator
+operator|/=
+operator|(
+name|QuantityType
+name|N
+operator|)
+block|{
+name|Quantity
+operator|/=
+name|N
+block|;
+return|return
+operator|*
+name|this
 return|;
 block|}
 name|QuantityType
@@ -648,11 +684,11 @@ return|return
 name|Quantity
 return|;
 block|}
-comment|/// RoundUpToAlignment - Returns the next integer (mod 2**64) that is
+comment|/// alignTo - Returns the next integer (mod 2**64) that is
 comment|/// greater than or equal to this quantity and is a multiple of \p Align.
 comment|/// Align must be non-zero.
 name|CharUnits
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 specifier|const
 name|CharUnits
@@ -666,7 +702,7 @@ name|CharUnits
 argument_list|(
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|Quantity
 argument_list|,

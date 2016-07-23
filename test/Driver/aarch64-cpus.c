@@ -248,6 +248,54 @@ comment|// ARM64-CA72: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "corte
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// CORTEX-A73: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "cortex-a73"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-CORTEX-A73 %s
+end_comment
+
+begin_comment
+comment|// ARM64-CORTEX-A73: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "cortex-a73"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64 -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1 %s
 end_comment
 
@@ -293,6 +341,94 @@ end_comment
 
 begin_comment
 comment|// ARM64-M1: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "exynos-m1"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=kryo -### -c %s 2>&1 | FileCheck -check-prefix=KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=kryo -### -c %s 2>&1 | FileCheck -check-prefix=KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=kryo -### -c %s 2>&1 | FileCheck -check-prefix=KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=kryo -### -c %s 2>&1 | FileCheck -check-prefix=KRYO %s
+end_comment
+
+begin_comment
+comment|// KRYO: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "kryo"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=kryo -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=kryo -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=kryo -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-KRYO %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=kryo -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-KRYO %s
+end_comment
+
+begin_comment
+comment|// ARM64-KRYO: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "kryo"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN %s
+end_comment
+
+begin_comment
+comment|// VULCAN: "-cc1"{{.*}} "-triple" "aarch64{{.*}}" "-target-cpu" "vulcan"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64 -mlittle-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=ARM64-VULCAN %s
+end_comment
+
+begin_comment
+comment|// ARM64-VULCAN: "-cc1"{{.*}} "-triple" "arm64{{.*}}" "-target-cpu" "vulcan"
 end_comment
 
 begin_comment
@@ -424,6 +560,34 @@ comment|// CA72-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "cor
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=cortex-a73 -### -c %s 2>&1 | FileCheck -check-prefix=CORTEX-A73-BE %s
+end_comment
+
+begin_comment
+comment|// CORTEX-A73-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "cortex-a73"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64_be -mcpu=exynos-m1 -### -c %s 2>&1 | FileCheck -check-prefix=M1-BE %s
 end_comment
 
@@ -452,6 +616,34 @@ comment|// M1-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "exyno
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target aarch64_be -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mcpu=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mbig-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64_be -mbig-endian -mtune=vulcan -### -c %s 2>&1 | FileCheck -check-prefix=VULCAN-BE %s
+end_comment
+
+begin_comment
+comment|// VULCAN-BE: "-cc1"{{.*}} "-triple" "aarch64_be{{.*}}" "-target-cpu" "vulcan"
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target aarch64 -mcpu=cortex-a57 -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
 end_comment
 
@@ -465,6 +657,18 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=cortex-a72  -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=cortex-a73     -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mcpu=vulcan -mtune=cortex-a53 -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64 -mtune=cortex-a53 -mcpu=vulcan  -### -c %s 2>&1 | FileCheck -check-prefix=MCPU-MTUNE %s
 end_comment
 
 begin_comment

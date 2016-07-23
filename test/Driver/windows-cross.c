@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -o /dev/null %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -stdlib=libstdc++ -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// CHECK-BASIC: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/Windo
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -rtlib=compiler-rt -o /dev/null %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %s/Inputs/Windows/ARM/8.1 -B %S/Inputs/Windows/ARM/8.1/usr/bin -rtlib=compiler-rt -stdlib=libstdc++ -o /dev/null %s 2>&1 \
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ comment|// CHECK-STANDALONE: armv7-windows-itanium-ld" "--sysroot={{.*}}/Inputs/
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %/Inputs/Windows/ARM/8.1/usr/bin -shared -o shared.dll -x c++ %s 2>&1 \
+comment|// RUN: %clang -### -target armv7-windows-itanium --sysroot %S/Inputs/Windows/ARM/8.1 -B %/Inputs/Windows/ARM/8.1/usr/bin -stdlib=libstdc++ -shared -o shared.dll -x c++ %s 2>&1 \
 end_comment
 
 begin_comment
@@ -169,6 +169,34 @@ end_comment
 
 begin_comment
 comment|// CHECK-SANITIZE-TSAN-NOT: "-fsanitize={{.*}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target armv7-windows-itanium -isystem-after "Windows Kits/10/Include/10.0.10586.0/ucrt" -isystem-after "Windows Kits/10/Include/10.0.10586.0/um" -isystem-after "Windows Kits/10/Include/10.0.10586.0/shared" -c %s -o /dev/null 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck %s --check-prefix CHECK-ISYSTEM-AFTER
+end_comment
+
+begin_comment
+comment|// CHECK-ISYSTEM-AFTER: "-resource-dir" "[[RESOURCE_DIR:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-ISYSTEM-AFTER: "-internal-isystem" "[[RESOURCE_DIR]]{{(/|\\\\)}}include"
+end_comment
+
+begin_comment
+comment|// CHECK-ISYSTEM-AFTER: "-internal-isystem" "Windows Kits{{[/\\]}}10{{[/\\]}}Include{{[/\\]}}10.0.10586.0{{[/\\]}}ucrt"
+end_comment
+
+begin_comment
+comment|// CHECK-ISYSTEM-AFTER: "-internal-isystem" "Windows Kits{{[/\\]}}10{{[/\\]}}Include{{[/\\]}}10.0.10586.0{{[/\\]}}um"
+end_comment
+
+begin_comment
+comment|// CHECK-ISYSTEM-AFTER: "-internal-isystem" "Windows Kits{{[/\\]}}10{{[/\\]}}Include{{[/\\]}}10.0.10586.0{{[/\\]}}shared"
 end_comment
 
 end_unit

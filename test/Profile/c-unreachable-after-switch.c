@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -O3 -triple x86_64-apple-macosx10.10 -main-file-name c-unreachable-after-switch.c %s -o - -emit-llvm -fprofile-instr-generate | FileCheck %s
+comment|// RUN: %clang_cc1 -O3 -triple x86_64-apple-macosx10.10 -main-file-name c-unreachable-after-switch.c %s -o - -emit-llvm -fprofile-instrument=clang | FileCheck %s
 end_comment
 
 begin_comment

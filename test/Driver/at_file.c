@@ -60,7 +60,7 @@ comment|// CHECK: bar
 end_comment
 
 begin_comment
-comment|// CHECK: zed12
+comment|// CHECK: zed1
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// CHECK: one\two
 end_comment
 
 begin_comment
-comment|// CHECK: c:\foo\bar.c
+comment|// CHECK: c:foobar.c
 end_comment
 
 begin_expr_stmt

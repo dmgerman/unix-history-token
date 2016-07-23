@@ -8,6 +8,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-unknown-freebsd 
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-scei-ps4 %s
+end_comment
+
+begin_comment
 comment|// Test FreeBSD kernel printf extensions.
 end_comment
 
@@ -50,6 +54,9 @@ parameter_list|,
 name|char
 modifier|*
 name|s
+parameter_list|,
+name|short
+name|h
 parameter_list|)
 block|{
 comment|// %b expects an int and a char *
@@ -244,6 +251,39 @@ argument_list|(
 literal|"%lr"
 argument_list|,
 name|l
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// h modifier expects a short
+name|freebsd_kernel_printf
+argument_list|(
+literal|"%hr"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'short' but the argument has type 'int'}}
+name|freebsd_kernel_printf
+argument_list|(
+literal|"%hr"
+argument_list|,
+name|h
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|freebsd_kernel_printf
+argument_list|(
+literal|"%hy"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format specifies type 'short' but the argument has type 'int'}}
+name|freebsd_kernel_printf
+argument_list|(
+literal|"%hy"
+argument_list|,
+name|h
 argument_list|)
 expr_stmt|;
 comment|// no-warning

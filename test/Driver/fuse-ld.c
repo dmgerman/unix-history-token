@@ -4,6 +4,22 @@ comment|// RUN: %clang %s -### \
 end_comment
 
 begin_comment
+comment|// RUN:     -fuse-ld=/usr/local/bin/or1k-linux-ld 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-ABSOLUTE-LD
+end_comment
+
+begin_comment
+comment|// CHECK-ABSOLUTE-LD: /usr/local/bin/or1k-linux-ld
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### \
+end_comment
+
+begin_comment
 comment|// RUN:     -target x86_64-unknown-freebsd 2>&1 \
 end_comment
 

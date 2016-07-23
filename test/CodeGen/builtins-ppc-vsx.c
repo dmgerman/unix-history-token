@@ -11,6 +11,104 @@ begin_comment
 comment|// RUN: %clang_cc1 -faltivec -target-feature +vsx -triple powerpc64le-unknown-unknown -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK-LE
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<altivec.h>
+end_include
+
+begin_decl_stmt
+name|vector
+name|bool
+name|char
+name|vbc
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|char
+name|vsc
+init|=
+block|{
+operator|-
+literal|8
+block|,
+literal|9
+block|,
+operator|-
+literal|10
+block|,
+literal|11
+block|,
+operator|-
+literal|12
+block|,
+literal|13
+block|,
+operator|-
+literal|14
+block|,
+literal|15
+block|,
+operator|-
+literal|0
+block|,
+literal|1
+block|,
+operator|-
+literal|2
+block|,
+literal|3
+block|,
+operator|-
+literal|4
+block|,
+literal|5
+block|,
+operator|-
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|vector
 name|unsigned
@@ -82,6 +180,106 @@ literal|3.5
 block|,
 operator|-
 literal|7.5
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|short
+name|vbs
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|short
+name|vss
+init|=
+block|{
+operator|-
+literal|1
+block|,
+literal|2
+block|,
+operator|-
+literal|3
+block|,
+literal|4
+block|,
+operator|-
+literal|5
+block|,
+literal|6
+block|,
+operator|-
+literal|7
+block|,
+literal|8
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|short
+name|vus
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|int
+name|vbi
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -179,6 +377,271 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|float
+name|af
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|23.4f
+block|,
+literal|56.7f
+block|,
+literal|89.0f
+block|,
+literal|12.3f
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|ad
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|23.4
+block|,
+literal|56.7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|char
+name|asc
+index|[
+literal|16
+index|]
+init|=
+block|{
+operator|-
+literal|8
+block|,
+literal|9
+block|,
+operator|-
+literal|10
+block|,
+literal|11
+block|,
+operator|-
+literal|12
+block|,
+literal|13
+block|,
+operator|-
+literal|14
+block|,
+literal|15
+block|,
+operator|-
+literal|0
+block|,
+literal|1
+block|,
+operator|-
+literal|2
+block|,
+literal|3
+block|,
+operator|-
+literal|4
+block|,
+literal|5
+block|,
+operator|-
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|auc
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|8
+block|,
+literal|9
+block|,
+literal|10
+block|,
+literal|11
+block|,
+literal|12
+block|,
+literal|13
+block|,
+literal|14
+block|,
+literal|15
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|short
+name|ass
+index|[
+literal|8
+index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+literal|2
+block|,
+operator|-
+literal|3
+block|,
+literal|4
+block|,
+operator|-
+literal|5
+block|,
+literal|6
+block|,
+operator|-
+literal|7
+block|,
+literal|8
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|short
+name|aus
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|int
+name|asi
+index|[
+literal|4
+index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+literal|2
+block|,
+operator|-
+literal|3
+block|,
+literal|4
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|aui
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|long
+name|asl
+index|[
+literal|2
+index|]
+init|=
+block|{
+operator|-
+literal|1L
+block|,
+literal|2L
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|aul
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|1L
+block|,
+literal|2L
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vector
 name|float
 name|res_vf
@@ -189,6 +652,62 @@ begin_decl_stmt
 name|vector
 name|double
 name|res_vd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|char
+name|res_vbc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|char
+name|res_vsc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|char
+name|res_vuc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|short
+name|res_vbs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|short
+name|res_vss
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|unsigned
+name|short
+name|res_vus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|int
+name|res_vbi
 decl_stmt|;
 end_decl_stmt
 
@@ -205,14 +724,6 @@ name|vector
 name|unsigned
 name|int
 name|res_vui
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vector
-name|bool
-name|int
-name|res_vbi
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +760,84 @@ name|res_d
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|float
+name|res_af
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|res_ad
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|char
+name|res_asc
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|res_auc
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|short
+name|res_ass
+index|[
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|short
+name|res_aus
+index|[
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|signed
+name|int
+name|res_asi
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|res_aui
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|dummy
@@ -263,6 +852,20 @@ parameter_list|()
 block|{
 comment|// CHECK-LABEL: define void @test1
 comment|// CHECK-LE-LABEL: define void @test1
+name|res_vf
+operator|=
+name|vec_abs
+argument_list|(
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: call<4 x float> @llvm.fabs.v4f32(<4 x float> %{{[0-9]*}})
+comment|// CHECK-LE: call<4 x float> @llvm.fabs.v4f32(<4 x float> %{{[0-9]*}})
+name|dummy
+argument_list|()
+expr_stmt|;
+comment|// CHECK: call void @dummy()
+comment|// CHECK-LE: call void @dummy()
 name|res_vd
 operator|=
 name|vec_add
@@ -878,6 +1481,18 @@ expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_vsx_ld */
+name|res_vbi
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
 name|res_vsi
 operator|=
 name|vec_vsx_ld
@@ -886,6 +1501,17 @@ literal|0
 argument_list|,
 operator|&
 name|vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vsi
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|asi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.lxvw4x
@@ -902,6 +1528,17 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.lxvw4x
 comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vui
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|aui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
 name|res_vf
 operator|=
 name|vec_vsx_ld
@@ -910,6 +1547,17 @@ literal|0
 argument_list|,
 operator|&
 name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vf
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|af
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.lxvw4x
@@ -950,15 +1598,187 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.lxvd2x
 comment|// CHECK-LE: @llvm.ppc.vsx.lxvd2x
+name|res_vd
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvd2x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvd2x
+name|res_vbs
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vss
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vss
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|ass
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vus
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vus
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|aus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vbc
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vsc
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vuc
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vsc
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|asc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
+name|res_vuc
+operator|=
+name|vec_vsx_ld
+argument_list|(
+literal|0
+argument_list|,
+name|auc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.lxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.lxvw4x
 comment|/* vec_vsx_st */
 name|vec_vsx_st
 argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+name|res_aui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+name|res_asi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
 name|vsi
 argument_list|,
 literal|0
 argument_list|,
 operator|&
 name|res_vsi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vsi
+argument_list|,
+literal|0
+argument_list|,
+name|res_asi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.stxvw4x
@@ -977,12 +1797,34 @@ comment|// CHECK: @llvm.ppc.vsx.stxvw4x
 comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
 name|vec_vsx_st
 argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+name|res_aui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
 name|vf
 argument_list|,
 literal|0
 argument_list|,
 operator|&
 name|res_vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vf
+argument_list|,
+literal|0
+argument_list|,
+name|res_af
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.stxvw4x
@@ -1023,6 +1865,177 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.stxvd2x
 comment|// CHECK-LE: @llvm.ppc.vsx.stxvd2x
+name|vec_vsx_st
+argument_list|(
+name|vd
+argument_list|,
+literal|0
+argument_list|,
+name|res_ad
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvd2x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvd2x
+name|vec_vsx_st
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+name|res_aus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+name|res_ass
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vss
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vss
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vss
+argument_list|,
+literal|0
+argument_list|,
+name|res_ass
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+name|res_aus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+name|res_asc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+name|res_auc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|res_vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+name|res_asc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
+name|vec_vsx_st
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+name|res_auc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.vsx.stxvw4x
+comment|// CHECK-LE: @llvm.ppc.vsx.stxvw4x
 comment|/* vec_and */
 name|res_vsll
 operator|=

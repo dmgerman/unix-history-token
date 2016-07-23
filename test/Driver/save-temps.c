@@ -295,5 +295,21 @@ begin_comment
 comment|// CHECK-OBJ-NOO: "-o" "a.out"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target i386-unknown-freebsd -save-temps -g -c %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK-SAVE-TEMPS
+end_comment
+
+begin_comment
+comment|// CHECK-SAVE-TEMPS: "-cc1as"
+end_comment
+
+begin_comment
+comment|// CHECK-SAVE-TEMPS: "-dwarf-version={{.}}"
+end_comment
+
 end_unit
 

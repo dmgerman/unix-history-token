@@ -171,6 +171,45 @@ if|if
 condition|(
 name|y
 operator|>
+literal|200
+operator|&&
+name|y
+operator|<
+literal|250
+condition|)
+block|{
+comment|// FIXME: Currently we are loosing this warning due to a SymbolCast in RHS.
+name|BOOL
+name|x
+init|=
+name|y
+decl_stmt|;
+comment|// no-warning
+return|return;
+block|}
+if|if
+condition|(
+name|y
+operator|>=
+literal|127
+operator|&&
+name|y
+operator|<
+literal|150
+condition|)
+block|{
+name|BOOL
+name|x
+init|=
+name|y
+decl_stmt|;
+comment|// expected-warning{{Assignment of a non-Boolean value}}
+return|return;
+block|}
+if|if
+condition|(
+name|y
+operator|>
 literal|1
 condition|)
 block|{

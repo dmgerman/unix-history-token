@@ -75,7 +75,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|//expected-error {{invalid special register for builtin}}
 block|}
 end_function
 
@@ -120,7 +119,6 @@ argument_list|(
 literal|"sysreg"
 argument_list|)
 return|;
-comment|//expected-error {{invalid special register for builtin}}
 block|}
 end_function
 

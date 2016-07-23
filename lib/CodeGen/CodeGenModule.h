@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/GlobalDecl.h"
 end_include
 
@@ -173,6 +179,12 @@ directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/Utils/SanitizerStats.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -211,9 +223,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|TargetCodeGenInfo
-decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
@@ -336,6 +345,9 @@ name|FunctionArgList
 decl_stmt|;
 name|class
 name|CoverageMappingModuleGen
+decl_stmt|;
+name|class
+name|TargetCodeGenInfo
 decl_stmt|;
 struct|struct
 name|OrderGlobalInits
@@ -572,6 +584,13 @@ operator|::
 name|Constant
 operator|*
 name|objc_storeWeak
+expr_stmt|;
+comment|/// id objc_unsafeClaimAutoreleasedReturnValue(id);
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|objc_unsafeClaimAutoreleasedReturnValue
 expr_stmt|;
 comment|/// A void(void) inline asm to use to mark that the return value of
 comment|/// a call will be immediately retain.
@@ -1003,16 +1022,23 @@ name|LLVMContext
 operator|&
 name|VMContext
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CodeGenTBAA
-modifier|*
+operator|>
 name|TBAA
-decl_stmt|;
+expr_stmt|;
 name|mutable
-specifier|const
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetCodeGenInfo
-modifier|*
+operator|>
 name|TheTargetCodeGenInfo
-decl_stmt|;
+expr_stmt|;
 comment|// This should not be moved earlier, since its initialization depends on some
 comment|// of the previous reference members being already initialized and also checks
 comment|// if TheTargetCodeGenInfo is NULL
@@ -1023,35 +1049,61 @@ comment|/// Holds information about C++ vtables.
 name|CodeGenVTables
 name|VTables
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGObjCRuntime
-modifier|*
+operator|>
 name|ObjCRuntime
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGOpenCLRuntime
-modifier|*
+operator|>
 name|OpenCLRuntime
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGOpenMPRuntime
-modifier|*
+operator|>
 name|OpenMPRuntime
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGCUDARuntime
-modifier|*
+operator|>
 name|CUDARuntime
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|CGDebugInfo
-modifier|*
+operator|>
 name|DebugInfo
-decl_stmt|;
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ObjCEntrypoints
-modifier|*
+operator|>
 name|ObjCData
-decl_stmt|;
+expr_stmt|;
 name|llvm
 operator|::
 name|MDNode
 operator|*
 name|NoObjCARCExceptionsMetadata
+operator|=
+name|nullptr
 expr_stmt|;
 name|std
 operator|::
@@ -1066,6 +1118,16 @@ expr_stmt|;
 name|InstrProfStats
 name|PGOStats
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|SanitizerStatReport
+operator|>
+name|SanStats
+expr_stmt|;
 comment|// A set of references that have only been seen via a weakref so far. This is
 comment|// used to remove the weak of the reference if we ever see a direct reference
 comment|// or a definition.
@@ -1642,6 +1704,8 @@ operator|::
 name|StructType
 operator|*
 name|NSConstantStringType
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// \brief The type used to describe the state of a fast enumeration in
 comment|/// Objective-C's for..in loop.
@@ -1689,36 +1753,48 @@ operator|::
 name|Constant
 operator|*
 name|NSConcreteGlobalBlock
+operator|=
+name|nullptr
 expr_stmt|;
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|NSConcreteStackBlock
+operator|=
+name|nullptr
 expr_stmt|;
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|BlockObjectAssign
+operator|=
+name|nullptr
 expr_stmt|;
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|BlockObjectDispose
+operator|=
+name|nullptr
 expr_stmt|;
 name|llvm
 operator|::
 name|Type
 operator|*
 name|BlockDescriptorType
+operator|=
+name|nullptr
 expr_stmt|;
 name|llvm
 operator|::
 name|Type
 operator|*
 name|GenericBlockLiteralType
+operator|=
+name|nullptr
 expr_stmt|;
 struct|struct
 block|{
@@ -1734,6 +1810,8 @@ operator|::
 name|Constant
 operator|*
 name|LifetimeStartFn
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// void @llvm.lifetime.end(i64 %size, i8* nocapture<ptr>)
 name|llvm
@@ -1741,6 +1819,8 @@ operator|::
 name|Constant
 operator|*
 name|LifetimeEndFn
+operator|=
+name|nullptr
 expr_stmt|;
 name|GlobalDecl
 name|initializedGlobalDecl
@@ -2201,6 +2281,9 @@ parameter_list|()
 block|{
 return|return
 name|DebugInfo
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|llvm
@@ -2906,7 +2989,7 @@ comment|/// Return the llvm::Constant for the address of the given global variab
 end_comment
 
 begin_comment
-comment|/// If Ty is non-null and if the global doesn't exist, then it will be greated
+comment|/// If Ty is non-null and if the global doesn't exist, then it will be created
 end_comment
 
 begin_comment
@@ -2914,7 +2997,15 @@ comment|/// with the specified type instead of whatever the normal requested typ
 end_comment
 
 begin_comment
-comment|/// would be.
+comment|/// would be. If IsForDefinition is true, it is guranteed that an actual
+end_comment
+
+begin_comment
+comment|/// global with type Ty will be returned, not conversion of a variable with
+end_comment
+
+begin_comment
+comment|/// the same mangled name but some other type.
 end_comment
 
 begin_expr_stmt
@@ -2924,18 +3015,11 @@ name|Constant
 operator|*
 name|GetAddrOfGlobalVar
 argument_list|(
-specifier|const
-name|VarDecl
-operator|*
-name|D
+argument|const VarDecl *D
 argument_list|,
-name|llvm
-operator|::
-name|Type
-operator|*
-name|Ty
-operator|=
-name|nullptr
+argument|llvm::Type *Ty = nullptr
+argument_list|,
+argument|bool IsForDefinition = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4394,6 +4478,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|RefreshTypeCacheForClass
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// \brief Appends Opts to the "Linker Options" metadata value.
 end_comment
@@ -4992,16 +5088,42 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Returns whether the given record is blacklisted from control flow
+comment|/// \brief Emit a code for declare reduction construct.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitOMPDeclareReduction
+parameter_list|(
+specifier|const
+name|OMPDeclareReductionDecl
+modifier|*
+name|D
+parameter_list|,
+name|CodeGenFunction
+modifier|*
+name|CGF
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Returns whether the given record has hidden LTO visibility and therefore
 end_comment
 
 begin_comment
-comment|/// integrity checks.
+comment|/// may participate in (single-module) CFI and whole-program vtable
+end_comment
+
+begin_comment
+comment|/// optimization.
 end_comment
 
 begin_function_decl
 name|bool
-name|IsCFIBlacklistedRecord
+name|HasHiddenLTOVisibility
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
@@ -5012,16 +5134,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Emit bit set entries for the given vtable using the given layout if
-end_comment
-
-begin_comment
-comment|/// vptr CFI is enabled.
+comment|/// Emit type metadata for the given vtable using the given layout.
 end_comment
 
 begin_decl_stmt
 name|void
-name|EmitVTableBitSetEntries
+name|EmitVTableTypeMetadata
 argument_list|(
 name|llvm
 operator|::
@@ -5038,7 +5156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Generate a cross-DSO type identifier for type.
+comment|/// Generate a cross-DSO type identifier for MD.
 end_comment
 
 begin_expr_stmt
@@ -5046,7 +5164,7 @@ name|llvm
 operator|::
 name|ConstantInt
 operator|*
-name|CreateCfiIdForTypeMetadata
+name|CreateCrossDsoCfiTypeId
 argument_list|(
 name|llvm
 operator|::
@@ -5082,12 +5200,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// Create a bitset entry for the given function and add it to BitsetsMD.
+comment|/// Create and attach type metadata to the given function.
 end_comment
 
 begin_decl_stmt
 name|void
-name|CreateFunctionBitSetEntry
+name|CreateFunctionTypeMetadata
 argument_list|(
 specifier|const
 name|FunctionDecl
@@ -5104,19 +5222,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Create a bitset entry for the given vtable and add it to BitsetsMD.
+comment|/// Returns whether this module needs the "all-vtables" type identifier.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|NeedAllVtablesTypeId
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Create and attach type metadata for the given vtable.
 end_comment
 
 begin_decl_stmt
 name|void
-name|CreateVTableBitSetEntry
+name|AddVTableTypeMetadata
 argument_list|(
-name|llvm
-operator|::
-name|NamedMDNode
-operator|*
-name|BitsetsMD
-argument_list|,
 name|llvm
 operator|::
 name|GlobalVariable
@@ -5144,6 +5268,16 @@ operator|::
 name|Constant
 operator|*
 name|getTerminateFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SanitizerStatReport
+operator|&
+name|getSanStats
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -5191,6 +5325,8 @@ argument_list|,
 argument|llvm::PointerType *PTy
 argument_list|,
 argument|const VarDecl *D
+argument_list|,
+argument|bool IsForDefinition = false
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5281,6 +5417,11 @@ specifier|const
 name|VarDecl
 modifier|*
 name|D
+parameter_list|,
+name|bool
+name|IsTentative
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5288,6 +5429,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|EmitAliasDefinition
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|emitIFuncDefinition
 parameter_list|(
 name|GlobalDecl
 name|GD

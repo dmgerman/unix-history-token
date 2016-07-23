@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple i686-pc-win32 -fms-extensions -emit-llvm -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple thumbv7-windows -fms-extensions -emit-llvm -o - | FileCheck %s
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma

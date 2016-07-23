@@ -931,6 +931,13 @@ name|Base
 parameter_list|,
 name|bool
 name|IsInheritedVirtualBase
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|*
+name|Parent
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Create the initialization entity for a delegated constructor.
@@ -2538,6 +2545,8 @@ comment|///
 comment|/// \param TopLevelOfInitList true if we are initializing from an expression
 comment|///        at the top level inside an initializer list. This disallows
 comment|///        narrowing conversions in C++11 onwards.
+comment|/// \param TreatUnavailableAsInvalid true if we want to treat unavailable
+comment|///        as invalid.
 name|InitializationSequence
 argument_list|(
 argument|Sema&S
@@ -2549,6 +2558,8 @@ argument_list|,
 argument|MultiExprArg Args
 argument_list|,
 argument|bool TopLevelOfInitList = false
+argument_list|,
+argument|bool TreatUnavailableAsInvalid = true
 argument_list|)
 empty_stmt|;
 name|void
@@ -2573,6 +2584,9 @@ name|Args
 parameter_list|,
 name|bool
 name|TopLevelOfInitList
+parameter_list|,
+name|bool
+name|TreatUnavailableAsInvalid
 parameter_list|)
 function_decl|;
 operator|~
@@ -2737,6 +2751,30 @@ name|Steps
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|step_iterator
+operator|>
+name|step_range
+expr_stmt|;
+name|step_range
+name|steps
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|step_begin
+argument_list|()
+block|,
+name|step_end
+argument_list|()
+block|}
 return|;
 block|}
 comment|/// \brief Determine whether this initialization is a direct reference
@@ -2941,12 +2979,12 @@ comment|/// \param AsInitList The constructor is called as an init list construc
 name|void
 name|AddConstructorInitializationStep
 parameter_list|(
+name|DeclAccessPair
+name|FoundDecl
+parameter_list|,
 name|CXXConstructorDecl
 modifier|*
 name|Constructor
-parameter_list|,
-name|AccessSpecifier
-name|Access
 parameter_list|,
 name|QualType
 name|T

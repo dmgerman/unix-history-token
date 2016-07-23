@@ -35,6 +35,14 @@ begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=NATIVE-HALF
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -o - -x renderscript %s \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=NATIVE-HALF
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned

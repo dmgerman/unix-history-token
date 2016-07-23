@@ -31,6 +31,10 @@ directive|include
 file|<x86intrin.h>
 end_include
 
+begin_comment
+comment|// NOTE: This should match the tests in llvm/test/CodeGen/X86/tbm-intrinsics-fast-isel.ll
+end_comment
+
 begin_function
 name|unsigned
 name|int
@@ -41,7 +45,8 @@ name|int
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: call i32 @llvm.x86.tbm.bextri.u32
+comment|// CHECK-LABEL: test__bextri_u32
+comment|// CHECK: call i32 @llvm.x86.tbm.bextri.u32(i32 %{{.*}}, i32 1)
 return|return
 name|__bextri_u32
 argument_list|(
@@ -65,7 +70,8 @@ name|long
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: call i64 @llvm.x86.tbm.bextri.u64
+comment|// CHECK-LABEL: test__bextri_u64
+comment|// CHECK: call i64 @llvm.x86.tbm.bextri.u64(i64 %{{.*}}, i64 2)
 return|return
 name|__bextri_u64
 argument_list|(
@@ -89,7 +95,8 @@ name|long
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: call i64 @llvm.x86.tbm.bextri.u64
+comment|// CHECK-LABEL: test__bextri_u64_bigint
+comment|// CHECK: call i64 @llvm.x86.tbm.bextri.u64(i64 %{{.*}}, i64 549755813887)
 return|return
 name|__bextri_u64
 argument_list|(
@@ -111,6 +118,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcfill_u32
 comment|// CHECK: [[TMP:%.*]] = add i32 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: %{{.*}} = and i32 [[TMP]], [[SRC]]
 return|return
@@ -134,6 +142,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcfill_u64
 comment|// CHECK: [[TMPT:%.*]] = add i64 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: %{{.*}} = and i64 [[TMP]], [[SRC]]
 return|return
@@ -155,6 +164,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blci_u32
 comment|// CHECK: [[TMP:%.*]] = sub i32 -2, [[SRC:%.*]]
 comment|// CHECK-NEXT: %{{.*}} = or i32 [[TMP]], [[SRC]]
 return|return
@@ -178,6 +188,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blci_u64
 comment|// CHECK: [[TMP:%.*]] = sub i64 -2, [[SRC:%.*]]
 comment|// CHECK-NEXT: %{{.*}} = or i64 [[TMP]], [[SRC]]
 return|return
@@ -199,6 +210,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcic_u32
 comment|// CHECK: [[TMP1:%.*]] = xor i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i32 [[SRC]], 1
 comment|// CHECK-NEXT: {{.*}} = and i32 [[TMP2]], [[TMP1]]
@@ -223,6 +235,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcic_u64
 comment|// CHECK: [[TMP1:%.*]] = xor i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i64 [[SRC]], 1
 comment|// CHECK-NEXT: {{.*}} = and i64 [[TMP2]], [[TMP1]]
@@ -245,6 +258,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcmsk_u32
 comment|// CHECK: [[TMP:%.*]] = add i32 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = xor i32 [[TMP]], [[SRC]]
 return|return
@@ -268,6 +282,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcmsk_u64
 comment|// CHECK: [[TMP:%.*]] = add i64 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = xor i64 [[TMP]], [[SRC]]
 return|return
@@ -289,6 +304,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcs_u32
 comment|// CHECK: [[TMP:%.*]] = add i32 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = or i32 [[TMP]], [[SRC]]
 return|return
@@ -312,6 +328,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blcs_u64
 comment|// CHECK: [[TMP:%.*]] = add i64 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = or i64 [[TMP]], [[SRC]]
 return|return
@@ -333,6 +350,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blsfill_u32
 comment|// CHECK: [[TMP:%.*]] = add i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = or i32 [[TMP]], [[SRC]]
 return|return
@@ -356,6 +374,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blsfill_u64
 comment|// CHECK: [[TMP:%.*]] = add i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = or i64 [[TMP]], [[SRC]]
 return|return
@@ -377,6 +396,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blsic_u32
 comment|// CHECK: [[TMP1:%.*]] = xor i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = or i32 [[TMP2]], [[TMP1]]
@@ -401,6 +421,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__blsic_u64
 comment|// CHECK: [[TMP1:%.*]] = xor i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = or i64 [[TMP2]], [[TMP1]]
@@ -423,6 +444,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__t1mskc_u32
 comment|// CHECK: [[TMP1:%.*]] = xor i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i32 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = or i32 [[TMP2]], [[TMP1]]
@@ -447,6 +469,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__t1mskc_u64
 comment|// CHECK: [[TMP1:%.*]] = xor i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i64 [[SRC:%.*]], 1
 comment|// CHECK-NEXT: {{.*}} = or i64 [[TMP2]], [[TMP1]]
@@ -469,6 +492,7 @@ name|int
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__tzmsk_u32
 comment|// CHECK: [[TMP1:%.*]] = xor i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i32 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = and i32 [[TMP2]], [[TMP1]]
@@ -493,6 +517,7 @@ name|long
 name|a
 parameter_list|)
 block|{
+comment|// CHECK-LABEL: test__tzmsk_u64
 comment|// CHECK: [[TMP1:%.*]] = xor i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: [[TMP2:%.*]] = add i64 [[SRC:%.*]], -1
 comment|// CHECK-NEXT: {{.*}} = and i64 [[TMP2]], [[TMP1]]

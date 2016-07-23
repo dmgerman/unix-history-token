@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: aarch64-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:   -ffp-contract=fast -S -O3 -o - %s | FileCheck %s
+comment|// RUN:  -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_include
@@ -18,7 +14,23 @@ file|<arm_neon.h>
 end_include
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_lane_f32
+comment|// CHECK-LABEL: define float @test_vdups_lane_f32(<2 x float> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x float> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x float>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VDUPS_LANE:%.*]] = extractelement<2 x float> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret float [[VDUPS_LANE]]
 end_comment
 
 begin_function
@@ -37,13 +49,27 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ret
-comment|// CHECK-NOT: dup {{s[0-9]+}}, {{v[0-9]+}}.s[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_lane_f64
+comment|// CHECK-LABEL: define double @test_vdupd_lane_f64(<1 x double> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x double> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x double>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VDUPD_LANE:%.*]] = extractelement<1 x double> [[TMP1]], i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   ret double [[VDUPD_LANE]]
 end_comment
 
 begin_function
@@ -62,13 +88,27 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: ret
-comment|// CHECK-NOT: dup {{d[0-9]+}}, {{v[0-9]+}}.d[0]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_laneq_f32
+comment|// CHECK-LABEL: define float @test_vdups_laneq_f32(<4 x float> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x float> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x float>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x float> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret float [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -87,13 +127,27 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ret
-comment|// CHECK-NOT: dup {{s[0-9]+}}, {{v[0-9]+}}.s[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_laneq_f64
+comment|// CHECK-LABEL: define double @test_vdupd_laneq_f64(<2 x double> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x double> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x double>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x double> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret double [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -112,13 +166,19 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ret
-comment|// CHECK-NOT: dup {{d[0-9]+}}, {{v[0-9]+}}.d[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_lane_s8
+comment|// CHECK-LABEL: define i8 @test_vdupb_lane_s8(<8 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<8 x i8> %a, i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -137,12 +197,27 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_lane_s16
+comment|// CHECK-LABEL: define i16 @test_vduph_lane_s16(<4 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<4 x i16> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -161,12 +236,27 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_lane_s32
+comment|// CHECK-LABEL: define i32 @test_vdups_lane_s32(<2 x i32> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x i32> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -185,12 +275,27 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_lane_s64
+comment|// CHECK-LABEL: define i64 @test_vdupd_lane_s64(<1 x i64> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<1 x i64> [[TMP1]], i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -209,12 +314,19 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmov {{x[0-9]+}}, {{d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_lane_u8
+comment|// CHECK-LABEL: define i8 @test_vdupb_lane_u8(<8 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<8 x i8> %a, i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -233,12 +345,27 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_lane_u16
+comment|// CHECK-LABEL: define i16 @test_vduph_lane_u16(<4 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<4 x i16> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -257,12 +384,27 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_lane_u32
+comment|// CHECK-LABEL: define i32 @test_vdups_lane_u32(<2 x i32> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i32> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<2 x i32>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<2 x i32> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -281,12 +423,27 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_lane_u64
+comment|// CHECK-LABEL: define i64 @test_vdupd_lane_u64(<1 x i64> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<1 x i64> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<1 x i64>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<1 x i64> [[TMP1]], i32 0
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -305,12 +462,19 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmov {{x[0-9]+}}, {{d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_laneq_s8
+comment|// CHECK-LABEL: define i8 @test_vdupb_laneq_s8(<16 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<16 x i8> %a, i32 15
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -329,12 +493,27 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_laneq_s16
+comment|// CHECK-LABEL: define i16 @test_vduph_laneq_s16(<8 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<8 x i16> [[TMP1]], i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -353,12 +532,27 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_laneq_s32
+comment|// CHECK-LABEL: define i32 @test_vdups_laneq_s32(<4 x i32> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x i32> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -377,12 +571,27 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_laneq_s64
+comment|// CHECK-LABEL: define i64 @test_vdupd_laneq_s64(<2 x i64> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x i64> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -401,12 +610,19 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{x[0-9]+}}, {{v[0-9]+}}.d[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_laneq_u8
+comment|// CHECK-LABEL: define i8 @test_vdupb_laneq_u8(<16 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<16 x i8> %a, i32 15
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -425,12 +641,27 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_laneq_u16
+comment|// CHECK-LABEL: define i16 @test_vduph_laneq_u16(<8 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<8 x i16> [[TMP1]], i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -449,12 +680,27 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdups_laneq_u32
+comment|// CHECK-LABEL: define i32 @test_vdups_laneq_u32(<4 x i32> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i32> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<4 x i32>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<4 x i32> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i32 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -473,12 +719,27 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupd_laneq_u64
+comment|// CHECK-LABEL: define i64 @test_vdupd_laneq_u64(<2 x i64> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<2 x i64> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<2 x i64>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<2 x i64> [[TMP1]], i32 1
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i64 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -497,12 +758,19 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{x[0-9]+}}, {{v[0-9]+}}.d[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_lane_p8
+comment|// CHECK-LABEL: define i8 @test_vdupb_lane_p8(<8 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<8 x i8> %a, i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -521,12 +789,27 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_lane_p16
+comment|// CHECK-LABEL: define i16 @test_vduph_lane_p16(<4 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<4 x i16> %a to<8 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<8 x i8> [[TMP0]] to<4 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGET_LANE:%.*]] = extractelement<4 x i16> [[TMP1]], i32 3
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGET_LANE]]
 end_comment
 
 begin_function
@@ -545,12 +828,19 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vdupb_laneq_p8
+comment|// CHECK-LABEL: define i8 @test_vdupb_laneq_p8(<16 x i8> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<16 x i8> %a, i32 15
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i8 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -569,12 +859,27 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: test_vduph_laneq_p16
+comment|// CHECK-LABEL: define i16 @test_vduph_laneq_p16(<8 x i16> %a) #0 {
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP0:%.*]] = bitcast<8 x i16> %a to<16 x i8>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[TMP1:%.*]] = bitcast<16 x i8> [[TMP0]] to<8 x i16>
+end_comment
+
+begin_comment
+comment|// CHECK:   [[VGETQ_LANE:%.*]] = extractelement<8 x i16> [[TMP1]], i32 7
+end_comment
+
+begin_comment
+comment|// CHECK:   ret i16 [[VGETQ_LANE]]
 end_comment
 
 begin_function
@@ -593,7 +898,6 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 

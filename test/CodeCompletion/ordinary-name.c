@@ -47,11 +47,15 @@ comment|// RUN: %clang_cc1 -isystem %S/Inputs -fsyntax-only -code-completion-at=
 end_comment
 
 begin_comment
+comment|// CHECK-CC1-NOT: __INTEGER_TYPE
+end_comment
+
+begin_comment
 comment|// CHECK-CC1: _Imaginary
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NOT: _INTEGER_TYPE;
+comment|// CHECK-CC1: _MyPrivateType
 end_comment
 
 begin_comment

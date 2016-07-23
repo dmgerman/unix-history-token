@@ -199,6 +199,9 @@ name|class
 name|StoredDeclsMap
 decl_stmt|;
 name|class
+name|TemplateDecl
+decl_stmt|;
+name|class
 name|TranslationUnitDecl
 decl_stmt|;
 name|class
@@ -232,28 +235,18 @@ comment|/// typedef, function, struct, etc.
 comment|///
 comment|/// Note: There are objects tacked on before the *beginning* of Decl
 comment|/// (and its subclasses) in its Decl::operator new(). Proper alignment
-comment|/// of all subclasses (not requiring more than DeclObjAlignment) is
+comment|/// of all subclasses (not requiring more than the alignment of Decl) is
 comment|/// asserted in DeclBase.cpp.
 name|class
+name|LLVM_ALIGNAS
+argument_list|(
+comment|/*alignof(uint64_t)*/
+literal|8
+argument_list|)
 name|Decl
 block|{
 name|public
 label|:
-comment|/// \brief Alignment guaranteed when allocating Decl and any subtypes.
-enum|enum
-block|{
-name|DeclObjAlignment
-init|=
-name|llvm
-operator|::
-name|AlignOf
-operator|<
-name|uint64_t
-operator|>
-operator|::
-name|Alignment
-block|}
-enum|;
 comment|/// \brief Lists the kind of concrete classes of Decl.
 enum|enum
 name|Kind
@@ -407,6 +400,11 @@ comment|/// lookup within the scope of the declaring function.
 name|IDNS_LocalExtern
 init|=
 literal|0x0800
+block|,
+comment|/// This declaration is an OpenMP user defined reduction construction.
+name|IDNS_OMPReduction
+init|=
+literal|0x1000
 block|}
 enum|;
 comment|/// ObjCDeclQualifier - 'Qualifiers' written next to the return and
@@ -626,7 +624,7 @@ comment|/// DeclKind - This indicates which class this is.
 name|unsigned
 name|DeclKind
 range|:
-literal|8
+literal|7
 decl_stmt|;
 comment|/// InvalidDecl - This indicates a semantic error occurred.
 name|unsigned
@@ -699,7 +697,7 @@ comment|/// IdentifierNamespace - This specifies what IDNS_* namespace this live
 name|unsigned
 name|IdentifierNamespace
 range|:
-literal|12
+literal|13
 decl_stmt|;
 comment|/// \brief If 0, we have not computed the linkage of this declaration.
 comment|/// Otherwise, it is the linkage + 1.
@@ -1747,8 +1745,8 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-comment|/// \brief Whether this declaration was used, meaning that a definition
-comment|/// is required.
+comment|/// \brief Whether *any* (re-)declaration of the entity was used, meaning that
+comment|/// a definition is required.
 comment|///
 comment|/// \param CheckUsedAttr When true, also consider the "used" attribute
 comment|/// (in addition to the "used" bit set by \c setUsed()) when determining
@@ -1766,10 +1764,14 @@ decl_stmt|;
 comment|/// \brief Set whether the declaration is used, in the sense of odr-use.
 comment|///
 comment|/// This should only be used immediately after creating a declaration.
+comment|/// It intentionally doesn't notify any listeners.
 name|void
 name|setIsUsed
 parameter_list|()
 block|{
+name|getCanonicalDecl
+argument_list|()
+operator|->
 name|Used
 operator|=
 name|true
@@ -1890,6 +1892,21 @@ operator|&
 name|ModulePrivateFlag
 return|;
 block|}
+comment|/// Return true if this declaration has an attribute which acts as
+comment|/// definition of the entity, such as 'alias' or 'ifunc'.
+name|bool
+name|hasDefiningAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return this declaration's defining attribute if it has one.
+specifier|const
+name|Attr
+operator|*
+name|getDefiningAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 comment|/// \brief Specify whether this declaration was marked as being private
@@ -3397,6 +3414,23 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief If this is a declaration that describes some template, this
+end_comment
+
+begin_comment
+comment|/// method returns that template declaration.
+end_comment
+
+begin_expr_stmt
+name|TemplateDecl
+operator|*
+name|getDescribedTemplate
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the function itself, or the templated function if this is a
 end_comment
 
@@ -4615,6 +4649,10 @@ end_comment
 
 begin_comment
 comment|///   BlockDecl
+end_comment
+
+begin_comment
+comment|///   OMPDeclareReductionDecl
 end_comment
 
 begin_comment

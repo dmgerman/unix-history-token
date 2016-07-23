@@ -88,6 +88,18 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-pc-windows-msvc -nostdlib --rtlib=compiler-rt -### %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-windows-msvc --rtlib=compiler-rt -nostdlib -### %s 2>&1 | FileCheck %s -check-prefix CHECK-MSVC-NOSTDLIB
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK-LINUX-NOSTDLIB: warning: argument unused during compilation: '--rtlib=compiler-rt'
 end_comment
 
@@ -97,6 +109,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-LINUX-NOSTDLIB-NOT: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.builtins-i686.a"
+end_comment
+
+begin_comment
+comment|// CHECK-MSVC-NOSTDLIB: warning: argument unused during compilation: '--rtlib=compiler-rt'
 end_comment
 
 end_unit

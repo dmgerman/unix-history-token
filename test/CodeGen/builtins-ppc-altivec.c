@@ -4,16 +4,57 @@ comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -faltivec -triple powerpc-unknown-unknown -emit-llvm %s \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+comment|// RUN:            -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-unknown -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK-LE
+comment|// RUN: %clang_cc1 -faltivec -triple powerpc64-unknown-unknown -emit-llvm %s \
 end_comment
+
+begin_comment
+comment|// RUN:            -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-unknown -emit-llvm %s \
+end_comment
+
+begin_comment
+comment|// RUN:            -o - | FileCheck %s -check-prefix=CHECK-LE
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -triple powerpc64le-unknown-unknown -emit-llvm %s \
+end_comment
+
+begin_comment
+comment|// RUN:            -ferror-limit 0 -DNO_ALTIVEC -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:            | FileCheck %s -check-prefix=CHECK-NOALTIVEC
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_ALTIVEC
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<altivec.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|vector
@@ -413,6 +454,10 @@ name|res_vf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK-NOALTIVEC: error: unknown type name 'vector'
+end_comment
+
 begin_decl_stmt
 name|signed
 name|char
@@ -551,8 +596,16 @@ argument_list|(
 name|vf
 argument_list|)
 expr_stmt|;
-comment|// CHECK: and<4 x i32>
-comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK: bitcast<4 x float> %{{.*}} to<4 x i32>
+comment|// CHECK: and<4 x i32> {{.*}},<i32 2147483647, i32 2147483647, i32 2147483647, i32 2147483647>
+comment|// CHECK: bitcast<4 x i32> %{{.*}} to<4 x float>
+comment|// CHECK: store<4 x float> %{{.*}},<4 x float>* @vf
+comment|// CHECK-LE: bitcast<4 x float> %{{.*}} to<4 x i32>
+comment|// CHECK-LE: and<4 x i32> {{.*}},<i32 2147483647, i32 2147483647, i32 2147483647, i32 2147483647>
+comment|// CHECK-LE: bitcast<4 x i32> %{{.*}} to<4 x float>
+comment|// CHECK-LE: store<4 x float> %{{.*}},<4 x float>* @vf
+comment|// CHECK-NOALTIVEC: error: use of undeclared identifier 'vf'
+comment|// CHECK-NOALTIVEC: vf = vec_abs(vf)
 comment|/* vec_abs */
 name|vsc
 operator|=

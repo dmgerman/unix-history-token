@@ -505,7 +505,7 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|__v64qi
+name|__m512i
 name|__attribute__
 argument_list|(
 operator|(

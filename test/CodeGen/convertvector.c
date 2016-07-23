@@ -75,46 +75,6 @@ directive|ifdef
 name|__cplusplus
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|BOOL
-value|bool
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BOOL
-value|_Bool
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|BOOL
-name|vector8bool
-name|__attribute__
-typedef|((
-name|__ext_vector_type__
-typedef|(8)));
-end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
 begin_extern
 extern|extern
 literal|"C"
@@ -156,25 +116,6 @@ argument_list|)
 return|;
 comment|// CHECK-LABEL: @flt_ext
 comment|// CHECK: fpext<8 x float> %{{[^ ]}} to<8 x double>
-block|}
-name|vector8bool
-name|flt_tobool
-parameter_list|(
-name|vector8float
-name|x
-parameter_list|)
-block|{
-return|return
-name|__builtin_convertvector
-argument_list|(
-name|x
-argument_list|,
-name|vector8bool
-argument_list|)
-return|;
-comment|// CHECK-LABEL: @flt_tobool
-comment|// CHECK-NOT: fptoui<8 x float> %{{[^ ]}} to<8 x i1>
-comment|// CHECK: fcmp une<8 x float> %{{[^ ]}}, zeroinitializer
 block|}
 name|vector8long
 name|flt_tosi
@@ -265,25 +206,6 @@ argument_list|)
 return|;
 comment|// CHECK-LABEL: @int_sext
 comment|// CHECK: sext<8 x i16> %{{[^ ]}} to<8 x i64>
-block|}
-name|vector8bool
-name|int_tobool
-parameter_list|(
-name|vector8short
-name|x
-parameter_list|)
-block|{
-return|return
-name|__builtin_convertvector
-argument_list|(
-name|x
-argument_list|,
-name|vector8bool
-argument_list|)
-return|;
-comment|// CHECK-LABEL: @int_tobool
-comment|// CHECK-NOT: trunc<8 x i16> %{{[^ ]}} to<8 x i1>
-comment|// CHECK: icmp ne<8 x i16> %{{[^ ]}}, zeroinitializer
 block|}
 name|vector8float
 name|int_tofp

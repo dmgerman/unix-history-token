@@ -169,8 +169,12 @@ name|public
 operator|:
 name|VerifyMatch
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BoundNodesCallback
-operator|*
+operator|>
 name|FindResultVerifier
 argument_list|,
 name|bool
@@ -185,7 +189,7 @@ argument_list|)
 block|,
 name|FindResultReviewer
 argument_list|(
-argument|FindResultVerifier
+argument|std::move(FindResultVerifier)
 argument_list|)
 block|{}
 name|void
@@ -251,9 +255,13 @@ operator|*
 specifier|const
 name|Verified
 block|;
-name|BoundNodesCallback
-operator|*
 specifier|const
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|BoundNodesCallback
+operator|>
 name|FindResultReviewer
 block|; }
 decl_stmt|;
@@ -357,7 +365,14 @@ name|Finder
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Some tests use typeof, which is a gnu extension.
+comment|// Some tests need rtti/exceptions on.  Use an unknown-unknown triple so we
+comment|// don't instantiate the full system toolchain.  On Linux, instantiating the
+comment|// toolchain involves stat'ing large portions of /usr/lib, and this slows down
+comment|// not only this test, but all other tests, via contention in the kernel.
+comment|//
+comment|// FIXME: This is a hack to work around the fact that there's no way to do the
+comment|// equivalent of runToolOnCodeWithArgs without instantiating a full Driver.
+comment|// We should consider having a function, at least for tests, that invokes cc1.
 name|std
 operator|::
 name|vector
@@ -367,28 +382,18 @@ operator|::
 name|string
 operator|>
 name|Args
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 name|CompileArg
-argument_list|)
-expr_stmt|;
-comment|// Some tests need rtti/exceptions on
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
 literal|"-frtti"
-argument_list|)
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
 literal|"-fexceptions"
-argument_list|)
+block|,
+literal|"-target"
+block|,
+literal|"i386-unknown-unknown"
+block|}
 expr_stmt|;
 if|if
 condition|(
@@ -405,6 +410,8 @@ argument_list|,
 name|Args
 argument_list|,
 name|Filename
+argument_list|,
+literal|"clang-tool"
 argument_list|,
 name|std
 operator|::
@@ -636,6 +643,39 @@ operator|>
 name|testing
 operator|::
 name|AssertionResult
+name|matchesC99
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|)
+block|{
+return|return
+name|matchesConditionally
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|true
+argument_list|,
+literal|"-std=c99"
+argument_list|,
+name|FileContentMappings
+argument_list|()
+argument_list|,
+literal|"input.c"
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
 name|notMatchesC
 argument_list|(
 argument|const std::string&Code
@@ -813,7 +853,9 @@ name|Finder
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// Some tests use typeof, which is a gnu extension.
+comment|// Some tests use typeof, which is a gnu extension.  Using an explicit
+comment|// unknown-unknown triple is good for a large speedup, because it lets us
+comment|// avoid constructing a full system triple.
 name|std
 operator|::
 name|vector
@@ -823,41 +865,22 @@ operator|::
 name|string
 operator|>
 name|Args
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+operator|=
+block|{
 literal|"-xcuda"
-argument_list|)
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
 literal|"-fno-ms-extensions"
-argument_list|)
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
 literal|"--cuda-host-only"
-argument_list|)
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
 literal|"-nocudainc"
-argument_list|)
-expr_stmt|;
-name|Args
-operator|.
-name|push_back
-argument_list|(
+block|,
+literal|"-target"
+block|,
+literal|"nvptx64-unknown-unknown"
+block|,
 name|CompileArg
-argument_list|)
+block|}
 expr_stmt|;
 if|if
 condition|(
@@ -1043,22 +1066,11 @@ argument|const std::string&Code
 argument_list|,
 argument|const T&AMatcher
 argument_list|,
-argument|BoundNodesCallback *FindResultVerifier
+argument|std::unique_ptr<BoundNodesCallback> FindResultVerifier
 argument_list|,
 argument|bool ExpectResult
 argument_list|)
 block|{
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|BoundNodesCallback
-operator|>
-name|ScopedVerifier
-argument_list|(
-name|FindResultVerifier
-argument_list|)
-block|;
 name|bool
 name|VerifiedResult
 operator|=
@@ -1070,7 +1082,12 @@ block|;
 name|VerifyMatch
 name|VerifyVerifiedResult
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|FindResultVerifier
+argument_list|)
 argument_list|,
 operator|&
 name|VerifiedResult
@@ -1101,7 +1118,9 @@ name|Finder
 argument_list|)
 argument_list|)
 block|;
-comment|// Some tests use typeof, which is a gnu extension.
+comment|// Some tests use typeof, which is a gnu extension.  Using an explicit
+comment|// unknown-unknown triple is good for a large speedup, because it lets us
+comment|// avoid constructing a full system triple.
 name|std
 operator|::
 name|vector
@@ -1111,11 +1130,14 @@ operator|::
 name|string
 operator|>
 name|Args
-argument_list|(
-literal|1
-argument_list|,
+operator|=
+block|{
 literal|"-std=gnu++98"
-argument_list|)
+block|,
+literal|"-target"
+block|,
+literal|"i386-unknown-unknown"
+block|}
 block|;
 if|if
 condition|(
@@ -1335,7 +1357,7 @@ argument|const std::string&Code
 argument_list|,
 argument|const T&AMatcher
 argument_list|,
-argument|BoundNodesCallback *FindResultVerifier
+argument|std::unique_ptr<BoundNodesCallback> FindResultVerifier
 argument_list|)
 block|{
 return|return
@@ -1345,7 +1367,12 @@ name|Code
 argument_list|,
 name|AMatcher
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|FindResultVerifier
+argument_list|)
 argument_list|,
 name|true
 argument_list|)
@@ -1368,7 +1395,7 @@ argument|const std::string&Code
 argument_list|,
 argument|const T&AMatcher
 argument_list|,
-argument|BoundNodesCallback *FindResultVerifier
+argument|std::unique_ptr<BoundNodesCallback> FindResultVerifier
 argument_list|)
 block|{
 return|return
@@ -1378,7 +1405,12 @@ name|Code
 argument_list|,
 name|AMatcher
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|FindResultVerifier
+argument_list|)
 argument_list|,
 name|false
 argument_list|)
@@ -1387,13 +1419,445 @@ block|}
 end_expr_stmt
 
 begin_comment
-unit|}
-comment|// end namespace ast_matchers
+comment|// Implements a run method that returns whether BoundNodes contains a
+end_comment
+
+begin_comment
+comment|// Decl bound to Id that can be dynamically cast to T.
+end_comment
+
+begin_comment
+comment|// Optionally checks that the check succeeded a specific number of times.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|VerifyIdIsBoundTo
+operator|:
+name|public
+name|BoundNodesCallback
+block|{
+name|public
+operator|:
+comment|// Create an object that checks that a node of type \c T was bound to \c Id.
+comment|// Does not check for a certain number of matches.
+name|explicit
+name|VerifyIdIsBoundTo
+argument_list|(
+argument|llvm::StringRef Id
+argument_list|)
+operator|:
+name|Id
+argument_list|(
+name|Id
+argument_list|)
+block|,
+name|ExpectedCount
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+block|,
+name|Count
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|// Create an object that checks that a node of type \c T was bound to \c Id.
+comment|// Checks that there were exactly \c ExpectedCount matches.
+name|VerifyIdIsBoundTo
+argument_list|(
+argument|llvm::StringRef Id
+argument_list|,
+argument|int ExpectedCount
+argument_list|)
+operator|:
+name|Id
+argument_list|(
+name|Id
+argument_list|)
+block|,
+name|ExpectedCount
+argument_list|(
+name|ExpectedCount
+argument_list|)
+block|,
+name|Count
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|// Create an object that checks that a node of type \c T was bound to \c Id.
+comment|// Checks that there was exactly one match with the name \c ExpectedName.
+comment|// Note that \c T must be a NamedDecl for this to work.
+name|VerifyIdIsBoundTo
+argument_list|(
+argument|llvm::StringRef Id
+argument_list|,
+argument|llvm::StringRef ExpectedName
+argument_list|,
+argument|int ExpectedCount =
+literal|1
+argument_list|)
+operator|:
+name|Id
+argument_list|(
+name|Id
+argument_list|)
+block|,
+name|ExpectedCount
+argument_list|(
+name|ExpectedCount
+argument_list|)
+block|,
+name|Count
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ExpectedName
+argument_list|(
+argument|ExpectedName
+argument_list|)
+block|{}
+name|void
+name|onEndOfTranslationUnit
+argument_list|()
+name|override
+block|{
+if|if
+condition|(
+name|ExpectedCount
+operator|!=
+operator|-
+literal|1
+condition|)
+name|EXPECT_EQ
+argument_list|(
+name|ExpectedCount
+argument_list|,
+name|Count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ExpectedName
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|EXPECT_EQ
+argument_list|(
+name|ExpectedName
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+name|Count
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|Name
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+unit|}    ~
+name|VerifyIdIsBoundTo
+argument_list|()
+end_macro
+
+begin_macro
+name|override
+end_macro
+
+begin_block
+block|{
+name|EXPECT_EQ
+argument_list|(
+literal|0
+argument_list|,
+name|Count
+argument_list|)
+expr_stmt|;
+name|EXPECT_EQ
+argument_list|(
+literal|""
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|bool
+name|run
+parameter_list|(
+specifier|const
+name|BoundNodes
+modifier|*
+name|Nodes
+parameter_list|)
+function|override
+block|{
+specifier|const
+name|BoundNodes
+operator|::
+name|IDToNodeMap
+operator|&
+name|M
+operator|=
+name|Nodes
+operator|->
+name|getMap
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Nodes
+operator|->
+name|getNodeAs
+operator|<
+name|T
+operator|>
+operator|(
+name|Id
+operator|)
+condition|)
+block|{
+operator|++
+name|Count
+expr_stmt|;
+if|if
+condition|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|Named
+init|=
+name|Nodes
+operator|->
+name|getNodeAs
+operator|<
+name|NamedDecl
+operator|>
+operator|(
+name|Id
+operator|)
+condition|)
+block|{
+name|Name
+operator|=
+name|Named
+operator|->
+name|getNameAsString
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+specifier|const
+name|NestedNameSpecifier
+modifier|*
+name|NNS
+init|=
+name|Nodes
+operator|->
+name|getNodeAs
+operator|<
+name|NestedNameSpecifier
+operator|>
+operator|(
+name|Id
+operator|)
+condition|)
+block|{
+name|llvm
+operator|::
+name|raw_string_ostream
+name|OS
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+name|NNS
+operator|->
+name|print
+argument_list|(
+name|OS
+argument_list|,
+name|PrintingPolicy
+argument_list|(
+name|LangOptions
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|BoundNodes
+operator|::
+name|IDToNodeMap
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|M
+operator|.
+name|find
+argument_list|(
+name|Id
+argument_list|)
+expr_stmt|;
+name|EXPECT_NE
+argument_list|(
+name|M
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|I
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|I
+operator|!=
+name|M
+operator|.
+name|end
+argument_list|()
+condition|)
+name|EXPECT_EQ
+argument_list|(
+name|Nodes
+operator|->
+name|getNodeAs
+operator|<
+name|T
+operator|>
+operator|(
+name|Id
+operator|)
+argument_list|,
+name|I
+operator|->
+name|second
+operator|.
+name|get
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|EXPECT_TRUE
+argument_list|(
+argument|M.count(Id) ==
+literal|0
+argument|||       M.find(Id)->second.template get<T>() == nullptr
+argument_list|)
+empty_stmt|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|run
+parameter_list|(
+specifier|const
+name|BoundNodes
+modifier|*
+name|Nodes
+parameter_list|,
+name|ASTContext
+modifier|*
+name|Context
+parameter_list|)
+function|override
+block|{
+return|return
+name|run
+argument_list|(
+name|Nodes
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+specifier|const
+name|std
+operator|::
+name|string
+name|Id
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|ExpectedCount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Count
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|const
+name|std
+operator|::
+name|string
+name|ExpectedName
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};  }
+comment|// namespace ast_matchers
 end_comment
 
 begin_comment
 unit|}
-comment|// end namespace clang
+comment|// namespace clang
 end_comment
 
 begin_endif

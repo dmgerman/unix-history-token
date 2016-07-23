@@ -133,5 +133,22 @@ return|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|id
+name|field
+decl_stmt|;
+block|}
+name|Test9
+typedef|;
+end_typedef
+
 end_unit
 

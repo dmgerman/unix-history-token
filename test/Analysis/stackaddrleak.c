@@ -94,7 +94,7 @@ comment|// expected-warning{{Address of stack memory allocated by call to alloca
 end_comment
 
 begin_comment
-comment|// PR 7383 - previosly the stack address checker would crash on this example
+comment|// PR 7383 - previously the stack address checker would crash on this example
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the global variable 'a' upon returning}} expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the global variable 'b' upon returning}}
+comment|// expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the static variable 'a' upon returning}} expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the static variable 'b' upon returning}}
 end_comment
 
 begin_function

@@ -332,6 +332,10 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-STATIC %s
 end_comment
 
 begin_comment
+comment|// CHECK-STATIC: ld{{.*}}" "--eh-frame-hdr" "-Bstatic"
+end_comment
+
+begin_comment
 comment|// CHECK-STATIC: crt1.o
 end_comment
 

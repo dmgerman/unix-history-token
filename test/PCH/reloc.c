@@ -4,7 +4,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 --relocatable-pch -o %t \
 end_comment
 
 begin_comment
-comment|// RUN:   -isysroot %S/libroot %S/libroot/usr/include/reloc.h
+comment|// RUN:   -isysroot %S/Inputs/libroot %S/Inputs/libroot/usr/include/reloc.h
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -fsyntax-only \
 end_comment
 
 begin_comment
-comment|// RUN:   -include-pch %t -isysroot %S/libroot %s -Xclang -verify
+comment|// RUN:   -include-pch %t -isysroot %S/Inputs/libroot %s -Xclang -verify
 end_comment
 
 begin_comment
@@ -54,11 +54,11 @@ comment|// expected-error{{redefinition}}
 end_comment
 
 begin_comment
-comment|// expected-note@libroot/usr/include/reloc.h:13{{previous definition}}
+comment|// expected-note@Inputs/libroot/usr/include/reloc.h:13{{previous definition}}
 end_comment
 
 begin_comment
-comment|// expected-note@libroot/usr/include/reloc2.h:14{{previous definition}}
+comment|// expected-note@Inputs/libroot/usr/include/reloc2.h:14{{previous definition}}
 end_comment
 
 end_unit

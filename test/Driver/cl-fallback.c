@@ -8,11 +8,15 @@ comment|// command-line option, e.g. on Mac where %s is commonly under /Users.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /Dfoo=bar /Ubaz /Ifoo /O0 /Ox /GR /GR- /Gy /Gy- \
+comment|// RUN: %clang_cl --target=i686-pc-win32 /fallback /Dfoo=bar /Ubaz /Ifoo /O0 /Ox /GR /GR- /GS /GS- /Gy /Gy- \
 end_comment
 
 begin_comment
 comment|// RUN:   /Gw /Gw- /LD /LDd /EHs /EHs- /Zl /MD /MDd /MTd /MT /FImyheader.h /Zi \
+end_comment
+
+begin_comment
+comment|// RUN:   -garbage -moregarbage \
 end_comment
 
 begin_comment
@@ -88,6 +92,10 @@ comment|// CHECK: "/GR-"
 end_comment
 
 begin_comment
+comment|// CHECK: "/GS-"
+end_comment
+
+begin_comment
 comment|// CHECK: "/Gy-"
 end_comment
 
@@ -128,6 +136,14 @@ comment|// CHECK: "/MT"
 end_comment
 
 begin_comment
+comment|// CHECK: "-garbage"
+end_comment
+
+begin_comment
+comment|// CHECK: "-moregarbage"
+end_comment
+
+begin_comment
 comment|// CHECK: "/Tc" "{{.*cl-fallback.c}}"
 end_comment
 
@@ -145,6 +161,18 @@ end_comment
 
 begin_comment
 comment|// GR: "/GR-"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fallback /GS- -### -- %s 2>&1 | FileCheck -check-prefix=GS %s
+end_comment
+
+begin_comment
+comment|// GS: cl.exe
+end_comment
+
+begin_comment
+comment|// GS: "/GS-"
 end_comment
 
 begin_comment

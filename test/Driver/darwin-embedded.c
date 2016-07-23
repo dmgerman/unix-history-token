@@ -8,7 +8,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin -arch armv7em -resource-dir=%
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin -arch armv7em -mhard-float -resource-dir=%S/Inputs/resource_dir %s -### 2>> %t
+comment|// RUN: %clang -target x86_64-apple-darwin -arch armv7em -mfloat-abi=soft -resource-dir=%S/Inputs/resource_dir %s -### 2>> %t
 end_comment
 
 begin_comment
@@ -56,27 +56,7 @@ comment|// CHECK: libclang_rt.soft_static.a
 end_comment
 
 begin_comment
-comment|// ARMv7em does, but defaults to soft
-end_comment
-
-begin_comment
-comment|// CHECK-LABEL: Target:
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: warning: unknown platform
-end_comment
-
-begin_comment
-comment|// CHECK: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK: libclang_rt.soft_static.a
-end_comment
-
-begin_comment
-comment|// Which can be overridden
+comment|// ARMv7em does
 end_comment
 
 begin_comment
@@ -93,6 +73,30 @@ end_comment
 
 begin_comment
 comment|// CHECK: libclang_rt.hard_static.a
+end_comment
+
+begin_comment
+comment|// but the ABI can be overridden
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: Target:
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: warning: unknown platform
+end_comment
+
+begin_comment
+comment|// CHECK: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK: libclang_rt.soft_static.a
 end_comment
 
 begin_comment

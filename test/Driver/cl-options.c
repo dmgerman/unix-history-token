@@ -176,6 +176,34 @@ comment|// GR_: -fno-rtti
 end_comment
 
 begin_comment
+comment|// Security Buffer Check is on by default.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### -- %s 2>&1 | FileCheck -check-prefix=GS-default %s
+end_comment
+
+begin_comment
+comment|// GS-default: "-stack-protector" "2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /GS -### -- %s 2>&1 | FileCheck -check-prefix=GS %s
+end_comment
+
+begin_comment
+comment|// GS: "-stack-protector" "2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /GS- -### -- %s 2>&1 | FileCheck -check-prefix=GS_ %s
+end_comment
+
+begin_comment
+comment|// GS_-NOT: -stack-protector
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /Gy -### -- %s 2>&1 | FileCheck -check-prefix=Gy %s
 end_comment
 
@@ -244,6 +272,26 @@ comment|// SLASH_I: "-I" "myincludedir"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /imsvcmyincludedir -### -- %s 2>&1 | FileCheck -check-prefix=SLASH_imsvc %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /imsvc myincludedir -### -- %s 2>&1 | FileCheck -check-prefix=SLASH_imsvc %s
+end_comment
+
+begin_comment
+comment|// Clang's resource header directory should be first:
+end_comment
+
+begin_comment
+comment|// SLASH_imsvc: "-internal-isystem" "{{[^"]*}}lib{{(64)?/|\\\\}}clang{{[^"]*}}include"
+end_comment
+
+begin_comment
+comment|// SLASH_imsvc: "-internal-isystem" "myincludedir"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /J -### -- %s 2>&1 | FileCheck -check-prefix=J %s
 end_comment
 
@@ -265,6 +313,38 @@ end_comment
 
 begin_comment
 comment|// Ob0: -fno-inline
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Ob2 -### -- %s 2>&1 | FileCheck -check-prefix=Ob2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Odb2 -### -- %s 2>&1 | FileCheck -check-prefix=Ob2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /O2 /Ob2 -### -- %s 2>&1 | FileCheck -check-prefix=Ob2 %s
+end_comment
+
+begin_comment
+comment|// Ob2-NOT: warning: argument unused during compilation: '/O2'
+end_comment
+
+begin_comment
+comment|// Ob2: -finline-functions
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Ob1 -### -- %s 2>&1 | FileCheck -check-prefix=Ob1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Odb1 -### -- %s 2>&1 | FileCheck -check-prefix=Ob1 %s
+end_comment
+
+begin_comment
+comment|// Ob1: -finline-hint-functions
 end_comment
 
 begin_comment
@@ -368,11 +448,23 @@ comment|// PR24003: -Os
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Zs /Oy -- %s 2>&1
+comment|// RUN: %clang_cl --target=i686-pc-win32 -Werror /Oy- /O2 -### -- %s 2>&1 | FileCheck -check-prefix=Oy_2 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl --target=i686-pc-win32 /Oy- -### -- %s 2>&1 | FileCheck -check-prefix=Oy_ %s
+comment|// Oy_2: -momit-leaf-frame-pointer
+end_comment
+
+begin_comment
+comment|// Oy_2: -O2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zs -Werror /Oy -- %s 2>&1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl --target=i686-pc-win32 -Werror /Oy- -### -- %s 2>&1 | FileCheck -check-prefix=Oy_ %s
 end_comment
 
 begin_comment
@@ -600,6 +692,30 @@ comment|// FI_: "-include" "asdf.h"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /TP /c -### -- %s 2>&1 | FileCheck -check-prefix=NO-GX %s
+end_comment
+
+begin_comment
+comment|// NO-GX-NOT: "-fcxx-exceptions" "-fexceptions"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /TP /c /GX -### -- %s 2>&1 | FileCheck -check-prefix=GX %s
+end_comment
+
+begin_comment
+comment|// GX: "-fcxx-exceptions" "-fexceptions"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /TP /c /GX /GX- -### -- %s 2>&1 | FileCheck -check-prefix=GX_ %s
+end_comment
+
+begin_comment
+comment|// GX_-NOT: "-fcxx-exceptions" "-fexceptions"
+end_comment
+
+begin_comment
 comment|// We forward any unrecognized -W diagnostic options to cc1.
 end_comment
 
@@ -696,11 +812,19 @@ comment|// RUN:    /cgthreads8 \
 end_comment
 
 begin_comment
+comment|// RUN:    /d2FastFail \
+end_comment
+
+begin_comment
 comment|// RUN:    /d2Zi+ \
 end_comment
 
 begin_comment
 comment|// RUN:    /errorReport:foo \
+end_comment
+
+begin_comment
+comment|// RUN:    /FC \
 end_comment
 
 begin_comment
@@ -729,14 +853,6 @@ end_comment
 
 begin_comment
 comment|// RUN:    /nologo \
-end_comment
-
-begin_comment
-comment|// RUN:    /Ob1 \
-end_comment
-
-begin_comment
-comment|// RUN:    /Ob2 \
 end_comment
 
 begin_comment
@@ -1200,7 +1316,7 @@ comment|// thread safe statics are off for versions< 19.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=NoThreadSafeStatics %s
+comment|// RUN: %clang_cl /c -### -fms-compatibility-version=18 -- %s 2>&1 | FileCheck -check-prefix=NoThreadSafeStatics %s
 end_comment
 
 begin_comment
@@ -1228,7 +1344,7 @@ comment|// Zi: "-gcodeview"
 end_comment
 
 begin_comment
-comment|// Zi: "-debug-info-kind=line-tables-only"
+comment|// Zi: "-debug-info-kind=limited"
 end_comment
 
 begin_comment
@@ -1240,7 +1356,19 @@ comment|// Z7: "-gcodeview"
 end_comment
 
 begin_comment
-comment|// Z7: "-debug-info-kind=line-tables-only"
+comment|// Z7: "-debug-info-kind=limited"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zd /c -### -- %s 2>&1 | FileCheck -check-prefix=Z7GMLT %s
+end_comment
+
+begin_comment
+comment|// Z7GMLT: "-gcodeview"
+end_comment
+
+begin_comment
+comment|// Z7GMLT: "-debug-info-kind=line-tables-only"
 end_comment
 
 begin_comment
@@ -1329,6 +1457,22 @@ end_comment
 
 begin_comment
 comment|// CXX14: -std=c++14
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fmsc-version=1900 -TP -std:c++14 -### -- %s 2>&1 | FileCheck -check-prefix=STDCXX14 %s
+end_comment
+
+begin_comment
+comment|// STDCXX14: -std=c++14
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fmsc-version=1900 -TP -std:c++latest -### -- %s 2>&1 | FileCheck -check-prefix=STDCXXLATEST %s
+end_comment
+
+begin_comment
+comment|// STDCXXLATEST: -std=c++1z
 end_comment
 
 begin_comment
@@ -1421,6 +1565,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -mllvm -disable-llvm-optzns \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir \
 end_comment
 
 begin_comment

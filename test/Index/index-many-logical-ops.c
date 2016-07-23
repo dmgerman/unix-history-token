@@ -16,7 +16,7 @@ comment|// logical operators.
 end_comment
 
 begin_comment
-comment|// UBSan increses stack usage.
+comment|// UBSan increases stack usage.
 end_comment
 
 begin_comment

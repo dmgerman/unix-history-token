@@ -64,6 +64,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// CHECK: --BEGIN FUNCTION--
+end_comment
+
 begin_function
 name|void
 name|testRemoveDeadBindings

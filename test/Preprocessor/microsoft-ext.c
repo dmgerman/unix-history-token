@@ -218,5 +218,52 @@ begin_comment
 comment|// CHECK: void func(int a , int b) {}
 end_comment
 
+begin_define
+define|#
+directive|define
+name|macro
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a - b)
+end_define
+
+begin_function_decl
+name|void
+name|function
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|COMMA_ELIDER
+parameter_list|(
+modifier|...
+parameter_list|)
+define|\
+value|macro(x, __VA_ARGS__); \   function(x, __VA_ARGS__);
+end_define
+
+begin_expr_stmt
+name|COMMA_ELIDER
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// CHECK: (x - );
+end_comment
+
+begin_comment
+comment|// CHECK: function(x);
+end_comment
+
 end_unit
 

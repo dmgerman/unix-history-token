@@ -7,6 +7,9 @@ name|__building_module
 argument_list|(
 name|a
 argument_list|)
+operator|&&
+operator|!
+name|BUILDING_A_PCH
 end_if
 
 begin_error

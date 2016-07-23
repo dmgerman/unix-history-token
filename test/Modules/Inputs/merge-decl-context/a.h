@@ -114,6 +114,17 @@ return|;
 block|}
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|Aggregate
+block|{
+name|int
+name|member
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

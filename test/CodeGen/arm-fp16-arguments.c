@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple armv7a--none-eabi -target-abi aapcs -mfloat-abi hard -fallow-half-arguments-and-returns -emit-llvm -o - -O1 %s | FileCheck %s --check-prefix=CHECK --check-prefix=HARD
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv7a--none-eabi -target-abi aapcs -mfloat-abi soft -fnative-half-arguments-and-returns -emit-llvm -o - -O1 %s | FileCheck %s --check-prefix=NATIVE
+end_comment
+
 begin_decl_stmt
 name|__fp16
 name|g
@@ -52,6 +56,14 @@ begin_comment
 comment|// CHECK: store i16 [[TRUNC]], i16* bitcast (half* @g to i16*)
 end_comment
 
+begin_comment
+comment|// NATIVE: define void @t1(half [[PARAM:%.*]])
+end_comment
+
+begin_comment
+comment|// NATIVE: store half [[PARAM]], half* @g
+end_comment
+
 begin_function
 name|__fp16
 name|t2
@@ -72,6 +84,10 @@ comment|// HARD: define arm_aapcs_vfpcc float @t2()
 end_comment
 
 begin_comment
+comment|// NATIVE: define half @t2()
+end_comment
+
+begin_comment
 comment|// CHECK: [[LOAD:%.*]] = load i16, i16* bitcast (half* @g to i16*)
 end_comment
 
@@ -89,6 +105,14 @@ end_comment
 
 begin_comment
 comment|// HARD: ret float [[BITCAST]]
+end_comment
+
+begin_comment
+comment|// NATIVE: [[LOAD:%.*]] = load half, half* @g
+end_comment
+
+begin_comment
+comment|// NATIVE: ret half [[LOAD]]
 end_comment
 
 end_unit

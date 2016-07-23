@@ -1,11 +1,77 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -O1 -disable-llvm-optzns | FileCheck %s --check-prefix=ALL --check-prefix=O1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -O0 | FileCheck %s --check-prefix=CHECK_O0
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -O0 | FileCheck %s --check-prefix=ALL --check-prefix=O0
 end_comment
+
+begin_comment
+comment|// In all tests, make sure that no expect is generated if optimizations are off.
+end_comment
+
+begin_comment
+comment|// If optimizations are on, generate the correct expect and preserve other necessary operations.
+end_comment
+
+begin_function
+name|int
+name|expect_taken
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// ALL-LABEL: define i32 @expect_taken
+comment|// O1:        call i64 @llvm.expect.i64(i64 {{%.*}}, i64 1)
+comment|// O0-NOT:    @llvm.expect
+if|if
+condition|(
+name|__builtin_expect
+argument_list|(
+name|x
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|expect_not_taken
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// ALL-LABEL: define i32 @expect_not_taken
+comment|// O1:        call i64 @llvm.expect.i64(i64 {{%.*}}, i64 0)
+comment|// O0-NOT:    @llvm.expect
+if|if
+condition|(
+name|__builtin_expect
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|x
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 name|int
@@ -31,13 +97,14 @@ end_function_decl
 
 begin_function
 name|void
-name|FUNC
+name|expect_value_side_effects
 parameter_list|()
 block|{
-comment|// CHECK-LABEL: define void @FUNC()
-comment|// CHECK: [[call:%.*]] = call i32 @y
-comment|// CHECK_O0: [[call:%.*]] = call i32 @y
-comment|// CHECK_O0-NOT: call i64 @llvm.expect
+comment|// ALL-LABEL: define void @expect_value_side_effects()
+comment|// ALL:       [[CALL:%.*]] = call i32 @y
+comment|// O1:        [[SEXT:%.*]] = sext i32 [[CALL]] to i64
+comment|// O1:        call i64 @llvm.expect.i64(i64 {{%.*}}, i64 [[SEXT]])
+comment|// O0-NOT:    @llvm.expect
 if|if
 condition|(
 name|__builtin_expect
@@ -53,6 +120,14 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// Make sure that issigprocmask() is called before bar()?
+end_comment
+
+begin_comment
+comment|// There's no compare, so there's nothing to expect?
+end_comment
 
 begin_comment
 comment|// rdar://9330105
@@ -79,6 +154,11 @@ name|int
 name|main
 parameter_list|()
 block|{
+comment|// ALL-LABEL: define i32 @main()
+comment|// ALL:       call void @isigprocmask()
+comment|// ALL:       [[CALL:%.*]] = call i64 (...) @bar()
+comment|// O1:        call i64 @llvm.expect.i64(i64 0, i64 [[CALL]])
+comment|// O0-NOT:    @llvm.expect
 operator|(
 name|void
 operator|)
@@ -98,74 +178,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|// CHECK-LABEL: define i32 @main()
-end_comment
-
-begin_comment
-comment|// CHECK: call void @isigprocmask()
-end_comment
-
-begin_comment
-comment|// CHECK: [[C:%.*]] = call i64 (...) @bar()
-end_comment
-
-begin_comment
-comment|// CHECK_O0: call void @isigprocmask()
-end_comment
-
-begin_comment
-comment|// CHECK_O0: [[C:%.*]] = call i64 (...) @bar()
-end_comment
-
-begin_comment
-comment|// CHECK_O0-NOT: call i64 @llvm.expect
-end_comment
-
-begin_comment
-comment|// CHECK-LABEL: define i32 @test1
-end_comment
-
 begin_function
 name|int
-name|test1
+name|switch_cond
 parameter_list|(
 name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK_O0-NOT: call i64 @llvm.expect
-if|if
-condition|(
-name|__builtin_expect
-argument_list|(
-name|x
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|x
-return|;
-block|}
-end_function
-
-begin_comment
-comment|// CHECK: define i32 @test2
-end_comment
-
-begin_function
-name|int
-name|test2
-parameter_list|(
-name|int
-name|x
-parameter_list|)
-block|{
-comment|// CHECK_O0-NOT: call i64 @llvm.expect
+comment|// ALL-LABEL: define i32 @switch_cond
+comment|// O1:        call i64 @llvm.expect.i64(i64 {{%.*}}, i64 5)
+comment|// O0-NOT:    @llvm.expect
 switch|switch
 condition|(
 name|__builtin_expect

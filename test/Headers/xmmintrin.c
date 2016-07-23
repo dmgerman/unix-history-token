@@ -34,6 +34,17 @@ file|<xmmintrin.h>
 end_include
 
 begin_comment
+comment|// CHECK: @c = common global i8 0, align 16
+end_comment
+
+begin_decl_stmt
+name|_MM_ALIGN16
+name|char
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Make sure the last step of _mm_cvtps_pi16 converts<4 x i32> to<4 x i16> by
 end_comment
 
@@ -95,6 +106,30 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__STDC_HOSTED__
+end_if
+
+begin_comment
+comment|// Make sure stdlib.h symbols are accessible.
+end_comment
+
+begin_decl_stmt
+name|void
+modifier|*
+name|p
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

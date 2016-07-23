@@ -8,6 +8,42 @@ comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN: | FileCheck -check-prefix=STATIC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: -pie --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: -shared --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck -check-prefix=SHARED %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -target x86_64--netbsd \
+end_comment
+
+begin_comment
+comment|// RUN: --sysroot=%S/Inputs/basic_netbsd_tree %s -### 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN: | FileCheck -check-prefix=X86_64 %s
 end_comment
 
@@ -417,6 +453,98 @@ end_comment
 
 begin_comment
 comment|// RUN: | FileCheck -check-prefix=S-POWERPC64 %s
+end_comment
+
+begin_comment
+comment|// STATIC: ld{{.*}}" "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// STATIC-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|// STATIC-NOT: "-Bshareable"
+end_comment
+
+begin_comment
+comment|// STATIC: "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// STATIC-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|// STATIC-NOT: "-Bshareable"
+end_comment
+
+begin_comment
+comment|// STATIC: "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// STATIC: "{{.*}}/usr/lib{{/|\\\\}}crti.o" "{{.*}}/usr/lib{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// STATIC: "{{.*}}/usr/lib{{/|\\\\}}crtend.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// SHARED: ld{{.*}}" "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// SHARED-NOT: "-pie"
+end_comment
+
+begin_comment
+comment|// SHARED-NOT: "-dynamic-linker"
+end_comment
+
+begin_comment
+comment|// SHARED-NOT: "{{.*}}/usr/lib{{/|\\\\}}crt0.o"
+end_comment
+
+begin_comment
+comment|// SHARED: "{{.*}}/usr/lib{{/|\\\\}}crti.o" "{{.*}}/usr/lib{{/|\\\\}}crtbeginS.o"
+end_comment
+
+begin_comment
+comment|// SHARED: "{{.*}}/usr/lib{{/|\\\\}}crtendS.o" "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
+end_comment
+
+begin_comment
+comment|// PIE: ld{{.*}}" "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// PIE-NOT: "-Bshareable"
+end_comment
+
+begin_comment
+comment|// PIE "-pie" "-dynamic-linker" "/libexec/ld.elf_so"
+end_comment
+
+begin_comment
+comment|// PIE-NOT: "-Bshareable"
+end_comment
+
+begin_comment
+comment|// PIE: "{{.*}}/usr/lib{{/|\\\\}}crt0.o" "{{.*}}/usr/lib{{/|\\\\}}crti.o"
+end_comment
+
+begin_comment
+comment|// PIE: "{{.*}}/usr/lib{{/|\\\\}}crtbeginS.o"
+end_comment
+
+begin_comment
+comment|// PIE: "{{.*}}/usr/lib{{/|\\\\}}crtendS.o"
+end_comment
+
+begin_comment
+comment|// PIE: "{{.*}}/usr/lib{{/|\\\\}}crtn.o"
 end_comment
 
 begin_comment

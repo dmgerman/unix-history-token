@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm64-apple-ios -O3 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm64-unknown-linux -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_function
@@ -39,7 +39,7 @@ return|return
 name|__builtin_thread_pointer
 argument_list|()
 return|;
-comment|// CHECK: call {{.*}} @llvm.aarch64.thread.pointer()
+comment|// CHECK: call {{.*}} @llvm.thread.pointer()
 block|}
 end_function
 
@@ -220,7 +220,7 @@ name|unsigned
 name|rsr
 parameter_list|()
 block|{
-comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
 comment|// CHECK-NEXT: trunc i64 [[V0]] to i32
 return|return
 name|__builtin_arm_rsr
@@ -253,7 +253,7 @@ modifier|*
 name|rsrp
 parameter_list|()
 block|{
-comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = {{.*}} call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
+comment|// CHECK: [[V0:[%A-Za-z0-9.]+]] = call i64 @llvm.read_register.i64(metadata ![[M0:[0-9]]])
 comment|// CHECK-NEXT: inttoptr i64 [[V0]] to i8*
 return|return
 name|__builtin_arm_rsrp

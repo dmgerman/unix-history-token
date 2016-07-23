@@ -316,5 +316,27 @@ block|}
 struct|;
 end_struct
 
+begin_macro
+name|_Pragma
+argument_list|(
+literal|"pack(push, 1)"
+argument_list|)
+end_macro
+
+begin_struct
+struct|struct
+name|PR28094
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+name|_Pragma
+argument_list|(
+literal|"pack(pop)"
+argument_list|)
+struct|;
+end_struct
+
 end_unit
 

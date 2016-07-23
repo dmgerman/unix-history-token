@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target mipsel-unknown-linux -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
+comment|// RUN: %clang_cc1 -triple mipsel-unknown-linux -O3 -S -o - -emit-llvm %s | FileCheck %s -check-prefix=O32
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips64el-unknown-linux -O3 -S -mabi=n64 -o - -emit-llvm %s | FileCheck %s -check-prefix=N64
+comment|// RUN: %clang_cc1 -triple mips64el-unknown-linux -O3 -S -target-abi n64 -o - -emit-llvm %s | FileCheck %s -check-prefix=N64
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// O32: define void @test_v4sf(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) [[NUW:#[0-9]+]]
+comment|// O32: define void @test_v4sf(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) local_unnamed_addr [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// O32: declare i32 @test_v4sf_2(i32 inreg, i32 inreg, i32 inreg, i32 in
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4sf(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) [[NUW:#[0-9]+]]
+comment|// N64: define void @test_v4sf(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) local_unnamed_addr [[NUW:#[0-9]+]]
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ block|}
 end_function
 
 begin_comment
-comment|// O32: define void @test_v4i32(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) [[NUW]]
+comment|// O32: define void @test_v4i32(i32 inreg %a1.coerce0, i32 inreg %a1.coerce1, i32 inreg %a1.coerce2, i32 inreg %a1.coerce3, i32 signext %a2, i32, i32 inreg %a3.coerce0, i32 inreg %a3.coerce1, i32 inreg %a3.coerce2, i32 inreg %a3.coerce3) local_unnamed_addr [[NUW]]
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ comment|// O32: declare i32 @test_v4i32_2(i32 inreg, i32 inreg, i32 inreg, i32 i
 end_comment
 
 begin_comment
-comment|// N64: define void @test_v4i32(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) [[NUW]]
+comment|// N64: define void @test_v4i32(i64 inreg %a1.coerce0, i64 inreg %a1.coerce1, i32 signext %a2, i64, i64 inreg %a3.coerce0, i64 inreg %a3.coerce1) local_unnamed_addr [[NUW]]
 end_comment
 
 begin_comment

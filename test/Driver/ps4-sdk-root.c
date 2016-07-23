@@ -4,11 +4,11 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// Check that ps4-clang doesn't report a warning message when locating
+comment|// Check that PS4 clang doesn't report a warning message when locating
 end_comment
 
 begin_comment
-comment|// system header files (either by looking at the value of SCE_PS4_SDK_DIR
+comment|// system header files (either by looking at the value of SCE_ORBIS_SDK_DIR
 end_comment
 
 begin_comment
@@ -20,15 +20,15 @@ comment|// "--sysroot" or "-isysroot" option is specified on the command line.
 end_comment
 
 begin_comment
-comment|// Otherwise, check that ps4-clang reports a warning.
+comment|// Otherwise, check that PS4 clang reports a warning.
 end_comment
 
 begin_comment
-comment|// Check that clang doesn't report a warning message when locating
+comment|// Check that PS4 clang doesn't report a warning message when locating
 end_comment
 
 begin_comment
-comment|// system libraries (either by looking at the value of SCE_PS4_SDK_DIR
+comment|// system libraries (either by looking at the value of SCE_ORBIS_SDK_DIR
 end_comment
 
 begin_comment
@@ -44,95 +44,95 @@ comment|// the command line.
 end_comment
 
 begin_comment
-comment|// Otherwise, check that ps4-clang reports a warning.
+comment|// Otherwise, check that PS4 clang reports a warning.
 end_comment
 
 begin_comment
-comment|// setting up SCE_PS4_SDK_DIR to existing location, which is not a PS4 SDK.
+comment|// Setting up SCE_ORBIS_SDK_DIR to existing location, which is not a PS4 SDK.
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=WARN-SYS-LIBS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=WARN-SYS-LIBS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=WARN-SYS-LIBS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=WARN-SYS-LIBS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -nostdinc -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast --sysroot=foo/ -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -c -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -S -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -E -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -emit-ast -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### --sysroot=foo/ -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### --sysroot=foo/ -isysroot foo -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-ISYSROOT -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -nostdlib -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -nostdlib -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment
-comment|// RUN: env SCE_PS4_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -nodefaultlibs -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
+comment|// RUN: env SCE_ORBIS_SDK_DIR=.. %clang -Winvalid-or-nonexistent-directory -### -nodefaultlibs -target x86_64-scei-ps4 %s 2>&1 | FileCheck -check-prefix=WARN-SYS-HEADERS -check-prefix=NO-WARN %s
 end_comment
 
 begin_comment

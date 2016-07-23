@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: arm-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple armv8-none-linux-gnueabi \
 end_comment
 
 begin_comment
-comment|// RUN:   -O3 -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_function
@@ -176,7 +172,7 @@ return|;
 comment|// CHECK: [[T0:%[0-9]+]] = trunc i64 %b to i32
 comment|// CHECK: [[T1:%[0-9]+]] = lshr i64 %b, 32
 comment|// CHECK: [[T2:%[0-9]+]] = trunc i64 [[T1]] to i32
-comment|// CHECK: [[T3:%[0-9]+]] = tail call i32 @llvm.arm.crc32w(i32 %a, i32 [[T0]])
+comment|// CHECK: [[T3:%[0-9]+]] = call i32 @llvm.arm.crc32w(i32 %a, i32 [[T0]])
 comment|// CHECK: call i32 @llvm.arm.crc32w(i32 [[T3]], i32 [[T2]])
 block|}
 end_function
@@ -204,7 +200,7 @@ return|;
 comment|// CHECK: [[T0:%[0-9]+]] = trunc i64 %b to i32
 comment|// CHECK: [[T1:%[0-9]+]] = lshr i64 %b, 32
 comment|// CHECK: [[T2:%[0-9]+]] = trunc i64 [[T1]] to i32
-comment|// CHECK: [[T3:%[0-9]+]] = tail call i32 @llvm.arm.crc32cw(i32 %a, i32 [[T0]])
+comment|// CHECK: [[T3:%[0-9]+]] = call i32 @llvm.arm.crc32cw(i32 %a, i32 [[T0]])
 comment|// CHECK: call i32 @llvm.arm.crc32cw(i32 [[T3]], i32 [[T2]])
 block|}
 end_function

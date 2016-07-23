@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +xop -
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 %s -triple=x86_64-apple-darwin -target-feature +xop -fno-signed-char -emit-llvm -o - -Werror | FileCheck %s
+end_comment
+
+begin_comment
 comment|// Don't include mm_malloc.h, it's system specific.
 end_comment
 
@@ -18,6 +22,10 @@ include|#
 directive|include
 file|<x86intrin.h>
 end_include
+
+begin_comment
+comment|// NOTE: This should match the tests in llvm/test/CodeGen/X86/xop-intrinsics-fast-isel.ll
+end_comment
 
 begin_function
 name|__m128i
@@ -34,7 +42,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccs_epi16
-comment|// CHECK: @llvm.x86.xop.vpmacssww
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpmacssww(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_maccs_epi16
 argument_list|(
@@ -63,7 +71,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_macc_epi16
-comment|// CHECK: @llvm.x86.xop.vpmacsww
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpmacsww(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_macc_epi16
 argument_list|(
@@ -92,7 +100,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccsd_epi16
-comment|// CHECK: @llvm.x86.xop.vpmacsswd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmacsswd(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_maccsd_epi16
 argument_list|(
@@ -121,7 +129,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccd_epi16
-comment|// CHECK: @llvm.x86.xop.vpmacswd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmacswd(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_maccd_epi16
 argument_list|(
@@ -150,7 +158,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccs_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacssdd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmacssdd(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_maccs_epi32
 argument_list|(
@@ -179,7 +187,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_macc_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacsdd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmacsdd(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_macc_epi32
 argument_list|(
@@ -208,7 +216,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccslo_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacssdql
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpmacssdql(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_maccslo_epi32
 argument_list|(
@@ -237,7 +245,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_macclo_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacsdql
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpmacsdql(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_macclo_epi32
 argument_list|(
@@ -266,7 +274,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maccshi_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacssdqh
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpmacssdqh(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_maccshi_epi32
 argument_list|(
@@ -295,7 +303,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_macchi_epi32
-comment|// CHECK: @llvm.x86.xop.vpmacsdqh
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpmacsdqh(<4 x i32> %{{.*}},<4 x i32> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_macchi_epi32
 argument_list|(
@@ -324,7 +332,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maddsd_epi16
-comment|// CHECK: @llvm.x86.xop.vpmadcsswd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmadcsswd(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_maddsd_epi16
 argument_list|(
@@ -353,7 +361,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maddd_epi16
-comment|// CHECK: @llvm.x86.xop.vpmadcswd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpmadcswd(<8 x i16> %{{.*}},<8 x i16> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_maddd_epi16
 argument_list|(
@@ -376,7 +384,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddw_epi8
-comment|// CHECK: @llvm.x86.xop.vphaddbw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vphaddbw(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddw_epi8
 argument_list|(
@@ -395,7 +403,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddd_epi8
-comment|// CHECK: @llvm.x86.xop.vphaddbd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vphaddbd(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddd_epi8
 argument_list|(
@@ -414,7 +422,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epi8
-comment|// CHECK: @llvm.x86.xop.vphaddbq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphaddbq(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddq_epi8
 argument_list|(
@@ -433,7 +441,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddd_epi16
-comment|// CHECK: @llvm.x86.xop.vphaddwd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vphaddwd(<8 x i16> %{{.*}})
 return|return
 name|_mm_haddd_epi16
 argument_list|(
@@ -452,7 +460,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epi16
-comment|// CHECK: @llvm.x86.xop.vphaddwq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphaddwq(<8 x i16> %{{.*}})
 return|return
 name|_mm_haddq_epi16
 argument_list|(
@@ -471,7 +479,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epi32
-comment|// CHECK: @llvm.x86.xop.vphadddq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphadddq(<4 x i32> %{{.*}})
 return|return
 name|_mm_haddq_epi32
 argument_list|(
@@ -490,7 +498,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddw_epu8
-comment|// CHECK: @llvm.x86.xop.vphaddubw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vphaddubw(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddw_epu8
 argument_list|(
@@ -509,7 +517,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddd_epu8
-comment|// CHECK: @llvm.x86.xop.vphaddubd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vphaddubd(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddd_epu8
 argument_list|(
@@ -528,7 +536,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epu8
-comment|// CHECK: @llvm.x86.xop.vphaddubq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphaddubq(<16 x i8> %{{.*}})
 return|return
 name|_mm_haddq_epu8
 argument_list|(
@@ -547,7 +555,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddd_epu16
-comment|// CHECK: @llvm.x86.xop.vphadduwd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vphadduwd(<8 x i16> %{{.*}})
 return|return
 name|_mm_haddd_epu16
 argument_list|(
@@ -566,7 +574,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epu16
-comment|// CHECK: @llvm.x86.xop.vphadduwq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphadduwq(<8 x i16> %{{.*}})
 return|return
 name|_mm_haddq_epu16
 argument_list|(
@@ -585,7 +593,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_haddq_epu32
-comment|// CHECK: @llvm.x86.xop.vphaddudq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphaddudq(<4 x i32> %{{.*}})
 return|return
 name|_mm_haddq_epu32
 argument_list|(
@@ -604,7 +612,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsubw_epi8
-comment|// CHECK: @llvm.x86.xop.vphsubbw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vphsubbw(<16 x i8> %{{.*}})
 return|return
 name|_mm_hsubw_epi8
 argument_list|(
@@ -623,7 +631,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsubd_epi16
-comment|// CHECK: @llvm.x86.xop.vphsubwd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vphsubwd(<8 x i16> %{{.*}})
 return|return
 name|_mm_hsubd_epi16
 argument_list|(
@@ -642,7 +650,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsubq_epi32
-comment|// CHECK: @llvm.x86.xop.vphsubdq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vphsubdq(<4 x i32> %{{.*}})
 return|return
 name|_mm_hsubq_epi32
 argument_list|(
@@ -667,7 +675,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cmov_si128
-comment|// CHECK: @llvm.x86.xop.vpcmov
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpcmov(<2 x i64> %{{.*}},<2 x i64> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_cmov_si128
 argument_list|(
@@ -696,7 +704,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_cmov_si256
-comment|// CHECK: @llvm.x86.xop.vpcmov.256
+comment|// CHECK: call<4 x i64> @llvm.x86.xop.vpcmov.256(<4 x i64> %{{.*}},<4 x i64> %{{.*}},<4 x i64> %{{.*}})
 return|return
 name|_mm256_cmov_si256
 argument_list|(
@@ -725,7 +733,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_perm_epi8
-comment|// CHECK: @llvm.x86.xop.vpperm
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vpperm(<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_perm_epi8
 argument_list|(
@@ -751,7 +759,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_rot_epi8
-comment|// CHECK: @llvm.x86.xop.vprotb
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vprotb(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_rot_epi8
 argument_list|(
@@ -775,7 +783,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_rot_epi16
-comment|// CHECK: @llvm.x86.xop.vprotw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vprotw(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_rot_epi16
 argument_list|(
@@ -799,7 +807,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_rot_epi32
-comment|// CHECK: @llvm.x86.xop.vprotd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vprotd(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_rot_epi32
 argument_list|(
@@ -823,7 +831,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_rot_epi64
-comment|// CHECK: @llvm.x86.xop.vprotq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vprotq(<2 x i64> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_rot_epi64
 argument_list|(
@@ -844,7 +852,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_roti_epi8
-comment|// CHECK: @llvm.x86.xop.vprotbi
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vprotbi(<16 x i8> %{{.*}}, i8 1)
 return|return
 name|_mm_roti_epi8
 argument_list|(
@@ -865,7 +873,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_roti_epi16
-comment|// CHECK: @llvm.x86.xop.vprotwi
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vprotwi(<8 x i16> %{{.*}}, i8 50)
 return|return
 name|_mm_roti_epi16
 argument_list|(
@@ -886,7 +894,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_roti_epi32
-comment|// CHECK: @llvm.x86.xop.vprotdi
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vprotdi(<4 x i32> %{{.*}}, i8 -30)
 return|return
 name|_mm_roti_epi32
 argument_list|(
@@ -908,7 +916,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_roti_epi64
-comment|// CHECK: @llvm.x86.xop.vprotqi
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vprotqi(<2 x i64> %{{.*}}, i8 100)
 return|return
 name|_mm_roti_epi64
 argument_list|(
@@ -932,7 +940,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_shl_epi8
-comment|// CHECK: @llvm.x86.xop.vpshlb
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vpshlb(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_shl_epi8
 argument_list|(
@@ -956,7 +964,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_shl_epi16
-comment|// CHECK: @llvm.x86.xop.vpshlw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpshlw(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_shl_epi16
 argument_list|(
@@ -980,7 +988,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_shl_epi32
-comment|// CHECK: @llvm.x86.xop.vpshld
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpshld(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_shl_epi32
 argument_list|(
@@ -1004,7 +1012,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_shl_epi64
-comment|// CHECK: @llvm.x86.xop.vpshlq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpshlq(<2 x i64> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_shl_epi64
 argument_list|(
@@ -1028,7 +1036,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sha_epi8
-comment|// CHECK: @llvm.x86.xop.vpshab
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vpshab(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_sha_epi8
 argument_list|(
@@ -1052,7 +1060,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sha_epi16
-comment|// CHECK: @llvm.x86.xop.vpshaw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpshaw(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_sha_epi16
 argument_list|(
@@ -1076,7 +1084,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sha_epi32
-comment|// CHECK: @llvm.x86.xop.vpshad
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpshad(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_sha_epi32
 argument_list|(
@@ -1100,7 +1108,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sha_epi64
-comment|// CHECK: @llvm.x86.xop.vpshaq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpshaq(<2 x i64> %{{.*}},<2 x i64> %{{.*}})
 return|return
 name|_mm_sha_epi64
 argument_list|(
@@ -1124,7 +1132,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epu8
-comment|// CHECK: @llvm.x86.xop.vpcomub
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vpcomub(<16 x i8> %{{.*}},<16 x i8> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epu8
 argument_list|(
@@ -1150,7 +1158,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epu16
-comment|// CHECK: @llvm.x86.xop.vpcomuw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpcomuw(<8 x i16> %{{.*}},<8 x i16> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epu16
 argument_list|(
@@ -1176,7 +1184,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epu32
-comment|// CHECK: @llvm.x86.xop.vpcomud
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpcomud(<4 x i32> %{{.*}},<4 x i32> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epu32
 argument_list|(
@@ -1202,7 +1210,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epu64
-comment|// CHECK: @llvm.x86.xop.vpcomuq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpcomuq(<2 x i64> %{{.*}},<2 x i64> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epu64
 argument_list|(
@@ -1228,7 +1236,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epi8
-comment|// CHECK: @llvm.x86.xop.vpcomb
+comment|// CHECK: call<16 x i8> @llvm.x86.xop.vpcomb(<16 x i8> %{{.*}},<16 x i8> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epi8
 argument_list|(
@@ -1254,7 +1262,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epi16
-comment|// CHECK: @llvm.x86.xop.vpcomw
+comment|// CHECK: call<8 x i16> @llvm.x86.xop.vpcomw(<8 x i16> %{{.*}},<8 x i16> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epi16
 argument_list|(
@@ -1280,7 +1288,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epi32
-comment|// CHECK: @llvm.x86.xop.vpcomd
+comment|// CHECK: call<4 x i32> @llvm.x86.xop.vpcomd(<4 x i32> %{{.*}},<4 x i32> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epi32
 argument_list|(
@@ -1306,7 +1314,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_com_epi64
-comment|// CHECK: @llvm.x86.xop.vpcomq
+comment|// CHECK: call<2 x i64> @llvm.x86.xop.vpcomq(<2 x i64> %{{.*}},<2 x i64> %{{.*}}, i8 0)
 return|return
 name|_mm_com_epi64
 argument_list|(
@@ -1335,7 +1343,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_permute2_pd
-comment|// CHECK: @llvm.x86.xop.vpermil2pd
+comment|// CHECK: call<2 x double> @llvm.x86.xop.vpermil2pd(<2 x double> %{{.*}},<2 x double> %{{.*}},<2 x i64> %{{.*}}, i8 0)
 return|return
 name|_mm_permute2_pd
 argument_list|(
@@ -1366,7 +1374,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_permute2_pd
-comment|// CHECK: @llvm.x86.xop.vpermil2pd.256
+comment|// CHECK: call<4 x double> @llvm.x86.xop.vpermil2pd.256(<4 x double> %{{.*}},<4 x double> %{{.*}},<4 x i64> %{{.*}}, i8 0)
 return|return
 name|_mm256_permute2_pd
 argument_list|(
@@ -1397,7 +1405,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_permute2_ps
-comment|// CHECK: @llvm.x86.xop.vpermil2ps
+comment|// CHECK: call<4 x float> @llvm.x86.xop.vpermil2ps(<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32> %{{.*}}, i8 0)
 return|return
 name|_mm_permute2_ps
 argument_list|(
@@ -1428,7 +1436,7 @@ name|c
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_permute2_ps
-comment|// CHECK: @llvm.x86.xop.vpermil2ps.256
+comment|// CHECK: call<8 x float> @llvm.x86.xop.vpermil2ps.256(<8 x float> %{{.*}},<8 x float> %{{.*}},<8 x i32> %{{.*}}, i8 0)
 return|return
 name|_mm256_permute2_ps
 argument_list|(
@@ -1453,7 +1461,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_frcz_ss
-comment|// CHECK: @llvm.x86.xop.vfrcz.ss
+comment|// CHECK: call<4 x float> @llvm.x86.xop.vfrcz.ss(<4 x float> %{{.*}})
 return|return
 name|_mm_frcz_ss
 argument_list|(
@@ -1472,7 +1480,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_frcz_sd
-comment|// CHECK: @llvm.x86.xop.vfrcz.sd
+comment|// CHECK: call<2 x double> @llvm.x86.xop.vfrcz.sd(<2 x double> %{{.*}})
 return|return
 name|_mm_frcz_sd
 argument_list|(
@@ -1491,7 +1499,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_frcz_ps
-comment|// CHECK: @llvm.x86.xop.vfrcz.ps
+comment|// CHECK: call<4 x float> @llvm.x86.xop.vfrcz.ps(<4 x float> %{{.*}})
 return|return
 name|_mm_frcz_ps
 argument_list|(
@@ -1510,7 +1518,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_frcz_pd
-comment|// CHECK: @llvm.x86.xop.vfrcz.pd
+comment|// CHECK: call<2 x double> @llvm.x86.xop.vfrcz.pd(<2 x double> %{{.*}})
 return|return
 name|_mm_frcz_pd
 argument_list|(
@@ -1529,7 +1537,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_frcz_ps
-comment|// CHECK: @llvm.x86.xop.vfrcz.ps.256
+comment|// CHECK: call<8 x float> @llvm.x86.xop.vfrcz.ps.256(<8 x float> %{{.*}})
 return|return
 name|_mm256_frcz_ps
 argument_list|(
@@ -1548,7 +1556,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_frcz_pd
-comment|// CHECK: @llvm.x86.xop.vfrcz.pd.256
+comment|// CHECK: call<4 x double> @llvm.x86.xop.vfrcz.pd.256(<4 x double> %{{.*}})
 return|return
 name|_mm256_frcz_pd
 argument_list|(

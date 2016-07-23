@@ -34,7 +34,7 @@ literal|"No _OPENMP macro is defined with -fopenmp option"
 end_error
 
 begin_empty
-empty|#elsif _OPENMP != 201307
+empty|#elsif _OPENMP != 201107
 end_empty
 
 begin_error

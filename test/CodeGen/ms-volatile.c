@@ -38,6 +38,45 @@ name|baz
 typedef|;
 end_typedef
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|)
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_struct
+struct|struct
+name|qux
+block|{
+specifier|volatile
+name|int
+name|f
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
 begin_function
 name|void
 name|test1
@@ -259,8 +298,8 @@ operator|*
 name|q
 expr_stmt|;
 comment|// CHECK-LABEL: @test8
-comment|// CHECK: load atomic volatile {{.*}} acquire
-comment|// CHECK: store atomic volatile {{.*}}, {{.*}} release
+comment|// CHECK: load volatile {{.*}}
+comment|// CHECK: store volatile {{.*}}, {{.*}}
 block|}
 end_function
 
@@ -285,7 +324,84 @@ operator|*
 name|q
 expr_stmt|;
 comment|// CHECK-LABEL: @test9
+comment|// CHECK: store volatile {{.*}}, {{.*}}
+comment|// CHECK: store volatile {{.*}}, {{.*}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test10
+parameter_list|(
+specifier|volatile
+name|long
+name|long
+modifier|*
+name|p
+parameter_list|,
+specifier|volatile
+name|long
+name|long
+modifier|*
+name|q
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+operator|*
+name|q
+expr_stmt|;
+comment|// CHECK-LABEL: @test10
+comment|// CHECK: load volatile {{.*}}
+comment|// CHECK: store volatile {{.*}}, {{.*}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test11
+parameter_list|(
+specifier|volatile
+name|float
+modifier|*
+name|p
+parameter_list|,
+specifier|volatile
+name|float
+modifier|*
+name|q
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+operator|*
+name|q
+expr_stmt|;
+comment|// CHECK-LABEL: @test11
+comment|// CHECK: load atomic volatile {{.*}} acquire
 comment|// CHECK: store atomic volatile {{.*}}, {{.*}} release
+block|}
+end_function
+
+begin_function
+name|int
+name|test12
+parameter_list|(
+name|struct
+name|qux
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|p
+operator|->
+name|f
+return|;
+comment|// CHECK-LABEL: @test12
+comment|// CHECK: load volatile {{.*}}
 block|}
 end_function
 

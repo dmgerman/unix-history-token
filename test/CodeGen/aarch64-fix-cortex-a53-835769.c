@@ -100,7 +100,7 @@ comment|// CHECK-YES-NEXT: nop
 end_comment
 
 begin_comment
-comment|// CHECK-NO-NEXT-NOT: nop
+comment|// CHECK-NO-NOT: nop
 end_comment
 
 begin_comment

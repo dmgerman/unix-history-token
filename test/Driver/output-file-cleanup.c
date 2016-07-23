@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: rm -f "%t.d" "%t1.s" "%t2.s" "%t3.s" "%t4.s" "%t5.s"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: touch %t.s
 end_comment
 
@@ -141,6 +149,18 @@ comment|// RUN: test ! -f %t2.s
 end_comment
 
 begin_comment
+comment|// When given multiple .c files to compile, clang compiles them in order until
+end_comment
+
+begin_comment
+comment|// it hits an error, at which point it stops.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: touch %t1.c
 end_comment
 
@@ -173,7 +193,7 @@ comment|// RUN: test ! -f %t2.s
 end_comment
 
 begin_comment
-comment|// RUN: test -f %t3.s
+comment|// RUN: test ! -f %t3.s
 end_comment
 
 begin_comment
@@ -181,7 +201,7 @@ comment|// RUN: test ! -f %t4.s
 end_comment
 
 begin_comment
-comment|// RUN: test -f %t5.s
+comment|// RUN: test ! -f %t5.s
 end_comment
 
 end_unit

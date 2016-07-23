@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64_be-none-linux-gnu -emit-llvm -w -o - %s | FileCheck --check-prefix=CHECK --check-prefix=CHECK-BE %s
+comment|// RUN: %clang_cc1 -triple aarch64_be-none-linux-gnu -emit-llvm -w -o - %s | FileCheck --check-prefix=CHECK %s
 end_comment
 
 begin_comment
@@ -8,11 +8,7 @@ comment|// char by definition has size 1
 end_comment
 
 begin_comment
-comment|// CHECK-LE: target datalayout = "e-m:e-i64:64-i128:128-n32:64-S128"
-end_comment
-
-begin_comment
-comment|// CHECK-BE: target datalayout = "E-m:e-i64:64-i128:128-n32:64-S128"
+comment|// CHECK: target datalayout = "E-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 end_comment
 
 begin_function

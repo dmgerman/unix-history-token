@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fprofile-instr-generate -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name switchmacro.c %s | FileCheck %s
+comment|// RUN: %clang_cc1 -fprofile-instrument=clang -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name switchmacro.c %s | FileCheck %s
 end_comment
 
 begin_define
@@ -31,6 +31,7 @@ condition|(
 name|i
 condition|)
 block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> {{[0-9]+}}:4 = #1
 default|default:
 comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> {{[0-9]+}}:11 = #2
 if|if
@@ -44,7 +45,7 @@ return|return
 literal|0
 return|;
 comment|// CHECK-NEXT: File 0, [[@LINE]]:7 -> [[@LINE]]:15 = #3
-comment|// CHECK-NEXT: Expansion,File 0, [[@LINE+2]]:5 -> [[@LINE+2]]:8 = (#2 - #3)
+comment|// CHECK-NEXT: Expansion,File 0, [[@LINE+2]]:5 -> [[@LINE+2]]:8 = (#2 - #3) (Expanded file = 1)
 comment|// CHECK-NEXT: File 0, [[@LINE+1]]:8 -> {{[0-9]+}}:11 = (#2 - #3)
 name|FOO
 argument_list|(
@@ -70,6 +71,72 @@ name|label
 label|:
 empty_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|// PR26825 - Crash when exiting macro expansion containing a switch
+end_comment
+
+begin_comment
+comment|// CHECK: bar
+end_comment
+
+begin_define
+define|#
+directive|define
+name|START
+value|{ while (0) { switch (0) {
+end_define
+
+begin_define
+define|#
+directive|define
+name|END
+value|}}}
+end_define
+
+begin_function
+name|void
+name|bar
+parameter_list|()
+block|{
+name|START
+comment|// CHECK: File 0, [[@LINE]]:8 -> [[@LINE+2]]:6
+default|default:
+empty_stmt|;
+name|END
+block|}
+end_function
+
+begin_comment
+comment|// PR27948 - Crash when handling a switch partially covered by a macro
+end_comment
+
+begin_comment
+comment|// CHECK: baz
+end_comment
+
+begin_define
+define|#
+directive|define
+name|START2
+value|switch (0) default:
+end_define
+
+begin_function
+name|void
+name|baz
+parameter_list|()
+block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|START2
+return|return;
+comment|// CHECK: Expansion,File 0, [[@LINE]]:5 -> [[@LINE]]:11 = #1 (Expanded file = 1)
 block|}
 end_function
 

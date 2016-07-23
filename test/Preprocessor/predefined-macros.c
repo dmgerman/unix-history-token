@@ -8,11 +8,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E -dM -triple i686-pc-win32 -fms-extensions -fms-compatibility \
+comment|// RUN: %clang_cc1 %s -x c++ -E -dM -triple i686-pc-win32 -fms-extensions -fms-compatibility \
 end_comment
 
 begin_comment
-comment|// RUN:     -fms-compatibility-version=13.00 -o - | FileCheck %s --check-prefix=CHECK-MS
+comment|// RUN:     -fms-compatibility-version=19.00 -std=c++1z -o - | FileCheck -match-full-lines %s --check-prefix=CHECK-MS
 end_comment
 
 begin_comment
@@ -24,7 +24,11 @@ comment|// CHECK-MS: #define _MSC_EXTENSIONS 1
 end_comment
 
 begin_comment
-comment|// CHECK-MS: #define _MSC_VER 1300
+comment|// CHECK-MS: #define _MSC_VER 1900
+end_comment
+
+begin_comment
+comment|// CHECK-MS: #define _MSVC_LANG 201403L
 end_comment
 
 begin_comment
@@ -32,7 +36,7 @@ comment|// CHECK-MS: #define _M_IX86 600
 end_comment
 
 begin_comment
-comment|// CHECK-MS: #define _M_IX86_FP
+comment|// CHECK-MS: #define _M_IX86_FP 0
 end_comment
 
 begin_comment
@@ -60,11 +64,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E -dM -triple x86_64-pc-win32 -fms-extensions -fms-compatibility \
+comment|// RUN: %clang_cc1 %s -x c++ -E -dM -triple x86_64-pc-win32 -fms-extensions -fms-compatibility \
 end_comment
 
 begin_comment
-comment|// RUN:     -fms-compatibility-version=13.00 -o - | FileCheck %s --check-prefix=CHECK-MS64
+comment|// RUN:     -fms-compatibility-version=19.00 -std=c++14 -o - | FileCheck -match-full-lines %s --check-prefix=CHECK-MS64
 end_comment
 
 begin_comment
@@ -76,7 +80,11 @@ comment|// CHECK-MS64: #define _MSC_EXTENSIONS 1
 end_comment
 
 begin_comment
-comment|// CHECK-MS64: #define _MSC_VER 1300
+comment|// CHECK-MS64: #define _MSC_VER 1900
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _MSVC_LANG 201402L
 end_comment
 
 begin_comment
@@ -116,7 +124,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -triple i686-pc-win32 -fms-compatibility \
 end_comment
 
 begin_comment
-comment|// RUN:     -o - | FileCheck %s --check-prefix=CHECK-MS-STDINT
+comment|// RUN:     -o - | FileCheck -match-full-lines %s --check-prefix=CHECK-MS-STDINT
 end_comment
 
 begin_comment
@@ -340,11 +348,11 @@ comment|// RUN: %clang_cc1 %s -E -dM -ffast-math -o - \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-FAST-MATH
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-FAST-MATH
 end_comment
 
 begin_comment
-comment|// CHECK-FAST-MATH: #define __FAST_MATH__
+comment|// CHECK-FAST-MATH: #define __FAST_MATH__ 1
 end_comment
 
 begin_comment
@@ -360,7 +368,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -ffinite-math-only -o - \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-FINITE-MATH-ONLY
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-FINITE-MATH-ONLY
 end_comment
 
 begin_comment
@@ -376,7 +384,7 @@ comment|// RUN: %clang %s -E -dM -fno-finite-math-only -o - \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-FINITE-MATH-ONLY
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-NO-FINITE-MATH-ONLY
 end_comment
 
 begin_comment
@@ -392,7 +400,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-FINITE-MATH-FLAG-UNDEFINED
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-FINITE-MATH-FLAG-UNDEFINED
 end_comment
 
 begin_comment
@@ -408,7 +416,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple i686 -target-cpu i386 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_I386
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_I386
 end_comment
 
 begin_comment
@@ -424,19 +432,19 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple i686 -target-cpu i486 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_I486
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_I486
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I486: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK-SYNC_CAS_I486: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I486: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK-SYNC_CAS_I486: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I486: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK-SYNC_CAS_I486: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
@@ -452,23 +460,23 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple i686 -target-cpu i586 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_I586
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_I586
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I586: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK-SYNC_CAS_I586: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I586: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK-SYNC_CAS_I586: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I586: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK-SYNC_CAS_I586: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_I586: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK-SYNC_CAS_I586: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -480,23 +488,23 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv6 -target-cpu arm1136j-s \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARM
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_ARM
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK-SYNC_CAS_ARM: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK-SYNC_CAS_ARM: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK-SYNC_CAS_ARM: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARM: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK-SYNC_CAS_ARM: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -508,23 +516,23 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv7 -target-cpu cortex-a8 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARMv7
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_ARMv7
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK-SYNC_CAS_ARMv7: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK-SYNC_CAS_ARMv7: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK-SYNC_CAS_ARMv7: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_ARMv7: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK-SYNC_CAS_ARMv7: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
 end_comment
 
 begin_comment
@@ -536,7 +544,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple armv6 -target-cpu cortex-m0 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_ARMv6
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_ARMv6
 end_comment
 
 begin_comment
@@ -552,7 +560,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple mips -target-cpu mips2 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_MIPS \
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_MIPS \
 end_comment
 
 begin_comment
@@ -564,7 +572,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -o - -triple mips64 -target-cpu mips3 \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-SYNC_CAS_MIPS \
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-SYNC_CAS_MIPS \
 end_comment
 
 begin_comment
@@ -572,15 +580,15 @@ comment|// RUN:         --check-prefix=CHECK-SYNC_CAS_MIPS64
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+comment|// CHECK-SYNC_CAS_MIPS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+comment|// CHECK-SYNC_CAS_MIPS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_MIPS:       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+comment|// CHECK-SYNC_CAS_MIPS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
 end_comment
 
 begin_comment
@@ -588,7 +596,147 @@ comment|// CHECK-SYNC_CAS_MIPS32-NOT: __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
 end_comment
 
 begin_comment
-comment|// CHECK-SYNC_CAS_MIPS64:     __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+comment|// CHECK-SYNC_CAS_MIPS64: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -x cl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-CL10
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -x cl -cl-std=CL1.1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-CL11
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -x cl -cl-std=CL1.2 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-CL12
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -x cl -cl-std=CL2.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-CL20
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -o - -x cl -cl-fast-relaxed-math \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -match-full-lines %s --check-prefix=CHECK-FRM
+end_comment
+
+begin_comment
+comment|// CHECK-CL10: #define CL_VERSION_1_0 100
+end_comment
+
+begin_comment
+comment|// CHECK-CL10: #define CL_VERSION_1_1 110
+end_comment
+
+begin_comment
+comment|// CHECK-CL10: #define CL_VERSION_1_2 120
+end_comment
+
+begin_comment
+comment|// CHECK-CL10: #define CL_VERSION_2_0 200
+end_comment
+
+begin_comment
+comment|// CHECK-CL10: #define __OPENCL_C_VERSION__ 100
+end_comment
+
+begin_comment
+comment|// CHECK-CL10-NOT: #define __FAST_RELAXED_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-CL11: #define CL_VERSION_1_0 100
+end_comment
+
+begin_comment
+comment|// CHECK-CL11: #define CL_VERSION_1_1 110
+end_comment
+
+begin_comment
+comment|// CHECK-CL11: #define CL_VERSION_1_2 120
+end_comment
+
+begin_comment
+comment|// CHECK-CL11: #define CL_VERSION_2_0 200
+end_comment
+
+begin_comment
+comment|// CHECK-CL11: #define __OPENCL_C_VERSION__ 110
+end_comment
+
+begin_comment
+comment|// CHECK-CL11-NOT: #define __FAST_RELAXED_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-CL12: #define CL_VERSION_1_0 100
+end_comment
+
+begin_comment
+comment|// CHECK-CL12: #define CL_VERSION_1_1 110
+end_comment
+
+begin_comment
+comment|// CHECK-CL12: #define CL_VERSION_1_2 120
+end_comment
+
+begin_comment
+comment|// CHECK-CL12: #define CL_VERSION_2_0 200
+end_comment
+
+begin_comment
+comment|// CHECK-CL12: #define __OPENCL_C_VERSION__ 120
+end_comment
+
+begin_comment
+comment|// CHECK-CL12-NOT: #define __FAST_RELAXED_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-CL20: #define CL_VERSION_1_0 100
+end_comment
+
+begin_comment
+comment|// CHECK-CL20: #define CL_VERSION_1_1 110
+end_comment
+
+begin_comment
+comment|// CHECK-CL20: #define CL_VERSION_1_2 120
+end_comment
+
+begin_comment
+comment|// CHECK-CL20: #define CL_VERSION_2_0 200
+end_comment
+
+begin_comment
+comment|// CHECK-CL20: #define __OPENCL_C_VERSION__ 200
+end_comment
+
+begin_comment
+comment|// CHECK-CL20-NOT: #define __FAST_RELAXED_MATH__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-FRM: #define __FAST_RELAXED_MATH__ 1
 end_comment
 
 end_unit

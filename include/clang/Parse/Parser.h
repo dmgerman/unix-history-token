@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Availability.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OpenMPKinds.h"
 end_include
 
@@ -384,6 +390,16 @@ comment|/// \brief Identifier for "message".
 name|IdentifierInfo
 operator|*
 name|Ident_message
+block|;
+comment|/// \brief Identifier for "strict".
+name|IdentifierInfo
+operator|*
+name|Ident_strict
+block|;
+comment|/// \brief Identifier for "replacement".
+name|IdentifierInfo
+operator|*
+name|Ident_replacement
 block|;
 comment|/// C++0x contextual keywords.
 name|mutable
@@ -2223,6 +2239,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Tok
+operator|.
+name|isAnnotation
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
 operator|!
 name|Ident_instancetype
 condition|)
@@ -2461,6 +2487,41 @@ argument_list|)
 block|;     }
 block|}
 empty_stmt|;
+comment|/// A TentativeParsingAction that automatically reverts in its destructor.
+comment|/// Useful for disambiguation parses that will always be reverted.
+name|class
+name|RevertingTentativeParsingAction
+range|:
+name|private
+name|Parser
+operator|::
+name|TentativeParsingAction
+block|{
+name|public
+operator|:
+name|RevertingTentativeParsingAction
+argument_list|(
+name|Parser
+operator|&
+name|P
+argument_list|)
+operator|:
+name|Parser
+operator|::
+name|TentativeParsingAction
+argument_list|(
+argument|P
+argument_list|)
+block|{}
+operator|~
+name|RevertingTentativeParsingAction
+argument_list|()
+block|{
+name|Revert
+argument_list|()
+block|; }
+block|}
+decl_stmt|;
 name|class
 name|UnannotatedTentativeParsingAction
 decl_stmt|;
@@ -5679,25 +5740,18 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ if/switch/while condition expression.
-name|bool
+name|Sema
+operator|::
+name|ConditionResult
 name|ParseCXXCondition
-parameter_list|(
-name|ExprResult
-modifier|&
-name|ExprResult
-parameter_list|,
-name|Decl
-modifier|*
-modifier|&
-name|DeclResult
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|bool
-name|ConvertToBoolean
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StmtResult *InitStmt
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|Sema::ConditionKind CK
+argument_list|)
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ Coroutines
 name|ExprResult
@@ -6054,23 +6108,26 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ParseParenExprOrCondition
-parameter_list|(
-name|ExprResult
-modifier|&
-name|ExprResult
-parameter_list|,
-name|Decl
-modifier|*
-modifier|&
-name|DeclResult
-parameter_list|,
+argument_list|(
+name|StmtResult
+operator|*
+name|InitStmt
+argument_list|,
+name|Sema
+operator|::
+name|ConditionResult
+operator|&
+name|CondResult
+argument_list|,
 name|SourceLocation
 name|Loc
-parameter_list|,
-name|bool
-name|ConvertToBoolean
-parameter_list|)
-function_decl|;
+argument_list|,
+name|Sema
+operator|::
+name|ConditionKind
+name|CK
+argument_list|)
+decl_stmt|;
 name|StmtResult
 name|ParseIfStatement
 parameter_list|(
@@ -6827,11 +6884,6 @@ name|bool
 name|isTypeSpecifierQualifier
 parameter_list|()
 function_decl|;
-name|bool
-name|isTypeQualifier
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// isKnownToBeTypeSpecifier - Return true if we know that the specified token
 comment|/// is definitely a type-specifier.  Return false if it isn't part of a type
 comment|/// specifier or if we're not sure.
@@ -7076,13 +7128,35 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// isCXXConditionDeclaration - Disambiguates between a declaration or an
-comment|/// expression for a condition of a if/switch/while/for statement.
-comment|/// If during the disambiguation process a parsing error is encountered,
-comment|/// the function returns true to let the declaration parsing code handle it.
+struct_decl|struct
+name|ConditionDeclarationOrInitStatementState
+struct_decl|;
+name|enum
+name|class
+name|ConditionOrInitStatement
+block|{
+name|Expression
+operator|,
+comment|///< Disambiguated as an expression (either kind).
+name|ConditionDecl
+operator|,
+comment|///< Disambiguated as the declaration form of condition.
+name|InitStmtDecl
+operator|,
+comment|///< Disambiguated as a simple-declaration init-statement.
+name|Error
+comment|///< Can't be any of the above!
+block|}
+empty_stmt|;
+comment|/// \brief Disambiguates between the different kinds of things that can happen
+comment|/// after 'if (' or 'switch ('. This could be one of two different kinds of
+comment|/// declaration (depending on whether there is a ';' later) or an expression.
+name|ConditionOrInitStatement
+name|isCXXConditionDeclarationOrInitStatement
+parameter_list|(
 name|bool
-name|isCXXConditionDeclaration
-parameter_list|()
+name|CanBeInitStmt
+parameter_list|)
 function_decl|;
 name|bool
 name|isCXXTypeId
@@ -8068,7 +8142,7 @@ name|attrs
 parameter_list|)
 function_decl|;
 name|void
-name|ParseOpenCLAttributes
+name|ParseOpenCLKernelAttributes
 parameter_list|(
 name|ParsedAttributes
 modifier|&
@@ -8077,6 +8151,44 @@ parameter_list|)
 function_decl|;
 name|void
 name|ParseOpenCLQualifiers
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses opencl_unroll_hint attribute if language is OpenCL v2.0
+comment|/// or higher.
+comment|/// \return false if error happens.
+name|bool
+name|MaybeParseOpenCLUnrollHintAttribute
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attrs
+parameter_list|)
+block|{
+if|if
+condition|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|OpenCL
+condition|)
+return|return
+name|ParseOpenCLUnrollHintAttribute
+argument_list|(
+name|Attrs
+argument_list|)
+return|;
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Parses opencl_unroll_hint attribute.
+comment|/// \return false if error happens.
+name|bool
+name|ParseOpenCLUnrollHintAttribute
 parameter_list|(
 name|ParsedAttributes
 modifier|&
@@ -8130,6 +8242,20 @@ name|Syntax
 name|Syntax
 argument_list|)
 decl_stmt|;
+name|Optional
+operator|<
+name|AvailabilitySpec
+operator|>
+name|ParseAvailabilitySpec
+argument_list|()
+expr_stmt|;
+name|ExprResult
+name|ParseAvailabilityCheckExpr
+parameter_list|(
+name|SourceLocation
+name|StartLoc
+parameter_list|)
+function_decl|;
 name|void
 name|ParseObjCBridgeRelatedAttribute
 argument_list|(
@@ -9104,7 +9230,7 @@ name|TagType
 argument_list|,
 name|Decl
 operator|*
-name|TagDecl
+name|Tag
 argument_list|)
 decl_stmt|;
 name|void
@@ -9221,15 +9347,61 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// OpenMP: Directives and clauses.
+comment|/// Parse clauses for '#pragma omp declare simd'.
+name|DeclGroupPtrTy
+name|ParseOMPDeclareSimdClauses
+parameter_list|(
+name|DeclGroupPtrTy
+name|Ptr
+parameter_list|,
+name|CachedTokens
+modifier|&
+name|Toks
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// \brief Parses declarative OpenMP directives.
 name|DeclGroupPtrTy
-name|ParseOpenMPDeclarativeDirective
-parameter_list|()
+name|ParseOpenMPDeclarativeDirectiveWithExtDecl
+argument_list|(
+name|AccessSpecifier
+operator|&
+name|AS
+argument_list|,
+name|ParsedAttributesWithRange
+operator|&
+name|Attrs
+argument_list|,
+name|DeclSpec
+operator|::
+name|TST
+name|TagType
+operator|=
+name|DeclSpec
+operator|::
+name|TST_unspecified
+argument_list|,
+name|Decl
+operator|*
+name|TagDecl
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// \brief Parse 'omp declare reduction' construct.
+name|DeclGroupPtrTy
+name|ParseOpenMPDeclareReductionDirective
+parameter_list|(
+name|AccessSpecifier
+name|AS
+parameter_list|)
 function_decl|;
 comment|/// \brief Parses simple list of variables.
 comment|///
 comment|/// \param Kind Kind of the directive.
-comment|/// \param [out] VarList List of referenced variables.
+comment|/// \param Callback Callback function to be called for the list elements.
 comment|/// \param AllowScopeSpecifier true, if the variables can have fully
 comment|/// qualified names.
 comment|///
@@ -9239,13 +9411,21 @@ argument_list|(
 name|OpenMPDirectiveKind
 name|Kind
 argument_list|,
-name|SmallVectorImpl
+specifier|const
+name|llvm
+operator|::
+name|function_ref
 operator|<
-name|Expr
-operator|*
+name|void
+argument_list|(
+name|CXXScopeSpec
+operator|&
+argument_list|,
+name|DeclarationNameInfo
+argument_list|)
 operator|>
 operator|&
-name|VarList
+name|Callback
 argument_list|,
 name|bool
 name|AllowScopeSpecifier
@@ -9352,6 +9532,92 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// Parses simple expression in parens for single-expression clauses of OpenMP
+comment|/// constructs.
+comment|/// \param RLoc Returned location of right paren.
+name|ExprResult
+name|ParseOpenMPParensExpr
+parameter_list|(
+name|StringRef
+name|ClauseName
+parameter_list|,
+name|SourceLocation
+modifier|&
+name|RLoc
+parameter_list|)
+function_decl|;
+comment|/// Data used for parsing list of variables in OpenMP clauses.
+struct|struct
+name|OpenMPVarListDataTy
+block|{
+name|Expr
+modifier|*
+name|TailExpr
+init|=
+name|nullptr
+decl_stmt|;
+name|SourceLocation
+name|ColonLoc
+decl_stmt|;
+name|CXXScopeSpec
+name|ReductionIdScopeSpec
+decl_stmt|;
+name|DeclarationNameInfo
+name|ReductionId
+decl_stmt|;
+name|OpenMPDependClauseKind
+name|DepKind
+init|=
+name|OMPC_DEPEND_unknown
+decl_stmt|;
+name|OpenMPLinearClauseKind
+name|LinKind
+init|=
+name|OMPC_LINEAR_val
+decl_stmt|;
+name|OpenMPMapClauseKind
+name|MapTypeModifier
+init|=
+name|OMPC_MAP_unknown
+decl_stmt|;
+name|OpenMPMapClauseKind
+name|MapType
+init|=
+name|OMPC_MAP_unknown
+decl_stmt|;
+name|bool
+name|IsMapTypeImplicit
+init|=
+name|false
+decl_stmt|;
+name|SourceLocation
+name|DepLinMapLoc
+decl_stmt|;
+block|}
+struct|;
+comment|/// Parses clauses with list.
+name|bool
+name|ParseOpenMPVarList
+argument_list|(
+name|OpenMPDirectiveKind
+name|DKind
+argument_list|,
+name|OpenMPClauseKind
+name|Kind
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|&
+name|Vars
+argument_list|,
+name|OpenMPVarListDataTy
+operator|&
+name|Data
+argument_list|)
+decl_stmt|;
 name|bool
 name|ParseUnqualifiedId
 parameter_list|(

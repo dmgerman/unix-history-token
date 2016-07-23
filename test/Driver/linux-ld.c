@@ -1560,6 +1560,42 @@ comment|// CHECK-GCC-VERSION4: "-L{{.*}}/Inputs/gcc_version_parsing4/bin/../lib/
 end_comment
 
 begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=i386-unknown-linux -m32 \
+end_comment
+
+begin_comment
+comment|// RUN:     -ccc-install-dir %S/Inputs/gcc_version_parsing5/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-GCC-VERSION5 %s
+end_comment
+
+begin_comment
+comment|// CHECK-GCC-VERSION5: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-GCC-VERSION5: "{{.*}}/Inputs/gcc_version_parsing5/bin/../lib/gcc/i386-unknown-linux/5{{/|\\\\}}crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-GCC-VERSION5: "-L{{.*}}/Inputs/gcc_version_parsing5/bin/../lib/gcc/i386-unknown-linux/5"
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -1904,7 +1940,7 @@ comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[
 end_comment
 
 begin_comment
-comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-dynamic-linker" "/lib/ld-linux-armhf.so.3"
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM-HF: "-dynamic-linker" "{{(/usr/arm--linux-gnueabihf)?}}/lib/ld-linux-armhf.so.3"
 end_comment
 
 begin_comment
@@ -1980,7 +2016,7 @@ comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYS
 end_comment
 
 begin_comment
-comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-dynamic-linker" "/lib/ld-linux.so.3"
+comment|// CHECK-X86-64-UBUNTU-13-10-ARM: "-dynamic-linker" "{{(/usr/arm--linux-gnueabi)?}}/lib/ld-linux.so.3"
 end_comment
 
 begin_comment
@@ -2552,7 +2588,7 @@ comment|// CHECK-PPC64: "-m" "elf64ppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+comment|// CHECK-PPC64: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.1"
 end_comment
 
 begin_comment
@@ -2592,7 +2628,7 @@ comment|// CHECK-PPC64-ELFv1: "-m" "elf64ppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64-ELFv1: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+comment|// CHECK-PPC64-ELFv1: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.1"
 end_comment
 
 begin_comment
@@ -2620,7 +2656,7 @@ comment|// CHECK-PPC64-ELFv2: "-m" "elf64ppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64-ELFv2: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
+comment|// CHECK-PPC64-ELFv2: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.2"
 end_comment
 
 begin_comment
@@ -2648,7 +2684,7 @@ comment|// CHECK-PPC64LE: "-m" "elf64lppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64LE: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
+comment|// CHECK-PPC64LE: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.2"
 end_comment
 
 begin_comment
@@ -2676,7 +2712,7 @@ comment|// CHECK-PPC64LE-ELFv1: "-m" "elf64lppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64LE-ELFv1: "-dynamic-linker" "{{.*}}/lib64/ld64.so.1"
+comment|// CHECK-PPC64LE-ELFv1: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.1"
 end_comment
 
 begin_comment
@@ -2704,7 +2740,7 @@ comment|// CHECK-PPC64LE-ELFv2: "-m" "elf64lppc"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64LE-ELFv2: "-dynamic-linker" "{{.*}}/lib64/ld64.so.2"
+comment|// CHECK-PPC64LE-ELFv2: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld64.so.2"
 end_comment
 
 begin_comment
@@ -2864,7 +2900,7 @@ comment|// CHECK-MIPS64: "-m" "elf64btsmip"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64: "-dynamic-linker" "{{.*}}/lib64/ld.so.1"
+comment|// CHECK-MIPS64: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld.so.1"
 end_comment
 
 begin_comment
@@ -2896,7 +2932,7 @@ comment|// CHECK-MIPS64EL: "-m" "elf64ltsmip"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64EL: "-dynamic-linker" "{{.*}}/lib64/ld.so.1"
+comment|// CHECK-MIPS64EL: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld.so.1"
 end_comment
 
 begin_comment
@@ -2924,7 +2960,7 @@ comment|// CHECK-MIPS64EL-NAN2008: "-m" "elf64ltsmip"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64EL-NAN2008: "-dynamic-linker" "{{.*}}/lib64/ld-linux-mipsn8.so.1"
+comment|// CHECK-MIPS64EL-NAN2008: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld-linux-mipsn8.so.1"
 end_comment
 
 begin_comment
@@ -2952,7 +2988,7 @@ comment|// CHECK-MIPS64R6EL: "-m" "elf64ltsmip"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64R6EL: "-dynamic-linker" "{{.*}}/lib64/ld-linux-mipsn8.so.1"
+comment|// CHECK-MIPS64R6EL: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld-linux-mipsn8.so.1"
 end_comment
 
 begin_comment
@@ -2984,7 +3020,7 @@ comment|// CHECK-MIPS64-N32: "-m" "elf32btsmipn32"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64-N32: "-dynamic-linker" "{{.*}}/lib32/ld.so.1"
+comment|// CHECK-MIPS64-N32: "-dynamic-linker" "{{.*}}/lib{{(32)?}}/ld.so.1"
 end_comment
 
 begin_comment
@@ -3016,7 +3052,7 @@ comment|// CHECK-MIPS64EL-N32: "-m" "elf32ltsmipn32"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64EL-N32: "-dynamic-linker" "{{.*}}/lib32/ld.so.1"
+comment|// CHECK-MIPS64EL-N32: "-dynamic-linker" "{{.*}}/lib{{(32)?}}/ld.so.1"
 end_comment
 
 begin_comment
@@ -3044,11 +3080,43 @@ comment|// CHECK-MIPS64EL-N32-NAN2008: "-m" "elf32ltsmipn32"
 end_comment
 
 begin_comment
-comment|// CHECK-MIPS64EL-N32-NAN2008: "-dynamic-linker" "{{.*}}/lib32/ld-linux-mipsn8.so.1"
+comment|// CHECK-MIPS64EL-N32-NAN2008: "-dynamic-linker" "{{.*}}/lib{{(32)?}}/ld-linux-mipsn8.so.1"
 end_comment
 
 begin_comment
 comment|// CHECK-MIPS64EL-N32-NAN2008-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 --target=mips64el-redhat-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64EL-REDHAT %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-REDHAT: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-REDHAT: "-m" "elf64ltsmip"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-REDHAT: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-REDHAT-NOT: "-dynamic-linker" "{{.*}}/lib{{(64)?}}/ld-musl-mipsel.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-REDHAT-NOT: "--hash-style={{gnu|both}}"
 end_comment
 
 begin_comment
@@ -3076,7 +3144,7 @@ comment|// CHECK-SPARCV8: "-m" "elf32_sparc"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV8: "-dynamic-linker" "/lib/ld-linux.so.2"
+comment|// CHECK-SPARCV8: "-dynamic-linker" "{{(/usr/sparc-unknown-linux-gnu)?}}/lib/ld-linux.so.2"
 end_comment
 
 begin_comment
@@ -3104,7 +3172,7 @@ comment|// CHECK-SPARCV8EL: "-m" "elf32_sparc"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV8EL: "-dynamic-linker" "/lib/ld-linux.so.2"
+comment|// CHECK-SPARCV8EL: "-dynamic-linker" "{{(/usr/sparcel-unknown-linux-gnu)?}}/lib/ld-linux.so.2"
 end_comment
 
 begin_comment
@@ -3132,7 +3200,7 @@ comment|// CHECK-SPARCV9: "-m" "elf64_sparc"
 end_comment
 
 begin_comment
-comment|// CHECK-SPARCV9: "-dynamic-linker" "/lib64/ld-linux.so.2"
+comment|// CHECK-SPARCV9: "-dynamic-linker" "{{(/usr/sparcv9-unknown-linux-gnu)?}}/lib{{(64)?}}/ld-linux.so.2"
 end_comment
 
 begin_comment
@@ -6208,7 +6276,7 @@ comment|// CHECK-ARMEB-NOT: "--be8"
 end_comment
 
 begin_comment
-comment|// CHECK-ARMEB: "-m" "armebelf_linux_eabi"
+comment|// CHECK-ARMEB: "-m" "armelfb_linux_eabi"
 end_comment
 
 begin_comment
@@ -6240,7 +6308,283 @@ comment|// CHECK-ARMV7EB: "--be8"
 end_comment
 
 begin_comment
-comment|// CHECK-ARMV7EB: "-m" "armebelf_linux_eabi"
+comment|// CHECK-ARMV7EB: "-m" "armelfb_linux_eabi"
+end_comment
+
+begin_comment
+comment|// Check dynamic-linker for musl-libc
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=i386-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-X86 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-X86_64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mips-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-MIPS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mipsel-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-MIPSEL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mips64-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-MIPS64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mips64el-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-MIPS64EL %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-PPC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64-pc-linux-musl \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-PPC64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=thumb-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=thumb-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=thumbeb-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=thumbeb-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEBHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARM %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armeb-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=armeb-pc-linux-musleabihf \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-ARMEBHF %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=aarch64-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-AARCH64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=aarch64_be-pc-linux-musleabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MUSL-AARCH64_BE %s
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-X86:        "-dynamic-linker" "/lib/ld-musl-i386.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-X86_64:     "-dynamic-linker" "/lib/ld-musl-x86_64.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-MIPS:       "-dynamic-linker" "/lib/ld-musl-mips.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-MIPSEL:     "-dynamic-linker" "/lib/ld-musl-mipsel.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-MIPS64:     "-dynamic-linker" "/lib/ld-musl-mips64.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-MIPS64EL:   "-dynamic-linker" "/lib/ld-musl-mips64el.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-PPC:        "-dynamic-linker" "/lib/ld-musl-powerpc.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-PPC64:      "-dynamic-linker" "/lib/ld-musl-powerpc64.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-ARM:        "-dynamic-linker" "/lib/ld-musl-arm.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-ARMHF:      "-dynamic-linker" "/lib/ld-musl-armhf.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-ARMEB:      "-dynamic-linker" "/lib/ld-musl-armeb.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-ARMEBHF:    "-dynamic-linker" "/lib/ld-musl-armebhf.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-AARCH64:    "-dynamic-linker" "/lib/ld-musl-aarch64.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MUSL-AARCH64_BE: "-dynamic-linker" "/lib/ld-musl-aarch64_be.so.1"
 end_comment
 
 end_unit

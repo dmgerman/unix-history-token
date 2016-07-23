@@ -46,7 +46,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @receive_f1(%struct.f1* byval align 4 %a0)
+comment|// CHECK: define void @receive_f1(float %a0.0)
 end_comment
 
 begin_struct
@@ -95,7 +95,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @receive_f2(%struct.f2* byval align 4 %a0)
+comment|// CHECK: define void @receive_f2(float %a0.0, float %a0.1)
 end_comment
 
 begin_struct
@@ -150,7 +150,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: define void @receive_f4(%struct.f4* byval align 4 %a0)
+comment|// CHECK: define void @receive_f4(float %a0.0, float %a0.1, float %a0.2, float %a0.3)
 end_comment
 
 end_unit

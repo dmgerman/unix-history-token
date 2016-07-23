@@ -4,7 +4,7 @@ comment|// RUN: not %clang_cc1 -triple le32-unknown-nacl %s -S -o - 2>&1 | FileC
 end_comment
 
 begin_comment
-comment|// CHECK: error: unable to create target: 'No available targets are compatible with this triple, see -version for the available targets.'
+comment|// CHECK: error: unable to create target: 'No available targets are compatible with this triple.
 end_comment
 
 end_unit

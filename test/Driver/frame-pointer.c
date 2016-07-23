@@ -40,6 +40,10 @@ comment|// RUN: %clang -target x86_64-pc-linux -### -S -Os %s -o %t.s 2>&1 | Fil
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-pc-win32-macho -### -S -O3 %s -o %t.s 2>&1 | FileCheck -check-prefix=CHECK-MACHO-64 %s
+end_comment
+
+begin_comment
 comment|// Trust the above to get the optimizations right, and just test other targets
 end_comment
 
@@ -125,6 +129,10 @@ end_comment
 
 begin_comment
 comment|// CHECKs-64-NOT: -mdisable-fp-elim
+end_comment
+
+begin_comment
+comment|// CHECK-MACHO-64: -mdisable-fp-elim
 end_comment
 
 end_unit

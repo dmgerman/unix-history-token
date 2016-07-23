@@ -39,7 +39,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|// CHECK: DW_TAG_structure_type
+comment|// CHECK-DAG: DW_TAG_structure_type, name: "OPAQUE"
 end_comment
 
 begin_typedef
@@ -168,7 +168,7 @@ comment|// Radar 7325611
 end_comment
 
 begin_comment
-comment|// CHECK: !DIDerivedType(tag: DW_TAG_typedef, name: "barfoo"
+comment|// CHECK-DAG: !DIDerivedType(tag: DW_TAG_typedef, name: "barfoo"
 end_comment
 
 begin_typedef
@@ -186,7 +186,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: __uint128_t
+comment|// CHECK-DAG: __uint128_t
 end_comment
 
 begin_function
@@ -206,7 +206,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: uint64x2_t
+comment|// CHECK-DAG: uint64x2_t
 end_comment
 
 begin_typedef

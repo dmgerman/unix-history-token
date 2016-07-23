@@ -12,7 +12,7 @@ comment|// RUN:     -fimplicit-module-maps -x c -fmodules-cache-path=%t -I %S/In
 end_comment
 
 begin_comment
-comment|// RUN:     %s -emit-llvm -o - | FileCheck %s
+comment|// RUN:     %s -emit-llvm -debugger-tuning=lldb -o - | FileCheck %s
 end_comment
 
 begin_include

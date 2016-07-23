@@ -288,11 +288,7 @@ name|VERIFY
 end_ifdef
 
 begin_comment
-comment|// expected-error@+2 {{builtin feature check macro requires a parenthesized identifier}}
-end_comment
-
-begin_comment
-comment|// expected-error@+1 {{expected value in expression}}
+comment|// expected-error@+1 {{builtin feature check macro requires a parenthesized identifier}}
 end_comment
 
 begin_if
@@ -309,10 +305,248 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// The following are not identifiers:
+end_comment
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+operator|!
+name|__is_identifier
+argument_list|(
+literal|"string"
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+operator|!
+name|__is_identifier
+argument_list|(
+literal|'c'
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+operator|!
+name|__is_identifier
+argument_list|(
+literal|123
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+operator|!
+name|__is_identifier
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_comment
+comment|// The following are:
+end_comment
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|__is_identifier
+argument_list|(
+name|abc
+comment|/* comment */
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|__is_identifier
+comment|/* comment */
+argument_list|(
+name|xyz
+argument_list|)
+argument_list|,
+literal|"oops"
+argument_list|)
+assert|;
+end_assert
+
+begin_comment
+comment|// expected-error@+1 {{too few arguments}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|()
+end_if
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// expected-error@+1 {{too many arguments}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+name|,
+operator|(
+operator|)
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing ')' after 'abc'}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+argument|abc xyz
+argument_list|)
+end_if
+
+begin_comment
+comment|// expected-note {{to match this '('}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing ')' after 'abc'}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+name|abc
+argument_list|()
+argument_list|)
+end_if
+
+begin_comment
+comment|// expected-note {{to match this '('}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing ')' after '.'}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+operator|.
+name|abc
+argument_list|)
+end_if
+
+begin_comment
+comment|// expected-note {{to match this '('}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{nested parentheses not permitted in '__is_identifier'}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+operator|(
+name|abc
+operator|)
+argument_list|)
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{missing '(' after '__is_identifier'}} expected-error@+1 {{expected value}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// expected-error@+1 {{unterminated}} expected-error@+1 {{expected value}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__is_identifier
+argument_list|(
+argument|#endif  #endif
+end_if
 
 end_unit
 

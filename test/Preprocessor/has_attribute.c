@@ -299,7 +299,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|// expected-error {{token is not a valid binary operator in a preprocessor subexpression}}
+comment|// expected-error {{function-like macro '__has_cpp_attribute' is not defined}}
 end_comment
 
 begin_endif

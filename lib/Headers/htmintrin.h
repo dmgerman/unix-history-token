@@ -657,7 +657,7 @@ argument_list|)
 name|__builtin_tbegin_retry_null
 argument_list|(
 name|int
-name|retry
+name|__retry
 argument_list|)
 block|{
 name|int
@@ -683,7 +683,7 @@ operator|&&
 name|i
 operator|++
 operator|<
-name|retry
+name|__retry
 condition|)
 name|__builtin_tx_assist
 argument_list|(
@@ -712,10 +712,10 @@ name|__builtin_tbegin_retry_tdb
 argument_list|(
 name|void
 operator|*
-name|tdb
+name|__tdb
 argument_list|,
 name|int
-name|retry
+name|__retry
 argument_list|)
 block|{
 name|int
@@ -732,7 +732,7 @@ name|cc
 operator|=
 name|__builtin_tbegin
 argument_list|(
-name|tdb
+name|__tdb
 argument_list|)
 operator|)
 operator|==
@@ -741,7 +741,7 @@ operator|&&
 name|i
 operator|++
 operator|<
-name|retry
+name|__retry
 condition|)
 name|__builtin_tx_assist
 argument_list|(
@@ -782,7 +782,7 @@ argument_list|)
 name|__builtin_tbegin_retry_nofloat_null
 argument_list|(
 name|int
-name|retry
+name|__retry
 argument_list|)
 block|{
 name|int
@@ -808,7 +808,7 @@ operator|&&
 name|i
 operator|++
 operator|<
-name|retry
+name|__retry
 condition|)
 name|__builtin_tx_assist
 argument_list|(
@@ -837,10 +837,10 @@ name|__builtin_tbegin_retry_nofloat_tdb
 argument_list|(
 name|void
 operator|*
-name|tdb
+name|__tdb
 argument_list|,
 name|int
-name|retry
+name|__retry
 argument_list|)
 block|{
 name|int
@@ -857,7 +857,7 @@ name|cc
 operator|=
 name|__builtin_tbegin_nofloat
 argument_list|(
-name|tdb
+name|__tdb
 argument_list|)
 operator|)
 operator|==
@@ -866,7 +866,7 @@ operator|&&
 name|i
 operator|++
 operator|<
-name|retry
+name|__retry
 condition|)
 name|__builtin_tx_assist
 argument_list|(

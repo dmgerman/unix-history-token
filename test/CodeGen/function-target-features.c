@@ -40,7 +40,7 @@ comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -ta
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple sparc-unknown-unknown -emit-llvm -o - %s -target-feature +soft-float | FileCheck %s -check-prefix=NO-SOFT-FLOAT
+comment|// RUN: %clang_cc1 -triple sparc-unknown-unknown -emit-llvm -o - %s -target-feature +soft-float | FileCheck %s -check-prefix=SOFT-FLOAT
 end_comment
 
 begin_comment

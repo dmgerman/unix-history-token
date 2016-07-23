@@ -56,7 +56,7 @@ struct|struct
 name|Small
 block|{
 name|int
-name|a
+name|x
 decl_stmt|;
 block|}
 struct|;
@@ -81,7 +81,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define x86_vectorcallcc void @"\01v3@@12"(i32 inreg %a, %struct.Small* byval align 4 %b, i32 inreg %c)
+comment|// CHECK: define x86_vectorcallcc void @"\01v3@@12"(i32 inreg %a, i32 %b.0, i32 inreg %c)
 end_comment
 
 begin_comment

@@ -24,7 +24,7 @@ comment|// RUN: rm -f %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -Wx-unknown-warning -Wall -fsyntax-only --serialize-diagnostics %t.diag %s
+comment|// RUN: %clang -Wx-typoed-warning -Wall -fsyntax-only --serialize-diagnostics %t.diag %s
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN: c-index-test -read-diagnostics %t.diag 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: warning: unknown warning option '-Wx-unknown-warning' [-Wunknown-warning-option] []
+comment|// CHECK: warning: unknown warning option '-Wx-typoed-warning' [-Wunknown-warning-option] []
 end_comment
 
 begin_comment

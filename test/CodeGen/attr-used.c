@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
+comment|// RUN: grep '@llvm.used = .*@a0' %t
+end_comment
+
+begin_comment
 comment|// RUN: grep '@llvm.used = .*@g0' %t
 end_comment
 
@@ -60,6 +64,32 @@ argument_list|)
 init|=
 literal|5225
 decl_stmt|;
+block|}
+end_function
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(used)
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|a0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|pr27535
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|a0
+expr_stmt|;
 block|}
 end_function
 

@@ -157,13 +157,13 @@ argument_list|(
 argument|DeclGroupRef D
 argument_list|)
 expr_stmt|;
-comment|/// \brief This callback is invoked each time an inline method definition is
-comment|/// completed.
+comment|/// \brief This callback is invoked each time an inline (method or friend)
+comment|/// function definition in a class is completed.
 name|virtual
 name|void
-name|HandleInlineMethodDefinition
+name|HandleInlineFunctionDefinition
 parameter_list|(
-name|CXXMethodDecl
+name|FunctionDecl
 modifier|*
 name|D
 parameter_list|)
@@ -251,49 +251,6 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// \brief Handle a pragma that appends to Linker Options.  Currently this
-comment|/// only exists to support Microsoft's #pragma comment(linker, "/foo").
-name|virtual
-name|void
-name|HandleLinkerOptionPragma
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Opts
-argument_list|)
-block|{}
-comment|/// \brief Handle a pragma that emits a mismatch identifier and value to the
-comment|/// object file for the linker to work with.  Currently, this only exists to
-comment|/// support Microsoft's #pragma detect_mismatch.
-name|virtual
-name|void
-name|HandleDetectMismatch
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Name
-argument_list|,
-name|llvm
-operator|::
-name|StringRef
-name|Value
-argument_list|)
-block|{}
-comment|/// \brief Handle a dependent library created by a pragma in the source.
-comment|/// Currently this only exists to support Microsoft's
-comment|/// #pragma comment(lib, "/foo").
-name|virtual
-name|void
-name|HandleDependentLibrary
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Lib
-argument_list|)
-block|{}
 comment|/// CompleteTentativeDefinition - Callback invoked at the end of a translation
 comment|/// unit to notify the consumer that the given tentative definition should be
 comment|/// completed.
@@ -310,6 +267,17 @@ parameter_list|(
 name|VarDecl
 modifier|*
 name|D
+parameter_list|)
+block|{}
+comment|/// \brief Callback invoked when an MSInheritanceAttr has been attached to a
+comment|/// CXXRecordDecl.
+name|virtual
+name|void
+name|AssignInheritanceModel
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|RD
 parameter_list|)
 block|{}
 comment|/// HandleCXXStaticMemberVarInstantiation - Tell the consumer that this

@@ -4,7 +4,7 @@ comment|// Ensure that declarations without definitions don't have maps emitted 
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fprofile-instr-generate -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only %s> %t
+comment|// RUN: %clang_cc1 -fprofile-instrument=clang -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only %s> %t
 end_comment
 
 begin_comment

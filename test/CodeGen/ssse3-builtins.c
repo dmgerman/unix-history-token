@@ -19,6 +19,10 @@ directive|include
 file|<x86intrin.h>
 end_include
 
+begin_comment
+comment|// NOTE: This should match the tests in llvm/test/CodeGen/X86/ssse3-intrinsics-fast-isel.ll
+end_comment
+
 begin_function
 name|__m128i
 name|test_mm_abs_epi8
@@ -28,7 +32,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_abs_epi8
-comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.pabs.b.128
+comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.pabs.b.128(<16 x i8> %{{.*}})
 return|return
 name|_mm_abs_epi8
 argument_list|(
@@ -47,7 +51,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_abs_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pabs.w.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pabs.w.128(<8 x i16> %{{.*}})
 return|return
 name|_mm_abs_epi16
 argument_list|(
@@ -66,7 +70,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_abs_epi32
-comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.pabs.d.128
+comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.pabs.d.128(<4 x i32> %{{.*}})
 return|return
 name|_mm_abs_epi32
 argument_list|(
@@ -140,7 +144,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hadd_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phadd.w.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phadd.w.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_hadd_epi16
 argument_list|(
@@ -164,7 +168,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hadd_epi32
-comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.phadd.d.128
+comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.phadd.d.128(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_hadd_epi32
 argument_list|(
@@ -188,7 +192,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hadds_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phadd.sw.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phadd.sw.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_hadds_epi16
 argument_list|(
@@ -212,7 +216,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsub_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phsub.w.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phsub.w.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_hsub_epi16
 argument_list|(
@@ -236,7 +240,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsub_epi32
-comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.phsub.d.128
+comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.phsub.d.128(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_hsub_epi32
 argument_list|(
@@ -260,7 +264,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_hsubs_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phsub.sw.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.phsub.sw.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_hsubs_epi16
 argument_list|(
@@ -284,7 +288,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_maddubs_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pmadd.ub.sw.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pmadd.ub.sw.128(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_maddubs_epi16
 argument_list|(
@@ -308,7 +312,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_mulhrs_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pmul.hr.sw.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.pmul.hr.sw.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_mulhrs_epi16
 argument_list|(
@@ -332,7 +336,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_shuffle_epi8
-comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.pshuf.b.128
+comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.pshuf.b.128(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_shuffle_epi8
 argument_list|(
@@ -356,7 +360,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sign_epi8
-comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.psign.b.128
+comment|// CHECK: call<16 x i8> @llvm.x86.ssse3.psign.b.128(<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 return|return
 name|_mm_sign_epi8
 argument_list|(
@@ -380,7 +384,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sign_epi16
-comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.psign.w.128
+comment|// CHECK: call<8 x i16> @llvm.x86.ssse3.psign.w.128(<8 x i16> %{{.*}},<8 x i16> %{{.*}})
 return|return
 name|_mm_sign_epi16
 argument_list|(
@@ -404,7 +408,7 @@ name|b
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_sign_epi32
-comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.psign.d.128
+comment|// CHECK: call<4 x i32> @llvm.x86.ssse3.psign.d.128(<4 x i32> %{{.*}},<4 x i32> %{{.*}})
 return|return
 name|_mm_sign_epi32
 argument_list|(

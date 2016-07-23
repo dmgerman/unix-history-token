@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -ast-print | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -ast-print | %clang_cc1 -fsyntax-only -
+end_comment
+
 begin_typedef
 typedef|typedef
 name|void
@@ -169,6 +173,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: typedef struct {
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -238,6 +246,60 @@ literal|4
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|initializers
+parameter_list|()
+block|{
+comment|// CHECK: int *x = ((void *)0), *y = ((void *)0);
+name|int
+modifier|*
+name|x
+init|=
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+operator|)
+decl_stmt|,
+modifier|*
+name|y
+init|=
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+operator|)
+decl_stmt|;
+struct|struct
+name|Z
+block|{}
+struct|;
+struct|struct
+block|{
+name|struct
+name|Z
+name|z
+decl_stmt|;
+comment|// CHECK: } z = {(struct Z){}};
+block|}
+name|z
+init|=
+block|{
+operator|(
+expr|struct
+name|Z
+operator|)
+block|{}
+block|}
+struct|;
+block|}
+end_function
 
 end_unit
 

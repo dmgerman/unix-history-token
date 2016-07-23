@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DebugInfoOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Sanitizers.h"
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Regex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
 end_include
 
 begin_include
@@ -181,6 +193,9 @@ comment|// Perform no inlining whatsoever.
 name|NormalInlining
 block|,
 comment|// Use the standard function inlining pass.
+name|OnlyHintInlining
+block|,
+comment|// Inline only (implicitly) hinted functions.
 name|OnlyAlwaysInlining
 comment|// Only run the always inlining pass.
 block|}
@@ -207,47 +222,6 @@ block|,
 name|Mixed
 operator|=
 literal|2
-block|}
-block|;    enum
-name|DebugInfoKind
-block|{
-name|NoDebugInfo
-block|,
-comment|/// Don't generate debug info.
-name|LocTrackingOnly
-block|,
-comment|/// Emit location information but do not generate
-comment|/// debug info in the output. This is useful in
-comment|/// cases where the backend wants to track source
-comment|/// locations for instructions without actually
-comment|/// emitting debug info for them (e.g., when -Rpass
-comment|/// is used).
-name|DebugLineTablesOnly
-block|,
-comment|/// Emit only debug info necessary for generating
-comment|/// line number tables (-gline-tables-only).
-name|LimitedDebugInfo
-block|,
-comment|/// Limit generated debug info to reduce size
-comment|/// (-fno-standalone-debug). This emits
-comment|/// forward decls for types that could be
-comment|/// replaced with forward decls in the source
-comment|/// code. For dynamic C++ classes type info
-comment|/// is only emitted int the module that
-comment|/// contains the classe's vtable.
-name|FullDebugInfo
-comment|/// Generate complete debug info.
-block|}
-block|;    enum
-name|DebuggerKind
-block|{
-name|DebuggerKindDefault
-block|,
-name|DebuggerKindGDB
-block|,
-name|DebuggerKindLLDB
-block|,
-name|DebuggerKindSCE
 block|}
 block|;    enum
 name|TLSModel
@@ -283,6 +257,35 @@ block|,
 comment|// Small structs on the stack (-fpcc-struct-return).
 name|SRCK_InRegs
 comment|// Small structs in registers (-freg-struct-return).
+block|}
+block|;    enum
+name|ProfileInstrKind
+block|{
+name|ProfileNone
+block|,
+comment|// Profile instrumentation is turned off.
+name|ProfileClangInstr
+block|,
+comment|// Clang instrumentation to generate execution counts
+comment|// to use with PGO.
+name|ProfileIRInstr
+block|,
+comment|// IR level PGO instrumentation in LLVM.
+block|}
+block|;    enum
+name|EmbedBitcodeKind
+block|{
+name|Embed_Off
+block|,
+comment|// No embedded bitcode.
+name|Embed_All
+block|,
+comment|// Embed both bitcode and commandline in the output.
+name|Embed_Bitcode
+block|,
+comment|// Embed just the bitcode in the output.
+name|Embed_Marker
+comment|// Embed a marker as a placeholder for bitcode.
 block|}
 block|;
 comment|/// The code model to use (-mcmodel).
@@ -423,6 +426,17 @@ name|string
 operator|>
 name|DependentLibraries
 block|;
+comment|/// A list of linker options to embed in the object file.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|LinkerOptions
+block|;
 comment|/// Name of the profile file to use as output for -fprofile-instr-generate
 comment|/// and -fprofile-generate.
 name|std
@@ -440,7 +454,7 @@ comment|/// Name of the profile file to use as input for -fprofile-instr-use
 name|std
 operator|::
 name|string
-name|InstrProfileInput
+name|ProfileInstrumentUsePath
 block|;
 comment|/// Name of the function summary index file to use for ThinLTO function
 comment|/// importing.
@@ -448,12 +462,6 @@ name|std
 operator|::
 name|string
 name|ThinLTOIndexFile
-block|;
-comment|/// The EABI version to use
-name|std
-operator|::
-name|string
-name|EABIVersion
 block|;
 comment|/// A list of file names passed with -fcuda-include-gpubinary options to
 comment|/// forward to CUDA runtime back-end for incorporating them into host-side
@@ -534,6 +542,15 @@ comment|/// Set of sanitizer checks that trap rather than diagnose.
 name|SanitizerSet
 name|SanitizeTrap
 block|;
+comment|/// List of backend command-line options for -fembed-bitcode.
+name|std
+operator|::
+name|vector
+operator|<
+name|uint8_t
+operator|>
+name|CmdArgs
+block|;
 comment|/// \brief A list of all -fno-builtin-* function names (e.g., memset).
 name|std
 operator|::
@@ -603,6 +620,58 @@ specifier|const
 block|{
 return|return
 name|NoBuiltinFuncs
+return|;
+block|}
+comment|/// \brief Check if Clang profile instrumenation is on.
+name|bool
+name|hasProfileClangInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProfileInstr
+argument_list|()
+operator|==
+name|ProfileClangInstr
+return|;
+block|}
+comment|/// \brief Check if IR level profile instrumentation is on.
+name|bool
+name|hasProfileIRInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProfileInstr
+argument_list|()
+operator|==
+name|ProfileIRInstr
+return|;
+block|}
+comment|/// \brief Check if Clang profile use is on.
+name|bool
+name|hasProfileClangUse
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProfileUse
+argument_list|()
+operator|==
+name|ProfileClangInstr
+return|;
+block|}
+comment|/// \brief Check if IR level profile use is on.
+name|bool
+name|hasProfileIRUse
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProfileUse
+argument_list|()
+operator|==
+name|ProfileIRInstr
 return|;
 block|}
 expr|}

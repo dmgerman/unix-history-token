@@ -1,42 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 0 | FileCheck -check-prefix=NOSSP %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 0 | FileCheck -check-prefix=DEF -check-prefix=NOSSP %s
 end_comment
 
 begin_comment
-comment|// NOSSP: define {{.*}}void @test1(i8* %msg) #0 {
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 1 | FileCheck -check-prefix=DEF -check-prefix=SSP %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 1 | FileCheck -check-prefix=WITHSSP %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 2 | FileCheck -check-prefix=DEF -check-prefix=SSPSTRONG %s
 end_comment
 
 begin_comment
-comment|// WITHSSP: define {{.*}}void @test1(i8* %msg) #0 {
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 3 | FileCheck -check-prefix=DEF -check-prefix=SSPREQ %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 2 | FileCheck -check-prefix=SSPSTRONG %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack | FileCheck -check-prefix=DEF -check-prefix=SAFESTACK-NOSSP %s
 end_comment
 
 begin_comment
-comment|// SSPSTRONG: define {{.*}}void @test1(i8* %msg) #0 {
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack -stack-protector 0 | FileCheck -check-prefix=DEF -check-prefix=SAFESTACK-NOSSP %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 3 | FileCheck -check-prefix=SSPREQ %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack -stack-protector 1 | FileCheck -check-prefix=DEF -check-prefix=SAFESTACK-SSP %s
 end_comment
 
 begin_comment
-comment|// SSPREQ: define {{.*}}void @test1(i8* %msg) #0 {
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack -stack-protector 2 | FileCheck -check-prefix=DEF -check-prefix=SAFESTACK-SSPSTRONG %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack | FileCheck -check-prefix=SAFESTACK %s
-end_comment
-
-begin_comment
-comment|// SAFESTACK: define {{.*}}void @test1(i8* %msg) #0 {
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -fsanitize=safe-stack -stack-protector 3 | FileCheck -check-prefix=DEF -check-prefix=SAFESTACK-SSPREQ %s
 end_comment
 
 begin_typedef
@@ -89,6 +85,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// DEF: define {{.*}}void @test1(i8* %msg) #[[A:.*]] {
+end_comment
+
 begin_function
 name|void
 name|test1
@@ -128,23 +128,39 @@ block|}
 end_function
 
 begin_comment
-comment|// NOSSP: attributes #{{.*}} = { nounwind{{.*}} }
+comment|// NOSSP-NOT: attributes #[[A]] = {{.*}} ssp
 end_comment
 
 begin_comment
-comment|// WITHSSP: attributes #{{.*}} = { nounwind ssp{{.*}} }
+comment|// SSP: attributes #[[A]] = {{.*}} ssp{{ }}
 end_comment
 
 begin_comment
-comment|// SSPSTRONG: attributes #{{.*}} = { nounwind sspstrong{{.*}} }
+comment|// SSPSTRONG: attributes #[[A]] = {{.*}} sspstrong
 end_comment
 
 begin_comment
-comment|// SSPREQ: attributes #{{.*}} = { nounwind sspreq{{.*}} }
+comment|// SSPREQ: attributes #[[A]] = {{.*}} sspreq
 end_comment
 
 begin_comment
-comment|// SAFESTACK: attributes #{{.*}} = { nounwind safestack{{.*}} }
+comment|// SAFESTACK-NOSSP: attributes #[[A]] = {{.*}} safestack
+end_comment
+
+begin_comment
+comment|// SAFESTACK-NOSSP-NOT: ssp
+end_comment
+
+begin_comment
+comment|// SAFESTACK-SSP: attributes #[[A]] = {{.*}} safestack ssp{{ }}
+end_comment
+
+begin_comment
+comment|// SAFESTACK-SSPSTRONG: attributes #[[A]] = {{.*}} safestack sspstrong
+end_comment
+
+begin_comment
+comment|// SAFESTACK-SSPREQ: attributes #[[A]] = {{.*}} safestack sspreq
 end_comment
 
 end_unit

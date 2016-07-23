@@ -208,11 +208,34 @@ block|}
 end_function
 
 begin_function
-name|int
-name|t_fail
+name|void
+name|t13
 parameter_list|()
 block|{
+asm|__asm m{o
+block|}
 end_function
+
+begin_decl_stmt
+name|v
+name|eax
+decl_stmt|,
+name|ebx
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{expected identifier}} expected-error {{use of undeclared label '{o}v eax, ebx'}}
+end_comment
+
+begin_macro
+unit|}  int
+name|t_fail
+argument_list|()
+end_macro
+
+begin_block
+block|{
+end_block
 
 begin_comment
 comment|// expected-note {{to match this}}
@@ -225,7 +248,7 @@ end_asm
 begin_asm
 asm|__asm {
 comment|//
-asm|expected-error 2 {{expected}} expected-note {{to match this}}
+asm|expected-error 3 {{expected}} expected-note {{to match this}}
 end_asm
 
 end_unit

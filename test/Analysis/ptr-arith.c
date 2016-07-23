@@ -265,7 +265,7 @@ name|x
 operator|+
 literal|1
 expr_stmt|;
-comment|// expected-warning{{Pointer arithmetic done on non-array variables means reliance on memory layout, which is dangerous}}
+comment|// expected-warning{{Pointer arithmetic on non-array variables relies on memory layout, which is dangerous}}
 name|int
 name|a
 index|[
@@ -402,7 +402,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{TRUE}} expected-warning{{Pointer arithmetic done on non-array variables}}
+comment|// expected-warning{{TRUE}}
 comment|// LHS is NULL, RHS is non-symbolic
 comment|// The same code is used for labels and non-symbolic values.
 name|clang_analyzer_eval

@@ -1285,7 +1285,7 @@ comment|// rdar://8359248
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define i64 @f34(i64 %arg.coerce)
+comment|// CHECK-LABEL: define double @f34(double %arg.coerce)
 end_comment
 
 begin_function
@@ -1307,7 +1307,7 @@ comment|// rdar://8358475
 end_comment
 
 begin_comment
-comment|// CHECK-LABEL: define i64 @f35(i64 %arg.coerce)
+comment|// CHECK-LABEL: define double @f35(double %arg.coerce)
 end_comment
 
 begin_typedef

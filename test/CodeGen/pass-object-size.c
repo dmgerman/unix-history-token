@@ -1964,5 +1964,72 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// There was a bug where variadic functions with pass_object_size would cause
+end_comment
+
+begin_comment
+comment|// problems in the form of failed assertions.
+end_comment
+
+begin_decl_stmt
+name|void
+name|my_sprintf
+argument_list|(
+name|char
+operator|*
+specifier|const
+name|c
+name|__attribute__
+argument_list|(
+operator|(
+name|pass_object_size
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+argument_list|)
+argument_list|,
+operator|...
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-LABEL: define void @test14
+end_comment
+
+begin_function
+name|void
+name|test14
+parameter_list|(
+name|char
+modifier|*
+name|c
+parameter_list|)
+block|{
+comment|// CHECK: @llvm.objectsize
+comment|// CHECK: call void (i8*, i64, ...) @my_sprintf
+name|my_sprintf
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.objectsize
+comment|// CHECK: call void (i8*, i64, ...) @my_sprintf
+name|my_sprintf
+argument_list|(
+name|c
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

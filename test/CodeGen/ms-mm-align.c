@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -fms-extensions -fms-compatibility -fms-compatibility-version=17.00 \
+comment|// RUN: %clang_cc1 -ffreestanding -fms-extensions -fms-compatibility -fms-compatibility-version=17.00 -target-feature +sse \
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN:         | FileCheck %s -check-prefix CHECK
 end_comment
 
 begin_comment
-comment|// Intrin.h needs size_t, but -ffreestanding prevents us from getting it from
+comment|// intrin.h needs size_t, but -ffreestanding prevents us from getting it from
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ end_typedef
 begin_include
 include|#
 directive|include
-file|<Intrin.h>
+file|<intrin.h>
 end_include
 
 begin_function_decl

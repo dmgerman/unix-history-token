@@ -52,6 +52,10 @@ comment|// CHECK-MT-NOT: "-D_DLL"
 end_comment
 
 begin_comment
+comment|// CHECK-MT: "-flto-visibility-public-std"
+end_comment
+
+begin_comment
 comment|// CHECK-MT: "--dependent-lib=libcmt"
 end_comment
 
@@ -77,6 +81,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-MTd-NOT: "-D_DLL"
+end_comment
+
+begin_comment
+comment|// CHECK-MTd: "-flto-visibility-public-std"
 end_comment
 
 begin_comment

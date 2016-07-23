@@ -366,11 +366,11 @@ comment|// CHECK: Punctuation: ")" [5:8 - 5:9] CStyleCastExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "sizeof" [5:9 - 5:15] UnexposedExpr=
+comment|// CHECK: Keyword: "sizeof" [5:9 - 5:15] UnaryExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [5:15 - 5:16] UnexposedExpr=
+comment|// CHECK: Punctuation: "(" [5:15 - 5:16] UnaryExpr=
 end_comment
 
 begin_comment
@@ -378,7 +378,7 @@ comment|// CHECK: Identifier: "T" [5:16 - 5:17] TypeRef=T:1:13
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [5:17 - 5:18] UnexposedExpr=
+comment|// CHECK: Punctuation: ")" [5:17 - 5:18] UnaryExpr=
 end_comment
 
 begin_comment

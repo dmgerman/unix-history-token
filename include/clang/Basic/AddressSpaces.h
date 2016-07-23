@@ -83,7 +83,7 @@ name|ID
 block|{
 name|Offset
 init|=
-literal|0xFFFF00
+literal|0x7FFF00
 block|,
 name|opencl_global
 init|=

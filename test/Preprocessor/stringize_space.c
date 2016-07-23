@@ -43,5 +43,36 @@ begin_comment
 comment|// CHECK: {{^}}"a c"{{$}}
 end_comment
 
+begin_define
+define|#
+directive|define
+name|str
+parameter_list|(
+name|x
+parameter_list|)
+value|#x
+end_define
+
+begin_define
+define|#
+directive|define
+name|f
+parameter_list|(
+name|x
+parameter_list|)
+value|str(-x)
+end_define
+
+begin_macro
+name|f
+argument_list|(
+literal|1
+argument_list|)
+end_macro
+
+begin_comment
+comment|// CHECK: {{^}}"-1"
+end_comment
+
 end_unit
 

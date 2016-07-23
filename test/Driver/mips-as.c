@@ -128,26 +128,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-linux-gnu -mabi=eabi -### \
-end_comment
-
-begin_comment
-comment|// RUN:   -no-integrated-as -c %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=MIPS-EABI %s
-end_comment
-
-begin_comment
-comment|// MIPS-EABI: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "eabi" "-mno-shared" "-call_nonpic" "-EB"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// RUN: %clang -target mips64-linux-gnu -mabi=n32 -### \
 end_comment
 

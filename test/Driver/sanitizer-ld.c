@@ -288,7 +288,7 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux -fsanitize=address \
+comment|// RUN:     -target i386-unknown-linux -stdlib=platform -fsanitize=address \
 end_comment
 
 begin_comment
@@ -352,11 +352,11 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o /dev/null -fsanitize=ad
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux --sysroot=%S/Inputs/basic_linux_tree \
+comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
 end_comment
 
 begin_comment
-comment|// RUN:     -lstdc++ -static 2>&1 \
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree -lstdc++ -static 2>&1 \
 end_comment
 
 begin_comment
@@ -576,7 +576,11 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -lstdc++ -fsanitize=thread \
+comment|// RUN:     -target x86_64-unknown-linux -stdlib=platform -lstdc++ \
+end_comment
+
+begin_comment
+comment|// RUN:     -fsanitize=thread \
 end_comment
 
 begin_comment
@@ -644,7 +648,11 @@ comment|// RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-unknown-linux -lstdc++ -fsanitize=memory \
+comment|// RUN:     -target x86_64-unknown-linux -stdlib=platform -lstdc++ \
+end_comment
+
+begin_comment
+comment|// RUN:     -fsanitize=memory \
 end_comment
 
 begin_comment
@@ -788,7 +796,7 @@ comment|// RUN: %clangxx -fsanitize=undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
 end_comment
 
 begin_comment
@@ -880,7 +888,7 @@ comment|// RUN: %clangxx -fsanitize=address,undefined %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux -stdlib=platform \
 end_comment
 
 begin_comment
@@ -1084,6 +1092,178 @@ comment|// CHECK-LSAN-ASAN-LINUX-NOT: libclang_rt.lsan
 end_comment
 
 begin_comment
+comment|// RUN: %clang -fsanitize=address -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-COV-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-COV-LINUX: "-whole-archive" "{{.*}}libclang_rt.asan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-COV-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-COV-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=memory -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MSAN-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-COV-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-COV-LINUX: "-whole-archive" "{{.*}}libclang_rt.msan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-COV-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-COV-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=dataflow -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DFSAN-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-COV-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-COV-LINUX: "-whole-archive" "{{.*}}libclang_rt.dfsan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-COV-LINUX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-COV-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// CHECK-DFSAN-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=undefined -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBSAN-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-COV-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-COV-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-COV-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize-coverage=func %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-COV-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-COV-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-COV-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-COV-LINUX-NOT: "-lstdc++"
+end_comment
+
+begin_comment
+comment|// CHECK-COV-LINUX: "-lpthread"
+end_comment
+
+begin_comment
 comment|// CFI by itself does not link runtime libraries.
 end_comment
 
@@ -1212,7 +1392,7 @@ comment|// RUN:     -mmacosx-version-min=10.6 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target x86_64-apple-darwin13.4.0 \
+comment|// RUN:     -target x86_64-apple-darwin13.4.0 -stdlib=platform \
 end_comment
 
 begin_comment
@@ -1273,6 +1453,122 @@ end_comment
 
 begin_comment
 comment|// CHECK-SAFESTACK-LINUX: "-ldl"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-STATS-LINUX %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-LINUX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-LINUX: "-whole-archive" "{{[^"]*}}libclang_rt.stats_client-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-LINUX-NOT: "-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-LINUX: "{{[^"]*}}libclang_rt.stats-x86_64.a"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-apple-darwin \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-STATS-DARWIN %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-DARWIN: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-DARWIN: "{{[^"]*}}libclang_rt.stats_client_osx.a"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-DARWIN: "{{[^"]*}}libclang_rt.stats_osx_dynamic.dylib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-pc-windows \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-STATS-WIN64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN64: "--dependent-lib={{[^"]*}}clang_rt.stats_client-x86_64.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN64: "--dependent-lib={{[^"]*}}clang_rt.stats-x86_64.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN64: "--linker-option=/include:__sanitizer_stats_register"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=cfi -fsanitize-stats %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i686-pc-windows \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-CFI-STATS-WIN32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN32: "--dependent-lib={{[^"]*}}clang_rt.stats_client-i386.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN32: "--dependent-lib={{[^"]*}}clang_rt.stats-i386.lib"
+end_comment
+
+begin_comment
+comment|// CHECK-CFI-STATS-WIN32: "--linker-option=/include:___sanitizer_stats_register"
 end_comment
 
 begin_comment
@@ -1429,6 +1725,42 @@ end_comment
 
 begin_comment
 comment|// CHECK-AUBSAN-PS4: -lSceDbgAddressSanitizer_stub_weak
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=efficiency-cache-frag %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ESAN-LINUX %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=efficiency-working-set %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ESAN-LINUX %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ESAN-LINUX: libclang_rt.esan-x86_64.a
 end_comment
 
 end_unit

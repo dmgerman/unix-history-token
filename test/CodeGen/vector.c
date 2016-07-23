@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -O1 -target-cpu pentium4 -target-feature +sse4.1 -debug-info-kind=limited -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -O1 -target-cpu core2 -debug-info-kind=limited -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -404,6 +404,99 @@ name|check_result_int
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
 unit|}
+comment|// Test some logic around our lax vector comparison rules with integers.
+end_comment
+
+begin_decl_stmt
+unit|typedef
+name|int
+name|vec_int1
+name|__attribute__
+argument_list|(
+operator|(
+name|vector_size
+argument_list|(
+literal|4
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|vec_int1
+name|lax_vector_compare1
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|vec_int1
+name|y
+parameter_list|)
+block|{
+name|y
+operator|=
+name|x
+operator|==
+name|y
+expr_stmt|;
+return|return
+name|y
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define i32 @lax_vector_compare1(i32 {{.*}}, i32 {{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK: icmp eq<1 x i32>
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|vec_int2
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(8)));
+end_typedef
+
+begin_function
+name|vec_int2
+name|lax_vector_compare2
+parameter_list|(
+name|long
+name|long
+name|x
+parameter_list|,
+name|vec_int2
+name|y
+parameter_list|)
+block|{
+name|y
+operator|=
+name|x
+operator|==
+name|y
+expr_stmt|;
+return|return
+name|y
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @lax_vector_compare2(<2 x i32>* {{.*sret.*}}, i64 {{.*}}, i64 {{.*}})
+end_comment
+
+begin_comment
+comment|// CHECK: icmp eq<2 x i32>
+end_comment
+
 end_unit
 

@@ -45,7 +45,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)_mm512_setzero_pd(), \                                       (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)_mm512_setzero_pd(), \                                       (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -61,7 +61,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)(__m512d)(S), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)(__m512d)(S), (__mmask8)(M), \                                       (int)(R)); })
 end_define
 
 begin_define
@@ -75,7 +75,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)_mm512_setzero_pd(), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_exp2pd_mask((__v8df)(__m512d)(A), \                                       (__v8df)_mm512_setzero_pd(), \                                       (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)_mm512_setzero_ps(), \                                      (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)_mm512_setzero_ps(), \                                      (__mmask16)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -142,7 +142,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)(__m512)(S), \                                      (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)(__m512)(S), (__mmask16)(M), \                                      (int)(R)); })
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)_mm512_setzero_ps(), \                                      (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_exp2ps_mask((__v16sf)(__m512)(A), \                                      (__v16sf)_mm512_setzero_ps(), \                                      (__mmask16)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -211,7 +211,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)_mm512_setzero_pd(), \                                          (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)_mm512_setzero_pd(), \                                          (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -227,7 +227,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)(__m512d)(S), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)(__m512d)(S), (__mmask8)(M), \                                          (int)(R)); })
 end_define
 
 begin_define
@@ -241,7 +241,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)_mm512_setzero_pd(), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rsqrt28pd_mask((__v8df)(__m512d)(A), \                                          (__v8df)_mm512_setzero_pd(), \                                          (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)_mm512_setzero_ps(), \                                         (__mmask16)-1, (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)_mm512_setzero_ps(), \                                         (__mmask16)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)(__m512)(S), \                                         (__mmask16)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)(__m512)(S), (__mmask16)(M), \                                         (int)(R)); })
 end_define
 
 begin_define
@@ -322,7 +322,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)_mm512_setzero_ps(), \                                         (__mmask16)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rsqrt28ps_mask((__v16sf)(__m512)(A), \                                         (__v16sf)_mm512_setzero_ps(), \                                         (__mmask16)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -375,7 +375,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round_mask((__v4sf)(__m128)(A), \                                               (__v4sf)(__m128)(B), \                                               (__v4sf)_mm_setzero_ps(), \                                               (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -393,7 +393,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)(__m128)(S), \                                         (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round_mask((__v4sf)(__m128)(A), \                                               (__v4sf)(__m128)(B), \                                               (__v4sf)(__m128)(S), \                                               (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -409,7 +409,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round((__v4sf)(__m128)(A), \                                         (__v4sf)(__m128)(B), \                                         (__v4sf)_mm_setzero_ps(), \                                         (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rsqrt28ss_round_mask((__v4sf)(__m128)(A), \                                               (__v4sf)(__m128)(B), \                                               (__v4sf)_mm_setzero_ps(), \                                               (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -468,7 +468,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round_mask((__v2df)(__m128d)(A), \                                                (__v2df)(__m128d)(B), \                                                (__v2df)_mm_setzero_pd(), \                                                (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -486,7 +486,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)(__m128d)(S), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round_mask((__v2df)(__m128d)(A), \                                                (__v2df)(__m128d)(B), \                                                (__v2df)(__m128d)(S), \                                                (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -502,7 +502,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round((__v2df)(__m128d)(A), \                                          (__v2df)(__m128d)(B), \                                          (__v2df)_mm_setzero_pd(), \                                          (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rsqrt28sd_round_mask((__v2df)(__m128d)(A), \                                                (__v2df)(__m128d)(B), \                                                (__v2df)_mm_setzero_pd(), \                                                (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -547,7 +547,7 @@ parameter_list|,
 name|B
 parameter_list|)
 define|\
-value|_mm_mask_rsqrt28_round_sd((M), (A), (B), _MM_FROUND_CUR_DIRECTION)
+value|_mm_maskz_rsqrt28_round_sd((M), (A), (B), _MM_FROUND_CUR_DIRECTION)
 end_define
 
 begin_comment
@@ -563,7 +563,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)_mm512_setzero_pd(), \                                        (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)_mm512_setzero_pd(), \                                        (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -579,7 +579,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)(__m512d)(S), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)(__m512d)(S), (__mmask8)(M), \                                        (int)(R)); })
 end_define
 
 begin_define
@@ -593,7 +593,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)_mm512_setzero_pd(), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m512d)__builtin_ia32_rcp28pd_mask((__v8df)(__m512d)(A), \                                        (__v8df)_mm512_setzero_pd(), \                                        (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -644,7 +644,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)_mm512_setzero_ps(), \                                       (__mmask16)-1, (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)_mm512_setzero_ps(), \                                       (__mmask16)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -660,7 +660,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)(__m512)(S), \                                       (__mmask16)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)(__m512)(S), (__mmask16)(M), \                                       (int)(R)); })
 end_define
 
 begin_define
@@ -674,7 +674,7 @@ name|A
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)_mm512_setzero_ps(), \                                       (__mmask16)(M), (R)); })
+value|__extension__ ({ \   (__m512)__builtin_ia32_rcp28ps_mask((__v16sf)(__m512)(A), \                                       (__v16sf)_mm512_setzero_ps(), \                                       (__mmask16)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -727,7 +727,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round_mask((__v4sf)(__m128)(A), \                                             (__v4sf)(__m128)(B), \                                             (__v4sf)_mm_setzero_ps(), \                                             (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -745,7 +745,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)(__m128)(S), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round_mask((__v4sf)(__m128)(A), \                                             (__v4sf)(__m128)(B), \                                             (__v4sf)(__m128)(S), \                                             (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -761,7 +761,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round((__v4sf)(__m128)(A), \                                       (__v4sf)(__m128)(B), \                                       (__v4sf)_mm_setzero_ps(), \                                       (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128)__builtin_ia32_rcp28ss_round_mask((__v4sf)(__m128)(A), \                                             (__v4sf)(__m128)(B), \                                             (__v4sf)_mm_setzero_ps(), \                                             (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -820,7 +820,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)-1, (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round_mask((__v2df)(__m128d)(A), \                                              (__v2df)(__m128d)(B), \                                              (__v2df)_mm_setzero_pd(), \                                              (__mmask8)-1, (int)(R)); })
 end_define
 
 begin_define
@@ -838,7 +838,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)(__m128d)(S), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round_mask((__v2df)(__m128d)(A), \                                              (__v2df)(__m128d)(B), \                                              (__v2df)(__m128d)(S), \                                              (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define
@@ -854,7 +854,7 @@ name|B
 parameter_list|,
 name|R
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round((__v2df)(__m128d)(A), \                                        (__v2df)(__m128d)(B), \                                        (__v2df)_mm_setzero_pd(), \                                        (__mmask8)(M), (R)); })
+value|__extension__ ({ \   (__m128d)__builtin_ia32_rcp28sd_round_mask((__v2df)(__m128d)(A), \                                              (__v2df)(__m128d)(B), \                                              (__v2df)_mm_setzero_pd(), \                                              (__mmask8)(M), (int)(R)); })
 end_define
 
 begin_define

@@ -265,7 +265,11 @@ comment|// Make sure this works even if the decl has been used before it's defin
 end_comment
 
 begin_comment
-comment|// CHECK: @GlobalRedecl4 = common global i32
+comment|// MS: @GlobalRedecl4 = common dllexport global i32
+end_comment
+
+begin_comment
+comment|// GNU: @GlobalRedecl4 = common global i32
 end_comment
 
 begin_macro
@@ -661,7 +665,11 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// CHECK-DAG: define void @redecl3()
+comment|// MS: define dllexport void @redecl3()
+end_comment
+
+begin_comment
+comment|// GNU: define void @redecl3()
 end_comment
 
 begin_macro
@@ -705,7 +713,11 @@ comment|// Make sure this works even if the decl is used before it's defined (PR
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: define void @redecl4()
+comment|// MS: define dllexport void @redecl4()
+end_comment
+
+begin_comment
+comment|// GNU: define void @redecl4()
 end_comment
 
 begin_macro

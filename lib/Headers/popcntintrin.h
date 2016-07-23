@@ -26,6 +26,46 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("popcnt")))
 end_define
 
+begin_comment
+comment|/// \brief Counts the number of bits in the source operand having a value of 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __A
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit integer containing the number of bits with value 1 in the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -46,6 +86,46 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Counts the number of bits in the source operand having a value of 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __A
+end_comment
+
+begin_comment
+comment|///    A signed 32-bit integer operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit integer containing the number of bits with value 1 in the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
 
 begin_function
 specifier|static
@@ -73,6 +153,46 @@ directive|ifdef
 name|__x86_64__
 end_ifdef
 
+begin_comment
+comment|/// \brief Counts the number of bits in the source operand having a value of 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __A
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer containing the number of bits with value 1 in the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -95,6 +215,46 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Counts the number of bits in the source operand having a value of 1.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c POPCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __A
+end_comment
+
+begin_comment
+comment|///    A signed 64-bit integer operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer containing the number of bits with value 1 in the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
 
 begin_function
 specifier|static

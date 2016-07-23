@@ -79,6 +79,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unordered_map>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -222,6 +228,8 @@ block|,
 name|IK_CUDA
 block|,
 name|IK_PreprocessedCuda
+block|,
+name|IK_RenderScript
 block|,
 name|IK_AST
 block|,
@@ -548,6 +556,13 @@ literal|1
 decl_stmt|;
 comment|///< Whether we should embed all used
 comment|///< files into the PCM file.
+name|unsigned
+name|IncludeTimestamps
+range|:
+literal|1
+decl_stmt|;
+comment|///< Whether timestamps should be
+comment|///< written to the produced PCH file.
 name|CodeCompleteOptions
 name|CodeCompleteOpts
 decl_stmt|;
@@ -737,7 +752,15 @@ operator|::
 name|string
 name|ActionName
 expr_stmt|;
-comment|/// Args to pass to the plugin
+comment|/// Args to pass to the plugins
+name|std
+operator|::
+name|unordered_map
+operator|<
+name|std
+operator|::
+name|string
+operator|,
 name|std
 operator|::
 name|vector
@@ -745,7 +768,7 @@ operator|<
 name|std
 operator|::
 name|string
-operator|>
+operator|>>
 name|PluginArgs
 expr_stmt|;
 comment|/// The list of plugin actions to run in addition to the normal action.
@@ -758,22 +781,6 @@ operator|::
 name|string
 operator|>
 name|AddPluginActions
-expr_stmt|;
-comment|/// Args to pass to the additional plugins
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-expr|>
-name|AddPluginArgs
 expr_stmt|;
 comment|/// The list of plugins to load.
 name|std
@@ -866,6 +873,13 @@ name|std
 operator|::
 name|string
 name|AuxTriple
+expr_stmt|;
+comment|/// \brief If non-empty, search the pch input file as it was a header
+comment|// included by this file.
+name|std
+operator|::
+name|string
+name|FindPchSource
 expr_stmt|;
 name|public
 label|:
@@ -960,6 +974,11 @@ operator|,
 name|ModulesEmbedAllFiles
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|IncludeTimestamps
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|ARCMTAction

@@ -46,15 +46,14 @@ name|n
 operator|+=
 literal|20
 expr_stmt|;
-index|[
-index|[
-name|clang
-operator|::
-name|fallthrough
-index|]
-index|]
+case|case
+literal|2
+case|:
+comment|// This should generate a warning: "unannotated fallthrough"
+name|n
+operator|+=
+literal|35
 expr_stmt|;
-comment|// This should generate a warning: "fallthrough annotation does not directly precede switch label".
 break|break;
 block|}
 end_expr_stmt

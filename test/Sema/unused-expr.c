@@ -383,7 +383,7 @@ block|{
 name|t5f
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{ignoring return value of function declared with warn_unused_result}}
+comment|// expected-warning {{ignoring return value of function declared with 'warn_unused_result' attribute}}
 block|}
 end_function
 
@@ -469,7 +469,7 @@ return|;
 name|fn1
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{ignoring return value of function declared with warn_unused_result attribute}}
+comment|// expected-warning {{ignoring return value of function declared with 'warn_unused_result' attribute}}
 name|fn2
 argument_list|(
 literal|92
@@ -498,7 +498,7 @@ operator|,
 name|fn1
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{ignoring return value of function declared with warn_unused_result attribute}}
+comment|// expected-warning {{ignoring return value of function declared with 'warn_unused_result' attribute}}
 return|return
 literal|0
 return|;
@@ -552,7 +552,7 @@ block|{
 name|fn4
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{ignoring return value of function declared with warn_unused_result attribute}}
+comment|// expected-warning {{ignoring return value of function declared with 'warn_unused_result' attribute}}
 block|}
 end_function
 

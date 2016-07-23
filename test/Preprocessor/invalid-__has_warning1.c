@@ -8,7 +8,7 @@ comment|// These must be the last lines in this test.
 end_comment
 
 begin_comment
-comment|// expected-error@+1{{expected string literal}} expected-error@+1 2{{expected}}
+comment|// expected-error@+1{{unterminated}} expected-error@+1 2{{expected}}
 end_comment
 
 begin_decl_stmt

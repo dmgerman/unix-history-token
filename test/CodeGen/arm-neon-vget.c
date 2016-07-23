@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: arm-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin \
 end_comment
 
@@ -28,7 +24,7 @@ comment|// RUN:   -ffreestanding \
 end_comment
 
 begin_comment
-comment|// RUN:   -emit-llvm -w -O1 -o - %s | FileCheck %s
+comment|// RUN:   -emit-llvm -w -o - %s | opt -S -mem2reg | FileCheck %s
 end_comment
 
 begin_include
@@ -53,7 +49,7 @@ name|int8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_low_s8
 argument_list|(
@@ -71,7 +67,7 @@ name|uint8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_low_u8
 argument_list|(
@@ -89,7 +85,7 @@ name|int16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 0, i32 1, i32 2, i32 3>
 return|return
 name|vget_low_s16
 argument_list|(
@@ -107,7 +103,7 @@ name|uint16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 0, i32 1, i32 2, i32 3>
 return|return
 name|vget_low_u16
 argument_list|(
@@ -125,7 +121,7 @@ name|int32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> undef,<2 x i32><i32 0, i32 1>
+comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> %a,<2 x i32><i32 0, i32 1>
 return|return
 name|vget_low_s32
 argument_list|(
@@ -143,7 +139,7 @@ name|uint32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> undef,<2 x i32><i32 0, i32 1>
+comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> %a,<2 x i32><i32 0, i32 1>
 return|return
 name|vget_low_u32
 argument_list|(
@@ -161,7 +157,7 @@ name|int64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> undef,<1 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> %a,<1 x i32> zeroinitializer
 return|return
 name|vget_low_s64
 argument_list|(
@@ -179,7 +175,7 @@ name|uint64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> undef,<1 x i32> zeroinitializer
+comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> %a,<1 x i32> zeroinitializer
 return|return
 name|vget_low_u64
 argument_list|(
@@ -197,7 +193,7 @@ name|poly8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_low_p8
 argument_list|(
@@ -215,7 +211,7 @@ name|poly16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 0, i32 1, i32 2, i32 3>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 0, i32 1, i32 2, i32 3>
 return|return
 name|vget_low_p16
 argument_list|(
@@ -233,7 +229,7 @@ name|float32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x float> %a,<4 x float> undef,<2 x i32><i32 0, i32 1>
+comment|// CHECK: shufflevector<4 x float> %a,<4 x float> %a,<2 x i32><i32 0, i32 1>
 return|return
 name|vget_low_f32
 argument_list|(
@@ -251,7 +247,7 @@ name|int8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|vget_high_s8
 argument_list|(
@@ -269,7 +265,7 @@ name|uint8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|vget_high_u8
 argument_list|(
@@ -287,7 +283,7 @@ name|int16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_high_s16
 argument_list|(
@@ -305,7 +301,7 @@ name|uint16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_high_u16
 argument_list|(
@@ -323,7 +319,7 @@ name|int32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> %a,<2 x i32><i32 2, i32 3>
 return|return
 name|vget_high_s32
 argument_list|(
@@ -341,7 +337,7 @@ name|uint32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x i32> %a,<4 x i32> %a,<2 x i32><i32 2, i32 3>
 return|return
 name|vget_high_u32
 argument_list|(
@@ -359,7 +355,7 @@ name|int64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> undef,<1 x i32><i32 1>
+comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> %a,<1 x i32><i32 1>
 return|return
 name|vget_high_s64
 argument_list|(
@@ -377,7 +373,7 @@ name|uint64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> undef,<1 x i32><i32 1>
+comment|// CHECK: shufflevector<2 x i64> %a,<2 x i64> %a,<1 x i32><i32 1>
 return|return
 name|vget_high_u64
 argument_list|(
@@ -395,7 +391,7 @@ name|poly8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> undef,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: shufflevector<16 x i8> %a,<16 x i8> %a,<8 x i32><i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|vget_high_p8
 argument_list|(
@@ -413,7 +409,7 @@ name|poly16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> undef,<4 x i32><i32 4, i32 5, i32 6, i32 7>
+comment|// CHECK: shufflevector<8 x i16> %a,<8 x i16> %a,<4 x i32><i32 4, i32 5, i32 6, i32 7>
 return|return
 name|vget_high_p16
 argument_list|(
@@ -431,7 +427,7 @@ name|float32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<4 x float> %a,<4 x float> undef,<2 x i32><i32 2, i32 3>
+comment|// CHECK: shufflevector<4 x float> %a,<4 x float> %a,<2 x i32><i32 2, i32 3>
 return|return
 name|vget_high_f32
 argument_list|(

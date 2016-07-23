@@ -732,6 +732,14 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HF %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux-musleabihf %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-HF %s
+end_comment
+
+begin_comment
 comment|// CHECK-HF: "-target-cpu" "arm1176jzf-s"
 end_comment
 

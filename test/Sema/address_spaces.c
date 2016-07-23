@@ -119,7 +119,7 @@ comment|// expected-error {{address space is negative}}
 name|__attribute__
 argument_list|(
 argument|(address_space(
-literal|0xFFFFFF
+literal|0x7FFFFF
 argument|))
 argument_list|)
 name|int

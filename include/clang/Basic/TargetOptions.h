@@ -75,6 +75,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/OpenCLOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -91,6 +97,13 @@ name|std
 operator|::
 name|string
 name|Triple
+expr_stmt|;
+comment|/// When compiling for the device side, contains the triple used to compile
+comment|/// for the host.
+name|std
+operator|::
+name|string
+name|HostTriple
 expr_stmt|;
 comment|/// If given, the name of the target CPU to generate code for.
 name|std
@@ -109,6 +122,12 @@ name|std
 operator|::
 name|string
 name|ABI
+expr_stmt|;
+comment|/// The EABI version to use
+name|std
+operator|::
+name|string
+name|EABIVersion
 expr_stmt|;
 comment|/// If given, the version string of the linker in use.
 name|std
@@ -149,6 +168,10 @@ name|string
 operator|>
 name|Reciprocals
 expr_stmt|;
+comment|/// Supported OpenCL extensions and optional core features.
+name|OpenCLOptions
+name|SupportedOpenCLOptions
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

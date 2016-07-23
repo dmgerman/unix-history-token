@@ -105,8 +105,21 @@ comment|/// This includes the case of a non-reference init-capture.
 name|Capture_ByCopy
 init|=
 literal|0x02
+block|,
+comment|/// \brief Flag used by the Capture class to distinguish between a capture
+comment|/// of '*this' and a capture of a VLA type.
+name|Capture_This
+init|=
+literal|0x04
 block|}
 enum|;
+comment|// Decl could represent:
+comment|// - a VarDecl* that represents the variable that was captured or the
+comment|//   init-capture.
+comment|// - or, is a nullptr and Capture_This is set in Bits if this represents a
+comment|//   capture of '*this' by value or reference.
+comment|// - or, is a nullptr and Capture_This is not set in Bits if this represents
+comment|//   a capture of a VLA type.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -114,7 +127,7 @@ operator|<
 name|Decl
 operator|*
 operator|,
-literal|2
+literal|3
 operator|>
 name|DeclAndBits
 expr_stmt|;
@@ -176,23 +189,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|DeclAndBits
 operator|.
 name|getPointer
 argument_list|()
 operator|==
 name|nullptr
-operator|)
 operator|&&
-operator|!
 operator|(
 name|DeclAndBits
 operator|.
 name|getInt
 argument_list|()
 operator|&
-name|Capture_ByCopy
+name|Capture_This
 operator|)
 return|;
 block|}
@@ -223,22 +233,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|DeclAndBits
 operator|.
 name|getPointer
 argument_list|()
 operator|==
 name|nullptr
-operator|)
 operator|&&
+operator|!
 operator|(
 name|DeclAndBits
 operator|.
 name|getInt
 argument_list|()
 operator|&
-name|Capture_ByCopy
+name|Capture_This
 operator|)
 return|;
 block|}
@@ -258,13 +267,14 @@ argument_list|(
 name|capturesVariable
 argument_list|()
 operator|&&
-literal|"No variable available for 'this' capture"
+literal|"No variable available for capture"
 argument_list|)
 block|;
 return|return
-name|cast
+name|static_cast
 operator|<
 name|VarDecl
+operator|*
 operator|>
 operator|(
 name|DeclAndBits

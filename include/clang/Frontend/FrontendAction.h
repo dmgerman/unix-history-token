@@ -699,7 +699,37 @@ name|arg
 argument_list|)
 operator|=
 literal|0
-block|; }
+block|;    enum
+name|ActionType
+block|{
+name|Cmdline
+block|,
+comment|///< Action is determined by the cc1 command-line
+name|ReplaceAction
+block|,
+comment|///< Replace the main action
+name|AddBeforeMainAction
+block|,
+comment|///< Execute the action before the main action
+name|AddAfterMainAction
+comment|///< Execute the action after the main action
+block|}
+block|;
+comment|/// \brief Get the action type for this plugin
+comment|///
+comment|/// \return The action type. If the type is Cmdline then by default the
+comment|/// plugin does nothing and what it does is determined by the cc1
+comment|/// command-line.
+name|virtual
+name|ActionType
+name|getActionType
+argument_list|()
+block|{
+return|return
+name|Cmdline
+return|;
+block|}
+expr|}
 block|;
 comment|/// \brief Abstract base class to use for preprocessor-based frontend actions.
 name|class
@@ -808,8 +838,12 @@ comment|/// Construct a WrapperFrontendAction from an existing action, taking
 comment|/// ownership of it.
 name|WrapperFrontendAction
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendAction
-operator|*
+operator|>
 name|WrappedAction
 argument_list|)
 block|;

@@ -202,6 +202,11 @@ operator|*
 name|Diags
 operator|=
 name|nullptr
+argument_list|,
+name|bool
+name|DefaultDiagColor
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 name|class
@@ -504,6 +509,8 @@ comment|/// language standard in the given LangOptions object.
 comment|///
 comment|/// \param Opts - The LangOptions object to set up.
 comment|/// \param IK - The input language.
+comment|/// \param T - The target triple.
+comment|/// \param PPOpts - The PreprocessorOptions affected.
 comment|/// \param LangStd - The input language standard.
 specifier|static
 name|void
@@ -512,6 +519,10 @@ argument_list|(
 argument|LangOptions&Opts
 argument_list|,
 argument|InputKind IK
+argument_list|,
+argument|const llvm::Triple&T
+argument_list|,
+argument|PreprocessorOptions&PPOpts
 argument_list|,
 argument|LangStandard::Kind LangStd = LangStandard::lang_unspecified
 argument_list|)

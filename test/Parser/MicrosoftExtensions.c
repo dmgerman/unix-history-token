@@ -342,6 +342,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HASHAT
+value|#@
+end_define
+
+begin_define
+define|#
+directive|define
+name|MISSING_ARG
+parameter_list|(
+name|x
+parameter_list|)
+value|#@
+end_define
+
+begin_comment
+comment|/* expected-error@-1 {{'#@' is not followed by a macro parameter}} */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum

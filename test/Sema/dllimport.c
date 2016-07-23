@@ -34,7 +34,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -49,7 +49,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -64,7 +64,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -82,7 +82,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_function
@@ -101,7 +101,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_struct
@@ -116,7 +116,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
+comment|// expected-warning@-1{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_comment
@@ -274,6 +274,21 @@ begin_comment
 comment|// Declare, then reject definition.
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
+begin_comment
+comment|// expected-note@+2{{previous attribute is here}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -289,8 +304,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous declaration is here}} expected-note{{previous attribute is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+4{{'ExternGlobalDeclInit' redeclared without 'dllimport' attribute: 'dllexport' attribute added}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+2{{'ExternGlobalDeclInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -300,9 +339,20 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
 begin_comment
-comment|// expected-warning{{'ExternGlobalDeclInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+comment|// expected-note@+2{{previous attribute is here}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__declspec
@@ -318,8 +368,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous declaration is here}} expected-note{{previous attribute is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+4{{'GlobalDeclInit' redeclared without 'dllimport' attribute: 'dllexport' attribute added}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+2{{'GlobalDeclInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -329,9 +403,20 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
 begin_comment
-comment|// expected-warning{{'GlobalDeclInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+comment|// expected-note@+2{{previous attribute is here}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -347,8 +432,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous declaration is here}} expected-note{{previous attribute is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+4{{'GlobalDeclChunkAttrInit' redeclared without 'dllimport' attribute: 'dllexport' attribute added}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+2{{'GlobalDeclChunkAttrInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -359,9 +468,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
 begin_comment
-comment|// expected-warning{{'GlobalDeclChunkAttrInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+comment|// expected-note@+2{{previous attribute is here}}
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -376,8 +496,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous declaration is here}} expected-note{{previous attribute is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+4{{'GlobalDeclAttrInit' redeclared without 'dllimport' attribute: 'dllexport' attribute added}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+2{{'GlobalDeclAttrInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -386,10 +530,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// expected-warning{{'GlobalDeclAttrInit' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
-end_comment
 
 begin_comment
 comment|// Redeclarations
@@ -500,11 +640,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// NB: MSVC issues a warning and makes GlobalRedecl3 dllexport. We follow GCC
-end_comment
-
-begin_comment
-comment|// and drop the dllimport with a warning.
+comment|// We follow GCC and drop the dllimport with a warning.
 end_comment
 
 begin_macro
@@ -1015,14 +1151,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// NB: MSVC issues a warning and makes redecl2/redecl3 dllexport. We follow GCC
-end_comment
-
-begin_comment
-comment|// and drop the dllimport with a warning.
-end_comment
-
 begin_macro
 name|__declspec
 argument_list|(
@@ -1052,6 +1180,21 @@ begin_comment
 comment|// expected-warning{{'redecl2' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU
+end_ifdef
+
+begin_comment
+comment|// expected-note@+2{{previous attribute is here}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__declspec
 argument_list|(
@@ -1067,8 +1210,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note{{previous declaration is here}} expected-note{{previous attribute is here}}
+comment|// expected-note{{previous declaration is here}}
 end_comment
+
+begin_comment
+comment|// NB: Both MSVC and Clang issue a warning and make redecl3 dllexport.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MS
+end_ifdef
+
+begin_comment
+comment|// expected-warning@+4{{'redecl3' redeclared without 'dllimport' attribute: 'dllexport' attribute added}}
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// expected-warning@+2{{'redecl3' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -1076,10 +1247,6 @@ name|redecl3
 parameter_list|()
 block|{}
 end_function
-
-begin_comment
-comment|// expected-warning{{'redecl3' redeclared without 'dllimport' attribute: previous 'dllimport' ignored}}
-end_comment
 
 begin_function_decl
 name|void
