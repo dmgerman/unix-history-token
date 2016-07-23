@@ -1161,7 +1161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queues  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
+comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queue  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
 end_comment
 
 begin_function
