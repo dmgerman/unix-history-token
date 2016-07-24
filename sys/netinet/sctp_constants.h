@@ -1451,6 +1451,13 @@ name|SCTP_RTT_FROM_DATA
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|PR_SCTP_UNORDERED_FLAG
+value|0x0001
+end_define
+
 begin_comment
 comment|/* IP hdr (20/40) + 12+2+2 (enet) + sctp common 12 */
 end_comment

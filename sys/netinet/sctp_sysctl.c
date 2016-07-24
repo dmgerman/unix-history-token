@@ -1284,27 +1284,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|sin6
-operator|->
-name|sin6_scope_id
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 								 * bad link 								 * local 								 * address 								 */
-if|if
-condition|(
-name|sa6_recoverscope
-argument_list|(
-name|sin6
-argument_list|)
-operator|!=
-literal|0
-condition|)
-continue|continue;
-block|}
 block|}
 if|if
 condition|(
