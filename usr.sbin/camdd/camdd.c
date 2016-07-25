@@ -5388,6 +5388,9 @@ case|:
 case|case
 name|T_RBC
 case|:
+case|case
+name|T_ZBC_HM
+case|:
 break|break;
 default|default:
 name|errx
