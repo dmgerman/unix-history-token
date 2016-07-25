@@ -128,6 +128,13 @@ name|_LIBUNWIND_CURSOR_SIZE
 value|19
 end_define
 
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|9
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -156,6 +163,13 @@ define|#
 directive|define
 name|_LIBUNWIND_CURSOR_SIZE
 value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|17
 end_define
 
 begin_elif
@@ -188,6 +202,13 @@ name|_LIBUNWIND_CURSOR_SIZE
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|113
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -216,6 +237,13 @@ define|#
 directive|define
 name|_LIBUNWIND_CURSOR_SIZE
 value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|96
 end_define
 
 begin_elif
@@ -248,6 +276,13 @@ name|_LIBUNWIND_CURSOR_SIZE
 value|67
 end_define
 
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|96
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -276,6 +311,13 @@ define|#
 directive|define
 name|_LIBUNWIND_CURSOR_SIZE
 value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|32
 end_define
 
 begin_elif
@@ -315,6 +357,13 @@ end_define
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|96
+end_define
 
 begin_else
 else|#
@@ -395,6 +444,13 @@ define|#
 directive|define
 name|_LIBUNWIND_CURSOR_SIZE
 value|140
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBUNWIND_MAX_REGISTER
+value|120
 end_define
 
 begin_endif
