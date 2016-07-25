@@ -1229,11 +1229,6 @@ name|int
 name|sc_wantresp
 decl_stmt|;
 name|struct
-name|taskqueue
-modifier|*
-name|sc_tq
-decl_stmt|;
-name|struct
 name|task
 name|sc_es_task
 decl_stmt|;
