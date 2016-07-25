@@ -12695,6 +12695,17 @@ name|vp
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For VMIO bufobj, BO_DEAD is set in vm_object_terminate() 	 * after the object's page queue is flushed. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_object
+operator|==
+name|NULL
+condition|)
 name|vp
 operator|->
 name|v_bufobj
