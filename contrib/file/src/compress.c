@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.96 2016/04/20 00:00:26 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.97 2016/05/13 23:02:28 christos Exp $"
 argument_list|)
 end_macro
 
@@ -200,11 +200,6 @@ name|defined
 argument_list|(
 name|HAVE_ZLIB_H
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_LIBZ
-argument_list|)
 end_if
 
 begin_define
@@ -218,12 +213,6 @@ include|#
 directive|include
 file|<zlib.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ZLIBSUPPORT
-end_define
 
 begin_endif
 endif|#

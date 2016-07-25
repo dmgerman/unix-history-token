@@ -1076,7 +1076,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.27"
+value|"file 5.28"
 end_define
 
 begin_comment
@@ -1109,7 +1109,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.27"
+value|"5.28"
 end_define
 
 begin_comment
@@ -1249,7 +1249,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.27"
+value|"5.28"
 end_define
 
 begin_comment
@@ -1306,6 +1306,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Enable zlib compression support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZLIBSUPPORT
+value|1
+end_define
 
 begin_comment
 comment|/* Enable large inode numbers on Mac OS X 10.5.  */
