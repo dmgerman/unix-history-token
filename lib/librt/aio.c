@@ -211,7 +211,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|__sys_aio_waitcomplete
 parameter_list|(
 name|struct
@@ -230,7 +230,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|__sys_aio_return
 parameter_list|(
 name|struct
@@ -625,7 +625,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|__aio_waitcomplete
 parameter_list|(
 name|struct
@@ -640,19 +640,21 @@ modifier|*
 name|timeout
 parameter_list|)
 block|{
+name|ssize_t
+name|ret
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|int
 name|ret
-init|=
+operator|=
 name|__sys_aio_waitcomplete
 argument_list|(
 name|iocbp
 argument_list|,
 name|timeout
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -711,7 +713,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|__aio_return
 parameter_list|(
 name|struct
@@ -740,11 +742,19 @@ argument_list|)
 operator|==
 name|EINPROGRESS
 condition|)
+block|{
+comment|/* 			 * Fail with EINVAL to match the semantics of 			 * __sys_aio_return() for an in-progress 			 * request. 			 */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
-name|EINPROGRESS
+operator|-
+literal|1
 operator|)
 return|;
+block|}
 name|__sigev_list_lock
 argument_list|()
 expr_stmt|;
