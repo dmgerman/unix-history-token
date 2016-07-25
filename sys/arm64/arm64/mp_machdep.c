@@ -1833,7 +1833,7 @@ operator|<
 name|MAXCPU
 argument_list|,
 operator|(
-literal|"Too mant CPUs"
+literal|"Too many CPUs"
 operator|)
 argument_list|)
 expr_stmt|;
