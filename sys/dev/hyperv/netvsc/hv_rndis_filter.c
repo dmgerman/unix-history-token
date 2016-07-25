@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hv_net_vsc.h"
 end_include
 
