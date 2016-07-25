@@ -1901,6 +1901,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* 	 * Rotate the CPU IDs to put the boot CPU as CPU 0. We keep the other 	 * CPUs ordered as the are likely grouped into clusters so it can be 	 * useful to keep that property, e.g. for the GICv3 driver to send 	 * an IPI to all CPUs in the cluster. 	 */
 name|cpuid
 operator|=
 name|id
@@ -1912,7 +1913,14 @@ operator|<
 name|cpu0
 condition|)
 name|cpuid
-operator|++
+operator|+=
+name|mp_maxid
+operator|+
+literal|1
+expr_stmt|;
+name|cpuid
+operator|-=
+name|cpu0
 expr_stmt|;
 name|pcpup
 operator|=
