@@ -2730,13 +2730,13 @@ name|conn_max_burst_length
 operator|=
 name|tmp
 expr_stmt|;
-name|keys_add
+name|keys_add_int
 argument_list|(
 name|response_keys
 argument_list|,
 name|name
 argument_list|,
-name|value
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
