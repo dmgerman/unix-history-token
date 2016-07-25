@@ -1011,6 +1011,34 @@ block|}
 comment|/* Sanity-check */
 if|if
 condition|(
+operator|(
+name|ctrl
+index|[
+literal|0
+index|]
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|ctrl
+index|[
+literal|1
+index|]
+operator|<
+literal|0
+operator|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Corrupt patch\n"
+argument_list|)
+expr_stmt|;
+comment|/* Sanity-check */
+if|if
+condition|(
 name|newpos
 operator|+
 name|ctrl
