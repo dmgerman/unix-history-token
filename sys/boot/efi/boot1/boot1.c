@@ -2811,9 +2811,9 @@ operator|)
 operator|&
 name|handles
 argument_list|)
+operator|)
 operator|!=
 name|EFI_SUCCESS
-operator|)
 condition|)
 block|{
 name|panic
