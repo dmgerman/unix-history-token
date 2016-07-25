@@ -69,27 +69,11 @@ directive|include
 file|<dev/hyperv/include/vmbus.h>
 end_include
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|struct
-name|vmbus_bufring
-modifier|*
-name|ring_buffer
-decl_stmt|;
-name|struct
-name|mtx
-name|ring_lock
-decl_stmt|;
-name|uint32_t
-name|ring_data_size
-decl_stmt|;
-comment|/* ring_size */
-block|}
-name|hv_vmbus_ring_buffer_info
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_brvar.h>
+end_include
 
 begin_struct
 struct|struct

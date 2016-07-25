@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HYPERV_PRIV_H__
+name|_VMBUS_BRVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__HYPERV_PRIV_H__
+name|_VMBUS_BRVAR_H_
 end_define
 
 begin_include
@@ -36,30 +36,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sema.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_iovec.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/vmbus/vmbus_chanvar.h>
-end_include
-
-begin_struct_decl
-struct_decl|struct
-name|vmbus_softc
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/*  * Private, VM Bus functions  */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|vmbus_bufring
+modifier|*
+name|ring_buffer
+decl_stmt|;
+name|struct
+name|mtx
+name|ring_lock
+decl_stmt|;
+name|uint32_t
+name|ring_data_size
+decl_stmt|;
+comment|/* ring_size */
+block|}
+name|hv_vmbus_ring_buffer_info
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -219,7 +219,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __HYPERV_PRIV_H__ */
+comment|/* _VMBUS_BRVAR_H_ */
 end_comment
 
 end_unit
