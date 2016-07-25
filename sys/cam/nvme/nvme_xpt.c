@@ -2409,29 +2409,12 @@ block|{
 case|case
 name|XPT_SCAN_BUS
 case|:
-name|printf
-argument_list|(
-literal|"NVME scan BUS started -- ignored\n"
-argument_list|)
-expr_stmt|;
-comment|//		break;
 case|case
 name|XPT_SCAN_TGT
 case|:
-name|printf
-argument_list|(
-literal|"NVME scan TGT started -- ignored\n"
-argument_list|)
-expr_stmt|;
-comment|//		break;
 case|case
 name|XPT_SCAN_LUN
 case|:
-name|printf
-argument_list|(
-literal|"NVME scan started\n"
-argument_list|)
-expr_stmt|;
 name|nvme_scan_lun
 argument_list|(
 name|start_ccb
