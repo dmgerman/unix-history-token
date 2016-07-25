@@ -3140,6 +3140,16 @@ name|geom
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|gp
+operator|->
+name|flags
+operator|&
+name|G_GEOM_WITHER
+operator|)
+operator|==
+literal|0
+operator|&&
 name|gp
 operator|->
 name|resize
