@@ -1152,15 +1152,6 @@ index|]
 operator|=
 name|length
 expr_stmt|;
-name|cmd
-operator|.
-name|dataflags
-index|[
-literal|1
-index|]
-operator|=
-name|IWM_HCMD_DFL_NOCOPY
-expr_stmt|;
 return|return
 name|iwm_send_cmd
 argument_list|(
@@ -1289,6 +1280,11 @@ return|return
 name|err
 return|;
 block|}
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|IWM_DPRINTF
 argument_list|(
 name|sc

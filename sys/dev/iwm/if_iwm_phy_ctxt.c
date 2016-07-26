@@ -470,12 +470,12 @@ name|chains_static
 argument_list|,
 name|chains_dynamic
 argument_list|,
-name|IWM_FW_VALID_RX_ANT
+name|iwm_fw_valid_rx_ant
 argument_list|(
 name|sc
 argument_list|)
 argument_list|,
-name|IWM_FW_VALID_TX_ANT
+name|iwm_fw_valid_tx_ant
 argument_list|(
 name|sc
 argument_list|)
@@ -540,7 +540,7 @@ name|rxchain_info
 operator|=
 name|htole32
 argument_list|(
-name|IWM_FW_VALID_RX_ANT
+name|iwm_fw_valid_rx_ant
 argument_list|(
 name|sc
 argument_list|)
@@ -576,7 +576,7 @@ name|txchain_info
 operator|=
 name|htole32
 argument_list|(
-name|IWM_FW_VALID_TX_ANT
+name|iwm_fw_valid_tx_ant
 argument_list|(
 name|sc
 argument_list|)

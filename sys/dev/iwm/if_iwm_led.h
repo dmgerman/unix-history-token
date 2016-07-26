@@ -24,6 +24,7 @@ name|__IF_IWM_LED_H__
 end_define
 
 begin_function_decl
+specifier|extern
 name|void
 name|iwm_mvm_led_enable
 parameter_list|(
@@ -35,6 +36,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|iwm_mvm_led_disable
 parameter_list|(
@@ -46,27 +48,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|iwm_mvm_led_is_enabled
-parameter_list|(
-name|struct
-name|iwm_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|iwm_led_blink_timeout
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|extern
 name|void
 name|iwm_led_blink_start
 parameter_list|(
@@ -78,6 +60,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|iwm_led_blink_stop
 parameter_list|(
