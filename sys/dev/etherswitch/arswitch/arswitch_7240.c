@@ -290,6 +290,7 @@ name|AR7240_GLOBAL_CTRL_MTU_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX ARP? Frame Age enable? */
 comment|/* Service Tag */
 name|arswitch_modifyreg
 argument_list|(
