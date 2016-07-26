@@ -1460,16 +1460,14 @@ name|time_second
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|--
 name|shmseg
 operator|->
 name|u
 operator|.
 name|shm_nattch
-operator|<=
+operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|shmseg
@@ -1543,7 +1541,7 @@ operator|->
 name|u
 operator|.
 name|shm_nattch
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
