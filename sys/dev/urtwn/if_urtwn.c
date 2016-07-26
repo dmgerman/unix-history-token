@@ -12586,6 +12586,35 @@ name|wk_macaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Clear high bits. */
+name|urtwn_cam_write
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_CAM_CTL6
+argument_list|(
+name|k
+operator|->
+name|wk_keyix
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|urtwn_cam_write
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_CAM_CTL7
+argument_list|(
+name|k
+operator|->
+name|wk_keyix
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Write key. */
 for|for
 control|(
