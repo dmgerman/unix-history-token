@@ -1204,13 +1204,12 @@ modifier|*
 name|initstate
 parameter_list|(
 name|unsigned
-name|long
-comment|/* XSI requires u_int */
+name|int
 parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|long
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1429,7 +1428,7 @@ name|void
 name|srandom
 parameter_list|(
 name|unsigned
-name|long
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -585,7 +585,7 @@ name|void
 name|srandom
 parameter_list|(
 name|unsigned
-name|long
+name|int
 name|x
 parameter_list|)
 block|{
@@ -805,14 +805,14 @@ modifier|*
 name|initstate
 parameter_list|(
 name|unsigned
-name|long
+name|int
 name|seed
 parameter_list|,
 name|char
 modifier|*
 name|arg_state
 parameter_list|,
-name|long
+name|size_t
 name|n
 parameter_list|)
 block|{
