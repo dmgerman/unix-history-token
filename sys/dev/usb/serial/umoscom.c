@@ -2705,9 +2705,6 @@ operator|->
 name|sc_parent
 decl_stmt|;
 name|uint8_t
-name|lsr
-decl_stmt|;
-name|uint8_t
 name|msr
 decl_stmt|;
 name|DPRINTFN
@@ -2717,8 +2714,9 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* read status registers */
-name|lsr
+comment|/* 	 * Read status registers.  MSR bits need translation from ns16550 to 	 * SER_* values.  LSR bits are ns16550 in hardware and ucom. 	 */
+operator|*
+name|p_lsr
 operator|=
 name|umoscom_cfg_read
 argument_list|(
