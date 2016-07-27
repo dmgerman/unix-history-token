@@ -11672,6 +11672,29 @@ comment|/* IWM_TX_FLAGS_BITS_API_S_VER_1 */
 end_comment
 
 begin_comment
+comment|/**  * enum iwm_tx_pm_timeouts - pm timeout values in TX command  * @IWM_PM_FRAME_NONE: no need to suspend sleep mode  * @IWM_PM_FRAME_MGMT: fw suspend sleep mode for 100TU  * @IWM_PM_FRAME_ASSOC: fw suspend sleep mode for 10sec  */
+end_comment
+
+begin_enum
+enum|enum
+name|iwm_tx_pm_timeouts
+block|{
+name|IWM_PM_FRAME_NONE
+init|=
+literal|0
+block|,
+name|IWM_PM_FRAME_MGMT
+init|=
+literal|2
+block|,
+name|IWM_PM_FRAME_ASSOC
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * TX command security control  */
 end_comment
 
