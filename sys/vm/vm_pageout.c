@@ -3955,7 +3955,7 @@ goto|goto
 name|requeue_page
 goto|;
 block|}
-comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
+comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of freeing it.  If, however, any of the page's 		 * mappings allow write access, then the page may still be 		 * modified until the last of those mappings are removed. 		 */
 if|if
 condition|(
 name|object
