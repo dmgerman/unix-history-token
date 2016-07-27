@@ -4001,6 +4001,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX Note: sc_lsr is always zero */
 operator|*
 name|lsr
 operator|=
