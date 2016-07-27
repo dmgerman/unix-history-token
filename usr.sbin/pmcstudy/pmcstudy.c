@@ -12805,24 +12805,18 @@ name|d
 parameter_list|)
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|do_cpuid
 parameter_list|(
-name|u_int
 name|ax
 parameter_list|,
-name|u_int
 name|cx
 parameter_list|,
-name|u_int
-modifier|*
 name|p
 parameter_list|)
-block|{ }
-end_function
+end_define
 
 begin_endif
 endif|#
@@ -12830,7 +12824,7 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|get_cpuid_set
 parameter_list|(
