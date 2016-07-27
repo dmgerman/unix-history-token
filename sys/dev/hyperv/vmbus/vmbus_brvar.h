@@ -304,7 +304,7 @@ name|int
 name|dlen
 parameter_list|,
 name|uint32_t
-name|offset
+name|skip
 parameter_list|)
 function_decl|;
 end_function_decl
