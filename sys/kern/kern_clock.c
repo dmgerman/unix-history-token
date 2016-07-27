@@ -1547,14 +1547,25 @@ begin_comment
 comment|/* Per-CPU version of ticks. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
-name|global_hardclock_run
+name|devpoll_run
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize clock frequencies and start both clocks running.  */
@@ -2402,20 +2413,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Dangerous and no need to call these things concurrently. */
-if|if
-condition|(
-name|atomic_cmpset_acq_int
-argument_list|(
-operator|&
-name|global_hardclock_run
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
 name|tc_ticktock
 argument_list|(
 name|newticks
@@ -2424,22 +2421,36 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
+comment|/* Dangerous and no need to call these things concurrently. */
+if|if
+condition|(
+name|atomic_cmpset_acq_int
+argument_list|(
+operator|&
+name|devpoll_run
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 comment|/* This is very short and quick. */
 name|hardclock_device_poll
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEVICE_POLLING */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
-name|global_hardclock_run
+name|devpoll_run
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 ifdef|#
 directive|ifdef
 name|SW_WATCHDOG
