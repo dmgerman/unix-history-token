@@ -735,6 +735,7 @@ name|tc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sysctl_handle_int
 argument_list|(
 name|oidp
@@ -746,6 +747,7 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -775,6 +777,7 @@ operator|->
 name|tc_frequency
 expr_stmt|;
 return|return
+operator|(
 name|sysctl_handle_64
 argument_list|(
 name|oidp
@@ -786,6 +789,7 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
