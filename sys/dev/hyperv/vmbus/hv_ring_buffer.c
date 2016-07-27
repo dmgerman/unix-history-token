@@ -1274,6 +1274,7 @@ operator|->
 name|rxbr_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The requested data and the 64bits channel packet 	 * offset should be there at least. 	 */
 name|bytesAvailToRead
 operator|=
 name|vmbus_rxbr_avail
@@ -1286,6 +1287,11 @@ condition|(
 name|bytesAvailToRead
 operator|<
 name|dlen
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -1403,6 +1409,13 @@ condition|(
 name|bytes_avail_to_read
 operator|<
 name|dlen
+operator|+
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+name|prev_indices
+argument_list|)
 condition|)
 block|{
 name|mtx_unlock_spin
