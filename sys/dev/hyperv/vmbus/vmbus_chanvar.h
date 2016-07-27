@@ -85,7 +85,8 @@ name|ch_flags
 decl_stmt|;
 comment|/* VMBUS_CHAN_FLAG_ */
 comment|/* 	 * RX bufring; immediately following ch_txbr. 	 */
-name|hv_vmbus_ring_buffer_info
+name|struct
+name|vmbus_rxbr
 name|ch_rxbr
 decl_stmt|;
 name|struct
@@ -105,7 +106,8 @@ modifier|*
 name|ch_cbarg
 decl_stmt|;
 comment|/* 	 * TX bufring; at the beginning of ch_bufring. 	 * 	 * NOTE: 	 * Put TX bufring and the following MNF/evtflag to a new 	 * cacheline, since they will be accessed on all CPUs by 	 * locking ch_txbr first. 	 * 	 * XXX 	 * TX bufring and following MNF/evtflags do _not_ fit in 	 * one 64B cacheline. 	 */
-name|hv_vmbus_ring_buffer_info
+name|struct
+name|vmbus_txbr
 name|ch_txbr
 name|__aligned
 parameter_list|(
