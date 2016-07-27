@@ -714,16 +714,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bintime
-name|boottimebin
+name|boottimebin_x
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
-name|boottime
+name|boottime_x
 decl_stmt|;
 end_decl_stmt
 
@@ -970,6 +972,16 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__mips__
@@ -1010,6 +1022,7 @@ operator|.
 name|tv_usec
 expr_stmt|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -1021,14 +1034,15 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
-else|else
 endif|#
 directive|endif
 endif|#
 directive|endif
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -1041,6 +1055,7 @@ argument_list|(
 name|boottime
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1346,7 +1361,7 @@ argument_list|(
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,7 +1685,7 @@ argument_list|(
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 block|}
@@ -1966,7 +1981,7 @@ argument_list|(
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 block|}
@@ -2286,7 +2301,7 @@ argument_list|(
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 block|}
@@ -2422,6 +2437,42 @@ end_endif
 begin_comment
 comment|/* FFCLOCK */
 end_comment
+
+begin_function
+name|void
+name|getboottime
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+name|boottime
+parameter_list|)
+block|{
+operator|*
+name|boottime
+operator|=
+name|boottime_x
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|getboottimebin
+parameter_list|(
+name|struct
+name|bintime
+modifier|*
+name|boottimebin
+parameter_list|)
+block|{
+operator|*
+name|boottimebin
+operator|=
+name|boottimebin_x
+expr_stmt|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -4924,6 +4975,10 @@ name|uint32_t
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|bintime
+name|boottimebin
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FFCLOCK
@@ -4987,6 +5042,13 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|getboottimebin
+argument_list|(
+operator|&
+name|boottimebin
+argument_list|)
+expr_stmt|;
 name|bintime_add
 argument_list|(
 name|bt
@@ -4995,6 +5057,7 @@ operator|&
 name|boottimebin
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef
@@ -5567,10 +5630,10 @@ operator|&
 name|bt2
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
-name|boottimebin
+name|boottimebin_x
 operator|=
 name|bt
 expr_stmt|;
@@ -5580,7 +5643,7 @@ operator|&
 name|bt
 argument_list|,
 operator|&
-name|boottime
+name|boottime_x
 argument_list|)
 expr_stmt|;
 comment|/* XXX fiddle all the little crinkly bits around the fiords... */
@@ -5900,7 +5963,7 @@ operator|&
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 name|i
@@ -5963,7 +6026,7 @@ name|sec
 operator|!=
 name|t
 condition|)
-name|boottimebin
+name|boottimebin_x
 operator|.
 name|sec
 operator|+=
@@ -7954,7 +8017,7 @@ operator|&
 name|bt
 argument_list|,
 operator|&
-name|boottimebin
+name|boottimebin_x
 argument_list|)
 expr_stmt|;
 name|bintime2timespec
@@ -9299,7 +9362,7 @@ name|vdso_th
 operator|->
 name|th_boottime
 operator|=
-name|boottimebin
+name|boottimebin_x
 expr_stmt|;
 name|enabled
 operator|=
@@ -9437,7 +9500,7 @@ name|th_boottime
 operator|.
 name|sec
 operator|=
-name|boottimebin
+name|boottimebin_x
 operator|.
 name|sec
 expr_stmt|;
@@ -9456,7 +9519,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|boottimebin
+name|boottimebin_x
 operator|.
 name|frac
 expr_stmt|;

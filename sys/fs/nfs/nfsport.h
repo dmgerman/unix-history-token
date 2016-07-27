@@ -3941,7 +3941,7 @@ name|NFSSETBOOTTIME
 parameter_list|(
 name|b
 parameter_list|)
-value|((b) = boottime)
+value|(getboottime(&b))
 end_define
 
 begin_comment

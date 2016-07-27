@@ -1365,9 +1365,11 @@ name|st
 argument_list|)
 expr_stmt|;
 comment|/* (4) The elapsed time the command ran (and its starting time) */
+name|getboottime
+argument_list|(
+operator|&
 name|tmp
-operator|=
-name|boottime
+argument_list|)
 expr_stmt|;
 name|timevaladd
 argument_list|(

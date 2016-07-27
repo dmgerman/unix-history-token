@@ -4142,6 +4142,10 @@ name|sigacts
 modifier|*
 name|ps
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 comment|/* For proc_realparent. */
 name|sx_assert
 argument_list|(
@@ -4680,6 +4684,12 @@ operator|->
 name|p_stats
 operator|->
 name|p_start
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|timevaladd
 argument_list|(

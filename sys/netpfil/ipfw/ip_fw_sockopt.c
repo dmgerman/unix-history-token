@@ -1970,6 +1970,10 @@ modifier|*
 name|cntr
 parameter_list|)
 block|{
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|cntr
 operator|->
 name|size
@@ -2030,6 +2034,13 @@ name|timestamp
 operator|>
 literal|0
 condition|)
+block|{
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
+expr_stmt|;
 name|cntr
 operator|->
 name|timestamp
@@ -2038,6 +2049,7 @@ name|boottime
 operator|.
 name|tv_sec
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2057,6 +2069,10 @@ modifier|*
 name|cntr
 parameter_list|)
 block|{
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 if|if
 condition|(
 name|krule
@@ -2107,6 +2123,13 @@ name|timestamp
 operator|>
 literal|0
 condition|)
+block|{
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
+expr_stmt|;
 name|cntr
 operator|->
 name|timestamp
@@ -2115,6 +2138,7 @@ name|boottime
 operator|.
 name|tv_sec
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -9059,6 +9083,10 @@ name|ip_fw_rule0
 modifier|*
 name|dst
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -9074,6 +9102,12 @@ decl_stmt|;
 name|warnflag
 operator|=
 literal|0
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|boot_seconds
 operator|=
