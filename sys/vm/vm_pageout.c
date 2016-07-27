@@ -3404,7 +3404,7 @@ decl_stmt|;
 name|boolean_t
 name|pageout_ok
 decl_stmt|,
-name|queues_locked
+name|queue_locked
 decl_stmt|;
 comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some.  We rate limit to avoid thrashing. 	 */
 if|if
@@ -3545,7 +3545,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3586,10 +3586,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|queues_locked
+name|queue_locked
 argument_list|,
 operator|(
-literal|"unlocked queues"
+literal|"unlocked inactive queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3822,7 +3822,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4063,7 +4063,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4189,7 +4189,7 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 name|drop_page
@@ -4204,12 +4204,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|relock_queues
+name|relock_queue
 label|:
 if|if
 condition|(
 operator|!
-name|queues_locked
+name|queue_locked
 condition|)
 block|{
 name|vm_pagequeue_lock
@@ -4217,7 +4217,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
