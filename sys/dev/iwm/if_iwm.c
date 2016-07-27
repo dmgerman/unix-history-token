@@ -16216,7 +16216,7 @@ block|}
 if|if
 condition|(
 name|type
-operator|!=
+operator|==
 name|IEEE80211_FC0_TYPE_DATA
 operator|&&
 operator|(
