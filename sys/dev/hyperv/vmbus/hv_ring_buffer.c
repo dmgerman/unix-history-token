@@ -610,7 +610,7 @@ expr_stmt|;
 name|mb
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Now check to see if the ring buffer is still empty. 	 * If it is not, we raced and we need to process new 	 * incoming messages. 	 */
+comment|/* 	 * Now check to see if the ring buffer is still empty. 	 * If it is not, we raced and we need to process new 	 * incoming channel packets. 	 */
 return|return
 name|vmbus_rxbr_avail
 argument_list|(
@@ -621,7 +621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When we write to the ring buffer, check if the host needs to  * be signaled. Here is the details of this protocol:  *  *	1. The host guarantees that while it is draining the  *	   ring buffer, it will set the interrupt_mask to  *	   indicate it does not need to be interrupted when  *	   new data is placed.  *  *	2. The host guarantees that it will completely drain  *	   the ring buffer before exiting the read loop. Further,  *	   once the ring buffer is empty, it will clear the  *	   interrupt_mask and re-check to see if new data has  *	   arrived.  */
+comment|/*  * When we write to the ring buffer, check if the host needs to be  * signaled.  *  * The contract:  * - The host guarantees that while it is draining the TX bufring,  *   it will set the br_imask to indicate it does not need to be  *   interrupted when new data are added.  * - The host guarantees that it will completely drain the TX bufring  *   before exiting the read loop.  Further, once the TX bufring is  *   empty, it will clear the br_imask and re-check to see if new  *   data have arrived.  */
 end_comment
 
 begin_function
@@ -653,6 +653,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
+comment|/* XXX only compiler fence is needed */
 comment|/* Read memory barrier */
 name|rmb
 argument_list|()
@@ -1016,7 +1017,7 @@ argument_list|(
 name|tbr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is only room for the packet, assume it is full. 	 * Otherwise, the next time around, we think the ring buffer 	 * is empty since the read index == write index 	 */
+comment|/* 	 * NOTE: 	 * If this write is going to make br_windex same as br_rindex, 	 * i.e. the available space for write is same as the write size, 	 * we can't do it then, since br_windex == br_rindex means that 	 * the bufring is empty. 	 */
 if|if
 condition|(
 name|byte_avail_to_write
@@ -1038,7 +1039,7 @@ name|EAGAIN
 operator|)
 return|;
 block|}
-comment|/* 	 * Write to the ring buffer 	 */
+comment|/* 	 * Copy the scattered channel packet to the TX bufring. 	 */
 name|next_write_location
 operator|=
 name|tbr
@@ -1087,7 +1088,7 @@ name|iov_len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set previous packet start 	 */
+comment|/* 	 * Set the offset of the current channel packet. 	 */
 name|prev_indices
 operator|=
 operator|(
@@ -1122,11 +1123,11 @@ name|uint64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Full memory barrier before upding the write index.  	 */
+comment|/* 	 * XXX only compiler fence is needed. 	 * Full memory barrier before upding the write index.  	 */
 name|mb
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Now, update the write location 	 */
+comment|/* 	 * Now, update the write index. 	 */
 name|tbr
 operator|->
 name|txbr_windex
@@ -1199,7 +1200,6 @@ argument_list|(
 name|rbr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure there is something to read 	 */
 if|if
 condition|(
 name|bytesAvailToRead
@@ -1221,7 +1221,6 @@ name|EAGAIN
 operator|)
 return|;
 block|}
-comment|/* 	 * Convert to byte offset 	 */
 name|nextReadLocation
 operator|=
 name|rbr
@@ -1318,7 +1317,6 @@ argument_list|(
 name|rbr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure there is something to read 	 */
 if|if
 condition|(
 name|bytes_avail_to_read
@@ -1340,6 +1338,7 @@ name|EAGAIN
 operator|)
 return|;
 block|}
+comment|/* 	 * Copy channel packet from RX bufring. 	 */
 name|next_read_location
 operator|=
 operator|(
@@ -1367,6 +1366,7 @@ argument_list|,
 name|next_read_location
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Discard this channel packet's start offset, which is useless 	 * for us. 	 */
 name|next_read_location
 operator|=
 name|copy_from_ring_buffer
@@ -1388,7 +1388,7 @@ argument_list|,
 name|next_read_location
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure all reads are done before we update the read index since 	 * the writer may start writing to the read area once the read index 	 * is updated. 	 */
+comment|/* 	 * XXX only compiler fence is needed. 	 * Make sure all reads are done before we update the read index since 	 * the writer may start writing to the read area once the read index 	 * is updated. 	 */
 name|wmb
 argument_list|()
 expr_stmt|;
@@ -1414,10 +1414,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/**  * @brief Helper routine to copy from source to ring buffer.  *  * Assume there is enough room. Handles wrap-around in dest case only!  */
-end_comment
 
 begin_function
 specifier|static
@@ -1469,7 +1465,7 @@ operator|-
 name|start_write_offset
 condition|)
 block|{
-comment|/* wrap-around detected! */
+comment|/* Wrap-around detected! */
 name|fragLen
 operator|=
 name|ring_buffer_size
@@ -1531,10 +1527,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * @brief Helper routine to copy to source from ring buffer.  *  * Assume there is enough room. Handles wrap-around in src case only!  */
-end_comment
-
 begin_function
 specifier|static
 name|uint32_t
@@ -1584,7 +1576,7 @@ operator|-
 name|start_read_offset
 condition|)
 block|{
-comment|/* wrap-around detected at the src */
+comment|/* Wrap-around detected at the src */
 name|fragLen
 operator|=
 name|ring_buffer_size
