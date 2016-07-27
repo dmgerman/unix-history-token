@@ -641,7 +641,7 @@ begin_define
 define|#
 directive|define
 name|PIN_PA15
-value|14
+value|15
 end_define
 
 begin_define
@@ -5870,14 +5870,14 @@ begin_define
 define|#
 directive|define
 name|PIN_PD24__UTXD2
-value|PINMUX_PIN(PIN_PD23, 1, 2)
+value|PINMUX_PIN(PIN_PD24, 1, 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIN_PD24__FLEXCOM4_IO3
-value|PINMUX_PIN(PIN_PD23, 3, 3)
+value|PINMUX_PIN(PIN_PD24, 3, 3)
 end_define
 
 begin_define

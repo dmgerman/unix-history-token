@@ -278,6 +278,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_TSADC
+value|93
+end_define
+
+begin_define
+define|#
+directive|define
 name|DCLK_LCDC0
 value|190
 end_define

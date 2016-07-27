@@ -1118,8 +1118,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_APMIXED_NR_CLK
+name|CLK_APMIXED_HDMI_REF
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_APMIXED_NR_CLK
+value|17
 end_define
 
 begin_comment

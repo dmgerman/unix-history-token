@@ -367,6 +367,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R8A7790_CLK_SCIF2
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|R8A7790_CLK_SDHI3
 value|11
 end_define

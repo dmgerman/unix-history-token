@@ -331,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA
-value|0x0054 0x02e0 0x0000 2 0
+value|0x0054 0x02e0 0x05f4 2 0
 end_define
 
 begin_define
@@ -1066,7 +1066,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_TX_DATA__CSI_DATA02
-value|0x0084 0x0310 0x0000 3 0
+value|0x0084 0x0310 0x04c4 3 1
 end_define
 
 begin_define
@@ -1122,7 +1122,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_RX_DATA__CSI_DATA03
-value|0x0088 0x0314 0x0000 3 0
+value|0x0088 0x0314 0x04c8 3 1
 end_define
 
 begin_define
@@ -1143,7 +1143,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_RX_DATA__SPDIF_IN
-value|0x0088 0x0314 0x0000 8 0
+value|0x0088 0x0314 0x0618 8 1
 end_define
 
 begin_define
@@ -1178,7 +1178,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_CTS_B__CSI_DATA04
-value|0x008c 0x0318 0x0000 3 0
+value|0x008c 0x0318 0x04d8 3 0
 end_define
 
 begin_define
@@ -1199,7 +1199,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_CTS_B__USDHC2_WP
-value|0x008c 0x0318 0x0000 8 0
+value|0x008c 0x0318 0x069c 8 1
 end_define
 
 begin_define
@@ -1234,7 +1234,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_RTS_B__CSI_DATA05
-value|0x0090 0x031c 0x0000 3 0
+value|0x0090 0x031c 0x04cc 3 1
 end_define
 
 begin_define
@@ -1255,7 +1255,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART1_RTS_B__USDHC2_CD_B
-value|0x0090 0x031c 0x0000 8 0
+value|0x0090 0x031c 0x0674 8 2
 end_define
 
 begin_define
@@ -1290,7 +1290,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_TX_DATA__CSI_DATA06
-value|0x0094 0x0320 0x0000 3 0
+value|0x0094 0x0320 0x04dc 3 0
 end_define
 
 begin_define
@@ -1346,7 +1346,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_RX_DATA__CSI_DATA07
-value|0x0098 0x0324 0x0000 3 0
+value|0x0098 0x0324 0x04e0 3 0
 end_define
 
 begin_define
@@ -1374,7 +1374,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK
-value|0x0098 0x0324 0x0000 8 0
+value|0x0098 0x0324 0x0554 8 0
 end_define
 
 begin_define
@@ -1409,7 +1409,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_CTS_B__CSI_DATA08
-value|0x009c 0x0328 0x0000 3 0
+value|0x009c 0x0328 0x04e4 3 0
 end_define
 
 begin_define
@@ -1437,7 +1437,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI
-value|0x009c 0x0328 0x0000 8 0
+value|0x009c 0x0328 0x055c 8 0
 end_define
 
 begin_define
@@ -1472,7 +1472,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_RTS_B__CSI_DATA09
-value|0x00a0 0x032c 0x0000 3 0
+value|0x00a0 0x032c 0x04e8 3 0
 end_define
 
 begin_define
@@ -1500,7 +1500,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO
-value|0x00a0 0x032c 0x0000 8 0
+value|0x00a0 0x032c 0x0558 8 0
 end_define
 
 begin_define
@@ -1570,7 +1570,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART3_TX_DATA__ANATOP_OTG1_ID
-value|0x00a4 0x0330 0x0000 8 0
+value|0x00a4 0x0330 0x04b8 8 1
 end_define
 
 begin_define
@@ -1801,7 +1801,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART4_TX_DATA__ECSPI2_SCLK
-value|0x00b4 0x0340 0x0000 8 0
+value|0x00b4 0x0340 0x0544 8 1
 end_define
 
 begin_define
@@ -1871,7 +1871,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART5_TX_DATA__ECSPI2_MOSI
-value|0x00bc 0x0348 0x0000 8 0
+value|0x00bc 0x0348 0x054c 8 0
 end_define
 
 begin_define
@@ -1969,7 +1969,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_UART5_RX_DATA__ECSPI2_MISO
-value|0x00c0 0x034c 0x0000 8 0
+value|0x00c0 0x034c 0x0548 8 1
 end_define
 
 begin_define
@@ -2396,7 +2396,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_ENET1_TX_CLK__GPT1_CLK
-value|0x00dc 0x0368 0x0000 8 0
+value|0x00dc 0x0368 0x0594 8 1
 end_define
 
 begin_define
@@ -2459,7 +2459,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_ENET1_RX_ER__GPT1_CAPTURE2
-value|0x00e0 0x036c 0x0000 8 0
+value|0x00e0 0x036c 0x0590 8 1
 end_define
 
 begin_define
@@ -2585,7 +2585,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_ENET2_RX_DATA1__USB_OTG1_OC
-value|0x00e8 0x0374 0x0000 8 0
+value|0x00e8 0x0374 0x0664 8 1
 end_define
 
 begin_define
@@ -2830,7 +2830,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_ENET2_TX_EN__USB_OTG2_OC
-value|0x00f8 0x0384 0x0000 8 0
+value|0x00f8 0x0384 0x0660 8 1
 end_define
 
 begin_define
@@ -2893,7 +2893,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_ENET2_TX_CLK__ANATOP_OTG2_ID
-value|0x00fc 0x0388 0x0000 8 0
+value|0x00fc 0x0388 0x04bc 8 1
 end_define
 
 begin_define
@@ -3327,7 +3327,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA01__SAI1_TX_SYNC
-value|0x011c 0x03a8 0x0000 8 0
+value|0x011c 0x03a8 0x05ec 8 0
 end_define
 
 begin_define
@@ -3376,7 +3376,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA02__SAI1_TX_BCLK
-value|0x0120 0x03ac 0x0000 8 0
+value|0x0120 0x03ac 0x05e8 8 0
 end_define
 
 begin_define
@@ -3747,7 +3747,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX
-value|0x013c 0x03c8 0x0000 8 0
+value|0x013c 0x03c8 0x0584 8 2
 end_define
 
 begin_define
@@ -3845,7 +3845,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA11__FLEXCAN2_RX
-value|0x0144 0x03d0 0x0000 8 0
+value|0x0144 0x03d0 0x0588 8 2
 end_define
 
 begin_define
@@ -3992,7 +3992,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA14__USDHC2_DATA4
-value|0x0150 0x03dc 0x0000 8 0
+value|0x0150 0x03dc 0x068c 8 0
 end_define
 
 begin_define
@@ -4041,7 +4041,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA15__USDHC2_DATA5
-value|0x0154 0x03e0 0x0000 8 0
+value|0x0154 0x03e0 0x0690 8 0
 end_define
 
 begin_define
@@ -4097,7 +4097,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA16__USDHC2_DATA6
-value|0x0158 0x03e4 0x0000 8 0
+value|0x0158 0x03e4 0x0694 8 0
 end_define
 
 begin_define
@@ -4153,7 +4153,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA17__USDHC2_DATA7
-value|0x015c 0x03e8 0x0000 8 0
+value|0x015c 0x03e8 0x0698 8 0
 end_define
 
 begin_define
@@ -4209,7 +4209,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA18__USDHC2_CMD
-value|0x0160 0x03ec 0x0000 8 0
+value|0x0160 0x03ec 0x0678 8 1
 end_define
 
 begin_define
@@ -4237,7 +4237,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA19__USDHC2_CLK
-value|0x0164 0x03f0 0x0000 8 0
+value|0x0164 0x03f0 0x0670 8 1
 end_define
 
 begin_define
@@ -4293,7 +4293,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA20__USDHC2_DATA0
-value|0x0168 0x03f4 0x0000 8 0
+value|0x0168 0x03f4 0x067c 8 1
 end_define
 
 begin_define
@@ -4391,7 +4391,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA21__USDHC2_DATA1
-value|0x016c 0x03f8 0x0000 8 0
+value|0x016c 0x03f8 0x0680 8 1
 end_define
 
 begin_define
@@ -4447,7 +4447,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA22__USDHC2_DATA2
-value|0x0170 0x03fc 0x0000 8 0
+value|0x0170 0x03fc 0x0684 8 0
 end_define
 
 begin_define
@@ -4503,7 +4503,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_LCD_DATA23__USDHC2_DATA3
-value|0x0174 0x0400 0x0000 8 0
+value|0x0174 0x0400 0x0688 8 1
 end_define
 
 begin_define
@@ -5399,7 +5399,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_NAND_DQS__SPDIF_EXT_CLK
-value|0x01b8 0x0444 0x0000 8 0
+value|0x01b8 0x0444 0x061c 8 1
 end_define
 
 begin_define
@@ -5504,7 +5504,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_SD1_CLK__USB_OTG1_OC
-value|0x01c0 0x044c 0x0000 8 0
+value|0x01c0 0x044c 0x0664 8 2
 end_define
 
 begin_define
@@ -5553,7 +5553,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_SD1_DATA0__ANATOP_OTG1_ID
-value|0x01c4 0x0450 0x0000 8 0
+value|0x01c4 0x0450 0x04b8 8 2
 end_define
 
 begin_define
@@ -5658,7 +5658,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_SD1_DATA2__USB_OTG2_OC
-value|0x01cc 0x0458 0x0000 8 0
+value|0x01cc 0x0458 0x0660 8 2
 end_define
 
 begin_define
@@ -5714,7 +5714,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_SD1_DATA3__ANATOP_OTG2_ID
-value|0x01d0 0x045c 0x0000 8 0
+value|0x01d0 0x045c 0x04bc 8 2
 end_define
 
 begin_define
@@ -6274,7 +6274,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_CSI_DATA04__USDHC1_WP
-value|0x01f4 0x0480 0x0000 8 0
+value|0x01f4 0x0480 0x066c 8 2
 end_define
 
 begin_define
@@ -6330,7 +6330,7 @@ begin_define
 define|#
 directive|define
 name|MX6UL_PAD_CSI_DATA05__USDHC1_CD_B
-value|0x01f8 0x0484 0x0000 8 0
+value|0x01f8 0x0484 0x0668 8 2
 end_define
 
 begin_define

@@ -43,6 +43,13 @@ name|TEGRA124_SOCTHERM_SENSOR_PLLX
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|TEGRA124_SOCTHERM_SENSOR_NUM
+value|4
+end_define
+
 begin_endif
 endif|#
 directive|endif

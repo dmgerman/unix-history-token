@@ -3676,13 +3676,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MX51_PAD_DISPB2_SER_RS__DISP1_EXT_CLK
-value|0x2c8 0x6c8 0x000 0x2 0x0
-end_define
-
-begin_define
-define|#
-directive|define
 name|MX51_PAD_DISPB2_SER_RS__DISP1_PIN16
 value|0x2c8 0x6c8 0x000 0x2 0x0
 end_define
