@@ -548,15 +548,6 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Sim action: ctrlr %p ns %p\n"
-argument_list|,
-name|ctrlr
-argument_list|,
-name|ns
-argument_list|)
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1273,17 +1264,6 @@ name|s_ns
 operator|=
 name|ns
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Our SIM's softc %p ctrlr %p ns %p\n"
-argument_list|,
-name|sc
-argument_list|,
-name|ctrlr
-argument_list|,
-name|ns
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX this is creating one bus per ns, but it should be one 	 * XXX target per controller, and one LUN per namespace. 	 * XXX Current drives only support one NS, so there's time 	 * XXX to fix it later when new drives arrive. 	 * 	 * XXX I'm pretty sure the xpt_bus_register() call below is 	 * XXX like super lame and it really belongs in the sim_new_ctrlr 	 * XXX callback. Then the create_path below would be pretty close 	 * XXX to being right. Except we should be per-ns not per-ctrlr 	 * XXX data. 	 */
 name|mtx_lock
 argument_list|(
@@ -1385,11 +1365,6 @@ name|ctrlr
 argument_list|)
 expr_stmt|;
 comment|/* Scan bus */
-name|printf
-argument_list|(
-literal|"Initiate rescan of the bus\n"
-argument_list|)
-expr_stmt|;
 name|nvme_sim_rescan_target
 argument_list|(
 name|ctrlr
