@@ -3343,7 +3343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Move inactive to cache or free  *	pass 2 - Launder dirty pages  */
+comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Free inactive pages  *	pass 2 - Launder dirty pages  */
 end_comment
 
 begin_function
@@ -3459,7 +3459,7 @@ name|addl_page_shortage
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
+comment|/* 	 * Calculate the number of pages that we want to free. 	 */
 if|if
 condition|(
 name|pass
@@ -3523,7 +3523,7 @@ name|vnodes_skipped
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Start scanning the inactive queue for pages we can move to the 	 * cache or free.  The scan will stop when the target is reached or 	 * we have scanned the entire inactive queue.  Note that m->act_count 	 * is not used to form decisions for the inactive queue, only for the 	 * active queue. 	 */
+comment|/* 	 * Start scanning the inactive queue for pages that we can free.  The 	 * scan will stop when we reach the target or we have scanned the 	 * entire queue.  (Note that m->act_count is not used to make 	 * decisions for the inactive queue, only for the active queue.) 	 */
 name|pq
 operator|=
 operator|&
@@ -4266,7 +4266,7 @@ name|defined
 argument_list|(
 name|NO_SWAPPING
 argument_list|)
-comment|/* 	 * Wakeup the swapout daemon if we didn't cache or free the targeted 	 * number of pages.  	 */
+comment|/* 	 * Wakeup the swapout daemon if we didn't free the targeted number of 	 * pages. 	 */
 if|if
 condition|(
 name|vm_swap_enabled
@@ -4282,7 +4282,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Wakeup the sync daemon if we skipped a vnode in a writeable object 	 * and we didn't cache or free enough pages. 	 */
+comment|/* 	 * Wakeup the sync daemon if we skipped a vnode in a writeable object 	 * and we didn't free enough pages. 	 */
 if|if
 condition|(
 name|vnodes_skipped
