@@ -1478,7 +1478,7 @@ name|KASSERT
 argument_list|(
 name|nc
 operator|->
-name|ntb_ctx
+name|ctx
 operator|!=
 name|NULL
 operator|&&
