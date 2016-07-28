@@ -1690,9 +1690,6 @@ name|sa6
 operator|->
 name|sin6_addr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NI_NUMERICSCOPE
 if|if
 condition|(
 operator|(
@@ -1738,8 +1735,6 @@ return|return
 name|n
 return|;
 block|}
-endif|#
-directive|endif
 comment|/* if_indextoname() does not take buffer size.  not a good api... */
 if|if
 condition|(
