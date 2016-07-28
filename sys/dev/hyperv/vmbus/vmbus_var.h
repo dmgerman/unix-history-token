@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus_dma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/taskqueue.h>
 end_include
 
