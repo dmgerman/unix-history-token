@@ -210,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|MB_CUR_MAX
-value|(___mb_cur_max())
+value|((size_t)___mb_cur_max())
 end_define
 
 begin_function_decl
