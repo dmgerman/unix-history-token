@@ -291,6 +291,7 @@ comment|/*  * Ethernet frames are DMA'd at this byte offset into the freelist bu
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fl_pktshift
 init|=
@@ -338,6 +339,7 @@ comment|/*  * Status page length.  * -1: driver should figure out a good value. 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|spg_len
 init|=
