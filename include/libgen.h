@@ -35,7 +35,6 @@ name|char
 modifier|*
 name|basename
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -62,7 +61,6 @@ name|char
 modifier|*
 name|dirname
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|)
