@@ -33645,7 +33645,7 @@ literal|1
 condition|)
 name|p
 operator|=
-literal|"int"
+literal|"ssize_t"
 expr_stmt|;
 break|break;
 comment|/* shmat */
