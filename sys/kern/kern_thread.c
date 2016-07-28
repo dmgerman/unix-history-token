@@ -1226,7 +1226,7 @@ decl_stmt|,
 modifier|*
 name|td_next
 decl_stmt|;
-comment|/* 	 * Don't even bother to lock if none at this instant, 	 * we really don't care about the next instant.. 	 */
+comment|/* 	 * Don't even bother to lock if none at this instant, 	 * we really don't care about the next instant. 	 */
 if|if
 condition|(
 operator|!
@@ -1511,6 +1511,14 @@ operator|&
 name|td
 operator|->
 name|td_vm_dom_policy
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_slpcallout
 argument_list|)
 expr_stmt|;
 name|uma_zfree
@@ -2326,6 +2334,14 @@ expr_stmt|;
 name|thread_cow_free
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_slpcallout
 argument_list|)
 expr_stmt|;
 name|thread_reap

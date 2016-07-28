@@ -863,6 +863,10 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
+name|sbintime_t
+name|td_sleeptimo
+decl_stmt|;
+comment|/* (t) Sleep timeout. */
 define|#
 directive|define
 name|td_endzero
@@ -1373,12 +1377,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_TIMOFAIL
+name|TDF_UNUSED12
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* Timeout from sleep after we were awake. */
+comment|/* --available-- */
 end_comment
 
 begin_define
