@@ -8731,7 +8731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a reference from the g_consumer. Post a close event if  * all referneces go away.  */
+comment|/*  * Remove a reference from the g_consumer. Post a close event if  * all references go away.  */
 end_comment
 
 begin_function
