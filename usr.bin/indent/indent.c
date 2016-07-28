@@ -5731,10 +5731,12 @@ argument_list|,
 name|buff
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buff
 argument_list|)
+argument_list|)
 operator|)
-operator|!=
+operator|>
 literal|0
 condition|)
 if|if
