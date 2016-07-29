@@ -1463,13 +1463,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* socket lock should be taken before calling this */
-end_comment
-
 begin_function
 specifier|static
-name|int
+name|void
 name|sdp_process_rx_ctl_mb
 parameter_list|(
 name|struct
@@ -1560,11 +1556,6 @@ name|ECONNRESET
 argument_list|)
 expr_stmt|;
 block|}
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -1572,11 +1563,6 @@ name|SDP_ZCOPY
 case|case
 name|SDP_MID_RDMARDCOMPL
 case|:
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SDP_MID_SENDSM
@@ -1591,11 +1577,6 @@ name|h
 operator|->
 name|mseq_ack
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|mb
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1663,11 +1644,6 @@ literal|"but no SrcAvail in process\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SDP_MID_SINKAVAIL
@@ -1715,11 +1691,6 @@ argument_list|(
 name|ssk
 argument_list|,
 name|ECONNRESET
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|mb
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1774,11 +1745,6 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SDP_MID_CHRCVBUF_ACK
@@ -1806,11 +1772,6 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 comment|/* TODO: Handle other messages */
@@ -1825,15 +1786,13 @@ operator|->
 name|mid
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|m_freem
 argument_list|(
 name|mb
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
