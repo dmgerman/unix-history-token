@@ -24,6 +24,24 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sdp.h"
 end_include
 
@@ -155,14 +173,13 @@ value|rw_assert(&sdp_lock, RW_LOCKED)
 end_define
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SDP
 argument_list|,
 literal|"sdp"
 argument_list|,
-literal|"Socket Direct Protocol"
+literal|"Sockets Direct Protocol"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

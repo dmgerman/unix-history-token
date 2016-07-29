@@ -1941,6 +1941,14 @@ parameter_list|)
 value|rw_assert(&(ssk)->lock, RA_LOCKED)
 end_define
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_SDP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 specifier|inline
