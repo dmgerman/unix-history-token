@@ -1432,6 +1432,16 @@ case|:
 operator|++
 name|line_no
 expr_stmt|;
+if|if
+condition|(
+name|sc_end
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|sw_buffer
+goto|;
+comment|/* dump comment, if any */
 name|flushed_nl
 operator|=
 name|true
