@@ -1272,7 +1272,7 @@ operator|->
 name|rwd
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|p
 operator|++
@@ -2708,7 +2708,7 @@ index|]
 operator|.
 name|rwd
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|p
 index|[

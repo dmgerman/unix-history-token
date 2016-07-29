@@ -1714,7 +1714,7 @@ if|if
 condition|(
 name|bp_save
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* there is a partly filled input buffer left */
@@ -1731,7 +1731,7 @@ name|bp_save
 operator|=
 name|be_save
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

@@ -145,7 +145,7 @@ literal|0
 expr_stmt|;
 name|last_bl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* no blanks found so far */
 name|ps
@@ -592,7 +592,7 @@ argument_list|()
 expr_stmt|;
 name|last_bl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 operator|*
 name|e_com
@@ -1529,7 +1529,7 @@ if|if
 condition|(
 name|last_bl
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* we have seen no blanks */
@@ -1610,7 +1610,7 @@ literal|1
 expr_stmt|;
 name|last_bl
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(

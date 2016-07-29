@@ -604,19 +604,19 @@ literal|0
 expr_stmt|;
 name|sc_end
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bp_save
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|be_save
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|output
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|tabs_to_var
 operator|=
@@ -1459,7 +1459,7 @@ if|if
 condition|(
 name|sc_end
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* ignore buffering if a comment wasn't 					 * stored up */
@@ -1502,14 +1502,14 @@ name|flushed_nl
 operator|||
 name|sc_end
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
 name|sc_end
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* if this is the first comment, we 					 * must set up the buffer */
@@ -1720,7 +1720,7 @@ if|if
 condition|(
 name|sc_end
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* ignore buffering if comment wasn't 					 * saved up */
@@ -1845,7 +1845,7 @@ name|sc_end
 expr_stmt|;
 name|sc_end
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -5182,6 +5182,7 @@ condition|)
 name|e_lab
 operator|--
 expr_stmt|;
+comment|/* comment on preprocessor line */
 if|if
 condition|(
 name|e_lab
@@ -5192,15 +5193,14 @@ name|com_end
 operator|&&
 name|bp_save
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
-comment|/* comment on 								 * preprocessor line */
 if|if
 condition|(
 name|sc_end
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* if this is the first comment, we 					 * must set up the buffer */
 name|sc_end
@@ -5324,7 +5324,7 @@ name|sc_end
 expr_stmt|;
 name|sc_end
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 operator|*

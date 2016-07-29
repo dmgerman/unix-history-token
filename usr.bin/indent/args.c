@@ -1815,7 +1815,7 @@ if|if
 condition|(
 name|input
 operator|==
-literal|0
+name|NULL
 condition|)
 name|input
 operator|=
@@ -1825,7 +1825,7 @@ if|if
 condition|(
 name|output
 operator|==
-literal|0
+name|NULL
 condition|)
 name|output
 operator|=
