@@ -648,6 +648,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vmbus_softc
 modifier|*
@@ -876,6 +877,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|vmbus_softc
+operator|*
+name|vmbus_get_softc
+argument_list|(
+argument|void
+argument_list|)
+block|{
+return|return
+name|vmbus_sc
+return|;
+block|}
 end_expr_stmt
 
 begin_function
