@@ -574,9 +574,14 @@ name|b_fun
 argument_list|,
 name|LOG_ERR
 argument_list|,
-literal|"%s: socket failed (%m)"
+literal|"%s: socket failed (%s)"
 argument_list|,
 name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BL_UNLOCK
@@ -783,13 +788,18 @@ name|b_fun
 argument_list|,
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: connect failed for `%s' (%m)"
+literal|"%s: connect failed for `%s' (%s)"
 argument_list|,
 name|__func__
 argument_list|,
 name|sun
 operator|->
 name|sun_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|b
@@ -902,13 +912,18 @@ name|b_fun
 argument_list|,
 name|LOG_ERR
 argument_list|,
-literal|"%s: bind failed for `%s' (%m)"
+literal|"%s: bind failed for `%s' (%s)"
 argument_list|,
 name|__func__
 argument_list|,
 name|sun
 operator|->
 name|sun_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1059,13 +1074,18 @@ argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"%s: setsockopt %s "
-literal|"failed (%m)"
+literal|"failed (%s)"
 argument_list|,
 name|__func__
 argument_list|,
 name|__STRING
 argument_list|(
 name|CRED_NAME
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1276,9 +1296,14 @@ name|fun
 argument_list|,
 name|LOG_ERR
 argument_list|,
-literal|"%s: malloc failed (%m)"
+literal|"%s: malloc failed (%s)"
 argument_list|,
 name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2087,9 +2112,14 @@ name|b_fun
 argument_list|,
 name|LOG_ERR
 argument_list|,
-literal|"%s: recvmsg failed (%m)"
+literal|"%s: recvmsg failed (%s)"
 argument_list|,
 name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
