@@ -382,6 +382,11 @@ condition|)
 name|e_lab
 operator|--
 expr_stmt|;
+operator|*
+name|e_lab
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cur_col
 operator|=
 name|pad_output
