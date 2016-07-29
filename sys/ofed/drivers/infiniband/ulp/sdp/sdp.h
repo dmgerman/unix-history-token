@@ -1733,15 +1733,10 @@ name|rwlock
 name|lock
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|rx_ctl_q
+name|mbufq
+name|rxctlq
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|rx_ctl_tail
-decl_stmt|;
+comment|/* received control packets */
 name|int
 name|qp_active
 decl_stmt|;

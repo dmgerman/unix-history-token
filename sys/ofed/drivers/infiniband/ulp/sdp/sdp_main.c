@@ -1906,6 +1906,16 @@ name|state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
+name|mbufq_init
+argument_list|(
+operator|&
+name|ssk
+operator|->
+name|rxctlq
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
 name|SDP_LIST_WLOCK
 argument_list|()
 expr_stmt|;
