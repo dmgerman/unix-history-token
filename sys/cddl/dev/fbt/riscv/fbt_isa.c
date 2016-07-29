@@ -259,13 +259,6 @@ name|retfbt
 decl_stmt|;
 name|uint32_t
 modifier|*
-name|target
-decl_stmt|,
-modifier|*
-name|start
-decl_stmt|;
-name|uint32_t
-modifier|*
 name|instr
 decl_stmt|,
 modifier|*
@@ -279,9 +272,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|modname
-decl_stmt|;
-name|int
-name|offs
 decl_stmt|;
 name|modname
 operator|=
