@@ -114,7 +114,7 @@ define|#
 directive|define
 name|CHECK_SIZE_COM
 define|\
-value|if (e_com>= l_com) { \ 	    int nsize = l_com-s_com+400; \ 	    combuf = (char *) realloc(combuf, nsize); \ 	    if (combuf == NULL) \ 		err(1, NULL); \ 	    e_com = combuf + (e_com-s_com) + 1; \ 	    l_com = combuf + nsize - 5; \ 	    s_com = combuf + 1; \ 	}
+value|if (e_com>= l_com) { \ 	    int nsize = l_com-s_com+400; \ 	    combuf = (char *) realloc(combuf, nsize); \ 	    if (combuf == NULL) \ 		err(1, NULL); \ 	    e_com = combuf + (e_com-s_com) + 1; \ 	    last_bl = combuf + (last_bl-s_com) + 1; \ 	    l_com = combuf + nsize - 5; \ 	    s_com = combuf + 1; \ 	}
 end_define
 
 begin_define
