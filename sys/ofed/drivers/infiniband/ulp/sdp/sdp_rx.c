@@ -727,7 +727,7 @@ name|ssk
 operator|->
 name|socket
 operator|->
-name|so_snd
+name|so_rcv
 operator|.
 name|sb_hiwat
 argument_list|,
