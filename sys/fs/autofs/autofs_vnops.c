@@ -522,11 +522,6 @@ name|autofs_node
 modifier|*
 name|anp
 decl_stmt|;
-name|struct
-name|autofs_mount
-modifier|*
-name|amp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -537,15 +532,6 @@ operator|=
 name|vp
 operator|->
 name|v_data
-expr_stmt|;
-name|amp
-operator|=
-name|VFSTOAUTOFS
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Release the vnode lock, so that other operations, in partcular 	 * mounting a filesystem on top of it, can proceed.  Increase use 	 * count, to prevent the vnode from being deallocated and to prevent 	 * filesystem from being unmounted. 	 */
 name|lock_flags
