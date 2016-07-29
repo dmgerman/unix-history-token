@@ -3205,13 +3205,23 @@ case|case
 name|semicolon
 case|:
 comment|/* got a ';' */
+if|if
+condition|(
+name|ps
+operator|.
+name|dec_nest
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* we are not in an initialization or structure declaration */
 name|ps
 operator|.
 name|in_or_st
 operator|=
 name|false
 expr_stmt|;
-comment|/* we are not in an initialization or 				 * structure declaration */
+block|}
 name|scase
 operator|=
 name|false
