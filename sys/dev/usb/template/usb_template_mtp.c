@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2008 Hans Petter Selasky<hselasky@FreeBSD.org>  * A
 end_comment
 
 begin_comment
-comment|/*  * This file contains the USB templates for an USB Message Transfer  * Protocol device.  *  * NOTE: It is common practice that MTP devices use some dummy  * descriptor cludges to be automatically detected by the host  * operating system. These descriptors are documented in the LibMTP  * library at sourceforge.net. The alternative is to supply the host  * operating system the VID and PID of your device.  */
+comment|/*  * This file contains the USB templates for an USB Media Transfer  * Protocol device.  *  * NOTE: It is common practice that MTP devices use some dummy  * descriptor cludges to be automatically detected by the host  * operating system. These descriptors are documented in the LibMTP  * library at sourceforge.net. The alternative is to supply the host  * operating system the VID and PID of your device.  */
 end_comment
 
 begin_ifdef
