@@ -3215,6 +3215,8 @@ argument_list|,
 operator|(
 literal|"%s: mismatched cq on %p"
 operator|,
+name|__func__
+operator|,
 name|ssk
 operator|)
 argument_list|)
