@@ -4569,9 +4569,16 @@ name|s_code
 operator|!=
 name|e_code
 condition|)
+block|{
+operator|*
+name|e_code
+operator|=
+literal|'\0'
+expr_stmt|;
 name|dump_line
 argument_list|()
 expr_stmt|;
+block|}
 name|dec_ind
 operator|=
 literal|0
