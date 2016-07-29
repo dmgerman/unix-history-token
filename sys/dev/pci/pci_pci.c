@@ -4799,6 +4799,36 @@ begin_comment
 comment|/*  * PCI-express HotPlug support.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pci_enable_pcie_hp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_pcie_hp
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|pci_enable_pcie_hp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable support for native PCI-express HotPlug."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -4813,6 +4843,12 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pci_enable_pcie_hp
+condition|)
+return|return;
 name|dev
 operator|=
 name|sc
