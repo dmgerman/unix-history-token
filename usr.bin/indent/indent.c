@@ -3213,15 +3213,13 @@ name|dec_nest
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* we are not in an initialization or structure declaration */
 name|ps
 operator|.
 name|in_or_st
 operator|=
 name|false
 expr_stmt|;
-block|}
+comment|/* we are not in an initialization or 				     * structure declaration */
 name|scase
 operator|=
 name|false
