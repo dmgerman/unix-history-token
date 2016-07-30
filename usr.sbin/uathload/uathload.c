@@ -193,7 +193,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|devname
+name|udevname
 parameter_list|,
 name|char
 modifier|*
@@ -221,7 +221,7 @@ name|dnbuf
 operator|=
 name|strdup
 argument_list|(
-name|devname
+name|udevname
 argument_list|)
 expr_stmt|;
 if|if
@@ -247,7 +247,7 @@ name|bnbuf
 operator|=
 name|strdup
 argument_list|(
-name|devname
+name|udevname
 argument_list|)
 expr_stmt|;
 if|if
@@ -394,7 +394,7 @@ modifier|*
 name|fwname
 decl_stmt|,
 modifier|*
-name|devname
+name|udevname
 decl_stmt|;
 name|char
 name|msgdev
@@ -446,7 +446,7 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|devname
+name|udevname
 operator|=
 name|NULL
 expr_stmt|;
@@ -477,7 +477,7 @@ block|{
 case|case
 literal|'d'
 case|:
-name|devname
+name|udevname
 operator|=
 name|optarg
 expr_stmt|;
@@ -507,7 +507,7 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-name|devname
+name|udevname
 operator|==
 name|NULL
 condition|)
@@ -642,7 +642,7 @@ if|if
 condition|(
 name|getdevname
 argument_list|(
-name|devname
+name|udevname
 argument_list|,
 name|msgdev
 argument_list|,
@@ -803,7 +803,7 @@ literal|"Load firmware %s to %s\n"
 argument_list|,
 name|fwname
 argument_list|,
-name|devname
+name|udevname
 argument_list|)
 expr_stmt|;
 name|bzero
