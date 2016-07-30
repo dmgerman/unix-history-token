@@ -13240,6 +13240,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -13280,6 +13286,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -13324,6 +13335,9 @@ condition|)
 goto|goto
 name|msix_done
 goto|;
+ifndef|#
+directive|ifndef
+name|EARLY_AP_STARTUP
 comment|/* Block MSIX negotiation until SMP started and IRQ reshuffled. */
 if|if
 condition|(
@@ -13333,6 +13347,8 @@ condition|)
 goto|goto
 name|reschedule
 goto|;
+endif|#
+directive|endif
 name|intel_ntb_get_msix_info
 argument_list|(
 name|ntb
