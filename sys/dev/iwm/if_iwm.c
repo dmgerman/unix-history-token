@@ -6824,6 +6824,7 @@ block|}
 comment|/* Wait for DMA channels to be idle */
 if|if
 condition|(
+operator|!
 name|iwm_poll_bit
 argument_list|(
 name|sc
@@ -6836,8 +6837,6 @@ name|mask
 argument_list|,
 literal|5000
 argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 name|device_printf
