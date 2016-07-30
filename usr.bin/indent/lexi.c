@@ -980,6 +980,7 @@ operator|&
 literal|2
 operator|)
 operator|&&
+operator|(
 name|strchr
 argument_list|(
 literal|"fFlL"
@@ -987,6 +988,9 @@ argument_list|,
 operator|*
 name|buf_ptr
 argument_list|)
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 name|CHECK_SIZE_TOKEN

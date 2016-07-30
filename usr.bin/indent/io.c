@@ -1722,7 +1722,7 @@ name|buf_ptr
 operator|=
 name|bp_save
 expr_stmt|;
-comment|/* dont read anything, just switch buffers */
+comment|/* do not read anything, just switch buffers */
 name|buf_end
 operator|=
 name|be_save

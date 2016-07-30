@@ -1512,7 +1512,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if this is the first comment, we 					 * must set up the buffer */
+comment|/* if this is the first comment, we 					   * must set up the buffer */
 name|save_com
 index|[
 literal|0
@@ -5180,7 +5180,6 @@ condition|)
 name|e_lab
 operator|--
 expr_stmt|;
-comment|/* comment on preprocessor line */
 if|if
 condition|(
 name|e_lab
@@ -5194,6 +5193,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* comment on preprocessor line */
 if|if
 condition|(
 name|sc_end
