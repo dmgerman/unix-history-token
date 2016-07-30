@@ -449,6 +449,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|__mtx_trylock_spin_flags
+parameter_list|(
+specifier|volatile
+name|uintptr_t
+modifier|*
+name|c
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|__mtx_unlock_spin_flags
 parameter_list|(
@@ -737,6 +760,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|_mtx_trylock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|o
+parameter_list|,
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|__mtx_trylock_spin_flags(&(m)->mtx_lock, o, f, l)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_mtx_unlock_spin_flags
 parameter_list|(
 name|m
@@ -901,6 +941,24 @@ parameter_list|)
 value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	} else 								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__mtx_trylock_spin
+parameter_list|(
+name|mp
+parameter_list|,
+name|tid
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|__extension__  ({	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int _ret;							\ 									\ 	spinlock_enter();						\ 	if (((mp)->mtx_lock != MTX_UNOWNED || !_mtx_obtain_lock((mp), _tid))) {\ 		spinlock_exit();					\ 		_ret = 0;						\ 	} else {							\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, file, line);				\ 		_ret = 1;						\ 	}								\ 	_ret;								\ })
+end_define
+
 begin_else
 else|#
 directive|else
@@ -926,6 +984,24 @@ parameter_list|,
 name|line
 parameter_list|)
 value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == _tid)					\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = _tid;					\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_trylock_spin
+parameter_list|(
+name|mp
+parameter_list|,
+name|tid
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|__extension__  ({	\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 	int _ret;							\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock != MTX_UNOWNED) {				\ 		spinlock_exit();					\ 		_ret = 0;						\ 	} else {							\ 		(mp)->mtx_lock = _tid;					\ 		_ret = 1;						\ 	}								\ 	_ret;								\ })
 end_define
 
 begin_endif
@@ -1008,7 +1084,7 @@ comment|/* SMP */
 end_comment
 
 begin_comment
-comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_initialized(m) returns non-zero if the lock `m' has been initialized.  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
+comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_trylock_spin(m) attempts to acquire MTX_SPIN mutex `m' but doesn't  *     spin if it cannot.  Rather, it returns 0 on failure and non-zero on  *     success.  It always returns failure for recursed lock attempts.  *  * mtx_initialized(m) returns non-zero if the lock `m' has been initialized.  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
 end_comment
 
 begin_define
@@ -1039,6 +1115,16 @@ parameter_list|(
 name|m
 parameter_list|)
 value|mtx_trylock_flags((m), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_trylock_spin
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_trylock_spin_flags((m), 0)
 end_define
 
 begin_define
@@ -1290,6 +1376,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|mtx_trylock_spin_flags_
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_mtx_trylock_spin_flags((m), (opts), (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
 name|mtx_unlock_spin_flags_
 parameter_list|(
 name|m
@@ -1362,6 +1465,23 @@ name|line
 parameter_list|)
 define|\
 value|__mtx_lock_spin((m), curthread, (opts), (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_trylock_spin_flags_
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__mtx_trylock_spin((m), curthread, (opts), (file), (line))
 end_define
 
 begin_define
@@ -1523,6 +1643,19 @@ name|opts
 parameter_list|)
 define|\
 value|mtx_trylock_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_trylock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|mtx_trylock_spin_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
