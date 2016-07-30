@@ -1273,6 +1273,14 @@ argument_list|)
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|size
+operator|>
+name|i
+operator|*
+name|bcache_blksize
+condition|)
 name|size
 operator|=
 name|i
