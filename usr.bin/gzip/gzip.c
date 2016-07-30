@@ -559,7 +559,7 @@ begin_define
 define|#
 directive|define
 name|NUM_SUFFIXES
-value|(sizeof suffixes / sizeof suffixes[0])
+value|(nitems(suffixes))
 end_define
 
 begin_define
