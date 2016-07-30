@@ -655,11 +655,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEW_PCIB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PCI_HP
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -668,6 +676,17 @@ name|_hw_pci
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
 
 begin_decl_stmt
 specifier|static
