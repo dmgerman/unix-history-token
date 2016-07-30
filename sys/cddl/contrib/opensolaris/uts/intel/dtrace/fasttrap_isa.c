@@ -4523,6 +4523,9 @@ name|fasttrap_id_t
 modifier|*
 name|id
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64
 if|if
 condition|(
 name|p
@@ -4738,6 +4741,8 @@ block|}
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 name|uintptr_t
 name|s0
 decl_stmt|,
@@ -5013,7 +5018,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__amd64
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* 	 * We're about to do a bunch of work so we cache a local copy of 	 * the tracepoint to emulate the instruction, and then find the 	 * tracepoint again later if we need to light up any return probes. 	 */
 name|tp_local
