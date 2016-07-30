@@ -3898,7 +3898,13 @@ argument_list|)
 operator|!=
 name|DOT
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -4038,6 +4044,10 @@ operator|*
 name|pathend
 operator|=
 name|EOS
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 continue|continue;
 block|}
