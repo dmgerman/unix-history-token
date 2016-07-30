@@ -3011,6 +3011,8 @@ operator|&
 name|more
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 name|errx
@@ -4123,6 +4125,8 @@ argument_list|(
 name|NULL
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|op
