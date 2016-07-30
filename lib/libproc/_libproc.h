@@ -6,25 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
 end_include
 
 begin_include
@@ -54,10 +36,6 @@ name|pid
 decl_stmt|;
 comment|/* Process ID. */
 name|int
-name|kq
-decl_stmt|;
-comment|/* Kernel event queue ID. */
-name|int
 name|flags
 decl_stmt|;
 comment|/* Process flags. */
@@ -78,21 +56,25 @@ name|rd_loadobj_t
 modifier|*
 name|rdobjs
 decl_stmt|;
+comment|/* Array of loaded objects. */
 name|size_t
 name|rdobjsz
 decl_stmt|;
+comment|/* Array size. */
 name|size_t
 name|nobjs
 decl_stmt|;
-name|struct
-name|lwpstatus
-name|lwps
-decl_stmt|;
+comment|/* Num. objects currently loaded. */
 name|rd_loadobj_t
 modifier|*
 name|rdexec
 decl_stmt|;
-comment|/* rdobj index of program executable. */
+comment|/* rdobj for program executable. */
+name|struct
+name|lwpstatus
+name|lwps
+decl_stmt|;
+comment|/* Process status. */
 name|char
 name|execname
 index|[
