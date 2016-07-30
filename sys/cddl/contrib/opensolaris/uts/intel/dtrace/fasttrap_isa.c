@@ -93,13 +93,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<cddl/dev/dtrace/dtrace_cddl.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/dtrace_bsd.h>
 end_include
 
 begin_include
@@ -117,7 +117,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dtrace_bsd.h>
+file|<cddl/dev/dtrace/dtrace_cddl.h>
 end_include
 
 begin_include
@@ -1273,9 +1273,6 @@ else|else
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__i386
 name|uint32_t
 modifier|*
 name|stack
@@ -1286,7 +1283,7 @@ operator|*
 operator|)
 name|rp
 operator|->
-name|r_esp
+name|r_rsp
 decl_stmt|;
 name|DTRACE_CPUFLAG_SET
 argument_list|(
@@ -1313,8 +1310,6 @@ operator||
 name|CPU_DTRACE_BADADDR
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64
@@ -2970,12 +2965,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
 begin_function
 specifier|static
 name|uint32_t
@@ -3016,11 +3005,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -3586,12 +3570,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -3701,11 +3679,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -4550,9 +4523,6 @@ name|fasttrap_id_t
 modifier|*
 name|id
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__amd64
 if|if
 condition|(
 name|p
@@ -4768,9 +4738,6 @@ block|}
 block|}
 else|else
 block|{
-else|#
-directive|else
-comment|/* __amd64 */
 name|uintptr_t
 name|s0
 decl_stmt|,
@@ -4794,7 +4761,7 @@ operator|*
 operator|)
 name|rp
 operator|->
-name|r_esp
+name|r_rsp
 decl_stmt|;
 comment|/* 			 * In 32-bit mode, all arguments are passed on the 			 * stack. If this is a function entry probe, we need 			 * to skip the first entry on the stack as it 			 * represents the return address rather than a 			 * parameter to the function. 			 */
 name|s0
@@ -5046,15 +5013,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* __amd64 */
-ifdef|#
-directive|ifdef
-name|__amd64
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* 	 * We're about to do a bunch of work so we cache a local copy of 	 * the tracepoint to emulate the instruction, and then find the 	 * tracepoint again later if we need to light up any return probes. 	 */
 name|tp_local
@@ -5195,9 +5154,6 @@ else|else
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 name|uint32_t
 name|dst32
 decl_stmt|;
@@ -5213,7 +5169,7 @@ operator|*
 operator|)
 name|rp
 operator|->
-name|r_esp
+name|r_rsp
 argument_list|)
 expr_stmt|;
 name|dst
@@ -5224,15 +5180,13 @@ name|addr
 operator|=
 name|rp
 operator|->
-name|r_esp
+name|r_rsp
 operator|+
 sizeof|sizeof
 argument_list|(
 name|uint32_t
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64
@@ -5893,9 +5847,6 @@ else|else
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 name|rp
 operator|->
 name|r_rsp
@@ -5922,8 +5873,6 @@ operator|->
 name|r_rbp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64
@@ -6918,9 +6867,6 @@ else|else
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 comment|/* 			 * Set up the jmp to the next instruction; note that 			 * the size of the traced instruction cancels out. 			 */
 name|scratch
 index|[
@@ -6955,8 +6901,6 @@ argument_list|(
 name|uint32_t
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__amd64
