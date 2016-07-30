@@ -4174,6 +4174,9 @@ name|owner
 argument_list|)
 condition|)
 block|{
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
@@ -4182,9 +4185,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-name|cpu_spinwait
-argument_list|()
-expr_stmt|;
 block|}
 name|KTR_STATE0
 argument_list|(
