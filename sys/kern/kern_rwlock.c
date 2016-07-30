@@ -4156,7 +4156,7 @@ name|all_time
 operator|-
 name|sleep_time
 argument_list|,
-name|LOCKSTAT_READER
+name|LOCKSTAT_WRITER
 argument_list|,
 operator|(
 name|state
