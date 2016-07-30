@@ -140,7 +140,7 @@ name|rdl_path
 argument_list|,
 name|phdl
 operator|->
-name|execname
+name|execpath
 argument_list|)
 operator|==
 literal|0

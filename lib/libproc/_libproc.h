@@ -27,6 +27,12 @@ directive|include
 file|"libproc.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|procstat
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc_handle
@@ -47,6 +53,10 @@ name|int
 name|wstat
 decl_stmt|;
 comment|/* Process wait status. */
+name|int
+name|model
+decl_stmt|;
+comment|/* Process data model. */
 name|rd_agent_t
 modifier|*
 name|rdap
@@ -75,8 +85,14 @@ name|lwpstatus
 name|lwps
 decl_stmt|;
 comment|/* Process status. */
+name|struct
+name|procstat
+modifier|*
+name|procstat
+decl_stmt|;
+comment|/* libprocstat handle. */
 name|char
-name|execname
+name|execpath
 index|[
 name|MAXPATHLEN
 index|]
