@@ -1160,7 +1160,7 @@ name|NULL
 condition|;
 name|nc1
 operator|=
-name|nc
+name|nc1
 operator|->
 name|next
 control|)
@@ -1279,7 +1279,7 @@ name|NULL
 condition|;
 name|nc1
 operator|=
-name|nc
+name|nc1
 operator|->
 name|next
 control|)
