@@ -737,6 +737,10 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+name|last_bl
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ps
