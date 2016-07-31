@@ -4121,6 +4121,16 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+condition|)
+name|errno
+operator|=
+name|saverrno
+expr_stmt|;
 name|err
 operator|=
 name|glob2
