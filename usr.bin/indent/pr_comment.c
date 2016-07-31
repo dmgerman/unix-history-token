@@ -111,10 +111,6 @@ name|t_ptr
 decl_stmt|;
 comment|/* used for moving string */
 name|int
-name|unix_comment
-decl_stmt|;
-comment|/* tri-state variable used to decide if it is 				 * a unix-style comment. 0 means only blanks 				 * since /+*, 1 means regular style comment, 2 				 * means unix style comment */
-name|int
 name|break_delim
 init|=
 name|comment_delimiter_on_blankline
@@ -161,11 +157,6 @@ operator|.
 name|out_coms
 expr_stmt|;
 comment|/* keep track of number of comments */
-name|unix_comment
-operator|=
-literal|1
-expr_stmt|;
-comment|/* set flag to let us figure out if there is a 				 * unix-style comment ** DISABLED: use 0 to 				 * reenable this hack! */
 comment|/* Figure where to align and how to treat the comment */
 if|if
 condition|(
@@ -846,112 +837,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|unix_comment
-operator|!=
-literal|1
-condition|)
-block|{
-comment|/* we not are in unix_style 						 * comment */
-if|if
-condition|(
-name|unix_comment
-operator|==
-literal|0
-operator|&&
-name|s_code
-operator|==
-name|e_code
-condition|)
-block|{
-comment|/* 			 * if it is a UNIX-style comment, ignore the 			 * requirement that previous line be blank for 			 * unindention 			 */
-name|ps
-operator|.
-name|com_col
-operator|=
-operator|(
-name|ps
-operator|.
-name|ind_level
-operator|-
-name|ps
-operator|.
-name|unindent_displace
-operator|)
-operator|*
-name|ps
-operator|.
-name|ind_size
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ps
-operator|.
-name|com_col
-operator|<=
-literal|1
-condition|)
-name|ps
-operator|.
-name|com_col
-operator|=
-literal|2
-expr_stmt|;
-block|}
-name|unix_comment
-operator|=
-literal|2
-expr_stmt|;
-comment|/* permanently remember that we are in 					 * this type of comment */
-name|dump_line
-argument_list|()
-expr_stmt|;
-operator|++
-name|line_no
-expr_stmt|;
-name|now_col
-operator|=
-name|ps
-operator|.
-name|com_col
-expr_stmt|;
-operator|*
-name|e_com
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-comment|/* 		     * fix so that the star at the start of the line will line 		     * up 		     */
-do|do
-comment|/* flush leading white space */
-if|if
-condition|(
-operator|++
-name|buf_ptr
-operator|>=
-name|buf_end
-condition|)
-name|fill_buffer
-argument_list|()
-expr_stmt|;
-do|while
-condition|(
-operator|*
-name|buf_ptr
-operator|==
-literal|' '
-operator|||
-operator|*
-name|buf_ptr
-operator|==
-literal|'\t'
-condition|)
-do|;
-break|break;
-block|}
-if|if
-condition|(
 operator|*
 operator|(
 name|e_com
@@ -1103,17 +988,6 @@ condition|)
 comment|/* get to next char after * */
 name|fill_buffer
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|unix_comment
-operator|==
-literal|0
-condition|)
-comment|/* set flag to show we are not in 					 * unix-style comment */
-name|unix_comment
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1321,27 +1195,6 @@ block|}
 break|break;
 default|default:
 comment|/* we have a random char */
-if|if
-condition|(
-name|unix_comment
-operator|==
-literal|0
-operator|&&
-operator|*
-name|buf_ptr
-operator|!=
-literal|' '
-operator|&&
-operator|*
-name|buf_ptr
-operator|!=
-literal|'\t'
-condition|)
-name|unix_comment
-operator|=
-literal|1
-expr_stmt|;
-comment|/* we are not in unix-style comment */
 operator|*
 name|e_com
 operator|=
@@ -1428,10 +1281,6 @@ operator|!
 name|ps
 operator|.
 name|box_com
-operator|&&
-name|unix_comment
-operator|==
-literal|1
 operator|&&
 name|e_com
 index|[
