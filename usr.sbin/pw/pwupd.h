@@ -57,39 +57,6 @@ directive|include
 file|<stringlist.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|RET_SETGRENT
-value|int
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RET_SETGRENT
-value|void
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|pwf
@@ -152,7 +119,7 @@ modifier|*
 name|nam
 parameter_list|)
 function_decl|;
-name|RET_SETGRENT
+name|void
 function_decl|(
 modifier|*
 name|_setgrent
@@ -737,7 +704,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|RET_SETGRENT
+name|void
 name|vsetgrent
 parameter_list|(
 name|void

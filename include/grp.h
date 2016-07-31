@@ -256,12 +256,8 @@ directive|if
 name|__XSI_VISIBLE
 end_if
 
-begin_comment
-comment|/* XXX IEEE Std 1003.1, 2003 specifies `void setgrent(void)' */
-end_comment
-
 begin_function_decl
-name|int
+name|void
 name|setgrent
 parameter_list|(
 name|void
