@@ -2019,12 +2019,12 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-name|uint64_t
+name|u_int
 name|spin_cnt
 init|=
 literal|0
 decl_stmt|;
-name|uint64_t
+name|u_int
 name|sleep_cnt
 init|=
 literal|0
