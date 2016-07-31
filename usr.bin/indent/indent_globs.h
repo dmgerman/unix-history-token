@@ -798,7 +798,7 @@ begin_define
 define|#
 directive|define
 name|STACKSIZE
-value|150
+value|256
 end_define
 
 begin_struct

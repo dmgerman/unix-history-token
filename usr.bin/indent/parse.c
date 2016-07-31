@@ -47,6 +47,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -850,6 +856,21 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* end of switch */
+if|if
+condition|(
+name|ps
+operator|.
+name|tos
+operator|>=
+name|STACKSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Parser stack overflow"
+argument_list|)
+expr_stmt|;
 name|reduce
 argument_list|()
 expr_stmt|;
