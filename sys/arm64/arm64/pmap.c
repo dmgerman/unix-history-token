@@ -3635,7 +3635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Normal, non-SMP, invalidation functions.  * We inline these within pmap.c for speed.  */
+comment|/*  * Invalidate a single TLB entry.  */
 end_comment
 
 begin_function
