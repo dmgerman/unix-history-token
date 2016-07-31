@@ -116,6 +116,12 @@ literal|21
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -143,6 +149,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The load configuration settings below are tuned by default for  * the case where all devices are of the same rotational type.  *  * If there is a mixture of rotating and non-rotating media, setting  * non_rotating_seek_inc to 0 may well provide better results as it  * will direct more reads to the non-rotating vdevs which are more  * likely to have a higher performance.  */
 end_comment
@@ -159,6 +170,12 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -181,6 +198,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -189,6 +211,12 @@ init|=
 literal|5
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -211,6 +239,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -223,6 +256,12 @@ operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -246,6 +285,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Non-rotating media load calculation configuration. */
 end_comment
@@ -258,6 +302,12 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -280,6 +330,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -288,6 +343,12 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -309,6 +370,11 @@ literal|"Non-rotating media load increment for seeking I/O's"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
