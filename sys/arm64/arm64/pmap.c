@@ -3654,9 +3654,9 @@ name|sched_pin
 argument_list|()
 expr_stmt|;
 asm|__asm __volatile(
-literal|"dsb  sy		\n"
+literal|"dsb  ishst		\n"
 literal|"tlbi vaae1is, %0	\n"
-literal|"dsb  sy		\n"
+literal|"dsb  ish		\n"
 literal|"isb		\n"
 operator|:
 operator|:
@@ -3697,7 +3697,11 @@ decl_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("dsb	sy");
+name|dsb
+argument_list|(
+name|ishst
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|addr
@@ -3733,7 +3737,7 @@ asm|__asm __volatile(
 end_asm
 
 begin_expr_stmt
-literal|"dsb  sy	\n"
+literal|"dsb  ish	\n"
 literal|"isb	\n"
 end_expr_stmt
 
@@ -3761,9 +3765,9 @@ name|sched_pin
 argument_list|()
 expr_stmt|;
 asm|__asm __volatile(
-literal|"dsb  sy		\n"
+literal|"dsb  ishst		\n"
 literal|"tlbi vmalle1is	\n"
-literal|"dsb  sy		\n"
+literal|"dsb  ish		\n"
 literal|"isb		\n"
 block|)
 function|;
