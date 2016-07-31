@@ -2350,14 +2350,18 @@ end_comment
 
 begin_function
 name|int
-name|count_spaces
+name|count_spaces_until
 parameter_list|(
 name|int
-name|current
+name|cur
 parameter_list|,
 name|char
 modifier|*
 name|buffer
+parameter_list|,
+name|char
+modifier|*
+name|end
 parameter_list|)
 comment|/*  * this routine figures out where the character position will be after  * printing the text in buffer starting at column "current"  */
 block|{
@@ -2366,14 +2370,6 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* used to look thru buffer */
-name|int
-name|cur
-decl_stmt|;
-comment|/* current character counter */
-name|cur
-operator|=
-name|current
-expr_stmt|;
 for|for
 control|(
 name|buf
@@ -2384,6 +2380,10 @@ operator|*
 name|buf
 operator|!=
 literal|'\0'
+operator|&&
+name|buf
+operator|!=
+name|end
 condition|;
 operator|++
 name|buf
@@ -2447,6 +2447,33 @@ comment|/* end of for loop */
 return|return
 operator|(
 name|cur
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|count_spaces
+parameter_list|(
+name|int
+name|cur
+parameter_list|,
+name|char
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|count_spaces_until
+argument_list|(
+name|cur
+argument_list|,
+name|buffer
+argument_list|,
+name|NULL
+argument_list|)
 operator|)
 return|;
 block|}

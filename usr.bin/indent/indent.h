@@ -59,6 +59,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|count_spaces_until
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|lexi
 parameter_list|(
 name|void
