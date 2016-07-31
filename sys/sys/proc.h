@@ -3751,7 +3751,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Switching due to opepreempt. */
+comment|/* Switching due to owepreempt. */
 end_comment
 
 begin_define
