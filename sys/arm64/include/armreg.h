@@ -384,6 +384,188 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISS_DATA_DFSC_ASF_L0
+value|(0x00<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L1
+value|(0x01<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L2
+value|(0x02<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L3
+value|(0x03<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L0
+value|(0x04<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L1
+value|(0x05<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L2
+value|(0x06<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L3
+value|(0x07<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L1
+value|(0x09<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L2
+value|(0x0a<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L3
+value|(0x0b<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L1
+value|(0x0d<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L2
+value|(0x0e<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L3
+value|(0x0f<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT
+value|(0x10<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L0
+value|(0x14<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L1
+value|(0x15<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L2
+value|(0x16<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L3
+value|(0x17<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC
+value|(0x18<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L0
+value|(0x1c<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L1
+value|(0x1d<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L2
+value|(0x1e<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L3
+value|(0x1f<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ALIGN
+value|(0x21<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TLB_CONFLICT
+value|(0x28<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ESR_ELx_IL
 value|(0x01<< 25)
 end_define
