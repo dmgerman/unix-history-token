@@ -582,6 +582,10 @@ literal|""
 argument_list|,
 name|prefix
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|indent
 operator|+
 name|strlen
@@ -600,6 +604,7 @@ literal|0
 else|:
 literal|12
 operator|)
+argument_list|)
 argument_list|,
 name|desc
 argument_list|,
