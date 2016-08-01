@@ -1760,7 +1760,7 @@ parameter_list|(
 name|_rt
 parameter_list|)
 define|\
-value|mtx_init(&(_rt)->rt_mtx, "rtentry", NULL, MTX_DEF | MTX_DUPOK)
+value|mtx_init(&(_rt)->rt_mtx, "rtentry", NULL, MTX_DEF | MTX_DUPOK | MTX_NEW)
 end_define
 
 begin_define
