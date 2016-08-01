@@ -181,6 +181,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|uint64_t
+name|__unused
 parameter_list|)
 function_decl|;
 end_function_decl
