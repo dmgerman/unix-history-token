@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -1922,12 +1928,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|OF_peer
-argument_list|(
-literal|0
-argument_list|)
-operator|==
-literal|0
+name|arm64_bus_method
+operator|!=
+name|ARM64_BUS_FDT
 condition|)
 return|return
 operator|(
@@ -2113,6 +2116,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|arm64_bus_method
+operator|!=
+name|ARM64_BUS_ACPI
+operator|||
 name|acpi_identify
 argument_list|()
 operator|!=

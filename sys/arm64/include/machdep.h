@@ -40,6 +40,27 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|arm64_bus
+block|{
+name|ARM64_BUS_NONE
+block|,
+name|ARM64_BUS_FDT
+block|,
+name|ARM64_BUS_ACPI
+block|, }
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|arm64_bus
+name|arm64_bus_method
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|vm_paddr_t
