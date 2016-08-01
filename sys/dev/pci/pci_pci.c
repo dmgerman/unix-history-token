@@ -4931,6 +4931,16 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Handling of slots with a power controller needs to be 	 * reexamined.  Ignore hotplug on such slots for now. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|pcie_slot_cap
+operator|&
+name|PCIEM_SLOT_CAP_PCP
+condition|)
+return|return;
 if|if
 condition|(
 name|sc
