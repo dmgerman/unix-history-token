@@ -2848,6 +2848,12 @@ argument_list|)
 modifier|*
 name|irq
 struct|;
+name|int
+name|sge_gts_reg
+decl_stmt|;
+name|int
+name|sge_kdoorbell_reg
+decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
 decl_stmt|;

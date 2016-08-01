@@ -1000,10 +1000,9 @@ operator|->
 name|regs_res
 argument_list|)
 operator|+
-name|MYPF_REG
-argument_list|(
-name|SGE_PF_KDOORBELL
-argument_list|)
+name|sc
+operator|->
+name|sge_kdoorbell_reg
 operator|)
 expr_stmt|;
 name|wq
@@ -1028,10 +1027,9 @@ operator|->
 name|regs_res
 argument_list|)
 operator|+
-name|MYPF_REG
-argument_list|(
-name|SGE_PF_GTS
-argument_list|)
+name|sc
+operator|->
+name|sge_gts_reg
 operator|)
 expr_stmt|;
 if|if
