@@ -441,7 +441,7 @@ define|#
 directive|define
 name|HN_TX_DATA_SEGCNT_MAX
 define|\
-value|(VMBUS_CHAN_SGLIST_MAX - HV_RF_NUM_TX_RESERVED_PAGE_BUFS)
+value|(NETVSC_PACKET_MAXPAGE - HV_RF_NUM_TX_RESERVED_PAGE_BUFS)
 end_define
 
 begin_define

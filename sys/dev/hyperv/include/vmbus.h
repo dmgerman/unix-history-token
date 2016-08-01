@@ -264,20 +264,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|VMBUS_CHAN_SGLIST_MAX
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CHAN_PRPLIST_MAX
-value|32
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|vmbus_channel

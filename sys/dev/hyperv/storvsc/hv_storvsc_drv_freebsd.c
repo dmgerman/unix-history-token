@@ -314,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|STORVSC_DATA_SEGCNT_MAX
-value|VMBUS_CHAN_PRPLIST_MAX
+value|32
 end_define
 
 begin_define

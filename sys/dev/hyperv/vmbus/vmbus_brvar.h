@@ -198,6 +198,32 @@ name|sysctl_oid
 struct_decl|;
 end_struct_decl
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|vmbus_txbr_maxpktsz
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_txbr
+modifier|*
+name|tbr
+parameter_list|)
+block|{
+comment|/* 1/2 data size */
+return|return
+operator|(
+name|tbr
+operator|->
+name|txbr_dsize
+operator|/
+literal|2
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 name|vmbus_br_sysctl_create

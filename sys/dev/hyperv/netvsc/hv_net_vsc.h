@@ -2181,6 +2181,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NETVSC_PACKET_MAXPAGE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|NETVSC_VLAN_PRIO_MASK
 value|0xe000
 end_define
@@ -2369,7 +2376,7 @@ name|struct
 name|vmbus_gpa
 name|gpa
 index|[
-name|VMBUS_CHAN_SGLIST_MAX
+name|NETVSC_PACKET_MAXPAGE
 index|]
 decl_stmt|;
 block|}
