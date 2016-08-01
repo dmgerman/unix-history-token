@@ -1949,6 +1949,140 @@ value|((attr)<< ((idx) * 8))
 end_define
 
 begin_comment
+comment|/* PAR_EL1 - Physical Address Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_F_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_F
+value|(0x1<< PAR_F_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_SUCCESS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& PAR_F) == 0)
+end_define
+
+begin_comment
+comment|/* When PAR_F == 0 (success) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_SH_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_SH_MASK
+value|(0x3<< PAR_SH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_NS_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_NS_MASK
+value|(0x3<< PAR_NS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PA_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PA_MASK
+value|0x0000fffffffff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_ATTR_SHIFT
+value|56
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_ATTR_MASK
+value|(0xff<< PAR_ATTR_SHIFT)
+end_define
+
+begin_comment
+comment|/* When PAR_F == 1 (aborted) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_FST_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_FST_MASK
+value|(0x3f<< PAR_FST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PTW_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PTW_MASK
+value|(0x1<< PAR_PTW_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_S_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_S_MASK
+value|(0x1<< PAR_S_SHIFT)
+end_define
+
+begin_comment
 comment|/* SCTLR_EL1 - System Control Register */
 end_comment
 
