@@ -310,11 +310,15 @@ name|VSTOR_PKT_SIZE
 value|(sizeof(struct vstor_packet) - vmscsi_size_delta)
 end_define
 
+begin_comment
+comment|/*  * 33 segments are needed to allow 128KB maxio, in case the data  * in the first page is _not_ PAGE_SIZE aligned, e.g.  *  *     |<----------- 128KB ----------->|  *     |                               |  *  0  2K 4K    8K   16K   124K  128K  130K  *  |  |  |     |     |       |     |  |  *  +--+--+-----+-----+.......+-----+--+--+  *  |  |  |     |     |       |     |  |  | DATA  *  |  |  |     |     |       |     |  |  |  *  +--+--+-----+-----+.......------+--+--+  *     |  |                         |  |  *     | 1|            31           | 1| ...... # of segments  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|STORVSC_DATA_SEGCNT_MAX
-value|32
+value|33
 end_define
 
 begin_define
@@ -329,7 +333,7 @@ define|#
 directive|define
 name|STORVSC_DATA_SIZE_MAX
 define|\
-value|(STORVSC_DATA_SEGCNT_MAX * STORVSC_DATA_SEGSZ_MAX)
+value|((STORVSC_DATA_SEGCNT_MAX - 1) * STORVSC_DATA_SEGSZ_MAX)
 end_define
 
 begin_struct_decl
@@ -5739,6 +5743,12 @@ operator|->
 name|hba_misc
 operator||=
 name|PIM_UNMAPPED
+expr_stmt|;
+name|cpi
+operator|->
+name|maxio
+operator|=
+name|STORVSC_DATA_SIZE_MAX
 expr_stmt|;
 name|cpi
 operator|->
