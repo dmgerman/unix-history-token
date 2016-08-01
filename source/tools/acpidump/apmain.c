@@ -19,12 +19,6 @@ directive|include
 file|"acpidump.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acapps.h"
-end_include
-
 begin_comment
 comment|/*  * acpidump - A portable utility for obtaining system ACPI tables and dumping  * them in an ASCII hex format suitable for binary extraction via acpixtract.  *  * Obtaining the system ACPI tables is an OS-specific operation.  *  * This utility can be ported to any host operating system by providing a  * module containing system-specific versions of these interfaces:  *  *      AcpiOsGetTableByAddress  *      AcpiOsGetTableByIndex  *      AcpiOsGetTableByName  *  * See the ACPICA Reference Guide for the exact definitions of these  * interfaces. Also, see these ACPICA source code modules for example  * implementations:  *  *      source/os_specific/service_layers/oswintbl.c  *      source/os_specific/service_layers/oslinuxtbl.c  */
 end_comment
@@ -278,8 +272,10 @@ operator|>
 name|AP_MAX_ACTIONS
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Too many table options (max %u)\n"
 argument_list|,
 name|AP_MAX_ACTIONS
@@ -396,8 +392,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: Cannot handle this switch, please use on|off\n"
 argument_list|,
 name|AcpiGbl_Optarg
@@ -471,8 +469,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: Could not convert to a physical address\n"
 argument_list|,
 name|AcpiGbl_Optarg
@@ -543,8 +543,10 @@ name|Gbl_VerboseMode
 operator|=
 name|TRUE
 expr_stmt|;
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 name|ACPI_COMMON_SIGNON
 argument_list|(
 name|AP_UTILITY_NAME
@@ -730,6 +732,10 @@ name|Gbl_OutputFile
 operator|=
 name|ACPI_FILE_OUT
 expr_stmt|;
+name|AcpiGbl_IntegerByteWidth
+operator|=
+literal|8
+expr_stmt|;
 comment|/* Process command line options */
 name|Status
 operator|=
@@ -845,8 +851,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Internal error, invalid action: 0x%X\n"
 argument_list|,
 name|Action
@@ -891,8 +899,10 @@ argument_list|(
 name|Gbl_OutputFile
 argument_list|)
 expr_stmt|;
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Output file %s contains 0x%X (%u) bytes\n\n"
 argument_list|,
 name|Gbl_OutputFilename
@@ -903,7 +913,7 @@ name|FileSize
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiOsCloseFile
+name|fclose
 argument_list|(
 name|Gbl_OutputFile
 argument_list|)

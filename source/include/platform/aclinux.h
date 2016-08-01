@@ -210,6 +210,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_FUNCTION
+value|__init
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -562,35 +569,28 @@ begin_comment
 comment|/* !__KERNEL__ */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
+begin_define
+define|#
+directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_STANDARD_HEADERS
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define/disable kernel-specific declarators */
@@ -742,16 +742,6 @@ end_endif
 begin_comment
 comment|/* __KERNEL__ */
 end_comment
-
-begin_comment
-comment|/* Linux uses GCC */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
 
 begin_endif
 endif|#

@@ -1012,7 +1012,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*      * For ACPI 1.0 FADTs (revision 1 or 2), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable. Only the length can be      * trusted.      */
+comment|/*      * For ACPI 1.0 FADTs (revision 1), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable because of BIOS errors.      * The table length is instead used as the final word on the version.      *      * Note: FADT revision 3 is the ACPI 2.0 version of the FADT.      */
 if|if
 condition|(
 name|AcpiGbl_FADT
@@ -1021,7 +1021,7 @@ name|Header
 operator|.
 name|Length
 operator|<=
-name|ACPI_FADT_V2_SIZE
+name|ACPI_FADT_V3_SIZE
 condition|)
 block|{
 name|AcpiGbl_FADT

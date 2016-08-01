@@ -520,7 +520,7 @@ operator|!
 name|Buffer
 condition|)
 block|{
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -558,7 +558,7 @@ name|Count
 condition|)
 block|{
 comment|/* Print current offset */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -594,7 +594,7 @@ name|Count
 condition|)
 block|{
 comment|/* Dump fill spaces */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -629,7 +629,7 @@ name|DB_BYTE_DISPLAY
 case|:
 default|default:
 comment|/* Default is BYTE display */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -667,7 +667,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -697,7 +697,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -727,7 +727,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -755,7 +755,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -772,7 +772,7 @@ name|Display
 expr_stmt|;
 block|}
 comment|/*          * Print the ASCII equivalent characters but watch out for the bad          * unprintable ones (printable chars are 0x20 through 0x7E)          */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -802,7 +802,7 @@ operator|>=
 name|Count
 condition|)
 block|{
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -831,7 +831,7 @@ name|BufChar
 argument_list|)
 condition|)
 block|{
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -843,7 +843,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,
@@ -853,7 +853,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Done with that line. */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|File
 argument_list|,

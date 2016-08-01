@@ -84,6 +84,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiInitializeTables
 parameter_list|(
 name|ACPI_TABLE_DESC
@@ -235,6 +236,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiReallocateRootTable
 parameter_list|(
 name|void

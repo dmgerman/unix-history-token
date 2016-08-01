@@ -134,9 +134,13 @@ operator|!
 name|InitFile
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"Could not open initialization file"
+name|stderr
+argument_list|,
+literal|"Could not open initialization file: %s\n"
+argument_list|,
+name|Filename
 argument_list|)
 expr_stmt|;
 return|return

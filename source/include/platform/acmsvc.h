@@ -83,6 +83,37 @@ end_define
 begin_define
 define|#
 directive|define
+name|snprintf
+value|_snprintf
+end_define
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|<=
+literal|1200
+end_if
+
+begin_comment
+comment|/* Versions below VC++ 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vsnprintf
+value|_vsnprintf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|O_RDONLY
 value|_O_RDONLY
 end_define
@@ -229,6 +260,26 @@ name|ACPI_INTERNAL_VAR_XFACE
 value|__cdecl
 end_define
 
+begin_comment
+comment|/* Do not maintain the architecture specific stuffs for the EFI ports */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_EDK2_EFI
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_GNU_EFI
+argument_list|)
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -311,6 +362,11 @@ parameter_list|)
 define|\
 value|{                           \     n_hi>>= 1;    \     n_lo>>= 1;    \ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -481,6 +537,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Begin standard headers */
+end_comment
+
+begin_comment
+comment|/*  * warn C4001: nonstandard extension 'single line comment' was used  *  * We need to enable this for ACPICA internal files, but disable it for  * buggy MS runtime headers.  */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|push
+name|)
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4001
+name|)
+end_pragma
 
 begin_endif
 endif|#

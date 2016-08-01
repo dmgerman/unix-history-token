@@ -22,16 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<platform/acgcc.h>
-end_include
-
-begin_comment
-comment|/* DragonFly uses GCC */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 

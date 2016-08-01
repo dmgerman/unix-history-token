@@ -333,18 +333,6 @@ name|ACPI_HELP_APP
 operator|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_comment
 comment|/* Local prototypes */
 end_comment

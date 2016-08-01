@@ -316,6 +316,12 @@ literal|"Platform Memory Topology Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_RASF
+block|,
+literal|"RAS Features Table"
+block|}
+block|,
+block|{
 name|ACPI_RSDP_NAME
 block|,
 literal|"Root System Description Pointer"

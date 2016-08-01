@@ -13,12 +13,6 @@ directive|include
 file|"acpisrc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acapps.h"
-end_include
-
 begin_comment
 comment|/******************************************************************************  *  * Standard/Common translation tables  *  ******************************************************************************/
 end_comment

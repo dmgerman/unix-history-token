@@ -19,11 +19,17 @@ directive|define
 name|__ACHAIKU_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
+begin_define
+define|#
+directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
 
 begin_include
 include|#
@@ -40,18 +46,6 @@ end_struct_decl
 begin_comment
 comment|/* Host-dependent types and defines for user- and kernel-space ACPICA */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_STANDARD_HEADERS
-end_define
 
 begin_define
 define|#

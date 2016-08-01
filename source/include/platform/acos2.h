@@ -22,6 +22,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
+
+begin_define
+define|#
+directive|define
 name|INCL_LONGLONG
 end_define
 
@@ -94,12 +106,6 @@ begin_define
 define|#
 directive|define
 name|ACPI_UNUSED_VAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_STANDARD_HEADERS
 end_define
 
 begin_include

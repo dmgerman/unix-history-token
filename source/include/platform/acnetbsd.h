@@ -19,16 +19,6 @@ directive|define
 name|__ACNETBSD_H__
 end_define
 
-begin_comment
-comment|/* NetBSD uses GCC */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
-
 begin_define
 define|#
 directive|define

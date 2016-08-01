@@ -668,6 +668,9 @@ case|case
 name|ACPI_DMT_BUF10
 case|:
 case|case
+name|ACPI_DMT_BUF12
+case|:
+case|case
 name|ACPI_DMT_BUF16
 case|:
 case|case
@@ -1179,6 +1182,14 @@ case|:
 name|ByteLength
 operator|=
 literal|10
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUF12
+case|:
+name|ByteLength
+operator|=
+literal|12
 expr_stmt|;
 break|break;
 case|case

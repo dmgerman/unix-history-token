@@ -13,12 +13,6 @@ directive|include
 file|"aecommon.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"errno.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -36,13 +30,6 @@ end_macro
 begin_comment
 comment|/*  * Main routine for the ACPI user-space execution utility.  *  * Portability note: The utility depends upon the host for command-line  * wildcard support - it is not implemented locally. For example:  *  * Linux/Unix systems: Shell expands wildcards automatically.  *  * Windows: The setargv.obj module must be linked in to automatically  * expand wildcards.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|BOOLEAN
-name|AcpiGbl_DebugTimeout
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Local prototypes */
@@ -66,7 +53,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ACPI_STATUS
+name|void
 name|AcpiDbRunBatchMode
 parameter_list|(
 name|void
@@ -1600,20 +1587,18 @@ argument_list|,
 name|EX_NO_SINGLE_STEP
 argument_list|)
 expr_stmt|;
-comment|/* Shut down the debugger */
-name|AcpiTerminateDebugger
-argument_list|()
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
+comment|/* Shut down the debugger and ACPICA */
+if|#
+directive|if
+literal|0
+comment|/* Temporarily removed */
+block|AcpiTerminateDebugger ();     Status = AcpiTerminate ();
+endif|#
+directive|endif
+name|Status
+operator|=
 name|AcpiOsTerminate
 argument_list|()
 expr_stmt|;
@@ -1624,12 +1609,6 @@ operator|)
 return|;
 name|ErrorExit
 label|:
-operator|(
-name|void
-operator|)
-name|AcpiOsTerminate
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ExitCode
@@ -1639,20 +1618,17 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiDbRunBatchMode  *  * PARAMETERS:  BatchCommandLine    - A semicolon separated list of commands  *                                    to be executed.  *                                    Use only commas to separate elements of  *                                    particular command.  * RETURN:      Status  *  * DESCRIPTION: For each command of list separated by ';' prepare the command  *              buffer and pass it to AcpiDbCommandDispatch.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiDbRunBatchMode  *  * PARAMETERS:  BatchCommandLine    - A semicolon separated list of commands  *                                    to be executed.  *                                    Use only commas to separate elements of  *                                    particular command.  * RETURN:      None  *  * DESCRIPTION: For each command of list separated by ';' prepare the command  *              buffer and pass it to AcpiDbCommandDispatch.  *  *****************************************************************************/
 end_comment
 
 begin_function
 specifier|static
-name|ACPI_STATUS
+name|void
 name|AcpiDbRunBatchMode
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|char
 modifier|*
 name|Ptr
@@ -1755,20 +1731,6 @@ name|Ptr
 expr_stmt|;
 block|}
 block|}
-comment|/* Shut down the debugger */
-name|AcpiTerminateDebugger
-argument_list|()
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
 block|}
 end_function
 

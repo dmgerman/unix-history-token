@@ -38,7 +38,38 @@ begin_define
 define|#
 directive|define
 name|AH_SUPPORTED_OPTIONS
-value|"adehikmopstuv"
+value|"adeghikmopstuv"
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+name|ACPI_OPTION
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|ACPI_OPTION
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ACPI_OPTION
+parameter_list|(
+name|Name
+parameter_list|,
+name|Description
+parameter_list|)
+define|\
+value|AcpiOsPrintf ("  %-24s%s\n", Name, Description);
 end_define
 
 begin_comment
@@ -74,21 +105,28 @@ argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
 argument_list|(
-literal|"\nAML (ACPI Machine Language) Names and Encodings:\n"
+literal|"\nAML Names and Encodings (ACPI Machine Language):\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-a [Name/Prefix]"
+literal|"-a [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display both ASL operator and AML opcode name(s)"
+literal|"Display both ASL operator and AML opcode name(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-m [Name/Prefix]"
+literal|"-g [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display AML opcode name(s)"
+literal|"Display AML grammar elements(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-m [Name/Prefix | *]"
+argument_list|,
+literal|"Display AML opcode name(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
@@ -112,40 +150,40 @@ argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
 argument_list|(
-literal|"\nASL (ACPI Source Language) Names and Symbols:\n"
+literal|"\nASL Names and Symbols (ACPI Source Language):\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-k [Name/Prefix]"
+literal|"-k [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display ASL non-operator keyword(s)"
+literal|"Display ASL non-operator keyword(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-p [Name/Prefix]"
+literal|"-p [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display ASL predefined method name(s)"
+literal|"Display ASL predefined method name(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-s [Name/Prefix]"
+literal|"-s [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display ASL operator name(s)"
+literal|"Display ASL operator name(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
 argument_list|(
-literal|"\nOther ACPI Names:\n"
+literal|"\nOther miscellaneous ACPI Names:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-i [Name/Prefix]"
+literal|"-i [Name/Prefix | *]"
 argument_list|,
-literal|"Find/Display ACPI/PNP Hardware ID(s)"
+literal|"Display ACPI/PNP Hardware ID(s)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -303,6 +341,14 @@ name|AH_DECODE_EXCEPTION
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+name|DecodeType
+operator|=
+name|AH_DECODE_AML_TYPE
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 name|DecodeType
@@ -424,6 +470,15 @@ case|case
 name|AH_DECODE_AML_OPCODE
 case|:
 name|AhDecodeAmlOpcode
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AH_DECODE_AML_TYPE
+case|:
+name|AhFindAmlTypes
 argument_list|(
 name|Name
 argument_list|)

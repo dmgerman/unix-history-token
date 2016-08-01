@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acapps.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"actables.h"
 end_include
 
@@ -40,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"acapps.h"
 end_include
 
 begin_define
@@ -167,9 +161,13 @@ operator|!
 name|File
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"Could not open input file"
+name|stderr
+argument_list|,
+literal|"Could not open input file: %s\n"
+argument_list|,
+name|Filename
 argument_list|)
 expr_stmt|;
 if|if
@@ -623,7 +621,7 @@ operator|=
 name|AcpiOsAllocate
 argument_list|(
 operator|(
-name|size_t
+name|ACPI_SIZE
 operator|)
 name|TableHeader
 operator|.
@@ -863,7 +861,7 @@ block|{
 name|ACPI_TABLE_HEADER
 name|TableHeader
 decl_stmt|;
-name|size_t
+name|ACPI_SIZE
 name|Actual
 decl_stmt|;
 name|long

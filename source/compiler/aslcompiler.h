@@ -109,12 +109,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 

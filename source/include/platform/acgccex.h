@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acwinex.h - Extra OS specific defines, etc.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgccex.h - Extra GCC specific defines, etc.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,30 +10,30 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACWINEX_H__
+name|__ACGCCEX_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACWINEX_H__
+name|__ACGCCEX_H__
 end_define
 
 begin_comment
-comment|/* Windows uses VC */
+comment|/*  * Some versions of gcc implement strchr() with a buggy macro. So,  * undef it here. Prevents error messages of this form (usually from the  * file getopt.c):  *  * error: logical '&&' with non-zero constant will always evaluate as true  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_MSC_VER
+name|strchr
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"acmsvcex.h"
-end_include
+begin_undef
+undef|#
+directive|undef
+name|strchr
+end_undef
 
 begin_endif
 endif|#
@@ -46,7 +46,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ACWINEX_H__ */
+comment|/* __ACGCCEX_H__ */
 end_comment
 
 end_unit

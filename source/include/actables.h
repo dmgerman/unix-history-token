@@ -529,6 +529,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiTbParseRootTable
 parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS

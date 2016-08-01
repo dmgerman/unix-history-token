@@ -19,15 +19,17 @@ directive|define
 name|__ACQNX_H__
 end_define
 
-begin_comment
-comment|/* QNX uses GCC */
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
 
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
 
 begin_define
 define|#
@@ -98,12 +100,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|ACPI_USE_STANDARD_HEADERS
-end_define
-
-begin_define
-define|#
-directive|define
 name|__cli
 parameter_list|()
 value|InterruptDisable();
@@ -121,12 +117,6 @@ begin_define
 define|#
 directive|define
 name|__cdecl
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
 
 begin_define

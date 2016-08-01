@@ -224,14 +224,6 @@ begin_comment
 comment|/* ACPI_SINGLE_THREADED */
 end_comment
 
-begin_decl_stmt
-name|BOOLEAN
-name|AcpiGbl_DebugTimeout
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Nothing to do for windows  *  *****************************************************************************/
 end_comment

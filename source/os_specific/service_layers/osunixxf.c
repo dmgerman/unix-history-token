@@ -103,14 +103,6 @@ literal|"osunixxf"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|BOOLEAN
-name|AcpiGbl_DebugTimeout
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Upcalls to AcpiExec */
 end_comment

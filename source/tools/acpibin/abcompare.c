@@ -13,12 +13,6 @@ directive|include
 file|"acpibin.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acapps.h"
-end_include
-
 begin_decl_stmt
 name|ACPI_TABLE_HEADER
 name|Header1

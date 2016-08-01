@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acapps.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdispat.h"
 end_include
 
@@ -46,13 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
+file|"acapps.h"
 end_include
 
 begin_define

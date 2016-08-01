@@ -334,6 +334,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RASF_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_RASF,f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_S3PT_OFFSET
 parameter_list|(
 name|f
@@ -2756,7 +2766,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* ACPI 1.0 FADT (Version 1) */
+comment|/* FADT version 1 (ACPI 1.0) */
 end_comment
 
 begin_decl_stmt
@@ -3689,74 +3699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI 1.0 MS Extensions (FADT version 2) */
-end_comment
-
-begin_decl_stmt
-name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoFadt2
-index|[]
-init|=
-block|{
-block|{
-name|ACPI_DMT_GAS
-block|,
-name|ACPI_FADT_OFFSET
-argument_list|(
-name|ResetRegister
-argument_list|)
-block|,
-literal|"Reset Register"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT8
-block|,
-name|ACPI_FADT_OFFSET
-argument_list|(
-name|ResetValue
-argument_list|)
-block|,
-literal|"Value to cause reset"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT16
-block|,
-name|ACPI_FADT_OFFSET
-argument_list|(
-name|ArmBootFlags
-argument_list|)
-block|,
-literal|"Reserved"
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|ACPI_DMT_UINT8
-block|,
-name|ACPI_FADT_OFFSET
-argument_list|(
-name|MinorRevision
-argument_list|)
-block|,
-literal|"Reserved"
-block|,
-literal|0
-block|}
-block|,
-name|ACPI_DMT_TERMINATOR
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ACPI 2.0+ Extensions (FADT version 3, 4, and 5) */
+comment|/* FADT version 3 (ACPI 2.0) */
 end_comment
 
 begin_decl_stmt
@@ -3985,12 +3928,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI 5.0 Extensions (FADT version 5) */
+comment|/* FADT version 4 (ACPI 3.0 and ACPI 4.0) */
 end_comment
 
 begin_decl_stmt
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoFadt5
+name|AcpiDmTableInfoFadt4
 index|[]
 init|=
 block|{
@@ -4007,6 +3950,21 @@ block|,
 literal|0
 block|}
 block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FADT version 5 (ACPI 5.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFadt5
+index|[]
+init|=
+block|{
 block|{
 name|ACPI_DMT_GAS
 block|,
@@ -4026,7 +3984,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI 6.0 Extensions (FADT version 6) */
+comment|/* FADT version 6 (ACPI 6.0) */
 end_comment
 
 begin_decl_stmt
@@ -15710,6 +15668,37 @@ name|BiosHandle
 argument_list|)
 block|,
 literal|"Bios Handle"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * RASF -  RAS Feature table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoRasf
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_BUF12
+block|,
+name|ACPI_RASF_OFFSET
+argument_list|(
+name|ChannelId
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Channel ID"
 block|,
 literal|0
 block|}

@@ -4628,45 +4628,6 @@ value|0x0D
 end_define
 
 begin_comment
-comment|/* Definitions of file IO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_READING
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_WRITING
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_BINARY
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_BEGIN
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_END
-value|0x02
-end_define
-
-begin_comment
 comment|/* Definitions of getopt */
 end_comment
 

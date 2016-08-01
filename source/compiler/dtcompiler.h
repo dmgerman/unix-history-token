@@ -2018,6 +2018,16 @@ specifier|extern
 specifier|const
 name|unsigned
 name|char
+name|TemplateRasf
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|char
 name|TemplateRsdt
 index|[]
 decl_stmt|;

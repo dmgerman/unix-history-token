@@ -63,6 +63,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiLoadTables
 parameter_list|(
 name|void
@@ -625,6 +626,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiInstallTable
 parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS

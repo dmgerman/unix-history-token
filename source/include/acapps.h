@@ -19,41 +19,26 @@ directive|define
 name|_ACAPPS
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_MSC_VER
+name|ACPI_USE_STANDARD_HEADERS
 end_ifdef
 
-begin_comment
-comment|/* disable some level-4 warnings */
-end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|warning
-name|(
-name|disable
-name|:
-name|4100
-name|)
-end_pragma
-
-begin_comment
-comment|/* warning C4100: unreferenced formal parameter */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ACPI_USE_STANDARD_HEADERS */
+end_comment
 
 begin_comment
 comment|/* Common info for tool signons */
@@ -166,7 +151,7 @@ parameter_list|(
 name|Usage
 parameter_list|)
 define|\
-value|AcpiOsPrintf ("Usage: %s\nOptions:\n", Usage);
+value|printf ("Usage: %s\nOptions:\n", Usage);
 end_define
 
 begin_define
@@ -177,7 +162,7 @@ parameter_list|(
 name|Description
 parameter_list|)
 define|\
-value|AcpiOsPrintf (Description);
+value|printf (Description);
 end_define
 
 begin_define
@@ -190,7 +175,7 @@ parameter_list|,
 name|Description
 parameter_list|)
 define|\
-value|AcpiOsPrintf ("  %-20s%s\n", Name, Description);
+value|printf ("  %-20s%s\n", Name, Description);
 end_define
 
 begin_comment

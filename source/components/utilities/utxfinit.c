@@ -82,6 +82,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiInitializeSubsystem
 parameter_list|(
 name|void
@@ -281,6 +282,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiEnableSubsystem
 parameter_list|(
 name|UINT32
@@ -506,6 +508,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiInitializeObjects
 parameter_list|(
 name|UINT32

@@ -13,12 +13,6 @@ directive|include
 file|"acpidump.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acapps.h"
-end_include
-
 begin_comment
 comment|/* Local prototypes */
 end_comment
@@ -68,8 +62,10 @@ name|StatInfo
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Target path already exists, overwrite? [y|n] "
 argument_list|)
 expr_stmt|;
@@ -134,11 +130,11 @@ block|}
 comment|/* Point stdout to the file */
 name|File
 operator|=
-name|AcpiOsOpenFile
+name|fopen
 argument_list|(
 name|Pathname
 argument_list|,
-name|ACPI_FILE_WRITING
+literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
@@ -147,8 +143,10 @@ operator|!
 name|File
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not open output file: %s\n"
 argument_list|,
 name|Pathname
@@ -211,7 +209,7 @@ decl_stmt|;
 name|ACPI_FILE
 name|File
 decl_stmt|;
-name|size_t
+name|ACPI_SIZE
 name|Actual
 decl_stmt|;
 name|UINT32
@@ -347,7 +345,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|AcpiUtSnprintf
+name|snprintf
 argument_list|(
 name|InstanceStr
 argument_list|,
@@ -381,8 +379,10 @@ condition|(
 name|Gbl_VerboseMode
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Writing [%4.4s] to binary file: %s 0x%X (%u) bytes\n"
 argument_list|,
 name|Table
@@ -404,13 +404,11 @@ block|}
 comment|/* Open the file and dump the entire table in binary mode */
 name|File
 operator|=
-name|AcpiOsOpenFile
+name|fopen
 argument_list|(
 name|Filename
 argument_list|,
-name|ACPI_FILE_WRITING
-operator||
-name|ACPI_FILE_BINARY
+literal|"wb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -419,8 +417,10 @@ operator|!
 name|File
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not open output file: %s\n"
 argument_list|,
 name|Filename
@@ -435,15 +435,15 @@ return|;
 block|}
 name|Actual
 operator|=
-name|AcpiOsWriteFile
+name|fwrite
 argument_list|(
-name|File
-argument_list|,
 name|Table
 argument_list|,
 literal|1
 argument_list|,
 name|TableLength
+argument_list|,
+name|File
 argument_list|)
 expr_stmt|;
 if|if
@@ -453,14 +453,16 @@ operator|!=
 name|TableLength
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Error writing binary output file: %s\n"
 argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
-name|AcpiOsCloseFile
+name|fclose
 argument_list|(
 name|File
 argument_list|)
@@ -472,7 +474,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|AcpiOsCloseFile
+name|fclose
 argument_list|(
 name|File
 argument_list|)
@@ -515,19 +517,17 @@ decl_stmt|;
 name|UINT32
 name|FileSize
 decl_stmt|;
-name|size_t
+name|ACPI_SIZE
 name|Actual
 decl_stmt|;
 comment|/* Must use binary mode */
 name|File
 operator|=
-name|AcpiOsOpenFile
+name|fopen
 argument_list|(
 name|Pathname
 argument_list|,
-name|ACPI_FILE_READING
-operator||
-name|ACPI_FILE_BINARY
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -536,8 +536,10 @@ operator|!
 name|File
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not open input file: %s\n"
 argument_list|,
 name|Pathname
@@ -564,8 +566,10 @@ operator|==
 name|ACPI_UINT32_MAX
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not get input file size: %s\n"
 argument_list|,
 name|Pathname
@@ -589,8 +593,10 @@ operator|!
 name|Buffer
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not allocate file buffer of size: %u\n"
 argument_list|,
 name|FileSize
@@ -603,15 +609,15 @@ block|}
 comment|/* Read the entire file */
 name|Actual
 operator|=
-name|AcpiOsReadFile
+name|fread
 argument_list|(
-name|File
-argument_list|,
 name|Buffer
 argument_list|,
 literal|1
 argument_list|,
 name|FileSize
+argument_list|,
+name|File
 argument_list|)
 expr_stmt|;
 if|if
@@ -621,8 +627,10 @@ operator|!=
 name|FileSize
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not read input file: %s\n"
 argument_list|,
 name|Pathname
@@ -648,7 +656,7 @@ name|FileSize
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiOsCloseFile
+name|fclose
 argument_list|(
 name|File
 argument_list|)

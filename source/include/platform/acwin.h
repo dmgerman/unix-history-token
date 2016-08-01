@@ -19,46 +19,23 @@ directive|define
 name|__ACWIN_H__
 end_define
 
-begin_comment
-comment|/*! [Begin] no source code translation (Keep the include) */
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
 
-begin_comment
-comment|/* Windows uses VC */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_MSC_VER
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"acmsvc.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*! [End] no source code translation !*/
-end_comment
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_MACHINE_WIDTH
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_STANDARD_HEADERS
 end_define
 
 begin_ifdef

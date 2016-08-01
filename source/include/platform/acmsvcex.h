@@ -20,6 +20,31 @@ name|__ACMSVCEX_H__
 end_define
 
 begin_comment
+comment|/* va_arg implementation can be compiler specific */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_STANDARD_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_USE_STANDARD_HEADERS */
+end_comment
+
+begin_comment
 comment|/* Debug support. */
 end_comment
 
@@ -49,6 +74,150 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* End standard headers */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_ifndef
+
+begin_comment
+comment|/******************************************************************************  *  * Not using native C library, use local implementations  *  *****************************************************************************/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|va_arg
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VALIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VALIST
+end_define
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|va_list
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _VALIST */
+end_comment
+
+begin_comment
+comment|/* Storage alignment properties */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_AUPBND
+value|(sizeof (ACPI_NATIVE_INT) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ADNBND
+value|(sizeof (ACPI_NATIVE_INT) - 1)
+end_define
+
+begin_comment
+comment|/* Variable argument list macro definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Bnd
+parameter_list|(
+name|X
+parameter_list|,
+name|bnd
+parameter_list|)
+value|(((sizeof (X)) + (bnd))& (~(bnd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|ap
+parameter_list|,
+name|T
+parameter_list|)
+value|(*(T *)(((ap) += (_Bnd (T, _AUPBND))) - (_Bnd (T,_ADNBND))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_end
+parameter_list|(
+name|ap
+parameter_list|)
+value|(ap = (va_list) NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ap
+parameter_list|,
+name|A
+parameter_list|)
+value|(void) ((ap) = (((char *)&(A)) + (_Bnd (A,_AUPBND))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* va_arg */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_USE_SYSTEM_CLIBRARY */
+end_comment
 
 begin_endif
 endif|#

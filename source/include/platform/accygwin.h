@@ -26,6 +26,12 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_USE_STANDARD_HEADERS
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
 
@@ -52,35 +58,22 @@ directive|define
 name|ACPI_USE_ALTERNATE_TIMEOUT
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_STANDARD_HEADERS
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -208,16 +201,6 @@ name|pthread
 parameter_list|)
 value|((ACPI_THREAD_ID) ACPI_TO_INTEGER (pthread))
 end_define
-
-begin_comment
-comment|/* Cygwin uses GCC */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
 
 begin_comment
 comment|/*  * The vsnprintf/snprintf functions are defined by c99, but cygwin/gcc  * does not enable this prototype when the -ansi flag is set. Also related  * to __STRICT_ANSI__. So, we just declare the prototype here.  */

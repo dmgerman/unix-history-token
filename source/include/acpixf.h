@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160527
+value|0x20160729
 end_define
 
 begin_include
@@ -1020,35 +1020,35 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeTables (     ACPI_TABLE_DESC         *InitialStorage,     UINT32                  InitialTableCount,     BOOLEAN                 AllowResize)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeTables (     ACPI_TABLE_DESC         *InitialStorage,     UINT32                  InitialTableCount,     BOOLEAN                 AllowResize)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeSubsystem (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeSubsystem (     void)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiEnableSubsystem (     UINT32                  Flags)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiEnableSubsystem (     UINT32                  Flags)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeObjects (     UINT32                  Flags)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeObjects (     UINT32                  Flags)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiTerminate (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiTerminate (     void)
 argument_list|)
 end_macro
 
@@ -1147,7 +1147,7 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInstallTable (     ACPI_PHYSICAL_ADDRESS   Address,     BOOLEAN                 Physical)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInstallTable (     ACPI_PHYSICAL_ADDRESS   Address,     BOOLEAN                 Physical)
 argument_list|)
 end_macro
 
@@ -1168,7 +1168,7 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiLoadTables (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiLoadTables (     void)
 argument_list|)
 end_macro
 
@@ -1179,14 +1179,14 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiReallocateRootTable (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiReallocateRootTable (     void)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiFindRootPointer (     ACPI_PHYSICAL_ADDRESS   *RsdpAddress)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiFindRootPointer (     ACPI_PHYSICAL_ADDRESS   *RsdpAddress)
 argument_list|)
 end_macro
 
@@ -1925,15 +1925,6 @@ begin_macro
 name|ACPI_DBG_DEPENDENT_RETURN_VOID
 argument_list|(
 argument|void AcpiTracePoint (     ACPI_TRACE_EVENT_TYPE   Type,     BOOLEAN                 Begin,     UINT8                   *Aml,     char                    *Pathname)
-argument_list|)
-end_macro
-
-begin_macro
-name|ACPI_APP_DEPENDENT_RETURN_VOID
-argument_list|(
-argument|ACPI_PRINTF_LIKE(
-literal|1
-argument|) void ACPI_INTERNAL_VAR_XFACE AcpiLogError (     const char              *Format,     ...)
 argument_list|)
 end_macro
 

@@ -125,20 +125,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-T<sig list>|ALL"
-argument_list|,
-literal|"Create ACPI table template/example files"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-T<count>"
-argument_list|,
-literal|"Emit DSDT and<count> SSDTs to same file"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-p<prefix>"
 argument_list|,
 literal|"Specify path/filename prefix for all output files"
@@ -280,7 +266,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-w1 -w2 -w3"
+literal|"-w<1|2|3>"
 argument_list|,
 literal|"Set warning reporting level"
 argument_list|)
@@ -355,40 +341,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nOptional Source Code Output Files:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-sc -sa"
-argument_list|,
-literal|"Create source file in C or assembler (*.c or *.asm)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ic -ia"
-argument_list|,
-literal|"Create include file in C or assembler (*.h or *.inc)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-tc -ta -ts"
-argument_list|,
-literal|"Create hex AML table in C, assembler, or ASL (*.hex)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-so"
-argument_list|,
-literal|"Create offset table in C (*.offset.h)"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nOptional Listing Files:\n"
+literal|"\nListings:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -428,6 +381,77 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\nFirmware Support - C Output:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-tc"
+argument_list|,
+literal|"Create hex AML table in C (*.hex)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-sc"
+argument_list|,
+literal|"Create named hex AML arrays in C (*.c)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ic"
+argument_list|,
+literal|"Create include file in C for -sc symbols (*.h)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-so"
+argument_list|,
+literal|"Create namespace AML offset table in C (*.offset.h)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nFirmware Support - Assembler Output:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ta"
+argument_list|,
+literal|"Create hex AML table in assembler (*.hex)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-sa"
+argument_list|,
+literal|"Create named hex AML arrays in assembler (*.asm)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ia"
+argument_list|,
+literal|"Create include file in assembler for -sa symbols (*.inc)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nFirmware Support - ASL Output:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ts"
+argument_list|,
+literal|"Create hex AML table in ASL (Buffer object) (*.hex)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\nData Table Compiler:\n"
 argument_list|)
 expr_stmt|;
@@ -436,6 +460,20 @@ argument_list|(
 literal|"-G"
 argument_list|,
 literal|"Compile custom table that contains generic operators"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<sig list>|ALL"
+argument_list|,
+literal|"Create ACPI table template/example files"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-T<count>"
+argument_list|,
+literal|"Emit DSDT and<count> SSDTs to same file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

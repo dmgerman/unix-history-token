@@ -20,6 +20,16 @@ name|__ACINTEL_H__
 end_define
 
 begin_comment
+comment|/*  * Use compiler specific<stdarg.h> is a good practice for even when  * -nostdinc is specified (i.e., ACPI_USE_STANDARD_HEADERS undefined.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
 comment|/* Configuration specific to Intel 64-bit C compiler */
 end_comment
 

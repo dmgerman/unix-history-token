@@ -96,7 +96,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|__init
+name|ACPI_INIT_FUNCTION
 name|AcpiOsInitialize
 parameter_list|(
 name|void

@@ -85,25 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"acapps.h"
 end_include
 
 begin_comment
@@ -206,29 +188,6 @@ literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Globals required for use with ACPICA modules */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_DECLARE_GLOBALS
-end_ifdef
-
-begin_decl_stmt
-name|UINT8
-name|AcpiGbl_IntegerByteWidth
-init|=
-literal|8
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Action table used to defer requested options */

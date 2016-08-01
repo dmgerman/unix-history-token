@@ -51,6 +51,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiTerminate
 parameter_list|(
 name|void

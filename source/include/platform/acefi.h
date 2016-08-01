@@ -19,32 +19,24 @@ directive|define
 name|__ACEFI_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
+begin_comment
+comment|/* EDK2 EFI environemnt */
+end_comment
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_GNU_EFI
+name|_EDK2_EFI
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_define
+define|#
+directive|define
+name|_GNU_EFI
+end_define
 
 begin_endif
 endif|#
@@ -111,7 +103,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|EFIAPI
+name|ACPI_EFI_API
 value|__cdecl
 end_define
 
@@ -124,7 +116,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|EFIAPI
+name|ACPI_EFI_API
 value|__attribute__((ms_abi))
 end_define
 
@@ -136,76 +128,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|EFIAPI
+name|ACPI_EFI_API
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|UINT8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|UINT16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int16_t
-name|INT16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|UINT32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|INT32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint64_t
-name|UINT64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int64_t
-name|INT64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|BOOLEAN
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|CHAR16
-typedef|;
-end_typedef
 
 begin_define
 define|#
@@ -296,24 +225,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|uint64_t
+begin_define
+define|#
+directive|define
 name|UINTN
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int64_t
-name|INTN
-typedef|;
-end_typedef
+value|uint64_t
+end_define
 
 begin_define
 define|#
 directive|define
-name|EFIERR
+name|INTN
+value|int64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EFI_ERR
 parameter_list|(
 name|a
 parameter_list|)
@@ -335,27 +264,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_typedef
-typedef|typedef
-name|uint32_t
 name|UINTN
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|INTN
-typedef|;
-end_typedef
+value|uint32_t
+end_define
 
 begin_define
 define|#
 directive|define
-name|EFIERR
+name|INTN
+value|int32_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EFI_ERR
 parameter_list|(
 name|a
 parameter_list|)
@@ -366,6 +289,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CHAR16
+value|uint16_t
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1138,40 +1068,6 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Using GCC for GNU EFI */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acgcc.h"
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ACPI_USE_STANDARD_HEADERS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ACPI_USE_NATIVE_DIVIDE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_SYSTEM_INTTYPES
-end_define
-
-begin_comment
 comment|/*  * Math helpers  */
 end_comment
 
@@ -1214,44 +1110,44 @@ end_endif
 
 begin_struct_decl
 struct_decl|struct
-name|_SIMPLE_TEXT_OUTPUT_INTERFACE
+name|_ACPI_SIMPLE_TEXT_OUTPUT_INTERFACE
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|_SIMPLE_INPUT_INTERFACE
+name|_ACPI_SIMPLE_INPUT_INTERFACE
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|_EFI_FILE_IO_INTERFACE
+name|_ACPI_EFI_FILE_IO_INTERFACE
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|_EFI_FILE_HANDLE
+name|_ACPI_EFI_FILE_HANDLE
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|_EFI_BOOT_SERVICES
+name|_ACPI_EFI_BOOT_SERVICES
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|_EFI_SYSTEM_TABLE
+name|_ACPI_EFI_SYSTEM_TABLE
 struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|_EFI_SYSTEM_TABLE
+name|_ACPI_EFI_SYSTEM_TABLE
 modifier|*
 name|ST
 decl_stmt|;
@@ -1260,7 +1156,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|_EFI_BOOT_SERVICES
+name|_ACPI_EFI_BOOT_SERVICES
 modifier|*
 name|BS
 decl_stmt|;
@@ -1269,21 +1165,21 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ACPI_FILE
-value|struct _SIMPLE_TEXT_OUTPUT_INTERFACE *
+name|FILE
+value|struct _ACPI_SIMPLE_TEXT_OUTPUT_INTERFACE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_FILE_OUT
+name|stdout
 value|ST->ConOut
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_FILE_ERR
+name|stderr
 value|ST->ConOut
 end_define
 

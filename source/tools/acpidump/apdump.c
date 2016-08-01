@@ -71,8 +71,10 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Table signature (0x%8.8X) is invalid\n"
 argument_list|,
 operator|*
@@ -104,8 +106,10 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Table length (0x%8.8X) is invalid\n"
 argument_list|,
 name|Table
@@ -198,8 +202,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%4.4s: Warning: wrong checksum in table\n"
 argument_list|,
 name|Table
@@ -355,7 +361,7 @@ operator|)
 return|;
 block|}
 comment|/*      * Dump the table with header for use with acpixtract utility.      * Note: simplest to just always emit a 64-bit address. AcpiXtract      * utility can handle this.      */
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|Gbl_OutputFile
 argument_list|,
@@ -389,7 +395,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AcpiUtFilePrintf
+name|fprintf
 argument_list|(
 name|Gbl_OutputFile
 argument_list|,
@@ -497,8 +503,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not get ACPI tables, %s\n"
 argument_list|,
 name|AcpiFormatException
@@ -516,8 +524,10 @@ return|;
 block|}
 else|else
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not get ACPI table at index %u, %s\n"
 argument_list|,
 name|i
@@ -617,8 +627,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: Could not convert to a physical address\n"
 argument_list|,
 name|AsciiAddress
@@ -656,8 +668,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not get table at 0x%8.8X%8.8X, %s\n"
 argument_list|,
 name|ACPI_FORMAT_UINT64
@@ -749,8 +763,10 @@ operator|!=
 name|ACPI_NAME_SIZE
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Invalid table signature [%s]: must be exactly 4 characters\n"
 argument_list|,
 name|Signature
@@ -866,8 +882,10 @@ literal|0
 operator|)
 return|;
 block|}
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not get ACPI table with signature [%s], %s\n"
 argument_list|,
 name|LocalSignature
@@ -982,8 +1000,10 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"No valid ACPI signature was found in input file %s\n"
 argument_list|,
 name|Pathname
@@ -1000,8 +1020,10 @@ operator|>
 name|FileSize
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Table length (0x%X) is too large for input file (0x%X) %s\n"
 argument_list|,
 name|Table
@@ -1022,8 +1044,10 @@ condition|(
 name|Gbl_VerboseMode
 condition|)
 block|{
-name|AcpiLogError
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Input file:  %s contains table [%4.4s], 0x%X (%u) bytes\n"
 argument_list|,
 name|Pathname
