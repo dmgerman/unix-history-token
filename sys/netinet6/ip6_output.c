@@ -4465,11 +4465,17 @@ operator|==
 operator|&
 name|ip6route
 operator|||
+operator|(
+name|ro
+operator|!=
+name|NULL
+operator|&&
 name|ro
 operator|->
 name|ro_flags
 operator|&
 name|RT_NORTREF
+operator|)
 condition|)
 name|RO_RTFREE
 argument_list|(
