@@ -105,7 +105,6 @@ parameter_list|(
 name|int
 name|errcode
 parameter_list|,
-specifier|const
 name|regex_t
 modifier|*
 name|preg
@@ -119,6 +118,17 @@ decl_stmt|;
 name|size_t
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|oe
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|oe
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|regerror
@@ -137,10 +147,8 @@ condition|(
 operator|(
 name|oe
 operator|=
-name|realloc
+name|malloc
 argument_list|(
-name|oe
-argument_list|,
 name|s
 argument_list|)
 operator|)
@@ -151,7 +159,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"realloc"
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 operator|(
