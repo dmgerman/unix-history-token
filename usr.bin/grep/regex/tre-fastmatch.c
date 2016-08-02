@@ -918,7 +918,9 @@ operator|==
 literal|0
 operator|)
 condition|)
-continue|continue;
+goto|goto
+name|badpat
+goto|;
 elseif|else
 if|if
 condition|(
