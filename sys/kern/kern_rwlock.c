@@ -1857,7 +1857,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_RWLOCKS
 argument_list|)
 operator|||
 name|defined
@@ -1903,7 +1903,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_RWLOCKS
 argument_list|)
 operator|||
 name|defined
@@ -3525,7 +3525,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_RWLOCKS
 argument_list|)
 operator|||
 name|defined
@@ -3571,7 +3571,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_RWLOCKS
 argument_list|)
 operator|||
 name|defined

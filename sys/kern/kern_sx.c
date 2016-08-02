@@ -2667,7 +2667,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_SX
 argument_list|)
 operator|||
 name|defined
@@ -2717,7 +2717,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_SX
 argument_list|)
 operator|||
 name|defined
@@ -4104,7 +4104,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_SX
 argument_list|)
 operator|||
 name|defined
@@ -4154,7 +4154,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|ADAPTIVE_SX
 argument_list|)
 operator|||
 name|defined
