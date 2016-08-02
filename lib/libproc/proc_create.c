@@ -241,10 +241,9 @@ name|count
 decl_stmt|,
 name|fd
 decl_stmt|;
-operator|*
-name|pphdl
+name|error
 operator|=
-name|NULL
+name|ENOMEM
 expr_stmt|;
 if|if
 condition|(
@@ -263,11 +262,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 name|memset
 argument_list|(
 name|phdl
@@ -314,11 +311,9 @@ name|procstat
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Obtain a path to the executable. */
 if|if
 condition|(
@@ -342,11 +337,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 name|error
 operator|=
 name|procstat_getpathname
@@ -384,11 +377,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 comment|/* Use it to determine the data model for the process. */
 if|if
 condition|(
