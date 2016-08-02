@@ -914,6 +914,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_ARM_AEABI
+value|64
+end_define
+
+begin_comment
+comment|/* ARM EABI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_ARM
 value|97
 end_define
