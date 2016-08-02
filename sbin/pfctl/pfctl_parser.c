@@ -358,6 +358,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|tcpflags
 init|=
 literal|"FSRPAUEW"
@@ -2879,6 +2880,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|pf_reasons
 index|[
 name|PFRES_MAX
@@ -2894,6 +2896,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|pf_lcounters
 index|[
 name|LCNT_MAX
@@ -2909,6 +2912,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|pf_fcounters
 index|[
 name|FCNT_MAX
@@ -2924,6 +2928,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|pf_scounters
 index|[
 name|FCNT_MAX

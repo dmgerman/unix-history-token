@@ -688,6 +688,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
@@ -756,6 +757,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pf_device
@@ -1284,6 +1286,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|clearopt_list
 index|[]
 init|=
@@ -1316,6 +1319,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|showopt_list
 index|[]
 init|=
@@ -1358,6 +1362,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|tblcmdopt_list
 index|[]
 init|=
@@ -1392,6 +1397,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|debugopt_list
 index|[]
 init|=
@@ -1414,6 +1420,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|optiopt_list
 index|[]
 init|=
@@ -12499,6 +12506,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|list
 parameter_list|)

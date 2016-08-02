@@ -2227,6 +2227,7 @@ comment|/* buffer management code */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|size_t
 name|buf_esize
 index|[
