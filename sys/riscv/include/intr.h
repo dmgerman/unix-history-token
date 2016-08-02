@@ -160,18 +160,40 @@ end_endif
 begin_enum
 enum|enum
 block|{
-name|IRQ_SOFTWARE
+name|IRQ_SOFTWARE_USER
 block|,
-name|IRQ_TIMER
+name|IRQ_SOFTWARE_SUPERVISOR
 block|,
-name|IRQ_HTIF
+name|IRQ_SOFTWARE_HYPERVISOR
 block|,
-name|IRQ_COP
+name|IRQ_SOFTWARE_MACHINE
 block|,
+name|IRQ_TIMER_USER
+block|,
+name|IRQ_TIMER_SUPERVISOR
+block|,
+name|IRQ_TIMER_HYPERVISOR
+block|,
+name|IRQ_TIMER_MACHINE
+block|,
+name|IRQ_EXTERNAL_USER
+block|,
+name|IRQ_EXTERNAL_SUPERVISOR
+block|,
+name|IRQ_EXTERNAL_HYPERVISOR
+block|,
+name|IRQ_EXTERNAL_MACHINE
+block|,
+if|#
+directive|if
+literal|0
+comment|/* lowRISC TODO */
+block|IRQ_COP,
 comment|/* lowRISC only */
-name|IRQ_UART
-block|,
+block|IRQ_UART,
 comment|/* lowRISC only */
+endif|#
+directive|endif
 name|NIRQS
 block|}
 enum|;

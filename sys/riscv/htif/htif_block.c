@@ -783,6 +783,9 @@ name|uint64_t
 name|paddr
 decl_stmt|;
 name|uint64_t
+name|resp
+decl_stmt|;
+name|uint64_t
 name|cmd
 decl_stmt|;
 name|int
@@ -1004,9 +1007,18 @@ name|cmd_done
 operator|=
 literal|0
 expr_stmt|;
+name|resp
+operator|=
 name|htif_command
 argument_list|(
 name|cmd
+argument_list|)
+expr_stmt|;
+name|htif_blk_intr
+argument_list|(
+name|sc
+argument_list|,
+name|resp
 argument_list|)
 expr_stmt|;
 comment|/* Wait for interrupt */

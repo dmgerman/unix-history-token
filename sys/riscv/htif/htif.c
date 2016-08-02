@@ -669,22 +669,6 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* Do poll as interrupts are disabled yet */
-while|while
-condition|(
-name|sc
-operator|->
-name|identify_done
-operator|==
-literal|0
-condition|)
-block|{
-name|htif_handle_entry
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 name|len
 operator|=
 name|strnlen

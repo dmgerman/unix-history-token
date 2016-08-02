@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|KERNENTRY
-value|(0x200)
+value|(0x80000000)
 end_define
 
 begin_comment

@@ -29,70 +29,70 @@ end_define
 begin_define
 define|#
 directive|define
-name|ECALL_CLEAR_PENDING
+name|ECALL_HTIF_GET_ENTRY
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_HTIF_CMD
+name|ECALL_MCPUID_GET
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_HTIF_GET_ENTRY
+name|ECALL_MIMPID_GET
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_MCPUID_GET
+name|ECALL_SEND_IPI
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_MIMPID_GET
+name|ECALL_CLEAR_IPI
 value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_SEND_IPI
+name|ECALL_MIE_SET
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_CLEAR_IPI
+name|ECALL_IO_IRQ_MASK
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_HTIF_LOWPUTC
+name|ECALL_HTIF_CMD
 value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_MIE_SET
+name|ECALL_HTIF_CMD_REQ
 value|0x0a
 end_define
 
 begin_define
 define|#
 directive|define
-name|ECALL_IO_IRQ_MASK
+name|ECALL_HTIF_CMD_RESP
 value|0x0b
 end_define
 
@@ -113,84 +113,84 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXCP_INSTR_ADDR_MISALIGNED
+name|EXCP_MISALIGNED_FETCH
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_INSTR_ACCESS_FAULT
+name|EXCP_FAULT_FETCH
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_INSTR_ILLEGAL
+name|EXCP_ILLEGAL_INSTRUCTION
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_INSTR_BREAKPOINT
+name|EXCP_BREAKPOINT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_LOAD_ADDR_MISALIGNED
+name|EXCP_MISALIGNED_LOAD
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_LOAD_ACCESS_FAULT
+name|EXCP_FAULT_LOAD
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_STORE_ADDR_MISALIGNED
+name|EXCP_MISALIGNED_STORE
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_STORE_ACCESS_FAULT
+name|EXCP_FAULT_STORE
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_UMODE_ENV_CALL
+name|EXCP_USER_ECALL
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_SMODE_ENV_CALL
+name|EXCP_SUPERVISOR_ECALL
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_HMODE_ENV_CALL
+name|EXCP_HYPERVISOR_ECALL
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCP_MMODE_ENV_CALL
+name|EXCP_MACHINE_ECALL
 value|11
 end_define
 
@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|EXCP_INTR
-value|(1<< 31)
+value|(1ul<< 63)
 end_define
 
 begin_define
@@ -225,57 +225,337 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSTATUS_IE
+name|SSTATUS_UIE
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSTATUS_PIE
-value|(1<< 3)
+name|SSTATUS_SIE
+value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSTATUS_PS
+name|SSTATUS_UPIE
 value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSTATUS_MPRV
-value|(1<< 16)
+name|SSTATUS_SPIE
+value|(1<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSTATUS_PRV_SHIFT
-value|1
+name|SSTATUS_SPIE_SHIFT
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSTATUS_PRV1_SHIFT
-value|4
+name|SSTATUS_SPP
+value|(1<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSTATUS_PRV2_SHIFT
+name|SSTATUS_SPP_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_SHIFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_XS_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_XS_SHIFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_PUM
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS32_SD
+value|(1<< 63)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS64_SD
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_UIE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_SIE
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_HIE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MIE
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_UPIE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_SPIE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_SPIE_SHIFT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_HPIE
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MPIE
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MPIE_SHIFT
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSTATUS_PRV_MASK
-value|(0x3<< MSTATUS_PRV_SHIFT)
+name|MSTATUS_SPP
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_SPP_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_HPP_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_HPP_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MPP_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MPP_SHIFT
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_FS_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_FS_SHIFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_XS_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_XS_SHIFT
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_MPRV
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_PUM
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_MASK
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_MBARE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_MBB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_MBBID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SV32
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SV39
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SV48
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SV57
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS_VM_SV64
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS32_SD
+value|(1<< 63)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSTATUS64_SD
+value|(1<< 31)
 end_define
 
 begin_define
@@ -325,57 +605,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MSTATUS_VM_SHIFT
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_MASK
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_MBARE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_MBB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_MBBID
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_SV32
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_SV39
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSTATUS_VM_SV48
-value|10
+name|MIE_USIE
+value|(1<< 0)
 end_define
 
 begin_define
@@ -402,6 +633,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIE_UTIE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIE_STIE
 value|(1<< 5)
 end_define
@@ -418,6 +656,13 @@ define|#
 directive|define
 name|MIE_MTIE
 value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIP_USIP
+value|(1<< 0)
 end_define
 
 begin_define
@@ -444,6 +689,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIP_UTIP
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIP_STIP
 value|(1<< 5)
 end_define
@@ -465,29 +717,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SR_IE
+name|SIE_USIE
 value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_IE1
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_IE2
-value|(1<< 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_IE3
-value|(1<< 9)
 end_define
 
 begin_define
@@ -500,8 +731,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIE_UTIE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIE_STIE
 value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIP_SEIP
+value|(1<< 9)
 end_define
 
 begin_comment
@@ -521,6 +766,16 @@ directive|define
 name|SIP_STIP
 value|(1<< 5)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* lowRISC TODO */
+end_comment
 
 begin_define
 define|#
@@ -546,6 +801,11 @@ end_define
 begin_comment
 comment|/* lowRISC only? */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

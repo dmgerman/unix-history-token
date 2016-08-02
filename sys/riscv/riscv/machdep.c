@@ -2023,7 +2023,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* 	 * Make sure the processor mode has not been tampered with and 	 * interrupts have not been disabled. 	 */
+comment|/* 	 * Make sure the processor mode has not been tampered with and 	 * interrupts have not been disabled. 	 * Supervisor interrupts in user mode are always enabled. 	 */
 name|sstatus
 operator|=
 name|uc
@@ -2039,17 +2039,9 @@ condition|(
 operator|(
 name|sstatus
 operator|&
-name|SSTATUS_PS
+name|SSTATUS_SPP
 operator|)
 operator|!=
-literal|0
-operator|||
-operator|(
-name|sstatus
-operator|&
-name|SSTATUS_PIE
-operator|)
-operator|==
 literal|0
 condition|)
 return|return
@@ -3515,7 +3507,13 @@ argument_list|)
 expr_stmt|;
 name|boothowto
 operator|=
-literal|0
+name|RB_VERBOSE
+operator||
+name|RB_SINGLE
+expr_stmt|;
+name|boothowto
+operator|=
+name|RB_VERBOSE
 expr_stmt|;
 name|kern_envp
 operator|=
@@ -3630,7 +3628,7 @@ expr_stmt|;
 name|cache_setup
 argument_list|()
 expr_stmt|;
-comment|/* Bootstrap enough of pmap  to enter the kernel proper */
+comment|/* Bootstrap enough of pmap to enter the kernel proper */
 name|kernlen
 operator|=
 operator|(
