@@ -1857,6 +1857,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* _WITH_GETLINE to allow pre 11 sources to build on 11+ systems */
+end_comment
+
 begin_function_decl
 name|ssize_t
 name|getline
