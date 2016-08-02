@@ -443,8 +443,7 @@ name|struct
 name|pfctl
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
