@@ -20865,6 +20865,12 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|paddr
+operator|=
+name|paddr
+expr_stmt|;
 name|em_setup_rxdesc
 argument_list|(
 operator|&
