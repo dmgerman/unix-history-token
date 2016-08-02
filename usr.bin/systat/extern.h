@@ -1250,6 +1250,14 @@ end_define
 begin_expr_stmt
 name|SYSTAT_CMD
 argument_list|(
+name|zarc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSTAT_CMD
+argument_list|(
 name|sctp
 argument_list|)
 expr_stmt|;
