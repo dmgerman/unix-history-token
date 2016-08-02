@@ -895,6 +895,12 @@ comment|/* # of lctx in the hash table */
 name|u_int
 name|ppod_start
 decl_stmt|;
+name|u_int
+name|ddp_pgsz
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|vmem_t
 modifier|*
 name|ppod_arena
