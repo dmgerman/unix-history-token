@@ -507,43 +507,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|ncl_printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vprintf
-argument_list|(
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -701,9 +664,9 @@ name|nfs_acdebug
 operator|>
 literal|1
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getattrcache: initial timeo = %d\n"
+literal|"ncl_getattrcache: initial timeo = %d\n"
 argument_list|,
 name|timeo
 argument_list|)
@@ -806,7 +769,7 @@ name|nfs_acdebug
 operator|>
 literal|2
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"acregmin %d; acregmax %d; acdirmin %d; acdirmax %d\n"
 argument_list|,
@@ -831,9 +794,9 @@ if|if
 condition|(
 name|nfs_acdebug
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getattrcache: age = %d; final timeo = %d\n"
+literal|"ncl_getattrcache: age = %d; final timeo = %d\n"
 argument_list|,
 operator|(
 name|time_second
