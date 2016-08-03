@@ -138,19 +138,19 @@ block|{
 block|{
 literal|"switch"
 block|,
-literal|1
+literal|7
 block|}
 block|,
 block|{
 literal|"case"
 block|,
-literal|2
+literal|8
 block|}
 block|,
 block|{
 literal|"break"
 block|,
-literal|0
+literal|9
 block|}
 block|,
 block|{
@@ -174,7 +174,7 @@ block|,
 block|{
 literal|"default"
 block|,
-literal|2
+literal|8
 block|}
 block|,
 block|{
@@ -270,13 +270,13 @@ block|,
 block|{
 literal|"goto"
 block|,
-literal|0
+literal|9
 block|}
 block|,
 block|{
 literal|"return"
 block|,
-literal|0
+literal|9
 block|}
 block|,
 block|{
@@ -312,7 +312,13 @@ block|,
 block|{
 literal|"sizeof"
 block|,
-literal|7
+literal|2
+block|}
+block|,
+block|{
+literal|"offsetof"
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -1144,15 +1150,9 @@ expr_stmt|;
 block|}
 name|ps
 operator|.
-name|its_a_keyword
+name|keyword
 operator|=
-name|false
-expr_stmt|;
-name|ps
-operator|.
-name|sizeof_keyword
-operator|=
-name|false
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1246,10 +1246,11 @@ condition|)
 block|{
 name|ps
 operator|.
-name|its_a_keyword
+name|keyword
 operator|=
-name|true
+literal|4
 expr_stmt|;
+comment|/* a type name */
 name|ps
 operator|.
 name|last_u_d
@@ -1356,9 +1357,11 @@ name|found_keyword
 label|:
 name|ps
 operator|.
-name|its_a_keyword
+name|keyword
 operator|=
-name|true
+name|p
+operator|->
+name|rwcode
 expr_stmt|;
 name|ps
 operator|.
@@ -1374,7 +1377,7 @@ name|rwcode
 condition|)
 block|{
 case|case
-literal|1
+literal|7
 case|:
 comment|/* it is a switch */
 return|return
@@ -1383,7 +1386,7 @@ name|swstmt
 operator|)
 return|;
 case|case
-literal|2
+literal|8
 case|:
 comment|/* a case or default */
 return|return
@@ -1414,6 +1417,7 @@ operator|.
 name|p_l_follow
 condition|)
 block|{
+comment|/* inside parens: cast, param list, offsetof or sizeof */
 name|ps
 operator|.
 name|cast_mask
@@ -1429,10 +1433,9 @@ operator|&
 operator|~
 name|ps
 operator|.
-name|sizeof_mask
+name|not_cast_mask
 expr_stmt|;
 break|break;
-comment|/* inside parens: cast, param list or sizeof */
 block|}
 name|last_code
 operator|=
@@ -1461,15 +1464,6 @@ operator|(
 name|sp_nparen
 operator|)
 return|;
-case|case
-literal|7
-case|:
-name|ps
-operator|.
-name|sizeof_keyword
-operator|=
-name|true
-expr_stmt|;
 default|default:
 comment|/* all others are treated like any other 				 * identifier */
 return|return
@@ -1641,10 +1635,11 @@ condition|)
 block|{
 name|ps
 operator|.
-name|its_a_keyword
+name|keyword
 operator|=
-name|true
+literal|4
 expr_stmt|;
+comment|/* a type name */
 name|ps
 operator|.
 name|last_u_d

@@ -846,11 +846,11 @@ decl_stmt|;
 name|int
 name|cast_mask
 decl_stmt|;
-comment|/* indicates which close parens close off 				 * casts */
+comment|/* indicates which close parens potentially 				 * close off casts */
 name|int
-name|sizeof_mask
+name|not_cast_mask
 decl_stmt|;
-comment|/* indicates which close parens close off 				 * sizeof''s */
+comment|/* indicates which close parens definitely 				 * close off something else than casts */
 name|int
 name|block_init
 decl_stmt|;
@@ -991,11 +991,9 @@ name|local_decl_indent
 decl_stmt|;
 comment|/* like decl_indent but for locals */
 name|int
-name|its_a_keyword
+name|keyword
 decl_stmt|;
-name|int
-name|sizeof_keyword
-decl_stmt|;
+comment|/* the type of a keyword or 0 */
 name|int
 name|dumped_decl_indent
 decl_stmt|;

@@ -2272,19 +2272,15 @@ name|ident
 operator|||
 name|proc_calls_space
 operator|||
+comment|/* offsetof (1) is never allowed a space; sizeof (2) gets 		     * one iff -bs; all other keywords (>2) always get a space 		     * before lparen */
 operator|(
 name|ps
 operator|.
-name|its_a_keyword
-operator|&&
-operator|(
-operator|!
-name|ps
-operator|.
-name|sizeof_keyword
-operator|||
+name|keyword
+operator|+
 name|Bill_Shannon
-operator|)
+operator|>
+literal|2
 operator|)
 operator|)
 condition|)
@@ -2464,15 +2460,24 @@ name|false
 expr_stmt|;
 comment|/* turn off flag for structure decl or 					 * initialization */
 block|}
+comment|/* parenthesized type following sizeof or offsetof is not a cast */
 if|if
 condition|(
 name|ps
 operator|.
-name|sizeof_keyword
+name|keyword
+operator|==
+literal|1
+operator|||
+name|ps
+operator|.
+name|keyword
+operator|==
+literal|2
 condition|)
 name|ps
 operator|.
-name|sizeof_mask
+name|not_cast_mask
 operator||=
 literal|1
 operator|<<
@@ -2505,7 +2510,7 @@ operator|&
 operator|~
 name|ps
 operator|.
-name|sizeof_mask
+name|not_cast_mask
 condition|)
 block|{
 name|ps
@@ -2544,7 +2549,7 @@ name|true
 expr_stmt|;
 name|ps
 operator|.
-name|sizeof_mask
+name|not_cast_mask
 operator|&=
 operator|(
 literal|1
@@ -3242,7 +3247,7 @@ literal|0
 expr_stmt|;
 name|ps
 operator|.
-name|sizeof_mask
+name|not_cast_mask
 operator|=
 literal|0
 expr_stmt|;
@@ -4500,7 +4505,7 @@ name|troff
 operator|&&
 name|ps
 operator|.
-name|its_a_keyword
+name|keyword
 condition|)
 block|{
 name|e_code
