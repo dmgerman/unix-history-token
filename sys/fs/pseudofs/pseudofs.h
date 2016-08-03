@@ -610,7 +610,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * pfs_info: describes a pseudofs instance  *  * The pi_mutex is only used to avoid using the global subr_unit lock for  * unrhdr.  The rest of struct pfs_info is only modified while Giant is  * held (during vfs_init() and vfs_uninit()).  */
+comment|/*  * pfs_info: describes a pseudofs instance  *  * The pi_mutex is only used to avoid using the global subr_unit lock  * for unrhdr.  The rest of struct pfs_info is only modified during  * vfs_init() and vfs_uninit() of the consumer filesystem.  */
 end_comment
 
 begin_struct
