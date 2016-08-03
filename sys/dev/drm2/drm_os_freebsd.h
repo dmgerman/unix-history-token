@@ -2370,6 +2370,21 @@ argument_list|(
 name|curthread
 argument_list|)
 return|;
+default|default:
+name|panic
+argument_list|(
+literal|"%s: unhandled capability: %0x"
+argument_list|,
+name|__func__
+argument_list|,
+name|cap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 block|}
 end_function
