@@ -5343,12 +5343,9 @@ begin_comment
 comment|/* include SSH protocol version 1 support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WITH_SSH1
-value|1
-end_define
+begin_comment
+comment|/* #undef WITH_SSH1 */
+end_comment
 
 begin_comment
 comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
