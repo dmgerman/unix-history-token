@@ -8725,7 +8725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a reference from the g_consumer. Post a close event if  * all references go away.  */
+comment|/*  * Remove a reference from the g_consumer.  Post a close event if all  * references go away, since the function might be called from the  * biodone context.  */
 end_comment
 
 begin_function
@@ -9332,7 +9332,7 @@ operator|&
 name|sw_dev_mtx
 argument_list|)
 expr_stmt|;
-comment|/* XXX: direct call when Giant untangled */
+comment|/* 	 * swapgeom_close() may be called from the biodone context, 	 * where we cannot perform topology changes.  Delegate the 	 * work to the events thread. 	 */
 if|if
 condition|(
 name|cp
