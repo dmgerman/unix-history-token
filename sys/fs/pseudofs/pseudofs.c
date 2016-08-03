@@ -1665,7 +1665,7 @@ argument_list|(
 name|pi
 argument_list|)
 expr_stmt|;
-comment|/* set up the root diretory */
+comment|/* set up the root directory */
 name|root
 operator|=
 name|pfs_alloc_node
