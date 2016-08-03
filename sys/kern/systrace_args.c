@@ -2315,7 +2315,7 @@ name|p
 operator|->
 name|addr
 expr_stmt|;
-comment|/* const void * */
+comment|/* void * */
 name|uarg
 index|[
 literal|1
@@ -19830,7 +19830,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"void *"
 expr_stmt|;
 break|break;
 case|case
