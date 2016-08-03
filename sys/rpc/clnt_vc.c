@@ -1259,11 +1259,6 @@ operator|)
 return|;
 name|err
 label|:
-if|if
-condition|(
-name|ct
-condition|)
-block|{
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -1283,11 +1278,6 @@ name|ct_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|cl
-condition|)
 name|mem_free
 argument_list|(
 name|cl

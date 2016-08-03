@@ -1411,11 +1411,6 @@ operator|)
 return|;
 name|err2
 label|:
-if|if
-condition|(
-name|cl
-condition|)
-block|{
 name|mem_free
 argument_list|(
 name|cl
@@ -1426,10 +1421,6 @@ name|CLIENT
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cu
-condition|)
 name|mem_free
 argument_list|(
 name|cu
@@ -1441,7 +1432,6 @@ name|cu
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL

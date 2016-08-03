@@ -4145,7 +4145,9 @@ begin_function
 name|SVCXPRT
 modifier|*
 name|svc_xprt_alloc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|SVCXPRT
 modifier|*
@@ -4207,12 +4209,10 @@ begin_function
 name|void
 name|svc_xprt_free
 parameter_list|(
-name|xprt
-parameter_list|)
 name|SVCXPRT
 modifier|*
 name|xprt
-decl_stmt|;
+parameter_list|)
 block|{
 name|mem_free
 argument_list|(
