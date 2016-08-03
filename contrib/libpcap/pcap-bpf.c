@@ -1876,7 +1876,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|p
