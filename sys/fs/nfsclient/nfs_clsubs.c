@@ -522,12 +522,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -545,12 +539,6 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -681,18 +669,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* must be before mtx_lock() */
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
@@ -910,18 +886,6 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|KDTRACE_NFS_ATTRCACHE_GET_MISS
 argument_list|(
 name|vp
@@ -1097,18 +1061,6 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|KDTRACE_NFS_ATTRCACHE_GET_HIT
 argument_list|(
 name|vp
