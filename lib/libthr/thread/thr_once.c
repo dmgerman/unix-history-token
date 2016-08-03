@@ -340,12 +340,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|_thr_once_init
-parameter_list|()
-block|{ }
-end_function
-
 end_unit
 

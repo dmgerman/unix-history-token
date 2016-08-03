@@ -2004,9 +2004,6 @@ operator|&
 name|_suspend_all_lock
 argument_list|)
 expr_stmt|;
-name|_thr_once_init
-argument_list|()
-expr_stmt|;
 name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;

@@ -2711,16 +2711,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|_thr_once_init
-argument_list|(
-name|void
-argument_list|)
-name|__hidden
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|_thr_report_creation
 argument_list|(
 expr|struct
