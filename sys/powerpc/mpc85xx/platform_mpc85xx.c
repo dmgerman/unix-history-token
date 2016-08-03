@@ -1263,32 +1263,34 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Time Base and Decrementer are updated every 8 CCB bus clocks. 	 * HID0[SEL_TBCLK] = 0 	 */
 if|if
 condition|(
 name|freq
-operator|!=
+operator|==
 literal|0
 condition|)
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
+goto|goto
+name|out
+goto|;
+comment|/* 	 * Time Base and Decrementer are updated every 8 CCB bus clocks. 	 * HID0[SEL_TBCLK] = 0 	 */
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
 name|ticks
 operator|=
 name|freq
 operator|/
 literal|32
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|ticks
 operator|=
 name|freq
 operator|/
 literal|8
 expr_stmt|;
-endif|#
-directive|endif
 name|out
 label|:
 if|if
@@ -1498,12 +1500,15 @@ decl_stmt|;
 name|int
 name|cpuid
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
 name|uint32_t
 name|tgt
 decl_stmt|;
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
+block|{
 name|reg
 operator|=
 name|ccsr_read4
@@ -1522,7 +1527,11 @@ condition|(
 operator|(
 name|reg
 operator|&
+operator|(
+literal|1
+operator|<<
 name|cpuid
+operator|)
 operator|)
 operator|!=
 literal|0
@@ -1550,9 +1559,9 @@ name|brr
 operator|=
 name|OCP85XX_BRR
 expr_stmt|;
-else|#
-directive|else
-comment|/* QORIQ_DPAA */
+block|}
+else|else
+block|{
 name|brr
 operator|=
 name|OCP85XX_EEBPCR
@@ -1565,8 +1574,7 @@ name|pc_cpuid
 operator|+
 literal|24
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|bp_kernload
 operator|=
 name|kernload
@@ -1659,10 +1667,13 @@ name|bptr
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
-comment|/* 	 * Read DDR controller configuration to select proper BPTR target ID. 	 * 	 * On P5020 bit 29 of DDR1_CS0_CONFIG enables DDR controllers 	 * interleaving. If this bit is set, we have to use 	 * OCP85XX_TGTIF_RAM_INTL as BPTR target ID. On other QorIQ DPAA SoCs, 	 * this bit is reserved and always 0. 	 */
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
+block|{
+comment|/* 		 * Read DDR controller configuration to select proper BPTR target ID. 		 * 		 * On P5020 bit 29 of DDR1_CS0_CONFIG enables DDR controllers 		 * interleaving. If this bit is set, we have to use 		 * OCP85XX_TGTIF_RAM_INTL as BPTR target ID. On other QorIQ DPAA SoCs, 		 * this bit is reserved and always 0. 		 */
 name|reg
 operator|=
 name|ccsr_read4
@@ -1689,7 +1700,7 @@ name|tgt
 operator|=
 name|OCP85XX_TGTIF_RAM1
 expr_stmt|;
-comment|/* 	 * Set BSTR to the physical address of the boot page 	 */
+comment|/* 		 * Set BSTR to the physical address of the boot page 		 */
 name|ccsr_write4
 argument_list|(
 name|OCP85XX_BSTRH
@@ -1715,7 +1726,7 @@ operator||
 operator|(
 name|tgt
 operator|<<
-name|OCP85XX_TRGT_SHIFT
+name|OCP85XX_TRGT_SHIFT_QORIQ
 operator|)
 operator||
 operator|(
@@ -1734,7 +1745,7 @@ argument_list|(
 name|OCP85XX_BSTAR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable and configure time base on new CPU. 	 */
+comment|/* 		 * Enable and configure time base on new CPU. 		 */
 comment|/* Set TB clock source to platform clock / 32 */
 name|reg
 operator|=
@@ -1782,9 +1793,10 @@ name|pc_cpuid
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* 	 * Set BPTR to the physical address of the boot page 	 */
+block|}
+else|else
+block|{
+comment|/* 		 * Set BPTR to the physical address of the boot page 		 */
 name|bptr
 operator|=
 operator|(
@@ -1803,9 +1815,7 @@ name|bptr
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("isync; msync");
-endif|#
-directive|endif
-comment|/* QORIQ_DPAA */
+block|}
 comment|/* 	 * Release AP from hold-off state 	 */
 name|reg
 operator|=
@@ -1849,9 +1859,11 @@ argument_list|)
 expr_stmt|;
 comment|/* wait 1ms */
 comment|/* 	 * Disable boot page translation so that the 4K page at the default 	 * address (= 0xfffff000) isn't permanently remapped and thus not 	 * usable otherwise. 	 */
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
 name|ccsr_write4
 argument_list|(
 name|OCP85XX_BSTAR
@@ -1859,8 +1871,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|ccsr_write4
 argument_list|(
 name|OCP85XX_BPTR
@@ -1868,8 +1879,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 asm|__asm __volatile("isync; msync");
 if|if
 condition|(
@@ -1878,7 +1887,7 @@ name|pc
 operator|->
 name|pc_awake
 condition|)
-name|printf
+name|panic
 argument_list|(
 literal|"SMP: CPU %d didn't wake up.\n"
 argument_list|,
@@ -1988,12 +1997,15 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
 name|uint32_t
 name|reg
 decl_stmt|;
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
+block|{
 name|reg
 operator|=
 name|ccsr_read4
@@ -2019,12 +2031,10 @@ argument_list|(
 name|OCP85XX_RCPM_CDOZCR
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|register_t
-name|msr
-decl_stmt|;
-name|msr
+block|}
+else|else
+block|{
+name|reg
 operator|=
 name|mfmsr
 argument_list|()
@@ -2033,18 +2043,14 @@ comment|/* Freescale E500 core RM section 6.4.1. */
 asm|__asm __volatile("msync; mtmsr %0; isync" ::
 literal|"r"
 operator|(
-name|msr
+name|reg
 operator||
 name|PSL_WE
 operator|)
 block|)
-function|;
+empty_stmt|;
+block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 unit|}  static
@@ -2058,12 +2064,15 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|QORIQ_DPAA
 name|uint32_t
 name|reg
 decl_stmt|;
+if|if
+condition|(
+name|mpc85xx_is_qoriq
+argument_list|()
+condition|)
+block|{
 name|reg
 operator|=
 name|ccsr_read4
@@ -2095,8 +2104,7 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
+block|}
 return|return
 operator|(
 literal|0

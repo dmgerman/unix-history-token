@@ -139,15 +139,6 @@ begin_comment
 comment|/*  * Local access registers  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|QORIQ_DPAA
-argument_list|)
-end_if
-
 begin_comment
 comment|/* Write order: OCP_LAWBARH -> OCP_LAWBARL -> OCP_LAWSR */
 end_comment
@@ -175,17 +166,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|OCP85XX_LAWSR
+name|OCP85XX_LAWSR_QORIQ
 parameter_list|(
 name|n
 parameter_list|)
 value|(CCSRBAR_VA + 0xc08 + 0x10 * (n))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -200,17 +186,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|OCP85XX_LAWSR
+name|OCP85XX_LAWSR_85XX
 parameter_list|(
 name|n
 parameter_list|)
 value|(CCSRBAR_VA + 0xc10 + 0x10 * (n))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|OCP85XX_LAWSR
+parameter_list|(
+name|n
+parameter_list|)
+value|(mpc85xx_is_qoriq() ? OCP85XX_LAWSR_QORIQ(n) : \ 				 OCP85XX_LAWSR_85XX(n))
+end_define
 
 begin_comment
 comment|/* Attribute register */
@@ -230,40 +221,31 @@ name|OCP85XX_DIS_MASK
 value|0x7fffffff
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|QORIQ_DPAA
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_LBC
+name|OCP85XX_TGTIF_LBC_QORIQ
 value|0x1f
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM_INTL
+name|OCP85XX_TGTIF_RAM_INTL_QORIQ
 value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM1
+name|OCP85XX_TGTIF_RAM1_QORIQ
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM2
+name|OCP85XX_TGTIF_RAM2_QORIQ
 value|0x11
 end_define
 
@@ -291,54 +273,84 @@ end_define
 begin_define
 define|#
 directive|define
-name|OCP85XX_TRGT_SHIFT
+name|OCP85XX_TRGT_SHIFT_QORIQ
 value|20
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_LBC
+name|OCP85XX_TGTIF_LBC_85XX
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM_INTL
+name|OCP85XX_TGTIF_RAM_INTL_85XX
 value|0x0b
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RIO
+name|OCP85XX_TGTIF_RIO_85XX
 value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM1
+name|OCP85XX_TGTIF_RAM1_85XX
 value|0x0f
 end_define
 
 begin_define
 define|#
 directive|define
-name|OCP85XX_TGTIF_RAM2
+name|OCP85XX_TGTIF_RAM2_85XX
 value|0x16
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_LBC
+define|\
+value|(mpc85xx_is_qoriq() ? OCP85XX_TGTIF_LBC_QORIQ : OCP85XX_TGTIF_LBC_85XX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM_INTL
+define|\
+value|(mpc85xx_is_qoriq() ? OCP85XX_TGTIF_RAM_INTL_QORIQ : OCP85XX_TGTIF_RAM_INTL_85XX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RIO
+define|\
+value|(mpc85xx_is_qoriq() ? OCP85XX_TGTIF_RIO_QORIQ : OCP85XX_TGTIF_RIO_85XX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM1
+define|\
+value|(mpc85xx_is_qoriq() ? OCP85XX_TGTIF_RAM1_QORIQ : OCP85XX_TGTIF_RAM1_85XX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_TGTIF_RAM2
+define|\
+value|(mpc85xx_is_qoriq() ? OCP85XX_TGTIF_RAM2_QORIQ : OCP85XX_TGTIF_RAM2_85XX)
+end_define
 
 begin_comment
 comment|/*  * L2 cache registers  */
@@ -616,6 +628,15 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mpc85xx_is_qoriq
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
