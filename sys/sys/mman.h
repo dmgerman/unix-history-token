@@ -1270,7 +1270,6 @@ begin_function_decl
 name|int
 name|mprotect
 parameter_list|(
-specifier|const
 name|void
 modifier|*
 parameter_list|,
