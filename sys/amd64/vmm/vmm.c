@@ -4324,7 +4324,7 @@ name|vcpuid
 operator|>=
 operator|-
 literal|1
-operator|||
+operator|&&
 name|vcpuid
 operator|<
 name|VM_MAXCPU
