@@ -425,6 +425,11 @@ operator|.
 name|desc
 argument_list|)
 expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
@@ -501,6 +506,11 @@ name|i
 index|]
 operator|.
 name|desc
+argument_list|)
+expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -622,10 +632,11 @@ name|vf_schema
 decl_stmt|;
 endif|#
 directive|endif
+name|device_t
+name|pdev
+decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|unit
 decl_stmt|;
 name|sc
 operator|=
@@ -642,10 +653,10 @@ operator|->
 name|sc_attached
 argument_list|)
 expr_stmt|;
-comment|/* 	 * PF0-3 are associated with a specific port on the NIC (PF0 	 * with port 0, etc.).  Ask the PF4 driver for the unit number 	 * for this function's associated port to determine if the port 	 * is present. 	 */
+comment|/* 	 * PF0-3 are associated with a specific port on the NIC (PF0 	 * with port 0, etc.).  Ask the PF4 driver for the device for 	 * this function's associated port to determine if the port is 	 * present. 	 */
 name|error
 operator|=
-name|T4_READ_PORT_UNIT
+name|T4_READ_PORT_DEVICE
 argument_list|(
 name|sc
 operator|->
@@ -657,7 +668,7 @@ name|dev
 argument_list|)
 argument_list|,
 operator|&
-name|unit
+name|pdev
 argument_list|)
 expr_stmt|;
 if|if
@@ -684,13 +695,20 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|pci_iov_attach
+name|pci_iov_attach_name
 argument_list|(
 name|dev
 argument_list|,
 name|pf_schema
 argument_list|,
 name|vf_schema
+argument_list|,
+literal|"%s"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|pdev
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
