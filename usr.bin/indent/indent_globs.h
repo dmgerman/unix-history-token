@@ -716,6 +716,16 @@ begin_comment
 comment|/* set true to recognize identifiers 					 * ending in "_t" like typedefs */
 end_comment
 
+begin_decl_stmt
+name|int
+name|space_after_cast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "b = (int) a" vs "b = (int)a" */
+end_comment
+
 begin_comment
 comment|/* -troff font state information */
 end_comment

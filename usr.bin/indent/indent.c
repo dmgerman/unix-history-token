@@ -2537,7 +2537,7 @@ name|ps
 operator|.
 name|want_blank
 operator|=
-name|false
+name|space_after_cast
 expr_stmt|;
 block|}
 else|else

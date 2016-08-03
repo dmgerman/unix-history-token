@@ -131,7 +131,7 @@ name|struct
 name|templ
 name|specials
 index|[
-literal|1000
+literal|16384
 index|]
 init|=
 block|{
@@ -2678,16 +2678,32 @@ operator|>=
 name|specials
 operator|+
 sizeof|sizeof
+argument_list|(
 name|specials
+argument_list|)
 operator|/
 sizeof|sizeof
+argument_list|(
 name|specials
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
-return|return;
-comment|/* For now, table overflows are silently 				 * ignored */
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"indent: typedef table overflow\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|rwd
