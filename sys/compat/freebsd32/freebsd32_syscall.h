@@ -279,9 +279,12 @@ name|FREEBSD32_SYS_dup
 value|41
 end_define
 
-begin_comment
-comment|/* 42 is freebsd10 freebsd32_pipe */
-end_comment
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SYS_freebsd10_freebsd32_pipe
+value|42
+end_define
 
 begin_define
 define|#
