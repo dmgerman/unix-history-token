@@ -19790,22 +19790,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void assert_vop_elocked_other(struct vnode *vp, const char *str) {  	if (!IGNORE_LOCK(vp)&& VOP_ISLOCKED(vp) != LK_EXCLOTHER) 		vfs_badlock("is not exclusive locked by another thread", 		    str, vp); }  void assert_vop_slocked(struct vnode *vp, const char *str) {  	if (!IGNORE_LOCK(vp)&& VOP_ISLOCKED(vp) != LK_SHARED) 		vfs_badlock("is not locked shared but should be", str, vp); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
