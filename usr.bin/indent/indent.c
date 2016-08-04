@@ -395,6 +395,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|alloc_typenames
+argument_list|()
+expr_stmt|;
 name|l_com
 operator|=
 name|combuf

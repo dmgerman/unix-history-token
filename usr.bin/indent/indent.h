@@ -17,12 +17,20 @@ end_endif
 
 begin_function_decl
 name|void
-name|addkey
+name|add_typename
 parameter_list|(
+specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|alloc_typenames
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
