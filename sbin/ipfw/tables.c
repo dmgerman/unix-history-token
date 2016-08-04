@@ -1257,13 +1257,36 @@ argument_list|(
 operator|&
 name|oh
 argument_list|)
-operator|!=
+operator|==
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
+literal|"failed to destroy table %s"
+argument_list|,
+name|tablename
+argument_list|)
+expr_stmt|;
+comment|/* ESRCH isn't fatal, warn if not quiet mode */
+if|if
+condition|(
+name|co
+operator|.
+name|do_quiet
+operator|==
+literal|0
+condition|)
+name|warn
+argument_list|(
 literal|"failed to destroy table %s"
 argument_list|,
 name|tablename
@@ -1291,13 +1314,36 @@ operator|&
 name|oh
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
+literal|"failed to flush table %s info"
+argument_list|,
+name|tablename
+argument_list|)
+expr_stmt|;
+comment|/* ESRCH isn't fatal, warn if not quiet mode */
+if|if
+condition|(
+name|co
+operator|.
+name|do_quiet
+operator|==
+literal|0
+condition|)
+name|warn
+argument_list|(
 literal|"failed to flush table %s info"
 argument_list|,
 name|tablename
@@ -1331,6 +1377,7 @@ argument_list|,
 literal|"failed to flush tables list"
 argument_list|)
 expr_stmt|;
+comment|/* XXX: we ignore errors here */
 block|}
 break|break;
 case|case
@@ -3073,9 +3120,6 @@ modifier|*
 name|second
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|table_check_name
@@ -3094,18 +3138,25 @@ argument_list|,
 name|second
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|table_do_swap
 argument_list|(
 name|oh
 argument_list|,
 name|second
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 switch|switch
 condition|(
-name|error
+name|errno
 condition|)
 block|{
 case|case
