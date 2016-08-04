@@ -5658,9 +5658,9 @@ name|ddp
 operator|.
 name|size
 argument_list|,
-literal|1
+name|PPOD_SIZE
 argument_list|,
-literal|32
+literal|512
 argument_list|,
 name|M_FIRSTFIT
 operator||
