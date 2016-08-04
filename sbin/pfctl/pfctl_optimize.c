@@ -293,6 +293,7 @@ comment|/* we should never see this field set?!? */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|pf_rule_field
 block|{
@@ -1301,6 +1302,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 function_decl|(
 modifier|*
@@ -1322,6 +1324,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1340,6 +1343,7 @@ value|{				\     { "ifp", PF_SKIP_IFP, skip_cmp_ifp },		\     { "dir", PF_SKIP_D
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pfr_buffer
 name|table_buffer
@@ -1347,6 +1351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|table_identifier
 decl_stmt|;

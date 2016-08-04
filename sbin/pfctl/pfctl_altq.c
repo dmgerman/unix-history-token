@@ -163,16 +163,14 @@ parameter_list|)
 value|(((sc) == NULL) || ((sc)->m1 == 0&& (sc)->m2 == 0))
 end_define
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|altqs
 argument_list|,
 argument|pf_altq
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|altqs
 operator|=
 name|TAILQ_HEAD_INITIALIZER
@@ -182,16 +180,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|gen_sc
 argument_list|,
 argument|segment
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|rtsc
 operator|,
 name|lssc

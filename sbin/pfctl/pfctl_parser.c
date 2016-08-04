@@ -7441,6 +7441,7 @@ comment|/* interface lookup routines */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|node_host
 modifier|*
