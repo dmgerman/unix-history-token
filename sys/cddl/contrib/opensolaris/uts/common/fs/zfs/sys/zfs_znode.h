@@ -509,6 +509,9 @@ name|uint64_t
 name|z_id
 decl_stmt|;
 comment|/* object ID for this znode */
+ifdef|#
+directive|ifdef
+name|illumos
 name|kmutex_t
 name|z_lock
 decl_stmt|;
@@ -526,6 +529,8 @@ modifier|*
 name|z_dirlocks
 decl_stmt|;
 comment|/* directory entry lock list */
+endif|#
+directive|endif
 name|kmutex_t
 name|z_range_lock
 decl_stmt|;
