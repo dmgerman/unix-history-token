@@ -686,17 +686,6 @@ define|\
 value|_lockmgr_args_rw((lk), (flags), (ilk), LK_WMESG_DEFAULT,	\ 	    LK_PRIO_DEFAULT, LK_TIMO_DEFAULT, LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_define
-define|#
-directive|define
-name|lockmgr_waiters
-parameter_list|(
-name|lk
-parameter_list|)
-define|\
-value|((lk)->lk_lock& LK_ALL_WAITERS)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

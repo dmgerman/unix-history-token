@@ -1248,21 +1248,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Find out if the lock has waiters or not.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUF_LOCKWAITERS
-parameter_list|(
-name|bp
-parameter_list|)
-define|\
-value|lockmgr_waiters(&(bp)->b_lock)
-end_define
-
 begin_endif
 endif|#
 directive|endif
