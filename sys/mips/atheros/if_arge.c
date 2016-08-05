@@ -413,6 +413,10 @@ block|,
 name|ARGE_DBG_PLL
 init|=
 literal|0x00000040
+block|,
+name|ARGE_DBG_ANY
+init|=
+literal|0xffffffff
 block|, }
 name|arge_debug_flags
 typedef|;
@@ -460,7 +464,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 		if ((_m)& (_sc)->arge_debug)				\ 			device_printf((_sc)->arge_dev, __VA_ARGS__);	\ 	} while (0)
+value|do {								\ 		if (((_m)& (_sc)->arge_debug) || ((_m) == ARGE_DBG_ANY)) \ 			device_printf((_sc)->arge_dev, __VA_ARGS__);	\ 	} while (0)
 end_define
 
 begin_else
@@ -5064,7 +5068,7 @@ name|ARGEDEBUG
 argument_list|(
 name|sc
 argument_list|,
-name|ARGE_DBG_MII
+name|ARGE_DBG_ANY
 argument_list|,
 literal|"%s timedout\n"
 argument_list|,
@@ -5261,7 +5265,7 @@ name|ARGEDEBUG
 argument_list|(
 name|sc
 argument_list|,
-name|ARGE_DBG_MII
+name|ARGE_DBG_ANY
 argument_list|,
 literal|"%s timedout\n"
 argument_list|,
@@ -11818,6 +11822,21 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARGE_DEBUG
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|tree
+decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|=
 name|device_get_softc
@@ -11890,6 +11909,50 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|ARGE_DEBUG
+name|ctx
+operator|=
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|tree
+operator|=
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"debug"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arge_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"argemdio interface debugging flags"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Reset MAC - required for AR71xx MDIO to successfully occur */
 name|arge_reset_mac
 argument_list|(
