@@ -5370,6 +5370,8 @@ parameter_list|)
 block|{
 name|bool
 name|card_inserted
+decl_stmt|,
+name|ei_engaged
 decl_stmt|;
 comment|/* Clear DETACHING if Present Detect has cleared. */
 if|if
@@ -5485,11 +5487,8 @@ name|mask
 operator||=
 name|PCIEM_SLOT_CTL_EIC
 expr_stmt|;
-if|if
-condition|(
-name|card_inserted
-operator|!=
-operator|!
+name|ei_engaged
+operator|=
 operator|(
 name|sc
 operator|->
@@ -5497,6 +5496,14 @@ name|pcie_slot_sta
 operator|&
 name|PCIEM_SLOT_STA_EIS
 operator|)
+operator|!=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|card_inserted
+operator|!=
+name|ei_engaged
 condition|)
 name|val
 operator||=
@@ -5589,7 +5596,7 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * During attach the child "pci" device is added sychronously; 	 * otherwise, the task is scheduled to manage the child 	 * device. 	 */
+comment|/* 	 * During attach the child "pci" device is added synchronously; 	 * otherwise, the task is scheduled to manage the child 	 * device. 	 */
 if|if
 condition|(
 name|schedule_task
