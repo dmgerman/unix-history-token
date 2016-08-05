@@ -211,14 +211,19 @@ modifier|*
 name|tbr
 parameter_list|)
 block|{
-comment|/* 1/2 data size */
+comment|/* 	 * - 64 bits for the trailing start index (- sizeof(uint64_t)). 	 * - The rindex and windex can't be same (- 1).  See 	 *   the comment near vmbus_bufring.br_{r,w}index. 	 */
 return|return
 operator|(
 name|tbr
 operator|->
 name|txbr_dsize
-operator|/
-literal|2
+operator|-
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+operator|-
+literal|1
 operator|)
 return|;
 block|}
