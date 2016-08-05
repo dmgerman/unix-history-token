@@ -381,16 +381,6 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|vm
 argument_list|, , ,
-name|vm__lowmem_cache
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|vm
-argument_list|, , ,
 name|vm__lowmem_scan
 argument_list|)
 expr_stmt|;
