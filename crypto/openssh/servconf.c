@@ -1153,19 +1153,6 @@ if|if
 condition|(
 name|options
 operator|->
-name|protocol
-operator|&
-name|SSH_PROTO_1
-condition|)
-name|error
-argument_list|(
-literal|"WARNING: SSH protocol version 1 enabled"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|->
 name|num_host_key_files
 operator|==
 literal|0
