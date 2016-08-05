@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -562,6 +568,40 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Xen hypervisors prior to 4.6.0 do not properly handle updates to  * enabled MSI-X table entries.  Allow migration of MSI-X interrupts  * to be disabled via a tunable.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msix_disable_migration
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disable_msix_migration
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|msix_disable_migration
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable migration of MSI-X interrupts between CPUs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -841,6 +881,19 @@ operator|->
 name|msi_first
 operator|!=
 name|msi
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|msix_disable_migration
+operator|&&
+name|msi
+operator|->
+name|msi_msix
 condition|)
 return|return
 operator|(
