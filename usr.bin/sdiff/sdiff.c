@@ -607,11 +607,6 @@ name|LFILES_OPT
 block|,
 name|DIFFPROG_OPT
 block|,
-name|PIPE_FD
-block|,
-comment|/* pid from the diff parent (if applicable) */
-name|DIFF_PID
-block|,
 name|NOOP_OPT
 block|, }
 enum|;
@@ -674,26 +669,6 @@ block|,
 name|NULL
 block|,
 name|DIFFPROG_OPT
-block|}
-block|,
-block|{
-literal|"pipe-fd"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-name|PIPE_FD
-block|}
-block|,
-block|{
-literal|"diff-pid"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-name|DIFF_PID
 block|}
 block|,
 comment|/* Options processed by diff. */
@@ -1266,12 +1241,6 @@ name|pid
 init|=
 literal|0
 decl_stmt|;
-name|pid_t
-name|ppid
-init|=
-operator|-
-literal|1
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1642,39 +1611,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DIFF_PID
-case|:
-name|ppid
-operator|=
-name|strtonum
-argument_list|(
-name|optarg
-argument_list|,
-literal|0
-argument_list|,
-name|INT_MAX
-argument_list|,
-operator|&
-name|errstr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errstr
-condition|)
-name|errx
-argument_list|(
-literal|2
-argument_list|,
-literal|"diff pid value is %s: %s"
-argument_list|,
-name|errstr
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|HELP_OPT
 case|:
 for|for
@@ -1993,14 +1929,6 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
-name|ppid
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
 name|pipe
 argument_list|(
 name|fd
@@ -2131,7 +2059,6 @@ argument_list|,
 literal|"could not open diff pipe"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
