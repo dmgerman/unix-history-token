@@ -279,12 +279,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT4_EA_INODE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Inode used for large EA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT4_EOFBLOCKS
 value|0x00400000
 end_define
 
 begin_comment
 comment|/* Blocks allocated beyond EOF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_INLINE_DATA
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Inode has inline data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT4_PROJINHERIT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Children inherit project ID */
 end_comment
 
 begin_comment
