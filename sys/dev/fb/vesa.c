@@ -247,6 +247,21 @@ name|vesa_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|vesa_lock
+argument_list|,
+operator|&
+name|vesa_lock
+argument_list|,
+literal|"VESA lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -9960,18 +9975,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|mtx_init
-argument_list|(
-operator|&
-name|vesa_lock
-argument_list|,
-literal|"VESA lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* locate a VGA adapter */
 name|vesa_adp
 operator|=
@@ -10131,12 +10134,6 @@ block|}
 block|}
 name|vesa_bios_uninit
 argument_list|()
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|vesa_lock
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
