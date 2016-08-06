@@ -31693,6 +31693,13 @@ goto|;
 endif|#
 directive|endif
 block|}
+comment|/* Save the value back for next time */
+name|stcb
+operator|->
+name|freed_by_sorcv_sincelast
+operator|=
+name|freed_so_far
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -31705,13 +31712,6 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-comment|/* Save the value back for next time */
-name|stcb
-operator|->
-name|freed_by_sorcv_sincelast
-operator|=
-name|freed_so_far
 expr_stmt|;
 block|}
 if|if
