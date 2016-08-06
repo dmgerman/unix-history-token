@@ -1079,6 +1079,7 @@ name|strq
 parameter_list|,
 name|int
 name|moved_how_much
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
