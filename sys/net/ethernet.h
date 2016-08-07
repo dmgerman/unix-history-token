@@ -246,6 +246,17 @@ begin_comment
 comment|/* is address mcast/bcast? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETHER_IS_BROADCAST
+parameter_list|(
+name|addr
+parameter_list|)
+define|\
+value|(((addr)[0]& (addr)[1]& (addr)[2]& \ 	  (addr)[3]& (addr)[4]& (addr)[5]) == 0xff)
+end_define
+
 begin_comment
 comment|/*  * 802.1q Virtual LAN header.  */
 end_comment
