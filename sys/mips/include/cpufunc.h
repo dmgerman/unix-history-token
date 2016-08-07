@@ -243,6 +243,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|userlocal
+argument_list|,
+name|MIPS_COP_0_USERLOCAL
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -736,6 +748,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MIPS_RW32_COP0_SEL
+argument_list|(
+name|userlocal
+argument_list|,
+name|MIPS_COP_0_USERLOCAL
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -971,6 +995,16 @@ argument_list|,
 name|MIPS_COP_0_PERFCNT
 argument_list|,
 literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW32_COP0
+argument_list|(
+name|hwrena
+argument_list|,
+name|MIPS_COP_0_HWRENA
 argument_list|)
 expr_stmt|;
 end_expr_stmt

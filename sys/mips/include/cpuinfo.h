@@ -63,6 +63,9 @@ decl_stmt|;
 name|boolean_t
 name|cache_coherent_dma
 decl_stmt|;
+name|boolean_t
+name|userlocal_reg
+decl_stmt|;
 struct|struct
 block|{
 name|u_int32_t
