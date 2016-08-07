@@ -4264,8 +4264,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ARSWITCH_DBG_REGIO
 argument_list|,
 literal|"%s: %d: reg=0x%08x\n"
 argument_list|,
@@ -4406,8 +4406,8 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ARSWITCH_DBG_VLAN
 argument_list|,
 literal|"%s: vid: %d, ports=0x%08x, untagged_ports=0x%08x\n"
 argument_list|,

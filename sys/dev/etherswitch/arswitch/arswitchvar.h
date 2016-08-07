@@ -191,6 +191,9 @@ decl_stmt|;
 name|etherswitch_info_t
 name|info
 decl_stmt|;
+name|uint32_t
+name|sc_debug
+decl_stmt|;
 comment|/* VLANs support */
 name|int
 name|vid
@@ -554,13 +557,52 @@ define|\
 value|mtx_trylock(&(_sc)->sc_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_RESET
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_REGIO
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_PHYIO
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_POLL
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_VLAN
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARSWITCH_DBG_ANY
+value|0xffffffff
+end_define
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
+literal|1
 end_if
 
 begin_define
@@ -568,12 +610,15 @@ define|#
 directive|define
 name|DPRINTF
 parameter_list|(
-name|dev
+name|sc
+parameter_list|,
+name|dbg
 parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|device_printf(dev, args)
+define|\
+value|do { \ 		if (((sc)->sc_debug& (dbg)) || \ 		    ((sc)->sc_debug == ARSWITCH_DBG_ANY)) { \ 			device_printf((sc)->sc_dev, args); 	\ 		} \ 	} while (0)
 end_define
 
 begin_define
@@ -593,16 +638,6 @@ parameter_list|)
 value|do { \ 		if (err != 0) device_printf(dev, fmt, err, args); \ 	} while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG_INCRVAR
-parameter_list|(
-name|var
-parameter_list|)
-value|do { \ 		var++; \ 	} while (0)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -614,6 +649,8 @@ directive|define
 name|DPRINTF
 parameter_list|(
 name|dev
+parameter_list|,
+name|dbg
 parameter_list|,
 name|args
 modifier|...
@@ -633,15 +670,6 @@ name|fmt
 parameter_list|,
 name|args
 modifier|...
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_INCRVAR
-parameter_list|(
-name|var
 parameter_list|)
 end_define
 
