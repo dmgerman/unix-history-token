@@ -144,7 +144,7 @@ name|i40e_msec_delay
 parameter_list|(
 name|x
 parameter_list|)
-value|DELAY(1000*(x))
+value|DELAY(1000 * (x))
 end_define
 
 begin_define
@@ -362,11 +362,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|UNREFERENCED_XPARAMETER
-end_define
+begin_comment
+comment|/* Remove unused shared code macros */
+end_comment
 
 begin_define
 define|#
@@ -422,6 +420,23 @@ parameter_list|,
 name|_r
 parameter_list|,
 name|_s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNREFERENCED_5PARAMETER
+parameter_list|(
+name|_p
+parameter_list|,
+name|_q
+parameter_list|,
+name|_r
+parameter_list|,
+name|_s
+parameter_list|,
+name|_t
 parameter_list|)
 end_define
 
@@ -641,26 +656,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(sizeof(((x*)0)->y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT
-parameter_list|(
-name|a
-parameter_list|)
-value|(1UL<< (a))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT_ULL
-parameter_list|(
-name|a
-parameter_list|)
-value|(1ULL<< (a))
 end_define
 
 begin_typedef
@@ -970,13 +965,13 @@ name|s
 parameter_list|,
 modifier|...
 parameter_list|)
-value|i40e_debug_d(h, m, s, ##__VA_ARGS__)
+value|i40e_debug_shared(h, m, s, ##__VA_ARGS__)
 end_define
 
 begin_function_decl
 specifier|extern
 name|void
-name|i40e_debug_d
+name|i40e_debug_shared
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -992,6 +987,19 @@ modifier|*
 name|fmt_str
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Non-busy-wait that uses kern_yield() */
+end_comment
+
+begin_function_decl
+name|void
+name|i40e_msec_pause
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

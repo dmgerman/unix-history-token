@@ -307,34 +307,46 @@ directive|include
 file|<machine/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PCI_IOV
+name|RSS
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/nv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/iov_schema.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pci_iov.h>
+file|<net/rss_config.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_rss.h"
+end_include
 
 begin_include
 include|#
@@ -347,20 +359,6 @@ include|#
 directive|include
 file|"i40e_prototype.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IXL_DEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IXL_DEBUG_SYSCTL
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -390,42 +388,11 @@ parameter_list|)
 value|((is_set) ? "On" : "Off")
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IXL_DEBUG || IXL_DEBUG_SYSCTL */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|IXL_DEBUG
 end_ifdef
-
-begin_comment
-comment|/* Enable debug sysctls */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IXL_DEBUG_SYSCTL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IXL_DEBUG_SYSCTL
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -729,6 +696,61 @@ begin_comment
 comment|/* IXL_DEBUG */
 end_comment
 
+begin_enum
+enum|enum
+name|ixl_dbg_mask
+block|{
+name|IXL_DBG_INFO
+init|=
+literal|0x00000001
+block|,
+name|IXL_DBG_EN_DIS
+init|=
+literal|0x00000002
+block|,
+name|IXL_DBG_AQ
+init|=
+literal|0x00000004
+block|,
+name|IXL_DBG_NVMUPD
+init|=
+literal|0x00000008
+block|,
+name|IXL_DBG_IOCTL_KNOWN
+init|=
+literal|0x00000010
+block|,
+name|IXL_DBG_IOCTL_UNKNOWN
+init|=
+literal|0x00000020
+block|,
+name|IXL_DBG_IOCTL_ALL
+init|=
+literal|0x00000030
+block|,
+name|I40E_DEBUG_RSS
+init|=
+literal|0x00000100
+block|,
+name|IXL_DBG_IOV
+init|=
+literal|0x00001000
+block|,
+name|IXL_DBG_IOV_VC
+init|=
+literal|0x00002000
+block|,
+name|IXL_DBG_SWITCH_INFO
+init|=
+literal|0x00010000
+block|,
+name|IXL_DBG_ALL
+init|=
+literal|0xFFFFFFFF
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* Tunables */
 end_comment
@@ -747,22 +769,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|PERFORM_RING
-value|2048
+name|IXL_MAX_RING
+value|8160
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_RING
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIN_RING
+name|IXL_MIN_RING
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_RING_INCREMENT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_AQ_LEN
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_AQ_LEN_MAX
+value|1024
 end_define
 
 begin_comment
@@ -772,19 +808,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SMALL_TXBRSZ
-value|4096
-end_define
-
-begin_comment
-comment|/* This may require mbuf cluster tuning */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DEFAULT_TXBRSZ
-value|(SMALL_TXBRSZ * SMALL_TXBRSZ)
+value|4096
 end_define
 
 begin_comment
@@ -827,31 +852,6 @@ name|IXL_TX_OP_THRESHOLD
 value|(que->num_desc / 32)
 end_define
 
-begin_comment
-comment|/* Flow control constants */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXL_FC_PAUSE
-value|0xFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXL_FC_HI
-value|0x20000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXL_FC_LO
-value|0x10000
-end_define
-
 begin_define
 define|#
 directive|define
@@ -892,31 +892,6 @@ define|#
 directive|define
 name|IXL_RX_HDR
 value|128
-end_define
-
-begin_comment
-comment|/* Controls the length of the Admin Queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXL_AQ_LEN
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXL_AQ_LEN_MAX
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXL_AQ_BUFSZ
-value|4096
 end_define
 
 begin_define
@@ -972,7 +947,7 @@ begin_define
 define|#
 directive|define
 name|IXL_MAX_TSO_SEGS
-value|66
+value|128
 end_define
 
 begin_define
@@ -992,8 +967,40 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXL_KEYSZ
-value|10
+name|IXL_RSS_KEY_SIZE_REG
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_RSS_KEY_SIZE
+value|(IXL_RSS_KEY_SIZE_REG * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_RSS_VSI_LUT_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* X722 -> VSI, X710 -> VF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXL_RSS_VSI_LUT_ENTRY_MASK
+value|0x3F
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_RSS_VF_LUT_ENTRY_MASK
+value|0xF
 end_define
 
 begin_define
@@ -1018,7 +1025,7 @@ value|0x3FFF
 end_define
 
 begin_comment
-comment|/* ERJ: hardware can support ~1.5k filters between all functions */
+comment|/* ERJ: hardware can support ~2k (SW5+) filters between all functions */
 end_comment
 
 begin_define
@@ -1337,6 +1344,13 @@ define|#
 directive|define
 name|IXL_END_OF_INTR_LNKLST
 value|0x7FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_DEFAULT_RSS_HENA
+value|(\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_UDP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_TCP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_SCTP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV4_OTHER) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_FRAG_IPV4) |		\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_UDP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_TCP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_SCTP) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_NONF_IPV6_OTHER) |	\ 	BIT_ULL(I40E_FILTER_PCTYPE_FRAG_IPV6) |		\ 	BIT_ULL(I40E_FILTER_PCTYPE_L2_PAYLOAD))
 end_define
 
 begin_define
@@ -1725,30 +1739,6 @@ parameter_list|,
 name|count
 parameter_list|)
 value|(vsi)->noproto = (count)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Pre-10.2 media type compatibility */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|1002000
-end_if
-
-begin_define
-define|#
-directive|define
-name|IFM_OTHER
-value|IFM_UNKNOWN
 end_define
 
 begin_endif
@@ -2147,10 +2137,7 @@ name|u64
 name|mbuf_pkt_failed
 decl_stmt|;
 name|u64
-name|tx_map_avail
-decl_stmt|;
-name|u64
-name|tx_dma_setup
+name|tx_dmamap_failed
 decl_stmt|;
 name|u64
 name|dropped_pkts
@@ -2160,7 +2147,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** Virtual Station interface:  **	there would be one of these per traffic class/type **	for now just one, and its embedded in the pf */
+comment|/* ** Virtual Station Interface */
 end_comment
 
 begin_expr_stmt
@@ -2204,21 +2191,8 @@ name|enum
 name|i40e_vsi_type
 name|type
 decl_stmt|;
-name|u64
-name|que_mask
-decl_stmt|;
 name|int
 name|id
-decl_stmt|;
-name|u16
-name|vsi_num
-decl_stmt|;
-name|u16
-name|msix_base
-decl_stmt|;
-comment|/* station base MSIX vector */
-name|u16
-name|first_queue
 decl_stmt|;
 name|u16
 name|num_queues
@@ -2229,12 +2203,18 @@ decl_stmt|;
 name|u32
 name|tx_itr_setting
 decl_stmt|;
+name|u16
+name|max_frame_size
+decl_stmt|;
 name|struct
 name|ixl_queue
 modifier|*
 name|queues
 decl_stmt|;
 comment|/* head of queues */
+name|u16
+name|vsi_num
+decl_stmt|;
 name|bool
 name|link_active
 decl_stmt|;
@@ -2247,15 +2227,6 @@ decl_stmt|;
 name|u16
 name|downlink_seid
 decl_stmt|;
-name|u16
-name|max_frame_size
-decl_stmt|;
-name|u16
-name|rss_table_size
-decl_stmt|;
-name|u16
-name|rss_size
-decl_stmt|;
 comment|/* MAC/VLAN Filter list */
 name|struct
 name|ixl_ftl_head
@@ -2264,6 +2235,7 @@ decl_stmt|;
 name|u16
 name|num_macs
 decl_stmt|;
+comment|/* Contains readylist& stat counter id */
 name|struct
 name|i40e_aqc_vsi_properties_data
 name|info
@@ -2596,6 +2568,73 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return next largest power of 2, unsigned  *  * Public domain, from Bit Twiddling Hacks  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u32
+name|next_power_of_two
+parameter_list|(
+name|u32
+name|n
+parameter_list|)
+block|{
+name|n
+operator|--
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|1
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|2
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|4
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|8
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|16
+expr_stmt|;
+name|n
+operator|++
+expr_stmt|;
+comment|/* Next power of two> 0 is 1 */
+name|n
+operator|+=
+operator|(
+name|n
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Info for stats sysctls  */
 end_comment
 
@@ -2620,9 +2659,26 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|ixl_atr_rate
+specifier|static
+name|uint8_t
+name|ixl_bcast_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+init|=
+block|{
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2699,6 +2755,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ixl_free_que_tx
+parameter_list|(
+name|struct
+name|ixl_queue
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixl_free_que_rx
+parameter_list|(
+name|struct
+name|ixl_queue
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ixl_mq_start
 parameter_list|(
@@ -2742,17 +2820,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_qflush
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ixl_free_vsi
 parameter_list|(
 name|struct
@@ -2764,53 +2831,18 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ixl_free_que_tx
+name|ixl_qflush
 parameter_list|(
 name|struct
-name|ixl_queue
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ixl_free_que_rx
-parameter_list|(
-name|struct
-name|ixl_queue
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IXL_FDIR
-end_ifdef
-
-begin_function_decl
-name|void
-name|ixl_atr
-parameter_list|(
-name|struct
-name|ixl_queue
-modifier|*
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Common function prototypes between PF/VF driver */
+end_comment
 
 begin_if
 if|#
@@ -2837,6 +2869,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|ixl_get_default_rss_key
+parameter_list|(
+name|u32
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
