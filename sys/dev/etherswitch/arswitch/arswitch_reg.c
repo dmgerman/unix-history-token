@@ -968,7 +968,15 @@ name|reg
 decl_stmt|;
 name|ARSWITCH_LOCK_ASSERT
 argument_list|(
-name|sc
+operator|(
+expr|struct
+name|arswitch_softc
+operator|*
+operator|)
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MA_OWNED
 argument_list|)
