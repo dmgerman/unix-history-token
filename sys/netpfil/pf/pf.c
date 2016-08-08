@@ -10754,7 +10754,7 @@ name|a
 operator|.
 name|addr
 argument_list|,
-literal|0
+name|AF_INET6
 argument_list|)
 condition|)
 return|return
@@ -10784,7 +10784,7 @@ name|a
 operator|.
 name|mask
 argument_list|,
-literal|0
+name|AF_INET6
 argument_list|)
 condition|)
 return|return
