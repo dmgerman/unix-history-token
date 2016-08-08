@@ -7871,11 +7871,31 @@ break|break;
 case|case
 name|O_SETFIB
 case|:
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+name|IP_FW_TARG
+condition|)
 name|bprint_uint_arg
 argument_list|(
 name|bp
 argument_list|,
 literal|"setfib "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
+argument_list|)
+expr_stmt|;
+else|else
+name|bprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|"setfib %u"
 argument_list|,
 name|cmd
 operator|->
