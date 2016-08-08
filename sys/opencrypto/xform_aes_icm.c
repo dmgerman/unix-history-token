@@ -123,7 +123,7 @@ name|aes_icm_crypt
 block|,
 name|aes_icm_setkey
 block|,
-name|rijndael128_zerokey
+name|aes_icm_zerokey
 block|,
 name|aes_icm_reinit
 block|, }
