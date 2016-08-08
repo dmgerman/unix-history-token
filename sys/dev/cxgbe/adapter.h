@@ -779,6 +779,14 @@ operator|<<
 literal|6
 operator|)
 block|,
+name|IS_VF
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+block|,
 name|CXGBE_BUSY
 init|=
 operator|(
