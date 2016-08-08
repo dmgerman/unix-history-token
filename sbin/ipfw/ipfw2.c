@@ -21022,7 +21022,8 @@ operator|=
 name|IP_FW_TARG
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|isalpha
@@ -21081,21 +21082,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Add high-order bit to DSCP to make room for tablearg */
-if|if
-condition|(
-name|action
-operator|->
-name|arg1
-operator|!=
-name|IP_FW_TARG
-condition|)
+comment|/* 			 * Add high-order bit to DSCP to make room 			 * for tablearg 			 */
 name|action
 operator|->
 name|arg1
 operator||=
 literal|0x8000
 expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
