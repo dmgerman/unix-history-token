@@ -732,14 +732,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|softc
-operator|->
-name|util_sc
-operator|.
-name|callback
-operator|=
-name|hv_timesync_cb
-expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -758,6 +750,8 @@ return|return
 name|hv_util_attach
 argument_list|(
 name|dev
+argument_list|,
+name|hv_timesync_cb
 argument_list|)
 return|;
 block|}

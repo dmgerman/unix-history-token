@@ -15,6 +15,12 @@ directive|define
 name|_HVUTIL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
 begin_comment
 comment|/**  * hv_util related structures  *  */
 end_comment
@@ -24,21 +30,6 @@ typedef|typedef
 struct|struct
 name|hv_util_sc
 block|{
-comment|/* 	 * function to process Hyper-V messages 	 */
-name|void
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
-name|struct
-name|vmbus_channel
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
 name|uint8_t
 modifier|*
 name|receive_buffer
@@ -73,6 +64,9 @@ name|hv_util_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|vmbus_chan_callback_t
+name|cb
 parameter_list|)
 function_decl|;
 end_function_decl

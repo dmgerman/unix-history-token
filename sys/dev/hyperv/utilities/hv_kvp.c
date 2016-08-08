@@ -4003,14 +4003,6 @@ argument_list|)
 decl_stmt|;
 name|sc
 operator|->
-name|util_sc
-operator|.
-name|callback
-operator|=
-name|hv_kvp_callback
-expr_stmt|;
-name|sc
-operator|->
 name|dev
 operator|=
 name|dev
@@ -4143,6 +4135,8 @@ return|return
 name|hv_util_attach
 argument_list|(
 name|dev
+argument_list|,
+name|hv_kvp_callback
 argument_list|)
 return|;
 block|}

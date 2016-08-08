@@ -267,6 +267,9 @@ name|hv_util_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|vmbus_chan_callback_t
+name|cb
 parameter_list|)
 block|{
 name|struct
@@ -335,9 +338,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|sc
-operator|->
-name|callback
+name|cb
 argument_list|,
 name|sc
 argument_list|)
