@@ -276,8 +276,6 @@ name|hv_negotiate_version
 argument_list|(
 name|icmsghdrp
 argument_list|,
-name|NULL
-argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;

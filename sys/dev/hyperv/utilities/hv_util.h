@@ -57,11 +57,6 @@ name|hv_vmbus_icmsg_hdr
 modifier|*
 name|icmsghdrp
 parameter_list|,
-name|struct
-name|hv_vmbus_icmsg_negotiate
-modifier|*
-name|negop
-parameter_list|,
 name|uint8_t
 modifier|*
 name|buf
