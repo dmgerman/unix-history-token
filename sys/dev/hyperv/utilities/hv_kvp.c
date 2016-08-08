@@ -2870,9 +2870,11 @@ argument_list|)
 expr_stmt|;
 name|recvlen
 operator|=
-literal|2
-operator|*
-name|PAGE_SIZE
+name|sc
+operator|->
+name|util_sc
+operator|.
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=
@@ -3120,9 +3122,11 @@ expr_stmt|;
 comment|/* 		 * Try reading next buffer 		 */
 name|recvlen
 operator|=
-literal|2
-operator|*
-name|PAGE_SIZE
+name|sc
+operator|->
+name|util_sc
+operator|.
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=

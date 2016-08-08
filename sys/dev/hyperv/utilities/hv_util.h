@@ -43,6 +43,9 @@ name|uint8_t
 modifier|*
 name|receive_buffer
 decl_stmt|;
+name|int
+name|ic_buflen
+decl_stmt|;
 block|}
 name|hv_util_sc
 typedef|;

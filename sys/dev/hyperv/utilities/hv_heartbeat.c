@@ -195,7 +195,9 @@ name|receive_buffer
 expr_stmt|;
 name|recvlen
 operator|=
-name|PAGE_SIZE
+name|softc
+operator|->
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=
