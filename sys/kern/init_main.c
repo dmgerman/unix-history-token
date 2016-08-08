@@ -2282,7 +2282,7 @@ argument_list|(
 literal|"default"
 argument_list|)
 expr_stmt|;
-name|proc_set_cred
+name|proc_set_cred_init
 argument_list|(
 name|p
 argument_list|,

@@ -8479,7 +8479,35 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change process credentials.  * Callers are responsible for providing the reference for current credentials  * and for freeing old ones.  *  * Process has to be locked except when it does not have credentials (as it  * should not be visible just yet) or when newcred is NULL (as this can be  * only used when the process is about to be freed, at which point it should  * not be visible anymore).  */
+comment|/*  * Set initial process credentials.  * Callers are responsible for providing the reference for provided credentials.  */
+end_comment
+
+begin_function
+name|void
+name|proc_set_cred_init
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|newcred
+parameter_list|)
+block|{
+name|p
+operator|->
+name|p_ucred
+operator|=
+name|newcred
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Change process credentials.  * Callers are responsible for providing the reference for passed credentials  * and for freeing old ones.  *  * Process has to be locked except when it does not have credentials (as it  * should not be visible just yet) or when newcred is NULL (as this can be  * only used when the process is about to be freed, at which point it should  * not be visible anymore).  */
 end_comment
 
 begin_function
@@ -8504,6 +8532,15 @@ name|ucred
 modifier|*
 name|oldcred
 decl_stmt|;
+name|MPASS
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|newcred
@@ -8519,15 +8556,7 @@ operator|==
 name|PRS_ZOMBIE
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|p_ucred
-operator|!=
-name|NULL
-condition|)
+else|else
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p

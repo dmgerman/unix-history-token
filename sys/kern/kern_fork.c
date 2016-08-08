@@ -3796,7 +3796,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * XXX: This is ugly; when we copy resource usage, we need to bump 	 *      per-cred resource counters. 	 */
-name|proc_set_cred
+name|proc_set_cred_init
 argument_list|(
 name|newproc
 argument_list|,
