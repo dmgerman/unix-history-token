@@ -5157,6 +5157,19 @@ name|vsi
 operator|->
 name|dev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|int
+name|cpu_id
+init|=
+literal|0
+decl_stmt|;
+name|cpuset_t
+name|cpu_mask
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Create queue tasks and start queue taskqueues */
 for|for
 control|(
@@ -5611,14 +5624,6 @@ name|vector
 init|=
 literal|1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RSS
-name|cpuset_t
-name|cpu_mask
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* Queue interrupt vector numbers start at 1 (adminq intr is 0) */
 for|for
 control|(

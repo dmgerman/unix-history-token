@@ -3668,17 +3668,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|RSS
-name|u32
-name|rss_hash_config
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|RSS
 comment|/* Fetch the configured RSS key */
 name|rss_getkey
 argument_list|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
 operator|&
 name|rss_seed
 argument_list|)
