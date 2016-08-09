@@ -477,7 +477,9 @@ name|CPUSTATES
 index|]
 decl_stmt|;
 comment|/* statclock ticks */
-name|device_t
+name|struct
+name|device
+modifier|*
 name|pc_device
 decl_stmt|;
 name|void
