@@ -2957,6 +2957,14 @@ parameter_list|,
 name|netvsc_packet
 modifier|*
 name|pkt
+parameter_list|,
+name|struct
+name|vmbus_gpa
+modifier|*
+name|gpa
+parameter_list|,
+name|int
+name|gpa_cnt
 parameter_list|)
 block|{
 name|nvsp_msg
@@ -3040,8 +3048,6 @@ name|send_buf_section_size
 expr_stmt|;
 if|if
 condition|(
-name|pkt
-operator|->
 name|gpa_cnt
 condition|)
 block|{
@@ -3051,12 +3057,8 @@ name|vmbus_chan_send_sglist
 argument_list|(
 name|chan
 argument_list|,
-name|pkt
-operator|->
 name|gpa
 argument_list|,
-name|pkt
-operator|->
 name|gpa_cnt
 argument_list|,
 operator|&

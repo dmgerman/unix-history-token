@@ -990,9 +990,6 @@ name|uint32_t
 name|message_type
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|netvsc_packet
 modifier|*
 name|packet
@@ -1007,6 +1004,16 @@ name|net_dev
 decl_stmt|;
 name|int
 name|send_buf_section_idx
+decl_stmt|;
+name|struct
+name|vmbus_gpa
+name|gpa
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|gpa_cnt
 decl_stmt|;
 comment|/* Set up the packet to send it */
 name|packet
@@ -1032,14 +1039,10 @@ name|request_msg
 operator|.
 name|msg_len
 expr_stmt|;
-name|packet
-operator|->
 name|gpa_cnt
 operator|=
 literal|1
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1057,8 +1060,6 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1072,8 +1073,6 @@ name|request_msg
 operator|.
 name|msg_len
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1098,8 +1097,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1107,8 +1104,6 @@ index|]
 operator|.
 name|gpa_ofs
 operator|+
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1119,14 +1114,10 @@ operator|>
 name|PAGE_SIZE
 condition|)
 block|{
-name|packet
-operator|->
 name|gpa_cnt
 operator|=
 literal|2
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1136,8 +1127,6 @@ name|gpa_len
 operator|=
 name|PAGE_SIZE
 operator|-
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1145,8 +1134,6 @@ index|]
 operator|.
 name|gpa_ofs
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|1
@@ -1165,8 +1152,6 @@ name|request
 operator|->
 name|request_msg
 operator|+
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1177,8 +1162,6 @@ argument_list|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|1
@@ -1188,8 +1171,6 @@ name|gpa_ofs
 operator|=
 literal|0
 expr_stmt|;
-name|packet
-operator|->
 name|gpa
 index|[
 literal|1
@@ -1203,8 +1184,6 @@ name|request_msg
 operator|.
 name|msg_len
 operator|-
-name|packet
-operator|->
 name|gpa
 index|[
 literal|0
@@ -1344,8 +1323,6 @@ name|packet
 operator|->
 name|tot_data_buf_len
 expr_stmt|;
-name|packet
-operator|->
 name|gpa_cnt
 operator|=
 literal|0
@@ -1370,8 +1347,7 @@ literal|0
 expr_stmt|;
 name|sendit
 label|:
-name|ret
-operator|=
+return|return
 name|hv_nv_on_send
 argument_list|(
 name|device
@@ -1383,12 +1359,11 @@ operator|->
 name|hn_prichan
 argument_list|,
 name|packet
+argument_list|,
+name|gpa
+argument_list|,
+name|gpa_cnt
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
 return|;
 block|}
 end_function
