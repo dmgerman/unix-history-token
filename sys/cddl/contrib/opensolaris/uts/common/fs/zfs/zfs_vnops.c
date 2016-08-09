@@ -16981,6 +16981,10 @@ label|:
 comment|/* original two vnodes are locked */
 if|if
 condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 name|zfsvfs
 operator|->
 name|z_os
@@ -16988,10 +16992,6 @@ operator|->
 name|os_sync
 operator|==
 name|ZFS_SYNC_ALWAYS
-operator|&&
-name|error
-operator|==
-literal|0
 condition|)
 name|zil_commit
 argument_list|(
