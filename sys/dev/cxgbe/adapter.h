@@ -1663,6 +1663,11 @@ name|int
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
+name|unsigned
+name|int
+name|abs_id
+decl_stmt|;
+comment|/* absolute SGE id for the eq */
 name|struct
 name|mtx
 name|eq_lock
@@ -2695,9 +2700,19 @@ comment|/* netmap rx queues */
 name|uint16_t
 name|iq_start
 decl_stmt|;
+comment|/* first cntxt_id */
+name|uint16_t
+name|iq_base
+decl_stmt|;
+comment|/* first abs_id */
 name|int
 name|eq_start
 decl_stmt|;
+comment|/* first cntxt_id */
+name|int
+name|eq_base
+decl_stmt|;
+comment|/* first abs_id */
 name|struct
 name|sge_iq
 modifier|*
