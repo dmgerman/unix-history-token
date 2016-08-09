@@ -247,7 +247,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|do									\     {									\       size_t slen = (size_t)(pmatch[0].rm_eo - pmatch[0].rm_so);	\       size_t offset = pmatch[0].rm_so;					\       int ret;								\ 									\       if ((long long)pmatch[0].rm_eo - pmatch[0].rm_so< 0)		\ 	return REG_NOMATCH;						\       ret = fn;								\       for (unsigned i = 0; (!(eflags& REG_NOSUB)&& (i< nmatch)); i++)\ 	{								\ 	  pmatch[i].rm_so += offset;					\ 	  pmatch[i].rm_eo += offset;					\ 	}								\       return ret;							\     } while (0
+value|do									\     {									\       size_t slen = (size_t)(pmatch[0].rm_eo - pmatch[0].rm_so);	\       size_t offset = pmatch[0].rm_so;					\       int ret;								\ 									\       if ((long long)pmatch[0].rm_eo - pmatch[0].rm_so< 0)		\ 	return REG_NOMATCH;						\       ret = fn;								\       for (unsigned i = 0; (!preg->nosub&& (i< nmatch)); i++)		\ 	{								\ 	  pmatch[i].rm_so += offset;					\ 	  pmatch[i].rm_eo += offset;					\ 	}								\       return ret;							\     } while (0
 comment|/*CONSTCOND*/
 value|)
 end_define

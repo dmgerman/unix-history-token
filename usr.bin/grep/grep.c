@@ -242,7 +242,13 @@ begin_decl_stmt
 name|unsigned
 name|int
 name|patterns
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
 name|pattern_sz
 decl_stmt|;
 end_decl_stmt
@@ -278,14 +284,15 @@ name|unsigned
 name|int
 name|fpatterns
 decl_stmt|,
-name|fpattern_sz
+name|dpatterns
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|int
-name|dpatterns
+name|fpattern_sz
 decl_stmt|,
 name|dpattern_sz
 decl_stmt|;
@@ -830,6 +837,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options

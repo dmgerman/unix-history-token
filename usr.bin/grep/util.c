@@ -1595,6 +1595,8 @@ operator|||
 name|qflag
 operator|||
 name|lflag
+operator|||
+name|Lflag
 operator|)
 condition|)
 break|break;

@@ -106,6 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xmalloc_current
 decl_stmt|;
@@ -119,6 +120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xmalloc_current_blocks
 decl_stmt|;
