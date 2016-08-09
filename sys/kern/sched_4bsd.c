@@ -4843,6 +4843,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|td
+operator|->
+name|td_lastcpu
+operator|!=
+name|NOCPU
+operator|&&
 name|THREAD_CAN_SCHED
 argument_list|(
 name|td
