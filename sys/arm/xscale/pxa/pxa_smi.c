@@ -1515,13 +1515,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ivars
-operator|==
-name|NULL
-condition|)
-return|return;
 name|child
 operator|=
 name|device_add_child
