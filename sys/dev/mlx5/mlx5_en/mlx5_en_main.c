@@ -15554,6 +15554,20 @@ name|gone
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Clear the device description to avoid use after free, 	 * because the bsddev is not destroyed when this module is 	 * unloaded: 	 */
+name|device_set_desc
+argument_list|(
+name|mdev
+operator|->
+name|pdev
+operator|->
+name|dev
+operator|.
+name|bsddev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* XXX wait a bit to allow IOCTL handlers to complete */
 name|pause
 argument_list|(
