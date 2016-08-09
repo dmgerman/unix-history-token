@@ -10312,29 +10312,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mmd
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"failed to allocate memory for "
-literal|"ivars of PORT_A\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|mmd
 operator|->
 name|port
@@ -10473,29 +10450,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mmd
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"failed to allocate memory for "
-literal|"ivars of PORT_B\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|mmd
 operator|->
 name|port
