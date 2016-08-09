@@ -4079,7 +4079,7 @@ name|sc_stats_tlu_oe_non_fatal
 argument_list|,
 literal|"DLU/TLU other event non-fatal errors summary"
 argument_list|)
-operator|,
+expr_stmt|;
 name|FIRE_SYSCTL_ADD_UINT
 argument_list|(
 literal|"tlu_oe_rx_err"
@@ -4091,7 +4091,7 @@ name|sc_stats_tlu_oe_rx_err
 argument_list|,
 literal|"DLU/TLU receive other event errors"
 argument_list|)
-operator|,
+expr_stmt|;
 name|FIRE_SYSCTL_ADD_UINT
 argument_list|(
 literal|"tlu_oe_tx_err"
@@ -4103,7 +4103,7 @@ name|sc_stats_tlu_oe_tx_err
 argument_list|,
 literal|"DLU/TLU transmit other event errors"
 argument_list|)
-operator|,
+expr_stmt|;
 name|FIRE_SYSCTL_ADD_UINT
 argument_list|(
 literal|"ubc_dmardue"
