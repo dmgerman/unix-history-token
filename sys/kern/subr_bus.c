@@ -6972,8 +6972,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|device
+operator|*
+name|dev
 argument_list|)
 argument_list|,
 name|M_BUS
@@ -18899,9 +18899,7 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 name|struct

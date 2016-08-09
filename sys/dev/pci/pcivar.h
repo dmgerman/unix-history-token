@@ -543,9 +543,7 @@ typedef|typedef
 struct|struct
 name|pcicfg
 block|{
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 comment|/* device which owns this */

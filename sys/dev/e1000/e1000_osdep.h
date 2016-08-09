@@ -588,9 +588,7 @@ decl_stmt|;
 name|bus_space_handle_t
 name|flash_bus_space_handle
 decl_stmt|;
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 block|}

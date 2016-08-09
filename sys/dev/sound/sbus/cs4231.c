@@ -286,9 +286,7 @@ begin_struct
 struct|struct
 name|cs4231_softc
 block|{
-name|struct
-name|device
-modifier|*
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|int

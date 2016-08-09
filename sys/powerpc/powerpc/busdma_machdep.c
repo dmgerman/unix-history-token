@@ -5765,9 +5765,7 @@ parameter_list|(
 name|bus_dma_tag_t
 name|tag
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|iommu
 parameter_list|,
 name|void

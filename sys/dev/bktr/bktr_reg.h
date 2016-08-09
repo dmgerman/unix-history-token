@@ -16,7 +16,7 @@ file|<machine/bus.h>
 end_include
 
 begin_comment
-comment|/* struct device */
+comment|/* device_t */
 end_comment
 
 begin_include

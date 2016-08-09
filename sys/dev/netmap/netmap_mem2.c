@@ -828,9 +828,7 @@ name|struct
 name|netmap_mem_d
 modifier|*
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1982,9 +1980,7 @@ name|netmap_mem_d
 modifier|*
 name|nmd
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
