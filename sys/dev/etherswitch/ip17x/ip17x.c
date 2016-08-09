@@ -321,7 +321,7 @@ name|phy_id1
 argument_list|,
 name|phy_id2
 argument_list|)
-operator|,
+expr_stmt|;
 name|model
 operator|=
 name|MII_MODEL

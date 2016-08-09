@@ -587,7 +587,7 @@ operator|->
 name|regs_res_id
 operator|=
 name|rid
-operator|,
+expr_stmt|;
 name|ahc
 operator|->
 name|platform_data

@@ -59009,7 +59009,7 @@ index|]
 operator|.
 name|config
 argument_list|)
-operator|,
+expr_stmt|;
 comment|/* get the link params */
 name|sc
 operator|->
