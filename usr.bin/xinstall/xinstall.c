@@ -2667,11 +2667,6 @@ argument_list|,
 name|to_name
 argument_list|)
 expr_stmt|;
-name|unlink
-argument_list|(
-name|to_name
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|rename
@@ -2882,11 +2877,6 @@ name|st_flags
 operator|&
 operator|~
 name|NOCHANGEBITS
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|to_name
 argument_list|)
 expr_stmt|;
 if|if
