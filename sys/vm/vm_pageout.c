@@ -1090,7 +1090,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it wirte busies and initializes the hold count  * to one as safety precautions.  */
+comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it write busies and initializes the hold count  * to one as safety precautions.  */
 end_comment
 
 begin_function
