@@ -3601,7 +3601,7 @@ block|,
 operator|.
 name|nargs
 operator|=
-literal|2
+literal|1
 block|,
 operator|.
 name|args
@@ -3611,12 +3611,6 @@ block|{
 name|Name
 block|,
 literal|0
-block|}
-block|,
-block|{
-name|Octal
-block|,
-literal|1
 block|}
 block|}
 block|}
