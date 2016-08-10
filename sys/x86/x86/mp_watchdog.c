@@ -237,7 +237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This callout resets a timer until the watchdog kicks in.  It acquires some  * critical locks to make sure things haven't gotten wedged with hose locks  * held.  */
+comment|/*  * This callout resets a timer until the watchdog kicks in.  It acquires some  * critical locks to make sure things haven't gotten wedged with those locks  * held.  */
 end_comment
 
 begin_function
