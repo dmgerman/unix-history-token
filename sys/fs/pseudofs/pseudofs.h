@@ -610,7 +610,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * pfs_info: describes a pseudofs instance  *  * The pi_mutex is only used to avoid using the global subr_unit lock for  * unrhdr.  The rest of struct pfs_info is only modified while Giant is  * held (during vfs_init() and vfs_uninit()).  */
+comment|/*  * pfs_info: describes a pseudofs instance  *  * The pi_mutex is only used to avoid using the global subr_unit lock  * for unrhdr.  The rest of struct pfs_info is only modified during  * vfs_init() and vfs_uninit() of the consumer filesystem.  */
 end_comment
 
 begin_struct
@@ -629,7 +629,7 @@ decl_stmt|;
 name|pfs_init_t
 name|pi_uninit
 decl_stmt|;
-comment|/* members below this line are initialized at run time*/
+comment|/* members below this line are initialized at run time */
 name|struct
 name|pfs_node
 modifier|*
@@ -1018,7 +1018,7 @@ parameter_list|,
 name|jflag
 parameter_list|)
 define|\ 									\
-value|static struct pfs_info name##_info = {					\ 	#name,								\ 	name##_init,							\ 	name##_uninit,							\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp) {					\         if (jflag&& !prison_allow(curthread->td_ucred, jflag))		\                 return (EPERM);						\ 	return pfs_mount(&name##_info, mp);				\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\ 	return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\ 	return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	.vfs_cmount =		pfs_cmount,				\ 	.vfs_init =		_##name##_init,				\ 	.vfs_mount =		_##name##_mount,			\ 	.vfs_root =		pfs_root,				\ 	.vfs_statfs =		pfs_statfs,				\ 	.vfs_uninit =		_##name##_uninit,			\ 	.vfs_unmount =		pfs_unmount,				\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC | (jflag ? VFCF_JAIL : 0));	\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
+value|static struct pfs_info name##_info = {					\ 	#name,								\ 	name##_init,							\ 	name##_uninit,							\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp) {					\         if (jflag&& !prison_allow(curthread->td_ucred, jflag))		\                 return (EPERM);						\ 	return (pfs_mount(&name##_info, mp));				\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\ 	return (pfs_init(&name##_info, vfc));				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\ 	return (pfs_uninit(&name##_info, vfc));				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	.vfs_cmount =		pfs_cmount,				\ 	.vfs_init =		_##name##_init,				\ 	.vfs_mount =		_##name##_mount,			\ 	.vfs_root =		pfs_root,				\ 	.vfs_statfs =		pfs_statfs,				\ 	.vfs_uninit =		_##name##_uninit,			\ 	.vfs_unmount =		pfs_unmount,				\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC | (jflag ? VFCF_JAIL : 0));	\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
 end_define
 
 begin_endif

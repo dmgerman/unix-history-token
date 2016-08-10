@@ -1652,20 +1652,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|pfs_fileno_init
 argument_list|(
 name|pi
 argument_list|)
 expr_stmt|;
-comment|/* set up the root diretory */
+comment|/* set up the root directory */
 name|root
 operator|=
 name|pfs_alloc_node
@@ -1772,14 +1764,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|pfs_destroy
 argument_list|(
 name|pi
