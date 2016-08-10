@@ -30,70 +30,23 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- * $FreeBSD$
  */
 
-/dts-v1/;
+#include <machine/asm.h>
+__FBSDID("$FreeBSD$");
 
-/ {
-	model = "UC Berkeley Spike Simulator RV64I";
-	compatible = "riscv,rv64i";
-	#address-cells = <1>;
-	#size-cells = <1>;
-	#interrupt-cells = <1>;
-
-	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		cpu@0 {
-			device_type = "cpu";
-			compatible = "riscv,rv64i";
-			reg = <0x40002000>;
-		};
-	};
-
-	aliases {
-		console0 = &console0;
-	};
-
-	memory {
-		device_type = "memory";
-		reg = <0x0 0x10000000>; /* 256MB at 0x0 */
-	};
-
-	soc {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		#interrupt-cells = <1>;
-
-		compatible = "simple-bus";
-		ranges;
-
-		pic0: pic@0 {
-			compatible = "riscv,pic";
-			interrupt-controller;
-		};
-
-		timer0: timer@0 {
-			compatible = "riscv,timer";
-			interrupts = < 1 >;
-			interrupt-parent = < &pic0 >;
-			clock-frequency = < 1000000 >;
-		};
-
-		console0: console@0 {
-			compatible = "riscv,console";
-			status = "okay";
-			interrupts = < 1 >;
-			interrupt-parent = < &pic0 >;
-		};
-	};
-
-	chosen {
-		bootargs = "-v";
-		stdin = "console0";
-		stdout = "console0";
-	};
-};
+.globl sbi_hart_id; sbi_hart_id = -2048
+.globl sbi_num_harts; sbi_num_harts = -2032
+.globl sbi_query_memory; sbi_query_memory = -2016
+.globl sbi_console_putchar; sbi_console_putchar = -2000
+.globl sbi_console_getchar; sbi_console_getchar = -1984
+.globl sbi_send_ipi; sbi_send_ipi = -1952
+.globl sbi_clear_ipi; sbi_clear_ipi = -1936
+.globl sbi_timebase; sbi_timebase = -1920
+.globl sbi_shutdown; sbi_shutdown = -1904
+.globl sbi_set_timer; sbi_set_timer = -1888
+.globl sbi_mask_interrupt; sbi_mask_interrupt = -1872
+.globl sbi_unmask_interrupt; sbi_unmask_interrupt = -1856
+.globl sbi_remote_sfence_vm; sbi_remote_sfence_vm = -1840
+.globl sbi_remote_sfence_vm_range; sbi_remote_sfence_vm_range = -1824
+.globl sbi_remote_fence_i; sbi_remote_fence_i = -1808

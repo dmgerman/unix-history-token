@@ -121,54 +121,6 @@ block|)
 function|;
 end_function
 
-begin_function
-unit|}  static
-name|__inline
-name|register_t
-name|machine_command
-parameter_list|(
-name|uint64_t
-name|cmd
-parameter_list|,
-name|uint64_t
-name|arg
-parameter_list|)
-block|{
-name|uint64_t
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"mv	t5, %2\n"
-literal|"mv	t6, %1\n"
-literal|"ecall\n"
-literal|"mv	%0, t6"
-operator|:
-literal|"=&r"
-operator|(
-name|res
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|arg
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|cmd
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
 begin_define
 unit|}
 define|#

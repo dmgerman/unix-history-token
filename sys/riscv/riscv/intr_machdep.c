@@ -83,6 +83,12 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sbi.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -963,13 +969,11 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|machine_command
+name|sbi_send_ipi
 argument_list|(
-name|ECALL_SEND_IPI
-argument_list|,
 name|pc
 operator|->
-name|pc_reg
+name|pc_cpuid
 argument_list|)
 expr_stmt|;
 name|CTR1

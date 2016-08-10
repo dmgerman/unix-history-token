@@ -131,6 +131,12 @@ directive|include
 file|<machine/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sbi.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -972,13 +978,8 @@ decl_stmt|;
 name|int
 name|bit
 decl_stmt|;
-comment|/* 	 * We have shared interrupt line for both IPI and HTIF, 	 * so we don't really need to clear pending bit here 	 * as it will be cleared later in htif_intr. 	 * But lets assume HTIF is optional part, so do clear 	 * pending bit if there is no new entires in htif_ring. 	 */
-name|machine_command
-argument_list|(
-name|ECALL_CLEAR_IPI
-argument_list|,
-literal|0
-argument_list|)
+name|sbi_clear_ipi
+argument_list|()
 expr_stmt|;
 name|cpu
 operator|=
@@ -1398,12 +1399,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pcpup
-operator|->
-name|pc_reg
-operator|=
-name|target_cpu
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1422,12 +1417,6 @@ expr|struct
 name|pcpu
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|pcpup
-operator|->
-name|pc_reg
-operator|=
-name|target_cpu
 expr_stmt|;
 name|dpcpu
 index|[

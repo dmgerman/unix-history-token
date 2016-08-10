@@ -113,6 +113,12 @@ directive|include
 file|<machine/frame.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sbi.h>
+end_include
+
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -392,16 +398,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"cpu_reset"
-argument_list|)
+name|sbi_shutdown
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
 literal|1
 condition|)
-asm|__asm volatile("wfi" ::: "memory");
+empty_stmt|;
 block|}
 end_function
 
