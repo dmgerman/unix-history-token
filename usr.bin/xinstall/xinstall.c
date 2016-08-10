@@ -854,6 +854,10 @@ name|char
 modifier|*
 name|to_name
 decl_stmt|;
+name|fset
+operator|=
+literal|0
+expr_stmt|;
 name|iflags
 operator|=
 literal|0
