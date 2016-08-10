@@ -4573,7 +4573,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rename
+name|unlink
+argument_list|(
+name|backup
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tempfile
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"unlink: %s"
+argument_list|,
+name|backup
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|link
 argument_list|(
 name|to_name
 argument_list|,
@@ -4600,7 +4637,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"rename: %s to %s"
+literal|"link: %s to %s"
 argument_list|,
 name|to_name
 argument_list|,
