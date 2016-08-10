@@ -9445,7 +9445,7 @@ operator|==
 name|tvp
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"nfs_rename: fvp == tvp (can't happen)\n"
 argument_list|)
@@ -12491,7 +12491,7 @@ name|uio_resid
 operator|>
 literal|0
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"EEK! readdirrpc resid> 0\n"
 argument_list|)
@@ -12829,7 +12829,7 @@ name|uio_resid
 operator|>
 literal|0
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"EEK! readdirplusrpc resid> 0\n"
 argument_list|)
@@ -16671,7 +16671,7 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"\tfileid %ld fsid 0x%x"
 argument_list|,

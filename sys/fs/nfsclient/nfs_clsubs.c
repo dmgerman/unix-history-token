@@ -507,55 +507,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|ncl_printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vprintf
-argument_list|(
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -681,18 +632,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* must be before mtx_lock() */
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
@@ -725,9 +664,9 @@ name|nfs_acdebug
 operator|>
 literal|1
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getattrcache: initial timeo = %d\n"
+literal|"ncl_getattrcache: initial timeo = %d\n"
 argument_list|,
 name|timeo
 argument_list|)
@@ -830,7 +769,7 @@ name|nfs_acdebug
 operator|>
 literal|2
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"acregmin %d; acregmax %d; acdirmin %d; acdirmax %d\n"
 argument_list|,
@@ -855,9 +794,9 @@ if|if
 condition|(
 name|nfs_acdebug
 condition|)
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getattrcache: age = %d; final timeo = %d\n"
+literal|"ncl_getattrcache: age = %d; final timeo = %d\n"
 argument_list|,
 operator|(
 name|time_second
@@ -910,18 +849,6 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|KDTRACE_NFS_ATTRCACHE_GET_MISS
 argument_list|(
 name|vp
@@ -1097,18 +1024,6 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NFS_ACDEBUG
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* ncl_printf() */
-endif|#
-directive|endif
 name|KDTRACE_NFS_ATTRCACHE_GET_HIT
 argument_list|(
 name|vp

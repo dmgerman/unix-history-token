@@ -411,9 +411,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: called with non-merged cache vnode??\n"
+literal|"ncl_getpages: called with non-merged cache vnode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -465,9 +465,9 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: called on non-cacheable vnode??\n"
+literal|"ncl_getpages: called on non-cacheable vnode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -737,9 +737,9 @@ name|count
 operator|)
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: error %d\n"
+literal|"ncl_getpages: error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1196,9 +1196,9 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"ncl_putpages: called on noncache-able vnode??\n"
+literal|"ncl_putpages: called on noncache-able vnode\n"
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3295,7 +3295,7 @@ name|uio_offset
 expr_stmt|;
 break|break;
 default|default:
-name|ncl_printf
+name|printf
 argument_list|(
 literal|" ncl_bioread: type %x unexpected\n"
 argument_list|,
@@ -5479,7 +5479,7 @@ operator|>
 name|bcount
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"NFS append race @%lx:%d\n"
 argument_list|,
@@ -7832,7 +7832,7 @@ name|B_INVAL
 expr_stmt|;
 break|break;
 default|default:
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"ncl_doio:  type %x unexpected\n"
 argument_list|,
