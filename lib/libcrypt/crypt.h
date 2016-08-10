@@ -26,8 +26,7 @@ value|16
 end_define
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_des
 parameter_list|(
 specifier|const
@@ -39,13 +38,16 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_md5
 parameter_list|(
 specifier|const
@@ -57,13 +59,16 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_nthash
 parameter_list|(
 specifier|const
@@ -75,13 +80,16 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_blowfish
 parameter_list|(
 specifier|const
@@ -93,13 +101,16 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_sha256
 parameter_list|(
 specifier|const
@@ -111,13 +122,16 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|crypt_sha512
 parameter_list|(
 specifier|const
@@ -129,6 +143,10 @@ specifier|const
 name|char
 modifier|*
 name|salt
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -167,10 +185,6 @@ name|B0
 parameter_list|,
 name|int
 name|n
-parameter_list|,
-name|int
-modifier|*
-name|buflen
 parameter_list|,
 name|char
 modifier|*
