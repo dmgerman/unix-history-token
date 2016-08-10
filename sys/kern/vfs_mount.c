@@ -2388,11 +2388,11 @@ argument|&mp->mnt_nvnodelist
 argument_list|,
 argument|v_nmntvnodes
 argument_list|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|""
-argument_list|,
 name|vp
+argument_list|,
+literal|"dangling vnode "
 argument_list|)
 expr_stmt|;
 name|panic

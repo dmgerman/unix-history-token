@@ -3335,18 +3335,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_define
-define|#
-directive|define
-name|vprint
-parameter_list|(
-name|label
-parameter_list|,
-name|vp
-parameter_list|)
-value|vn_printf((vp), "%s\n", (label))
-end_define
-
 begin_function_decl
 name|int
 name|vrecycle

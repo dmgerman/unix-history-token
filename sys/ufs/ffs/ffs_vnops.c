@@ -1382,11 +1382,11 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"ffs_fsync: dirty"
-argument_list|,
 name|vp
+argument_list|,
+literal|"ffs_fsync: dirty "
 argument_list|)
 expr_stmt|;
 endif|#
