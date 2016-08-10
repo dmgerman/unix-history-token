@@ -2654,6 +2654,19 @@ operator|~
 name|NOCHANGEBITS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"install: link %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|to_name
@@ -2685,6 +2698,20 @@ operator|)
 return|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"install: link %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|link
@@ -2695,6 +2722,7 @@ name|to_name
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -2863,6 +2891,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"install: symlink %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|rename
 argument_list|(
 name|tmpl
@@ -2896,6 +2937,19 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"install: symlink %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|symlink
