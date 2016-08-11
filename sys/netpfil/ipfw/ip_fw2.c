@@ -10607,7 +10607,7 @@ name|cmd
 operator|->
 name|arg1
 operator|==
-literal|0
+name|IP_FW_NAT44_GLOBAL
 condition|)
 block|{
 name|retval
