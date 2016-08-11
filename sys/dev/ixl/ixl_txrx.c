@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/* **	IXL driver TX/RX Routines: **	    This was seperated to allow usage by ** 	    both the BASE and the VF drivers. */
+comment|/* **	IXL driver TX/RX Routines: **	    This was seperated to allow usage by ** 	    both the PF and VF drivers. */
 end_comment
 
 begin_ifndef
@@ -156,7 +156,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ixl_rx_discard
 parameter_list|(
@@ -171,7 +171,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ixl_rx_input
 parameter_list|(
@@ -188,6 +188,60 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|u8
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|bool
+name|ixl_tso_detect_sparse
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ixl_tx_setup_offload
+parameter_list|(
+name|struct
+name|ixl_queue
+modifier|*
+name|que
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|mp
+parameter_list|,
+name|u32
+modifier|*
+name|cmd
+parameter_list|,
+name|u32
+modifier|*
+name|off
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|u32
+name|ixl_get_tx_head
+parameter_list|(
+name|struct
+name|ixl_queue
+modifier|*
+name|que
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -212,6 +266,72 @@ end_endif
 begin_comment
 comment|/* DEV_NETMAP */
 end_comment
+
+begin_comment
+comment|/*  * @key key is saved into this parameter  */
+end_comment
+
+begin_function
+name|void
+name|ixl_get_default_rss_key
+parameter_list|(
+name|u32
+modifier|*
+name|key
+parameter_list|)
+block|{
+name|MPASS
+argument_list|(
+name|key
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|u32
+name|rss_seed
+index|[
+name|IXL_RSS_KEY_SIZE_REG
+index|]
+init|=
+block|{
+literal|0x41b01687
+block|,
+literal|0x183cfd8c
+block|,
+literal|0xce880440
+block|,
+literal|0x580cbc3c
+block|,
+literal|0x35897377
+block|,
+literal|0x328b25e1
+block|,
+literal|0x4fa98922
+block|,
+literal|0xb7d90c14
+block|,
+literal|0xd5bad70d
+block|,
+literal|0xcd15a2c1
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|,
+literal|0x0
+block|}
+decl_stmt|;
+name|bcopy
+argument_list|(
+name|rss_seed
+argument_list|,
+name|key
+argument_list|,
+name|IXL_RSS_KEY_SIZE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* ** Multiqueue Transmit driver */
@@ -333,32 +453,6 @@ operator|%
 name|vsi
 operator|->
 name|num_queues
-expr_stmt|;
-comment|/* 	** This may not be perfect, but until something 	** better comes along it will keep from scheduling 	** on stalled queues. 	*/
-if|if
-condition|(
-operator|(
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|&
-name|vsi
-operator|->
-name|active_queues
-operator|)
-operator|==
-literal|0
-condition|)
-name|i
-operator|=
-name|ffsl
-argument_list|(
-name|vsi
-operator|->
-name|active_queues
-argument_list|)
 expr_stmt|;
 name|que
 operator|=
@@ -1004,8 +1098,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|nsegs
-decl_stmt|,
-name|maxsegs
 decl_stmt|;
 name|int
 name|first
@@ -1076,10 +1168,6 @@ name|txr
 operator|->
 name|tx_tag
 expr_stmt|;
-name|maxsegs
-operator|=
-name|IXL_MAX_TX_SEGS
-expr_stmt|;
 if|if
 condition|(
 name|m_head
@@ -1097,10 +1185,6 @@ operator|=
 name|txr
 operator|->
 name|tso_tag
-expr_stmt|;
-name|maxsegs
-operator|=
-name|IXL_MAX_TSO_SEGS
 expr_stmt|;
 if|if
 condition|(
@@ -1255,7 +1339,7 @@ condition|)
 block|{
 name|que
 operator|->
-name|tx_dma_setup
+name|tx_dmamap_failed
 operator|++
 expr_stmt|;
 return|return
@@ -1274,7 +1358,7 @@ condition|)
 block|{
 name|que
 operator|->
-name|tx_dma_setup
+name|tx_dmamap_failed
 operator|++
 expr_stmt|;
 name|m_freem
@@ -1305,7 +1389,7 @@ condition|)
 block|{
 name|que
 operator|->
-name|tx_dma_setup
+name|tx_dmamap_failed
 operator|++
 expr_stmt|;
 return|return
@@ -1324,7 +1408,7 @@ condition|)
 block|{
 name|que
 operator|->
-name|tx_dma_setup
+name|tx_dmamap_failed
 operator|++
 expr_stmt|;
 name|m_freem
@@ -3591,6 +3675,7 @@ name|cmd
 operator|=
 name|I40E_TX_CTX_DESC_TSO
 expr_stmt|;
+comment|/* ERJ: this must not be less than 64 */
 name|mss
 operator|=
 name|mp
@@ -6324,7 +6409,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ixl_rx_input
 parameter_list|(
@@ -6454,7 +6539,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|ixl_rx_discard
 parameter_list|(
@@ -6894,8 +6979,6 @@ modifier|*
 name|mp
 decl_stmt|;
 name|u32
-name|rsc
-decl_stmt|,
 name|status
 decl_stmt|,
 name|error
@@ -7054,10 +7137,6 @@ expr_stmt|;
 name|nbuf
 operator|=
 name|NULL
-expr_stmt|;
-name|rsc
-operator|=
-literal|0
 expr_stmt|;
 name|cur
 operator|->
@@ -7456,26 +7535,6 @@ name|mp
 operator|->
 name|m_len
 expr_stmt|;
-if|if
-condition|(
-name|vtag
-condition|)
-block|{
-name|sendmp
-operator|->
-name|m_pkthdr
-operator|.
-name|ether_vtag
-operator|=
-name|vtag
-expr_stmt|;
-name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_VLANTAG
-expr_stmt|;
-block|}
 block|}
 comment|/* Pass the head pointer on */
 if|if
@@ -7554,6 +7613,27 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+comment|/* Set VLAN tag (field only valid in eop desc) */
+if|if
+condition|(
+name|vtag
+condition|)
+block|{
+name|sendmp
+operator|->
+name|m_pkthdr
+operator|.
+name|ether_vtag
+operator|=
+name|vtag
+expr_stmt|;
+name|sendmp
+operator|->
+name|m_flags
+operator||=
+name|M_VLANTAG
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

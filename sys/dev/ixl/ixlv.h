@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|IXLV_FLAG_AQ_ENABLE_QUEUES
-value|(u32)(1)
+value|(u32)(1<< 0)
 end_define
 
 begin_define
@@ -141,6 +141,34 @@ name|IXLV_FLAG_AQ_GET_STATS
 value|(u32)(1<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXLV_FLAG_AQ_CONFIG_RSS_KEY
+value|(u32)(1<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXLV_FLAG_AQ_SET_RSS_HENA
+value|(u32)(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXLV_FLAG_AQ_GET_RSS_HENA_CAPS
+value|(u32)(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXLV_FLAG_AQ_CONFIG_RSS_LUT
+value|(u32)(1<< 14)
+end_define
+
 begin_comment
 comment|/* printf %b arg */
 end_comment
@@ -153,15 +181,12 @@ define|\
 value|"\20\1ENABLE_QUEUES\2DISABLE_QUEUES\3ADD_MAC_FILTER" \     "\4ADD_VLAN_FILTER\5DEL_MAC_FILTER\6DEL_VLAN_FILTER" \     "\7CONFIGURE_QUEUES\10MAP_VECTORS\11HANDLE_RESET" \     "\12CONFIGURE_PROMISC\13GET_STATS"
 end_define
 
-begin_comment
-comment|/* Hack for compatibility with 1.0.x linux pf driver */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|I40E_VIRTCHNL_OP_EVENT
-value|17
+name|IXLV_PRINTF_VF_OFFLOAD_FLAGS
+define|\
+value|"\20\1I40E_VIRTCHNL_VF_OFFLOAD_L2" \     "\2I40E_VIRTCHNL_VF_OFFLOAD_IWARP" \     "\3I40E_VIRTCHNL_VF_OFFLOAD_FCOE" \     "\4I40E_VIRTCHNL_VF_OFFLOAD_RSS_AQ" \     "\5I40E_VIRTCHNL_VF_OFFLOAD_RSS_REG" \     "\6I40E_VIRTCHNL_VF_OFFLOAD_WB_ON_ITR" \     "\21I40E_VIRTCHNL_VF_OFFLOAD_VLAN" \     "\22I40E_VIRTCHNL_VF_OFFLOAD_RX_POLLING" \     "\23I40E_VIRTCHNL_VF_OFFLOAD_RSS_PCTYPE_V2" \     "\24I40E_VIRTCHNL_VF_OFFLOAD_RSS_PF"
 end_define
 
 begin_comment
@@ -197,9 +222,13 @@ block|,
 name|IXLV_INIT_COMPLETE
 block|,
 name|IXLV_RUNNING
-block|,	 }
+block|, }
 enum|;
 end_enum
+
+begin_comment
+comment|/* Structs */
+end_comment
 
 begin_struct
 struct|struct
@@ -298,6 +327,9 @@ decl_stmt|;
 name|enum
 name|ixlv_state_t
 name|init_state
+decl_stmt|;
+name|int
+name|init_in_progress
 decl_stmt|;
 comment|/* 	 * Interrupt resources 	 */
 name|void
@@ -422,6 +454,22 @@ decl_stmt|;
 name|struct
 name|ixl_vc_cmd
 name|del_multi_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|config_rss_key_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|get_rss_hena_caps_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|set_rss_hena_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|config_rss_lut_cmd
 decl_stmt|;
 comment|/* Virtual comm channel */
 name|struct
@@ -790,6 +838,51 @@ end_function_decl
 begin_function_decl
 name|void
 name|ixlv_update_link_status
+parameter_list|(
+name|struct
+name|ixlv_sc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixlv_get_default_rss_key
+parameter_list|(
+name|u32
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixlv_config_rss_key
+parameter_list|(
+name|struct
+name|ixlv_sc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixlv_set_rss_hena
+parameter_list|(
+name|struct
+name|ixlv_sc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixlv_config_rss_lut
 parameter_list|(
 name|struct
 name|ixlv_sc
