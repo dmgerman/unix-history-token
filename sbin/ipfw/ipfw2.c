@@ -7819,11 +7819,31 @@ break|break;
 case|case
 name|O_SETFIB
 case|:
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+name|IP_FW_TARG
+condition|)
 name|bprint_uint_arg
 argument_list|(
 name|bp
 argument_list|,
 literal|"setfib "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
+argument_list|)
+expr_stmt|;
+else|else
+name|bprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|"setfib %u"
 argument_list|,
 name|cmd
 operator|->
@@ -20734,7 +20754,8 @@ operator|=
 name|IP_FW_TARG
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|isalpha
@@ -20793,21 +20814,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Add high-order bit to DSCP to make room for tablearg */
-if|if
-condition|(
-name|action
-operator|->
-name|arg1
-operator|!=
-name|IP_FW_TARG
-condition|)
+comment|/* 			 * Add high-order bit to DSCP to make room 			 * for tablearg 			 */
 name|action
 operator|->
 name|arg1
 operator||=
 literal|0x8000
 expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
