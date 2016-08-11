@@ -2866,21 +2866,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|textvp_fullpath
-parameter_list|(
-name|p
-parameter_list|,
-name|rb
-parameter_list|,
-name|rfb
-parameter_list|)
-define|\
-value|vn_fullpath(FIRST_THREAD_IN_PROC(p), (p)->p_textvp, rb, rfb)
-end_define
-
 begin_function_decl
 name|int
 name|vn_fullpath
