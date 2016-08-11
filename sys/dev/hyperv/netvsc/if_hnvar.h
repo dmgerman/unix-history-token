@@ -75,6 +75,8 @@ specifier|const
 name|struct
 name|nvsp_msg_
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef
@@ -224,6 +226,9 @@ name|struct
 name|nvsp_msg_
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 function_decl|;
 end_function_decl

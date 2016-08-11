@@ -414,6 +414,9 @@ name|struct
 name|nvsp_msg_
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -443,6 +446,9 @@ name|struct
 name|nvsp_msg_
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5234,6 +5240,10 @@ name|nvsp_msg_
 modifier|*
 name|msg
 name|__unused
+parameter_list|,
+name|int
+name|dlen
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -5282,6 +5292,10 @@ name|struct
 name|nvsp_msg_
 modifier|*
 name|msg
+name|__unused
+parameter_list|,
+name|int
+name|dlen
 name|__unused
 parameter_list|)
 block|{
