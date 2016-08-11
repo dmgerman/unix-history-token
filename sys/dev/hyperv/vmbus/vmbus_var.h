@@ -234,9 +234,9 @@ modifier|*
 name|vmbus_chmap
 decl_stmt|;
 name|struct
-name|vmbus_msghc_ctx
+name|vmbus_xact_ctx
 modifier|*
-name|vmbus_msg_hc
+name|vmbus_xc
 decl_stmt|;
 name|struct
 name|vmbus_pcpu_data

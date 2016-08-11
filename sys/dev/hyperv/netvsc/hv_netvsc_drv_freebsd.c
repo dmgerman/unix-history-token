@@ -2654,6 +2654,8 @@ argument_list|,
 name|HN_XACT_REQ_SIZE
 argument_list|,
 name|HN_XACT_RESP_SIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
