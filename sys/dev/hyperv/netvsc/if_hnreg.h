@@ -86,6 +86,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_TYPE_RXBUF_DISCONN
+value|103
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_TYPE_CHIM_CONN
 value|104
 end_define
@@ -371,6 +378,47 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/* No response */
+end_comment
+
+begin_struct
+struct|struct
+name|hn_nvs_rxbuf_disconn
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_RXBUF_DISCONN */
+name|uint16_t
+name|nvs_sig
+decl_stmt|;
+comment|/* HN_NVS_RXBUF_SIG */
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|26
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_rxbuf_disconn
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
