@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_backtrace.c,v 1.15 2014/05/01 03:46:11 joerg Exp $	*/
+comment|/*	$NetBSD: t_backtrace.c,v 1.16 2014/11/04 00:20:19 justin Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_backtrace.c,v 1.15 2014/05/01 03:46:11 joerg Exp $"
+literal|"$NetBSD: t_backtrace.c,v 1.16 2014/11/04 00:20:19 justin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_dm.c,v 1.1 2010/10/06 11:24:55 haad Exp $	*/
+comment|/*	$NetBSD: h_dm.c,v 1.2 2016/01/23 21:18:27 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -265,6 +265,11 @@ argument_list|(
 name|dict_out
 argument_list|)
 expr_stmt|;
+name|__USE
+argument_list|(
+name|xml
+argument_list|)
+expr_stmt|;
 name|rump_sys_close
 argument_list|(
 name|fd
@@ -412,6 +417,11 @@ operator|=
 name|prop_dictionary_externalize
 argument_list|(
 name|dict_out
+argument_list|)
+expr_stmt|;
+name|__USE
+argument_list|(
+name|xml
 argument_list|)
 expr_stmt|;
 name|rump_sys_close

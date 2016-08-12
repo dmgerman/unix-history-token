@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_floatunditf.c,v 1.5 2014/02/02 08:16:22 martin Exp $ */
+comment|/* $NetBSD: t_floatunditf.c,v 1.6 2014/11/04 00:20:19 justin Exp $ */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
 end_include
 
 begin_include

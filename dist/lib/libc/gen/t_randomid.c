@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_randomid.c,v 1.3 2011/07/07 09:49:59 jruoho Exp $ */
+comment|/* $NetBSD: t_randomid.c,v 1.5 2015/03/07 09:59:15 isaki Exp $ */
 end_comment
 
 begin_comment
@@ -57,7 +57,7 @@ value|30000
 end_define
 
 begin_decl_stmt
-name|uint64_t
+name|uint32_t
 name|last
 index|[
 literal|65536
@@ -113,7 +113,7 @@ name|ctx
 init|=
 name|NULL
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|lowest
 decl_stmt|,
 name|n
@@ -149,7 +149,7 @@ argument_list|)
 expr_stmt|;
 name|lowest
 operator|=
-name|UINT64_MAX
+name|UINT32_MAX
 expr_stmt|;
 for|for
 control|(
@@ -159,7 +159,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|1000000
+literal|100000
 condition|;
 name|n
 operator|++
@@ -202,19 +202,19 @@ if|if
 condition|(
 name|lowest
 operator|!=
-name|UINT64_MAX
+name|UINT32_MAX
 condition|)
 name|printf
 argument_list|(
 literal|"id %5d: last call at %9"
-name|PRIu64
+name|PRIu32
 literal|", current call %9"
-name|PRIu64
+name|PRIu32
 literal|" (diff %5"
-name|PRIu64
+name|PRIu32
 literal|"), "
 literal|"lowest %"
-name|PRIu64
+name|PRIu32
 literal|"\n"
 argument_list|,
 name|id
@@ -238,7 +238,7 @@ operator|>=
 name|PERIOD
 argument_list|,
 literal|"diff (%"
-name|PRIu64
+name|PRIu32
 literal|") less than minimum "
 literal|"period (%d)"
 argument_list|,

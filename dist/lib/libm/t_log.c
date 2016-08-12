@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_log.c,v 1.11 2014/03/03 10:39:08 martin Exp $ */
+comment|/* $NetBSD: t_log.c,v 1.13 2015/02/09 19:39:48 martin Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_log.c,v 1.11 2014/03/03 10:39:08 martin Exp $"
+literal|"$NetBSD: t_log.c,v 1.13 2015/02/09 19:39:48 martin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
 end_include
 
 begin_include
@@ -792,19 +786,6 @@ literal|1.0L
 operator|/
 literal|0.0L
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-alpha/46301"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_CHECK
 argument_list|(
 name|log10f
@@ -2619,19 +2600,6 @@ literal|1.0L
 operator|/
 literal|0.0L
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-alpha/46301"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_CHECK
 argument_list|(
 name|log2f
@@ -3628,19 +3596,6 @@ literal|1.0L
 operator|/
 literal|0.0L
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-alpha/46301"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_CHECK
 argument_list|(
 name|logf

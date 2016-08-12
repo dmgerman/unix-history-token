@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_spawn.c,v 1.1 2012/02/13 21:03:08 martin Exp $ */
+comment|/* $NetBSD: t_spawn.c,v 1.2 2014/10/18 08:33:30 snj Exp $ */
 end_comment
 
 begin_comment
@@ -612,7 +612,7 @@ name|tc
 argument_list|,
 literal|"descr"
 argument_list|,
-literal|"posix_spawn a child and get it's return code"
+literal|"posix_spawn a child and get its return code"
 argument_list|)
 expr_stmt|;
 block|}
