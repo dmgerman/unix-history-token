@@ -608,6 +608,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pmap_fault
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
