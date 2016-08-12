@@ -37,6 +37,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_CHIM_SIG
+value|0xface
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_STATUS_OK
 value|1
 end_define
@@ -74,6 +81,20 @@ define|#
 directive|define
 name|HN_NVS_TYPE_RXBUF_CONNRESP
 value|102
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_CHIM_CONN
+value|104
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_CHIM_CONNRESP
+value|105
 end_define
 
 begin_define
@@ -346,6 +367,68 @@ name|hn_nvs_rxbuf_sect
 name|nvs_sect
 index|[]
 decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hn_nvs_chim_conn
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_CHIM_CONN */
+name|uint32_t
+name|nvs_gpadl
+decl_stmt|;
+comment|/* chimney buf vmbus GPADL */
+name|uint16_t
+name|nvs_sig
+decl_stmt|;
+comment|/* NDIS_NVS_CHIM_SIG */
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|22
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_chim_conn
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|hn_nvs_chim_connresp
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_CHIM_CONNRESP */
+name|uint32_t
+name|nvs_status
+decl_stmt|;
+comment|/* HN_NVS_STATUS_ */
+name|uint32_t
+name|nvs_sectsz
+decl_stmt|;
+comment|/* section size */
 block|}
 name|__packed
 struct|;
