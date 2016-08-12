@@ -51,6 +51,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_TYPE_NDIS_INIT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_TYPE_NDIS_CONF
 value|125
 end_define
@@ -189,6 +196,51 @@ directive|define
 name|HN_NVS_NDIS_CONF_VLAN
 value|0x0008
 end_define
+
+begin_comment
+comment|/* No response */
+end_comment
+
+begin_struct
+struct|struct
+name|hn_nvs_ndis_init
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_NDIS_INIT */
+name|uint32_t
+name|nvs_ndis_major
+decl_stmt|;
+comment|/* NDIS_VERSION_MAJOR_ */
+name|uint32_t
+name|nvs_ndis_minor
+decl_stmt|;
+comment|/* NDIS_VERSION_MINOR_ */
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|20
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_ndis_init
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
