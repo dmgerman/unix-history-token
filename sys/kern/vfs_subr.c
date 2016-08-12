@@ -19460,6 +19460,39 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|vfs_badlock_vnode
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print vnode details on lock violations. */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vfs_badlock_vnode
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vfs_badlock_vnode
+argument_list|,
+literal|0
+argument_list|,
+literal|"Print vnode details on lock violations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -19537,6 +19570,17 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|vfs_badlock_vnode
+condition|)
+name|vn_printf
+argument_list|(
+name|vp
+argument_list|,
+literal|"vnode "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vfs_badlock_print
