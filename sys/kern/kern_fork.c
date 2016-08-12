@@ -4547,6 +4547,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_TRACED
+operator|||
+name|td
+operator|->
+name|td_dbgflags
+operator|&
+name|TDB_BORN
 condition|)
 block|{
 comment|/* 		 * This is the start of a new thread in a traced 		 * process.  Report a system call exit event. 		 */
@@ -4583,6 +4589,16 @@ name|S_PT_SCX
 operator|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|td
+operator|->
+name|td_dbgflags
+operator|&
+name|TDB_BORN
+operator|)
+operator|!=
+literal|0
 condition|)
 name|ptracestop
 argument_list|(
@@ -4596,7 +4612,11 @@ operator|->
 name|td_dbgflags
 operator|&=
 operator|~
+operator|(
 name|TDB_SCX
+operator||
+name|TDB_BORN
+operator|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(

@@ -12261,8 +12261,18 @@ operator|->
 name|p_flag
 operator|&
 name|P_SINGLE_EXIT
+operator|&&
+operator|!
+operator|(
+name|td
+operator|->
+name|td_dbgflags
+operator|&
+name|TDB_EXIT
+operator|)
 condition|)
 block|{
+comment|/* 			 * Ignore ptrace stops except for thread exit 			 * events when the process exits. 			 */
 name|td
 operator|->
 name|td_dbgflags
