@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_proc3.c,v 1.1 2012/11/17 21:55:24 joerg Exp $ */
+comment|/* $NetBSD: t_proc3.c,v 1.2 2015/01/14 22:22:32 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_proc3.c,v 1.1 2012/11/17 21:55:24 joerg Exp $"
+literal|"$NetBSD: t_proc3.c,v 1.2 2015/01/14 22:22:32 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,6 +160,9 @@ argument_list|(
 operator|&
 name|ke
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|getpid
 argument_list|()
 argument_list|,

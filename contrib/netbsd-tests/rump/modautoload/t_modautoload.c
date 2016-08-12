@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_modautoload.c,v 1.2 2014/03/10 22:38:53 pooka Exp $	*/
+comment|/*	$NetBSD: t_modautoload.c,v 1.4 2015/12/27 08:21:44 pgoyette Exp $	*/
 end_comment
 
 begin_include
@@ -145,6 +145,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|bool
+name|old_autoload
+decl_stmt|,
+name|new_autoload
+decl_stmt|;
+name|size_t
+name|old_len
+decl_stmt|,
+name|new_len
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -174,6 +187,46 @@ condition|)
 name|atf_tc_fail_errno
 argument_list|(
 literal|"mkdir /kern"
+argument_list|)
+expr_stmt|;
+name|new_autoload
+operator|=
+name|true
+expr_stmt|;
+name|new_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|new_autoload
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|sysctlbyname
+argument_list|(
+literal|"kern.module.autoload"
+argument_list|,
+operator|&
+name|old_autoload
+argument_list|,
+operator|&
+name|old_len
+argument_list|,
+operator|&
+name|new_autoload
+argument_list|,
+name|new_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|atf_tc_fail_errno
+argument_list|(
+literal|"could not enable module autoload"
 argument_list|)
 expr_stmt|;
 if|if

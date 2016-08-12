@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_p2kifs.c,v 1.4 2014/02/07 15:29:23 hannken Exp $	*/
+comment|/*	$NetBSD: t_p2kifs.c,v 1.5 2016/01/25 11:45:57 pooka Exp $	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<rump/rump.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rump/rumpvnode_if.h>
 end_include
 
 begin_include

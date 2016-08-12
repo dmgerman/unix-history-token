@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_exp.c,v 1.7 2014/03/17 11:08:11 martin Exp $ */
+comment|/* $NetBSD: t_exp.c,v 1.8 2014/10/07 16:53:44 gson Exp $ */
 end_comment
 
 begin_comment
@@ -759,7 +759,10 @@ name|double
 name|x
 decl_stmt|;
 name|double
-name|y
+name|d_y
+decl_stmt|;
+name|float
+name|f_y
 decl_stmt|;
 name|double
 name|d_eps
@@ -787,6 +790,8 @@ literal|0x1
 operator|.
 name|ffffffffffd3ap1023
 block|,
+literal|0.00
+block|,
 literal|0x1p969
 block|,
 literal|0.0
@@ -797,6 +802,12 @@ block|{
 literal|0x1
 operator|.
 name|fffffep6
+block|,
+literal|0x1
+operator|.
+name|ffff4ep
+operator|+
+literal|127
 block|,
 literal|0x1
 operator|.
@@ -819,6 +830,8 @@ name|T_LIBM_PLUS_INF
 block|,
 name|T_LIBM_PLUS_INF
 block|,
+name|T_LIBM_PLUS_INF
+block|,
 literal|0.0
 block|,
 literal|0.0
@@ -828,11 +841,17 @@ endif|#
 directive|endif
 comment|/* The few values from the old tests */
 comment|/* Results from i386/amd64, d_eps needed on i386 */
+comment|/* f_y values calculated using py-mpmath */
 block|{
 literal|1.1
 block|,
 literal|0x1
 literal|.125fbee250664p
+operator|+
+literal|1
+block|,
+literal|0x1
+literal|.125fc0p
 operator|+
 literal|1
 block|,
@@ -854,6 +873,11 @@ literal|.2611186bae675p
 operator|+
 literal|2
 block|,
+literal|0x1
+literal|.26111ap
+operator|+
+literal|2
+block|,
 literal|0x1p
 operator|-
 literal|51
@@ -869,6 +893,11 @@ literal|3.3
 block|,
 literal|0x1
 literal|.3b2c47bff8328p
+operator|+
+literal|3
+block|,
+literal|0x1
+literal|.3b2c48p
 operator|+
 literal|3
 block|,
@@ -890,6 +919,11 @@ literal|.51cb453b9536ep
 operator|+
 literal|4
 block|,
+literal|0x1
+literal|.51cb46p
+operator|+
+literal|4
+block|,
 literal|0x1p
 operator|-
 literal|49
@@ -905,6 +939,11 @@ literal|5.5
 block|,
 literal|0x1
 literal|.6a09e667f3bcdp
+operator|+
+literal|5
+block|,
+literal|0x1
+literal|.6a09e6p
 operator|+
 literal|5
 block|,
@@ -926,6 +965,11 @@ literal|.8406003b2ae5bp
 operator|+
 literal|6
 block|,
+literal|0x1
+literal|.8405fep
+operator|+
+literal|6
+block|,
 literal|0x1p
 operator|-
 literal|47
@@ -936,12 +980,16 @@ operator|-
 literal|17
 block|}
 block|,
-comment|/* 	     * These two currently fail for 'float'. 	     * 8.8 is definitely out by more than it should be. 	     */
 block|{
 literal|7.7
 block|,
 literal|0x1
 literal|.9fdf8bcce533ep
+operator|+
+literal|7
+block|,
+literal|0x1
+literal|.9fdf88p
 operator|+
 literal|7
 block|,
@@ -964,6 +1012,12 @@ name|bdb8cdadbe124p
 operator|+
 literal|8
 block|,
+literal|0x1
+operator|.
+name|bdb8d2p
+operator|+
+literal|8
+block|,
 literal|0x1p
 operator|-
 literal|45
@@ -979,17 +1033,6 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"Some of the cases produce failures on FreeBSD "
-literal|"due to the error epsilon being so small"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -1025,7 +1068,7 @@ index|[
 name|i
 index|]
 operator|.
-name|y
+name|d_y
 argument_list|,
 name|v
 index|[
@@ -1059,7 +1102,7 @@ index|[
 name|i
 index|]
 operator|.
-name|y
+name|f_y
 argument_list|,
 name|v
 index|[

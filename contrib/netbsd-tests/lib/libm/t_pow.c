@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_pow.c,v 1.3 2014/03/03 10:39:08 martin Exp $ */
+comment|/* $NetBSD: t_pow.c,v 1.4 2015/09/08 05:24:27 dholland Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_pow.c,v 1.3 2014/03/03 10:39:08 martin Exp $"
+literal|"$NetBSD: t_pow.c,v 1.4 2015/09/08 05:24:27 dholland Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1183,11 +1183,6 @@ operator|!=
 name|HUGE_VAL
 condition|)
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-amd64/45391"
-argument_list|)
-expr_stmt|;
 name|atf_tc_fail_nonfatal
 argument_list|(
 literal|"pow(+0.0, -4.0) != HUGE_VAL"
@@ -1212,11 +1207,6 @@ operator|!=
 name|HUGE_VAL
 condition|)
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-amd64/45391"
-argument_list|)
-expr_stmt|;
 name|atf_tc_fail_nonfatal
 argument_list|(
 literal|"pow(-0.0, -4.0) != HUGE_VAL"
@@ -1241,11 +1231,6 @@ operator|!=
 name|HUGE_VAL
 condition|)
 block|{
-name|atf_tc_expect_fail
-argument_list|(
-literal|"PR port-amd64/45391"
-argument_list|)
-expr_stmt|;
 name|atf_tc_fail_nonfatal
 argument_list|(
 literal|"pow(+0.0, -5.0) != HUGE_VAL"

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_lwproc.c,v 1.5 2011/01/02 12:58:17 pooka Exp $	*/
+comment|/*	$NetBSD: t_lwproc.c,v 1.7 2015/01/21 15:19:01 pooka Exp $	*/
 end_comment
 
 begin_comment
@@ -291,6 +291,15 @@ name|l1
 operator|=
 name|rump_pub_lwproc_curlwp
 argument_list|()
+expr_stmt|;
+name|RZ
+argument_list|(
+name|rump_pub_lwproc_newlwp
+argument_list|(
+name|rump_sys_getpid
+argument_list|()
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|RZ
 argument_list|(

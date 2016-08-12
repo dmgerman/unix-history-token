@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_forward.c,v 1.8 2012/03/18 09:46:50 jruoho Exp $	*/
+comment|/*	$NetBSD: t_forward.c,v 1.9 2015/02/26 13:03:21 martin Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_forward.c,v 1.8 2012/03/18 09:46:50 jruoho Exp $"
+literal|"$NetBSD: t_forward.c,v 1.9 2015/02/26 13:03:21 martin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -522,7 +522,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"4"
+literal|"20"
 argument_list|)
 expr_stmt|;
 comment|/* just in case */
