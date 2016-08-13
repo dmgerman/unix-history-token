@@ -3520,7 +3520,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|nat64lsn_portgroup
 operator|*

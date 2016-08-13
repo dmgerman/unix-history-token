@@ -278,7 +278,7 @@ end_ifdef
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|sockaddr
 operator|*
@@ -295,7 +295,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|sockaddr
 operator|*
@@ -321,7 +321,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|int
 name|nat64_output
 parameter_list|(
@@ -415,7 +415,7 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|int
 name|nat64_output_one
 parameter_list|(
@@ -707,7 +707,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|int
 name|nat64_output
 parameter_list|(
@@ -869,7 +869,7 @@ end_function
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|int
 name|nat64_output_one
 parameter_list|(
@@ -924,7 +924,7 @@ literal|0
 end_if
 
 begin_comment
-unit|void print_ipv6_header(struct ip6_hdr *ip6, char *buf, size_t bufsize);  void print_ipv6_header(struct ip6_hdr *ip6, char *buf, size_t bufsize) { 	char sbuf[INET6_ADDRSTRLEN], dbuf[INET6_ADDRSTRLEN];  	inet_ntop(AF_INET6,&ip6->ip6_src, sbuf, sizeof(sbuf)); 	inet_ntop(AF_INET6,&ip6->ip6_dst, dbuf, sizeof(dbuf)); 	snprintf(buf, bufsize, "%s -> %s %d", sbuf, dbuf, ip6->ip6_nxt); }   static __noinline int nat64_embed_ip4(struct nat64_cfg *cfg, in_addr_t ia, struct in6_addr *ip6) {
+unit|void print_ipv6_header(struct ip6_hdr *ip6, char *buf, size_t bufsize);  void print_ipv6_header(struct ip6_hdr *ip6, char *buf, size_t bufsize) { 	char sbuf[INET6_ADDRSTRLEN], dbuf[INET6_ADDRSTRLEN];  	inet_ntop(AF_INET6,&ip6->ip6_src, sbuf, sizeof(sbuf)); 	inet_ntop(AF_INET6,&ip6->ip6_dst, dbuf, sizeof(dbuf)); 	snprintf(buf, bufsize, "%s -> %s %d", sbuf, dbuf, ip6->ip6_nxt); }   static NAT64NOINLINE int nat64_embed_ip4(struct nat64_cfg *cfg, in_addr_t ia, struct in6_addr *ip6) {
 comment|/* assume the prefix is properly filled with zeros */
 end_comment
 
@@ -977,7 +977,7 @@ directive|endif
 end_endif
 
 begin_comment
-unit|break; 	default: 		return (0); 	}; 	ip6->s6_addr8[8] = 0; 	return (1); }  static __noinline in_addr_t nat64_extract_ip4(struct in6_addr *ip6, int plen) { 	in_addr_t ia;
+unit|break; 	default: 		return (0); 	}; 	ip6->s6_addr8[8] = 0; 	return (1); }  static NAT64NOINLINE in_addr_t nat64_extract_ip4(struct in6_addr *ip6, int plen) { 	in_addr_t ia;
 comment|/* 	 * According to RFC 6052 p2.2: 	 * IPv4-embedded IPv6 addresses are composed of a variable-length 	 * prefix, the embedded IPv4 address, and a variable length suffix. 	 * The suffix bits are reserved for future extensions and SHOULD 	 * be set to zero. 	 */
 end_comment
 
@@ -1041,7 +1041,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|uint16_t
 name|nat64_cksum_convert
 parameter_list|(
@@ -1196,7 +1196,7 @@ end_endif
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|void
 name|nat64_init_ip4hdr
 parameter_list|(
@@ -1403,7 +1403,7 @@ end_define
 
 begin_function
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 name|int
 name|nat64_fragment6
 parameter_list|(
@@ -1947,7 +1947,7 @@ end_endif
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|sockaddr
 operator|*
@@ -2159,7 +2159,7 @@ end_define
 
 begin_function
 unit|static
-name|__noinline
+name|NAT64NOINLINE
 name|void
 name|nat64_icmp6_reflect
 parameter_list|(
@@ -2641,7 +2641,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|sockaddr
 operator|*
@@ -2854,7 +2854,7 @@ end_define
 
 begin_function
 unit|static
-name|__noinline
+name|NAT64NOINLINE
 name|void
 name|nat64_icmp_reflect
 parameter_list|(
@@ -3531,7 +3531,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|__noinline
+name|NAT64NOINLINE
 expr|struct
 name|mbuf
 operator|*
