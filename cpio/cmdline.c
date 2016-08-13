@@ -180,6 +180,14 @@ literal|'o'
 block|}
 block|,
 block|{
+literal|"dereference"
+block|,
+literal|0
+block|,
+literal|'L'
+block|}
+block|,
+block|{
 literal|"dot"
 block|,
 literal|0

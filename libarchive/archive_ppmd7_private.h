@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|PPMD7_MAX_MEM_SIZE
-value|(0xFFFFFFFF - 12 * 3)
+value|(0xFFFFFFFFu - 12 * 3)
 end_define
 
 begin_struct_decl

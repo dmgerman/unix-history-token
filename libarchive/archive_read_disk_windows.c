@@ -3867,7 +3867,7 @@ operator|)
 argument_list|,
 name|errno
 argument_list|,
-literal|"Faild : %s"
+literal|"Failed : %s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -4171,7 +4171,7 @@ operator|)
 argument_list|,
 name|errno
 argument_list|,
-literal|"Faild : %s"
+literal|"Failed : %s"
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -4321,7 +4321,7 @@ operator|)
 argument_list|,
 name|errno
 argument_list|,
-literal|"Faild : %s"
+literal|"Failed : %s"
 argument_list|,
 name|archive_error_string
 argument_list|(

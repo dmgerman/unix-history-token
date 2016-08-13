@@ -3743,6 +3743,10 @@ operator|)
 operator|>
 literal|0
 condition|)
+name|assertEqualInt
+argument_list|(
+name|size
+argument_list|,
 name|fwrite
 argument_list|(
 name|buff
@@ -3753,10 +3757,16 @@ name|size
 argument_list|,
 name|fp
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertEqualInt

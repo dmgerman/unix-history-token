@@ -622,6 +622,8 @@ name|entries
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|r
 decl_stmt|;
 name|ret
 operator|=
@@ -957,6 +959,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|ACL_TYPE_NFS4
+comment|// XXX acl_get_flagset_np on FreeBSD returns EINVAL for
+comment|// non-NFSv4 ACLs
+name|r
+operator|=
 name|acl_get_flagset_np
 argument_list|(
 name|acl_entry
@@ -965,6 +971,13 @@ operator|&
 name|acl_flagset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+block|{
 name|acl_clear_flags_np
 argument_list|(
 name|acl_flagset
@@ -1023,6 +1036,7 @@ operator|.
 name|platform_inherit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

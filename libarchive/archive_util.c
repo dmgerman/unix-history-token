@@ -2728,7 +2728,7 @@ name|void
 operator|)
 name|fd
 expr_stmt|;
-comment|/* UNSED */
+comment|/* UNUSED */
 else|#
 directive|else
 name|int

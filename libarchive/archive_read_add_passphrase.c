@@ -473,7 +473,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|=
 operator|-
 literal|1
@@ -513,7 +513,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|<
 literal|0
 condition|)
@@ -551,7 +551,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|=
 name|cnt
 expr_stmt|;
@@ -571,7 +571,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|>
 literal|1
 condition|)
@@ -581,7 +581,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|--
 expr_stmt|;
 name|p
@@ -598,7 +598,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Pick a new passphrase candiate up. */
+comment|/* Pick a new passphrase candidate up. */
 name|p
 operator|=
 name|a
@@ -615,17 +615,17 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|==
 literal|1
 condition|)
 block|{
-comment|/* This case is that all cadiates failed to decryption. */
+comment|/* This case is that all candidates failed to decrypt. */
 name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|=
 literal|0
 expr_stmt|;
@@ -664,7 +664,7 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-comment|/* There is no passphrase candaite. */
+comment|/* There is no passphrase candidate. */
 name|p
 operator|=
 name|NULL
@@ -752,7 +752,7 @@ name|a
 operator|->
 name|passphrases
 operator|.
-name|candiate
+name|candidate
 operator|=
 literal|1
 expr_stmt|;

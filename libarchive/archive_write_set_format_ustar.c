@@ -2338,6 +2338,13 @@ name|NULL
 operator|&&
 name|p
 index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|p
+index|[
 name|strlen
 argument_list|(
 name|p
