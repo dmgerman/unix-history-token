@@ -8286,13 +8286,13 @@ name|un_uppervp
 operator|!=
 name|NULLVP
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"unionfs: upper"
-argument_list|,
 name|unp
 operator|->
 name|un_uppervp
+argument_list|,
+literal|"unionfs: upper "
 argument_list|)
 expr_stmt|;
 if|if
@@ -8303,13 +8303,13 @@ name|un_lowervp
 operator|!=
 name|NULLVP
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"unionfs: lower"
-argument_list|,
 name|unp
 operator|->
 name|un_lowervp
+argument_list|,
+literal|"unionfs: lower "
 argument_list|)
 expr_stmt|;
 return|return

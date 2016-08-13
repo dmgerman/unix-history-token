@@ -262,23 +262,14 @@ name|cpu_partsp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* TODO: can we get mimpid and misa somewhere ? */
 name|mimpid
 operator|=
-name|machine_command
-argument_list|(
-name|ECALL_MIMPID_GET
-argument_list|,
 literal|0
-argument_list|)
 expr_stmt|;
 name|misa
 operator|=
-name|machine_command
-argument_list|(
-name|ECALL_MCPUID_GET
-argument_list|,
 literal|0
-argument_list|)
 expr_stmt|;
 name|cpu
 operator|=

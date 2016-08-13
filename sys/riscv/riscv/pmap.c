@@ -491,6 +491,70 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_paddr_t
+name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The start of the dmap region */
+end_comment
+
+begin_decl_stmt
+name|vm_paddr_t
+name|dmap_phys_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The limit of the dmap region */
+end_comment
+
+begin_decl_stmt
+name|vm_offset_t
+name|dmap_max_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The virtual address limit of the dmap */
+end_comment
+
+begin_comment
+comment|/* This code assumes all L1 DMAP entries will be used */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+name|DMAP_MIN_ADDRESS
+operator|&
+operator|~
+name|L1_OFFSET
+operator|)
+operator|==
+name|DMAP_MIN_ADDRESS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+name|DMAP_MAX_ADDRESS
+operator|&
+operator|~
+name|L1_OFFSET
+operator|)
+operator|==
+name|DMAP_MAX_ADDRESS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|rwlock_padalign
@@ -1673,6 +1737,25 @@ operator|&
 name|l2_slot
 argument_list|)
 expr_stmt|;
+comment|/* Check locore has used L2 superpages */
+name|KASSERT
+argument_list|(
+operator|(
+name|l2
+index|[
+name|l2_slot
+index|]
+operator|&
+name|PTE_RX
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"Invalid bootstrap L2 table"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* L2 is superpages */
 name|ret
 operator|=
@@ -1709,10 +1792,13 @@ name|void
 name|pmap_bootstrap_dmap
 parameter_list|(
 name|vm_offset_t
-name|l1pt
+name|kern_l1
 parameter_list|,
 name|vm_paddr_t
-name|kernstart
+name|min_pa
+parameter_list|,
+name|vm_paddr_t
+name|max_pa
 parameter_list|)
 block|{
 name|vm_offset_t
@@ -1734,25 +1820,11 @@ decl_stmt|;
 name|pn_t
 name|pn
 decl_stmt|;
-comment|/* 	 * Initialize DMAP starting from zero physical address. 	 * TODO: remove this once machine-mode code splitted out. 	 */
-name|kernstart
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: l1pt 0x%016lx kernstart 0x%016lx\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|l1pt
-argument_list|,
-name|kernstart
-argument_list|)
-expr_stmt|;
 name|pa
 operator|=
-name|kernstart
+name|dmap_phys_base
+operator|=
+name|min_pa
 operator|&
 operator|~
 name|L1_OFFSET
@@ -1767,7 +1839,7 @@ operator|(
 name|pd_entry_t
 operator|*
 operator|)
-name|l1pt
+name|kern_l1
 expr_stmt|;
 name|l1_slot
 operator|=
@@ -1782,6 +1854,10 @@ init|;
 name|va
 operator|<
 name|DMAP_MAX_ADDRESS
+operator|&&
+name|pa
+operator|<
+name|max_pa
 condition|;
 name|pa
 operator|+=
@@ -1843,6 +1919,15 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the upper limit of the DMAP region */
+name|dmap_phys_max
+operator|=
+name|pa
+expr_stmt|;
+name|dmap_max_addr
+operator|=
+name|va
+expr_stmt|;
 name|cpu_dcache_wb_range
 argument_list|(
 operator|(
@@ -2123,6 +2208,8 @@ name|vm_paddr_t
 name|pa
 decl_stmt|,
 name|min_pa
+decl_stmt|,
+name|max_pa
 decl_stmt|;
 name|int
 name|i
@@ -2202,6 +2289,8 @@ expr_stmt|;
 comment|/* Assume the address we were loaded to is a valid physical address */
 name|min_pa
 operator|=
+name|max_pa
+operator|=
 name|KERNBASE
 operator|-
 name|kern_delta
@@ -2257,6 +2346,26 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|>
+name|max_pa
+condition|)
+name|max_pa
+operator|=
+name|physmap
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
 break|break;
 block|}
 comment|/* Create a direct map region early so we can use it for pa -> va */
@@ -2265,6 +2374,8 @@ argument_list|(
 name|l1pt
 argument_list|,
 name|min_pa
+argument_list|,
+name|max_pa
 argument_list|)
 expr_stmt|;
 name|va

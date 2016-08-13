@@ -1700,11 +1700,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vm_object_vndeallocate"
-argument_list|,
 name|vp
+argument_list|,
+literal|"vm_object_vndeallocate "
 argument_list|)
 expr_stmt|;
 name|panic

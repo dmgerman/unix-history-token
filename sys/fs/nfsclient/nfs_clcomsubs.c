@@ -36,8 +36,8 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstats
-name|newnfsstats
+name|nfsstatsv1
+name|nfsstatsv1
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,11 +1445,11 @@ if|if
 condition|(
 name|procnum
 operator|<
-name|NFSV4_NPROCS
+name|NFSV41_NPROCS
 condition|)
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpccnt
 index|[

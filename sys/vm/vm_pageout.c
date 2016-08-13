@@ -4401,7 +4401,7 @@ name|vmd_last_active_scan
 operator|=
 name|scan_tick
 expr_stmt|;
-comment|/* 	 * Scan the active queue for pages that can be deactivated.  Update 	 * the per-page activity counter and use it to identify deactivation 	 * candidates. 	 */
+comment|/* 	 * Scan the active queue for pages that can be deactivated.  Update 	 * the per-page activity counter and use it to identify deactivation 	 * candidates.  Held pages may be deactivated. 	 */
 for|for
 control|(
 name|m
@@ -4542,7 +4542,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * The count for pagedaemon pages is done after checking the 		 * page for eligibility... 		 */
+comment|/* 		 * The count for page daemon pages is updated after checking 		 * the page for eligibility. 		 */
 name|PCPU_INC
 argument_list|(
 name|cnt
@@ -4581,7 +4581,7 @@ name|act_delta
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Unlocked object ref count check.  Two races are possible. 		 * 1) The ref was transitioning to zero and we saw non-zero, 		 *    the pmap bits will be checked unnecessarily. 		 * 2) The ref was transitioning to one and we saw zero.  		 *    The page lock prevents a new reference to this page so 		 *    we need not check the reference bits. 		 */
+comment|/* 		 * Perform an unsynchronized object ref count check.  While 		 * the page lock ensures that the page is not reallocated to 		 * another object, in particular, one with unmanaged mappings 		 * that cannot support pmap_ts_referenced(), two races are, 		 * nonetheless, possible: 		 * 1) The count was transitioning to zero, but we saw a non- 		 *    zero value.  pmap_ts_referenced() will return zero 		 *    because the page is not mapped. 		 * 2) The count was transitioning to one, but we saw zero.  		 *    This race delays the detection of a new reference.  At 		 *    worst, we will deactivate and reactivate the page. 		 */
 if|if
 condition|(
 name|m

@@ -25,13 +25,21 @@ directive|include
 file|<sys/bus_dma.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|device
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|bus_dma_tag_set_iommu
 parameter_list|(
 name|bus_dma_tag_t
 parameter_list|,
-name|device_t
+name|struct
+name|device
+modifier|*
 name|iommu
 parameter_list|,
 name|void

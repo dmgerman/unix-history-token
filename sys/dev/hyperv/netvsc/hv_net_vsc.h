@@ -2097,10 +2097,6 @@ decl_stmt|;
 name|uint32_t
 name|rx_section_count
 decl_stmt|;
-name|nvsp_1_rx_buf_section
-modifier|*
-name|rx_sections
-decl_stmt|;
 comment|/* Used for NetVSP initialization protocol */
 name|struct
 name|sema
@@ -2304,63 +2300,11 @@ typedef|typedef
 struct|struct
 name|netvsc_packet_
 block|{
-name|uint8_t
-name|is_data_pkt
-decl_stmt|;
-comment|/* One byte */
 name|uint16_t
 name|vlan_tci
 decl_stmt|;
 name|uint32_t
 name|status
-decl_stmt|;
-comment|/* Completion */
-union|union
-block|{
-struct|struct
-block|{
-name|uint64_t
-name|rx_completion_tid
-decl_stmt|;
-name|void
-modifier|*
-name|rx_completion_context
-decl_stmt|;
-comment|/* This is no longer used */
-name|pfn_on_send_rx_completion
-name|on_rx_completion
-decl_stmt|;
-block|}
-name|rx
-struct|;
-struct|struct
-block|{
-name|uint64_t
-name|send_completion_tid
-decl_stmt|;
-name|void
-modifier|*
-name|send_completion_context
-decl_stmt|;
-comment|/* Still used in netvsc and filter code */
-name|pfn_on_send_rx_completion
-name|on_send_completion
-decl_stmt|;
-block|}
-name|send
-struct|;
-block|}
-name|compl
-union|;
-name|uint32_t
-name|send_buf_section_idx
-decl_stmt|;
-name|uint32_t
-name|send_buf_section_size
-decl_stmt|;
-name|void
-modifier|*
-name|rndis_mesg
 decl_stmt|;
 name|uint32_t
 name|tot_data_buf_len
@@ -2792,6 +2736,11 @@ name|sysctl_oid
 modifier|*
 name|hn_rx_sysctl_tree
 decl_stmt|;
+name|struct
+name|vmbus_xact_ctx
+modifier|*
+name|hn_xact
+decl_stmt|;
 block|}
 name|hn_softc_t
 typedef|;
@@ -2807,6 +2756,12 @@ name|int
 name|hv_promisc_mode
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|hn_send_ctx
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -2869,9 +2824,13 @@ name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
-name|netvsc_packet
+name|bool
+name|is_data_pkt
+parameter_list|,
+name|struct
+name|hn_send_ctx
 modifier|*
-name|pkt
+name|sndc
 parameter_list|,
 name|struct
 name|vmbus_gpa

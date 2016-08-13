@@ -386,9 +386,6 @@ name|void
 modifier|*
 name|b_fsprivate3
 decl_stmt|;
-name|int
-name|b_pin_count
-decl_stmt|;
 block|}
 struct|;
 end_struct

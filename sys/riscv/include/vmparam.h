@@ -314,7 +314,7 @@ value|(0xffffffc800000000UL)
 end_define
 
 begin_comment
-comment|/* Direct Map for 128 GiB of PA: 0x0 - 0x1fffffffff */
+comment|/* 128 GiB maximum for the direct map region */
 end_comment
 
 begin_define
@@ -328,21 +328,21 @@ begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|(0xffffffefffffffffUL)
+value|(0xfffffff000000000UL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MIN_PHYSADDR
-value|(0x0000000000000000UL)
+value|(dmap_phys_base)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MAX_PHYSADDR
-value|(DMAP_MAX_ADDRESS - DMAP_MIN_ADDRESS)
+value|(dmap_phys_max)
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ name|PHYS_IN_DMAP
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa)>= DMAP_MIN_PHYSADDR&& \     (pa)<= DMAP_MAX_PHYSADDR)
+value|((pa)>= DMAP_MIN_PHYSADDR&& \     (pa)< DMAP_MAX_PHYSADDR)
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ name|VIRT_IN_DMAP
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)>= DMAP_MIN_ADDRESS&& \     (va)<= DMAP_MAX_ADDRESS)
+value|((va)>= DMAP_MIN_ADDRESS&& \     (va)< (dmap_max_addr))
 end_define
 
 begin_define
@@ -381,7 +381,7 @@ parameter_list|(
 name|pa
 parameter_list|)
 define|\
-value|({									\ 	KASSERT(PHYS_IN_DMAP(pa),					\ 	    ("%s: PA out of range, PA: 0x%lx", __func__,		\ 	    (vm_paddr_t)(pa)));						\ 	(pa) | DMAP_MIN_ADDRESS;					\ })
+value|({									\ 	KASSERT(PHYS_IN_DMAP(pa),					\ 	    ("%s: PA out of range, PA: 0x%lx", __func__,		\ 	    (vm_paddr_t)(pa)));						\ 	((pa) - dmap_phys_base) + DMAP_MIN_ADDRESS;			\ })
 end_define
 
 begin_define
@@ -392,7 +392,7 @@ parameter_list|(
 name|va
 parameter_list|)
 define|\
-value|({									\ 	KASSERT(VIRT_IN_DMAP(va),					\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	(va)& ~DMAP_MIN_ADDRESS;					\ })
+value|({									\ 	KASSERT(VIRT_IN_DMAP(va),					\ 	    ("%s: VA out of range, VA: 0x%lx", __func__,		\ 	    (vm_offset_t)(va)));					\ 	((va) - DMAP_MIN_ADDRESS) + dmap_phys_base;			\ })
 end_define
 
 begin_define
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|KERNENTRY
-value|(0x80000000)
+value|(0)
 end_define
 
 begin_comment
@@ -543,6 +543,33 @@ begin_comment
 comment|/*  * RISCVTODO  * #define	UMA_MD_SMALL_ALLOC  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dmap_phys_base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dmap_phys_max
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|dmap_max_addr
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -563,6 +590,11 @@ name|vm_offset_t
 name|init_pt_va
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

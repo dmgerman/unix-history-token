@@ -172,6 +172,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|nfsstatsv1
+name|nfsstatsv1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vfsoptlist
 name|nfsv4root_opt
@@ -3306,6 +3314,18 @@ name|nh_seqcount
 operator|<<
 name|IO_SEQSHIFT
 expr_stmt|;
+comment|/* XXX KDM make this more systematic? */
+name|nfsstatsv1
+operator|.
+name|srvbytes
+index|[
+name|NFSV4OP_READ
+index|]
+operator|+=
+name|uiop
+operator|->
+name|uio_resid
+expr_stmt|;
 name|error
 operator|=
 name|VOP_READ
@@ -3731,6 +3751,18 @@ operator|->
 name|nh_seqcount
 operator|<<
 name|IO_SEQSHIFT
+expr_stmt|;
+comment|/* XXX KDM make this more systematic? */
+name|nfsstatsv1
+operator|.
+name|srvbytes
+index|[
+name|NFSV4OP_WRITE
+index|]
+operator|+=
+name|uiop
+operator|->
+name|uio_resid
 expr_stmt|;
 name|error
 operator|=

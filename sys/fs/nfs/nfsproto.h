@@ -1824,14 +1824,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * NFSPROC_NOOP is a fake op# that can't be the same as any V2/3/4 Procedure  * or Operation#. Since the NFS V4 Op #s go higher, use NFSV41_NOPS, which  * is one greater than the highest Op#.  */
+comment|/*  * NFSPROC_NOOP is a fake op# that can't be the same as any V2/3/4 Procedure  * or Operation#. Since the NFS V4 Op #s go higher, use NFSV42_NOPS, which  * is one greater than the highest Op#.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NFSPROC_NOOP
-value|NFSV41_NOPS
+value|NFSV42_NOPS
 end_define
 
 begin_comment

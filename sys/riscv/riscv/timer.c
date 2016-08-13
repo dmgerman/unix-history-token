@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/sbi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -478,10 +484,8 @@ argument_list|,
 name|SIE_STIE
 argument_list|)
 expr_stmt|;
-name|machine_command
+name|sbi_set_timer
 argument_list|(
-name|ECALL_MTIMECMP
-argument_list|,
 name|counts
 argument_list|)
 expr_stmt|;
