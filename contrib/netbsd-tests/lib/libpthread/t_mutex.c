@@ -2502,6 +2502,18 @@ block|{
 name|pthread_mutexattr_t
 name|mattr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"fails on i == 0 with: "
+literal|"pthread_mutexattr_setprioceiling(&mattr, i): Invalid argument "
+literal|"-- PR # 211802"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_mutexattr_init
@@ -2545,6 +2557,35 @@ block|{
 name|int
 name|prioceiling
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|int
+name|protocol
+decl_stmt|;
+name|PTHREAD_REQUIRE
+argument_list|(
+name|pthread_mutexattr_getprotocol
+argument_list|(
+operator|&
+name|mattr
+argument_list|,
+operator|&
+name|protocol
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"priority: %d\nprotocol: %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|protocol
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PTHREAD_REQUIRE
 argument_list|(
 name|pthread_mutexattr_setprioceiling
@@ -2568,6 +2609,18 @@ name|prioceiling
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printf
+argument_list|(
+literal|"prioceiling: %d\n"
+argument_list|,
+name|prioceiling
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_EQ
 argument_list|(
 name|i
