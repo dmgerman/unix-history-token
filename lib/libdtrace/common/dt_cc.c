@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2015 Gary Mills  */
 end_comment
 
 begin_comment
@@ -11125,6 +11125,7 @@ name|pcb
 decl_stmt|;
 name|void
 modifier|*
+specifier|volatile
 name|rv
 decl_stmt|;
 name|int
