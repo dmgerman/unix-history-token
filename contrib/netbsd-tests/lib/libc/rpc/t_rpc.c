@@ -1684,6 +1684,17 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"fails with: clnt_call: "
+literal|"RPC: Can't decode result -- PR # 211804"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rawtest
 argument_list|(
 name|NULL
