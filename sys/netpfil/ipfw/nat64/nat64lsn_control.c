@@ -3877,8 +3877,11 @@ name|DP_GENERIC
 operator||
 name|DP_STATE
 argument_list|,
-literal|"XXX: %lu %u %u"
+literal|"XXX: %ju %u %u"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|next_idx
 argument_list|,
 name|addr
