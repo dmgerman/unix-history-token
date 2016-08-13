@@ -340,29 +340,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|table_fill_ntlv
-parameter_list|(
-name|ipfw_obj_ntlv
-modifier|*
-name|ntlv
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|uint32_t
-name|set
-parameter_list|,
-name|uint16_t
-name|uidx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|table_flush_one
 parameter_list|(
@@ -921,7 +898,7 @@ name|char
 modifier|*
 name|tablename
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|set
 decl_stmt|;
 name|void
@@ -1612,7 +1589,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|table_fill_ntlv
 parameter_list|(
@@ -1625,7 +1601,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|uint32_t
+name|uint8_t
 name|set
 parameter_list|,
 name|uint16_t
