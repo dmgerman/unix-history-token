@@ -54,7 +54,7 @@ define|#
 directive|define
 name|PC_REGS
 parameter_list|()
-value|((db_addr_t)kdb_thrctx->pcb_eip)
+value|((db_addr_t)(kdb_frame->tf_eflags& PSL_VM ?	\ 			    (kdb_frame->tf_eip& 0xffff) +		\ 			    ((kdb_frame->tf_cs& 0xffff)<< 4) :	\ 			    kdb_frame->tf_eip))
 end_define
 
 begin_define
