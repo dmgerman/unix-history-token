@@ -19894,6 +19894,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -19901,6 +19904,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -19919,9 +19923,16 @@ argument_list|,
 name|IPFW_TLV_STATE_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|TOK_COMMENT
+condition|)
 name|warn
 argument_list|(
-literal|"Ambiguous state name '%s', '%s' used instead.\n"
+literal|"Ambiguous state name '%s', '%s'"
+literal|" used instead.\n"
 argument_list|,
 operator|*
 name|av
@@ -19929,6 +19940,7 @@ argument_list|,
 name|default_state_name
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 elseif|else
 if|if
@@ -21710,10 +21722,61 @@ if|if
 condition|(
 name|have_state
 condition|)
+block|{
 comment|/* must be a check-state, we are done */
+if|if
+condition|(
+operator|*
+name|av
+operator|!=
+name|NULL
+operator|&&
+name|match_token
+argument_list|(
+name|rule_options
+argument_list|,
+operator|*
+name|av
+argument_list|)
+operator|==
+name|TOK_COMMENT
+condition|)
+block|{
+comment|/* check-state has a comment */
+name|av
+operator|++
+expr_stmt|;
+name|fill_comment
+argument_list|(
+name|cmd
+argument_list|,
+name|av
+argument_list|,
+name|cblen
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|next_cmd
+argument_list|(
+name|cmd
+argument_list|,
+operator|&
+name|cblen
+argument_list|)
+expr_stmt|;
+name|av
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 goto|goto
 name|done
 goto|;
+block|}
 define|#
 directive|define
 name|OR_START
@@ -23605,6 +23668,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23612,6 +23678,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23623,6 +23690,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(
@@ -23850,6 +23921,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23857,6 +23931,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23868,6 +23943,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(

@@ -712,7 +712,7 @@ modifier|*
 name|last
 decl_stmt|;
 name|int
-name|candiate
+name|candidate
 decl_stmt|;
 name|archive_passphrase_callback
 modifier|*

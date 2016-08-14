@@ -1911,7 +1911,7 @@ operator|=
 name|kernload
 expr_stmt|;
 comment|/* 	 * bp_kernload is in the boot page.  Sync the cache because ePAPR 	 * booting has the other core(s) already running. 	 */
-name|__syncicache
+name|cpu_flush_dcache
 argument_list|(
 operator|&
 name|bp_kernload

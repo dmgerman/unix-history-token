@@ -2005,6 +2005,8 @@ argument_list|,
 name|count
 argument_list|,
 name|flags
+operator||
+name|needactivate
 argument_list|)
 operator|)
 return|;
@@ -2048,6 +2050,8 @@ argument_list|,
 name|count
 argument_list|,
 name|flags
+operator||
+name|needactivate
 argument_list|)
 operator|)
 return|;

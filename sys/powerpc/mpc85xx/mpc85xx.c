@@ -1342,7 +1342,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 if|if
@@ -1362,7 +1362,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 name|moveon

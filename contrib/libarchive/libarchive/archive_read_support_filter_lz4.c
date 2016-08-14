@@ -2644,7 +2644,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Check if an error happend in decompression process. */
+comment|/* Check if an error occurred in the decompression process. */
 if|if
 condition|(
 name|uncompressed_size
