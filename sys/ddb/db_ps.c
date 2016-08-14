@@ -154,7 +154,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Layout:  * - column counts  * - header  * - single-threaded process  * - multi-threaded process  * - thread in a MT process  *  *          1         2         3         4         5         6         7  * 1234567890123456789012345678901234567890123456789012345678901234567890  *   pid  ppid  pgrp   uid   state   wmesg     wchan    cmd  *<pid><ppi><pgi><uid><stat>< wmesg>< wchan><name>  *<pid><ppi><pgi><uid><stat>  (threaded)<command>  *<tid><stat>< wmesg>< wchan><name>  *  * For machines with 64-bit pointers, we expand the wchan field 8 more  * characters.  */
+comment|/*  * Layout:  * - column counts  * - header  * - single-threaded process  * - multi-threaded process  * - thread in a MT process  *  *          1         2         3         4         5         6         7  * 1234567890123456789012345678901234567890123456789012345678901234567890  *   pid  ppid  pgrp   uid  state   wmesg   wchan       cmd  *<pid><ppi><pgi><uid><stat><wmesg><wchan><name>  *<pid><ppi><pgi><uid><stat>  (threaded)<command>  *<tid><stat><wmesg><wchan><name>  *  * For machines with 64-bit pointers, we expand the wchan field 8 more  * characters.  */
 end_comment
 
 begin_function
@@ -251,14 +251,14 @@ directive|ifdef
 name|__LP64__
 name|db_printf
 argument_list|(
-literal|"  pid  ppid  pgrp   uid   state   wmesg         wchan        cmd\n"
+literal|"  pid  ppid  pgrp   uid  state   wmesg   wchan               cmd\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|db_printf
 argument_list|(
-literal|"  pid  ppid  pgrp   uid   state   wmesg     wchan    cmd\n"
+literal|"  pid  ppid  pgrp   uid  state   wmesg   wchan       cmd\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1278,7 +1278,7 @@ expr_stmt|;
 block|}
 name|db_printf
 argument_list|(
-literal|"%c%-8.8s "
+literal|"%c%-7.7s "
 argument_list|,
 name|wprefix
 argument_list|,
@@ -1296,7 +1296,7 @@ directive|ifdef
 name|__LP64__
 name|db_printf
 argument_list|(
-literal|"%18s "
+literal|"%18s  "
 argument_list|,
 literal|""
 argument_list|)
@@ -1305,7 +1305,7 @@ else|#
 directive|else
 name|db_printf
 argument_list|(
-literal|"%10s "
+literal|"%10s  "
 argument_list|,
 literal|""
 argument_list|)
@@ -1315,7 +1315,7 @@ directive|endif
 else|else
 name|db_printf
 argument_list|(
-literal|"%p "
+literal|"%p  "
 argument_list|,
 name|wchan
 argument_list|)
