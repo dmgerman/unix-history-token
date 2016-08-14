@@ -12667,7 +12667,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Place clean pages at the head of the inactive queue rather than the 	 * tail, thus defeating the queue's LRU operation and ensuring that the 	 * page will be reused quickly. 	 */
+comment|/* 	 * Place clean pages near the head of the inactive queue rather than 	 * the tail, thus defeating the queue's LRU operation and ensuring that 	 * the page will be reused quickly.  Dirty pages are given a chance to 	 * cycle once through the inactive queue before becoming eligible for 	 * laundering. 	 */
 name|_vm_page_deactivate
 argument_list|(
 name|m
