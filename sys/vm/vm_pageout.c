@@ -1144,7 +1144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queues  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
+comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queue  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
 end_comment
 
 begin_function
@@ -3792,7 +3792,7 @@ name|int
 name|lockmode
 decl_stmt|;
 name|boolean_t
-name|queues_locked
+name|queue_locked
 decl_stmt|;
 comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some.  We rate limit to avoid thrashing. 	 */
 if|if
@@ -3929,7 +3929,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3970,10 +3970,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|queues_locked
+name|queue_locked
 argument_list|,
 operator|(
-literal|"unlocked queues"
+literal|"unlocked inactive queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4163,7 +4163,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4268,7 +4268,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4289,7 +4289,7 @@ name|m
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 if|if
@@ -4316,7 +4316,7 @@ name|addl_page_shortage
 operator|++
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
@@ -4424,7 +4424,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4538,7 +4538,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4548,7 +4548,7 @@ name|m
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 comment|/* 			 * The object is already known NOT to be dead.   It 			 * is possible for the vget() to block the whole 			 * pageout daemon, but the new low-memory handling 			 * code should prevent it. 			 * 			 * The previous code skipped locked vnodes and, worse, 			 * reordered pages in the queue.  This results in 			 * completely non-deterministic operation and, on a 			 * busy system, can lead to extremely non-optimal 			 * pageouts.  For example, it can cause clean pages 			 * to be freed and dirty pages to be moved to the end 			 * of the queue.  Since dirty pages are also moved to 			 * the end of the queue once-cleaned, this gives 			 * way too large a weighting to defering the freeing 			 * of dirty pages. 			 * 			 * We can't wait forever for the vnode lock, we might 			 * deadlock due to a vn_read() getting stuck in 			 * vm_wait while holding this vnode.  We skip the  			 * vnode if we can't get it in a reasonable amount 			 * of time. 			 */
@@ -4707,7 +4707,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4820,7 +4820,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4866,7 +4866,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|queues_locked
+name|queue_locked
 condition|)
 block|{
 name|vm_pagequeue_unlock
@@ -4874,7 +4874,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4909,7 +4909,7 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 name|vm_page_unlock
@@ -4922,12 +4922,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|relock_queues
+name|relock_queue
 label|:
 if|if
 condition|(
 operator|!
-name|queues_locked
+name|queue_locked
 condition|)
 block|{
 name|vm_pagequeue_lock
@@ -4935,7 +4935,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
