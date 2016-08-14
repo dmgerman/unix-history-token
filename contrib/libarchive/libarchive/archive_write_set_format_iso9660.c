@@ -1085,7 +1085,7 @@ directive|define
 name|OPT_BOOT_LOAD_SIZE_DEFAULT
 value|0
 comment|/* Not specified */
-comment|/* 	 * Usage  : boot-type=<boot-media-type> 	 *        : 'no-emulation' : 'no emulation' image 	 *        :           'fd' : floppy disk image 	 *        :    'hard-disk' : hard disk image 	 * Type   : string 	 * Default: Auto detect 	 *        : We check a size of boot image; 	 *        : If ths size is just 1.22M/1.44M/2.88M, 	 *        : we assume boot_type is 'fd'; 	 *        : otherwise boot_type is 'no-emulation'. 	 * COMPAT : 	 *    boot=no-emulation 	 *	mkisofs -no-emul-boot 	 *    boot=fd 	 *	This is a default on the mkisofs. 	 *    boot=hard-disk 	 *	mkisofs -hard-disk-boot 	 * 	 * Specifies a type of "El Torito" boot image. 	 */
+comment|/* 	 * Usage  : boot-type=<boot-media-type> 	 *        : 'no-emulation' : 'no emulation' image 	 *        :           'fd' : floppy disk image 	 *        :    'hard-disk' : hard disk image 	 * Type   : string 	 * Default: Auto detect 	 *        : We check a size of boot image; 	 *        : If the size is just 1.22M/1.44M/2.88M, 	 *        : we assume boot_type is 'fd'; 	 *        : otherwise boot_type is 'no-emulation'. 	 * COMPAT : 	 *    boot=no-emulation 	 *	mkisofs -no-emul-boot 	 *    boot=fd 	 *	This is a default on the mkisofs. 	 *    boot=hard-disk 	 *	mkisofs -hard-disk-boot 	 * 	 * Specifies a type of "El Torito" boot image. 	 */
 name|unsigned
 name|int
 name|boot_type

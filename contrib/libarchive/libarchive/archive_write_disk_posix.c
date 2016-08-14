@@ -8336,7 +8336,7 @@ name|strlen
 argument_list|(
 name|tail
 argument_list|)
-operator|<=
+operator|<
 name|PATH_MAX
 condition|)
 return|return;
@@ -8379,7 +8379,7 @@ name|strlen
 argument_list|(
 name|tail
 argument_list|)
-operator|>
+operator|>=
 name|PATH_MAX
 condition|)
 block|{

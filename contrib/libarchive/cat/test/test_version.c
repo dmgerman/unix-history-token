@@ -353,6 +353,11 @@ operator|||
 operator|*
 name|q
 operator|==
+literal|'-'
+operator|||
+operator|*
+name|q
+operator|==
 literal|'/'
 operator|||
 operator|*
