@@ -19894,6 +19894,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -19901,6 +19904,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -19919,9 +19923,16 @@ argument_list|,
 name|IPFW_TLV_STATE_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|TOK_COMMENT
+condition|)
 name|warn
 argument_list|(
-literal|"Ambiguous state name '%s', '%s' used instead.\n"
+literal|"Ambiguous state name '%s', '%s'"
+literal|" used instead.\n"
 argument_list|,
 operator|*
 name|av
@@ -19929,6 +19940,7 @@ argument_list|,
 name|default_state_name
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 elseif|else
 if|if
@@ -23605,6 +23617,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23612,6 +23627,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23623,6 +23639,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(
@@ -23850,6 +23870,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23857,6 +23880,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23868,6 +23892,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(
