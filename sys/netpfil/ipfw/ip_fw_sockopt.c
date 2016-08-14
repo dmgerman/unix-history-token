@@ -2580,7 +2580,7 @@ name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alter opcodes: 	 * 1) convert tablearg value from 65335 to 0 	 * 2) Add high bit to O_SETFIB/O_SETDSCP values (to make room for targ). 	 * 3) convert table number in iface opcodes to u16 	 */
+comment|/* 	 * Alter opcodes: 	 * 1) convert tablearg value from 65535 to 0 	 * 2) Add high bit to O_SETFIB/O_SETDSCP values (to make room 	 *    for targ). 	 * 3) convert table number in iface opcodes to u16 	 * 4) convert old `nat global` into new 65535 	 */
 name|l
 operator|=
 name|krule
@@ -2667,13 +2667,28 @@ name|cmd
 operator|->
 name|arg1
 operator|==
-literal|65535
+name|IP_FW_TABLEARG
 condition|)
 name|cmd
 operator|->
 name|arg1
 operator|=
 name|IP_FW_TARG
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+literal|0
+condition|)
+name|cmd
+operator|->
+name|arg1
+operator|=
+name|IP_FW_NAT44_GLOBAL
 expr_stmt|;
 break|break;
 case|case
@@ -2688,7 +2703,7 @@ name|cmd
 operator|->
 name|arg1
 operator|==
-literal|65535
+name|IP_FW_TABLEARG
 condition|)
 name|cmd
 operator|->
@@ -2721,7 +2736,7 @@ name|lcmd
 operator|->
 name|conn_limit
 operator|==
-literal|65535
+name|IP_FW_TABLEARG
 condition|)
 name|lcmd
 operator|->
@@ -2919,7 +2934,7 @@ operator|->
 name|pcnt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alter opcodes: 	 * 1) convert tablearg value from 0 to 65335 	 * 2) Remove highest bit from O_SETFIB/O_SETDSCP values. 	 * 3) convert table number in iface opcodes to int 	 */
+comment|/* 	 * Alter opcodes: 	 * 1) convert tablearg value from 0 to 65535 	 * 2) Remove highest bit from O_SETFIB/O_SETDSCP values. 	 * 3) convert table number in iface opcodes to int 	 */
 name|l
 operator|=
 name|urule
@@ -3012,7 +3027,22 @@ name|cmd
 operator|->
 name|arg1
 operator|=
-literal|65535
+name|IP_FW_TABLEARG
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+name|IP_FW_NAT44_GLOBAL
+condition|)
+name|cmd
+operator|->
+name|arg1
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3033,7 +3063,7 @@ name|cmd
 operator|->
 name|arg1
 operator|=
-literal|65535
+name|IP_FW_TABLEARG
 expr_stmt|;
 else|else
 name|cmd
@@ -3067,7 +3097,7 @@ name|lcmd
 operator|->
 name|conn_limit
 operator|=
-literal|65535
+name|IP_FW_TABLEARG
 expr_stmt|;
 break|break;
 comment|/* Interface tables */

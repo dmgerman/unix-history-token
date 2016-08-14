@@ -7794,7 +7794,7 @@ name|cmd
 operator|->
 name|arg1
 operator|!=
-literal|0
+name|IP_FW_NAT44_GLOBAL
 condition|)
 name|bprint_uint_arg
 argument_list|(
@@ -19854,7 +19854,7 @@ name|action
 operator|->
 name|arg1
 operator|=
-literal|0
+name|IP_FW_NAT44_GLOBAL
 expr_stmt|;
 name|av
 operator|++

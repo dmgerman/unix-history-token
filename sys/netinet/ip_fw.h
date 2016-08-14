@@ -117,6 +117,17 @@ begin_comment
 comment|/* Current tablearg value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_GLOBAL
+value|65535
+end_define
+
+begin_comment
+comment|/* arg1 value for "nat global" */
+end_comment
+
 begin_comment
 comment|/*  * Number of entries in the call stack of the call/return commands.  * Call stack currently is an uint16_t array with rule numbers.  */
 end_comment
