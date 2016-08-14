@@ -9722,11 +9722,10 @@ operator|==
 name|MADV_FREE
 condition|)
 comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page as freeable as we can without 		 * actually taking the step of unmapping it. 		 */
+name|vm_page_undirty
+argument_list|(
 name|m
-operator|->
-name|dirty
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
