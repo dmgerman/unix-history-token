@@ -1918,7 +1918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark the page m's PV list as participating in the current thread's  * DI block.  Any threads concurrently using m's PV list to remove or  * restrict all mappings to m will wait for the current thread's DI  * block to complete before proceeding.  *  * The function works by setting the DI generation number for m's PV  * list to at least * the number for the current thread.  This forces  * a caller to pmap_delayed_invl_wait() to spin until current thread  * calls pmap_delayed_invl_finished().  */
+comment|/*  * Mark the page m's PV list as participating in the current thread's  * DI block.  Any threads concurrently using m's PV list to remove or  * restrict all mappings to m will wait for the current thread's DI  * block to complete before proceeding.  *  * The function works by setting the DI generation number for m's PV  * list to at least the DI generation number of the current thread.  * This forces a caller of pmap_delayed_invl_wait() to block until  * current thread calls pmap_delayed_invl_finished().  */
 end_comment
 
 begin_function
