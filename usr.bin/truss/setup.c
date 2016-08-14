@@ -958,6 +958,13 @@ name|pl_flags
 operator|&
 name|PL_FLAG_SCE
 condition|)
+block|{
+name|info
+operator|->
+name|curthread
+operator|=
+name|t
+expr_stmt|;
 name|enter_syscall
 argument_list|(
 name|info
@@ -968,6 +975,7 @@ operator|&
 name|pl
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
