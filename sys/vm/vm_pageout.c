@@ -1151,7 +1151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queues  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
+comment|/*  * vm_pageout_fallback_object_lock:  *   * Lock vm object currently associated with `m'. VM_OBJECT_TRYWLOCK is  * known to have failed and page queue must be either PQ_ACTIVE or  * PQ_INACTIVE.  To avoid lock order violation, unlock the page queue  * while locking the vm object.  Use marker page to detect page queue  * changes and maintain notion of next page on page queue.  Return  * TRUE if no changes were detected, FALSE otherwise.  vm object is  * locked on return.  *   * This function depends on both the lock portion of struct vm_object  * and normal struct vm_page being type stable.  */
 end_comment
 
 begin_function
@@ -3394,7 +3394,7 @@ decl_stmt|;
 name|boolean_t
 name|pageout_ok
 decl_stmt|,
-name|queues_locked
+name|queue_locked
 decl_stmt|;
 comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some.  We rate limit to avoid thrashing. 	 */
 if|if
@@ -3535,7 +3535,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3576,10 +3576,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|queues_locked
+name|queue_locked
 argument_list|,
 operator|(
-literal|"unlocked queues"
+literal|"unlocked inactive queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3812,7 +3812,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4053,7 +4053,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4179,7 +4179,7 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 name|drop_page
@@ -4194,12 +4194,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|relock_queues
+name|relock_queue
 label|:
 if|if
 condition|(
 operator|!
-name|queues_locked
+name|queue_locked
 condition|)
 block|{
 name|vm_pagequeue_lock
@@ -4207,7 +4207,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
