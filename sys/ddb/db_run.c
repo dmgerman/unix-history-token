@@ -491,11 +491,6 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -600,11 +595,6 @@ expr_stmt|;
 name|db_print_loc_and_inst
 argument_list|(
 name|pc
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
