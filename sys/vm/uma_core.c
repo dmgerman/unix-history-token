@@ -11641,6 +11641,10 @@ name|uc_freebucket
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* We are no longer associated with this CPU. */
+name|critical_exit
+argument_list|()
+expr_stmt|;
 comment|/* Can we throw this on the zone full list? */
 if|if
 condition|(
@@ -11686,10 +11690,6 @@ name|ub_link
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We are no longer associated with this CPU. */
-name|critical_exit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * We bump the uz count when the cache size is insufficient to 	 * handle the working set. 	 */
 if|if
 condition|(
