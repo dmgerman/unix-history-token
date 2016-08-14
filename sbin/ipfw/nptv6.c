@@ -1656,9 +1656,35 @@ argument_list|,
 literal|"Error retrieving stats"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|co
+operator|.
+name|use_set
+operator|!=
+literal|0
+operator|||
+name|set
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"Number of packets translated (internal to external): %ju\n"
+literal|"set %u "
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nptv6 %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%ju packets translated (internal to external)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1670,7 +1696,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of packets translated (external to internal): %ju\n"
+literal|"\t%ju packets translated (external to internal)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1682,7 +1708,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of packets dropped due to some error: %ju\n"
+literal|"\t%ju packets dropped due to some error\n"
 argument_list|,
 operator|(
 name|uintmax_t
