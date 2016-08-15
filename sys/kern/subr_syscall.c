@@ -334,9 +334,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_stops
+name|p_ptevents
 operator|&
-name|S_PT_SCE
+name|PTRACE_SCE
 condition|)
 name|ptracestop
 argument_list|(
@@ -952,9 +952,9 @@ operator|||
 operator|(
 name|p
 operator|->
-name|p_stops
+name|p_ptevents
 operator|&
-name|S_PT_SCX
+name|PTRACE_SCX
 operator|)
 operator|!=
 literal|0

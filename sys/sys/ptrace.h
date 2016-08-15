@@ -281,6 +281,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_GET_EVENT_MASK
+value|25
+end_define
+
+begin_comment
+comment|/* get mask of optional events */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_SET_EVENT_MASK
+value|26
+end_define
+
+begin_comment
+comment|/* set mask of optional events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -386,6 +408,59 @@ end_include
 begin_comment
 comment|/* machine-specific requests, if any */
 end_comment
+
+begin_comment
+comment|/* Events used with PT_GET_EVENT_MASK and PT_SET_EVENT_MASK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTRACE_EXEC
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_SCE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_SCX
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_SYSCALL
+value|(PTRACE_SCE | PTRACE_SCX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_FORK
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_LWP
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRACE_DEFAULT
+value|(PTRACE_EXEC)
+end_define
 
 begin_struct
 struct|struct
@@ -633,24 +708,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_comment
-comment|/*  * The flags below are used for ptrace(2) tracing and have no relation  * to procfs.  They are stored in struct proc's p_stops member.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_PT_SCE
-value|0x000010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_PT_SCX
-value|0x000020000
-end_define
 
 begin_function_decl
 name|int

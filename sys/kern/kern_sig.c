@@ -11160,7 +11160,7 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 	 * SIGKILL: Remove procfs STOPEVENTs. 	 */
+comment|/* 	 * SIGKILL: Remove procfs STOPEVENTs and ptrace events. 	 */
 if|if
 condition|(
 name|sig
@@ -11168,6 +11168,12 @@ operator|==
 name|SIGKILL
 condition|)
 block|{
+name|p
+operator|->
+name|p_ptevents
+operator|=
+literal|0
+expr_stmt|;
 comment|/* from procfs_ioctl.c: PIOCBIC */
 name|p
 operator|->
