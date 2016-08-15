@@ -1536,6 +1536,17 @@ name|NO_INO_UPDT
 value|0x00000001
 end_define
 
+begin_comment
+comment|/*  * Request data sync only from ffs_syncvnode(), not touching even more  * metadata than NO_INO_UPDT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATA_ONLY
+value|0x00000002
+end_define
+
 begin_function_decl
 name|int
 name|ffs_rdonly
