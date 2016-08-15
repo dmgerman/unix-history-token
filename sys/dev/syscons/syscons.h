@@ -1111,10 +1111,6 @@ name|kbd_mode
 decl_stmt|;
 comment|/* keyboard I/O mode */
 name|int
-name|kbd_prev_mode
-decl_stmt|;
-comment|/* keyboard I/O mode */
-name|int
 name|cursor_pos
 decl_stmt|;
 comment|/* cursor buffer position */

@@ -9378,6 +9378,9 @@ name|scr_stat
 modifier|*
 name|scp
 decl_stmt|;
+name|int
+name|kbd_mode
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9467,17 +9470,7 @@ operator|->
 name|kbd
 argument_list|)
 expr_stmt|;
-comment|/* we shall always use the keyboard in the XLATE mode here */
-name|scp
-operator|->
-name|kbd_prev_mode
-operator|=
-name|scp
-operator|->
-name|kbd_mode
-expr_stmt|;
-name|scp
-operator|->
+comment|/* Switch the keyboard to console mode (K_XLATE, polled) on all scp's. */
 name|kbd_mode
 operator|=
 name|K_XLATE
@@ -9499,8 +9492,6 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|scp
-operator|->
 name|kbd_mode
 argument_list|)
 expr_stmt|;
@@ -9565,6 +9556,7 @@ operator|>
 literal|0
 condition|)
 return|return;
+comment|/* Restore keyboard mode (for the current, possibly-changed scp). */
 name|kbdd_poll
 argument_list|(
 name|scp
@@ -9575,14 +9567,6 @@ name|kbd
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
-name|scp
-operator|->
-name|kbd_mode
-operator|=
-name|scp
-operator|->
-name|kbd_prev_mode
 expr_stmt|;
 operator|(
 name|void
@@ -14265,6 +14249,12 @@ if|if
 condition|(
 name|sc
 operator|->
+name|grab_level
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
 name|old_scp
 operator|->
 name|kbd_mode
@@ -18542,6 +18532,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|grab_level
+operator|==
+literal|0
+operator|&&
 name|scp
 operator|->
 name|kbd_mode
