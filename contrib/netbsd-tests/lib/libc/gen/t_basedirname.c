@@ -347,6 +347,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 comment|/* 		 * basename(3) is allowed to modify the input buffer. 		 * However, that is considered hostile by some programs, 		 * and so we elect to consider this an error. 		 * 		 * This is not a problem, as basename(3) is also allowed 		 * to return a pointer to a statically-allocated buffer 		 * (it is explicitly not required to be reentrant). 		 */
 if|if
 condition|(
@@ -394,6 +397,8 @@ literal|"Input buffer was modified."
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Make sure the result is correct. */
 if|if
 condition|(
@@ -591,6 +596,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 comment|/* 		 * dirname(3) is allowed to modify the input buffer. 		 * However, that is considered hostile by some programs, 		 * and so we elect to consider this an error. 		 * 		 * This is not a problem, as dirname(3) is also allowed 		 * to return a pointer to a statically-allocated buffer 		 * (it is explicitly not required to be reentrant). 		 */
 if|if
 condition|(
@@ -638,6 +646,8 @@ literal|"Input buffer was modified."
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Make sure the result is correct. */
 if|if
 condition|(
