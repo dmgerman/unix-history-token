@@ -664,6 +664,15 @@ decl_stmt|;
 name|int
 name|fl_pktshift
 decl_stmt|;
+name|u32
+name|sge_control
+decl_stmt|;
+name|u32
+name|sge_fl_buffer_size
+index|[
+name|SGE_FLBUF_SIZES
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

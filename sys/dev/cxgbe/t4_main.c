@@ -18572,6 +18572,11 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|t4_init_sge_params
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We've got the params we wanted to query via the firmware.  Now grab 	 * some others directly from the chip. 	 */
 name|rc
 operator|=
