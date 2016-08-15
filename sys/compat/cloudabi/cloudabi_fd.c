@@ -541,8 +541,8 @@ name|uap
 parameter_list|)
 block|{
 name|struct
-name|fsync_args
-name|fsync_args
+name|fdatasync_args
+name|fdatasync_args
 init|=
 block|{
 operator|.
@@ -553,15 +553,14 @@ operator|->
 name|fd
 block|}
 decl_stmt|;
-comment|/* Call into fsync(), as FreeBSD lacks fdatasync(). */
 return|return
 operator|(
-name|sys_fsync
+name|sys_fdatasync
 argument_list|(
 name|td
 argument_list|,
 operator|&
-name|fsync_args
+name|fdatasync_args
 argument_list|)
 operator|)
 return|;
