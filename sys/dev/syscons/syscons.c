@@ -9449,7 +9449,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|grabbed
+name|sc
+operator|->
+name|grab_level
 operator|++
 operator|>
 literal|0
@@ -9556,7 +9558,9 @@ condition|(
 operator|--
 name|scp
 operator|->
-name|grabbed
+name|sc
+operator|->
+name|grab_level
 operator|>
 literal|0
 condition|)
