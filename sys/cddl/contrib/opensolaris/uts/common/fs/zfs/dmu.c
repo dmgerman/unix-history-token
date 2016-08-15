@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -7825,6 +7825,8 @@ name|dmu_sync_late_arrival_ready
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|dmu_sync_late_arrival_done
 argument_list|,
 name|dsa
@@ -8365,6 +8367,8 @@ operator|&
 name|zp
 argument_list|,
 name|dmu_sync_ready
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

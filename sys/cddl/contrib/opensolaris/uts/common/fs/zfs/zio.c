@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -3831,6 +3831,10 @@ name|ready
 parameter_list|,
 name|zio_done_func_t
 modifier|*
+name|children_ready
+parameter_list|,
+name|zio_done_func_t
+modifier|*
 name|physdone
 parameter_list|,
 name|zio_done_func_t
@@ -3963,6 +3967,12 @@ operator|->
 name|io_ready
 operator|=
 name|ready
+expr_stmt|;
+name|zio
+operator|->
+name|io_children_ready
+operator|=
+name|children_ready
 expr_stmt|;
 name|zio
 operator|->
@@ -6039,6 +6049,35 @@ operator|(
 name|ZIO_PIPELINE_CONTINUE
 operator|)
 return|;
+if|if
+condition|(
+name|zio
+operator|->
+name|io_children_ready
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Now that all our children are ready, run the callback 		 * associated with this zio in case it wants to modify the 		 * data to be written. 		 */
+name|ASSERT3U
+argument_list|(
+name|zp
+operator|->
+name|zp_level
+argument_list|,
+operator|>
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|zio
+operator|->
+name|io_children_ready
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+block|}
 name|ASSERT
 argument_list|(
 name|zio
@@ -10219,6 +10258,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|gn
 operator|->
@@ -12225,6 +12266,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|zio_ddt_ditto_write_done
 argument_list|,
 name|dde
@@ -12403,6 +12446,8 @@ argument_list|,
 name|zp
 argument_list|,
 name|zio_ddt_child_write_ready
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
