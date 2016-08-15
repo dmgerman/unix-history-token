@@ -19882,6 +19882,10 @@ name|rewind
 init|=
 name|ZPOOL_NEVER_REWIND
 decl_stmt|;
+name|char
+modifier|*
+name|spa_config_path_env
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -19912,6 +19916,24 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+comment|/* 	 * If there is an environment variable SPA_CONFIG_PATH it overrides 	 * default spa_config_path setting. If -U flag is specified it will 	 * override this environment variable settings once again. 	 */
+name|spa_config_path_env
+operator|=
+name|getenv
+argument_list|(
+literal|"SPA_CONFIG_PATH"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|spa_config_path_env
+operator|!=
+name|NULL
+condition|)
+name|spa_config_path
+operator|=
+name|spa_config_path_env
 expr_stmt|;
 while|while
 condition|(
