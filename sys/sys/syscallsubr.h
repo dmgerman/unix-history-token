@@ -803,6 +803,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_fsync
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|bool
+name|fullsync
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_ftruncate
 parameter_list|(
 name|struct
