@@ -937,13 +937,6 @@ parameter_list|)
 value|(&SC_DEV(sc, vty))
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|debugger
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -10104,9 +10097,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|debugger
-operator|>
-literal|0
+name|kdb_active
 operator|||
 name|panicstr
 operator|||
@@ -10443,9 +10434,7 @@ comment|/* PC98 */
 comment|/* should we stop the screen saver? */
 if|if
 condition|(
-name|debugger
-operator|>
-literal|0
+name|kdb_active
 operator|||
 name|panicstr
 operator|||
@@ -12498,9 +12487,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debugger
-operator|==
-literal|0
+operator|!
+name|kdb_active
 condition|)
 name|wakeup
 argument_list|(
@@ -13288,13 +13276,8 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|debugger
-operator|>
-literal|0
-operator|)
+name|kdb_active
 operator|&&
-operator|(
 name|SC_STAT
 argument_list|(
 name|tp
@@ -13305,7 +13288,6 @@ operator|.
 name|mode
 operator|==
 name|VT_PROCESS
-operator|)
 condition|)
 block|{
 name|splx
@@ -13373,9 +13355,8 @@ expr_stmt|;
 comment|/* 	 * XXX wakeup() locks the scheduler lock which will hang if 	 * the lock is in an in-between state, e.g., when we stop at 	 * a breakpoint at fork_exit.  It has always been wrong to call 	 * wakeup() when the debugger is active.  In RELENG_4, wakeup() 	 * is supposed to be locked by splhigh(), but the debugger may 	 * be invoked at splhigh(). 	 */
 if|if
 condition|(
-name|debugger
-operator|==
-literal|0
+operator|!
+name|kdb_active
 condition|)
 name|wakeup
 argument_list|(
@@ -13459,9 +13440,8 @@ expr_stmt|;
 comment|/* wake up processes waiting for this vty */
 if|if
 condition|(
-name|debugger
-operator|==
-literal|0
+operator|!
+name|kdb_active
 condition|)
 name|wakeup
 argument_list|(
