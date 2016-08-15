@@ -50213,14 +50213,10 @@ decl_stmt|;
 name|int
 name|reglen
 init|=
-name|is_t4
+name|t4_get_regs_len
 argument_list|(
 name|sc
 argument_list|)
-condition|?
-name|T4_REGDUMP_SIZE
-else|:
-name|T5_REGDUMP_SIZE
 decl_stmt|;
 name|uint8_t
 modifier|*
