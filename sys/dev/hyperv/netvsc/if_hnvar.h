@@ -204,7 +204,7 @@ end_function
 
 begin_function_decl
 name|void
-name|hn_nvs_sent_wakeup
+name|hn_nvs_sent_xact
 parameter_list|(
 name|struct
 name|hn_send_ctx

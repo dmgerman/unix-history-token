@@ -118,6 +118,24 @@ name|HN_NVS_TYPE_NDIS_CONF
 value|125
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_SUBCH_REQ
+value|133
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_SUBCH_RESP
+value|133
+end_define
+
+begin_comment
+comment|/* same as SUBCH_REQ */
+end_comment
+
 begin_comment
 comment|/*  * Any size less than this one will _not_ work, e.g. hn_nvs_init  * only has 12B valid data, however, if only 12B data were sent,  * Hypervisor would never reply.  */
 end_comment
@@ -529,6 +547,73 @@ name|HN_NVS_REQSIZE_MIN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_SUBCH_OP_ALLOC
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|hn_nvs_subch_req
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_SUBCH_REQ */
+name|uint32_t
+name|nvs_op
+decl_stmt|;
+comment|/* HN_NVS_SUBCH_OP_ */
+name|uint32_t
+name|nvs_nsubch
+decl_stmt|;
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|20
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_subch_req
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|hn_nvs_subch_resp
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_SUBCH_RESP */
+name|uint32_t
+name|nvs_status
+decl_stmt|;
+comment|/* HN_NVS_STATUS_ */
+name|uint32_t
+name|nvs_nsubch
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_endif
 endif|#
