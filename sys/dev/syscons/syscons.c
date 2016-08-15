@@ -19030,6 +19030,7 @@ name|scp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Only safe in Giant-locked context. */
 name|tp
 operator|=
 name|SC_DEV
@@ -19044,7 +19045,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|kdb_active
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
 operator|&&
 name|tty_opened_ns
 argument_list|(
@@ -19222,6 +19227,13 @@ name|SC_DISABLE_REBOOT
 if|if
 condition|(
 name|enable_reboot
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
 condition|)
 name|shutdown_nice
 argument_list|(
@@ -19240,6 +19252,13 @@ name|SC_DISABLE_REBOOT
 if|if
 condition|(
 name|enable_reboot
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
 condition|)
 name|shutdown_nice
 argument_list|(
@@ -19258,6 +19277,13 @@ name|SC_DISABLE_REBOOT
 if|if
 condition|(
 name|enable_reboot
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
 condition|)
 name|shutdown_nice
 argument_list|(
@@ -20664,6 +20690,8 @@ block|{
 if|if
 condition|(
 name|cold
+operator|||
+name|kdb_active
 operator|||
 name|shutdown_in_progress
 operator|||
