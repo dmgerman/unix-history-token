@@ -1704,6 +1704,17 @@ begin_comment
 comment|/* Exiting LWP indicator for ptrace() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_FSTP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* The thread is PT_ATTACH leader */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -3568,6 +3579,17 @@ begin_comment
 comment|/* Handles SU ast for kthreads. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P2_PTRACE_FSTP
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* SIGSTOP from PT_ATTACH not yet handled. */
+end_comment
+
 begin_comment
 comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
 end_comment
@@ -5416,6 +5438,18 @@ name|struct
 name|proc
 modifier|*
 name|newparent
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|proc_set_traced
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
