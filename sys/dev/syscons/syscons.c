@@ -9428,10 +9428,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|scr_stat
-modifier|*
-name|scp
-decl_stmt|;
 name|int
 name|kbd_mode
 decl_stmt|;
@@ -9440,8 +9436,6 @@ condition|(
 operator|!
 name|cold
 operator|&&
-name|sc_console
-operator|->
 name|sc
 operator|->
 name|cur_scp
@@ -9452,8 +9446,6 @@ name|sc_console
 operator|->
 name|index
 operator|&&
-name|sc_console
-operator|->
 name|sc
 operator|->
 name|cur_scp
@@ -9474,8 +9466,6 @@ name|VT_AUTO
 condition|)
 name|sc_switch_scr
 argument_list|(
-name|sc_console
-operator|->
 name|sc
 argument_list|,
 name|sc_console
@@ -9483,18 +9473,8 @@ operator|->
 name|index
 argument_list|)
 expr_stmt|;
-name|scp
-operator|=
-name|sc_console
-operator|->
-name|sc
-operator|->
-name|cur_scp
-expr_stmt|;
 if|if
 condition|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9505,8 +9485,6 @@ return|return;
 comment|/*      * Make sure the keyboard is accessible even when the kbd device      * driver is disabled.      */
 name|kbdd_enable
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9522,8 +9500,6 @@ name|void
 operator|)
 name|kbdd_ioctl
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9539,8 +9515,6 @@ argument_list|)
 expr_stmt|;
 name|kbdd_poll
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9566,23 +9540,8 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|scr_stat
-modifier|*
-name|scp
-decl_stmt|;
-name|scp
-operator|=
-name|sc_console
-operator|->
-name|sc
-operator|->
-name|cur_scp
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9593,8 +9552,6 @@ return|return;
 comment|/* Restore keyboard mode (for the current, possibly-changed scp). */
 name|kbdd_poll
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9607,8 +9564,6 @@ name|void
 operator|)
 name|kbdd_ioctl
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
@@ -9619,15 +9574,15 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|scp
+name|sc
+operator|->
+name|cur_scp
 operator|->
 name|kbd_mode
 argument_list|)
 expr_stmt|;
 name|kbdd_disable
 argument_list|(
-name|scp
-operator|->
 name|sc
 operator|->
 name|kbd
