@@ -867,6 +867,9 @@ decl_stmt|;
 name|char
 name|blink_in_progress
 decl_stmt|;
+name|int
+name|grab_level
+decl_stmt|;
 name|struct
 name|mtx
 name|scr_lock
@@ -1103,9 +1106,6 @@ name|int
 name|status
 decl_stmt|;
 comment|/* status (bitfield) */
-name|int
-name|grabbed
-decl_stmt|;
 name|int
 name|kbd_mode
 decl_stmt|;
