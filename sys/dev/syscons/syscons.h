@@ -869,6 +869,11 @@ name|blink_in_progress
 decl_stmt|;
 name|struct
 name|mtx
+name|scr_lock
+decl_stmt|;
+comment|/* mutex for sc_puts() */
+name|struct
+name|mtx
 name|video_mtx
 decl_stmt|;
 name|long
@@ -1241,11 +1246,6 @@ name|int
 name|splash_save_status
 decl_stmt|;
 comment|/* saved status for splash screen */
-name|struct
-name|mtx
-name|scr_lock
-decl_stmt|;
-comment|/* mutex for sc_puts() */
 ifdef|#
 directive|ifdef
 name|_SCR_MD_STAT_DECLARED_
