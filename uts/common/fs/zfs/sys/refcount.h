@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -114,6 +114,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|refcount_create_untracked
+parameter_list|(
+name|refcount_t
+modifier|*
+name|rc
+parameter_list|)
+function_decl|;
+name|void
+name|refcount_create_tracked
 parameter_list|(
 name|refcount_t
 modifier|*
@@ -234,6 +242,26 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|refcount_held
+parameter_list|(
+name|refcount_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|refcount_not_held
+parameter_list|(
+name|refcount_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 name|refcount_init
 parameter_list|(
@@ -269,6 +297,13 @@ value|((rc)->rc_count = 0)
 define|#
 directive|define
 name|refcount_create_untracked
+parameter_list|(
+name|rc
+parameter_list|)
+value|((rc)->rc_count = 0)
+define|#
+directive|define
+name|refcount_create_tracked
 parameter_list|(
 name|rc
 parameter_list|)
@@ -364,6 +399,24 @@ name|current_holder
 parameter_list|,
 name|new_holder
 parameter_list|)
+define|#
+directive|define
+name|refcount_held
+parameter_list|(
+name|rc
+parameter_list|,
+name|holder
+parameter_list|)
+value|((rc)->rc_count> 0)
+define|#
+directive|define
+name|refcount_not_held
+parameter_list|(
+name|rc
+parameter_list|,
+name|holder
+parameter_list|)
+value|(B_TRUE)
 define|#
 directive|define
 name|refcount_init
