@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -3947,6 +3953,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_ptevents
+operator|&
+name|PTRACE_EXEC
+condition|)
 name|td
 operator|->
 name|td_dbgflags

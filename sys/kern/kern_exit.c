@@ -1233,6 +1233,12 @@ operator||
 name|P_PPTRACE
 operator|)
 expr_stmt|;
+name|p
+operator|->
+name|p_ptevents
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Stop the real interval timer.  If the handler is currently 	 * executing, prevent it from rearming itself and let it finish. 	 */
 if|if
 condition|(
@@ -1712,6 +1718,12 @@ name|P_TRACED
 operator||
 name|P_STOPPED_TRACE
 operator|)
+expr_stmt|;
+name|q
+operator|->
+name|p_ptevents
+operator|=
+literal|0
 expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(

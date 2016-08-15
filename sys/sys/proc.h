@@ -2962,6 +2962,10 @@ argument_list|)
 name|p_orphans
 expr_stmt|;
 comment|/* (e) Pointer to list of orphans. */
+name|u_int
+name|p_ptevents
+decl_stmt|;
+comment|/* (c) ptrace() event mask. */
 block|}
 struct|;
 end_struct
@@ -3173,12 +3177,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_FOLLOWFORK
+name|P_UNUSED3
 value|0x00008
 end_define
 
 begin_comment
-comment|/* Attach parent debugger to children. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -3562,17 +3566,6 @@ end_define
 
 begin_comment
 comment|/* Handles SU ast for kthreads. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P2_LWP_EVENTS
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Report LWP events via ptrace(2). */
 end_comment
 
 begin_comment

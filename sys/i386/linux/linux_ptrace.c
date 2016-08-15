@@ -218,7 +218,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PTRACE_SYSCALL
+name|LINUX_PTRACE_SYSCALL
 value|24
 end_define
 
@@ -2435,7 +2435,7 @@ block|}
 break|break;
 block|}
 case|case
-name|PTRACE_SYSCALL
+name|LINUX_PTRACE_SYSCALL
 case|:
 comment|/* fall through */
 default|default:
