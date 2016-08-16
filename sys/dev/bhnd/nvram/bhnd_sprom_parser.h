@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BHND_NVRAM_BHND_SPROMVAR_H_
+name|_BHND_NVRAM_BHND_SPROM_PARSER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BHND_NVRAM_BHND_SPROMVAR_H_
+name|_BHND_NVRAM_BHND_SPROM_PARSER_H_
 end_define
 
 begin_include
@@ -21,36 +21,25 @@ directive|include
 file|<dev/bhnd/bhnd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"bhnd_sprom_parser.h"
-end_include
-
-begin_expr_stmt
-name|DECLARE_CLASS
-argument_list|(
-name|bhnd_sprom_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_struct_decl
+struct_decl|struct
+name|bhnd_sprom
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
-name|bhnd_sprom_probe
+name|bhnd_sprom_init
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|bhnd_sprom_attach
-parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sprom
+parameter_list|,
+name|struct
+name|bhnd_resource
+modifier|*
+name|r
 parameter_list|,
 name|bus_size_t
 name|offset
@@ -59,66 +48,116 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|bhnd_sprom_resume
+name|void
+name|bhnd_sprom_fini
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sprom
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|bhnd_sprom_suspend
+name|bhnd_sprom_getvar
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|bhnd_sprom_detach
+name|bhnd_sprom_setvar
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * bhnd_sprom driver instance state. Must be first member of all subclass  * softc structures.  */
+comment|/**  * bhnd sprom parser instance state.  */
 end_comment
 
 begin_struct
 struct|struct
-name|bhnd_sprom_softc
+name|bhnd_sprom
 block|{
 name|device_t
 name|dev
 decl_stmt|;
+comment|/**< sprom parent device */
+name|uint8_t
+name|sp_rev
+decl_stmt|;
+comment|/**< sprom revision */
 name|struct
 name|bhnd_resource
 modifier|*
-name|sprom_res
+name|sp_res
 decl_stmt|;
-comment|/**< SPROM resource */
-name|int
-name|sprom_rid
+comment|/**< sprom resource. */
+name|bus_size_t
+name|sp_res_off
 decl_stmt|;
-comment|/**< SPROM RID */
-name|struct
-name|bhnd_sprom
-name|shadow
+comment|/**< offset to sprom image */
+name|uint8_t
+modifier|*
+name|sp_shadow
 decl_stmt|;
-comment|/**< SPROM shadow */
-name|struct
-name|mtx
-name|mtx
+comment|/**< sprom shadow */
+name|bus_size_t
+name|sp_size_max
 decl_stmt|;
-comment|/**< SPROM shadow mutex */
+comment|/**< maximum possible sprom length */
+name|size_t
+name|sp_size
+decl_stmt|;
+comment|/**< shadow size */
+name|size_t
+name|sp_capacity
+decl_stmt|;
+comment|/**< shadow buffer capacity */
 block|}
 struct|;
 end_struct
@@ -129,7 +168,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _BHND_NVRAM_BHND_SPROMVAR_H_ */
+comment|/* _BHND_NVRAM_BHND_SPROM_PARSER_H_ */
 end_comment
 
 end_unit

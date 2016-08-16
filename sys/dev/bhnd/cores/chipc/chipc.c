@@ -1560,25 +1560,16 @@ name|otp_st
 decl_stmt|,
 name|srom_ctrl
 decl_stmt|;
-comment|/* Very early devices vend SPROM/OTP/CIS (if at all) via the 	 * host bridge interface instead of ChipCommon. */
+comment|/* 	 * We check for hardware presence in order of precedence. For example, 	 * SPROM is is always used in preference to internal OTP if found. 	 */
 if|if
 condition|(
-operator|!
 name|CHIPC_QUIRK
 argument_list|(
 name|sc
 argument_list|,
 name|SUPPORTS_SPROM
 argument_list|)
-condition|)
-return|return
-operator|(
-name|BHND_NVRAM_SRC_UNKNOWN
-operator|)
-return|;
-comment|/* 	 * Later chipset revisions standardized the SPROM capability flags and 	 * register interfaces. 	 *  	 * We check for hardware presence in order of precedence. For example, 	 * SPROM is is always used in preference to internal OTP if found. 	 */
-if|if
-condition|(
+operator|&&
 name|caps
 operator|->
 name|sprom

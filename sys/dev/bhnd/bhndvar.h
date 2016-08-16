@@ -273,6 +273,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|size
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

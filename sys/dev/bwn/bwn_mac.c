@@ -363,7 +363,7 @@ index|]
 decl_stmt|;
 name|error
 operator|=
-name|bhnd_nvram_getvar
+name|bhnd_nvram_getvar_array
 argument_list|(
 name|dev
 argument_list|,
@@ -375,6 +375,8 @@ sizeof|sizeof
 argument_list|(
 name|macaddr
 argument_list|)
+argument_list|,
+name|BHND_NVRAM_TYPE_UINT8
 argument_list|)
 expr_stmt|;
 if|if

@@ -1293,7 +1293,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"warning: %s NVRAM device not found\n"
+literal|"warning: NVRAM %s device not found\n"
 argument_list|,
 name|bhnd_nvram_src_name
 argument_list|(
@@ -1614,6 +1614,33 @@ operator|=
 name|device_find_child
 argument_list|(
 name|chipc
+argument_list|,
+name|classname
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|found
+goto|;
+comment|/* Look for a parent-attached device (e.g. nexus0 -> bhnd_nvram) */
+name|child
+operator|=
+name|device_find_child
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 name|classname
 argument_list|,
@@ -2291,6 +2318,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|size
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 block|{
 name|struct
@@ -2334,6 +2364,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|size
+argument_list|,
+name|type
 argument_list|)
 return|;
 comment|/* Otherwise, try to delegate to parent */
@@ -2371,6 +2403,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|size
+argument_list|,
+name|type
 argument_list|)
 operator|)
 return|;

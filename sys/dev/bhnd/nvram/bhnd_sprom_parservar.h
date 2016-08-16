@@ -6,14 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BHND_NVRAM_SPROMREG_H_
+name|_BHND_NVRAM_SPROM_PARSERVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BHND_NVRAM_SPROMREG_H_
+name|_BHND_NVRAM_SPROM_PARSERVAR_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|"bhnd_sprom_parser.h"
+end_include
 
 begin_define
 define|#
@@ -178,7 +184,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _BHND_NVRAM_SPROMREG_H_ */
+comment|/* _BHND_NVRAM_SPROM_PARSERVAR_H_ */
 end_comment
 
 end_unit

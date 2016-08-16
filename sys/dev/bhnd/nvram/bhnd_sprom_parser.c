@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Landon Fuller<landon@landonf.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landonf@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -62,25 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/bhnd/bhndvar.h>
+file|"bhnd_nvram_common.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nvramvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bhnd_spromreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bhnd_spromvar.h"
+file|"bhnd_sprom_parservar.h"
 end_include
 
 begin_comment
@@ -150,7 +144,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|sprom_var_defn
+name|sprom_get_var_defn
 parameter_list|(
 name|struct
 name|bhnd_sprom
@@ -164,14 +158,14 @@ name|name
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_nvram_var
+name|bhnd_nvram_vardefn
 modifier|*
 modifier|*
 name|var
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_sprom_var
+name|bhnd_sprom_vardefn
 modifier|*
 modifier|*
 name|sprom
@@ -179,6 +173,29 @@ parameter_list|,
 name|size_t
 modifier|*
 name|size
+parameter_list|,
+name|size_t
+modifier|*
+name|nelem
+parameter_list|,
+name|bhnd_nvram_type
+name|req_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|char
+name|sprom_get_delim_char
+parameter_list|(
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sc
+parameter_list|,
+name|bhnd_nvram_sfmt
+name|sfmt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -393,7 +410,7 @@ value|*((uint32_t *)((_sc)->sp_shadow + _off)) = (_v)
 end_define
 
 begin_comment
-comment|/* Call @p _next macro with the C type, widened (signed or unsigned) C  * type, and width associated with @p _dtype */
+comment|/* Call @p _next macro with the C type, widened (signed or unsigned) 32-bit C  * type, width, and min/max values associated with @p _dtype */
 end_comment
 
 begin_define
@@ -408,7 +425,34 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	switch (_dtype) {						\ 	case BHND_NVRAM_DT_UINT8:					\ 		_next (uint8_t,		uint32_t,	1,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_UINT16:					\ 		_next (uint16_t,	uint32_t,	2,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_UINT32:					\ 		_next (uint32_t,	uint32_t,	4,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_INT8:					\ 		_next (int8_t,		int32_t,	1,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_INT16:					\ 		_next (int16_t,		int32_t,	2,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_INT32:					\ 		_next (int32_t,		int32_t,	4,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	case BHND_NVRAM_DT_CHAR:					\ 		_next (uint8_t,		uint32_t,	1,		\ 		    ## __VA_ARGS__);					\ 		break;							\ 	}								\ } while (0)
+value|do {									\ 	switch (_dtype) {						\ 	case BHND_NVRAM_TYPE_UINT8:					\ 		_next (uint8_t,		uint32_t,	1,	0,	\ 		    UINT8_MAX, ## __VA_ARGS__);				\ 		break;							\ 	case BHND_NVRAM_TYPE_UINT16:					\ 		_next (uint16_t,	uint32_t,	2,	0,	\ 		    UINT16_MAX, ## __VA_ARGS__);			\ 		break;							\ 	case BHND_NVRAM_TYPE_UINT32:					\ 		_next (uint32_t,	uint32_t,	4,	0,	\ 		    UINT32_MAX, ## __VA_ARGS__);			\ 		break;							\ 	case BHND_NVRAM_TYPE_INT8:					\ 		_next (int8_t,		int32_t,	1,		\ 		    INT8_MIN,	INT8_MAX, ## __VA_ARGS__);		\ 		break;							\ 	case BHND_NVRAM_TYPE_INT16:					\ 		_next (int16_t,		int32_t,	2,		\ 		    INT16_MIN,	INT16_MAX, ## __VA_ARGS__);		\ 		break;							\ 	case BHND_NVRAM_TYPE_INT32:					\ 		_next (int32_t,		int32_t,	4,		\ 		    INT32_MIN,	INT32_MAX, ## __VA_ARGS__);		\ 		break;							\ 	case BHND_NVRAM_TYPE_CHAR:					\ 		_next (char,		int32_t,	1,		\ 		    CHAR_MIN,	CHAR_MAX, ## __VA_ARGS__);		\ 		break;							\ 	case BHND_NVRAM_TYPE_CSTR:					\ 		panic("%s: BHND_NVRAM_TYPE_CSTR unhandled",		\ 		    __FUNCTION__);					\ 		break;							\ 	}								\ } while (0)
+end_define
+
+begin_comment
+comment|/* Verify the range of _val of (_stype) within _type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPROM_VERIFY_RANGE
+parameter_list|(
+name|_type
+parameter_list|,
+name|_widen
+parameter_list|,
+name|_width
+parameter_list|,
+name|_min
+parameter_list|,
+name|_max
+parameter_list|,
+name|_val
+parameter_list|,	\
+name|_stype
+parameter_list|)
+define|\
+value|do {									\ 	if (BHND_NVRAM_SIGNED_TYPE(_stype)) {				\ 		int32_t sval = (int32_t) (_val);			\ 		if (sval> (_max) || sval< (_min))			\ 			return (ERANGE);				\ 	} else {							\ 		if ((_val)> (_max))					\ 			return (ERANGE);				\ 	}								\ } while(0)
 end_define
 
 begin_comment
@@ -626,7 +670,7 @@ name|sprom
 operator|->
 name|sp_capacity
 argument_list|,
-name|M_BHND
+name|M_BHND_NVRAM
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -689,14 +733,14 @@ name|sprom
 operator|->
 name|sp_shadow
 argument_list|,
-name|M_BHND
+name|M_BHND_NVRAM
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Perform a read using a SPROM offset descriptor, safely widening the  * result to its 32-bit representation before assigning it to @p _dest. */
+comment|/* Perform a read using a SPROM offset descriptor, safely widening the result  * to its 32-bit representation before assigning it to @p _dest. */
 end_comment
 
 begin_define
@@ -710,18 +754,22 @@ name|_widen
 parameter_list|,
 name|_width
 parameter_list|,
+name|_min
+parameter_list|,
+name|_max
+parameter_list|,
 name|_sc
 parameter_list|,
 name|_off
-parameter_list|,
+parameter_list|,	\
 name|_dest
 parameter_list|)
 define|\
-value|do {									\ 	_type _v = (_type)SPROM_READ_ ## _width(_sc, _off->offset);	\ 	if (_off->shift> 0) {						\ 		_v>>= _off->shift;					\ 	} else if (off->shift< 0) {					\ 		_v<<= -_off->shift;					\ 	}								\ 	_dest = ((uint32_t) (_widen) _v)& _off->mask;			\ } while(0)
+value|do {									\ 	_type _v = (_type)SPROM_READ_ ## _width(_sc, _off->offset);	\ 	if (_off->shift> 0) {						\ 		_v>>= _off->shift;					\ 	} else if (off->shift< 0) {					\ 		_v<<= -_off->shift;					\ 	}								\ 									\ 	if (_off->cont)							\ 		_dest |= ((uint32_t) (_widen) _v)& _off->mask;		\ 	else								\ 		_dest = ((uint32_t) (_widen) _v)& _off->mask;		\ } while(0)
 end_define
 
 begin_comment
-comment|/* Emit a value read using a SPROM offset descriptor, narrowing the  * result output representation and, if necessary, OR'ing it with the  * previously read value from @p _buf. */
+comment|/* Emit a value read using a SPROM offset descriptor, narrowing the  * result output representation. */
 end_comment
 
 begin_define
@@ -735,18 +783,55 @@ name|_widen
 parameter_list|,
 name|_width
 parameter_list|,
-name|_off
+name|_min
 parameter_list|,
+name|_max
+parameter_list|,
+name|_off
+parameter_list|,	\
 name|_src
 parameter_list|,
 name|_buf
 parameter_list|)
 define|\
-value|do {									\ 	_type _v = (_type) (_widen) _src;				\ 	if (_off->cont)							\ 		_v |= *((_type *)_buf);					\ 	*((_type *)_buf) = _v;						\ } while(0)
+value|do {									\ 	_type _v = (_type) (_widen) _src;				\ 	*((_type *)_buf) = _v;						\ } while(0)
 end_define
 
 begin_comment
-comment|/**  * Read a SPROM variable, performing conversion to host byte order.  *  * @param		sc	The SPROM parser state.  * @param		name	The SPROM variable name.  * @param[out]		buf	On success, the requested value will be written  *				to this buffer. This argment may be NULL if  *				the value is not desired.  * @param[in,out]	len	The capacity of @p buf. On success, will be set  *				to the actual size of the requested value.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval ENOMEM	If @p buf is non-NULL and a buffer of @p len is too  *			small to hold the requested value.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
+comment|/* String format a value read using a SPROM offset descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPROM_GETVAR_SNPRINTF
+parameter_list|(
+name|_type
+parameter_list|,
+name|_widen
+parameter_list|,
+name|_width
+parameter_list|,
+name|_min
+parameter_list|,
+name|_max
+parameter_list|,
+name|_src
+parameter_list|,	\
+name|_buf
+parameter_list|,
+name|_remain
+parameter_list|,
+name|_fmt
+parameter_list|,
+name|_nwrite
+parameter_list|)
+define|\
+value|do {									\ 	_nwrite = snprintf(_buf, _remain, _fmt, (_type) (_widen) _src);	\ } while(0)
+end_define
+
+begin_comment
+comment|/**  * Read a SPROM variable, performing conversion to host byte order.  *  * @param		sc	The SPROM parser state.  * @param		name	The SPROM variable name.  * @param[out]		buf	On success, the requested value will be written  *				to this buffer. This argment may be NULL if  *				the value is not desired.  * @param[in,out]	len	The capacity of @p buf. On success, will be set  *				to the actual size of the requested value.  * @param		type	The requested data type to be written to @p buf.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval ENOMEM	If @p buf is non-NULL and a buffer of @p len is too  *			small to hold the requested value.  * @retval non-zero	If reading @p name otherwise fails, a regular unix  *			error code will be returned.  */
 end_comment
 
 begin_function
@@ -770,35 +855,50 @@ parameter_list|,
 name|size_t
 modifier|*
 name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|bhnd_nvram_var
+name|bhnd_nvram_vardefn
 modifier|*
 name|nv
 decl_stmt|;
 specifier|const
 name|struct
-name|bhnd_sprom_var
+name|bhnd_sprom_vardefn
 modifier|*
 name|sv
+decl_stmt|;
+name|void
+modifier|*
+name|outp
 decl_stmt|;
 name|size_t
 name|all1_offs
 decl_stmt|;
 name|size_t
 name|req_size
+decl_stmt|,
+name|nelem
+decl_stmt|;
+name|size_t
+name|str_remain
+decl_stmt|;
+name|char
+name|str_delim
+decl_stmt|;
+name|uint32_t
+name|val
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|sprom_var_defn
+name|sprom_get_var_defn
 argument_list|(
 name|sc
 argument_list|,
@@ -812,18 +912,45 @@ name|sv
 argument_list|,
 operator|&
 name|req_size
+argument_list|,
+operator|&
+name|nelem
+argument_list|,
+name|type
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+name|outp
+operator|=
+name|buf
+expr_stmt|;
+name|str_remain
+operator|=
+literal|0
+expr_stmt|;
+name|str_delim
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|!=
+name|BHND_NVRAM_TYPE_CSTR
+condition|)
+block|{
 comment|/* Provide required size */
 if|if
 condition|(
-name|buf
+name|outp
 operator|==
 name|NULL
 condition|)
@@ -858,8 +985,52 @@ name|len
 operator|=
 name|req_size
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* String length calculation requires performing  		 * the actual string formatting */
+name|KASSERT
+argument_list|(
+name|req_size
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"req_size set for variable-length type"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* If caller is querying length, the len argument  		 * may be uninitialized */
+if|if
+condition|(
+name|outp
+operator|!=
+name|NULL
+condition|)
+name|str_remain
+operator|=
+operator|*
+name|len
+expr_stmt|;
+comment|/* Fetch delimiter for the variable's string format */
+name|str_delim
+operator|=
+name|sprom_get_delim_char
+argument_list|(
+name|sc
+argument_list|,
+name|nv
+operator|->
+name|sfmt
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Read data */
 name|all1_offs
+operator|=
+literal|0
+expr_stmt|;
+name|val
 operator|=
 literal|0
 expr_stmt|;
@@ -885,9 +1056,6 @@ name|struct
 name|bhnd_sprom_offset
 modifier|*
 name|off
-decl_stmt|;
-name|uint32_t
-name|val
 decl_stmt|;
 name|off
 operator|=
@@ -915,7 +1083,7 @@ literal|"cont marked on first offset"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If not a continuation, advance the output buffer */
+comment|/* If not a continuation, advance the output buffer; if 		 * a C string, this requires appending a delimiter character */
 if|if
 condition|(
 name|i
@@ -928,30 +1096,127 @@ operator|->
 name|cont
 condition|)
 block|{
-name|buf
+name|size_t
+name|width
+init|=
+name|bhnd_nvram_type_width
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+comment|/* Non-fixed width types (such as CSTR) will have a 0 			 * width value */
+if|if
+condition|(
+name|width
+operator|!=
+literal|0
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|outp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL output buffer"
+operator|)
+argument_list|)
+expr_stmt|;
+name|outp
 operator|=
 operator|(
 operator|(
 name|uint8_t
 operator|*
 operator|)
-name|buf
+name|outp
 operator|)
 operator|+
-name|bhnd_nvram_type_width
-argument_list|(
-name|sv
-operator|->
-name|offsets
-index|[
+name|width
+expr_stmt|;
+block|}
+comment|/* Append CSTR delim, if necessary */
+if|if
+condition|(
+name|type
+operator|==
+name|BHND_NVRAM_TYPE_CSTR
+operator|&&
+name|str_delim
+operator|!=
+literal|'\0'
+operator|&&
 name|i
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|outp
+operator|!=
+name|NULL
+operator|&&
+name|str_remain
+operator|>=
+literal|1
+condition|)
+block|{
+operator|*
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|outp
+operator|)
+operator|=
+name|str_delim
+expr_stmt|;
+name|outp
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|outp
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+comment|/* Drop outp reference if we hit 0 */
+if|if
+condition|(
+name|str_remain
+operator|--
+operator|==
+literal|0
+condition|)
+name|outp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|SIZE_MAX
 operator|-
 literal|1
-index|]
-operator|.
-name|type
-argument_list|)
+operator|<
+name|req_size
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
+comment|/* too long */
+name|req_size
+operator|++
 expr_stmt|;
+block|}
 block|}
 comment|/* Read the value, widening to a common uint32 		 * representation */
 name|SPROM_SWITCH_TYPE
@@ -1032,11 +1297,196 @@ name|all1_offs
 operator|++
 expr_stmt|;
 block|}
-comment|/* Write the value, narrowing to the appropriate output 		 * width. */
-name|SPROM_SWITCH_TYPE
+comment|/* Skip writing if additional continuations remain */
+if|if
+condition|(
+name|i
+operator|+
+literal|1
+operator|<
+name|sv
+operator|->
+name|num_offsets
+operator|&&
+name|sv
+operator|->
+name|offsets
+index|[
+name|i
+index|]
+operator|.
+name|cont
+condition|)
+continue|continue;
+comment|/* Perform write */
+if|if
+condition|(
+name|type
+operator|==
+name|BHND_NVRAM_TYPE_CSTR
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|fmtstr
+decl_stmt|;
+name|int
+name|written
+decl_stmt|;
+name|fmtstr
+operator|=
+name|bhnd_nvram_type_fmt
 argument_list|(
+name|off
+operator|->
+name|type
+argument_list|,
 name|nv
 operator|->
+name|sfmt
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fmtstr
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"no NVRAM format string "
+literal|"for '%s' (type=%d)\n"
+argument_list|,
+name|name
+argument_list|,
+name|off
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+name|SPROM_SWITCH_TYPE
+argument_list|(
+name|off
+operator|->
+name|type
+argument_list|,
+name|SPROM_GETVAR_SNPRINTF
+argument_list|,
+name|val
+argument_list|,
+name|outp
+argument_list|,
+name|str_remain
+argument_list|,
+name|fmtstr
+argument_list|,
+name|written
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|written
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
+comment|/* Calculate remaining capacity, drop outp reference 			 * if we hit 0 -- otherwise, advance the buffer 			 * position */
+if|if
+condition|(
+name|written
+operator|>=
+name|str_remain
+condition|)
+block|{
+name|str_remain
+operator|=
+literal|0
+expr_stmt|;
+name|outp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|str_remain
+operator|-=
+name|written
+expr_stmt|;
+if|if
+condition|(
+name|outp
+operator|!=
+name|NULL
+condition|)
+name|outp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|outp
+operator|+
+name|written
+expr_stmt|;
+block|}
+comment|/* Add additional bytes to total length */
+if|if
+condition|(
+name|SIZE_MAX
+operator|-
+name|written
+operator|<
+name|req_size
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
+comment|/* string too long */
+name|req_size
+operator|+=
+name|written
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Verify range */
+name|SPROM_SWITCH_TYPE
+argument_list|(
+name|type
+argument_list|,
+name|SPROM_VERIFY_RANGE
+argument_list|,
+name|val
+argument_list|,
+name|off
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+comment|/* Write the value, narrowing to the appropriate output 			 * width. */
+name|SPROM_SWITCH_TYPE
+argument_list|(
 name|type
 argument_list|,
 name|SPROM_GETVAR_WRITE
@@ -1045,9 +1495,10 @@ name|off
 argument_list|,
 name|val
 argument_list|,
-name|buf
+name|outp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Should value should be treated as uninitialized? */
 if|if
@@ -1069,6 +1520,62 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+comment|/* If this is a C string request, we need to provide the computed 	 * length. */
+if|if
+condition|(
+name|type
+operator|==
+name|BHND_NVRAM_TYPE_CSTR
+condition|)
+block|{
+comment|/* Account for final trailing NUL */
+if|if
+condition|(
+name|SIZE_MAX
+operator|-
+literal|1
+operator|<
+name|req_size
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
+comment|/* string too long */
+name|req_size
+operator|++
+expr_stmt|;
+comment|/* Return an error if a too-small output buffer was provided */
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|len
+operator|<
+name|req_size
+condition|)
+block|{
+operator|*
+name|len
+operator|=
+name|req_size
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+operator|*
+name|len
+operator|=
+name|req_size
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1078,7 +1585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Perform a read of a variable offset from _src, safely widening the result  * to its 32-bit representation before assigning it to @p  * _dest. */
+comment|/* Perform a read of a variable offset from _src, safely widening the result  * to its 32-bit representation before assigning it to @p _dest. */
 end_comment
 
 begin_define
@@ -1092,8 +1599,12 @@ name|_widen
 parameter_list|,
 name|_width
 parameter_list|,
-name|_off
+name|_min
 parameter_list|,
+name|_max
+parameter_list|,
+name|_off
+parameter_list|,	\
 name|_src
 parameter_list|,
 name|_dest
@@ -1117,8 +1628,12 @@ name|_widen
 parameter_list|,
 name|_width
 parameter_list|,
-name|_sc
+name|_min
 parameter_list|,
+name|_max
+parameter_list|,
+name|_sc
+parameter_list|,	\
 name|_off
 parameter_list|,
 name|_src
@@ -1128,7 +1643,7 @@ value|do {									\ 	_type _v = (_type) (_widen) _src;				\ 	if (_off->cont)			
 end_define
 
 begin_comment
-comment|/**  * Set a local value for a SPROM variable, performing conversion to SPROM byte  * order.  *   * The new value will be written to the backing SPROM shadow.  *   * @param		sc	The SPROM parser state.  * @param		name	The SPROM variable name.  * @param[out]		buf	The new value.  * @param[in,out]	len	The size of @p buf.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval EINVAL	If @p len does not match the expected variable size.  */
+comment|/**  * Set a local value for a SPROM variable, performing conversion to SPROM byte  * order.  *   * The new value will be written to the backing SPROM shadow.  *   * @param		sc	The SPROM parser state.  * @param		name	The SPROM variable name.  * @param[out]		buf	The new value.  * @param[in,out]	len	The size of @p buf.  * @param		type	The data type of @p buf.  *  * @retval 0		success  * @retval ENOENT	The requested variable was not found.  * @retval EINVAL	If @p len does not match the expected variable size.  */
 end_comment
 
 begin_function
@@ -1152,22 +1667,27 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|bhnd_nvram_var
+name|bhnd_nvram_vardefn
 modifier|*
 name|nv
 decl_stmt|;
 specifier|const
 name|struct
-name|bhnd_sprom_var
+name|bhnd_sprom_vardefn
 modifier|*
 name|sv
 decl_stmt|;
 name|size_t
 name|req_size
+decl_stmt|,
+name|nelem
 decl_stmt|;
 name|int
 name|error
@@ -1175,12 +1695,9 @@ decl_stmt|;
 name|uint8_t
 name|crc
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|sprom_var_defn
+name|sprom_get_var_defn
 argument_list|(
 name|sc
 argument_list|,
@@ -1194,12 +1711,32 @@ name|sv
 argument_list|,
 operator|&
 name|req_size
+argument_list|,
+operator|&
+name|nelem
+argument_list|,
+name|type
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+comment|/* String parsing is currently unsupported */
+if|if
+condition|(
+name|type
+operator|==
+name|BHND_NVRAM_TYPE_CSTR
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 comment|/* Provide required size */
@@ -1320,6 +1857,20 @@ argument_list|,
 name|buf
 argument_list|,
 name|val
+argument_list|)
+expr_stmt|;
+comment|/* Verify range */
+name|SPROM_SWITCH_TYPE
+argument_list|(
+name|nv
+operator|->
+name|type
+argument_list|,
+name|SPROM_VERIFY_RANGE
+argument_list|,
+name|val
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 comment|/* Write the value, narrowing to the appropriate output 		 * width. */
@@ -1887,7 +2438,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|sprom_var_defn
+name|sprom_get_var_defn
 parameter_list|(
 name|struct
 name|bhnd_sprom
@@ -1901,14 +2452,14 @@ name|name
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_nvram_var
+name|bhnd_nvram_vardefn
 modifier|*
 modifier|*
 name|var
 parameter_list|,
 specifier|const
 name|struct
-name|bhnd_sprom_var
+name|bhnd_sprom_vardefn
 modifier|*
 modifier|*
 name|sprom
@@ -1916,13 +2467,20 @@ parameter_list|,
 name|size_t
 modifier|*
 name|size
+parameter_list|,
+name|size_t
+modifier|*
+name|nelem
+parameter_list|,
+name|bhnd_nvram_type
+name|req_type
 parameter_list|)
 block|{
 comment|/* Find variable definition */
 operator|*
 name|var
 operator|=
-name|bhnd_nvram_var_defn
+name|bhnd_nvram_find_vardefn
 argument_list|(
 name|name
 argument_list|)
@@ -1954,7 +2512,7 @@ operator|*
 name|var
 operator|)
 operator|->
-name|num_sp_descs
+name|num_sp_defs
 condition|;
 name|i
 operator|++
@@ -1962,7 +2520,7 @@ control|)
 block|{
 specifier|const
 name|struct
-name|bhnd_sprom_var
+name|bhnd_sprom_vardefn
 modifier|*
 name|sp
 init|=
@@ -1972,7 +2530,7 @@ operator|*
 name|var
 operator|)
 operator|->
-name|sprom_descs
+name|sp_defs
 index|[
 name|i
 index|]
@@ -2009,23 +2567,57 @@ name|sprom
 operator|=
 name|sp
 expr_stmt|;
-comment|/* Calculate size in bytes */
+comment|/* Calculate element count and total size, in bytes */
+operator|*
+name|nelem
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|size_t
+name|j
+init|=
+literal|0
+init|;
+name|j
+operator|<
+name|sp
+operator|->
+name|num_offsets
+condition|;
+name|j
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|sp
+operator|->
+name|offsets
+index|[
+name|j
+index|]
+operator|.
+name|cont
+condition|)
+operator|*
+name|nelem
+operator|+=
+literal|1
+expr_stmt|;
 operator|*
 name|size
 operator|=
 name|bhnd_nvram_type_width
 argument_list|(
-operator|(
-operator|*
-name|var
-operator|)
-operator|->
-name|type
+name|req_type
 argument_list|)
 operator|*
-name|sp
-operator|->
-name|num_offsets
+operator|(
+operator|*
+name|nelem
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -2039,6 +2631,80 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return the array element delimiter for @p sfmt, or '\0' if none.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+name|sprom_get_delim_char
+parameter_list|(
+name|struct
+name|bhnd_sprom
+modifier|*
+name|sc
+parameter_list|,
+name|bhnd_nvram_sfmt
+name|sfmt
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|sfmt
+condition|)
+block|{
+case|case
+name|BHND_NVRAM_SFMT_HEX
+case|:
+case|case
+name|BHND_NVRAM_SFMT_DEC
+case|:
+return|return
+operator|(
+literal|','
+operator|)
+return|;
+case|case
+name|BHND_NVRAM_SFMT_CCODE
+case|:
+case|case
+name|BHND_NVRAM_SFMT_LEDDC
+case|:
+return|return
+operator|(
+literal|'\0'
+operator|)
+return|;
+case|case
+name|BHND_NVRAM_SFMT_MACADDR
+case|:
+return|return
+operator|(
+literal|':'
+operator|)
+return|;
+default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"unknown NVRAM string format: %d\n"
+argument_list|,
+name|sfmt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|','
+operator|)
+return|;
+block|}
 block|}
 end_function
 
