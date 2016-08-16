@@ -795,11 +795,17 @@ decl_stmt|;
 name|long
 name|k
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__LP64__
 name|atf_tc_expect_fail
 argument_list|(
-literal|"the testcase violates FLT_EPSILON"
+literal|"the testcase violates FLT_EPSILON on 64-bit "
+literal|"platforms, e.g. amd64"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_MSG
 argument_list|(
 name|unsetenv
