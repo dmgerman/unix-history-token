@@ -183,6 +183,22 @@ name|HN_NVS_REQSIZE_MIN
 value|32
 end_define
 
+begin_comment
+comment|/* NVS message common header */
+end_comment
+
+begin_struct
+struct|struct
+name|hn_nvs_hdr
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|hn_nvs_init

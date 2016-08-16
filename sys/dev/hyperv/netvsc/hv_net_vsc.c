@@ -3418,9 +3418,10 @@ modifier|*
 name|pkt
 decl_stmt|;
 specifier|const
-name|nvsp_msg
+name|struct
+name|hn_nvs_hdr
 modifier|*
-name|nvsp_msg_pkt
+name|nvs_hdr
 decl_stmt|;
 name|netvsc_packet
 name|vsc_pkt
@@ -3447,23 +3448,24 @@ name|status
 init|=
 name|nvsp_status_success
 decl_stmt|;
-name|nvsp_msg_pkt
+comment|/* Make sure that this is a RNDIS message. */
+name|nvs_hdr
 operator|=
 name|VMBUS_CHANPKT_CONST_DATA
 argument_list|(
 name|pkthdr
 argument_list|)
 expr_stmt|;
-comment|/* Make sure this is a valid nvsp packet */
 if|if
 condition|(
-name|nvsp_msg_pkt
+name|__predict_false
+argument_list|(
+name|nvs_hdr
 operator|->
-name|hdr
-operator|.
-name|msg_type
+name|nvs_type
 operator|!=
-name|nvsp_msg_1_type_send_rndis_pkt
+name|HN_NVS_TYPE_RNDIS
+argument_list|)
 condition|)
 block|{
 name|if_printf
@@ -3472,13 +3474,11 @@ name|rxr
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"packet hdr type %u is invalid!\n"
+literal|"nvs type %u, not RNDIS\n"
 argument_list|,
-name|nvsp_msg_pkt
+name|nvs_hdr
 operator|->
-name|hdr
-operator|.
-name|msg_type
+name|nvs_type
 argument_list|)
 expr_stmt|;
 return|return;
