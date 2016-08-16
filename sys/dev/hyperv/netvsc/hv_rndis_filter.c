@@ -4978,13 +4978,11 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|vmbus_chan_send
+name|hn_nvs_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
@@ -4996,12 +4994,6 @@ operator|*
 name|req
 argument_list|)
 argument_list|,
-call|(
-name|uint64_t
-call|)
-argument_list|(
-name|uintptr_t
-argument_list|)
 operator|&
 name|sndc
 argument_list|)
