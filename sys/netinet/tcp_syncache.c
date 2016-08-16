@@ -3954,6 +3954,8 @@ name|tfb_tcp_fb_fini
 call|)
 argument_list|(
 name|tp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|refcount_release

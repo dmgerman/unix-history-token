@@ -278,7 +278,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * If defining the optional tcp_timers, in the  * tfb_tcp_timer_stop call you must use the  * callout_async_drain() function with the  * tcp_timer_discard callback. You should check  * the return of callout_async_drain() and if 0  * increment tt_draincnt. Since the timer sub-system  * does not know your callbacks you must provide a  * stop_all function that loops through and calls  * tcp_timer_stop() with each of your defined timers.  */
+comment|/*  * If defining the optional tcp_timers, in the  * tfb_tcp_timer_stop call you must use the  * callout_async_drain() function with the  * tcp_timer_discard callback. You should check  * the return of callout_async_drain() and if 0  * increment tt_draincnt. Since the timer sub-system  * does not know your callbacks you must provide a  * stop_all function that loops through and calls  * tcp_timer_stop() with each of your defined timers.  * Adding a tfb_tcp_handoff_ok function allows the socket  * option to change stacks to query you even if the  * connection is in a later stage. You return 0 to  * say you can take over and run your stack, you return  * non-zero (an error number) to say no you can't.  * If the function is undefined you can only change  * in the early states (before connect or listen).  * tfb_tcp_fb_fini is changed to add a flag to tell  * the old stack if the tcb is being destroyed or  * not. A one in the flag means the TCB is being  * destroyed, a zero indicates its transitioning to  * another stack (via socket option).  */
 end_comment
 
 begin_struct
@@ -381,6 +381,8 @@ parameter_list|(
 name|struct
 name|tcpcb
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* Optional timers, must define all if you define one */
@@ -440,6 +442,17 @@ name|void
 function_decl|(
 modifier|*
 name|tfb_tcp_rexmit_tmr
+function_decl|)
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tfb_tcp_handoff_ok
 function_decl|)
 parameter_list|(
 name|struct
