@@ -452,7 +452,13 @@ name|int
 name|nfs_type
 decl_stmt|;
 block|}
-decl|static
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|stattypes
 name|statstruct
 index|[]
 init|=
@@ -475,8 +481,8 @@ block|,
 name|NFSV4OP_COMMIT
 block|}
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
