@@ -2824,8 +2824,8 @@ name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
-name|bool
-name|is_data_pkt
+name|uint32_t
+name|rndis_mtype
 parameter_list|,
 name|struct
 name|hn_send_ctx

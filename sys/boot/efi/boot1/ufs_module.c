@@ -135,7 +135,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"dskread: failed dev: %p, id: %u, lba: %lu, size: %d, "
+literal|"dskread: failed dev: %p, id: %u, lba: %zu, size: %d, "
 literal|"status: %lu\n"
 argument_list|,
 name|devinfo

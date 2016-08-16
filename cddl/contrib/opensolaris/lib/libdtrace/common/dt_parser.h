@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -273,6 +273,26 @@ comment|/* provider redeclared */
 block|}
 name|_provider
 struct|;
+struct|struct
+block|{
+name|struct
+name|dt_node
+modifier|*
+name|_conditional
+decl_stmt|;
+name|struct
+name|dt_node
+modifier|*
+name|_body
+decl_stmt|;
+name|struct
+name|dt_node
+modifier|*
+name|_alternate_body
+decl_stmt|;
+block|}
+name|_conditional
+struct|;
 block|}
 name|dn_u
 union|;
@@ -431,6 +451,19 @@ directive|define
 name|dn_probes
 value|dn_u._provider._probes
 comment|/* DT_NODE_PROVIDER */
+comment|/* DT_NODE_IF: */
+define|#
+directive|define
+name|dn_conditional
+value|dn_u._conditional._conditional
+define|#
+directive|define
+name|dn_body
+value|dn_u._conditional._body
+define|#
+directive|define
+name|dn_alternate_body
+value|dn_u._conditional._alternate_body
 define|#
 directive|define
 name|DT_NODE_FREE
@@ -541,6 +574,11 @@ directive|define
 name|DT_NODE_PROG
 value|21
 comment|/* program translation unit */
+define|#
+directive|define
+name|DT_NODE_IF
+value|22
+comment|/* if statement */
 define|#
 directive|define
 name|DT_NF_SIGNED
@@ -988,6 +1026,21 @@ function_decl|;
 specifier|extern
 name|dt_node_t
 modifier|*
+name|dt_node_if
+parameter_list|(
+name|dt_node_t
+modifier|*
+parameter_list|,
+name|dt_node_t
+modifier|*
+parameter_list|,
+name|dt_node_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|dt_node_t
+modifier|*
 name|dt_node_link
 parameter_list|(
 name|dt_node_t
@@ -1171,6 +1224,19 @@ function_decl|;
 specifier|extern
 name|void
 name|dt_node_printr
+parameter_list|(
+name|dt_node_t
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dt_printd
 parameter_list|(
 name|dt_node_t
 modifier|*

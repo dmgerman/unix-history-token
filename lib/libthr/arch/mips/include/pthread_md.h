@@ -182,7 +182,7 @@ literal|".set\tmips64r2\n\t"
 literal|"rdhwr\t%0, $29\n\t"
 literal|".set\tpop"
 operator|:
-literal|"=v"
+literal|"=r"
 operator|(
 name|_rv
 operator|)
@@ -237,7 +237,7 @@ literal|".set\tmips32r2\n\t"
 literal|"rdhwr\t%0, $29\n\t"
 literal|".set\tpop"
 operator|:
-literal|"=v"
+literal|"=r"
 operator|(
 name|_rv
 operator|)

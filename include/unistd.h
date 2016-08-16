@@ -2631,6 +2631,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|fdatasync
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * ftruncate() was in the POSIX Realtime Extension (it's used for shared  * memory), but truncate() was not.  */
 end_comment

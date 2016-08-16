@@ -162,12 +162,13 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|t
 operator|=
 name|ttyname
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 if|if
@@ -188,9 +189,9 @@ name|exit
 argument_list|(
 name|t
 condition|?
-literal|0
+name|EXIT_SUCCESS
 else|:
-literal|1
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -208,7 +209,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tty [-s]\n"
+literal|"usage: %s [-s]\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit

@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2014, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -90,6 +90,9 @@ value|3
 comment|/* library ABI interface version */
 struct_decl|struct
 name|ps_prochandle
+struct_decl|;
+struct_decl|struct
+name|dt_node
 struct_decl|;
 typedef|typedef
 name|struct
@@ -363,7 +366,7 @@ define|#
 directive|define
 name|DTRACE_C_PSPEC
 value|0x0080
-comment|/* Intepret ambiguous specifiers as probes */
+comment|/* Interpret ambiguous specifiers as probes */
 define|#
 directive|define
 name|DTRACE_C_ETAGS
@@ -2169,6 +2172,20 @@ name|FILE
 modifier|*
 parameter_list|,
 name|dtrace_typeinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|struct
+name|dt_node
+modifier|*
+name|dt_compile_sugar
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|struct
+name|dt_node
 modifier|*
 parameter_list|)
 function_decl|;

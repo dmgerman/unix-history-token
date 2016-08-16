@@ -6553,8 +6553,16 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* enable_sets() expects bitmasks. */
 if|if
 condition|(
+name|op3
+operator|->
+name|opcode
+operator|!=
+name|IP_FW_SET_ENABLE
+operator|&&
+operator|(
 name|rh
 operator|->
 name|range
@@ -6570,6 +6578,7 @@ operator|.
 name|new_set
 operator|>=
 name|IPFW_MAX_SETS
+operator|)
 condition|)
 return|return
 operator|(

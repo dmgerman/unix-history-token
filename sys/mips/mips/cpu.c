@@ -562,6 +562,14 @@ name|mips_rd_config1
 argument_list|()
 expr_stmt|;
 comment|/* Get the Config2 and Config3 registers as well. */
+name|cfg2
+operator|=
+literal|0
+expr_stmt|;
+name|cfg3
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|cfg1

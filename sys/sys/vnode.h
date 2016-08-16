@@ -4163,6 +4163,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdfdatasync_buf
+parameter_list|(
+name|struct
+name|vop_fdatasync_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdfsync
 parameter_list|(
 name|struct

@@ -7340,6 +7340,12 @@ expr_stmt|;
 name|SCTP_ITERATOR_LOCK
 argument_list|()
 expr_stmt|;
+name|sctp_it_ctl
+operator|.
+name|cur_it
+operator|=
+name|it
+expr_stmt|;
 if|if
 condition|(
 name|it
@@ -7374,6 +7380,12 @@ block|{
 comment|/* iterator is complete */
 name|done_with_iterator
 label|:
+name|sctp_it_ctl
+operator|.
+name|cur_it
+operator|=
+name|NULL
+expr_stmt|;
 name|SCTP_ITERATOR_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -8141,12 +8153,6 @@ argument_list|,
 argument|nit
 argument_list|)
 block|{
-name|sctp_it_ctl
-operator|.
-name|cur_it
-operator|=
-name|it
-expr_stmt|;
 comment|/* now lets work on this one */
 name|TAILQ_REMOVE
 argument_list|(
@@ -8174,12 +8180,6 @@ name|sctp_iterator_work
 argument_list|(
 name|it
 argument_list|)
-expr_stmt|;
-name|sctp_it_ctl
-operator|.
-name|cur_it
-operator|=
-name|NULL
 expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()

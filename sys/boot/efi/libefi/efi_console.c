@@ -1841,13 +1841,22 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|status
 operator|==
 name|EFI_NOT_READY
 condition|)
 block|{
+comment|/* Some EFI implementation (u-boot for example) do not support WaitForKey */
+if|if
+condition|(
+name|conin
+operator|->
+name|WaitForKey
+operator|!=
+name|NULL
+condition|)
 name|BS
 operator|->
 name|WaitForEvent
@@ -1910,6 +1919,19 @@ name|int
 name|efi_cons_poll
 parameter_list|()
 block|{
+if|if
+condition|(
+name|conin
+operator|->
+name|WaitForKey
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 comment|/* This can clear the signaled state. */
 return|return
 operator|(

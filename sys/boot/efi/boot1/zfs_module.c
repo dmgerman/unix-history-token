@@ -161,7 +161,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"vdev_read: failed dev: %p, id: %u, lba: %zu, size: %zu,"
+literal|"vdev_read: failed dev: %p, id: %u, lba: %jd, size: %zu,"
 literal|" status: %lu\n"
 argument_list|,
 name|devinfo
