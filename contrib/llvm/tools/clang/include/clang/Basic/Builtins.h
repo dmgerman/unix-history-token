@@ -140,6 +140,11 @@ init|=
 literal|0x10
 block|,
 comment|// builtin requires MS mode.
+name|OCLC20_LANG
+init|=
+literal|0x20
+block|,
+comment|// builtin for OpenCL C only.
 name|ALL_LANGUAGES
 init|=
 name|C_LANG
@@ -322,7 +327,7 @@ operator|.
 name|Type
 return|;
 block|}
-comment|/// \brief Return true if this function is a target-specific builtin
+comment|/// \brief Return true if this function is a target-specific builtin.
 name|bool
 name|isTSBuiltin
 argument_list|(
@@ -337,6 +342,31 @@ operator|>=
 name|Builtin
 operator|::
 name|FirstTSBuiltin
+return|;
+block|}
+comment|/// \brief Return true if this function has no side effects.
+name|bool
+name|isPure
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|getRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'U'
+argument_list|)
+operator|!=
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return true if this function has no side effects and doesn't
@@ -831,6 +861,9 @@ name|int
 block|{
 comment|/// \brief This names the __make_integer_seq BuiltinTemplateDecl.
 name|BTK__make_integer_seq
+block|,
+comment|/// \brief This names the __type_pack_element BuiltinTemplateDecl.
+name|BTK__type_pack_element
 block|}
 enum|;
 block|}

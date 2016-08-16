@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|32
+value|35
 end_define
 
 begin_define
@@ -339,7 +339,7 @@ name|CXFile
 name|file
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve a file handle within the given translation unit.  *  * \param tu the translation unit  *  * \param file_name the name of the file.  *  * \returns the file handle for the named file in the translation unit \p tu,  * or a NULL file handle if the file was not a part of this translation unit.  */
+comment|/**  * \brief Retrieve a file handle within the given translation unit.  *  * \param tu the translation unit  * * \param file_name the name of the file.  *  * \returns the file handle for the named file in the translation unit \p tu,  * or a NULL file handle if the file was not a part of this translation unit.  */
 name|CINDEX_LINKAGE
 name|CXFile
 name|clang_getFile
@@ -1156,6 +1156,11 @@ comment|/**    * \brief Used to indicate that the precompiled preamble should be
 name|CXTranslationUnit_CreatePreambleOnFirstParse
 init|=
 literal|0x100
+block|,
+comment|/**    * \brief Do not stop processing when fatal errors are encountered.    *    * When fatal errors are encountered while parsing a translation unit,    * semantic analysis is typically stopped early when compiling code. A common    * source for fatal errors are unresolvable include files. For the    * purposes of an IDE, this is undesirable behavior and as much information    * as possible should be reported. Use this flag to enable this behavior.    */
+name|CXTranslationUnit_KeepGoing
+init|=
+literal|0x200
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -2014,7 +2019,7 @@ name|CXCursor_CXXDeleteExpr
 init|=
 literal|135
 block|,
-comment|/** \brief A unary expression.    */
+comment|/** \brief A unary expression. (noexcept, sizeof, or other traits)    */
 name|CXCursor_UnaryExpr
 init|=
 literal|136
@@ -2074,9 +2079,14 @@ name|CXCursor_OMPArraySectionExpr
 init|=
 literal|147
 block|,
+comment|/** \brief Represents an @available(...) check.    */
+name|CXCursor_ObjCAvailabilityCheckExpr
+init|=
+literal|148
+block|,
 name|CXCursor_LastExpr
 init|=
-name|CXCursor_OMPArraySectionExpr
+name|CXCursor_ObjCAvailabilityCheckExpr
 block|,
 comment|/* Statements */
 name|CXCursor_FirstStmt
@@ -2392,9 +2402,54 @@ name|CXCursor_OMPDistributeDirective
 init|=
 literal|260
 block|,
+comment|/** \brief OpenMP target enter data directive.    */
+name|CXCursor_OMPTargetEnterDataDirective
+init|=
+literal|261
+block|,
+comment|/** \brief OpenMP target exit data directive.    */
+name|CXCursor_OMPTargetExitDataDirective
+init|=
+literal|262
+block|,
+comment|/** \brief OpenMP target parallel directive.    */
+name|CXCursor_OMPTargetParallelDirective
+init|=
+literal|263
+block|,
+comment|/** \brief OpenMP target parallel for directive.    */
+name|CXCursor_OMPTargetParallelForDirective
+init|=
+literal|264
+block|,
+comment|/** \brief OpenMP target update directive.    */
+name|CXCursor_OMPTargetUpdateDirective
+init|=
+literal|265
+block|,
+comment|/** \brief OpenMP distribute parallel for directive.    */
+name|CXCursor_OMPDistributeParallelForDirective
+init|=
+literal|266
+block|,
+comment|/** \brief OpenMP distribute parallel for simd directive.    */
+name|CXCursor_OMPDistributeParallelForSimdDirective
+init|=
+literal|267
+block|,
+comment|/** \brief OpenMP distribute simd directive.    */
+name|CXCursor_OMPDistributeSimdDirective
+init|=
+literal|268
+block|,
+comment|/** \brief OpenMP target parallel for simd directive.    */
+name|CXCursor_OMPTargetParallelForSimdDirective
+init|=
+literal|269
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_OMPDistributeDirective
+name|CXCursor_OMPTargetParallelForSimdDirective
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -2530,13 +2585,18 @@ name|CXCursor_TypeAliasTemplateDecl
 init|=
 literal|601
 block|,
+comment|/**    * \brief A static_assert or _Static_assert node    */
+name|CXCursor_StaticAssert
+init|=
+literal|602
+block|,
 name|CXCursor_FirstExtraDecl
 init|=
 name|CXCursor_ModuleImportDecl
 block|,
 name|CXCursor_LastExtraDecl
 init|=
-name|CXCursor_TypeAliasTemplateDecl
+name|CXCursor_StaticAssert
 block|,
 comment|/**    * \brief A code completion overload candidate.    */
 name|CXCursor_OverloadCandidate
@@ -2664,6 +2724,15 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine whether the given cursor has any attributes.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_hasAttrs
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine whether the given cursor kind represents an invalid  * cursor.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -2771,7 +2840,7 @@ typedef|typedef
 struct|struct
 name|CXPlatformAvailability
 block|{
-comment|/**    * \brief A string that describes the platform for which this structure    * provides availability information.    *    * Possible values are "ios" or "macosx".    */
+comment|/**    * \brief A string that describes the platform for which this structure    * provides availability information.    *    * Possible values are "ios" or "macos".    */
 name|CXString
 name|Platform
 decl_stmt|;
@@ -3133,6 +3202,10 @@ name|CXType_ObjCSel
 init|=
 literal|29
 block|,
+name|CXType_Float128
+init|=
+literal|30
+block|,
 name|CXType_FirstBuiltin
 init|=
 name|CXType_Void
@@ -3216,6 +3289,11 @@ block|,
 name|CXType_Auto
 init|=
 literal|118
+block|,
+comment|/**    * \brief Represents a type that was referred to using an elaborated type keyword.    *    * E.g., struct S, or via a qualified name, e.g., N::M::type, or both.    */
+name|CXType_Elaborated
+init|=
+literal|119
 block|}
 enum|;
 comment|/**  * \brief Describes the calling convention of a function type  */
@@ -3270,6 +3348,18 @@ block|,
 name|CXCallingConv_X86VectorCall
 init|=
 literal|12
+block|,
+name|CXCallingConv_Swift
+init|=
+literal|13
+block|,
+name|CXCallingConv_PreserveMost
+init|=
+literal|14
+block|,
+name|CXCallingConv_PreserveAll
+init|=
+literal|15
 block|,
 name|CXCallingConv_Invalid
 init|=
@@ -3502,6 +3592,33 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine whether a  CXCursor that is a macro, is  * function like.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isMacroFunctionLike
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine whether a  CXCursor that is a macro, is a  * builtin one.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isMacroBuiltin
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine whether a  CXCursor that is a function declaration, is an  * inline declaration.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isFunctionInlined
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine whether a CXType has the "volatile" qualifier set,  * without looking through typedefs that may have added "volatile" at  * a different level.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -3545,6 +3662,15 @@ name|clang_getDeclObjCTypeEncoding
 parameter_list|(
 name|CXCursor
 name|C
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the Objective-C type encoding for the specified CXType.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_Type_getObjCEncoding
+parameter_list|(
+name|CXType
+name|type
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Retrieve the spelling of a given CXTypeKind.  */
@@ -3657,6 +3783,15 @@ name|CINDEX_LINKAGE
 name|long
 name|long
 name|clang_getArraySize
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the type named by the qualified-id.  *  * If a non-elaborated type is passed in, an invalid type is returned.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_Type_getNamedType
 parameter_list|(
 name|CXType
 name|T
@@ -3982,6 +4117,7 @@ name|parent
 parameter_list|)
 function_decl|;
 comment|/**  * Visits the children of a cursor using the specified block.  Behaves  * identically to clang_visitChildren() in all other respects.  */
+name|CINDEX_LINKAGE
 name|unsigned
 name|clang_visitChildrenWithBlock
 parameter_list|(
@@ -4232,6 +4368,10 @@ block|,
 name|CXObjCPropertyAttr_unsafe_unretained
 init|=
 literal|0x800
+block|,
+name|CXObjCPropertyAttr_class
+init|=
+literal|0x1000
 block|}
 name|CXObjCPropertyAttrKind
 typedef|;
@@ -4452,10 +4592,55 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
+comment|/**  * \brief Determine if a C++ constructor is a converting constructor.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXConstructor_isConvertingConstructor
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ constructor is a copy constructor.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXConstructor_isCopyConstructor
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ constructor is the default constructor.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXConstructor_isDefaultConstructor
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ constructor is a move constructor.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXConstructor_isMoveConstructor
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Determine if a C++ field is declared 'mutable'.  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_CXXField_isMutable
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine if a C++ method is declared '= default'.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXMethod_isDefaulted
 parameter_list|(
 name|CXCursor
 name|C
@@ -5193,7 +5378,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Perform code completion at a given location in a translation unit.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of  * semantic analysis, what completions to provide. These completions are  * returned via a new \c CXCodeCompleteResults structure.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the  * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-completion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param TU The translation unit in which code-completion should  * occur. The source files for this translation unit need not be  * completely up-to-date (and the contents of those source files may  * be overridden via \p unsaved_files). Cursors referring into the  * translation unit may be invalidated by this invocation.  *  * \param complete_filename The name of the source file where code  * completion should be performed. This filename may be any file  * included in the translation unit.  *  * \param complete_line The line at which code-completion should occur.  *  * \param complete_column The column at which code-completion should occur.  * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param unsaved_files the Tiles that have not yet been saved to disk  * but may be required for parsing or code completion, including the  * contents of those files.  The contents and name of these files (as  * specified by CXUnsavedFile) are copied when necessary, so the  * client only needs to guarantee their validity until the call to  * this function returns.  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param options Extra options that control the behavior of code  * completion, expressed as a bitwise OR of the enumerators of the  * CXCodeComplete_Flags enumeration. The   * \c clang_defaultCodeCompleteOptions() function returns a default set  * of code-completion options.  *  * \returns If successful, a new \c CXCodeCompleteResults structure  * containing code-completion results, which should eventually be  * freed with \c clang_disposeCodeCompleteResults(). If code  * completion fails, returns NULL.  */
+comment|/**  * \brief Perform code completion at a given location in a translation unit.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of  * semantic analysis, what completions to provide. These completions are  * returned via a new \c CXCodeCompleteResults structure.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the  * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-completion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param TU The translation unit in which code-completion should  * occur. The source files for this translation unit need not be  * completely up-to-date (and the contents of those source files may  * be overridden via \p unsaved_files). Cursors referring into the  * translation unit may be invalidated by this invocation.  *  * \param complete_filename The name of the source file where code  * completion should be performed. This filename may be any file  * included in the translation unit.  *  * \param complete_line The line at which code-completion should occur.  *  * \param complete_column The column at which code-completion should occur.  * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param unsaved_files the Files that have not yet been saved to disk  * but may be required for parsing or code completion, including the  * contents of those files.  The contents and name of these files (as  * specified by CXUnsavedFile) are copied when necessary, so the  * client only needs to guarantee their validity until the call to  * this function returns.  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param options Extra options that control the behavior of code  * completion, expressed as a bitwise OR of the enumerators of the  * CXCodeComplete_Flags enumeration. The   * \c clang_defaultCodeCompleteOptions() function returns a default set  * of code-completion options.  *  * \returns If successful, a new \c CXCodeCompleteResults structure  * containing code-completion results, which should eventually be  * freed with \c clang_disposeCodeCompleteResults(). If code  * completion fails, returns NULL.  */
 name|CINDEX_LINKAGE
 name|CXCodeCompleteResults
 modifier|*
@@ -5374,6 +5559,101 @@ name|CXClientData
 name|client_data
 parameter_list|)
 function_decl|;
+typedef|typedef
+enum|enum
+block|{
+name|CXEval_Int
+init|=
+literal|1
+block|,
+name|CXEval_Float
+init|=
+literal|2
+block|,
+name|CXEval_ObjCStrLiteral
+init|=
+literal|3
+block|,
+name|CXEval_StrLiteral
+init|=
+literal|4
+block|,
+name|CXEval_CFStr
+init|=
+literal|5
+block|,
+name|CXEval_Other
+init|=
+literal|6
+block|,
+name|CXEval_UnExposed
+init|=
+literal|0
+block|}
+name|CXEvalResultKind
+typedef|;
+comment|/**  * \brief Evaluation result of a cursor  */
+typedef|typedef
+name|void
+modifier|*
+name|CXEvalResult
+typedef|;
+comment|/**  * \brief If cursor is a statement declaration tries to evaluate the   * statement and if its variable, tries to evaluate its initializer,  * into its corresponding type.  */
+name|CINDEX_LINKAGE
+name|CXEvalResult
+name|clang_Cursor_Evaluate
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the kind of the evaluated result.  */
+name|CINDEX_LINKAGE
+name|CXEvalResultKind
+name|clang_EvalResult_getKind
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the evaluation result as integer if the  * kind is Int.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_EvalResult_getAsInt
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the evaluation result as double if the  * kind is double.  */
+name|CINDEX_LINKAGE
+name|double
+name|clang_EvalResult_getAsDouble
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the evaluation result as a constant string if the  * kind is other than Int or float. User must not free this pointer,  * instead call clang_EvalResult_dispose on the CXEvalResult returned  * by clang_Cursor_Evaluate.  */
+name|CINDEX_LINKAGE
+specifier|const
+name|char
+modifier|*
+name|clang_EvalResult_getAsStr
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Disposes the created Eval memory.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_EvalResult_dispose
+parameter_list|(
+name|CXEvalResult
+name|E
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/** \defgroup CINDEX_REMAPPING Remapping functions  *  * @{  */
 comment|/**  * \brief A remapping of original source files and their translated files.  */
@@ -5455,6 +5735,7 @@ block|}
 enum|;
 typedef|typedef
 struct|struct
+name|CXCursorAndRangeVisitor
 block|{
 name|void
 modifier|*

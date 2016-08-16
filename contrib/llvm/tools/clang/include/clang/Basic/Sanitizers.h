@@ -156,21 +156,14 @@ block|}
 struct|struct
 name|SanitizerSet
 block|{
-name|SanitizerSet
-argument_list|()
-operator|:
-name|Mask
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 comment|/// \brief Check if a certain (single) sanitizer is enabled.
 name|bool
 name|has
 argument_list|(
-argument|SanitizerMask K
+name|SanitizerMask
+name|K
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -181,7 +174,7 @@ argument_list|(
 name|K
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Mask
 operator|&
@@ -267,6 +260,8 @@ block|}
 comment|/// \brief Bitmask of enabled sanitizers.
 name|SanitizerMask
 name|Mask
+init|=
+literal|0
 decl_stmt|;
 block|}
 struct|;

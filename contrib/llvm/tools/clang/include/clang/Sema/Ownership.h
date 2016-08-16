@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -139,6 +145,8 @@ block|{
 name|void
 operator|*
 name|Ptr
+operator|=
+name|nullptr
 block|;
 name|explicit
 name|OpaquePtr
@@ -165,11 +173,8 @@ expr_stmt|;
 name|public
 operator|:
 name|OpaquePtr
-argument_list|()
-operator|:
-name|Ptr
 argument_list|(
-argument|nullptr
+argument|std::nullptr_t = nullptr
 argument_list|)
 block|{}
 specifier|static

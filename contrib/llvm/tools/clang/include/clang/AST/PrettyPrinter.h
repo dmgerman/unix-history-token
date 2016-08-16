@@ -116,10 +116,13 @@ block|}
 empty_stmt|;
 comment|/// \brief Describes how types, statements, expressions, and
 comment|/// declarations should be printed.
+comment|///
+comment|/// This type is intended to be small and suitable for passing by value.
+comment|/// It is very frequently copied.
 struct|struct
 name|PrintingPolicy
 block|{
-comment|/// \brief Create a default printing policy for C.
+comment|/// \brief Create a default printing policy for the specified language.
 name|PrintingPolicy
 argument_list|(
 specifier|const
@@ -128,11 +131,6 @@ operator|&
 name|LO
 argument_list|)
 operator|:
-name|LangOpts
-argument_list|(
-name|LO
-argument_list|)
-operator|,
 name|Indentation
 argument_list|(
 literal|2
@@ -145,10 +143,12 @@ argument_list|)
 operator|,
 name|SuppressTagKeyword
 argument_list|(
-name|false
+name|LO
+operator|.
+name|CPlusPlus
 argument_list|)
 operator|,
-name|SuppressTag
+name|IncludeTagDefinition
 argument_list|(
 name|false
 argument_list|)
@@ -188,11 +188,45 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SuppressTemplateArgsInCXXConstructors
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Bool
 argument_list|(
 name|LO
 operator|.
 name|Bool
+argument_list|)
+operator|,
+name|Restrict
+argument_list|(
+name|LO
+operator|.
+name|C99
+argument_list|)
+operator|,
+name|Alignof
+argument_list|(
+name|LO
+operator|.
+name|CPlusPlus11
+argument_list|)
+operator|,
+name|UnderscoreAlignof
+argument_list|(
+name|LO
+operator|.
+name|C11
+argument_list|)
+operator|,
+name|UseVoidForZeroParams
+argument_list|(
+operator|!
+name|LO
+operator|.
+name|CPlusPlus
 argument_list|)
 operator|,
 name|TerseOutput
@@ -234,16 +268,32 @@ argument_list|(
 argument|false
 argument_list|)
 block|{ }
-comment|/// \brief What language we're printing.
-name|LangOptions
-name|LangOpts
-expr_stmt|;
+comment|/// \brief Adjust this printing policy for cases where it's known that
+comment|/// we're printing C++ code (for instance, if AST dumping reaches a
+comment|/// C++-only construct). This should not be used if a real LangOptions
+comment|/// object is available.
+name|void
+name|adjustForCPlusPlus
+argument_list|()
+block|{
+name|SuppressTagKeyword
+operator|=
+name|true
+block|;
+name|Bool
+operator|=
+name|true
+block|;
+name|UseVoidForZeroParams
+operator|=
+name|false
+block|;   }
 comment|/// \brief The number of spaces to use to indent each line.
 name|unsigned
 name|Indentation
-range|:
+operator|:
 literal|8
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Whether we should suppress printing of the actual specifiers for
 comment|/// the given type or declaration.
 comment|///
@@ -276,16 +326,16 @@ name|SuppressTagKeyword
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether type printing should skip printing the actual tag type.
+comment|/// \brief When true, include the body of a tag definition.
 comment|///
-comment|/// This is used when the caller needs to print a tag definition in front
-comment|/// of the type, as in constructs like the following:
+comment|/// This is used to place the definition of a struct
+comment|/// in the middle of another declaration as with:
 comment|///
 comment|/// \code
 comment|/// typedef struct { int x, y; } Point;
 comment|/// \endcode
 name|bool
-name|SuppressTag
+name|IncludeTagDefinition
 range|:
 literal|1
 decl_stmt|;
@@ -361,10 +411,42 @@ name|SuppressLifetimeQualifiers
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Whether we can use 'bool' rather than '_Bool', even if the language
-comment|/// doesn't actually have 'bool' (because, e.g., it is defined as a macro).
+comment|/// When true, suppresses printing template arguments in names of C++
+comment|/// constructors.
+name|unsigned
+name|SuppressTemplateArgsInCXXConstructors
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we can use 'bool' rather than '_Bool' (even if the language
+comment|/// doesn't actually have 'bool', because, e.g., it is defined as a macro).
 name|unsigned
 name|Bool
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we can use 'restrict' rather than '__restrict'.
+name|unsigned
+name|Restrict
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we can use 'alignof' rather than '__alignof'.
+name|unsigned
+name|Alignof
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we can use '_Alignof' rather than '__alignof'.
+name|unsigned
+name|UnderscoreAlignof
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we should use '(void)' rather than '()' for a function
+comment|/// prototype with zero parameters.
+name|unsigned
+name|UseVoidForZeroParams
 range|:
 literal|1
 decl_stmt|;

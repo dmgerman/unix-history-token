@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -87,9 +93,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|CXXRecordDecl
-decl_stmt|;
 comment|// BaseSubobject - Uniquely identifies a direct or indirect base class.
 comment|// Stores both the base class decl and the offset from the most derived class to
 comment|// the base class. Used for vtable and VTT generation.

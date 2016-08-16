@@ -365,8 +365,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Called by CoreEngine.  Used to generate end-of-path
-comment|/// nodes when the control reaches the end of a function.
+comment|/// Called by CoreEngine.  Used to notify checkers that processing a
+comment|/// function has begun. Called for both inlined and and top-level functions.
+name|virtual
+name|void
+name|processBeginOfFunction
+parameter_list|(
+name|NodeBuilderContext
+modifier|&
+name|BC
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|BlockEdge
+modifier|&
+name|L
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Called by CoreEngine.  Used to notify checkers that processing a
+comment|/// function has ended. Called for both inlined and and top-level functions.
 name|virtual
 name|void
 name|processEndOfFunction
@@ -387,6 +413,10 @@ name|virtual
 name|void
 name|processCallEnter
 parameter_list|(
+name|NodeBuilderContext
+modifier|&
+name|BC
+parameter_list|,
 name|CallEnter
 name|CE
 parameter_list|,

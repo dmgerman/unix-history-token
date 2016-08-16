@@ -968,6 +968,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_float128
+init|=
+name|clang
+operator|::
+name|TST_float128
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_bool
 init|=
 name|clang
@@ -1136,6 +1145,19 @@ name|clang
 operator|::
 name|TST_atomic
 decl_stmt|;
+define|#
+directive|define
+name|GENERIC_IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|)
+define|\
+value|static const TST TST_##ImgType##_t = clang::TST_##ImgType##_t;
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 specifier|static
 specifier|const
 name|TST
@@ -1166,11 +1188,15 @@ name|TQ_volatile
 init|=
 literal|4
 block|,
+name|TQ_unaligned
+init|=
+literal|8
+block|,
 comment|// This has no corresponding Qualifiers::TQ value, because it's not treated
 comment|// as a qualifier in our type system.
 name|TQ_atomic
 init|=
-literal|8
+literal|16
 block|}
 enum|;
 comment|/// ParsedSpecifiers - Flags to query which specifiers were applied.  This is
@@ -1273,7 +1299,7 @@ comment|// type-qualifiers
 name|unsigned
 name|TypeQualifiers
 range|:
-literal|4
+literal|5
 decl_stmt|;
 comment|// Bitwise OR of TQ.
 comment|// function-specifier
@@ -1382,6 +1408,8 @@ decl_stmt|,
 name|TQ_volatileLoc
 decl_stmt|,
 name|TQ_atomicLoc
+decl_stmt|,
+name|TQ_unalignedLoc
 decl_stmt|;
 name|SourceLocation
 name|FS_inlineLoc
@@ -2247,6 +2275,15 @@ name|TQ_atomicLoc
 return|;
 block|}
 name|SourceLocation
+name|getUnalignedSpecLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TQ_unalignedLoc
+return|;
+block|}
+name|SourceLocation
 name|getPipeLoc
 argument_list|()
 specifier|const
@@ -2280,6 +2317,11 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 name|TQ_atomicLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_unalignedLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -3472,6 +3514,7 @@ literal|0x40
 block|}
 enum|;
 comment|/// PropertyAttributeKind - list of property attributes.
+comment|/// Keep this list in sync with LLVM's Dwarf.h ApplePropertyAttributes.
 enum|enum
 name|ObjCPropertyAttributeKind
 block|{
@@ -3534,6 +3577,10 @@ block|,
 name|DQ_PR_null_resettable
 init|=
 literal|0x2000
+block|,
+name|DQ_PR_class
+init|=
+literal|0x4000
 block|}
 enum|;
 name|ObjCDeclSpec
@@ -3835,7 +3882,7 @@ comment|// NOTE: VC++ treats enums as signed, avoid using ObjCPropertyAttributeK
 name|unsigned
 name|PropertyAttributes
 range|:
-literal|14
+literal|15
 decl_stmt|;
 name|unsigned
 name|Nullability
@@ -4451,11 +4498,11 @@ name|PointerTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers: const/volatile/restrict/atomic.
+comment|/// The type qualifiers: const/volatile/restrict/unaligned/atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|4
+literal|5
 block|;
 comment|/// The location of the const-qualifier, if any.
 name|unsigned
@@ -4472,6 +4519,10 @@ block|;
 comment|/// The location of the _Atomic-qualifier, if any.
 name|unsigned
 name|AtomicQualLoc
+block|;
+comment|/// The location of the __unaligned-qualifier, if any.
+name|unsigned
+name|UnalignedQualLoc
 block|;
 name|void
 name|destroy
@@ -4507,20 +4558,21 @@ name|ArrayTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers for the array: const/volatile/restrict/_Atomic.
+comment|/// The type qualifiers for the array:
+comment|/// const/volatile/restrict/__unaligned/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|4
+literal|5
 block|;
 comment|/// True if this dimension included the 'static' keyword.
-name|bool
+name|unsigned
 name|hasStatic
 operator|:
 literal|1
 block|;
 comment|/// True if this dimension was [*].  In this case, NumElts is null.
-name|bool
+name|unsigned
 name|isStar
 operator|:
 literal|1
@@ -4649,12 +4701,12 @@ name|RefQualifierIsLValueRef
 operator|:
 literal|1
 block|;
-comment|/// The type qualifiers: const/volatile/restrict.
+comment|/// The type qualifiers: const/volatile/restrict/__unaligned
 comment|/// The qualifier bitmask values are the same as in QualType.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// ExceptionSpecType - An ExceptionSpecificationType value.
 name|unsigned
@@ -5121,11 +5173,11 @@ range|:
 name|TypeInfoCommon
 block|{
 comment|/// For now, sema will catch these as invalid.
-comment|/// The type qualifiers: const/volatile/restrict/_Atomic.
+comment|/// The type qualifiers: const/volatile/restrict/__unaligned/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|4
+literal|5
 block|;
 name|void
 name|destroy
@@ -5141,11 +5193,11 @@ name|MemberPointerTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers: const/volatile/restrict/_Atomic.
+comment|/// The type qualifiers: const/volatile/restrict/__unaligned/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|4
+literal|5
 block|;
 comment|// CXXScopeSpec has a constructor, so it can't be a direct member.
 comment|// So we need some pointer-aligned storage and a bit of trickery.
@@ -5400,6 +5452,8 @@ argument_list|,
 argument|SourceLocation RestrictQualLoc
 argument_list|,
 argument|SourceLocation AtomicQualLoc
+argument_list|,
+argument|SourceLocation UnalignedQualLoc
 argument_list|)
 block|{
 name|DeclaratorChunk
@@ -5465,6 +5519,17 @@ operator|.
 name|AtomicQualLoc
 operator|=
 name|AtomicQualLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|I
+operator|.
+name|Ptr
+operator|.
+name|UnalignedQualLoc
+operator|=
+name|UnalignedQualLoc
 operator|.
 name|getRawEncoding
 argument_list|()
@@ -5768,7 +5833,7 @@ name|Cls
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|I
@@ -5955,6 +6020,9 @@ comment|// Declaration within a block in a function.
 name|ForContext
 block|,
 comment|// Declaration within first part of a for loop.
+name|InitStmtContext
+block|,
+comment|// Declaration within optional init stmt of if/switch.
 name|ConditionContext
 block|,
 comment|// Condition declaration in a C++ if/switch/while/for.
@@ -6028,13 +6096,13 @@ operator|>
 name|DeclTypeInfo
 block|;
 comment|/// InvalidType - Set by Sema::GetTypeForDeclarator().
-name|bool
+name|unsigned
 name|InvalidType
 operator|:
 literal|1
 block|;
 comment|/// GroupingParens - Set by Parser::ParseParenDeclarator().
-name|bool
+name|unsigned
 name|GroupingParens
 operator|:
 literal|1
@@ -6049,7 +6117,7 @@ operator|:
 literal|2
 block|;
 comment|/// \brief Is this Declarator a redeclaration?
-name|bool
+name|unsigned
 name|Redeclaration
 operator|:
 literal|1
@@ -6588,6 +6656,9 @@ case|case
 name|ForContext
 case|:
 case|case
+name|InitStmtContext
+case|:
+case|case
 name|ConditionContext
 case|:
 return|return
@@ -6680,6 +6751,9 @@ case|case
 name|ForContext
 case|:
 case|case
+name|InitStmtContext
+case|:
+case|case
 name|ConditionContext
 case|:
 case|case
@@ -6769,6 +6843,9 @@ name|BlockContext
 case|:
 case|case
 name|ForContext
+case|:
+case|case
+name|InitStmtContext
 case|:
 case|case
 name|ConditionContext
@@ -6926,6 +7003,9 @@ name|BlockContext
 case|:
 case|case
 name|ForContext
+case|:
+case|case
+name|InitStmtContext
 case|:
 return|return
 name|true
@@ -7928,12 +8008,15 @@ case|:
 case|case
 name|BlockContext
 case|:
-return|return
-name|true
-return|;
 case|case
 name|ForContext
 case|:
+case|case
+name|InitStmtContext
+case|:
+return|return
+name|true
+return|;
 case|case
 name|ConditionContext
 case|:
@@ -9144,6 +9227,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_CLANG_SEMA_DECLSPEC_H
+end_comment
 
 end_unit
 

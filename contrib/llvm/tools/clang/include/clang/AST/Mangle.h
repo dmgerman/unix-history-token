@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -695,6 +701,18 @@ name|Out
 parameter_list|)
 function_decl|;
 name|void
+name|mangleObjCMethodNameWithoutSize
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|MD
+parameter_list|,
+name|raw_ostream
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|mangleObjCMethodName
 parameter_list|(
 specifier|const
@@ -1109,6 +1127,8 @@ argument_list|,
 argument|bool IsConst
 argument_list|,
 argument|bool IsVolatile
+argument_list|,
+argument|bool IsUnaligned
 argument_list|,
 argument|uint32_t NumEntries
 argument_list|,

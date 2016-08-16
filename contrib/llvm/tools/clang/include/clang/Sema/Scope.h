@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -385,6 +391,17 @@ name|bool
 operator|>
 name|NRVO
 expr_stmt|;
+name|void
+name|setFlags
+parameter_list|(
+name|Scope
+modifier|*
+name|Parent
+parameter_list|,
+name|unsigned
+name|F
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|Scope
@@ -427,9 +444,13 @@ name|unsigned
 name|F
 parameter_list|)
 block|{
-name|Flags
-operator|=
+name|setFlags
+argument_list|(
+name|getParent
+argument_list|()
+argument_list|,
 name|F
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// isBlockScope - Return true if this scope correspond to a closure.

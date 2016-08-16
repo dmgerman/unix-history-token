@@ -15,6 +15,30 @@ directive|define
 name|__CLANG_INTTYPES_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1800
+end_if
+
+begin_error
+error|#
+directive|error
+error|MSVC does not have inttypes.h prior to Visual Studio 2013
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_empty
 empty|#include_next<inttypes.h>
 end_empty

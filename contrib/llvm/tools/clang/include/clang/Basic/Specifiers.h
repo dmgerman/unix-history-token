@@ -151,6 +151,8 @@ name|TST_float
 block|,
 name|TST_double
 block|,
+name|TST_float128
+block|,
 name|TST_bool
 block|,
 comment|// _Bool
@@ -203,6 +205,19 @@ comment|// __unknown_anytype extension
 name|TST_atomic
 block|,
 comment|// C11 _Atomic
+define|#
+directive|define
+name|GENERIC_IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|)
+value|TST_##ImgType##_t,
+comment|// OpenCL image types
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 name|TST_error
 comment|// erroneous type
 block|}
@@ -230,7 +245,7 @@ name|Width
 range|:
 literal|2
 decl_stmt|;
-name|bool
+name|unsigned
 name|ModeAttr
 range|:
 literal|1
@@ -509,8 +524,18 @@ comment|// __attribute__((intel_ocl_bicc))
 name|CC_SpirFunction
 block|,
 comment|// default for OpenCL functions on SPIR target
-name|CC_SpirKernel
-comment|// inferred for OpenCL kernels on SPIR target
+name|CC_OpenCLKernel
+block|,
+comment|// inferred for OpenCL kernels
+name|CC_Swift
+block|,
+comment|// __attribute__((swiftcall))
+name|CC_PreserveMost
+block|,
+comment|// __attribute__((preserve_most))
+name|CC_PreserveAll
+block|,
+comment|// __attribute__((preserve_all))
 block|}
 enum|;
 comment|/// \brief Checks whether the given calling convention supports variadic
@@ -547,7 +572,10 @@ case|case
 name|CC_SpirFunction
 case|:
 case|case
-name|CC_SpirKernel
+name|CC_OpenCLKernel
+case|:
+case|case
+name|CC_Swift
 case|:
 return|return
 name|false
@@ -609,6 +637,37 @@ argument_list|(
 argument|NullabilityKind kind
 argument_list|,
 argument|bool isContextSensitive = false
+argument_list|)
+expr_stmt|;
+comment|/// \brief Kinds of parameter ABI.
+name|enum
+name|class
+name|ParameterABI
+block|{
+comment|/// This parameter uses ordinary ABI rules for its type.
+name|Ordinary
+operator|,
+comment|/// This parameter (which must have pointer type) is a Swift
+comment|/// indirect result parameter.
+name|SwiftIndirectResult
+operator|,
+comment|/// This parameter (which must have pointer-to-pointer type) uses
+comment|/// the special Swift error-result ABI treatment.  There can be at
+comment|/// most one parameter on a given function that uses this treatment.
+name|SwiftErrorResult
+operator|,
+comment|/// This parameter (which must have pointer type) uses the special
+comment|/// Swift context-pointer ABI treatment.  There can be at
+comment|/// most one parameter on a given function that uses this treatment.
+name|SwiftContext
+block|}
+empty_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|getParameterABISpelling
+argument_list|(
+argument|ParameterABI kind
 argument_list|)
 expr_stmt|;
 block|}

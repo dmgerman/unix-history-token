@@ -83,6 +83,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Sema
+decl_stmt|;
 comment|/// \brief Examines the FunctionScopeInfo stack to determine the nearest
 comment|/// enclosing lambda (to the current lambda) that is 'capture-capable' for
 comment|/// the variable referenced in the current lambda (i.e. \p VarToCapture).

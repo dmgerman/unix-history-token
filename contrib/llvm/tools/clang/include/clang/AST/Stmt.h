@@ -339,6 +339,24 @@ decl_stmt|;
 block|}
 empty_stmt|;
 name|class
+name|IfStmtBitfields
+block|{
+name|friend
+name|class
+name|IfStmt
+decl_stmt|;
+name|unsigned
+label|:
+name|NumStmtBits
+expr_stmt|;
+name|unsigned
+name|IsConstexpr
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
 name|ExprBitfields
 block|{
 name|friend
@@ -443,6 +461,11 @@ comment|// ctor
 name|friend
 name|class
 name|AtomicExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|OpaqueValueExpr
 decl_stmt|;
 comment|// ctor
 name|unsigned
@@ -674,10 +697,18 @@ name|unsigned
 label|:
 name|NumExprBits
 expr_stmt|;
+comment|// When false, it must not have side effects.
+name|unsigned
+name|CleanupsHaveSideEffects
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|NumObjects
 range|:
 literal|32
+operator|-
+literal|1
 operator|-
 name|NumExprBits
 decl_stmt|;
@@ -808,6 +839,9 @@ name|StmtBits
 decl_stmt|;
 name|CompoundStmtBitfields
 name|CompoundStmtBits
+decl_stmt|;
+name|IfStmtBitfields
+name|IfStmtBits
 decl_stmt|;
 name|ExprBitfields
 name|ExprBits
@@ -4121,6 +4155,8 @@ name|public
 name|Stmt
 block|{   enum
 block|{
+name|INIT
+block|,
 name|VAR
 block|,
 name|COND
@@ -4152,6 +4188,10 @@ argument_list|(
 argument|const ASTContext&C
 argument_list|,
 argument|SourceLocation IL
+argument_list|,
+argument|bool IsConstexpr
+argument_list|,
+argument|Stmt *init
 argument_list|,
 argument|VarDecl *var
 argument_list|,
@@ -4228,6 +4268,45 @@ index|]
 operator|)
 return|;
 block|}
+name|Stmt
+operator|*
+name|getInit
+argument_list|()
+block|{
+return|return
+name|SubExprs
+index|[
+name|INIT
+index|]
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubExprs
+index|[
+name|INIT
+index|]
+return|;
+block|}
+name|void
+name|setInit
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|INIT
+index|]
+operator|=
+name|S
+block|; }
 specifier|const
 name|Expr
 operator|*
@@ -4404,6 +4483,29 @@ name|ElseLoc
 operator|=
 name|L
 block|; }
+name|bool
+name|isConstexpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IfStmtBits
+operator|.
+name|IsConstexpr
+return|;
+block|}
+name|void
+name|setConstexpr
+argument_list|(
+argument|bool C
+argument_list|)
+block|{
+name|IfStmtBits
+operator|.
+name|IsConstexpr
+operator|=
+name|C
+block|; }
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -4502,6 +4604,8 @@ name|SourceLocation
 name|SwitchLoc
 block|;   enum
 block|{
+name|INIT
+block|,
 name|VAR
 block|,
 name|COND
@@ -4543,6 +4647,10 @@ specifier|const
 name|ASTContext
 operator|&
 name|C
+argument_list|,
+name|Stmt
+operator|*
+name|Init
 argument_list|,
 name|VarDecl
 operator|*
@@ -4618,6 +4726,45 @@ index|]
 operator|)
 return|;
 block|}
+name|Stmt
+operator|*
+name|getInit
+argument_list|()
+block|{
+return|return
+name|SubExprs
+index|[
+name|INIT
+index|]
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getInit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubExprs
+index|[
+name|INIT
+index|]
+return|;
+block|}
+name|void
+name|setInit
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|INIT
+index|]
+operator|=
+name|S
+block|; }
 specifier|const
 name|Expr
 operator|*

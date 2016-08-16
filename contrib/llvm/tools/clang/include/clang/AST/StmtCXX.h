@@ -579,7 +579,9 @@ block|;   enum
 block|{
 name|RANGE
 block|,
-name|BEGINEND
+name|BEGINSTMT
+block|,
+name|ENDSTMT
 block|,
 name|COND
 block|,
@@ -620,7 +622,9 @@ name|CXXForRangeStmt
 argument_list|(
 argument|DeclStmt *Range
 argument_list|,
-argument|DeclStmt *BeginEnd
+argument|DeclStmt *Begin
+argument_list|,
+argument|DeclStmt *End
 argument_list|,
 argument|Expr *Cond
 argument_list|,
@@ -695,7 +699,7 @@ return|;
 block|}
 name|DeclStmt
 operator|*
-name|getBeginEndStmt
+name|getBeginStmt
 argument_list|()
 block|{
 return|return
@@ -706,7 +710,25 @@ operator|>
 operator|(
 name|SubExprs
 index|[
-name|BEGINEND
+name|BEGINSTMT
+index|]
+operator|)
+return|;
+block|}
+name|DeclStmt
+operator|*
+name|getEndStmt
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DeclStmt
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|ENDSTMT
 index|]
 operator|)
 return|;
@@ -800,7 +822,7 @@ block|}
 specifier|const
 name|DeclStmt
 operator|*
-name|getBeginEndStmt
+name|getBeginStmt
 argument_list|()
 specifier|const
 block|{
@@ -812,7 +834,27 @@ operator|>
 operator|(
 name|SubExprs
 index|[
-name|BEGINEND
+name|BEGINSTMT
+index|]
+operator|)
+return|;
+block|}
+specifier|const
+name|DeclStmt
+operator|*
+name|getEndStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|DeclStmt
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|ENDSTMT
 index|]
 operator|)
 return|;
@@ -925,14 +967,27 @@ operator|=
 name|S
 block|; }
 name|void
-name|setBeginEndStmt
+name|setBeginStmt
 argument_list|(
 argument|Stmt *S
 argument_list|)
 block|{
 name|SubExprs
 index|[
-name|BEGINEND
+name|BEGINSTMT
+index|]
+operator|=
+name|S
+block|; }
+name|void
+name|setEndStmt
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|ENDSTMT
 index|]
 operator|=
 name|S

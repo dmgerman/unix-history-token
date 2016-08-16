@@ -154,7 +154,7 @@ name|DIAG_START_ANALYSIS
 init|=
 name|DIAG_START_SEMA
 operator|+
-literal|3000
+literal|3500
 block|,
 name|DIAG_UPPER_LIMIT
 init|=

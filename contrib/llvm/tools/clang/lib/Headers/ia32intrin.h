@@ -264,6 +264,16 @@ parameter_list|()
 value|__rdtsc()
 end_define
 
+begin_define
+define|#
+directive|define
+name|_rdpmc
+parameter_list|(
+name|A
+parameter_list|)
+value|__rdpmc(A)
+end_define
+
 begin_endif
 endif|#
 directive|endif

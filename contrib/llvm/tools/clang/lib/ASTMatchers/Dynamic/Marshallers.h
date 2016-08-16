@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- Marshallers.h - Generic matcher function marshallers -*- C++ -*-===//
+comment|//===--- Marshallers.h - Generic matcher function marshallers ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -512,6 +512,118 @@ return|;
 block|}
 expr|}
 block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|ArgTypeTraits
+operator|<
+name|clang
+operator|::
+name|CastKind
+operator|>
+block|{
+name|private
+operator|:
+specifier|static
+name|clang
+operator|::
+name|CastKind
+name|getCastKind
+argument_list|(
+argument|llvm::StringRef AttrKind
+argument_list|)
+block|{
+return|return
+name|llvm
+operator|::
+name|StringSwitch
+operator|<
+name|clang
+operator|::
+name|CastKind
+operator|>
+operator|(
+name|AttrKind
+operator|)
+define|#
+directive|define
+name|CAST_OPERATION
+parameter_list|(
+name|Name
+parameter_list|)
+value|.Case( #Name, CK_##Name)
+include|#
+directive|include
+file|"clang/AST/OperationKinds.def"
+operator|.
+name|Default
+argument_list|(
+name|CK_Invalid
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+specifier|static
+name|bool
+name|is
+argument_list|(
+argument|const VariantValue&Value
+argument_list|)
+block|{
+return|return
+name|Value
+operator|.
+name|isString
+argument_list|()
+operator|&&
+name|getCastKind
+argument_list|(
+name|Value
+operator|.
+name|getString
+argument_list|()
+argument_list|)
+operator|!=
+name|CK_Invalid
+return|;
+block|}
+specifier|static
+name|clang
+operator|::
+name|CastKind
+name|get
+argument_list|(
+argument|const VariantValue&Value
+argument_list|)
+block|{
+return|return
+name|getCastKind
+argument_list|(
+name|Value
+operator|.
+name|getString
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ArgKind
+name|getKind
+argument_list|()
+block|{
+return|return
+name|ArgKind
+argument_list|(
+name|ArgKind
+operator|::
+name|AK_String
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Matcher descriptor interface.
 comment|///
 comment|/// Provides a \c create() method that constructs the matcher from the provided
@@ -992,7 +1104,7 @@ name|outvalueToVariantMatcher
 argument_list|(
 argument|const T&PolyMatcher
 argument_list|,
-argument|typename T::ReturnTypes * =                                                    NULL
+argument|typename T::ReturnTypes * =                                                    nullptr
 argument_list|)
 block|{
 name|std
@@ -1501,7 +1613,7 @@ argument_list|)
 operator|>
 name|VariadicFuncMatcherDescriptor
 argument_list|(
-argument|llvm::VariadicFunction<ResultT
+argument|ast_matchers::internal::VariadicFunction<ResultT
 argument_list|,
 argument|ArgT
 argument_list|,
@@ -1850,7 +1962,7 @@ name|template
 operator|<
 name|typename
 name|ReturnType
-operator|,
+block|,
 name|typename
 name|ArgType1
 operator|>
@@ -1883,14 +1995,14 @@ name|CHECK_ARG_COUNT
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
+block|;
 name|CHECK_ARG_TYPE
 argument_list|(
 literal|0
 argument_list|,
 name|ArgType1
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|outvalueToVariantMatcher
 argument_list|(
@@ -2504,17 +2616,8 @@ operator|>>
 name|Overloads
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Variadic operator marshaller function.
-end_comment
-
-begin_decl_stmt
 name|class
 name|VariadicOperatorMatcherDescriptor
 range|:
@@ -2655,9 +2758,6 @@ name|VariantMatcher
 operator|>
 name|InnerArgs
 expr_stmt|;
-end_decl_stmt
-
-begin_for
 for|for
 control|(
 name|size_t
@@ -2750,9 +2850,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_return
 return|return
 name|VariantMatcher
 operator|::
@@ -2768,15 +2865,13 @@ name|InnerArgs
 argument_list|)
 argument_list|)
 return|;
-end_return
-
-begin_macro
-unit|}    bool
-name|isVariadic
-argument_list|()
-end_macro
+block|}
+end_decl_stmt
 
 begin_expr_stmt
+name|bool
+name|isVariadic
+argument_list|()
 specifier|const
 name|override
 block|{
@@ -3223,7 +3318,7 @@ name|MatcherDescriptor
 operator|*
 name|makeMatcherAutoMarshall
 argument_list|(
-argument|llvm::VariadicFunction<ResultT
+argument|ast_matchers::internal::VariadicFunction<ResultT
 argument_list|,
 argument|ArgT
 argument_list|,

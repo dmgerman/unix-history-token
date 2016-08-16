@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
 end_include
 
@@ -180,6 +186,10 @@ comment|/// \brief llvm.unroll.
 name|unsigned
 name|UnrollCount
 decl_stmt|;
+comment|/// \brief Value for llvm.loop.distribute.enable metadata.
+name|LVEnableState
+name|DistributeEnable
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Information used when generating a structured loop.
@@ -191,18 +201,13 @@ label|:
 comment|/// \brief Construct a new LoopInfo for the loop with entry Header.
 name|LoopInfo
 argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|Header
+argument|llvm::BasicBlock *Header
 argument_list|,
-specifier|const
-name|LoopAttributes
-operator|&
-name|Attrs
+argument|const LoopAttributes&Attrs
+argument_list|,
+argument|llvm::DebugLoc Location
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// \brief Get the loop id metadata for this loop.
 name|llvm
 operator|::
@@ -304,6 +309,16 @@ operator|::
 name|BasicBlock
 operator|*
 name|Header
+argument_list|,
+name|llvm
+operator|::
+name|DebugLoc
+name|Location
+operator|=
+name|llvm
+operator|::
+name|DebugLoc
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// \brief Begin a new structured loop. Stage attributes from the Attrs list.
@@ -332,6 +347,16 @@ name|Attr
 operator|*
 operator|>
 name|Attrs
+argument_list|,
+name|llvm
+operator|::
+name|DebugLoc
+name|Location
+operator|=
+name|llvm
+operator|::
+name|DebugLoc
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// \brief End the current loop.
@@ -420,6 +445,31 @@ block|{
 name|StagedAttrs
 operator|.
 name|VectorizeEnable
+operator|=
+name|Enable
+condition|?
+name|LoopAttributes
+operator|::
+name|Enable
+else|:
+name|LoopAttributes
+operator|::
+name|Disable
+expr_stmt|;
+block|}
+comment|/// \brief Set the next pushed loop as a distribution candidate.
+name|void
+name|setDistributeState
+parameter_list|(
+name|bool
+name|Enable
+init|=
+name|true
+parameter_list|)
+block|{
+name|StagedAttrs
+operator|.
+name|DistributeEnable
 operator|=
 name|Enable
 condition|?

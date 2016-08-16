@@ -252,19 +252,6 @@ name|CleanupSize
 range|:
 literal|12
 decl_stmt|;
-comment|/// The number of fixups required by enclosing scopes (not including
-comment|/// this one).  If this is the top cleanup scope, all the fixups
-comment|/// from this index onwards belong to this scope.
-name|unsigned
-name|FixupDepth
-range|:
-literal|32
-operator|-
-literal|18
-operator|-
-name|NumCommonBits
-decl_stmt|;
-comment|// currently 12
 block|}
 empty_stmt|;
 name|class
@@ -592,6 +579,17 @@ operator|.
 name|NumHandlers
 operator|=
 name|numHandlers
+block|;
+name|assert
+argument_list|(
+name|CatchBits
+operator|.
+name|NumHandlers
+operator|==
+name|numHandlers
+operator|&&
+literal|"NumHandlers overflow?"
+argument_list|)
 block|;   }
 name|unsigned
 name|getNumHandlers
@@ -904,6 +902,12 @@ expr|struct
 name|ExtInfo
 operator|*
 name|ExtInfo
+block|;
+comment|/// The number of fixups required by enclosing scopes (not including
+comment|/// this one).  If this is the top cleanup scope, all the fixups
+comment|/// from this index onwards belong to this scope.
+name|unsigned
+name|FixupDepth
 block|;    struct
 name|ExtInfo
 operator|&
@@ -1032,7 +1036,12 @@ argument_list|)
 operator|,
 name|ExtInfo
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|FixupDepth
+argument_list|(
+argument|fixupDepth
 argument_list|)
 block|{
 name|CleanupBits
@@ -1076,12 +1085,6 @@ operator|.
 name|CleanupSize
 operator|=
 name|cleanupSize
-block|;
-name|CleanupBits
-operator|.
-name|FixupDepth
-operator|=
-name|fixupDepth
 block|;
 name|assert
 argument_list|(
@@ -1316,8 +1319,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CleanupBits
-operator|.
 name|FixupDepth
 return|;
 block|}
@@ -1777,6 +1778,17 @@ operator|.
 name|NumFilters
 operator|=
 name|numFilters
+block|;
+name|assert
+argument_list|(
+name|FilterBits
+operator|.
+name|NumFilters
+operator|==
+name|numFilters
+operator|&&
+literal|"NumFilters overflow"
+argument_list|)
 block|;   }
 specifier|static
 name|size_t
@@ -2190,7 +2202,7 @@ name|Ptr
 operator|+=
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|Size
 argument_list|,

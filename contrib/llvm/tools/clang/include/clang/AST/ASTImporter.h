@@ -107,6 +107,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|CXXCtorInitializer
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -499,6 +502,19 @@ name|FileID
 name|Import
 parameter_list|(
 name|FileID
+parameter_list|)
+function_decl|;
+comment|/// \brief Import the given C++ constructor initializer from the "from"
+comment|/// context into the "to" context.
+comment|///
+comment|/// \returns the equivalent initializer in the "to" context.
+name|CXXCtorInitializer
+modifier|*
+name|Import
+parameter_list|(
+name|CXXCtorInitializer
+modifier|*
+name|FromInit
 parameter_list|)
 function_decl|;
 comment|/// \brief Import the definition of the given declaration, including all of

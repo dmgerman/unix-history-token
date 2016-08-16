@@ -580,6 +580,10 @@ name|ErrorsAsFatal
 decl_stmt|;
 comment|// Treat errors like fatal errors.
 name|bool
+name|FatalsAsError
+decl_stmt|;
+comment|// Treat fatal errors like errors.
+name|bool
 name|SuppressSystemWarnings
 decl_stmt|;
 comment|// Suppress warnings in system headers.
@@ -1921,6 +1925,45 @@ specifier|const
 block|{
 return|return
 name|ErrorsAsFatal
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief When set to true, any fatal error reported is made an error.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This setting takes precedence over the setErrorsAsFatal setting above.
+end_comment
+
+begin_function
+name|void
+name|setFatalsAsError
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|FatalsAsError
+operator|=
+name|Val
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|getFatalsAsError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FatalsAsError
 return|;
 block|}
 end_expr_stmt
@@ -4676,7 +4719,15 @@ name|std
 operator|::
 name|is_same
 operator|<
+name|typename
+name|std
+operator|::
+name|remove_const
+operator|<
 name|T
+operator|>
+operator|::
+name|type
 operator|,
 name|DeclContext
 operator|>

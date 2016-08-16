@@ -1593,6 +1593,8 @@ block|; }
 name|SourceLocation
 name|getThrowLoc
 argument_list|()
+specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|AtThrowLoc

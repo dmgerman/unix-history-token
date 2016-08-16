@@ -131,6 +131,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -3773,12 +3779,17 @@ name|ScanReachableSymbols
 argument_list|(
 argument|ProgramStateRef st
 argument_list|,
-argument|SymbolVisitor& v
+argument|SymbolVisitor&v
 argument_list|)
 block|:
 name|state
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|st
+argument_list|)
 argument_list|)
 operator|,
 name|visitor

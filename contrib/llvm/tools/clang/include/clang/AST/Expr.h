@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -1729,6 +1735,30 @@ name|SE_NoSideEffects
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// EvaluateAsFloat - Return true if this is a constant which we can fold and
+comment|/// convert to a floating point value, using any crazy technique that we
+comment|/// want to.
+name|bool
+name|EvaluateAsFloat
+argument_list|(
+name|llvm
+operator|::
+name|APFloat
+operator|&
+name|Result
+argument_list|,
+specifier|const
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+name|SideEffectsKind
+name|AllowSideEffects
+operator|=
+name|SE_NoSideEffects
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isEvaluatable - Call EvaluateAsRValue to see if this expression can be
 comment|/// constant folded without side-effects, but discard the result.
 name|bool
@@ -2521,6 +2551,15 @@ name|T
 operator|->
 name|isDependentType
 argument_list|()
+operator|||
+operator|(
+name|SourceExpr
+operator|&&
+name|SourceExpr
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|)
 argument_list|,
 name|T
 operator|->
@@ -2540,6 +2579,15 @@ name|T
 operator|->
 name|isInstantiationDependentType
 argument_list|()
+operator|||
+operator|(
+name|SourceExpr
+operator|&&
+name|SourceExpr
+operator|->
+name|isInstantiationDependent
+argument_list|()
+operator|)
 argument_list|,
 name|false
 argument_list|)
@@ -3718,8 +3766,28 @@ name|NumTemplateArgs
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getTemplateArgs
+argument_list|()
+block|,
+name|getNumTemplateArgs
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// \brief Returns true if this expression refers to a function that
 end_comment
 
@@ -3727,13 +3795,10 @@ begin_comment
 comment|/// was resolved from an overloaded set having size greater than 1.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|hadMultipleCandidates
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -8242,20 +8307,45 @@ block|;
 name|SourceLocation
 name|RParenLoc
 block|;
+name|void
+name|updateDependenciesFromArg
+argument_list|(
+name|Expr
+operator|*
+name|Arg
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|// These versions of the constructor are for derived classes.
 name|CallExpr
 argument_list|(
-argument|const ASTContext& C
+argument|const ASTContext&C
 argument_list|,
 argument|StmtClass SC
 argument_list|,
 argument|Expr *fn
 argument_list|,
-argument|unsigned NumPreArgs
+argument|ArrayRef<Expr *> preargs
 argument_list|,
-argument|ArrayRef<Expr*> args
+argument|ArrayRef<Expr *> args
+argument_list|,
+argument|QualType t
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|SourceLocation rparenloc
+argument_list|)
+block|;
+name|CallExpr
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|StmtClass SC
+argument_list|,
+argument|Expr *fn
+argument_list|,
+argument|ArrayRef<Expr *> args
 argument_list|,
 argument|QualType t
 argument_list|,
@@ -9771,18 +9861,35 @@ name|NumTemplateArgs
 return|;
 end_return
 
+begin_expr_stmt
+unit|}    ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getTemplateArgs
+argument_list|()
+block|,
+name|getNumTemplateArgs
+argument_list|()
+block|}
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// \brief Retrieve the member declaration name info.
 end_comment
 
-begin_macro
-unit|DeclarationNameInfo
+begin_expr_stmt
+name|DeclarationNameInfo
 name|getMemberNameInfo
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -16993,7 +17100,7 @@ name|EqualOrColonLoc
 block|;
 comment|/// Whether this designated initializer used the GNU deprecated
 comment|/// syntax rather than the C99 '=' syntax.
-name|bool
+name|unsigned
 name|GNUSyntax
 operator|:
 literal|1
@@ -17024,15 +17131,13 @@ argument|const ASTContext&C
 argument_list|,
 argument|QualType Ty
 argument_list|,
-argument|unsigned NumDesignators
-argument_list|,
-argument|const Designator *Designators
+argument|llvm::ArrayRef<Designator> Designators
 argument_list|,
 argument|SourceLocation EqualOrColonLoc
 argument_list|,
 argument|bool GNUSyntax
 argument_list|,
-argument|ArrayRef<Expr*> IndexExprs
+argument|ArrayRef<Expr *> IndexExprs
 argument_list|,
 argument|Expr *Init
 argument_list|)
@@ -17645,9 +17750,7 @@ name|Create
 argument_list|(
 argument|const ASTContext&C
 argument_list|,
-argument|Designator *Designators
-argument_list|,
-argument|unsigned NumDesignators
+argument|llvm::ArrayRef<Designator> Designators
 argument_list|,
 argument|ArrayRef<Expr*> IndexExprs
 argument_list|,
@@ -17679,283 +17782,93 @@ name|NumDesignators
 return|;
 block|}
 comment|// Iterator access to the designators.
-typedef|typedef
-name|Designator
-modifier|*
-name|designators_iterator
-typedef|;
-name|designators_iterator
-name|designators_begin
-argument_list|()
-block|{
-return|return
-name|Designators
-return|;
-block|}
-name|designators_iterator
-name|designators_end
-argument_list|()
-block|{
-return|return
-name|Designators
-operator|+
-name|NumDesignators
-return|;
-block|}
-typedef|typedef
-specifier|const
-name|Designator
-modifier|*
-name|const_designators_iterator
-typedef|;
-name|const_designators_iterator
-name|designators_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Designators
-return|;
-block|}
-name|const_designators_iterator
-name|designators_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Designators
-operator|+
-name|NumDesignators
-return|;
-block|}
-typedef|typedef
 name|llvm
 operator|::
-name|iterator_range
+name|MutableArrayRef
 operator|<
-name|designators_iterator
+name|Designator
 operator|>
-name|designators_range
-expr_stmt|;
-name|designators_range
 name|designators
 argument_list|()
 block|{
 return|return
-name|designators_range
-argument_list|(
-name|designators_begin
-argument_list|()
-argument_list|,
-name|designators_end
-argument_list|()
-argument_list|)
+block|{
+name|Designators
+block|,
+name|NumDesignators
+block|}
 return|;
 block|}
-typedef|typedef
 name|llvm
 operator|::
-name|iterator_range
+name|ArrayRef
 operator|<
-name|const_designators_iterator
+name|Designator
 operator|>
-name|designators_const_range
-expr_stmt|;
-name|designators_const_range
 name|designators
 argument_list|()
 specifier|const
 block|{
 return|return
-name|designators_const_range
-argument_list|(
-name|designators_begin
-argument_list|()
-argument_list|,
-name|designators_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|designators_iterator
-operator|>
-name|reverse_designators_iterator
-expr_stmt|;
-end_typedef
-
-begin_function
-name|reverse_designators_iterator
-name|designators_rbegin
-parameter_list|()
 block|{
-return|return
-name|reverse_designators_iterator
-argument_list|(
-name|designators_end
-argument_list|()
-argument_list|)
+name|Designators
+block|,
+name|NumDesignators
+block|}
 return|;
 block|}
-end_function
-
-begin_function
-name|reverse_designators_iterator
-name|designators_rend
-parameter_list|()
-block|{
-return|return
-name|reverse_designators_iterator
-argument_list|(
-name|designators_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|const_designators_iterator
-operator|>
-name|const_reverse_designators_iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|const_reverse_designators_iterator
-name|designators_rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_reverse_designators_iterator
-argument_list|(
-name|designators_end
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|const_reverse_designators_iterator
-name|designators_rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_reverse_designators_iterator
-argument_list|(
-name|designators_begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
 name|Designator
-modifier|*
+operator|*
 name|getDesignator
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|)
 block|{
 return|return
 operator|&
-name|designators_begin
+name|designators
 argument_list|()
 index|[
 name|Idx
 index|]
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|void
 name|setDesignators
-parameter_list|(
-specifier|const
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-specifier|const
-name|Designator
-modifier|*
-name|Desigs
-parameter_list|,
-name|unsigned
-name|NumDesigs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|const Designator *Desigs
+argument_list|,
+argument|unsigned NumDesigs
+argument_list|)
+block|;
 name|Expr
-modifier|*
+operator|*
 name|getArrayIndex
 argument_list|(
-specifier|const
-name|Designator
-operator|&
-name|D
+argument|const Designator&D
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|Expr
-modifier|*
+operator|*
 name|getArrayRangeStart
 argument_list|(
-specifier|const
-name|Designator
-operator|&
-name|D
+argument|const Designator&D
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
+block|;
 name|Expr
-modifier|*
+operator|*
 name|getArrayRangeEnd
 argument_list|(
-specifier|const
-name|Designator
-operator|&
-name|D
+argument|const Designator&D
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|const
+block|;
 comment|/// @brief Retrieve the location of the '=' that precedes the
-end_comment
-
-begin_comment
 comment|/// initializer value itself, if present.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getEqualOrColonLoc
 argument_list|()
@@ -17965,32 +17878,18 @@ return|return
 name|EqualOrColonLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setEqualOrColonLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|EqualOrColonLoc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// @brief Determines whether this designated initializer used the
-end_comment
-
-begin_comment
 comment|/// deprecated GNU syntax for designated initializers.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|usesGNUSyntax
 argument_list|()
@@ -18000,28 +17899,17 @@ return|return
 name|GNUSyntax
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setGNUSyntax
-parameter_list|(
-name|bool
-name|GNU
-parameter_list|)
+argument_list|(
+argument|bool GNU
+argument_list|)
 block|{
 name|GNUSyntax
 operator|=
 name|GNU
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// @brief Retrieve the initializer value.
-end_comment
-
-begin_expr_stmt
 name|Expr
 operator|*
 name|getInit
@@ -18049,43 +17937,22 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setInit
-parameter_list|(
-name|Expr
-modifier|*
-name|init
-parameter_list|)
+argument_list|(
+argument|Expr *init
+argument_list|)
 block|{
 operator|*
 name|child_begin
 argument_list|()
 operator|=
 name|init
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// \brief Retrieve the total number of subexpressions in this
-end_comment
-
-begin_comment
 comment|/// designated initializer expression, including the actual
-end_comment
-
-begin_comment
 comment|/// initialized value and any expressions that occur within array
-end_comment
-
-begin_comment
 comment|/// and array-range designators.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumSubExprs
 argument_list|()
@@ -18095,17 +17962,13 @@ return|return
 name|NumSubExprs
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|Expr
-modifier|*
+operator|*
 name|getSubExpr
 argument_list|(
-name|unsigned
-name|Idx
+argument|unsigned Idx
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -18115,7 +17978,7 @@ name|NumSubExprs
 operator|&&
 literal|"Subscript out of range"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|cast
 operator|<
@@ -18135,19 +17998,13 @@ index|]
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|setSubExpr
-parameter_list|(
-name|unsigned
-name|Idx
-parameter_list|,
-name|Expr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|Expr *E
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -18157,7 +18014,7 @@ name|NumSubExprs
 operator|&&
 literal|"Subscript out of range"
 argument_list|)
-expr_stmt|;
+block|;
 name|getTrailingObjects
 operator|<
 name|Stmt
@@ -18170,79 +18027,44 @@ name|Idx
 index|]
 operator|=
 name|E
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// \brief Replaces the designator at index @p Idx with the series
-end_comment
-
-begin_comment
 comment|/// of designators in [First, Last).
-end_comment
-
-begin_function_decl
 name|void
 name|ExpandDesignator
-parameter_list|(
-specifier|const
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-name|unsigned
-name|Idx
-parameter_list|,
-specifier|const
-name|Designator
-modifier|*
-name|First
-parameter_list|,
-specifier|const
-name|Designator
-modifier|*
-name|Last
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const Designator *First
+argument_list|,
+argument|const Designator *Last
+argument_list|)
+block|;
 name|SourceRange
 name|getDesignatorsSourceRange
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|SourceLocation
 name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
-expr_stmt|;
-end_expr_stmt
-
-begin_function
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -18253,22 +18075,16 @@ operator|==
 name|DesignatedInitExprClass
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function
 name|child_range
 name|children
-parameter_list|()
+argument_list|()
 block|{
 name|Stmt
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|begin
-init|=
+operator|=
 name|getTrailingObjects
 operator|<
 name|Stmt
@@ -18276,7 +18092,7 @@ operator|*
 operator|>
 operator|(
 operator|)
-decl_stmt|;
+block|;
 return|return
 name|child_range
 argument_list|(
@@ -18288,55 +18104,22 @@ name|NumSubExprs
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|friend
 name|TrailingObjects
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
+block|; }
+block|;
 comment|/// \brief Represents a place-holder for an object not to be initialized by
-end_comment
-
-begin_comment
 comment|/// anything.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This only makes sense when it appears as part of an updater of a
-end_comment
-
-begin_comment
 comment|/// DesignatedInitUpdateExpr (see below). The base expression of a DIUE
-end_comment
-
-begin_comment
 comment|/// initializes a big object, and the NoInitExpr's mark the spots within the
-end_comment
-
-begin_comment
 comment|/// big object not to be overwritten by the updater.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \see DesignatedInitUpdateExpr
-end_comment
-
-begin_decl_stmt
 name|class
 name|NoInitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -20650,35 +20433,6 @@ operator|=
 literal|0
 block|}
 block|;
-comment|// The ABI values for various atomic memory orderings.
-block|enum
-name|AtomicOrderingKind
-block|{
-name|AO_ABI_memory_order_relaxed
-operator|=
-literal|0
-block|,
-name|AO_ABI_memory_order_consume
-operator|=
-literal|1
-block|,
-name|AO_ABI_memory_order_acquire
-operator|=
-literal|2
-block|,
-name|AO_ABI_memory_order_release
-operator|=
-literal|3
-block|,
-name|AO_ABI_memory_order_acq_rel
-operator|=
-literal|4
-block|,
-name|AO_ABI_memory_order_seq_cst
-operator|=
-literal|5
-block|}
-block|;
 name|private
 operator|:
 expr|enum
@@ -20948,6 +20702,7 @@ block|}
 name|unsigned
 name|getNumSubExprs
 argument_list|()
+specifier|const
 block|{
 return|return
 name|NumSubExprs
@@ -20964,6 +20719,28 @@ name|reinterpret_cast
 operator|<
 name|Expr
 operator|*
+operator|*
+operator|>
+operator|(
+name|SubExprs
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+specifier|const
+operator|*
+name|getSubExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+specifier|const
 operator|*
 operator|>
 operator|(

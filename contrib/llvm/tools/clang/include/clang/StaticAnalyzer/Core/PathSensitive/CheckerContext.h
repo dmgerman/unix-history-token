@@ -832,6 +832,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Returns the word that should be used to refer to the declaration
+comment|/// in the report.
+name|StringRef
+name|getDeclDescription
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|/// \brief Get the declaration of the called function (path-sensitive).
 specifier|const
 name|FunctionDecl

@@ -93,6 +93,9 @@ decl_stmt|;
 name|class
 name|SValBuilder
 decl_stmt|;
+name|class
+name|SymbolReaper
+decl_stmt|;
 comment|/// An entry in the environment consists of a Stmt and an LocationContext.
 comment|/// This allows the environment to manage context-sensitive bindings,
 comment|/// which is essentially for modeling recursive function analysis, among

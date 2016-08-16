@@ -243,7 +243,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// \brief Whether this macro info was loaded from an AST file.
-name|unsigned
+name|bool
 name|FromASTFile
 range|:
 literal|1
@@ -1104,7 +1104,7 @@ range|:
 literal|2
 decl_stmt|;
 comment|/// \brief True if the macro directive was loaded from a PCH file.
-name|bool
+name|unsigned
 name|IsFromPCH
 range|:
 literal|1
@@ -1112,7 +1112,7 @@ decl_stmt|;
 comment|// Used by VisibilityMacroDirective ----------------------------------------//
 comment|/// \brief Whether the macro has public visibility (when described in a
 comment|/// module).
-name|bool
+name|unsigned
 name|IsPublic
 range|:
 literal|1

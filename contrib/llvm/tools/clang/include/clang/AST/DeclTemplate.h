@@ -105,6 +105,12 @@ directive|include
 file|<limits>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -683,9 +689,11 @@ comment|// Constructs an instance with an internal Argument list, containing
 comment|// a copy of the Args array. (Called by CreateCopy)
 name|TemplateArgumentList
 argument_list|(
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|)
 block|;
 name|public
@@ -705,11 +713,15 @@ name|TemplateArgumentList
 operator|*
 name|CreateCopy
 argument_list|(
-argument|ASTContext&Context
+name|ASTContext
+operator|&
+name|Context
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|)
 block|;
 comment|/// \brief Construct a new, temporary template argument list on the stack.
@@ -719,21 +731,26 @@ comment|/// provided.
 name|explicit
 name|TemplateArgumentList
 argument_list|(
-argument|OnStackType
+name|OnStackType
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|Args
 argument_list|)
 operator|:
 name|Arguments
 argument_list|(
 name|Args
+operator|.
+name|data
+argument_list|()
 argument_list|)
 block|,
 name|NumArguments
 argument_list|(
-argument|NumArgs
+argument|Args.size()
 argument_list|)
 block|{}
 comment|/// \brief Produces a shallow copy of the given template argument list.
@@ -1367,6 +1384,8 @@ block|,
 name|TemplatedDecl
 argument_list|(
 name|nullptr
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TemplateParams
@@ -1403,6 +1422,8 @@ block|,
 name|TemplatedDecl
 argument_list|(
 name|nullptr
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TemplateParams
@@ -1440,13 +1461,15 @@ block|,
 name|TemplatedDecl
 argument_list|(
 name|Decl
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TemplateParams
 argument_list|(
 argument|Params
 argument_list|)
-block|{ }
+block|{}
 name|public
 operator|:
 comment|/// Get the list of template parameters
@@ -1469,6 +1492,9 @@ specifier|const
 block|{
 return|return
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
@@ -1522,6 +1548,9 @@ name|getTemplateLoc
 argument_list|()
 argument_list|,
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|->
 name|getSourceRange
 argument_list|()
@@ -1531,10 +1560,48 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Whether this is a (C++ Concepts TS) function or variable concept.
+name|bool
+name|isConcept
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplatedDecl
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+name|void
+name|setConcept
+argument_list|()
+block|{
+name|TemplatedDecl
+operator|.
+name|setInt
+argument_list|(
+name|true
+argument_list|)
+block|; }
 name|protected
 operator|:
+comment|/// \brief The named declaration from which this template was instantiated.
+comment|/// (or null).
+comment|///
+comment|/// The boolean value will be true to indicate that this template
+comment|/// (function or variable) is a concept.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|NamedDecl
 operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
 name|TemplatedDecl
 block|;
 name|TemplateParameterList
@@ -1557,6 +1624,9 @@ name|assert
 argument_list|(
 operator|!
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|&&
 literal|"TemplatedDecl already set!"
 argument_list|)
@@ -1570,8 +1640,11 @@ literal|"TemplateParams already set!"
 argument_list|)
 block|;
 name|TemplatedDecl
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|templatedDecl
+argument_list|)
 block|;
 name|TemplateParams
 operator|=
@@ -1864,25 +1937,14 @@ argument_list|)
 block|;
 for|for
 control|(
-name|unsigned
-name|Arg
-init|=
-literal|0
-init|;
-name|Arg
-operator|!=
+specifier|const
+name|TemplateArgument
+modifier|&
+name|TemplateArg
+range|:
 name|TemplateArgs
-operator|.
-name|size
-argument_list|()
-condition|;
-operator|++
-name|Arg
 control|)
-name|TemplateArgs
-index|[
-name|Arg
-index|]
+name|TemplateArg
 operator|.
 name|Profile
 argument_list|(
@@ -3257,6 +3319,9 @@ operator|*
 operator|>
 operator|(
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|)
 return|;
 block|}
@@ -4500,11 +4565,9 @@ argument|QualType T
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
-argument|const QualType *ExpandedTypes
+argument|ArrayRef<QualType> ExpandedTypes
 argument_list|,
-argument|unsigned NumExpandedTypes
-argument_list|,
-argument|TypeSourceInfo **ExpandedTInfos
+argument|ArrayRef<TypeSourceInfo *> ExpandedTInfos
 argument_list|)
 expr_stmt|;
 name|friend
@@ -4561,53 +4624,53 @@ specifier|static
 name|NonTypeTemplateParmDecl
 modifier|*
 name|Create
-parameter_list|(
+argument_list|(
 specifier|const
 name|ASTContext
-modifier|&
+operator|&
 name|C
-parameter_list|,
+argument_list|,
 name|DeclContext
-modifier|*
+operator|*
 name|DC
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|StartLoc
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|IdLoc
-parameter_list|,
+argument_list|,
 name|unsigned
 name|D
-parameter_list|,
+argument_list|,
 name|unsigned
 name|P
-parameter_list|,
+argument_list|,
 name|IdentifierInfo
-modifier|*
+operator|*
 name|Id
-parameter_list|,
+argument_list|,
 name|QualType
 name|T
-parameter_list|,
+argument_list|,
 name|TypeSourceInfo
-modifier|*
+operator|*
 name|TInfo
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|QualType
-modifier|*
+operator|>
 name|ExpandedTypes
-parameter_list|,
-name|unsigned
-name|NumExpandedTypes
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|TypeSourceInfo
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|ExpandedTInfos
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 specifier|static
 name|NonTypeTemplateParmDecl
 modifier|*
@@ -5154,9 +5217,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
-argument|unsigned NumExpansions
-argument_list|,
-argument|TemplateParameterList * const *Expansions
+argument|ArrayRef<TemplateParameterList *> Expansions
 argument_list|)
 expr_stmt|;
 name|public
@@ -5633,11 +5694,11 @@ comment|/// \brief Represents the builtin template declaration which is used to
 end_comment
 
 begin_comment
-comment|/// implement __make_integer_seq.  It serves no real purpose beyond existing as
+comment|/// implement __make_integer_seq and other builtin templates.  It serves
 end_comment
 
 begin_comment
-comment|/// a place to hold template parameters.
+comment|/// no real purpose beyond existing as a place to hold template parameters.
 end_comment
 
 begin_decl_stmt
@@ -5886,9 +5947,7 @@ argument|SourceLocation IdLoc
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|ClassTemplateSpecializationDecl *PrevDecl
 argument_list|)
@@ -5920,9 +5979,7 @@ argument|SourceLocation IdLoc
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|ClassTemplateSpecializationDecl *PrevDecl
 argument_list|)
@@ -6668,25 +6725,14 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|unsigned
-name|Arg
-init|=
-literal|0
-init|;
-name|Arg
-operator|!=
+specifier|const
+name|TemplateArgument
+modifier|&
+name|TemplateArg
+range|:
 name|TemplateArgs
-operator|.
-name|size
-argument_list|()
-condition|;
-operator|++
-name|Arg
 control|)
-name|TemplateArgs
-index|[
-name|Arg
-index|]
+name|TemplateArg
 operator|.
 name|Profile
 argument_list|(
@@ -6815,9 +6861,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const ASTTemplateArgumentListInfo *ArgsAsWritten
 argument_list|,
@@ -6876,9 +6920,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const TemplateArgumentListInfo&ArgInfos
 argument_list|,
@@ -6991,6 +7033,17 @@ operator|->
 name|InstantiatedFromMember
 operator|.
 name|getPointer
+argument_list|()
+return|;
+block|}
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInstantiatedFromMember
 argument_list|()
 return|;
 block|}
@@ -7354,6 +7407,9 @@ operator|*
 operator|>
 operator|(
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|)
 return|;
 block|}
@@ -7953,9 +8009,7 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|unsigned NParams
-argument_list|,
-argument|TemplateParameterList **Params
+argument|MutableArrayRef<TemplateParameterList *> Params
 argument_list|,
 argument|FriendUnion Friend
 argument_list|,
@@ -7978,12 +8032,18 @@ argument_list|)
 operator|,
 name|NumParams
 argument_list|(
-name|NParams
+name|Params
+operator|.
+name|size
+argument_list|()
 argument_list|)
 operator|,
 name|Params
 argument_list|(
 name|Params
+operator|.
+name|data
+argument_list|()
 argument_list|)
 operator|,
 name|Friend
@@ -8033,9 +8093,7 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|unsigned NParams
-argument_list|,
-argument|TemplateParameterList **Params
+argument|MutableArrayRef<TemplateParameterList *> Params
 argument_list|,
 argument|FriendUnion Friend
 argument_list|,
@@ -8369,6 +8427,9 @@ operator|*
 operator|>
 operator|(
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|)
 return|;
 block|}
@@ -8742,7 +8803,7 @@ argument_list|)
 block|,
 name|TemplateArgs
 argument_list|(
-argument|TemplArgs
+argument|std::move(TemplArgs)
 argument_list|)
 block|{}
 name|ClassScopeFunctionSpecializationDecl
@@ -8834,7 +8895,12 @@ name|FD
 argument_list|,
 name|HasExplicitTemplateArgs
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|TemplateArgs
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -9050,9 +9116,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|)
 block|;
 name|explicit
@@ -9086,9 +9150,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|)
 block|;
 specifier|static
@@ -9364,20 +9426,12 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
+name|isTemplateInstantiation
+argument_list|(
 name|getSpecializationKind
 argument_list|()
-operator|!=
-name|TSK_ImplicitInstantiation
-operator|&&
-name|getSpecializationKind
-argument_list|()
-operator|!=
-name|TSK_ExplicitInstantiationDefinition
-operator|&&
-name|getSpecializationKind
-argument_list|()
-operator|!=
-name|TSK_ExplicitInstantiationDeclaration
+argument_list|)
 condition|)
 return|return
 name|llvm
@@ -9395,41 +9449,10 @@ operator|)
 return|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|SpecializedPartialSpecialization
-modifier|*
-name|PartialSpec
-init|=
-name|SpecializedTemplate
-operator|.
-name|dyn_cast
-operator|<
-name|SpecializedPartialSpecialization
-operator|*
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|PartialSpec
-operator|->
-name|PartialSpecialization
-return|;
-end_if
-
 begin_return
 return|return
-name|SpecializedTemplate
-operator|.
-name|get
-operator|<
-name|VarTemplateDecl
-operator|*
-operator|>
-operator|(
-operator|)
+name|getSpecializedTemplateOrPartial
+argument_list|()
 return|;
 end_return
 
@@ -9931,25 +9954,14 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|unsigned
-name|Arg
-init|=
-literal|0
-init|;
-name|Arg
-operator|!=
+specifier|const
+name|TemplateArgument
+modifier|&
+name|TemplateArg
+range|:
 name|TemplateArgs
-operator|.
-name|size
-argument_list|()
-condition|;
-operator|++
-name|Arg
 control|)
-name|TemplateArgs
-index|[
-name|Arg
-index|]
+name|TemplateArg
 operator|.
 name|Profile
 argument_list|(
@@ -10082,9 +10094,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const ASTTemplateArgumentListInfo *ArgInfos
 argument_list|)
@@ -10145,9 +10155,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const TemplateArgumentListInfo&ArgInfos
 argument_list|)
@@ -10584,6 +10592,9 @@ operator|*
 operator|>
 operator|(
 name|TemplatedDecl
+operator|.
+name|getPointer
+argument_list|()
 operator|)
 return|;
 block|}

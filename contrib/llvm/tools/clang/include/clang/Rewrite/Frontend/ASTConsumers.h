@@ -105,7 +105,7 @@ name|CreateObjCRewriter
 argument_list|(
 argument|const std::string&InFile
 argument_list|,
-argument|raw_ostream *OS
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|,
 argument|DiagnosticsEngine&Diags
 argument_list|,
@@ -124,7 +124,7 @@ name|CreateModernObjCRewriter
 argument_list|(
 argument|const std::string&InFile
 argument_list|,
-argument|raw_ostream *OS
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|,
 argument|DiagnosticsEngine&Diags
 argument_list|,
@@ -145,7 +145,7 @@ name|ASTConsumer
 operator|>
 name|CreateHTMLPrinter
 argument_list|(
-argument|raw_ostream *OS
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|,
 argument|Preprocessor&PP
 argument_list|,

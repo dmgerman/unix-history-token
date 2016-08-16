@@ -83,22 +83,19 @@ parameter_list|)
 value|X,
 define|#
 directive|define
-name|LAST_INHERITABLE_ATTR
+name|ATTR_RANGE
 parameter_list|(
-name|X
+name|CLASS
+parameter_list|,
+name|FIRST_NAME
+parameter_list|,
+name|LAST_NAME
 parameter_list|)
-value|X, LAST_INHERITABLE = X,
-define|#
-directive|define
-name|LAST_INHERITABLE_PARAM_ATTR
-parameter_list|(
-name|X
-parameter_list|)
-value|X, LAST_INHERITABLE_PARAM = X,
+define|\
+value|First##CLASS = FIRST_NAME,                    \   Last##CLASS = LAST_NAME,
 include|#
 directive|include
 file|"clang/Basic/AttrList.inc"
-name|NUM_ATTRS
 block|}
 enum|;
 block|}

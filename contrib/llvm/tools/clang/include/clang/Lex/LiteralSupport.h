@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -232,6 +238,12 @@ range|:
 literal|1
 decl_stmt|;
 name|bool
+name|isHalf
+range|:
+literal|1
+decl_stmt|;
+comment|// 1.0h
+name|bool
 name|isFloat
 range|:
 literal|1
@@ -243,6 +255,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// 1.0i
+name|bool
+name|isFloat128
+range|:
+literal|1
+decl_stmt|;
+comment|// 1.0q
 name|uint8_t
 name|MicrosoftInteger
 decl_stmt|;
@@ -374,6 +392,13 @@ name|SourceLocation
 name|TokLoc
 parameter_list|)
 function_decl|;
+name|void
+name|ParseDecimalOrOctalCommon
+parameter_list|(
+name|SourceLocation
+name|TokLoc
+parameter_list|)
+function_decl|;
 specifier|static
 name|bool
 name|isDigitSeparator
@@ -386,6 +411,45 @@ return|return
 name|C
 operator|==
 literal|'\''
+return|;
+block|}
+comment|/// \brief Determine whether the sequence of characters [Start, End) contains
+comment|/// any real digits (not digit separators).
+name|bool
+name|containsDigits
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Start
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|End
+parameter_list|)
+block|{
+return|return
+name|Start
+operator|!=
+name|End
+operator|&&
+operator|(
+name|Start
+operator|+
+literal|1
+operator|!=
+name|End
+operator|||
+operator|!
+name|isDigitSeparator
+argument_list|(
+name|Start
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
 return|;
 block|}
 enum|enum

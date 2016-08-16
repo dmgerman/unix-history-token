@@ -231,7 +231,12 @@ name|FunctionRecordTy
 expr_stmt|;
 name|std
 operator|::
+name|vector
+operator|<
+name|std
+operator|::
 name|string
+operator|>
 name|CoverageMappings
 expr_stmt|;
 name|public
@@ -297,7 +302,7 @@ operator|&
 name|CoverageMapping
 argument_list|,
 name|bool
-name|isUsed
+name|IsUsed
 operator|=
 name|true
 argument_list|)

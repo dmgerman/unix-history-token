@@ -95,6 +95,12 @@ directive|include
 file|"llvm/Option/OptSpecifier.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -257,13 +263,14 @@ function_decl|;
 comment|/// An interface for collecting the dependencies of a compilation. Users should
 comment|/// use \c attachToPreprocessor and \c attachToASTReader to get all of the
 comment|/// dependencies.
-comment|// FIXME: Migrate DependencyFileGen, DependencyGraphGen, ModuleDepCollectory to
-comment|// use this interface.
+comment|/// FIXME: Migrate DependencyFileGen and DependencyGraphGen to use this
+comment|/// interface.
 name|class
 name|DependencyCollector
 block|{
 name|public
 label|:
+name|virtual
 name|void
 name|attachToPreprocessor
 parameter_list|(
@@ -272,6 +279,7 @@ modifier|&
 name|PP
 parameter_list|)
 function_decl|;
+name|virtual
 name|void
 name|attachToASTReader
 parameter_list|(
@@ -436,32 +444,63 @@ comment|/// Collects the dependencies for imported modules into a directory.  Us
 comment|/// should attach to the AST reader whenever a module is loaded.
 name|class
 name|ModuleDependencyCollector
+range|:
+name|public
+name|DependencyCollector
 block|{
 name|std
 operator|::
 name|string
 name|DestDir
-expr_stmt|;
+block|;
 name|bool
 name|HasErrors
-decl_stmt|;
+operator|=
+name|false
+block|;
 name|llvm
 operator|::
 name|StringSet
 operator|<
 operator|>
 name|Seen
-expr_stmt|;
+block|;
 name|vfs
 operator|::
 name|YAMLVFSWriter
 name|VFSWriter
-expr_stmt|;
+block|;
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|SymLinkMap
+block|;
+name|bool
+name|getRealPath
+argument_list|(
+argument|StringRef SrcPath
+argument_list|,
+argument|SmallVectorImpl<char>&Result
+argument_list|)
+block|;
+name|std
+operator|::
+name|error_code
+name|copyToRoot
+argument_list|(
+argument|StringRef Src
+argument_list|)
+block|;
 name|public
-label|:
+operator|:
 name|StringRef
 name|getDest
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DestDir
@@ -469,10 +508,9 @@ return|;
 block|}
 name|bool
 name|insertSeen
-parameter_list|(
-name|StringRef
-name|Filename
-parameter_list|)
+argument_list|(
+argument|StringRef Filename
+argument_list|)
 block|{
 return|return
 name|Seen
@@ -486,23 +524,18 @@ name|second
 return|;
 block|}
 name|void
-name|setHasErrors
-parameter_list|()
-block|{
-name|HasErrors
-operator|=
-name|true
-expr_stmt|;
-block|}
+name|addFile
+argument_list|(
+argument|StringRef Filename
+argument_list|)
+block|;
 name|void
 name|addFileMapping
-parameter_list|(
-name|StringRef
-name|VPath
-parameter_list|,
-name|StringRef
-name|RPath
-parameter_list|)
+argument_list|(
+argument|StringRef VPath
+argument_list|,
+argument|StringRef RPath
+argument_list|)
 block|{
 name|VFSWriter
 operator|.
@@ -512,23 +545,28 @@ name|VPath
 argument_list|,
 name|RPath
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
+name|void
+name|attachToPreprocessor
+argument_list|(
+argument|Preprocessor&PP
+argument_list|)
+name|override
+block|;
 name|void
 name|attachToASTReader
-parameter_list|(
-name|ASTReader
-modifier|&
-name|R
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|ASTReader&R
+argument_list|)
+name|override
+block|;
 name|void
 name|writeFileMap
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|bool
 name|hasErrors
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|HasErrors
@@ -538,15 +576,10 @@ name|ModuleDependencyCollector
 argument_list|(
 argument|std::string DestDir
 argument_list|)
-block|:
+operator|:
 name|DestDir
 argument_list|(
-name|DestDir
-argument_list|)
-operator|,
-name|HasErrors
-argument_list|(
-argument|false
+argument|std::move(DestDir)
 argument_list|)
 block|{}
 operator|~
@@ -556,30 +589,24 @@ block|{
 name|writeFileMap
 argument_list|()
 block|; }
-block|}
-empty_stmt|;
+expr|}
+block|;
 comment|/// AttachDependencyGraphGen - Create a dependency graph generator, and attach
 comment|/// it to the given preprocessor.
 name|void
 name|AttachDependencyGraphGen
-parameter_list|(
-name|Preprocessor
-modifier|&
-name|PP
-parameter_list|,
-name|StringRef
-name|OutputFile
-parameter_list|,
-name|StringRef
-name|SysRoot
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|StringRef OutputFile
+argument_list|,
+argument|StringRef SysRoot
+argument_list|)
+block|;
 comment|/// AttachHeaderIncludeGen - Create a header include list generator, and attach
 comment|/// it to the given preprocessor.
 comment|///
-comment|/// \param ExtraHeaders - If not empty, will write the header filenames, just
-comment|/// like they were included during a regular preprocessing. Useful for
-comment|/// implicit include dependencies, like sanitizer blacklists.
+comment|/// \param DepOpts - Options controlling the output.
 comment|/// \param ShowAllHeaders - If true, show all header information instead of just
 comment|/// headers following the predefines buffer. This is useful for making sure
 comment|/// includes mentioned on the command line are also reported, but differs from
@@ -591,56 +618,33 @@ comment|/// \param MSStyle - Whether to print in cl.exe /showIncludes style.
 name|void
 name|AttachHeaderIncludeGen
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|ExtraHeaders
+argument|const DependencyOutputOptions&DepOpts
 argument_list|,
-name|bool
-name|ShowAllHeaders
-operator|=
-name|false
+argument|bool ShowAllHeaders = false
 argument_list|,
-name|StringRef
-name|OutputPath
-operator|=
+argument|StringRef OutputPath =
 literal|""
 argument_list|,
-name|bool
-name|ShowDepth
-operator|=
-name|true
+argument|bool ShowDepth = true
 argument_list|,
-name|bool
-name|MSStyle
-operator|=
-name|false
+argument|bool MSStyle = false
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Cache tokens for use with PCH. Note that this requires a seekable stream.
 name|void
 name|CacheTokens
-parameter_list|(
+argument_list|(
 name|Preprocessor
-modifier|&
+operator|&
 name|PP
-parameter_list|,
+argument_list|,
 name|raw_pwrite_stream
-modifier|*
+operator|*
 name|OS
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// The ChainedIncludesSource class converts headers to chained PCHs in
 comment|/// memory, mainly for testing.
 name|IntrusiveRefCntPtr
@@ -660,14 +664,14 @@ operator|>
 operator|&
 name|Reader
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// createInvocationFromCommandLine - Construct a compiler invocation object for
 comment|/// a command line argument vector.
 comment|///
 comment|/// \return A CompilerInvocation, or 0 if none was built for the given
 comment|/// argument vector.
 name|CompilerInvocation
-modifier|*
+operator|*
 name|createInvocationFromCommandLine
 argument_list|(
 name|ArrayRef
@@ -691,64 +695,32 @@ operator|>
 operator|(
 operator|)
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// Return the value of the last argument as an integer, or a default. If Diags
 comment|/// is non-null, emits an error if the argument is given, but non-integral.
 name|int
 name|getLastArgIntValue
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|OptSpecifier
-name|Id
+argument|llvm::opt::OptSpecifier Id
 argument_list|,
-name|int
-name|Default
+argument|int Default
 argument_list|,
-name|DiagnosticsEngine
-operator|*
-name|Diags
-operator|=
-name|nullptr
+argument|DiagnosticsEngine *Diags = nullptr
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|int
 name|getLastArgIntValue
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|OptSpecifier
-name|Id
+argument|llvm::opt::OptSpecifier Id
 argument_list|,
-name|int
-name|Default
+argument|int Default
 argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
+argument|DiagnosticsEngine&Diags
 argument_list|)
 block|{
 return|return
@@ -768,58 +740,26 @@ block|}
 name|uint64_t
 name|getLastArgUInt64Value
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|OptSpecifier
-name|Id
+argument|llvm::opt::OptSpecifier Id
 argument_list|,
-name|uint64_t
-name|Default
+argument|uint64_t Default
 argument_list|,
-name|DiagnosticsEngine
-operator|*
-name|Diags
-operator|=
-name|nullptr
+argument|DiagnosticsEngine *Diags = nullptr
 argument_list|)
-decl_stmt|;
+block|;
 specifier|inline
 name|uint64_t
 name|getLastArgUInt64Value
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|opt
-operator|::
-name|ArgList
-operator|&
-name|Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-name|llvm
-operator|::
-name|opt
-operator|::
-name|OptSpecifier
-name|Id
+argument|llvm::opt::OptSpecifier Id
 argument_list|,
-name|uint64_t
-name|Default
+argument|uint64_t Default
 argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
+argument|DiagnosticsEngine&Diags
 argument_list|)
 block|{
 return|return
@@ -841,13 +781,13 @@ comment|// global objects, but we don't want LeakDetectors to complain, so we bu
 comment|// in a globally visible array.
 name|void
 name|BuryPointer
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
+operator|*
 name|Ptr
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|template
 operator|<
 name|typename

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-------- Intrin.h ---------------------------------------------------===  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to deal  * in the Software without restriction, including without limitation the rights  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  * copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  * THE SOFTWARE.  *  *===-----------------------------------------------------------------------===  */
+comment|/* ===-------- intrin.h ---------------------------------------------------===  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to deal  * in the Software without restriction, including without limitation the rights  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  * copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  * THE SOFTWARE.  *  *===-----------------------------------------------------------------------===  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ name|_MSC_VER
 end_ifndef
 
 begin_empty
-empty|#include_next<Intrin.h>
+empty|#include_next<intrin.h>
 end_empty
 
 begin_else
@@ -1573,8 +1573,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-specifier|static
-name|__inline__
 specifier|static
 name|__inline__
 name|void
@@ -4257,7 +4255,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_and_fetch
+name|__atomic_fetch_and
 argument_list|(
 name|_Value
 argument_list|,
@@ -4283,7 +4281,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_and_fetch
+name|__atomic_fetch_and
 argument_list|(
 name|_Value
 argument_list|,
@@ -4309,7 +4307,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_and_fetch
+name|__atomic_fetch_and
 argument_list|(
 name|_Value
 argument_list|,
@@ -4338,7 +4336,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_and_fetch
+name|__atomic_fetch_and
 argument_list|(
 name|_Value
 argument_list|,
@@ -4367,7 +4365,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_or_fetch
+name|__atomic_fetch_or
 argument_list|(
 name|_Value
 argument_list|,
@@ -4393,7 +4391,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_or_fetch
+name|__atomic_fetch_or
 argument_list|(
 name|_Value
 argument_list|,
@@ -4419,7 +4417,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_or_fetch
+name|__atomic_fetch_or
 argument_list|(
 name|_Value
 argument_list|,
@@ -4448,7 +4446,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_or_fetch
+name|__atomic_fetch_or
 argument_list|(
 name|_Value
 argument_list|,
@@ -4477,7 +4475,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_xor_fetch
+name|__atomic_fetch_xor
 argument_list|(
 name|_Value
 argument_list|,
@@ -4503,7 +4501,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_xor_fetch
+name|__atomic_fetch_xor
 argument_list|(
 name|_Value
 argument_list|,
@@ -4529,7 +4527,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_xor_fetch
+name|__atomic_fetch_xor
 argument_list|(
 name|_Value
 argument_list|,
@@ -4558,7 +4556,7 @@ name|_Mask
 parameter_list|)
 block|{
 return|return
-name|__atomic_xor_fetch
+name|__atomic_fetch_xor
 argument_list|(
 name|_Value
 argument_list|,
@@ -4926,30 +4924,6 @@ block|}
 specifier|static
 name|__inline__
 name|unsigned
-name|__int64
-name|__DEFAULT_FN_ATTRS
-name|__readfsqword
-parameter_list|(
-name|unsigned
-name|long
-name|__offset
-parameter_list|)
-block|{
-return|return
-operator|*
-name|__ptr_to_addr_space
-argument_list|(
-literal|257
-argument_list|,
-argument|unsigned __int64
-argument_list|,
-argument|__offset
-argument_list|)
-return|;
-block|}
-specifier|static
-name|__inline__
-name|unsigned
 name|short
 name|__DEFAULT_FN_ATTRS
 name|__readfsword
@@ -4966,6 +4940,30 @@ argument_list|(
 literal|257
 argument_list|,
 argument|unsigned short
+argument_list|,
+argument|__offset
+argument_list|)
+return|;
+block|}
+specifier|static
+name|__inline__
+name|unsigned
+name|__int64
+name|__DEFAULT_FN_ATTRS
+name|__readfsqword
+parameter_list|(
+name|unsigned
+name|long
+name|__offset
+parameter_list|)
+block|{
+return|return
+operator|*
+name|__ptr_to_addr_space
+argument_list|(
+literal|257
+argument_list|,
+argument|unsigned __int64
 argument_list|,
 argument|__offset
 argument_list|)
@@ -4995,6 +4993,30 @@ argument_list|(
 literal|256
 argument_list|,
 argument|unsigned char
+argument_list|,
+argument|__offset
+argument_list|)
+return|;
+block|}
+specifier|static
+name|__inline__
+name|unsigned
+name|short
+name|__DEFAULT_FN_ATTRS
+name|__readgsword
+parameter_list|(
+name|unsigned
+name|long
+name|__offset
+parameter_list|)
+block|{
+return|return
+operator|*
+name|__ptr_to_addr_space
+argument_list|(
+literal|256
+argument_list|,
+argument|unsigned short
 argument_list|,
 argument|__offset
 argument_list|)
@@ -5043,30 +5065,6 @@ argument_list|(
 literal|256
 argument_list|,
 argument|unsigned __int64
-argument_list|,
-argument|__offset
-argument_list|)
-return|;
-block|}
-specifier|static
-name|__inline__
-name|unsigned
-name|short
-name|__DEFAULT_FN_ATTRS
-name|__readgsword
-parameter_list|(
-name|unsigned
-name|long
-name|__offset
-parameter_list|)
-block|{
-return|return
-operator|*
-name|__ptr_to_addr_space
-argument_list|(
-literal|256
-argument_list|,
-argument|unsigned short
 argument_list|,
 argument|__offset
 argument_list|)

@@ -485,6 +485,7 @@ file|"clang/AST/TypeNodes.def"
 comment|/// The collection of all-type qualifiers we support.
 comment|/// Clang supports five independent qualifiers:
 comment|/// * C99: const, volatile, and restrict
+comment|/// * MS: __unaligned
 comment|/// * Embedded C (TR18037): address spaces
 comment|/// * Objective C: the GC attributes (none, weak, or strong)
 name|class
@@ -556,10 +557,10 @@ enum|;
 enum|enum
 block|{
 comment|/// The maximum supported address space number.
-comment|/// 24 bits should be enough for anyone.
+comment|/// 23 bits should be enough for anyone.
 name|MaxAddressSpace
 init|=
-literal|0xffffffu
+literal|0x7fffffu
 block|,
 comment|/// The width of the "fast" qualifier mask.
 name|FastWidth
@@ -839,6 +840,28 @@ operator|.
 name|addCVRQualifiers
 argument_list|(
 name|CVR
+argument_list|)
+expr_stmt|;
+return|return
+name|Qs
+return|;
+block|}
+specifier|static
+name|Qualifiers
+name|fromCVRUMask
+parameter_list|(
+name|unsigned
+name|CVRU
+parameter_list|)
+block|{
+name|Qualifiers
+name|Qs
+decl_stmt|;
+name|Qs
+operator|.
+name|addCVRUQualifiers
+argument_list|(
+name|CVRU
 argument_list|)
 expr_stmt|;
 return|return
@@ -1154,6 +1177,89 @@ expr_stmt|;
 name|Mask
 operator||=
 name|mask
+expr_stmt|;
+block|}
+name|void
+name|addCVRUQualifiers
+parameter_list|(
+name|unsigned
+name|mask
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|mask
+operator|&
+operator|~
+name|CVRMask
+operator|&
+operator|~
+name|UMask
+operator|)
+operator|&&
+literal|"bitmask contains non-CVRU bits"
+argument_list|)
+expr_stmt|;
+name|Mask
+operator||=
+name|mask
+expr_stmt|;
+block|}
+name|bool
+name|hasUnaligned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mask
+operator|&
+name|UMask
+return|;
+block|}
+name|void
+name|setUnaligned
+parameter_list|(
+name|bool
+name|flag
+parameter_list|)
+block|{
+name|Mask
+operator|=
+operator|(
+name|Mask
+operator|&
+operator|~
+name|UMask
+operator|)
+operator||
+operator|(
+name|flag
+condition|?
+name|UMask
+else|:
+literal|0
+operator|)
+expr_stmt|;
+block|}
+name|void
+name|removeUnaligned
+parameter_list|()
+block|{
+name|Mask
+operator|&=
+operator|~
+name|UMask
+expr_stmt|;
+block|}
+name|void
+name|addUnaligned
+parameter_list|()
+block|{
+name|Mask
+operator||=
+name|UMask
 expr_stmt|;
 block|}
 name|bool
@@ -2034,6 +2140,18 @@ operator|&
 name|CVRMask
 operator|)
 operator|)
+operator|&&
+comment|// U qualifier may superset.
+operator|(
+operator|!
+name|other
+operator|.
+name|hasUnaligned
+argument_list|()
+operator|||
+name|hasUnaligned
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Determines if these qualifiers compatibly include another set of
@@ -2305,38 +2423,52 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|// bits:     |0 1 2|3 .. 4|5  ..  7|8   ...   31|
-comment|//           |C R V|GCAttr|Lifetime|AddressSpace|
+comment|// bits:     |0 1 2|3|4 .. 5|6  ..  8|9   ...   31|
+comment|//           |C R V|U|GCAttr|Lifetime|AddressSpace|
 name|uint32_t
 name|Mask
 decl_stmt|;
 specifier|static
 specifier|const
 name|uint32_t
-name|GCAttrMask
+name|UMask
 init|=
-literal|0x18
+literal|0x8
 decl_stmt|;
 specifier|static
 specifier|const
 name|uint32_t
-name|GCAttrShift
+name|UShift
 init|=
 literal|3
 decl_stmt|;
 specifier|static
 specifier|const
 name|uint32_t
+name|GCAttrMask
+init|=
+literal|0x30
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint32_t
+name|GCAttrShift
+init|=
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint32_t
 name|LifetimeMask
 init|=
-literal|0xE0
+literal|0x1C0
 decl_stmt|;
 specifier|static
 specifier|const
 name|uint32_t
 name|LifetimeShift
 init|=
-literal|5
+literal|6
 decl_stmt|;
 specifier|static
 specifier|const
@@ -2346,6 +2478,8 @@ init|=
 operator|~
 operator|(
 name|CVRMask
+operator||
+name|UMask
 operator||
 name|GCAttrMask
 operator||
@@ -2357,7 +2491,7 @@ specifier|const
 name|uint32_t
 name|AddressSpaceShift
 init|=
-literal|8
+literal|9
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -3247,6 +3381,7 @@ begin_decl_stmt
 name|bool
 name|isConstant
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Ctx
@@ -3275,6 +3410,7 @@ begin_decl_stmt
 name|bool
 name|isPODType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -3295,6 +3431,7 @@ begin_decl_stmt
 name|bool
 name|isCXX98PODType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -3319,6 +3456,7 @@ begin_decl_stmt
 name|bool
 name|isCXX11PODType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -3335,6 +3473,7 @@ begin_decl_stmt
 name|bool
 name|isTrivialType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -3351,6 +3490,7 @@ begin_decl_stmt
 name|bool
 name|isTriviallyCopyableType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -4272,6 +4412,11 @@ name|PlaceHolder
 operator|=
 name|Twine
 argument_list|()
+argument_list|,
+name|unsigned
+name|Indentation
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -4285,6 +4430,8 @@ argument_list|,
 name|Policy
 argument_list|,
 name|PlaceHolder
+argument_list|,
+name|Indentation
 argument_list|)
 expr_stmt|;
 block|}
@@ -4311,6 +4458,11 @@ specifier|const
 name|Twine
 modifier|&
 name|PlaceHolder
+parameter_list|,
+name|unsigned
+name|Indentation
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -4329,6 +4481,8 @@ argument_list|,
 name|policy
 argument_list|,
 name|PlaceHolder
+argument_list|,
+name|Indentation
 argument_list|)
 return|;
 block|}
@@ -4360,6 +4514,11 @@ specifier|const
 name|Twine
 modifier|&
 name|PlaceHolder
+parameter_list|,
+name|unsigned
+name|Indentation
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4480,26 +4639,22 @@ name|Twine
 modifier|&
 name|PlaceHolder
 decl_stmt|;
+name|unsigned
+name|Indentation
+decl_stmt|;
 name|public
 label|:
 name|StreamedQualTypeHelper
 argument_list|(
-specifier|const
-name|QualType
-operator|&
-name|T
+argument|const QualType&T
 argument_list|,
-specifier|const
-name|PrintingPolicy
-operator|&
-name|Policy
+argument|const PrintingPolicy&Policy
 argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|PlaceHolder
+argument|const Twine&PlaceHolder
+argument_list|,
+argument|unsigned Indentation
 argument_list|)
-operator|:
+block|:
 name|T
 argument_list|(
 name|T
@@ -4512,7 +4667,12 @@ argument_list|)
 operator|,
 name|PlaceHolder
 argument_list|(
-argument|PlaceHolder
+name|PlaceHolder
+argument_list|)
+operator|,
+name|Indentation
+argument_list|(
+argument|Indentation
 argument_list|)
 block|{ }
 name|friend
@@ -4546,6 +4706,10 @@ argument_list|,
 name|SQT
 operator|.
 name|PlaceHolder
+argument_list|,
+name|SQT
+operator|.
+name|Indentation
 argument_list|)
 block|;
 return|return
@@ -4575,6 +4739,11 @@ name|PlaceHolder
 operator|=
 name|Twine
 argument_list|()
+argument_list|,
+name|unsigned
+name|Indentation
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -4587,6 +4756,8 @@ argument_list|,
 name|Policy
 argument_list|,
 name|PlaceHolder
+argument_list|,
+name|Indentation
 argument_list|)
 return|;
 block|}
@@ -5048,6 +5219,18 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Remove all qualifiers including _Atomic.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getAtomicUnqualifiedType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -5073,6 +5256,7 @@ parameter_list|(
 name|QualType
 name|T
 parameter_list|,
+specifier|const
 name|ASTContext
 modifier|&
 name|Ctx
@@ -5952,7 +6136,7 @@ comment|/// cv-qualifier-seq, [...], are part of the function type.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
 comment|///
@@ -6600,7 +6784,7 @@ block|;
 name|bool
 name|isIntegralType
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -7015,78 +7199,25 @@ argument_list|()
 specifier|const
 block|;
 comment|// C11 _Atomic()
-name|bool
-name|isImage1dT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image1d_t
-name|bool
-name|isImage1dArrayT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image1d_array_t
-name|bool
-name|isImage1dBufferT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image1d_buffer_t
-name|bool
-name|isImage2dT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image2d_t
-name|bool
-name|isImage2dArrayT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image2d_array_t
-name|bool
-name|isImage2dDepthT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_depth_t
-name|bool
-name|isImage2dArrayDepthT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_array_depth_t
-name|bool
-name|isImage2dMSAAT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_msaa_t
-name|bool
-name|isImage2dArrayMSAAT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_array_msaa_t
-name|bool
-name|isImage2dMSAATDepth
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_msaa_depth_t
-name|bool
-name|isImage2dArrayMSAATDepth
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image_2d_array_msaa_depth_t
-name|bool
-name|isImage3dT
-argument_list|()
-specifier|const
-block|;
-comment|// OpenCL image3d_t
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+define|\
+value|bool is##Id##Type() const;
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 name|bool
 name|isImageType
 argument_list|()
@@ -7479,6 +7610,16 @@ name|getArrayElementTypeNoTypeQual
 argument_list|()
 specifier|const
 block|;
+comment|/// If this is a pointer type, return the pointee type.
+comment|/// If this is an array type, return the array element type.
+comment|/// This should never be used when type qualifiers are meaningful.
+specifier|const
+name|Type
+operator|*
+name|getPointeeOrArrayElementType
+argument_list|()
+specifier|const
+block|;
 comment|/// If this is a pointer, ObjC object pointer, or block
 comment|/// pointer, this returns the respective pointee.
 name|QualType
@@ -7765,6 +7906,26 @@ operator|:
 expr|enum
 name|Kind
 block|{
+comment|// OpenCL image types
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+value|Id,
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
+comment|// All other builtin types
 define|#
 directive|define
 name|BUILTIN_TYPE
@@ -7977,7 +8138,7 @@ operator|&&
 name|getKind
 argument_list|()
 operator|<=
-name|LongDouble
+name|Float128
 return|;
 block|}
 comment|/// Determines whether the given kind corresponds to a placeholder type.
@@ -9907,7 +10068,7 @@ specifier|static
 name|unsigned
 name|getNumAddressingBits
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType ElementType
 argument_list|,
@@ -9920,6 +10081,7 @@ specifier|static
 name|unsigned
 name|getMaxSizeBits
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -11896,7 +12058,7 @@ comment|/// this type.
 name|QualType
 name|getCallResultType
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|)
 specifier|const
 block|{
@@ -12098,7 +12260,232 @@ name|FoldingSetNode
 block|{
 name|public
 operator|:
-expr|struct
+comment|/// Interesting information about a specific parameter that can't simply
+comment|/// be reflected in parameter's type.
+comment|///
+comment|/// It makes sense to model language features this way when there's some
+comment|/// sort of parameter-specific override (such as an attribute) that
+comment|/// affects how the function is called.  For example, the ARC ns_consumed
+comment|/// attribute changes whether a parameter is passed at +0 (the default)
+comment|/// or +1 (ns_consumed).  This must be reflected in the function type,
+comment|/// but isn't really a change to the parameter type.
+comment|///
+comment|/// One serious disadvantage of modelling language features this way is
+comment|/// that they generally do not work with language features that attempt
+comment|/// to destructure types.  For example, template argument deduction will
+comment|/// not be able to match a parameter declared as
+comment|///   T (*)(U)
+comment|/// against an argument of type
+comment|///   void (*)(__attribute__((ns_consumed)) id)
+comment|/// because the substitution of T=void, U=id into the former will
+comment|/// not produce the latter.
+name|class
+name|ExtParameterInfo
+block|{     enum
+block|{
+name|ABIMask
+operator|=
+literal|0x0F
+block|,
+name|IsConsumed
+operator|=
+literal|0x10
+block|}
+block|;
+name|unsigned
+name|char
+name|Data
+block|;
+name|public
+operator|:
+name|ExtParameterInfo
+argument_list|()
+operator|:
+name|Data
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// Return the ABI treatment of this parameter.
+name|ParameterABI
+name|getABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParameterABI
+argument_list|(
+name|Data
+operator|&
+name|ABIMask
+argument_list|)
+return|;
+block|}
+name|ExtParameterInfo
+name|withABI
+argument_list|(
+argument|ParameterABI kind
+argument_list|)
+specifier|const
+block|{
+name|ExtParameterInfo
+name|copy
+operator|=
+operator|*
+name|this
+block|;
+name|copy
+operator|.
+name|Data
+operator|=
+operator|(
+name|copy
+operator|.
+name|Data
+operator|&
+operator|~
+name|ABIMask
+operator|)
+operator||
+name|unsigned
+argument_list|(
+name|kind
+argument_list|)
+block|;
+return|return
+name|copy
+return|;
+block|}
+comment|/// Is this parameter considered "consumed" by Objective-C ARC?
+comment|/// Consumed parameters must have retainable object type.
+name|bool
+name|isConsumed
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Data
+operator|&
+name|IsConsumed
+operator|)
+return|;
+block|}
+name|ExtParameterInfo
+name|withIsConsumed
+argument_list|(
+argument|bool consumed
+argument_list|)
+specifier|const
+block|{
+name|ExtParameterInfo
+name|copy
+operator|=
+operator|*
+name|this
+block|;
+if|if
+condition|(
+name|consumed
+condition|)
+block|{
+name|copy
+operator|.
+name|Data
+operator||=
+name|IsConsumed
+expr_stmt|;
+block|}
+else|else
+block|{
+name|copy
+operator|.
+name|Data
+operator|&=
+operator|~
+name|IsConsumed
+expr_stmt|;
+block|}
+return|return
+name|copy
+return|;
+block|}
+name|unsigned
+name|char
+name|getOpaqueValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+specifier|static
+name|ExtParameterInfo
+name|getFromOpaqueValue
+argument_list|(
+argument|unsigned char data
+argument_list|)
+block|{
+name|ExtParameterInfo
+name|result
+block|;
+name|result
+operator|.
+name|Data
+operator|=
+name|data
+block|;
+return|return
+name|result
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|ExtParameterInfo
+name|lhs
+expr|,
+name|ExtParameterInfo
+name|rhs
+operator|)
+block|{
+return|return
+name|lhs
+operator|.
+name|Data
+operator|==
+name|rhs
+operator|.
+name|Data
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|ExtParameterInfo
+name|lhs
+expr|,
+name|ExtParameterInfo
+name|rhs
+operator|)
+block|{
+return|return
+name|lhs
+operator|.
+name|Data
+operator|!=
+name|rhs
+operator|.
+name|Data
+return|;
+block|}
+expr|}
+block|;    struct
 name|ExceptionSpecInfo
 block|{
 name|ExceptionSpecInfo
@@ -12205,7 +12592,7 @@ argument_list|(
 name|RQ_None
 argument_list|)
 block|,
-name|ConsumedParameters
+name|ExtParameterInfos
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -12240,7 +12627,7 @@ argument_list|(
 name|RQ_None
 argument_list|)
 block|,
-name|ConsumedParameters
+name|ExtParameterInfos
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -12294,9 +12681,9 @@ name|ExceptionSpecInfo
 name|ExceptionSpec
 block|;
 specifier|const
-name|bool
+name|ExtParameterInfo
 operator|*
-name|ConsumedParameters
+name|ExtParameterInfos
 block|;   }
 block|;
 name|private
@@ -12372,9 +12759,9 @@ name|ExceptionSpecType
 operator|:
 literal|4
 block|;
-comment|/// Whether this function has any consumed parameters.
+comment|/// Whether this function has extended parameter information.
 name|unsigned
-name|HasAnyConsumedParams
+name|HasExtParameterInfos
 operator|:
 literal|1
 block|;
@@ -12400,84 +12787,153 @@ comment|// ExceptionSpecDecl, ExceptionSpecTemplate - Instead of Exceptions, the
 comment|// be a pair of FunctionDecl* pointing to the function which should be used to
 comment|// instantiate this function type's exception specification, and the function
 comment|// from which it should be instantiated.
-comment|// ConsumedParameters - A variable size array, following Exceptions
-comment|// and of length NumParams, holding flags indicating which parameters
-comment|// are consumed.  This only appears if HasAnyConsumedParams is true.
+comment|// ExtParameterInfos - A variable size array, following the exception
+comment|// specification and of length NumParams, holding an ExtParameterInfo
+comment|// for each of the parameters.  This only appears if HasExtParameterInfos
+comment|// is true.
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
 specifier|const
-name|bool
+name|ExtParameterInfo
 operator|*
-name|getConsumedParamsBuffer
+name|getExtParameterInfosBuffer
 argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|hasAnyConsumedParams
+name|hasExtParameterInfos
 argument_list|()
 argument_list|)
 block|;
-comment|// Find the end of the exceptions.
-name|Expr
-operator|*
+comment|// Find the end of the exception specification.
 specifier|const
+name|char
 operator|*
-name|eh_end
+name|ptr
 operator|=
 name|reinterpret_cast
 operator|<
-name|Expr
-operator|*
 specifier|const
+name|char
 operator|*
 operator|>
 operator|(
-name|exception_end
+name|exception_begin
 argument_list|()
 operator|)
 block|;
-if|if
-condition|(
-name|getExceptionSpecType
-argument_list|()
-operator|==
-name|EST_ComputedNoexcept
-condition|)
-name|eh_end
+name|ptr
 operator|+=
-literal|1
-expr_stmt|;
-comment|// NoexceptExpr
-comment|// The memory layout of these types isn't handled here, so
-comment|// hopefully this is never called for them?
-name|assert
-argument_list|(
-name|getExceptionSpecType
+name|getExceptionSpecSize
 argument_list|()
-operator|!=
-name|EST_Uninstantiated
-operator|&&
-name|getExceptionSpecType
-argument_list|()
-operator|!=
-name|EST_Unevaluated
-argument_list|)
 block|;
 return|return
 name|reinterpret_cast
 operator|<
 specifier|const
-name|bool
+name|ExtParameterInfo
 operator|*
 operator|>
 operator|(
-name|eh_end
+name|ptr
 operator|)
 return|;
+block|}
+name|size_t
+name|getExceptionSpecSize
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getExceptionSpecType
+argument_list|()
+condition|)
+block|{
+case|case
+name|EST_None
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|EST_DynamicNone
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|EST_MSAny
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|EST_BasicNoexcept
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|EST_Unparsed
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|EST_Dynamic
+case|:
+return|return
+name|getNumExceptions
+argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|QualType
+argument_list|)
+return|;
+case|case
+name|EST_ComputedNoexcept
+case|:
+return|return
+sizeof|sizeof
+argument_list|(
+name|Expr
+operator|*
+argument_list|)
+return|;
+case|case
+name|EST_Uninstantiated
+case|:
+return|return
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|FunctionDecl
+operator|*
+argument_list|)
+return|;
+case|case
+name|EST_Unevaluated
+case|:
+return|return
+sizeof|sizeof
+argument_list|(
+name|FunctionDecl
+operator|*
+argument_list|)
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"bad exception specification kind"
+argument_list|)
+expr_stmt|;
 block|}
 name|public
 operator|:
@@ -12692,14 +13148,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|hasAnyConsumedParams
+name|hasExtParameterInfos
 argument_list|()
 condition|)
 name|EPI
 operator|.
-name|ConsumedParameters
+name|ExtParameterInfos
 operator|=
-name|getConsumedParamsBuffer
+name|getExtParameterInfosBuffer
 argument_list|()
 expr_stmt|;
 return|return
@@ -13135,13 +13591,139 @@ operator|+
 name|NumExceptions
 return|;
 block|}
+comment|/// Is there any interesting extra information for any of the parameters
+comment|/// of this function type?
 name|bool
-name|hasAnyConsumedParams
+name|hasExtParameterInfos
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasAnyConsumedParams
+name|HasExtParameterInfos
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|ExtParameterInfo
+operator|>
+name|getExtParameterInfos
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasExtParameterInfos
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|ArrayRef
+operator|<
+name|ExtParameterInfo
+operator|>
+operator|(
+name|getExtParameterInfosBuffer
+argument_list|()
+expr|,
+name|getNumParams
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Return a pointer to the beginning of the array of extra parameter
+comment|/// information, if present, or else null if none of the parameters
+comment|/// carry it.  This is equivalent to getExtProtoInfo().ExtParameterInfos.
+specifier|const
+name|ExtParameterInfo
+operator|*
+name|getExtParameterInfosOrNull
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasExtParameterInfos
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+name|getExtParameterInfosBuffer
+argument_list|()
+return|;
+block|}
+name|ExtParameterInfo
+name|getExtParameterInfo
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumParams
+argument_list|()
+operator|&&
+literal|"parameter index out of range"
+argument_list|)
+block|;
+if|if
+condition|(
+name|hasExtParameterInfos
+argument_list|()
+condition|)
+return|return
+name|getExtParameterInfosBuffer
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+return|return
+name|ExtParameterInfo
+argument_list|()
+return|;
+block|}
+name|ParameterABI
+name|getParameterABI
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumParams
+argument_list|()
+operator|&&
+literal|"parameter index out of range"
+argument_list|)
+block|;
+if|if
+condition|(
+name|hasExtParameterInfos
+argument_list|()
+condition|)
+return|return
+name|getExtParameterInfosBuffer
+argument_list|()
+index|[
+name|I
+index|]
+operator|.
+name|getABI
+argument_list|()
+return|;
+return|return
+name|ParameterABI
+operator|::
+name|Ordinary
 return|;
 block|}
 name|bool
@@ -13163,15 +13745,18 @@ argument_list|)
 block|;
 if|if
 condition|(
-name|hasAnyConsumedParams
+name|hasExtParameterInfos
 argument_list|()
 condition|)
 return|return
-name|getConsumedParamsBuffer
+name|getExtParameterInfosBuffer
 argument_list|()
 index|[
 name|I
 index|]
+operator|.
+name|isConsumed
+argument_list|()
 return|;
 return|return
 name|false
@@ -14040,6 +14625,84 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Internal representation of canonical, dependent
+comment|/// __underlying_type(type) types.
+comment|///
+comment|/// This class is used internally by the ASTContext to manage
+comment|/// canonical, dependent types, only. Clients will only see instances
+comment|/// of this class via UnaryTransformType nodes.
+name|class
+name|DependentUnaryTransformType
+operator|:
+name|public
+name|UnaryTransformType
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|public
+operator|:
+name|DependentUnaryTransformType
+argument_list|(
+argument|const ASTContext&C
+argument_list|,
+argument|QualType BaseType
+argument_list|,
+argument|UTTKind UKind
+argument_list|)
+block|;
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getBaseType
+argument_list|()
+argument_list|,
+name|getUTTKind
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType BaseType
+argument_list|,
+argument|UTTKind UKind
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|BaseType
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|UKind
+argument_list|)
+block|;   }
+block|}
+block|;
 name|class
 name|TagType
 operator|:
@@ -14404,6 +15067,8 @@ name|attr_thiscall
 block|,
 name|attr_pascal
 block|,
+name|attr_swiftcall
+block|,
 name|attr_vectorcall
 block|,
 name|attr_inteloclbicc
@@ -14411,6 +15076,10 @@ block|,
 name|attr_ms_abi
 block|,
 name|attr_sysv_abi
+block|,
+name|attr_preserve_most
+block|,
+name|attr_preserve_all
 block|,
 name|attr_ptr32
 block|,
@@ -15682,7 +16351,7 @@ operator|:
 literal|31
 block|;
 comment|/// Whether this template specialization type is a substituted type alias.
-name|bool
+name|unsigned
 name|TypeAlias
 operator|:
 literal|1
@@ -15691,9 +16360,7 @@ name|TemplateSpecializationType
 argument_list|(
 argument|TemplateName T
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|QualType Canon
 argument_list|,
@@ -15712,11 +16379,15 @@ specifier|static
 name|bool
 name|anyDependentTemplateArguments
 argument_list|(
-argument|const TemplateArgumentLoc *Args
+name|ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|bool&InstantiationDependent
+name|bool
+operator|&
+name|InstantiationDependent
 argument_list|)
 block|;
 specifier|static
@@ -15740,9 +16411,7 @@ name|PrintTemplateArgumentList
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const PrintingPolicy&Policy
 argument_list|,
@@ -15753,13 +16422,20 @@ specifier|static
 name|void
 name|PrintTemplateArgumentList
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const TemplateArgumentLoc *Args
+name|ArrayRef
+operator|<
+name|TemplateArgumentLoc
+operator|>
+name|Args
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|const PrintingPolicy&Policy
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
 argument_list|)
 block|;
 specifier|static
@@ -15927,6 +16603,23 @@ argument_list|)
 specifier|const
 block|;
 comment|// in TemplateBase.h
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getArgs
+argument_list|()
+block|,
+name|NumArgs
+block|}
+return|;
+block|}
 name|bool
 name|isSugared
 argument_list|()
@@ -15968,10 +16661,8 @@ name|ID
 argument_list|,
 name|Template
 argument_list|,
-name|getArgs
+name|template_arguments
 argument_list|()
-argument_list|,
-name|NumArgs
 argument_list|,
 name|Ctx
 argument_list|)
@@ -15998,9 +16689,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|TemplateName T
 argument_list|,
-argument|const TemplateArgument *Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|const ASTContext&Context
 argument_list|)
@@ -16074,6 +16763,10 @@ block|;
 comment|// FIXME: ASTContext::getInjectedClassNameType is not
 comment|// currently suitable for AST reading, too much
 comment|// interdependencies.
+name|friend
+name|class
+name|ASTNodeImporter
+block|;
 name|InjectedClassNameType
 argument_list|(
 argument|CXXRecordDecl *D
@@ -16919,9 +17612,7 @@ argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|const IdentifierInfo *Name
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|const TemplateArgument *Args
+argument|ArrayRef<TemplateArgument> Args
 argument_list|,
 argument|QualType Canon
 argument_list|)
@@ -16987,6 +17678,23 @@ argument_list|)
 specifier|const
 block|;
 comment|// in TemplateBase.h
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|template_arguments
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|getArgs
+argument_list|()
+block|,
+name|NumArgs
+block|}
+return|;
+block|}
 typedef|typedef
 specifier|const
 name|TemplateArgument
@@ -17053,11 +17761,13 @@ name|NNS
 argument_list|,
 name|Name
 argument_list|,
-name|NumArgs
-argument_list|,
+block|{
 name|getArgs
 argument_list|()
-argument_list|)
+operator|,
+name|NumArgs
+block|}
+block|)
 block|;   }
 specifier|static
 name|void
@@ -17073,9 +17783,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|const IdentifierInfo *Name
 argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|const TemplateArgument *Args
+argument|ArrayRef<TemplateArgument> Args
 argument_list|)
 block|;
 specifier|static
@@ -19836,7 +20544,7 @@ operator|&&
 literal|"mask has non-CVR bits"
 argument_list|)
 block|;
-name|assert
+name|static_assert
 argument_list|(
 operator|(
 name|int
@@ -19851,6 +20559,8 @@ operator|)
 name|Qualifiers
 operator|::
 name|FastMask
+argument_list|,
+literal|"Fast bits differ from CVR bits!"
 argument_list|)
 block|;
 comment|// Fast path: we don't need to touch the slow qualifiers.
@@ -20010,13 +20720,13 @@ argument_list|)
 specifier|const
 block|{
 name|Qualifiers
-name|myQuals
+name|MyQuals
 operator|=
 name|getQualifiers
 argument_list|()
 block|;
 name|Qualifiers
-name|otherQuals
+name|OtherQuals
 operator|=
 name|other
 operator|.
@@ -20025,15 +20735,15 @@ argument_list|()
 block|;
 return|return
 operator|(
-name|myQuals
+name|MyQuals
 operator|!=
-name|otherQuals
+name|OtherQuals
 operator|&&
-name|myQuals
+name|MyQuals
 operator|.
 name|compatiblyIncludes
 argument_list|(
-name|otherQuals
+name|OtherQuals
 argument_list|)
 operator|)
 return|;
@@ -20052,16 +20762,35 @@ argument|QualType other
 argument_list|)
 specifier|const
 block|{
+name|Qualifiers
+name|OtherQuals
+operator|=
+name|other
+operator|.
+name|getQualifiers
+argument_list|()
+block|;
+comment|// Ignore __unaligned qualifier if this type is a void.
+if|if
+condition|(
+name|getUnqualifiedType
+argument_list|()
+operator|->
+name|isVoidType
+argument_list|()
+condition|)
+name|OtherQuals
+operator|.
+name|removeUnaligned
+argument_list|()
+expr_stmt|;
 return|return
 name|getQualifiers
 argument_list|()
 operator|.
 name|compatiblyIncludes
 argument_list|(
-name|other
-operator|.
-name|getQualifiers
-argument_list|()
+name|OtherQuals
 argument_list|)
 return|;
 block|}
@@ -20926,210 +21655,25 @@ name|isObjCSelType
 argument_list|()
 return|;
 block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage1dT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage1d
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage1dArrayT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage1dArray
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage1dBufferT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage1dBuffer
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2d
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dArrayT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dArray
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dDepthT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dDepth
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dArrayDepthT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dArrayDepth
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dMSAAT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dMSAA
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dArrayMSAAT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dArrayMSAA
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dMSAATDepth
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dMSAADepth
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage2dArrayMSAATDepth
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage2dArrayMSAADepth
-argument_list|)
-return|;
-block|}
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isImage3dT
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|OCLImage3d
-argument_list|)
-return|;
-block|}
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+define|\
+value|inline bool Type::is##Id##Type() const { \     return isSpecificBuiltinType(BuiltinType::Id); \   }
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
 specifier|inline
 name|bool
 name|Type
@@ -21240,43 +21784,28 @@ name|isImageType
 argument_list|()
 specifier|const
 block|{
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+value|is##Id##Type() ||
 return|return
-name|isImage3dT
-argument_list|()
-operator|||
-name|isImage2dT
-argument_list|()
-operator|||
-name|isImage2dArrayT
-argument_list|()
-operator|||
-name|isImage2dDepthT
-argument_list|()
-operator|||
-name|isImage2dArrayDepthT
-argument_list|()
-operator|||
-name|isImage2dMSAAT
-argument_list|()
-operator|||
-name|isImage2dArrayMSAAT
-argument_list|()
-operator|||
-name|isImage2dMSAATDepth
-argument_list|()
-operator|||
-name|isImage2dArrayMSAATDepth
-argument_list|()
-operator|||
-name|isImage1dT
-argument_list|()
-operator|||
-name|isImage1dArrayT
-argument_list|()
-operator|||
-name|isImage1dBufferT
-argument_list|()
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
+literal|0
 return|;
+comment|// end boolean or operation
 block|}
 specifier|inline
 name|bool
@@ -21426,6 +21955,9 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|BuiltinType
@@ -21461,11 +21993,16 @@ condition|)
 return|return
 name|BT
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|nullptr
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|}  inline
 name|bool
 name|Type
 operator|::
@@ -21520,11 +22057,16 @@ operator|)
 name|K
 operator|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|}  inline
 name|bool
 name|Type
 operator|::
@@ -21553,14 +22095,16 @@ operator|->
 name|isNonOverloadPlaceholderType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_block
+end_return
 
 begin_expr_stmt
-specifier|inline
+unit|}  inline
 name|bool
 name|Type
 operator|::
@@ -22215,6 +22759,62 @@ operator|.
 name|getTypePtr
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|type
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  inline
+specifier|const
+name|Type
+operator|*
+name|Type
+operator|::
+name|getPointeeOrArrayElementType
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|Type
+operator|*
+name|type
+operator|=
+name|this
+block|;
+if|if
+condition|(
+name|type
+operator|->
+name|isAnyPointerType
+argument_list|()
+condition|)
+return|return
+name|type
+operator|->
+name|getPointeeType
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+return|;
+elseif|else
+if|if
+condition|(
+name|type
+operator|->
+name|isArrayType
+argument_list|()
+condition|)
+return|return
+name|type
+operator|->
+name|getBaseElementTypeUnsafe
+argument_list|()
+return|;
 end_expr_stmt
 
 begin_return

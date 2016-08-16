@@ -444,6 +444,15 @@ argument|Selector Sel
 argument_list|)
 name|override
 block|;
+comment|/// Load the contents of the global method pool for a given
+comment|/// selector if necessary.
+name|void
+name|updateOutOfDateSelector
+argument_list|(
+argument|Selector Sel
+argument_list|)
+name|override
+block|;
 comment|/// \brief Load the set of namespaces that are known to the external source,
 comment|/// which will be used during typo correction.
 name|void
@@ -458,7 +467,7 @@ comment|/// internal linkage, or used but not defined inline functions.
 name|void
 name|ReadUndefinedButUsed
 argument_list|(
-argument|llvm::DenseMap<NamedDecl*
+argument|llvm::MapVector<NamedDecl *
 argument_list|,
 argument|SourceLocation>&Undefined
 argument_list|)

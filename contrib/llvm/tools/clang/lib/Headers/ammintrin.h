@@ -69,15 +69,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c EXTRQ instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -113,19 +105,19 @@ comment|///    Bits [5:0] specify the index of the least significant bit; the ot
 end_comment
 
 begin_comment
-comment|///    bits are ignored. If the sum of the index and length is greater than
+comment|///    bits are ignored. If the sum of the index and length is greater than 64,
 end_comment
 
 begin_comment
-comment|///    64, the result is undefined. If the length and index are both zero,
+comment|///    the result is undefined. If the length and index are both zero, bits
 end_comment
 
 begin_comment
-comment|///    bits [63:0] of parameter x are extracted. If the length is zero
+comment|///    [63:0] of parameter x are extracted. If the length is zero but the index
 end_comment
 
 begin_comment
-comment|///    but the index is non-zero, the result is undefined.
+comment|///    is non-zero, the result is undefined.
 end_comment
 
 begin_comment
@@ -172,15 +164,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c EXTRQ instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -200,31 +184,27 @@ comment|/// \param __y
 end_comment
 
 begin_comment
-comment|///    Specifies the index of the least significant bit at [13:8]
+comment|///    Specifies the index of the least significant bit at [13:8] and the
 end_comment
 
 begin_comment
-comment|///    and the length at [5:0]; all other bits are ignored.
+comment|///    length at [5:0]; all other bits are ignored. If bits [5:0] are zero, the
 end_comment
 
 begin_comment
-comment|///    If bits [5:0] are zero, the length is interpreted as 64.
+comment|///    length is interpreted as 64. If the sum of the index and length is
 end_comment
 
 begin_comment
-comment|///    If the sum of the index and length is greater than 64, the result is
+comment|///    greater than 64, the result is undefined. If the length and index are
 end_comment
 
 begin_comment
-comment|///    undefined. If the length and index are both zero, bits [63:0] of
+comment|///    both zero, bits [63:0] of parameter __x are extracted. If the length is
 end_comment
 
 begin_comment
-comment|///    parameter __x are extracted. If the length is zero but the index is
-end_comment
-
-begin_comment
-comment|///    non-zero, the result is undefined.
+comment|///    zero but the index is non-zero, the result is undefined.
 end_comment
 
 begin_comment
@@ -270,15 +250,15 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Inserts bits of a specified length from the source integer vector
+comment|/// \brief Inserts bits of a specified length from the source integer vector y
 end_comment
 
 begin_comment
-comment|///    y into the lower 64 bits of the destination integer vector x at the
+comment|///    into the lower 64 bits of the destination integer vector x at the index
 end_comment
 
 begin_comment
-comment|///    index idx and of the length len.
+comment|///    idx and of the length len.
 end_comment
 
 begin_comment
@@ -314,15 +294,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c INSERTQ instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -378,35 +350,35 @@ comment|///    Bits [5:0] specify the index of the least significant bit; the ot
 end_comment
 
 begin_comment
-comment|///    bits are ignored. If the sum of the index and length is greater than
+comment|///    bits are ignored. If the sum of the index and length is greater than 64,
 end_comment
 
 begin_comment
-comment|///    64, the result is undefined. If the length and index are both zero,
+comment|///    the result is undefined. If the length and index are both zero, bits
 end_comment
 
 begin_comment
-comment|///    bits [63:0] of parameter y are inserted into parameter x. If the
+comment|///    [63:0] of parameter y are inserted into parameter x. If the length is
 end_comment
 
 begin_comment
-comment|///    length is zero but the index is non-zero, the result is undefined.
+comment|///    zero but the index is non-zero, the result is undefined.
 end_comment
 
 begin_comment
-comment|/// \returns A 128-bit integer vector containing the original lower 64-bits
+comment|/// \returns A 128-bit integer vector containing the original lower 64-bits of
 end_comment
 
 begin_comment
-comment|///    of destination operand x with the specified bitfields replaced by the
+comment|///    destination operand x with the specified bitfields replaced by the lower
 end_comment
 
 begin_comment
-comment|///    lower bits of source operand y. The upper 64 bits of the return value
+comment|///    bits of source operand y. The upper 64 bits of the return value are
 end_comment
 
 begin_comment
-comment|///    are undefined.
+comment|///    undefined.
 end_comment
 
 begin_define
@@ -431,11 +403,11 @@ comment|/// \brief Inserts bits of a specified length from the source integer ve
 end_comment
 
 begin_comment
-comment|///    __y into the lower 64 bits of the destination integer vector __x at
+comment|///    __y into the lower 64 bits of the destination integer vector __x at the
 end_comment
 
 begin_comment
-comment|///    the index and of the length specified by __y.
+comment|///    index and of the length specified by __y.
 end_comment
 
 begin_comment
@@ -451,15 +423,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c INSERTQ instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -499,35 +463,35 @@ comment|///    by bits [69:64]. These are inserted into the destination at the i
 end_comment
 
 begin_comment
-comment|///    specified by bits [77:72]; all other bits are ignored.
+comment|///    specified by bits [77:72]; all other bits are ignored. If bits [69:64]
 end_comment
 
 begin_comment
-comment|///    If bits [69:64] are zero, the length is interpreted as 64.
+comment|///    are zero, the length is interpreted as 64. If the sum of the index and
 end_comment
 
 begin_comment
-comment|///    If the sum of the index and length is greater than 64, the result is
+comment|///    length is greater than 64, the result is undefined. If the length and
 end_comment
 
 begin_comment
-comment|///    undefined. If the length and index are both zero, bits [63:0] of
+comment|///    index are both zero, bits [63:0] of parameter __y are inserted into
 end_comment
 
 begin_comment
-comment|///    parameter __y are inserted into parameter __x. If the length
+comment|///    parameter __x. If the length is zero but the index is non-zero, the
 end_comment
 
 begin_comment
-comment|///    is zero but the index is non-zero, the result is undefined.
+comment|///    result is undefined.
 end_comment
 
 begin_comment
-comment|/// \returns A 128-bit integer vector containing the original lower 64-bits
+comment|/// \returns A 128-bit integer vector containing the original lower 64-bits of
 end_comment
 
 begin_comment
-comment|///    of destination operand __x with the specified bitfields replaced by the
+comment|///    destination operand __x with the specified bitfields replaced by the
 end_comment
 
 begin_comment
@@ -597,15 +561,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c MOVNTSD instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -625,11 +581,7 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    The 64-bit double-precision floating-point register value to
-end_comment
-
-begin_comment
-comment|///    be stored.
+comment|///    The 64-bit double-precision floating-point register value to be stored.
 end_comment
 
 begin_function
@@ -685,15 +637,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \code
-end_comment
-
-begin_comment
 comment|/// This intrinsic corresponds to the \c MOVNTSS instruction.
-end_comment
-
-begin_comment
-comment|/// \endcode
 end_comment
 
 begin_comment
@@ -713,11 +657,7 @@ comment|/// \param __a
 end_comment
 
 begin_comment
-comment|///    The 32-bit single-precision floating-point register value to
-end_comment
-
-begin_comment
-comment|///    be stored.
+comment|///    The 32-bit single-precision floating-point register value to be stored.
 end_comment
 
 begin_function

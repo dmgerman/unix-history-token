@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -250,6 +256,17 @@ block|,
 name|SaveTempsObj
 block|}
 name|SaveTemps
+enum|;
+enum|enum
+name|BitcodeEmbedMode
+block|{
+name|EmbedNone
+block|,
+name|EmbedMarker
+block|,
+name|EmbedBitcode
+block|}
+name|BitcodeEmbed
 enum|;
 comment|/// LTO mode selected via -f(no-)?lto(=.*)? options.
 name|LTOKind
@@ -506,7 +523,7 @@ decl_stmt|;
 name|private
 label|:
 comment|/// Certain options suppress the 'no input files' warning.
-name|bool
+name|unsigned
 name|SuppressMissingInputWarning
 range|:
 literal|1
@@ -729,7 +746,12 @@ argument_list|)
 block|{
 name|DriverTitle
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Value
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Get the path to the main clang executable.
@@ -810,9 +832,46 @@ operator|==
 name|SaveTempsObj
 return|;
 block|}
+name|bool
+name|embedBitcodeEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BitcodeEmbed
+operator|==
+name|EmbedBitcode
+return|;
+block|}
+name|bool
+name|embedBitcodeMarkerOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BitcodeEmbed
+operator|==
+name|EmbedMarker
+return|;
+block|}
 comment|/// @}
 comment|/// @name Primary Functionality
 comment|/// @{
+comment|/// CreateOffloadingDeviceToolChains - create all the toolchains required to
+comment|/// support offloading devices given the programming models specified in the
+comment|/// current compilation. Also, update the host tool chain kind accordingly.
+name|void
+name|CreateOffloadingDeviceToolChains
+parameter_list|(
+name|Compilation
+modifier|&
+name|C
+parameter_list|,
+name|InputList
+modifier|&
+name|Inputs
+parameter_list|)
+function_decl|;
 comment|/// BuildCompilation - Construct a compilation object for a command
 comment|/// line argument vector.
 comment|///
@@ -899,7 +958,6 @@ comment|/// BuildActions - Construct the list of actions to perform for the
 comment|/// given arguments, which are only done for a single architecture.
 comment|///
 comment|/// \param C - The compilation that is being built.
-comment|/// \param TC - The default host tool chain.
 comment|/// \param Args - The input arguments.
 comment|/// \param Actions - The list to store the resulting actions onto.
 name|void
@@ -908,11 +966,6 @@ argument_list|(
 name|Compilation
 operator|&
 name|C
-argument_list|,
-specifier|const
-name|ToolChain
-operator|&
-name|TC
 argument_list|,
 name|llvm
 operator|::
@@ -1116,11 +1169,6 @@ operator|&
 name|C
 argument_list|,
 specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|opt
@@ -1140,8 +1188,9 @@ name|Input
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// BuildJobsForAction - Construct the jobs to perform for the
-comment|/// action \p A and return an InputInfo for the result of running \p A.
+comment|/// BuildJobsForAction - Construct the jobs to perform for the action \p A and
+comment|/// return an InputInfo for the result of running \p A.  Will only construct
+comment|/// jobs for a given (Action, ToolChain, BoundArch) tuple once.
 name|InputInfo
 name|BuildJobsForAction
 argument_list|(
@@ -1174,6 +1223,31 @@ specifier|const
 name|char
 operator|*
 name|LinkingOutput
+argument_list|,
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Action
+operator|*
+argument_list|,
+name|std
+operator|::
+name|string
+operator|>
+argument_list|,
+name|InputInfo
+operator|>
+operator|&
+name|CachedResults
+argument_list|,
+name|bool
+name|BuildForOffloadDevice
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1196,6 +1270,7 @@ comment|/// triggered by.
 comment|/// \param BoundArch - The bound architecture.
 comment|/// \param AtTopLevel - Whether this is a "top-level" action.
 comment|/// \param MultipleArchs - Whether multiple -arch options were supplied.
+comment|/// \param NormalizedTriple - The normalized triple of the relevant target.
 specifier|const
 name|char
 modifier|*
@@ -1225,6 +1300,9 @@ name|AtTopLevel
 argument_list|,
 name|bool
 name|MultipleArchs
+argument_list|,
+name|StringRef
+name|NormalizedTriple
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1240,6 +1318,18 @@ argument_list|(
 argument|StringRef Prefix
 argument_list|,
 argument|const char *Suffix
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Return the pathname of the pch file in clang-cl mode.
+name|std
+operator|::
+name|string
+name|GetClPchPath
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|StringRef BaseName
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1336,6 +1426,69 @@ name|getIncludeExcludeOptionFlagMasks
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Helper used in BuildJobsForAction.  Doesn't use the cache when building
+comment|/// jobs specifically for the given action, but will use the cache when
+comment|/// building jobs for the Action's inputs.
+name|InputInfo
+name|BuildJobsForActionNoCache
+argument_list|(
+name|Compilation
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|Action
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|ToolChain
+operator|*
+name|TC
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
+argument_list|,
+name|bool
+name|AtTopLevel
+argument_list|,
+name|bool
+name|MultipleArchs
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|LinkingOutput
+argument_list|,
+name|std
+operator|::
+name|map
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Action
+operator|*
+argument_list|,
+name|std
+operator|::
+name|string
+operator|>
+argument_list|,
+name|InputInfo
+operator|>
+operator|&
+name|CachedResults
+argument_list|,
+name|bool
+name|BuildForOffloadDevice
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// GetReleaseVersion - Parse (([0-9]+)(.([0-9]+)(.([0-9]+)?))?)? and
@@ -1371,6 +1524,28 @@ modifier|&
 name|HadExtra
 parameter_list|)
 function_decl|;
+comment|/// Parse digits from a string \p Str and fulfill \p Digits with
+comment|/// the parsed numbers. This method assumes that the max number of
+comment|/// digits to look for is equal to Digits.size().
+comment|///
+comment|/// \return True if the entire string was parsed and there are
+comment|/// no extra characters remaining at the end.
+specifier|static
+name|bool
+name|GetReleaseVersion
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Str
+argument_list|,
+name|MutableArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Digits
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \return True if the last defined optimization level is -Ofast.

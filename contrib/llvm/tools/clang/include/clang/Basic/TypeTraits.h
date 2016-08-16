@@ -183,6 +183,8 @@ name|BTT_IsSame
 block|,
 name|BTT_TypeCompatible
 block|,
+name|BTT_IsAssignable
+block|,
 name|BTT_IsNothrowAssignable
 block|,
 name|BTT_IsTriviallyAssignable

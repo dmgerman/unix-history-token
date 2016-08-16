@@ -1175,7 +1175,7 @@ name|dataInt
 operator|=
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|dataInt
 argument_list|,
@@ -1484,7 +1484,7 @@ name|size
 operator|=
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|size
 argument_list|,
@@ -1663,7 +1663,7 @@ name|size
 operator|=
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|size
 argument_list|,
@@ -1716,7 +1716,7 @@ name|data
 operator|=
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|data
 argument_list|,
@@ -2261,7 +2261,7 @@ name|bk
 operator|<=
 name|BuiltinType
 operator|::
-name|LongDouble
+name|Float128
 operator|)
 operator|||
 name|bk

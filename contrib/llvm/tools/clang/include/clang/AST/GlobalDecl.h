@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/ABI.h"
 end_include
 
@@ -201,6 +207,17 @@ block|}
 name|GlobalDecl
 argument_list|(
 argument|const ObjCMethodDecl *D
+argument_list|)
+block|{
+name|Init
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+name|GlobalDecl
+argument_list|(
+argument|const OMPDeclareReductionDecl *D
 argument_list|)
 block|{
 name|Init

@@ -15,6 +15,118 @@ directive|define
 name|_WMMINTRIN_PCLMUL_H
 end_define
 
+begin_comment
+comment|/// \brief Multiplies two 64-bit integer values, which are selected from source
+end_comment
+
+begin_comment
+comment|///    operands using the immediate-value operand. The multiplication is a
+end_comment
+
+begin_comment
+comment|///    carry-less multiplication, and the 128-bit integer product is stored in
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_clmulepi64_si128(__m128i __X, __m128i __Y, const int __I);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPCLMULQDQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x i64] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __I
+end_comment
+
+begin_comment
+comment|///    An immediate value specifying which 64-bit values to select from the
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
+
+begin_comment
+comment|///    Bit 0 is used to select a value from operand __X,
+end_comment
+
+begin_comment
+comment|///    and bit 4 is used to select a value from operand __Y:
+end_comment
+
+begin_comment
+comment|///    Bit[0]=0 indicates that bits[63:0] of operand __X are used.
+end_comment
+
+begin_comment
+comment|///    Bit[0]=1 indicates that bits[127:64] of operand __X are used.
+end_comment
+
+begin_comment
+comment|///    Bit[4]=0 indicates that bits[63:0] of operand __Y are used.
+end_comment
+
+begin_comment
+comment|///    Bit[4]=1 indicates that bits[127:64] of operand __Y are used.
+end_comment
+
+begin_comment
+comment|/// \returns The 128-bit integer vector containing the result of the carry-less
+end_comment
+
+begin_comment
+comment|///    multiplication of the selected 64-bit values.
+end_comment
+
 begin_define
 define|#
 directive|define

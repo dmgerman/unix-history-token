@@ -220,6 +220,15 @@ argument_list|(
 argument|Selector Sel
 argument_list|)
 block|;
+comment|/// Load the contents of the global method pool for a given
+comment|/// selector if necessary.
+name|virtual
+name|void
+name|updateOutOfDateSelector
+argument_list|(
+argument|Selector Sel
+argument_list|)
+block|;
 comment|/// \brief Load the set of namespaces that are known to the external source,
 comment|/// which will be used during typo correction.
 name|virtual
@@ -243,7 +252,7 @@ name|ReadUndefinedButUsed
 argument_list|(
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|NamedDecl
 operator|*

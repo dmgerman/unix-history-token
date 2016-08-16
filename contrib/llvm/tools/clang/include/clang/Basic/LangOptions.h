@@ -248,6 +248,20 @@ name|PPTMK_FullGeneralityVirtualInheritance
 block|}
 enum|;
 enum|enum
+name|DefaultCallingConvention
+block|{
+name|DCC_None
+block|,
+name|DCC_CDecl
+block|,
+name|DCC_FastCall
+block|,
+name|DCC_StdCall
+block|,
+name|DCC_VectorCall
+block|}
+enum|;
+enum|enum
 name|AddrSpaceMapMangling
 block|{
 name|ASMM_Target
@@ -314,19 +328,14 @@ operator|::
 name|string
 name|OverflowHandler
 expr_stmt|;
-comment|/// \brief The name of the current module.
+comment|/// \brief The name of the current module, of which the main source file
+comment|/// is a part. If CompilingModule is set, we are compiling the interface
+comment|/// of this module, otherwise we are compiling an implementation file of
+comment|/// it.
 name|std
 operator|::
 name|string
 name|CurrentModule
-expr_stmt|;
-comment|/// \brief The name of the module that the translation unit is an
-comment|/// implementation of. Prevents semantic imports, but does not otherwise
-comment|/// treat this as the CurrentModule.
-name|std
-operator|::
-name|string
-name|ImplementationOfModule
 expr_stmt|;
 comment|/// \brief The names of any features to enable in module 'requires' decls
 comment|/// in addition to the hard-coded list in Module.cpp and the target features.
@@ -515,47 +524,6 @@ argument_list|(
 argument|LangOpts.DefaultFPContract
 argument_list|)
 block|{}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief OpenCL volatile options
-end_comment
-
-begin_decl_stmt
-name|class
-name|OpenCLOptions
-block|{
-name|public
-label|:
-define|#
-directive|define
-name|OPENCLEXT
-parameter_list|(
-name|nm
-parameter_list|)
-value|unsigned nm : 1;
-include|#
-directive|include
-file|"clang/Basic/OpenCLExtensions.def"
-name|OpenCLOptions
-argument_list|()
-block|{
-define|#
-directive|define
-name|OPENCLEXT
-parameter_list|(
-name|nm
-parameter_list|)
-value|nm = 0;
-include|#
-directive|include
-file|"clang/Basic/OpenCLExtensions.def"
-block|}
 block|}
 end_decl_stmt
 

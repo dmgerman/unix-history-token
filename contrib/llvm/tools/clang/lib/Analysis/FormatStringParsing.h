@@ -248,6 +248,27 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// Returns true if the invalid specifier in \p SpecifierBegin is a UTF-8
+comment|/// string; check that it won't go further than \p FmtStrEnd and write
+comment|/// up the total size in \p Len.
+name|bool
+name|ParseUTF8InvalidSpecifier
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|SpecifierBegin
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|FmtStrEnd
+parameter_list|,
+name|unsigned
+modifier|&
+name|Len
+parameter_list|)
+function_decl|;
 name|template
 operator|<
 name|typename

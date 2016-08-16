@@ -762,6 +762,26 @@ argument|ASTContext&Context
 argument_list|)
 expr_stmt|;
 comment|/// @}
+comment|/// \brief Returns the results of matching \p Matcher on the translation unit of
+comment|/// \p Context and collects the \c BoundNodes of all callback invocations.
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+expr_stmt|;
 comment|/// \brief Returns the first result of type \c NodeT bound to \p BoundTo.
 comment|///
 comment|/// Returns \c NULL if there is no match, or if the matching node cannot be
@@ -957,6 +977,60 @@ name|Node
 argument_list|)
 argument_list|,
 name|Context
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|MatcherT
+operator|>
+name|SmallVector
+operator|<
+name|BoundNodes
+operator|,
+literal|1
+operator|>
+name|match
+argument_list|(
+argument|MatcherT Matcher
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+block|{
+name|internal
+operator|::
+name|CollectMatchesCallback
+name|Callback
+block|;
+name|MatchFinder
+name|Finder
+block|;
+name|Finder
+operator|.
+name|addMatcher
+argument_list|(
+name|Matcher
+argument_list|,
+operator|&
+name|Callback
+argument_list|)
+block|;
+name|Finder
+operator|.
+name|matchAST
+argument_list|(
+name|Context
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|move
+argument_list|(
+name|Callback
+operator|.
+name|Nodes
 argument_list|)
 return|;
 block|}

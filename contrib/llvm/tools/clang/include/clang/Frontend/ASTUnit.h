@@ -266,7 +266,7 @@ name|class
 name|TargetInfo
 decl_stmt|;
 name|class
-name|ASTFrontendAction
+name|FrontendAction
 decl_stmt|;
 name|class
 name|ASTDeserializationListener
@@ -3387,7 +3387,7 @@ name|DiagnosticsEngine
 operator|>
 name|Diags
 argument_list|,
-name|ASTFrontendAction
+name|FrontendAction
 operator|*
 name|Action
 operator|=

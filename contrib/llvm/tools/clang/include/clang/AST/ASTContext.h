@@ -192,6 +192,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -680,6 +686,15 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|DependentUnaryTransformType
+operator|>
+name|DependentUnaryTransformTypes
+block|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
 name|AutoType
 operator|>
 name|AutoTypes
@@ -1007,12 +1022,6 @@ name|TypedefDecl
 modifier|*
 name|UInt128Decl
 decl_stmt|;
-comment|/// \brief The typedef for the __float128 stub type.
-name|mutable
-name|TypeDecl
-modifier|*
-name|Float128StubDecl
-decl_stmt|;
 comment|/// \brief The typedef for the target specific predefined
 comment|/// __builtin_va_list type.
 name|mutable
@@ -1067,6 +1076,14 @@ decl_stmt|;
 name|QualType
 name|ObjCSelRedefinitionType
 decl_stmt|;
+comment|/// The identifier 'bool'.
+name|mutable
+name|IdentifierInfo
+modifier|*
+name|BoolName
+init|=
+name|nullptr
+decl_stmt|;
 comment|/// The identifier 'NSObject'.
 name|IdentifierInfo
 modifier|*
@@ -1089,11 +1106,24 @@ name|MakeIntegerSeqName
 init|=
 name|nullptr
 decl_stmt|;
+comment|/// The identifier '__type_pack_element'.
+name|mutable
+name|IdentifierInfo
+modifier|*
+name|TypePackElementName
+init|=
+name|nullptr
+decl_stmt|;
 name|QualType
 name|ObjCConstantStringType
 decl_stmt|;
 name|mutable
 name|RecordDecl
+modifier|*
+name|CFConstantStringTagDecl
+decl_stmt|;
+name|mutable
+name|TypedefDecl
 modifier|*
 name|CFConstantStringTypeDecl
 decl_stmt|;
@@ -1371,7 +1401,7 @@ comment|/// \brief Side-table of mangling numbers for declarations which rarely
 comment|/// need them (like static local vars).
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 specifier|const
 name|NamedDecl
@@ -1383,7 +1413,7 @@ name|MangleNumbers
 expr_stmt|;
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 specifier|const
 name|VarDecl
@@ -1432,6 +1462,11 @@ name|mutable
 name|BuiltinTemplateDecl
 modifier|*
 name|MakeIntegerSeqDecl
+decl_stmt|;
+name|mutable
+name|BuiltinTemplateDecl
+modifier|*
+name|TypePackElementDecl
 decl_stmt|;
 comment|/// \brief The associated SourceManager object.a
 name|SourceManager
@@ -3338,6 +3373,31 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|overridden_cxx_method_iterator
+operator|>
+name|overridden_method_range
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|overridden_method_range
+name|overridden_methods
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// \brief Note that the given C++ \p Method overrides the given \p
 end_comment
@@ -3658,10 +3718,19 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|BuiltinTemplateDecl
+operator|*
+name|getMakeIntegerSeqDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|BuiltinTemplateDecl
 modifier|*
-name|getMakeIntegerSeqDecl
+name|getTypePackElementDecl
 parameter_list|()
 function_decl|const;
 end_function_decl
@@ -3781,6 +3850,8 @@ decl_stmt|,
 name|DoubleTy
 decl_stmt|,
 name|LongDoubleTy
+decl_stmt|,
+name|Float128Ty
 decl_stmt|;
 end_decl_stmt
 
@@ -3801,6 +3872,12 @@ decl_stmt|,
 name|DoubleComplexTy
 decl_stmt|,
 name|LongDoubleComplexTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|Float128ComplexTy
 decl_stmt|;
 end_decl_stmt
 
@@ -3854,49 +3931,30 @@ name|ObjCBuiltinBoolTy
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|CanQualType
-name|OCLImage1dTy
-decl_stmt|,
-name|OCLImage1dArrayTy
-decl_stmt|,
-name|OCLImage1dBufferTy
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|IMAGE_TYPE
+parameter_list|(
+name|ImgType
+parameter_list|,
+name|Id
+parameter_list|,
+name|SingletonId
+parameter_list|,
+name|Access
+parameter_list|,
+name|Suffix
+parameter_list|)
+define|\
+value|CanQualType SingletonId;
+end_define
 
-begin_decl_stmt
-name|CanQualType
-name|OCLImage2dTy
-decl_stmt|,
-name|OCLImage2dArrayTy
-decl_stmt|,
-name|OCLImage2dDepthTy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CanQualType
-name|OCLImage2dArrayDepthTy
-decl_stmt|,
-name|OCLImage2dMSAATy
-decl_stmt|,
-name|OCLImage2dArrayMSAATy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CanQualType
-name|OCLImage2dMSAADepthTy
-decl_stmt|,
-name|OCLImage2dArrayMSAADepthTy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CanQualType
-name|OCLImage3dTy
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/OpenCLImageTypes.def"
+end_include
 
 begin_decl_stmt
 name|CanQualType
@@ -4227,19 +4285,6 @@ begin_expr_stmt
 name|TypedefDecl
 operator|*
 name|getUInt128Decl
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieve the declaration for a 128-bit float stub type.
-end_comment
-
-begin_expr_stmt
-name|TypeDecl
-operator|*
-name|getFloat128StubType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -5598,13 +5643,11 @@ argument_list|(
 name|TemplateName
 name|T
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|TemplateArgument
-operator|*
+operator|>
 name|Args
-argument_list|,
-name|unsigned
-name|NumArgs
 argument_list|,
 name|QualType
 name|Canon
@@ -5623,13 +5666,11 @@ argument_list|(
 name|TemplateName
 name|T
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|TemplateArgument
-operator|*
+operator|>
 name|Args
-argument_list|,
-name|unsigned
-name|NumArgs
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5779,12 +5820,10 @@ name|IdentifierInfo
 operator|*
 name|Name
 argument_list|,
-name|unsigned
-name|NumArgs
-argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|TemplateArgument
-operator|*
+operator|>
 name|Args
 argument_list|)
 decl|const
@@ -6349,7 +6388,7 @@ condition|(
 name|CFConstantStringTypeDecl
 condition|)
 return|return
-name|getTagDeclType
+name|getTypedefType
 argument_list|(
 name|CFConstantStringTypeDecl
 argument_list|)
@@ -6374,6 +6413,24 @@ end_macro
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+name|TypedefDecl
+operator|*
+name|getCFConstantStringDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RecordDecl
+operator|*
+name|getCFConstantStringTagDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// This setter/getter represents the ObjC type for an NSConstantString.
@@ -6660,8 +6717,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Retrieve the identifier 'bool'.
+end_comment
+
 begin_expr_stmt
 name|IdentifierInfo
+operator|*
+name|getBoolName
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|BoolName
+condition|)
+name|BoolName
+operator|=
+operator|&
+name|Idents
+operator|.
+name|get
+argument_list|(
+literal|"bool"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|BoolName
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    IdentifierInfo
 operator|*
 name|getMakeIntegerSeqName
 argument_list|()
@@ -6687,6 +6778,36 @@ end_expr_stmt
 begin_return
 return|return
 name|MakeIntegerSeqName
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    IdentifierInfo
+operator|*
+name|getTypePackElementName
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|TypePackElementName
+condition|)
+name|TypePackElementName
+operator|=
+operator|&
+name|Idents
+operator|.
+name|get
+argument_list|(
+literal|"__type_pack_element"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|TypePackElementName
 return|;
 end_return
 
@@ -10786,7 +10907,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|FunctionTypesMatchOnNSConsumedAttrs
+name|doFunctionTypesMatchOnExtParameterInfos
 parameter_list|(
 specifier|const
 name|FunctionProtoType
@@ -12061,6 +12182,62 @@ end_comment
 begin_decl_stmt
 name|bool
 name|isMSStaticDataMemberInlineDefinition
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|enum
+name|class
+name|InlineVariableDefinitionKind
+block|{
+name|None
+operator|,
+comment|///< Not an inline variable.
+name|Weak
+operator|,
+comment|///< Weak definition of inline variable.
+name|WeakUnknown
+operator|,
+comment|///< Weak for now, might become strong later in this TU.
+name|Strong
+comment|///< Strong definition.
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Determine whether a definition of this inline variable should
+end_comment
+
+begin_comment
+comment|/// be treated as a weak or strong definition. For compatibility with
+end_comment
+
+begin_comment
+comment|/// C++14 and before, for a constexpr static data member, if there is an
+end_comment
+
+begin_comment
+comment|/// out-of-line declaration of the member, we may promote it from weak to
+end_comment
+
+begin_comment
+comment|/// strong.
+end_comment
+
+begin_decl_stmt
+name|InlineVariableDefinitionKind
+name|getInlineVariableDefinitionKind
 argument_list|(
 specifier|const
 name|VarDecl

@@ -156,6 +156,12 @@ name|string
 operator|>
 name|ExtraDeps
 expr_stmt|;
+comment|/// In /showIncludes mode, pretend the main TU is a header with this name.
+name|std
+operator|::
+name|string
+name|ShowIncludesPretendHeader
+expr_stmt|;
 comment|/// \brief The file to write GraphViz-formatted header dependencies to.
 name|std
 operator|::
