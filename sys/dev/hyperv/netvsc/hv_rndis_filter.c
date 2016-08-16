@@ -1259,7 +1259,7 @@ if|if
 condition|(
 name|send_buf_section_idx
 operator|!=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 condition|)
 block|{
 name|char
@@ -1314,7 +1314,7 @@ comment|/* Failed to allocate chimney send buffer; move on */
 block|}
 name|send_buf_section_idx
 operator|=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 expr_stmt|;
 name|send_buf_section_size
 operator|=
@@ -1349,7 +1349,7 @@ name|sc
 operator|->
 name|hn_prichan
 argument_list|,
-name|false
+name|HN_NVS_RNDIS_MTYPE_CTRL
 argument_list|,
 operator|&
 name|request
@@ -5423,7 +5423,7 @@ name|sndc
 operator|->
 name|hn_chim_idx
 operator|!=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 condition|)
 name|hn_chim_free
 argument_list|(
@@ -5484,7 +5484,7 @@ name|sndc
 operator|->
 name|hn_chim_idx
 operator|!=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 condition|)
 name|hn_chim_free
 argument_list|(

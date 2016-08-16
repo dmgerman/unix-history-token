@@ -3828,7 +3828,7 @@ name|sndc
 operator|->
 name|hn_chim_idx
 operator|!=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 condition|)
 name|hn_chim_free
 argument_list|(
@@ -4720,7 +4720,7 @@ if|if
 condition|(
 name|send_buf_section_idx
 operator|!=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 condition|)
 block|{
 name|uint8_t
@@ -4998,7 +4998,7 @@ expr_stmt|;
 block|}
 name|send_buf_section_idx
 operator|=
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 expr_stmt|;
 name|send_buf_section_size
 operator|=
@@ -5083,7 +5083,7 @@ name|txr
 operator|->
 name|hn_chan
 argument_list|,
-name|true
+name|HN_NVS_RNDIS_MTYPE_DATA
 argument_list|,
 operator|&
 name|txd

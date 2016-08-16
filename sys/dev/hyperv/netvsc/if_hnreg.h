@@ -44,9 +44,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_CHIM_IDX_INVALID
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_RNDIS_MTYPE_DATA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_RNDIS_MTYPE_CTRL
+value|1
+end_define
+
+begin_comment
+comment|/*  * NVS message transacion status codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_STATUS_OK
 value|1
 end_define
+
+begin_comment
+comment|/*  * NVS request/response message types.  */
+end_comment
 
 begin_define
 define|#
@@ -109,6 +138,13 @@ define|#
 directive|define
 name|HN_NVS_TYPE_CHIM_DISCONN
 value|106
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_RNDIS
+value|107
 end_define
 
 begin_define
@@ -614,6 +650,50 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|hn_nvs_rndis
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_RNDIS */
+name|uint32_t
+name|nvs_rndis_mtype
+decl_stmt|;
+comment|/* HN_NVS_RNDIS_MTYPE_ */
+comment|/* 	 * Chimney sending buffer index and size. 	 * 	 * NOTE: 	 * If nvs_chim_idx is set to HN_NVS_CHIM_IDX_INVALID 	 * and nvs_chim_sz is set to 0, then chimney sending 	 * buffer is _not_ used by this RNDIS message. 	 */
+name|uint32_t
+name|nvs_chim_idx
+decl_stmt|;
+name|uint32_t
+name|nvs_chim_sz
+decl_stmt|;
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_rndis
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

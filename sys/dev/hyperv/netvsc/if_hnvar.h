@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/netvsc/hv_net_vsc.h>
+file|<dev/hyperv/netvsc/if_hnreg.h>
 end_include
 
 begin_struct_decl
@@ -118,7 +118,7 @@ parameter_list|,
 name|cbarg
 parameter_list|)
 define|\
-value|{									\ 	.hn_cb		= cb,						\ 	.hn_cbarg	= cbarg,					\ 	.hn_chim_idx	= NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX,	\ 	.hn_chim_sz	= 0						\ }
+value|{							\ 	.hn_cb		= cb,				\ 	.hn_cbarg	= cbarg,			\ 	.hn_chim_idx	= HN_NVS_CHIM_IDX_INVALID,	\ 	.hn_chim_sz	= 0				\ }
 end_define
 
 begin_function
@@ -200,7 +200,7 @@ name|cb
 argument_list|,
 name|cbarg
 argument_list|,
-name|NVSP_1_CHIMNEY_SEND_INVALID_SECTION_INDEX
+name|HN_NVS_CHIM_IDX_INVALID
 argument_list|,
 literal|0
 argument_list|)
