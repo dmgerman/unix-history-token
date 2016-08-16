@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bitstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -637,7 +643,8 @@ name|size_t
 name|dwa_count
 decl_stmt|;
 comment|/**< number of dynamic windows available. */
-name|uint32_t
+name|bitstr_t
+modifier|*
 name|dwa_freelist
 decl_stmt|;
 comment|/**< dynamic window free list */
@@ -650,14 +657,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Returns true if the all dynamic windows have been exhausted, false  * otherwise.  *   * @param br The resource state to check.  */
+comment|/**  * Returns true if the all dynamic windows are marked free, false  * otherwise.  *   * @param br The resource state to check.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|bool
-name|bhndb_dw_exhausted
+name|bhndb_dw_all_free
 parameter_list|(
 name|struct
 name|bhndb_resources
@@ -665,13 +672,29 @@ modifier|*
 name|br
 parameter_list|)
 block|{
-return|return
-operator|(
+name|int
+name|bit
+decl_stmt|;
+name|bit_ffs
+argument_list|(
 name|br
 operator|->
 name|dwa_freelist
+argument_list|,
+name|br
+operator|->
+name|dwa_count
+argument_list|,
+operator|&
+name|bit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|bit
 operator|==
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -700,12 +723,29 @@ name|bhndb_dw_alloc
 modifier|*
 name|dw_free
 decl_stmt|;
-if|if
-condition|(
-name|bhndb_dw_exhausted
+name|int
+name|bit
+decl_stmt|;
+name|bit_ffc
 argument_list|(
 name|br
+operator|->
+name|dwa_freelist
+argument_list|,
+name|br
+operator|->
+name|dwa_count
+argument_list|,
+operator|&
+name|bit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bit
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -719,12 +759,7 @@ name|br
 operator|->
 name|dw_alloc
 index|[
-name|__builtin_ctz
-argument_list|(
-name|br
-operator|->
-name|dwa_freelist
-argument_list|)
+name|bit
 index|]
 expr_stmt|;
 name|KASSERT
@@ -786,23 +821,17 @@ name|KASSERT
 argument_list|(
 name|is_free
 operator|==
-operator|(
-operator|(
+operator|!
+name|bit_test
+argument_list|(
 name|br
 operator|->
 name|dwa_freelist
-operator|&
-operator|(
-literal|1
-operator|<<
+argument_list|,
 name|dwa
 operator|->
 name|rnid
-operator|)
-operator|)
-operator|!=
-literal|0
-operator|)
+argument_list|)
 argument_list|,
 operator|(
 literal|"refs out of sync with free list"
