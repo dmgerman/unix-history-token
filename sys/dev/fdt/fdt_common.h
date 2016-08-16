@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/slicer.h>
 end_include
 
@@ -269,6 +275,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_fdt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int

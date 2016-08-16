@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: cfe_api_int.h,v 1.2 2003/02/07 17:38:48 cgd Exp $ */
-end_comment
-
-begin_comment
-comment|/* from: SiByte Id: cfe_api_int.h,v 1.21 2002/07/09 23:29:11 cgd Exp $ */
+comment|/* from: Broadcom Id: cfe_api_int.h,v 1.22 2003/02/07 17:27:56 cgd Exp $ */
 end_comment
 
 begin_comment

@@ -220,7 +220,6 @@ specifier|static
 name|void
 name|do_tr
 parameter_list|(
-specifier|const
 name|struct
 name|s_tr
 modifier|*
@@ -243,7 +242,6 @@ specifier|static
 name|void
 name|lputs
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -257,7 +255,6 @@ specifier|static
 name|int
 name|regexec_e
 parameter_list|(
-specifier|const
 name|regex_t
 modifier|*
 parameter_list|,
@@ -284,11 +281,9 @@ parameter_list|(
 name|SPACE
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -300,7 +295,6 @@ specifier|static
 name|int
 name|substitute
 parameter_list|(
-specifier|const
 name|struct
 name|s_command
 modifier|*
@@ -369,7 +363,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|regex_t
 modifier|*
 name|defpreg
@@ -1709,7 +1702,6 @@ specifier|static
 name|int
 name|substitute
 parameter_list|(
-specifier|const
 name|struct
 name|s_command
 modifier|*
@@ -1719,7 +1711,6 @@ block|{
 name|SPACE
 name|tspace
 decl_stmt|;
-specifier|const
 name|regex_t
 modifier|*
 name|re
@@ -1732,7 +1723,7 @@ name|lastempty
 decl_stmt|,
 name|n
 decl_stmt|;
-name|regoff_t
+name|size_t
 name|le
 init|=
 literal|0
@@ -2358,7 +2349,6 @@ specifier|static
 name|void
 name|do_tr
 parameter_list|(
-specifier|const
 name|struct
 name|s_tr
 modifier|*
@@ -2840,7 +2830,6 @@ specifier|static
 name|void
 name|lputs
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|s
@@ -3381,7 +3370,6 @@ specifier|static
 name|int
 name|regexec_e
 parameter_list|(
-specifier|const
 name|regex_t
 modifier|*
 name|preg
@@ -3528,12 +3516,10 @@ name|SPACE
 modifier|*
 name|sp
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|string
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|src
@@ -3904,7 +3890,6 @@ name|s_command
 modifier|*
 name|cp
 parameter_list|,
-specifier|const
 name|struct
 name|s_command
 modifier|*

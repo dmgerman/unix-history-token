@@ -135,7 +135,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"dskread: failed dev: %p, id: %u, lba: %lu, size: %d, "
+literal|"dskread: failed dev: %p, id: %u, lba: %zu, size: %d, "
 literal|"status: %lu\n"
 argument_list|,
 name|devinfo
@@ -515,7 +515,9 @@ begin_function
 specifier|static
 name|void
 name|status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -599,7 +601,9 @@ specifier|static
 name|dev_info_t
 modifier|*
 name|_devices
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

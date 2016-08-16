@@ -1653,7 +1653,7 @@ value|0x80000200
 end_define
 
 begin_comment
-comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  7	MIPS_COP_0_INFO		..33 Info registers  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 16/4 MIPS_COP_0_CONFIG4	..33 Configuration register 4.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
+comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  4/2	MIPS_COP_0_USERLOCAL	..36 UserLocal.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  7	MIPS_COP_0_HWRENA	..33 rdHWR Enable.  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 16/4 MIPS_COP_0_CONFIG4	..33 Configuration register 4.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
 end_comment
 
 begin_comment
@@ -1898,7 +1898,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_COP_0_INFO
+name|MIPS_COP_0_USERLOCAL
+value|_(4)
+end_define
+
+begin_comment
+comment|/* sel 2 is userlevel register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_COP_0_HWRENA
 value|_(7)
 end_define
 
@@ -1992,6 +2003,21 @@ begin_comment
 comment|/* Standard fixed mapping */
 end_comment
 
+begin_comment
+comment|/*  * Config Register Fields  * (See "MIPS Architecture for Programmers Volume III", MD00091, Table 9.39)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG0_M
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Flag: Config1 is present. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2029,7 +2055,22 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* instruction cache is virtual */
+comment|/* inst cache is virtual */
+end_comment
+
+begin_comment
+comment|/*  * Config1 Register Fields  * (See "MIPS Architecture for Programmers Volume III", MD00091, Table 9-1)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG1_M
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Flag: Config2 is present. */
 end_comment
 
 begin_define
@@ -2305,6 +2346,47 @@ end_define
 
 begin_comment
 comment|/* Coherence manager present */
+end_comment
+
+begin_comment
+comment|/*  * Config2 Register Fields  * (See "MIPS Architecture for Programmers Volume III", MD00091, Table 9.40)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG2_M
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Flag: Config3 is present. */
+end_comment
+
+begin_comment
+comment|/*  * Config3 Register Fields  * (See "MIPS Architecture for Programmers Volume III", MD00091, Table 9.41)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG3_M
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Flag: Config4 is present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CONFIG3_ULR
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* UserLocal reg implemented */
 end_comment
 
 begin_define
@@ -2714,6 +2796,87 @@ directive|define
 name|MIPS_CMGCRF_BASE
 value|(~((1<< MIPS_CMGCRB_BASE) - 1))
 end_define
+
+begin_comment
+comment|/*  * Bits defined for for the HWREna (CP0 register 7, select 0).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_CPUNUM
+value|(1<<0)
+end_define
+
+begin_comment
+comment|/* CPU number program is running on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_SYNCI_STEP
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* Address step sized used with SYNCI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_CC
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Hi Res cycle counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_CCRES
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* Cycle counter resolution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_UL
+value|(1<<29)
+end_define
+
+begin_comment
+comment|/* UserLocal Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_IMPL30
+value|(1<<30)
+end_define
+
+begin_comment
+comment|/* Implementation-dependent 30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_HWRENA_IMPL31
+value|(1<<31)
+end_define
+
+begin_comment
+comment|/* Implementation-dependent 31 */
+end_comment
 
 begin_endif
 endif|#

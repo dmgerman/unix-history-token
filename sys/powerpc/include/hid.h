@@ -592,7 +592,7 @@ begin_define
 define|#
 directive|define
 name|HID0_E500_DEFAULT_SET
-value|(HID0_EMCP | HID0_E500_TBEN)
+value|(HID0_EMCP | HID0_E500_TBEN | \ 				 HID0_E500_MAS7UPDEN)
 end_define
 
 begin_define

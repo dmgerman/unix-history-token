@@ -831,27 +831,12 @@ name|NI_DGRAM
 value|0x00000010
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* obsolete */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|NI_WITHSCOPEID
+name|NI_NUMERICSCOPE
 value|0x00000020
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Scope delimit character  */

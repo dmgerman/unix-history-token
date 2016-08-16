@@ -8862,6 +8862,8 @@ block|{
 name|struct
 name|bintime
 name|bt2
+decl_stmt|,
+name|boottimebin
 decl_stmt|;
 name|struct
 name|timeval
@@ -8886,6 +8888,12 @@ name|bt2
 operator|=
 operator|*
 name|bt
+expr_stmt|;
+name|getboottimebin
+argument_list|(
+operator|&
+name|boottimebin
+argument_list|)
 expr_stmt|;
 name|bintime_add
 argument_list|(

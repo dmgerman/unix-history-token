@@ -216,6 +216,22 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|nptv6_reset_stats
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uint8_t
+name|set
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|nptv6_show_cb
 parameter_list|(
@@ -301,8 +317,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|_s_x
+name|nptv6statscmds
+index|[]
+init|=
+block|{
+block|{
+literal|"reset"
+block|,
+name|TOK_RESET
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * This one handles all NPTv6-related commands  *	ipfw [set N] nptv6 NAME {create | config} ...  *	ipfw [set N] nptv6 NAME stats  *	ipfw [set N] nptv6 {NAME | all} destroy  *	ipfw [set N] nptv6 {NAME | all} {list | show}  */
+comment|/*  * This one handles all NPTv6-related commands  *	ipfw [set N] nptv6 NAME {create | config} ...  *	ipfw [set N] nptv6 NAME stats [reset]  *	ipfw [set N] nptv6 {NAME | all} destroy  *	ipfw [set N] nptv6 {NAME | all} {list | show}  */
 end_comment
 
 begin_define
@@ -528,7 +567,47 @@ break|break;
 case|case
 name|TOK_STATS
 case|:
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|==
+literal|0
+condition|)
+block|{
 name|nptv6_stats
+argument_list|(
+name|name
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|tcmd
+operator|=
+name|get_token
+argument_list|(
+name|nptv6statscmds
+argument_list|,
+operator|*
+name|av
+argument_list|,
+literal|"stats command"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcmd
+operator|==
+name|TOK_RESET
+condition|)
+name|nptv6_reset_stats
 argument_list|(
 name|name
 argument_list|,
@@ -1577,9 +1656,35 @@ argument_list|,
 literal|"Error retrieving stats"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|co
+operator|.
+name|use_set
+operator|!=
+literal|0
+operator|||
+name|set
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"Number of packets translated (internal to external): %ju\n"
+literal|"set %u "
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nptv6 %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%ju packets translated (internal to external)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1591,7 +1696,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of packets translated (external to internal): %ju\n"
+literal|"\t%ju packets translated (external to internal)\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1603,7 +1708,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Number of packets dropped due to some error: %ju\n"
+literal|"\t%ju packets dropped due to some error\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1611,6 +1716,83 @@ operator|)
 name|stats
 operator|.
 name|dropped
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reset NPTv6 instance statistics specified by @oh->ntlv.  * Request: [ ipfw_obj_header ]  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|nptv6_reset_stats
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uint8_t
+name|set
+parameter_list|)
+block|{
+name|ipfw_obj_header
+name|oh
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|oh
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|oh
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|nptv6_fill_ntlv
+argument_list|(
+operator|&
+name|oh
+operator|.
+name|ntlv
+argument_list|,
+name|name
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_set3
+argument_list|(
+name|IP_FW_NPTV6_RESET_STATS
+argument_list|,
+operator|&
+name|oh
+operator|.
+name|opheader
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|oh
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"failed to reset stats for instance %s"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}

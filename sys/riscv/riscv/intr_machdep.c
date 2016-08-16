@@ -83,6 +83,12 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sbi.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -301,7 +307,7 @@ name|irq
 condition|)
 block|{
 case|case
-name|IRQ_TIMER
+name|IRQ_TIMER_SUPERVISOR
 case|:
 name|csr_clear
 argument_list|(
@@ -312,7 +318,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_SOFTWARE
+name|IRQ_SOFTWARE_USER
+case|:
+name|csr_clear
+argument_list|(
+name|sie
+argument_list|,
+name|SIE_USIE
+argument_list|)
+expr_stmt|;
+case|case
+name|IRQ_SOFTWARE_SUPERVISOR
 case|:
 name|csr_clear
 argument_list|(
@@ -322,17 +338,13 @@ name|SIE_SSIE
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IRQ_UART
-case|:
-name|machine_command
-argument_list|(
-name|ECALL_IO_IRQ_MASK
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|)
-expr_stmt|;
-break|break;
+comment|/* lowRISC TODO */
+block|case IRQ_UART: 		machine_command(ECALL_IO_IRQ_MASK, 0); 		break;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -371,7 +383,7 @@ name|irq
 condition|)
 block|{
 case|case
-name|IRQ_TIMER
+name|IRQ_TIMER_SUPERVISOR
 case|:
 name|csr_set
 argument_list|(
@@ -382,7 +394,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_SOFTWARE
+name|IRQ_SOFTWARE_USER
+case|:
+name|csr_set
+argument_list|(
+name|sie
+argument_list|,
+name|SIE_USIE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IRQ_SOFTWARE_SUPERVISOR
 case|:
 name|csr_set
 argument_list|(
@@ -392,17 +415,13 @@ name|SIE_SSIE
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|IRQ_UART
-case|:
-name|machine_command
-argument_list|(
-name|ECALL_IO_IRQ_MASK
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
+if|#
+directive|if
+literal|0
+comment|/* lowRISC TODO */
+block|case IRQ_UART: 		machine_command(ECALL_IO_IRQ_MASK, 1); 		break;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -770,14 +789,21 @@ condition|(
 name|active_irq
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/* lowRISC TODO */
+block|case IRQ_UART:
+endif|#
+directive|endif
 case|case
-name|IRQ_UART
+name|IRQ_SOFTWARE_USER
 case|:
 case|case
-name|IRQ_SOFTWARE
+name|IRQ_SOFTWARE_SUPERVISOR
 case|:
 case|case
-name|IRQ_TIMER
+name|IRQ_TIMER_SUPERVISOR
 case|:
 name|event
 operator|=
@@ -802,18 +828,6 @@ argument_list|(
 name|cnt
 operator|.
 name|v_intr
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IRQ_HTIF
-case|:
-comment|/* HTIF interrupts are only handled in machine mode */
-name|panic
-argument_list|(
-literal|"%s: HTIF interrupt"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -885,7 +899,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|IRQ_SOFTWARE
+name|IRQ_SOFTWARE_SUPERVISOR
 argument_list|,
 name|INTR_TYPE_MISC
 argument_list|,
@@ -955,13 +969,11 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|machine_command
+name|sbi_send_ipi
 argument_list|(
-name|ECALL_SEND_IPI
-argument_list|,
 name|pc
 operator|->
-name|pc_reg
+name|pc_cpuid
 argument_list|)
 expr_stmt|;
 name|CTR1

@@ -260,9 +260,6 @@ name|u16
 name|api_min_ver
 decl_stmt|;
 comment|/* api minor version */
-name|bool
-name|nvm_release_on_done
-decl_stmt|;
 name|struct
 name|i40e_spinlock
 name|asq_spinlock

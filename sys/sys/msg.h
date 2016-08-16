@@ -525,12 +525,8 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXX return value should be ssize_t. */
-end_comment
-
 begin_function_decl
-name|int
+name|ssize_t
 name|msgrcv
 parameter_list|(
 name|int

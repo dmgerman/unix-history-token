@@ -264,8 +264,8 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstats
-name|newnfsstats
+name|nfsstatsv1
+name|nfsstatsv1
 decl_stmt|;
 end_decl_stmt
 
@@ -2700,7 +2700,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpcrequests
 argument_list|)
@@ -3207,7 +3207,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpctimeouts
 argument_list|)
@@ -3227,7 +3227,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpcinvalid
 argument_list|)
@@ -3247,7 +3247,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpcinvalid
 argument_list|)
@@ -3274,7 +3274,7 @@ else|else
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|rpcinvalid
 argument_list|)

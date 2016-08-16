@@ -13179,7 +13179,7 @@ name|ddata
 argument_list|,
 literal|"wchar_t"
 argument_list|,
-literal|6
+literal|7
 argument_list|)
 condition|)
 goto|goto

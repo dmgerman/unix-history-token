@@ -24575,6 +24575,12 @@ operator|!=
 name|IFF_DRV_RUNNING
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
 name|rc
 operator|=
 name|drbr_enqueue
@@ -59003,7 +59009,7 @@ index|]
 operator|.
 name|config
 argument_list|)
-operator|,
+expr_stmt|;
 comment|/* get the link params */
 name|sc
 operator|->

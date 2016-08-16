@@ -1733,15 +1733,10 @@ name|rwlock
 name|lock
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|rx_ctl_q
+name|mbufq
+name|rxctlq
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|rx_ctl_tail
-decl_stmt|;
+comment|/* received control packets */
 name|int
 name|qp_active
 decl_stmt|;
@@ -1945,6 +1940,14 @@ name|ssk
 parameter_list|)
 value|rw_assert(&(ssk)->lock, RA_LOCKED)
 end_define
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_SDP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

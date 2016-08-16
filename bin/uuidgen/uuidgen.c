@@ -109,6 +109,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|iterate
+decl_stmt|,
+name|status
 decl_stmt|;
 name|count
 operator|=
@@ -380,7 +382,21 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-name|NULL
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|uuid_s_ok
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot stringify a UUID"
 argument_list|)
 expr_stmt|;
 name|fprintf

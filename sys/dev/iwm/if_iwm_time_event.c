@@ -795,12 +795,7 @@ name|apply_time
 operator|=
 name|htole32
 argument_list|(
-name|iwm_read_prph
-argument_list|(
-name|sc
-argument_list|,
-name|IWM_DEVICE_SYSTEM_TIME_REG
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|time_cmd
@@ -852,6 +847,8 @@ argument_list|(
 name|IWM_TE_V2_NOTIF_HOST_EVENT_START
 operator||
 name|IWM_TE_V2_NOTIF_HOST_EVENT_END
+operator||
+name|IWM_T2_V2_START_IMMEDIATELY
 argument_list|)
 expr_stmt|;
 name|iwm_mvm_time_event_send_add

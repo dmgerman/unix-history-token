@@ -47,12 +47,6 @@ directive|include
 file|<libutil.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_WITH_GETLINE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -474,7 +468,7 @@ block|}
 end_function
 
 begin_function
-name|RET_SETGRENT
+name|void
 name|vsetgrent
 parameter_list|(
 name|void
@@ -483,17 +477,6 @@ block|{
 name|vendgrent
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -863,6 +863,10 @@ modifier|*
 name|td_su
 decl_stmt|;
 comment|/* (k) FFS SU private */
+name|sbintime_t
+name|td_sleeptimo
+decl_stmt|;
+comment|/* (t) Sleep timeout. */
 define|#
 directive|define
 name|td_endzero
@@ -1373,12 +1377,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_TIMOFAIL
+name|TDF_UNUSED12
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* Timeout from sleep after we were awake. */
+comment|/* --available-- */
 end_comment
 
 begin_define
@@ -1713,6 +1717,17 @@ end_define
 
 begin_comment
 comment|/* vfork indicator for ptrace() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_FSTP
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* The thread is PT_ATTACH leader */
 end_comment
 
 begin_comment
@@ -3579,6 +3594,17 @@ begin_comment
 comment|/* Handles SU ast for kthreads. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P2_PTRACE_FSTP
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* SIGSTOP from PT_ATTACH not yet handled. */
+end_comment
+
 begin_comment
 comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
 end_comment
@@ -3755,7 +3781,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Switching due to opepreempt. */
+comment|/* Switching due to owepreempt. */
 end_comment
 
 begin_define
@@ -4907,6 +4933,74 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cr_cansee
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|u1
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|u2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cr_canseesocket
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cr_canseeothergids
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|u1
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|u2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cr_canseeotheruids
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|u1
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|u2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cr_cansignal
 parameter_list|(
 name|struct
@@ -5427,6 +5521,18 @@ name|struct
 name|proc
 modifier|*
 name|newparent
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|proc_set_traced
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl

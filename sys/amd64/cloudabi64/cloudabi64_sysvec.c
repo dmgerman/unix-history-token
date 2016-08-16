@@ -806,11 +806,6 @@ operator|=
 name|VM_MAXUSER_ADDRESS
 block|,
 operator|.
-name|sv_usrstack
-operator|=
-name|USRSTACK
-block|,
-operator|.
 name|sv_stackprot
 operator|=
 name|VM_PROT_READ

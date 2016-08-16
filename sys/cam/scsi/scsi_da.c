@@ -2219,6 +2219,24 @@ comment|/*quirks*/
 name|DA_Q_NO_RC16
 block|}
 block|,
+block|{
+comment|/* 		 * I-O Data USB Flash Disk 		 * PR: usb/211716 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"I-O DATA"
+block|,
+literal|"USB Flash Disk*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_RC16
+block|}
+block|,
 comment|/* ATA/SATA devices over SAS/USB/... */
 block|{
 comment|/* Hitachi Advanced Format (4k) drives */
@@ -22938,7 +22956,7 @@ name|zone_flags
 operator|<<
 literal|8
 operator|)
-operator|,
+expr_stmt|;
 name|ata_flags
 operator|=
 name|AP_FLAG_BYT_BLOK_BLOCKS
@@ -23322,14 +23340,14 @@ name|zone_flags
 operator|<<
 literal|8
 operator|)
-operator|,
+expr_stmt|;
 name|sectors_out
 operator|=
 name|dxfer_len
 operator|>>
 literal|9
-operator|,
-comment|/* XXX KDM macro*/
+expr_stmt|;
+comment|/* XXX KDM macro */
 name|protocol
 operator|=
 name|AP_PROTO_DMA

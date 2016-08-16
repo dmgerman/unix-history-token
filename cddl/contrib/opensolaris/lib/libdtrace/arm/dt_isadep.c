@@ -56,29 +56,11 @@ directive|include
 file|<dt_pid.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PR_MODEL_ILP32
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PR_MODEL_LP64
-value|2
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_include
 include|#

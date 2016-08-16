@@ -1589,7 +1589,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"450"
+literal|"1200"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1641,7 +1641,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"450"
+literal|"1200"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1693,7 +1693,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"450"
+literal|"1200"
 argument_list|)
 expr_stmt|;
 block|}

@@ -625,9 +625,7 @@ specifier|static
 name|int
 name|nlge_mii_write
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -643,9 +641,7 @@ specifier|static
 name|int
 name|nlge_mii_read
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -4106,9 +4102,7 @@ specifier|static
 name|int
 name|nlge_mii_write
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|,
 name|int
@@ -4167,9 +4161,7 @@ specifier|static
 name|int
 name|nlge_mii_read
 parameter_list|(
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|,
 name|int

@@ -244,6 +244,11 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__riscv__
+argument_list|)
 end_if
 
 begin_expr_stmt

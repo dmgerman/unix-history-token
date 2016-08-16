@@ -145,6 +145,7 @@ decl_stmt|;
 name|pid_t
 name|shm_cpid
 decl_stmt|;
+name|unsigned
 name|int
 name|shm_nattch
 decl_stmt|;

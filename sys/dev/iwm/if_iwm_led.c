@@ -306,6 +306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwm_mvm_led_is_enabled
 parameter_list|(
@@ -331,6 +332,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwm_led_blink_timeout
 parameter_list|(
@@ -424,7 +426,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|callout_drain
+name|callout_stop
 argument_list|(
 operator|&
 name|sc

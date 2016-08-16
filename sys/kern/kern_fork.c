@@ -4484,7 +4484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Simplified back end of syscall(), used when returning from fork()  * directly into user mode.  Giant is not held on entry, and must not  * be held on return.  This function is passed in to fork_exit() as the  * first parameter and is called when returning to a new userland process.  */
+comment|/*  * Simplified back end of syscall(), used when returning from fork()  * directly into user mode.  This function is passed in to fork_exit()  * as the first parameter and is called when returning to a new  * userland process.  */
 end_comment
 
 begin_function
@@ -4556,27 +4556,10 @@ name|p_pptr
 operator|->
 name|p_pptr
 expr_stmt|;
+name|proc_set_traced
+argument_list|(
 name|p
-operator|->
-name|p_flag
-operator||=
-name|P_TRACED
-expr_stmt|;
-name|p
-operator|->
-name|p_ptevents
-operator|=
-name|PTRACE_DEFAULT
-expr_stmt|;
-name|p
-operator|->
-name|p_oppid
-operator|=
-name|p
-operator|->
-name|p_pptr
-operator|->
-name|p_pid
+argument_list|)
 expr_stmt|;
 name|CTR2
 argument_list|(
@@ -4613,6 +4596,8 @@ operator||=
 name|TDB_CHILD
 operator||
 name|TDB_SCX
+operator||
+name|TDB_FSTP
 expr_stmt|;
 name|ptracestop
 argument_list|(

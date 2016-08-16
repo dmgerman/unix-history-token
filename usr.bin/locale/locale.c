@@ -1631,7 +1631,7 @@ begin_define
 define|#
 directive|define
 name|NKWINFO
-value|(sizeof(kwinfo)/sizeof(kwinfo[0]))
+value|(nitems(kwinfo))
 end_define
 
 begin_decl_stmt
@@ -1651,7 +1651,7 @@ begin_define
 define|#
 directive|define
 name|NBOGUS
-value|(sizeof(boguslocales)/sizeof(boguslocales[0]))
+value|(nitems(boguslocales))
 end_define
 
 begin_function

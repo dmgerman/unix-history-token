@@ -443,8 +443,7 @@ name|struct
 name|pfctl
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -689,12 +688,14 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pf_anchor_global
 name|pf_anchors
@@ -702,6 +703,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pf_anchor
 name|pf_main_anchor
@@ -709,6 +711,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -717,6 +720,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|rulesopt
@@ -724,6 +728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -732,6 +737,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -740,6 +746,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|anchoropt
@@ -747,6 +754,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -757,6 +765,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|pf_device
@@ -766,6 +776,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ifaceopt
@@ -773,6 +784,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|tableopt
@@ -780,6 +792,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -788,12 +801,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|src_node_killers
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|src_node_kill
@@ -804,12 +819,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|state_killers
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|state_kill
@@ -841,6 +858,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|first_title
 init|=
@@ -849,6 +867,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|labels
 init|=
@@ -1285,6 +1304,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|clearopt_list
 index|[]
 init|=
@@ -1317,6 +1337,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|showopt_list
 index|[]
 init|=
@@ -1359,6 +1380,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|tblcmdopt_list
 index|[]
 init|=
@@ -1393,6 +1415,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|debugopt_list
 index|[]
 init|=
@@ -1415,6 +1438,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|optiopt_list
 index|[]
 init|=
@@ -12500,6 +12524,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|list
 parameter_list|)

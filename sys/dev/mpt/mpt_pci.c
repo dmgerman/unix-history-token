@@ -2082,28 +2082,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mpt
-operator|->
-name|request_pool
-operator|==
-name|NULL
-condition|)
-block|{
-name|mpt_prt
-argument_list|(
-name|mpt
-argument_list|,
-literal|"cannot allocate request pool\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 comment|/* 	 * Create a parent dma tag for this device. 	 * 	 * Align at byte boundaries, 	 * Limit to 32-bit addressing for request/reply queues. 	 */
 if|if
 condition|(

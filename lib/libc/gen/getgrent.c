@@ -2923,12 +2923,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX IEEE Std 1003.1, 2003 specifies `void setgrent(void)' */
-end_comment
-
 begin_function
-name|int
+name|void
 name|setgrent
 parameter_list|(
 name|void
@@ -2952,11 +2948,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

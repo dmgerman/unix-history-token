@@ -5699,14 +5699,14 @@ begin_define
 define|#
 directive|define
 name|SD_RA_SP_MASK
-value|0x1fff07f
+value|0x01fff07f
 end_define
 
 begin_define
 define|#
 directive|define
 name|SD_RA_SP
-value|0x0113023
+value|0x00113023
 end_define
 
 begin_define

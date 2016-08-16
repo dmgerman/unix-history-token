@@ -51,6 +51,12 @@ directive|include
 file|<sys/nv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/gtaskqueue.h>
+end_include
+
 begin_comment
 comment|/*  * Most cards can handle much larger TSO requests  * but the FreeBSD TCP stack will break on larger  * values  */
 end_comment
@@ -122,6 +128,9 @@ decl_stmt|;
 name|uint16_t
 name|irf_idx
 decl_stmt|;
+name|uint16_t
+name|irf_len
+decl_stmt|;
 block|}
 typedef|*
 name|if_rxd_frag_t
@@ -142,6 +151,7 @@ name|uint16_t
 name|iri_vtag
 decl_stmt|;
 comment|/* vlan tag - if flag set */
+comment|/* XXX redundant with the new irf_len field */
 name|uint16_t
 name|iri_len
 decl_stmt|;
@@ -525,6 +535,9 @@ name|qsidx
 parameter_list|,
 name|uint32_t
 name|pidx
+parameter_list|,
+name|int
+name|budget
 parameter_list|)
 function_decl|;
 name|int
@@ -568,6 +581,9 @@ name|vaddrs
 parameter_list|,
 name|uint16_t
 name|count
+parameter_list|,
+name|uint16_t
+name|buf_size
 parameter_list|)
 function_decl|;
 name|void
@@ -628,6 +644,36 @@ name|isc_tx_nsegments
 decl_stmt|;
 comment|/* can be model specific - initialize in attach_pre */
 name|int
+name|isc_ntxd
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_nrxd
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint32_t
+name|isc_txqsizes
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint32_t
+name|isc_rxqsizes
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_max_txqsets
+decl_stmt|;
+name|int
+name|isc_max_rxqsets
+decl_stmt|;
+name|int
 name|isc_tx_tso_segments_max
 decl_stmt|;
 name|int
@@ -641,6 +687,12 @@ name|isc_rss_table_size
 decl_stmt|;
 name|int
 name|isc_rss_table_mask
+decl_stmt|;
+name|int
+name|isc_nrxqsets_max
+decl_stmt|;
+name|int
+name|isc_ntxqsets_max
 decl_stmt|;
 name|iflib_intr_mode_t
 name|isc_intr
@@ -678,12 +730,6 @@ modifier|*
 name|isc_driver
 decl_stmt|;
 name|int
-name|isc_ntxd
-decl_stmt|;
-name|int
-name|isc_nrxd
-decl_stmt|;
-name|int
 name|isc_nfl
 decl_stmt|;
 name|int
@@ -710,22 +756,10 @@ decl_stmt|;
 name|int
 name|isc_rx_process_limit
 decl_stmt|;
-name|uint32_t
-name|isc_txqsizes
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|int
 name|isc_ntxqs
 decl_stmt|;
 comment|/* # of tx queues per tx qset - usually 1 */
-name|uint32_t
-name|isc_rxqsizes
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|int
 name|isc_nrxqs
 decl_stmt|;
@@ -770,6 +804,42 @@ modifier|*
 name|rev_id
 parameter_list|)
 function_decl|;
+name|int
+name|isc_nrxd_min
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_nrxd_default
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_nrxd_max
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_ntxd_min
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_ntxd_default
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|int
+name|isc_ntxd_max
+index|[
+literal|8
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -842,13 +912,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Interface has a separate command queue  */
+comment|/*  * Interface has a separate command queue for RX  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFLIB_HAS_CQ
+name|IFLIB_HAS_RXCQ
 value|0x1
 end_define
 
@@ -872,6 +942,17 @@ define|#
 directive|define
 name|IFLIB_IS_VF
 value|0x4
+end_define
+
+begin_comment
+comment|/*  * Interface has a separate command queue for TX  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLIB_HAS_TXCQ
+value|0x8
 end_define
 
 begin_comment
@@ -1226,13 +1307,25 @@ name|grouptask
 modifier|*
 name|gtask
 parameter_list|,
-name|task_fn_t
+name|gtask_fn_t
 modifier|*
 name|fn
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iflib_config_gtask_deinit
+parameter_list|(
+name|struct
+name|grouptask
+modifier|*
+name|gtask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1292,6 +1385,9 @@ name|ctx
 parameter_list|,
 name|int
 name|linkstate
+parameter_list|,
+name|uint64_t
+name|baudrate
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/sbi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/asm.h>
 end_include
 
@@ -453,6 +459,13 @@ specifier|extern
 name|int
 modifier|*
 name|initstack_end
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|memory_block_info
+name|memory_info
 decl_stmt|;
 end_decl_stmt
 
@@ -2023,7 +2036,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* 	 * Make sure the processor mode has not been tampered with and 	 * interrupts have not been disabled. 	 */
+comment|/* 	 * Make sure the processor mode has not been tampered with and 	 * interrupts have not been disabled. 	 * Supervisor interrupts in user mode are always enabled. 	 */
 name|sstatus
 operator|=
 name|uc
@@ -2039,17 +2052,9 @@ condition|(
 operator|(
 name|sstatus
 operator|&
-name|SSTATUS_PS
+name|SSTATUS_SPP
 operator|)
 operator|!=
-literal|0
-operator|||
-operator|(
-name|sstatus
-operator|&
-name|SSTATUS_PIE
-operator|)
-operator|==
 literal|0
 condition|)
 return|return
@@ -3462,27 +3467,14 @@ modifier|*
 name|rvbp
 parameter_list|)
 block|{
-name|struct
-name|mem_region
-name|mem_regions
-index|[
-name|FDT_MEM_REGIONS
-index|]
-decl_stmt|;
 name|vm_offset_t
 name|lastaddr
-decl_stmt|;
-name|int
-name|mem_regions_sz
 decl_stmt|;
 name|vm_size_t
 name|kernlen
 decl_stmt|;
 name|caddr_t
 name|kmdp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* Set the module data location */
 name|lastaddr
@@ -3515,7 +3507,13 @@ argument_list|)
 expr_stmt|;
 name|boothowto
 operator|=
-literal|0
+name|RB_VERBOSE
+operator||
+name|RB_SINGLE
+expr_stmt|;
+name|boothowto
+operator|=
+name|RB_VERBOSE
 expr_stmt|;
 name|kern_envp
 operator|=
@@ -3536,54 +3534,23 @@ name|physmap_idx
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|struct mem_region mem_regions[FDT_MEM_REGIONS]; 	int mem_regions_sz; 	int i;
 comment|/* Grab physical memory regions information from device tree. */
-if|if
-condition|(
-name|fdt_get_mem_regions
-argument_list|(
-name|mem_regions
-argument_list|,
-operator|&
-name|mem_regions_sz
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"Cannot get physical memory regions"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|mem_regions_sz
-condition|;
-name|i
-operator|++
-control|)
+block|if (fdt_get_mem_regions(mem_regions,&mem_regions_sz, NULL) != 0) 		panic("Cannot get physical memory regions"); 	for (i = 0; i< mem_regions_sz; i++) 		add_physmap_entry(mem_regions[i].mr_start, 		    mem_regions[i].mr_size, physmap,&physmap_idx);
+endif|#
+directive|endif
 name|add_physmap_entry
 argument_list|(
-name|mem_regions
-index|[
-name|i
-index|]
+name|memory_info
 operator|.
-name|mr_start
+name|base
 argument_list|,
-name|mem_regions
-index|[
-name|i
-index|]
+name|memory_info
 operator|.
-name|mr_size
+name|size
 argument_list|,
 name|physmap
 argument_list|,
@@ -3630,7 +3597,7 @@ expr_stmt|;
 name|cache_setup
 argument_list|()
 expr_stmt|;
-comment|/* Bootstrap enough of pmap  to enter the kernel proper */
+comment|/* Bootstrap enough of pmap to enter the kernel proper */
 name|kernlen
 operator|=
 operator|(
@@ -3645,7 +3612,9 @@ name|rvbp
 operator|->
 name|kern_l1pt
 argument_list|,
-name|KERNENTRY
+name|memory_info
+operator|.
+name|base
 argument_list|,
 name|kernlen
 argument_list|)
@@ -3667,12 +3636,17 @@ name|td_pcb
 operator|->
 name|pcb_l1addr
 operator|=
+expr|\
 operator|(
 name|rvbp
 operator|->
 name|kern_l1pt
 operator|-
 name|KERNBASE
+operator|+
+name|memory_info
+operator|.
+name|base
 operator|)
 expr_stmt|;
 name|msgbufinit

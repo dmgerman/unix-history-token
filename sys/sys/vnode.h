@@ -2099,18 +2099,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void	assert_vop_elocked_other(struct vnode *vp, const char *str);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|assert_vop_locked
@@ -2127,18 +2115,6 @@ name|str
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|voi0	assert_vop_slocked(struct vnode *vp, const char *str);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -2193,29 +2169,6 @@ parameter_list|)
 value|assert_vop_elocked((vp), (str))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_ELOCKED_OTHER
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-value|assert_vop_locked_other((vp), (str))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2227,29 +2180,6 @@ name|str
 parameter_list|)
 value|assert_vop_locked((vp), (str))
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_SLOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-value|assert_vop_slocked((vp), (str))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2308,28 +2238,6 @@ parameter_list|)
 value|((void)0)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_ELOCKED_OTHER
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2341,28 +2249,6 @@ name|str
 parameter_list|)
 value|((void)0)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_SLOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2980,21 +2866,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|textvp_fullpath
-parameter_list|(
-name|p
-parameter_list|,
-name|rb
-parameter_list|,
-name|rfb
-parameter_list|)
-define|\
-value|vn_fullpath(FIRST_THREAD_IN_PROC(p), (p)->p_textvp, rb, rfb)
-end_define
-
 begin_function_decl
 name|int
 name|vn_fullpath
@@ -3448,18 +3319,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_define
-define|#
-directive|define
-name|vprint
-parameter_list|(
-name|label
-parameter_list|,
-name|vp
-parameter_list|)
-value|vn_printf((vp), "%s\n", (label))
-end_define
 
 begin_function_decl
 name|int
@@ -4297,6 +4156,17 @@ name|vop_stdbmap
 parameter_list|(
 name|struct
 name|vop_bmap_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdfdatasync_buf
+parameter_list|(
+name|struct
+name|vop_fdatasync_args
 modifier|*
 parameter_list|)
 function_decl|;

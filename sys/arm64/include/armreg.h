@@ -384,6 +384,188 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISS_DATA_DFSC_ASF_L0
+value|(0x00<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L1
+value|(0x01<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L2
+value|(0x02<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ASF_L3
+value|(0x03<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L0
+value|(0x04<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L1
+value|(0x05<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L2
+value|(0x06<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TF_L3
+value|(0x07<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L1
+value|(0x09<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L2
+value|(0x0a<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_AFF_L3
+value|(0x0b<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L1
+value|(0x0d<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L2
+value|(0x0e<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_PF_L3
+value|(0x0f<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT
+value|(0x10<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L0
+value|(0x14<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L1
+value|(0x15<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L2
+value|(0x16<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_EXT_L3
+value|(0x17<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC
+value|(0x18<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L0
+value|(0x1c<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L1
+value|(0x1d<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L2
+value|(0x1e<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ECC_L3
+value|(0x1f<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_ALIGN
+value|(0x21<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISS_DATA_DFSC_TLB_CONFLICT
+value|(0x28<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ESR_ELx_IL
 value|(0x01<< 25)
 end_define
@@ -770,6 +952,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AA64DFR0_DEBUG_VER_8_VHE
+value|(0x7<< ID_AA64DFR0_DEBUG_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AA64DFR0_TRACE_VER_SHIFT
 value|4
 end_define
@@ -841,6 +1030,13 @@ define|#
 directive|define
 name|ID_AA64DFR0_PMU_VER_3
 value|(0x1<< ID_AA64DFR0_PMU_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMU_VER_3_1
+value|(0x4<< ID_AA64DFR0_PMU_VER_SHIFT)
 end_define
 
 begin_define
@@ -933,7 +1129,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64ISAR0_MASK
-value|0x000ffff0
+value|0xf0fffff0
 end_define
 
 begin_define
@@ -1093,6 +1289,82 @@ define|#
 directive|define
 name|ID_AA64ISAR0_CRC32_BASE
 value|(0x1<< ID_AA64ISAR0_CRC32_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_MASK
+value|(0xf<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64ISAR0_ATOMIC_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_NONE
+value|(0x0<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_IMPL
+value|(0x2<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_SHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_MASK
+value|(0xf<< ID_AA64ISAR0_RDM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64ISAR0_RDM_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_NONE
+value|(0x0<< ID_AA64ISAR0_RDM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_IMPL
+value|(0x1<< ID_AA64ISAR0_RDM_SHIFT)
 end_define
 
 begin_comment
@@ -1439,6 +1711,252 @@ value|(0xf<< ID_AA64MMFR0_TGRAN4_SHIFT)
 end_define
 
 begin_comment
+comment|/* ID_AA64MMFR1_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_MASK
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_MASK
+value|(0xf<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_HAFDBS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_NONE
+value|(0x0<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_AF
+value|(0x1<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_AF_DBS
+value|(0x2<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_MASK
+value|(0xf<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_VMIDBITS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_8
+value|(0x0<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_16
+value|(0x2<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_MASK
+value|(0xf<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_VH_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_NONE
+value|(0x0<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_IMPL
+value|(0x1<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_MASK
+value|(0xf<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_HPDS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_NONE
+value|(0x0<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_IMPL
+value|(0x1<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_MASK
+value|(0xf<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_LO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_NONE
+value|(0x0<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_IMPL
+value|(0x1<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_MASK
+value|(0xf<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_PAN_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_NONE
+value|(0x0<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_IMPL
+value|(0x1<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
+begin_comment
 comment|/* ID_AA64PFR0_EL1 */
 end_comment
 
@@ -1764,6 +2282,140 @@ parameter_list|,
 name|idx
 parameter_list|)
 value|((attr)<< ((idx) * 8))
+end_define
+
+begin_comment
+comment|/* PAR_EL1 - Physical Address Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_F_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_F
+value|(0x1<< PAR_F_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_SUCCESS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& PAR_F) == 0)
+end_define
+
+begin_comment
+comment|/* When PAR_F == 0 (success) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_SH_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_SH_MASK
+value|(0x3<< PAR_SH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_NS_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_NS_MASK
+value|(0x3<< PAR_NS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PA_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PA_MASK
+value|0x0000fffffffff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_ATTR_SHIFT
+value|56
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_ATTR_MASK
+value|(0xff<< PAR_ATTR_SHIFT)
+end_define
+
+begin_comment
+comment|/* When PAR_F == 1 (aborted) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAR_FST_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_FST_MASK
+value|(0x3f<< PAR_FST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PTW_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_PTW_MASK
+value|(0x1<< PAR_PTW_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_S_SHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAR_S_MASK
+value|(0x1<< PAR_S_SHIFT)
 end_define
 
 begin_comment

@@ -494,9 +494,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|device
-modifier|*
+name|device_t
 name|rman_get_device
 parameter_list|(
 name|struct
@@ -730,9 +728,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -764,9 +760,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -811,9 +805,7 @@ name|resource
 modifier|*
 name|_r
 parameter_list|,
-name|struct
-name|device
-modifier|*
+name|device_t
 name|_dev
 parameter_list|)
 function_decl|;

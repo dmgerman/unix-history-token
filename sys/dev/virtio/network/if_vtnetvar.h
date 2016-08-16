@@ -480,6 +480,9 @@ decl_stmt|;
 name|int
 name|vtnet_max_vq_pairs
 decl_stmt|;
+name|int
+name|vtnet_requested_vq_pairs
+decl_stmt|;
 name|struct
 name|virtqueue
 modifier|*

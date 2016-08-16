@@ -498,12 +498,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|resettodr_lock
-argument_list|)
-expr_stmt|;
 name|getnanotime
 argument_list|(
 operator|&
@@ -527,6 +521,12 @@ name|utc_offset
 argument_list|()
 expr_stmt|;
 comment|/* XXX: We should really set all registered RTCs */
+name|mtx_lock
+argument_list|(
+operator|&
+name|resettodr_lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|CLOCK_SETTIME

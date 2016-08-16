@@ -10601,6 +10601,12 @@ operator|->
 name|vd_curwindow
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kbd
 operator|=
 name|kbd_get_keyboard
@@ -10621,6 +10627,12 @@ argument_list|(
 name|vw
 argument_list|,
 name|kbd
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}

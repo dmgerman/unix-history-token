@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: cfe_api.h,v 1.3 2003/02/07 17:38:48 cgd Exp $ */
-end_comment
-
-begin_comment
-comment|/* from: SiByte Id: cfe_api.h,v 1.29 2002/07/09 23:29:11 cgd Exp $ */
+comment|/* from: Broadcom Id: cfe_api.h,v 1.31 2006/08/24 02:13:56 binh Exp $ */
 end_comment
 
 begin_comment
@@ -504,6 +500,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|cfe_enumdev
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|__cfe_enumdev(a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|cfe_enummem
 parameter_list|(
 name|a
@@ -786,6 +796,23 @@ name|val
 parameter_list|,
 name|int
 name|vallen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cfe_enumdev
+parameter_list|(
+name|int
+name|idx
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -588,6 +588,8 @@ name|int
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -613,6 +615,8 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3009,6 +3013,9 @@ operator|&
 name|alwaysfrag
 argument_list|,
 name|fibnum
+argument_list|,
+operator|*
+name|nexthdrp
 argument_list|)
 operator|)
 operator|!=
@@ -4458,11 +4465,17 @@ operator|==
 operator|&
 name|ip6route
 operator|||
+operator|(
+name|ro
+operator|!=
+name|NULL
+operator|&&
 name|ro
 operator|->
 name|ro_flags
 operator|&
 name|RT_NORTREF
+operator|)
 condition|)
 name|RO_RTFREE
 argument_list|(
@@ -5328,6 +5341,8 @@ argument_list|,
 name|mtup
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|fib6_free_nh_ext
@@ -5384,6 +5399,9 @@ name|alwaysfragp
 parameter_list|,
 name|u_int
 name|fibnum
+parameter_list|,
+name|u_int
+name|proto
 parameter_list|)
 block|{
 name|struct
@@ -5564,6 +5582,8 @@ argument_list|,
 name|mtup
 argument_list|,
 name|alwaysfragp
+argument_list|,
+name|proto
 argument_list|)
 operator|)
 return|;
@@ -5600,6 +5620,9 @@ parameter_list|,
 name|int
 modifier|*
 name|alwaysfragp
+parameter_list|,
+name|u_int
+name|proto
 parameter_list|)
 block|{
 name|u_long
@@ -5662,6 +5685,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* TCP is known to react to pmtu changes so skip hc */
+if|if
+condition|(
+name|proto
+operator|!=
+name|IPPROTO_TCP
+condition|)
 name|mtu
 operator|=
 name|tcp_hc_getmtu

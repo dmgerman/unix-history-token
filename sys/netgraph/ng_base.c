@@ -15220,6 +15220,12 @@ name|ng_callout_trampoline
 operator|)
 operator|&&
 operator|(
+name|item
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|NGI_NODE
 argument_list|(
 name|item

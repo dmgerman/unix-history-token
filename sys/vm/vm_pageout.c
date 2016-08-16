@@ -381,16 +381,6 @@ name|SDT_PROBE_DEFINE
 argument_list|(
 name|vm
 argument_list|, , ,
-name|vm__lowmem_cache
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|vm
-argument_list|, , ,
 name|vm__lowmem_scan
 argument_list|)
 expr_stmt|;
@@ -1107,7 +1097,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it wirte busies and initializes the hold count  * to one as safety precautions.  */
+comment|/*  * Initialize a dummy page for marking the caller's place in the specified  * paging queue.  In principle, this function only needs to set the flag  * PG_MARKER.  Nonetheless, it write busies and initializes the hold count  * to one as safety precautions.  */
 end_comment
 
 begin_function
@@ -1529,7 +1519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_clean:  *  * Clean the page and remove it from the laundry.  *   * We set the busy bit to cause potential page faults on this page to  * block.  Note the careful timing, however, the busy bit isn't set till  * late and we cannot do anything that will mess with the page.  */
+comment|/*  * Scan for pages at adjacent offsets within the given page's object that are  * eligible for laundering, form a cluster of these pages and the given page,  * and launder that cluster.  */
 end_comment
 
 begin_function
@@ -1552,12 +1542,14 @@ operator|*
 name|vm_pageout_page_count
 index|]
 decl_stmt|,
+name|p
+decl_stmt|,
 name|pb
 decl_stmt|,
 name|ps
 decl_stmt|;
-name|int
-name|pageout_count
+name|vm_pindex_t
+name|pindex
 decl_stmt|;
 name|int
 name|ib
@@ -1565,19 +1557,12 @@ decl_stmt|,
 name|is
 decl_stmt|,
 name|page_base
+decl_stmt|,
+name|pageout_count
 decl_stmt|;
-name|vm_pindex_t
-name|pindex
-init|=
-name|m
-operator|->
-name|pindex
-decl_stmt|;
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|object
@@ -1591,8 +1576,13 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
-comment|/* 	 * Can't clean the page if it's busy or held. 	 */
+name|pindex
+operator|=
+name|m
+operator|->
+name|pindex
+expr_stmt|;
+comment|/* 	 * We can't clean the page if it is busy or held. 	 */
 name|vm_page_assert_unbusied
 argument_list|(
 name|m
@@ -1607,7 +1597,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vm_pageout_clean: page %p is held"
+literal|"page %p is held"
 operator|,
 name|m
 operator|)
@@ -1645,21 +1635,20 @@ name|is
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Scan object for clusterable pages. 	 * 	 * We can cluster ONLY if: ->> the page is NOT 	 * clean, wired, busy, held, or mapped into a 	 * buffer, and one of the following: 	 * 1) The page is inactive, or a seldom used 	 *    active page. 	 * -or- 	 * 2) we force the issue. 	 * 	 * During heavy mmap/modification loads the pageout 	 * daemon can really fragment the underlying file 	 * due to flushing pages out of order and not trying 	 * align the clusters (which leave sporatic out-of-order 	 * holes).  To solve this problem we do the reverse scan 	 * first and attempt to align our cluster, then do a  	 * forward scan if room remains. 	 */
+comment|/* 	 * We can cluster only if the page is not clean, busy, or held, and 	 * the page is inactive. 	 * 	 * During heavy mmap/modification loads the pageout 	 * daemon can really fragment the underlying file 	 * due to flushing pages out of order and not trying to 	 * align the clusters (which leaves sporadic out-of-order 	 * holes).  To solve this problem we do the reverse scan 	 * first and attempt to align our cluster, then do a  	 * forward scan if room remains. 	 */
 name|more
 label|:
 while|while
 condition|(
 name|ib
+operator|!=
+literal|0
 operator|&&
 name|pageout_count
 operator|<
 name|vm_pageout_page_count
 condition|)
 block|{
-name|vm_page_t
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|ib
@@ -1771,7 +1760,7 @@ expr_stmt|;
 operator|++
 name|ib
 expr_stmt|;
-comment|/* 		 * alignment boundary, stop here and switch directions.  Do 		 * not clear ib. 		 */
+comment|/* 		 * We are at an alignment boundary.  Stop here, and switch 		 * directions.  Do not clear ib. 		 */
 if|if
 condition|(
 operator|(
@@ -1805,9 +1794,6 @@ operator|->
 name|size
 condition|)
 block|{
-name|vm_page_t
-name|p
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1892,10 +1878,12 @@ operator|++
 name|is
 expr_stmt|;
 block|}
-comment|/* 	 * If we exhausted our forward scan, continue with the reverse scan 	 * when possible, even past a page boundary.  This catches boundary 	 * conditions. 	 */
+comment|/* 	 * If we exhausted our forward scan, continue with the reverse scan 	 * when possible, even past an alignment boundary.  This catches 	 * boundary conditions. 	 */
 if|if
 condition|(
 name|ib
+operator|!=
+literal|0
 operator|&&
 name|pageout_count
 operator|<
@@ -1904,7 +1892,6 @@ condition|)
 goto|goto
 name|more
 goto|;
-comment|/* 	 * we allow reads during pageouts... 	 */
 return|return
 operator|(
 name|vm_pageout_flush
@@ -3343,7 +3330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Move inactive to cache or free  *	pass 2 - Launder dirty pages  */
+comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Free inactive pages  *	pass 2 - Launder dirty pages  */
 end_comment
 
 begin_function
@@ -3404,7 +3391,7 @@ decl_stmt|;
 name|boolean_t
 name|pageout_ok
 decl_stmt|,
-name|queues_locked
+name|queue_locked
 decl_stmt|;
 comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some.  We rate limit to avoid thrashing. 	 */
 if|if
@@ -3459,7 +3446,7 @@ name|addl_page_shortage
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
+comment|/* 	 * Calculate the number of pages that we want to free. 	 */
 if|if
 condition|(
 name|pass
@@ -3523,7 +3510,7 @@ name|vnodes_skipped
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Start scanning the inactive queue for pages we can move to the 	 * cache or free.  The scan will stop when the target is reached or 	 * we have scanned the entire inactive queue.  Note that m->act_count 	 * is not used to form decisions for the inactive queue, only for the 	 * active queue. 	 */
+comment|/* 	 * Start scanning the inactive queue for pages that we can free.  The 	 * scan will stop when we reach the target or we have scanned the 	 * entire queue.  (Note that m->act_count is not used to make 	 * decisions for the inactive queue, only for the active queue.) 	 */
 name|pq
 operator|=
 operator|&
@@ -3545,7 +3532,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3586,10 +3573,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|queues_locked
+name|queue_locked
 argument_list|,
 operator|(
-literal|"unlocked queues"
+literal|"unlocked inactive queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3822,7 +3809,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|FALSE
 expr_stmt|;
@@ -3955,7 +3942,7 @@ goto|goto
 name|requeue_page
 goto|;
 block|}
-comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of placing it onto the cache queue.  If, 		 * however, any of the page's mappings allow write access, 		 * then the page may still be modified until the last of those 		 * mappings are removed. 		 */
+comment|/* 		 * If the page appears to be clean at the machine-independent 		 * layer, then remove all of its mappings from the pmap in 		 * anticipation of freeing it.  If, however, any of the page's 		 * mappings allow write access, then the page may still be 		 * modified until the last of those mappings are removed. 		 */
 if|if
 condition|(
 name|object
@@ -4063,7 +4050,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4189,7 +4176,7 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 goto|goto
-name|relock_queues
+name|relock_queue
 goto|;
 block|}
 name|drop_page
@@ -4204,12 +4191,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|relock_queues
+name|relock_queue
 label|:
 if|if
 condition|(
 operator|!
-name|queues_locked
+name|queue_locked
 condition|)
 block|{
 name|vm_pagequeue_lock
@@ -4217,7 +4204,7 @@ argument_list|(
 name|pq
 argument_list|)
 expr_stmt|;
-name|queues_locked
+name|queue_locked
 operator|=
 name|TRUE
 expr_stmt|;
@@ -4266,7 +4253,7 @@ name|defined
 argument_list|(
 name|NO_SWAPPING
 argument_list|)
-comment|/* 	 * Wakeup the swapout daemon if we didn't cache or free the targeted 	 * number of pages.  	 */
+comment|/* 	 * Wakeup the swapout daemon if we didn't free the targeted number of 	 * pages. 	 */
 if|if
 condition|(
 name|vm_swap_enabled
@@ -4282,7 +4269,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Wakeup the sync daemon if we skipped a vnode in a writeable object 	 * and we didn't cache or free enough pages. 	 */
+comment|/* 	 * Wakeup the sync daemon if we skipped a vnode in a writeable object 	 * and we didn't free enough pages. 	 */
 if|if
 condition|(
 name|vnodes_skipped
@@ -4414,7 +4401,7 @@ name|vmd_last_active_scan
 operator|=
 name|scan_tick
 expr_stmt|;
-comment|/* 	 * Scan the active queue for pages that can be deactivated.  Update 	 * the per-page activity counter and use it to identify deactivation 	 * candidates. 	 */
+comment|/* 	 * Scan the active queue for pages that can be deactivated.  Update 	 * the per-page activity counter and use it to identify deactivation 	 * candidates.  Held pages may be deactivated. 	 */
 for|for
 control|(
 name|m
@@ -4555,7 +4542,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * The count for pagedaemon pages is done after checking the 		 * page for eligibility... 		 */
+comment|/* 		 * The count for page daemon pages is updated after checking 		 * the page for eligibility. 		 */
 name|PCPU_INC
 argument_list|(
 name|cnt
@@ -4594,7 +4581,7 @@ name|act_delta
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Unlocked object ref count check.  Two races are possible. 		 * 1) The ref was transitioning to zero and we saw non-zero, 		 *    the pmap bits will be checked unnecessarily. 		 * 2) The ref was transitioning to one and we saw zero.  		 *    The page lock prevents a new reference to this page so 		 *    we need not check the reference bits. 		 */
+comment|/* 		 * Perform an unsynchronized object ref count check.  While 		 * the page lock ensures that the page is not reallocated to 		 * another object, in particular, one with unmanaged mappings 		 * that cannot support pmap_ts_referenced(), two races are, 		 * nonetheless, possible: 		 * 1) The count was transitioning to zero, but we saw a non- 		 *    zero value.  pmap_ts_referenced() will return zero 		 *    because the page is not mapped. 		 * 2) The count was transitioning to one, but we saw zero.  		 *    This race delays the detection of a new reference.  At 		 *    worst, we will deactivate and reactivate the page. 		 */
 if|if
 condition|(
 name|m
@@ -4706,10 +4693,14 @@ name|defined
 argument_list|(
 name|NO_SWAPPING
 argument_list|)
-comment|/* 	 * Idle process swapout -- run once per second. 	 */
+comment|/* 	 * Idle process swapout -- run once per second when we are reclaiming 	 * pages. 	 */
 if|if
 condition|(
 name|vm_swap_idle_enabled
+operator|&&
+name|pass
+operator|>
+literal|0
 condition|)
 block|{
 specifier|static

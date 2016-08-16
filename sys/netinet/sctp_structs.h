@@ -1607,21 +1607,37 @@ begin_comment
 comment|/*  * This union holds all data necessary for  * different stream schedulers.  */
 end_comment
 
-begin_union
-union|union
+begin_struct
+struct|struct
 name|scheduling_data
 block|{
 name|struct
+name|sctp_stream_out
+modifier|*
+name|locked_on_sending
+decl_stmt|;
+comment|/* circular looking for output selection */
+name|struct
+name|sctp_stream_out
+modifier|*
+name|last_out_stream
+decl_stmt|;
+union|union
+block|{
+name|struct
 name|sctpwheel_listhead
-name|out_wheel
+name|wheel
 decl_stmt|;
 name|struct
 name|sctplist_listhead
-name|out_list
+name|list
 decl_stmt|;
 block|}
+name|out
 union|;
-end_union
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * This union holds all parameters per stream  * necessary for different stream schedulers.  */
@@ -2307,6 +2323,11 @@ name|sctp_ss_init_stream
 function_decl|)
 parameter_list|(
 name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
@@ -2521,6 +2542,23 @@ name|uint16_t
 name|value
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|sctp_ss_is_user_msgs_incomplete
+function_decl|)
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_association
+modifier|*
+name|asoc
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -2732,15 +2770,9 @@ name|sctpchunk_listhead
 name|send_queue
 decl_stmt|;
 comment|/* Scheduling queues */
-name|union
+name|struct
 name|scheduling_data
 name|ss_data
-decl_stmt|;
-comment|/* 	 * This pointer will be set to NULL most of the time. But when we 	 * have a fragmented message, where we could not get out all of the 	 * message at the last send then this will point to the stream to go 	 * get data from. 	 */
-name|struct
-name|sctp_stream_out
-modifier|*
-name|locked_on_sending
 decl_stmt|;
 comment|/* If an iterator is looking at me, this is it */
 name|struct
@@ -2809,12 +2841,6 @@ name|struct
 name|sctp_nets
 modifier|*
 name|last_control_chunk_from
-decl_stmt|;
-comment|/* circular looking for output selection */
-name|struct
-name|sctp_stream_out
-modifier|*
-name|last_out_stream
 decl_stmt|;
 comment|/* 	 * wait to the point the cum-ack passes req->send_reset_at_tsn for 	 * any req on the list. 	 */
 name|struct

@@ -1223,17 +1223,5 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int iwm_mvm_update_beacon_filter(struct iwm_softc *sc, struct iwm_node *in) { 	if (!sc->sc_bf.bf_enabled) 		return 0;  	return iwm_mvm_enable_beacon_filter(sc, in); }
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

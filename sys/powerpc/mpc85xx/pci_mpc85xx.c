@@ -3293,7 +3293,10 @@ condition|)
 block|{
 comment|/* XXX OCP85XX_TGTIF_RAM2, OCP85XX_TGTIF_RAM_INTL should be handled */
 case|case
-name|OCP85XX_TGTIF_RAM1
+name|OCP85XX_TGTIF_RAM1_85XX
+case|:
+case|case
+name|OCP85XX_TGTIF_RAM1_QORIQ
 case|:
 name|attr
 operator|=

@@ -779,6 +779,14 @@ operator|<<
 literal|6
 operator|)
 block|,
+name|IS_VF
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+block|,
 name|CXGBE_BUSY
 init|=
 operator|(
@@ -1655,6 +1663,11 @@ name|int
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
+name|unsigned
+name|int
+name|abs_id
+decl_stmt|;
+comment|/* absolute SGE id for the eq */
 name|struct
 name|mtx
 name|eq_lock
@@ -2687,9 +2700,19 @@ comment|/* netmap rx queues */
 name|uint16_t
 name|iq_start
 decl_stmt|;
+comment|/* first cntxt_id */
+name|uint16_t
+name|iq_base
+decl_stmt|;
+comment|/* first abs_id */
 name|int
 name|eq_start
 decl_stmt|;
+comment|/* first cntxt_id */
+name|int
+name|eq_base
+decl_stmt|;
+comment|/* first abs_id */
 name|struct
 name|sge_iq
 modifier|*
@@ -2848,6 +2871,12 @@ argument_list|)
 modifier|*
 name|irq
 struct|;
+name|int
+name|sge_gts_reg
+decl_stmt|;
+name|int
+name|sge_kdoorbell_reg
+decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
 decl_stmt|;

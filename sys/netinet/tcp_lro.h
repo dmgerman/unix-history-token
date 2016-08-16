@@ -53,6 +53,12 @@ argument|lro_entry
 argument_list|)
 name|next
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|lro_entry
+argument_list|)
+name|hash_next
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -265,6 +271,14 @@ name|unsigned
 name|lro_length_lim
 decl_stmt|;
 comment|/* max len of aggregated data */
+name|u_long
+name|lro_hashsz
+decl_stmt|;
+name|struct
+name|lro_head
+modifier|*
+name|lro_hash
+decl_stmt|;
 name|struct
 name|lro_head
 name|lro_active

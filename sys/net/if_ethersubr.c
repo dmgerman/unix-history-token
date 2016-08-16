@@ -638,17 +638,6 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ETHER_IS_BROADCAST
-parameter_list|(
-name|addr
-parameter_list|)
-define|\
-value|(bcmp(etherbroadcastaddr, (addr), ETHER_ADDR_LEN) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|senderr
 parameter_list|(
 name|e

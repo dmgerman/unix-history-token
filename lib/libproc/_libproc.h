@@ -6,25 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
 end_include
 
 begin_include
@@ -45,6 +27,12 @@ directive|include
 file|"libproc.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|procstat
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc_handle
@@ -53,10 +41,6 @@ name|pid_t
 name|pid
 decl_stmt|;
 comment|/* Process ID. */
-name|int
-name|kq
-decl_stmt|;
-comment|/* Kernel event queue ID. */
 name|int
 name|flags
 decl_stmt|;
@@ -69,6 +53,10 @@ name|int
 name|wstat
 decl_stmt|;
 comment|/* Process wait status. */
+name|int
+name|model
+decl_stmt|;
+comment|/* Process data model. */
 name|rd_agent_t
 modifier|*
 name|rdap
@@ -78,23 +66,33 @@ name|rd_loadobj_t
 modifier|*
 name|rdobjs
 decl_stmt|;
+comment|/* Array of loaded objects. */
 name|size_t
 name|rdobjsz
 decl_stmt|;
+comment|/* Array size. */
 name|size_t
 name|nobjs
 decl_stmt|;
-name|struct
-name|lwpstatus
-name|lwps
-decl_stmt|;
+comment|/* Num. objects currently loaded. */
 name|rd_loadobj_t
 modifier|*
 name|rdexec
 decl_stmt|;
-comment|/* rdobj index of program executable. */
+comment|/* rdobj for program executable. */
+name|struct
+name|lwpstatus
+name|lwps
+decl_stmt|;
+comment|/* Process status. */
+name|struct
+name|procstat
+modifier|*
+name|procstat
+decl_stmt|;
+comment|/* libprocstat handle. */
 name|char
-name|execname
+name|execpath
 index|[
 name|MAXPATHLEN
 index|]

@@ -4,11 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright 2016 Joyent, Inc.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1144,6 +1144,10 @@ name|uintptr_t
 name|dtms_strtok
 decl_stmt|;
 comment|/* saved strtok() pointer */
+name|uintptr_t
+name|dtms_strtok_limit
+decl_stmt|;
+comment|/* upper bound of strtok ptr */
 name|uint32_t
 name|dtms_access
 decl_stmt|;

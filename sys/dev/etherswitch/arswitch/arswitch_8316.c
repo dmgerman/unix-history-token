@@ -453,6 +453,7 @@ literal|0xfa50
 argument_list|)
 expr_stmt|;
 comment|/* Enable ARP frame acknowledge. */
+comment|/* XXX TODO: aging? */
 name|arswitch_modifyreg
 argument_list|(
 name|sc

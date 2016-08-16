@@ -369,6 +369,13 @@ begin_comment
 comment|/* Page pods written to the card. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_AIOTX
+value|EXT_FLAG_VENDOR1
+end_define
+
 begin_struct
 struct|struct
 name|ddp_buffer
@@ -385,6 +392,26 @@ name|job
 decl_stmt|;
 name|int
 name|cancel_pending
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aiotx_buffer
+block|{
+name|struct
+name|pageset
+name|ps
+decl_stmt|;
+name|struct
+name|kaiocb
+modifier|*
+name|job
+decl_stmt|;
+name|int
+name|refcount
 decl_stmt|;
 block|}
 struct|;
@@ -552,6 +579,20 @@ decl_stmt|;
 name|struct
 name|mtx
 name|ddp_lock
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kaiocb
+argument_list|)
+name|aiotx_jobq
+expr_stmt|;
+name|struct
+name|task
+name|aiotx_task
+decl_stmt|;
+name|bool
+name|aiotx_task_active
 decl_stmt|;
 comment|/* Tx software descriptor */
 name|uint8_t
@@ -853,6 +894,12 @@ decl_stmt|;
 comment|/* # of lctx in the hash table */
 name|u_int
 name|ppod_start
+decl_stmt|;
+name|u_int
+name|ddp_pgsz
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|vmem_t
 modifier|*
@@ -1507,6 +1554,32 @@ end_function_decl
 begin_comment
 comment|/* t4_cpl_io.c */
 end_comment
+
+begin_function_decl
+name|void
+name|aiotx_init_toep
+parameter_list|(
+name|struct
+name|toepcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_aio_queue_aiotx
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|kaiocb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

@@ -3553,7 +3553,7 @@ name|psb
 operator|->
 name|res1
 argument_list|)
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|irt
@@ -3564,7 +3564,7 @@ name|psb
 operator|->
 name|res1
 argument_list|)
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|mvs
@@ -3575,7 +3575,7 @@ name|psb
 operator|->
 name|res1
 argument_list|)
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|low

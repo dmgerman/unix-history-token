@@ -354,20 +354,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VOP_REALVP
-parameter_list|(
-name|vp
-parameter_list|,
-name|vpp
-parameter_list|,
-name|ct
-parameter_list|)
-value|(*(vpp) = (vp), 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|vnevent_create
 parameter_list|(
 name|vp

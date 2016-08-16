@@ -1934,6 +1934,16 @@ name|value
 operator|=
 literal|10
 expr_stmt|;
+if|if
+condition|(
+name|value
+operator|<
+literal|0
+condition|)
+name|value
+operator|=
+literal|10
+expr_stmt|;
 name|HALDEBUG
 argument_list|(
 name|ah

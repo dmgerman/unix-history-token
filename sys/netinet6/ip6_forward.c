@@ -346,14 +346,6 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SCTP
-name|int
-name|sw_csum
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|m_tag
 modifier|*

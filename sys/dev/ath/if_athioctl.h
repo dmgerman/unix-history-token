@@ -885,14 +885,14 @@ index|[
 name|ATH_RADIOTAP_MAX_CHAINS
 index|]
 decl_stmt|;
-comment|/* 4 */
+comment|/* 4 * 4 = 16 */
 name|uint8_t
 name|rssi_ext
 index|[
 name|ATH_RADIOTAP_MAX_CHAINS
 index|]
 decl_stmt|;
-comment|/* 4 */
+comment|/* 4 * 4 = 16 */
 name|uint8_t
 name|vh_phyerr_code
 decl_stmt|;

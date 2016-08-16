@@ -823,6 +823,8 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -834,6 +836,11 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
+name|vm_page_xbusy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -880,12 +887,12 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
 name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_lock
 argument_list|(
 name|m

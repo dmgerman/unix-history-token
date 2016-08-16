@@ -184,6 +184,47 @@ begin_comment
 comment|/* connect blocks until accepted */
 end_comment
 
+begin_comment
+comment|/*  * These flags are used to handle non-atomicity in connect() and bind()  * operations on a socket: in particular, to avoid races between multiple  * threads or processes operating simultaneously on the same socket.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_CONNECTING
+value|0x010
+end_define
+
+begin_comment
+comment|/* Currently connecting. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_BINDING
+value|0x020
+end_define
+
+begin_comment
+comment|/* Currently binding. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_NASCENT
+value|0x040
+end_define
+
+begin_comment
+comment|/* Newborn child socket. */
+end_comment
+
+begin_comment
+comment|/*  * Flags in unp_gcflag.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -226,32 +267,6 @@ end_define
 
 begin_comment
 comment|/* Attached rights are freed */
-end_comment
-
-begin_comment
-comment|/*  * These flags are used to handle non-atomicity in connect() and bind()  * operations on a socket: in particular, to avoid races between multiple  * threads or processes operating simultaneously on the same socket.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNP_CONNECTING
-value|0x010
-end_define
-
-begin_comment
-comment|/* Currently connecting. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNP_BINDING
-value|0x020
-end_define
-
-begin_comment
-comment|/* Currently binding. */
 end_comment
 
 begin_define

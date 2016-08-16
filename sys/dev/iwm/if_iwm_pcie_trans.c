@@ -748,6 +748,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_device_family
+operator|==
+name|IWM_DEVICE_FAMILY_8000
+condition|)
+name|DELAY
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|iwm_poll_bit
 argument_list|(
 name|sc
@@ -772,6 +785,17 @@ block|}
 else|else
 block|{
 comment|/* jolt */
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_RESET
+argument_list|,
+literal|"%s: resetting device via NMI\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWM_WRITE
 argument_list|(
 name|sc
@@ -1051,6 +1075,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|ready
+decl_stmt|;
 name|IWM_SETBITS
 argument_list|(
 name|sc
@@ -1060,7 +1087,8 @@ argument_list|,
 name|IWM_CSR_HW_IF_CONFIG_REG_BIT_NIC_READY
 argument_list|)
 expr_stmt|;
-return|return
+name|ready
+operator|=
 name|iwm_poll_bit
 argument_list|(
 name|sc
@@ -1073,6 +1101,24 @@ name|IWM_CSR_HW_IF_CONFIG_REG_BIT_NIC_READY
 argument_list|,
 name|IWM_HW_READY_TIMEOUT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ready
+condition|)
+block|{
+name|IWM_SETBITS
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_CSR_MBOX_SET_REG
+argument_list|,
+name|IWM_CSR_MBOX_SET_REG_OS_ALIVE
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|ready
 return|;
 block|}
 end_function
@@ -1283,6 +1329,15 @@ literal|"iwm apm start\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable L0S exit timer (platform NMI Work/Around) */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_device_family
+operator|!=
+name|IWM_DEVICE_FAMILY_8000
+condition|)
+block|{
 name|IWM_SETBITS
 argument_list|(
 name|sc
@@ -1292,6 +1347,7 @@ argument_list|,
 name|IWM_CSR_GIO_CHICKEN_BITS_REG_BIT_DIS_L0S_EXIT_TIMER
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Disable L0s without affecting L1; 	 *  don't wait for ICH L0s (ICH bug W/A) 	 */
 name|IWM_SETBITS
 argument_list|(
@@ -1330,7 +1386,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* not for 7k */
+comment|/* not for 7k/8k */
 comment|/* Configure analog phase-lock-loop before activating to D0A */
 block|if (trans->cfg->base_params->pll_cfg_val) 		IWM_SETBITS(trans, IWM_CSR_ANA_PLL_CFG, 		    trans->cfg->base_params->pll_cfg_val);
 endif|#
@@ -1427,6 +1483,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Enable DMA clock and wait for it to stabilize. 	 * 	 * Write to "CLK_EN_REG"; "1" bits enable clocks, while "0" bits 	 * do not disable clocks.  This preserves any hardware bits already 	 * set by default in "CLK_CTRL_REG" after reset. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_device_family
+operator|==
+name|IWM_DEVICE_FAMILY_7000
+condition|)
+block|{
 name|iwm_write_prph
 argument_list|(
 name|sc
@@ -1436,7 +1501,6 @@ argument_list|,
 name|IWM_APMG_CLK_VAL_DMA_CLK_RQT
 argument_list|)
 expr_stmt|;
-comment|//kpause("iwmapm", 0, mstohz(20), NULL);
 name|DELAY
 argument_list|(
 literal|20
@@ -1462,6 +1526,7 @@ argument_list|,
 name|IWM_APMG_RTC_INT_STT_RFKILL
 argument_list|)
 expr_stmt|;
+block|}
 name|out
 label|:
 if|if
@@ -1589,8 +1654,6 @@ argument_list|,
 name|IWM_CSR_RESET
 argument_list|,
 name|IWM_CSR_RESET_REG_FLAG_SW_RESET
-operator||
-name|IWM_CSR_RESET_REG_FLAG_NEVO_RESET
 argument_list|)
 expr_stmt|;
 name|DELAY

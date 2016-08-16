@@ -977,6 +977,18 @@ index|[]
 init|=
 block|{
 block|{
+literal|"nat64lsn"
+block|,
+name|TOK_NAT64LSN
+block|}
+block|,
+block|{
+literal|"nat64stl"
+block|,
+name|TOK_NAT64STL
+block|}
+block|,
+block|{
 literal|"nptv6"
 block|,
 name|TOK_NPTV6
@@ -7846,7 +7858,7 @@ name|cmd
 operator|->
 name|arg1
 operator|!=
-literal|0
+name|IP_FW_NAT44_GLOBAL
 condition|)
 name|bprint_uint_arg
 argument_list|(
@@ -7871,11 +7883,31 @@ break|break;
 case|case
 name|O_SETFIB
 case|:
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+name|IP_FW_TARG
+condition|)
 name|bprint_uint_arg
 argument_list|(
 name|bp
 argument_list|,
 literal|"setfib "
+argument_list|,
+name|cmd
+operator|->
+name|arg1
+argument_list|)
+expr_stmt|;
+else|else
+name|bprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|"setfib %u"
 argument_list|,
 name|cmd
 operator|->
@@ -19862,6 +19894,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -19869,6 +19904,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -19887,9 +19923,16 @@ argument_list|,
 name|IPFW_TLV_STATE_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|TOK_COMMENT
+condition|)
 name|warn
 argument_list|(
-literal|"Ambiguous state name '%s', '%s' used instead.\n"
+literal|"Ambiguous state name '%s', '%s'"
+literal|" used instead.\n"
 argument_list|,
 operator|*
 name|av
@@ -19897,6 +19940,7 @@ argument_list|,
 name|default_state_name
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 elseif|else
 if|if
@@ -20122,7 +20166,7 @@ name|action
 operator|->
 name|arg1
 operator|=
-literal|0
+name|IP_FW_NAT44_GLOBAL
 expr_stmt|;
 name|av
 operator|++
@@ -21022,7 +21066,8 @@ operator|=
 name|IP_FW_TARG
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|isalpha
@@ -21081,21 +21126,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Add high-order bit to DSCP to make room for tablearg */
-if|if
-condition|(
-name|action
-operator|->
-name|arg1
-operator|!=
-name|IP_FW_TARG
-condition|)
+comment|/* 			 * Add high-order bit to DSCP to make room 			 * for tablearg 			 */
 name|action
 operator|->
 name|arg1
 operator||=
 literal|0x8000
 expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
@@ -21684,10 +21722,61 @@ if|if
 condition|(
 name|have_state
 condition|)
+block|{
 comment|/* must be a check-state, we are done */
+if|if
+condition|(
+operator|*
+name|av
+operator|!=
+name|NULL
+operator|&&
+name|match_token
+argument_list|(
+name|rule_options
+argument_list|,
+operator|*
+name|av
+argument_list|)
+operator|==
+name|TOK_COMMENT
+condition|)
+block|{
+comment|/* check-state has a comment */
+name|av
+operator|++
+expr_stmt|;
+name|fill_comment
+argument_list|(
+name|cmd
+argument_list|,
+name|av
+argument_list|,
+name|cblen
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|next_cmd
+argument_list|(
+name|cmd
+argument_list|,
+operator|&
+name|cblen
+argument_list|)
+expr_stmt|;
+name|av
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 goto|goto
 name|done
 goto|;
+block|}
 define|#
 directive|define
 name|OR_START
@@ -23579,6 +23668,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23586,6 +23678,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23597,6 +23690,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(
@@ -23824,6 +23921,9 @@ name|av
 operator|==
 name|NULL
 operator|||
+operator|(
+name|i
+operator|=
 name|match_token
 argument_list|(
 name|rule_options
@@ -23831,6 +23931,7 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
+operator|)
 operator|!=
 operator|-
 literal|1
@@ -23842,6 +23943,10 @@ operator|*
 name|av
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|!=
+name|TOK_COMMENT
 condition|)
 name|warn
 argument_list|(

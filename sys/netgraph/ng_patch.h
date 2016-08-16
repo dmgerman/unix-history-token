@@ -144,7 +144,7 @@ decl_stmt|;
 name|uint16_t
 name|length
 decl_stmt|;
-comment|/* 1,2,4 or 8 (bytes) */
+comment|/* 1, 2, 4 or 8 (bytes) */
 name|uint16_t
 name|mode
 decl_stmt|;
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|NG_PATCH_OP_TYPE_INFO
-value|{	\ 		{ "value",&ng_parse_uint64_type	},	\ 		{ "offset",&ng_parse_uint32_type	},	\ 		{ "length",&ng_parse_uint16_type	},	\ 		{ "mode",&ng_parse_uint16_type	},	\ 		{ NULL } \ }
+value|{				\ 	{ "value",&ng_parse_uint64_type	},	\ 	{ "offset",&ng_parse_uint32_type	},	\ 	{ "length",&ng_parse_uint16_type	},	\ 	{ "mode",&ng_parse_uint16_type	},	\ 	{ NULL }					\ }
 end_define
 
 begin_struct
@@ -182,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|NG_PATCH_CONFIG_TYPE_INFO
-value|{	\ 		{ "count",&ng_parse_uint32_type	},	\ 		{ "csum_flags",&ng_parse_uint32_type	},	\ 		{ "ops",&ng_patch_confarr_type	},	\ 		{ NULL } \ }
+value|{					\ 	{ "count",&ng_parse_uint32_type		},	\ 	{ "csum_flags",&ng_parse_uint64_type		},	\ 	{ "ops",&ng_patch_ops_array_type		},	\ 	{ NULL }							\ }
 end_define
 
 begin_struct
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|NG_PATCH_STATS_TYPE_INFO
-value|{	\ 		{ "received",&ng_parse_uint64_type	},	\ 		{ "patched",&ng_parse_uint64_type	},	\ 		{ "dropped",&ng_parse_uint64_type	},	\ 		{ NULL } \ }
+value|{			\ 	{ "Received",&ng_parse_uint64_type	},	\ 	{ "Patched",&ng_parse_uint64_type	},	\ 	{ "Dropped",&ng_parse_uint64_type	},	\ 	{ NULL }					\ }
 end_define
 
 begin_endif

@@ -80,12 +80,6 @@ directive|include
 file|<err.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_WITH_GETLINE
-end_define
-
 begin_include
 include|#
 directive|include

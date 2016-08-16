@@ -1302,7 +1302,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* let noone else know about the pool, it's a secret, shhh */
+comment|/* let no one else know about the pool, it's a secret, shhh */
 name|fnam
 operator|.
 name|str

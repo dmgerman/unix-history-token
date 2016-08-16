@@ -2595,9 +2595,9 @@ name|ctl
 operator|&
 name|PCIEM_SLOT_CTL_PCC
 condition|?
-literal|"on"
-else|:
 literal|"off"
+else|:
+literal|"on"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2617,6 +2617,25 @@ condition|?
 literal|"open"
 else|:
 literal|"closed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap
+operator|&
+name|PCIEM_SLOT_CAP_EIP
+condition|)
+name|printf
+argument_list|(
+literal|" EI(%s)"
+argument_list|,
+name|sta
+operator|&
+name|PCIEM_SLOT_STA_EIS
+condition|?
+literal|"engaged"
+else|:
+literal|"disengaged"
 argument_list|)
 expr_stmt|;
 block|}

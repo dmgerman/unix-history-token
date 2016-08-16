@@ -655,11 +655,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NEW_PCIB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PCI_HP
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -668,6 +676,17 @@ name|_hw_pci
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -4799,6 +4818,36 @@ begin_comment
 comment|/*  * PCI-express HotPlug support.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pci_enable_pcie_hp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_pcie_hp
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|pci_enable_pcie_hp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable support for native PCI-express HotPlug."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -4813,6 +4862,12 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pci_enable_pcie_hp
+condition|)
+return|return;
 name|dev
 operator|=
 name|sc
@@ -4876,6 +4931,16 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Handling of slots with a power controller needs to be 	 * reexamined.  Ignore hotplug on such slots for now. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|pcie_slot_cap
+operator|&
+name|PCIEM_SLOT_CAP_PCP
+condition|)
+return|return;
 if|if
 condition|(
 name|sc
@@ -5305,6 +5370,8 @@ parameter_list|)
 block|{
 name|bool
 name|card_inserted
+decl_stmt|,
+name|ei_engaged
 decl_stmt|;
 comment|/* Clear DETACHING if Present Detect has cleared. */
 if|if
@@ -5420,11 +5487,8 @@ name|mask
 operator||=
 name|PCIEM_SLOT_CTL_EIC
 expr_stmt|;
-if|if
-condition|(
-name|card_inserted
-operator|!=
-operator|!
+name|ei_engaged
+operator|=
 operator|(
 name|sc
 operator|->
@@ -5432,6 +5496,14 @@ name|pcie_slot_sta
 operator|&
 name|PCIEM_SLOT_STA_EIS
 operator|)
+operator|!=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|card_inserted
+operator|!=
+name|ei_engaged
 condition|)
 name|val
 operator||=
@@ -5524,7 +5596,7 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * During attach the child "pci" device is added sychronously; 	 * otherwise, the task is scheduled to manage the child 	 * device. 	 */
+comment|/* 	 * During attach the child "pci" device is added synchronously; 	 * otherwise, the task is scheduled to manage the child 	 * device. 	 */
 if|if
 condition|(
 name|schedule_task

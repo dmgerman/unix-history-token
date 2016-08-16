@@ -11787,6 +11787,12 @@ name|XHCI_CMD_RS
 operator|)
 operator|==
 literal|0
+operator|||
+name|dev
+operator|->
+name|dev_ctx
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(

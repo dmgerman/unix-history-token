@@ -767,19 +767,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ncl_printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ncl_dircookie_lock
 parameter_list|(
 name|struct

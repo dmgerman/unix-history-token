@@ -1513,7 +1513,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"    disk%d:   BIOS drive %c:\n"
+literal|"    disk%d:   BIOS drive %c (%ju X %u):\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1551,6 +1551,23 @@ name|bd_unit
 operator|-
 literal|0x80
 operator|)
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bdinfo
+index|[
+name|i
+index|]
+operator|.
+name|bd_sectors
+argument_list|,
+name|bdinfo
+index|[
+name|i
+index|]
+operator|.
+name|bd_sectorsize
 argument_list|)
 expr_stmt|;
 if|if

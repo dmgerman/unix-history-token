@@ -15305,14 +15305,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|umtxq_signal
-argument_list|(
-operator|&
-name|key
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Check if count is greater than 0, this means the memory is 		 * still being referenced by user code, so we can safely 		 * update _has_waiters flag. 		 */
 if|if
 condition|(
@@ -15357,6 +15349,14 @@ operator|=
 name|EFAULT
 expr_stmt|;
 block|}
+name|umtxq_signal
+argument_list|(
+operator|&
+name|key
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|umtxq_unbusy
 argument_list|(
@@ -15947,14 +15947,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|umtxq_signal
-argument_list|(
-operator|&
-name|key
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If this was the last sleeping thread, clear the waiters 		 * flag in _count. 		 */
 if|if
 condition|(
@@ -16031,6 +16023,14 @@ name|key
 argument_list|)
 expr_stmt|;
 block|}
+name|umtxq_signal
+argument_list|(
+operator|&
+name|key
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|umtxq_unbusy
 argument_list|(

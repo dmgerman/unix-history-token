@@ -153,8 +153,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstats
-name|newnfsstats
+name|nfsstatsv1
+name|nfsstatsv1
 decl_stmt|;
 end_decl_stmt
 
@@ -411,9 +411,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: called with non-merged cache vnode??\n"
+literal|"ncl_getpages: called with non-merged cache vnode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -465,9 +465,9 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: called on non-cacheable vnode??\n"
+literal|"ncl_getpages: called on non-cacheable vnode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -737,9 +737,9 @@ name|count
 operator|)
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"nfs_getpages: error %d\n"
+literal|"ncl_getpages: error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1196,9 +1196,9 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
-name|ncl_printf
+name|printf
 argument_list|(
-literal|"ncl_putpages: called on noncache-able vnode??\n"
+literal|"ncl_putpages: called on noncache-able vnode\n"
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -2230,7 +2230,7 @@ name|VREG
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|biocache_reads
 argument_list|)
@@ -2630,7 +2630,7 @@ name|VLNK
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|biocache_readlinks
 argument_list|)
@@ -2765,7 +2765,7 @@ name|VDIR
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|biocache_readdirs
 argument_list|)
@@ -3295,7 +3295,7 @@ name|uio_offset
 expr_stmt|;
 break|break;
 default|default:
-name|ncl_printf
+name|printf
 argument_list|(
 literal|" ncl_bioread: type %x unexpected\n"
 argument_list|,
@@ -4898,7 +4898,7 @@ block|}
 block|}
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|biocache_writes
 argument_list|)
@@ -5479,7 +5479,7 @@ operator|>
 name|bcount
 condition|)
 block|{
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"NFS append race @%lx:%d\n"
 argument_list|,
@@ -7534,7 +7534,7 @@ name|DEV_BSIZE
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|read_bios
 argument_list|)
@@ -7702,7 +7702,7 @@ literal|0
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|readlink_bios
 argument_list|)
@@ -7724,7 +7724,7 @@ name|VDIR
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|readdir_bios
 argument_list|)
@@ -7832,7 +7832,7 @@ name|B_INVAL
 expr_stmt|;
 break|break;
 default|default:
-name|ncl_printf
+name|printf
 argument_list|(
 literal|"ncl_doio:  type %x unexpected\n"
 argument_list|,
@@ -8102,7 +8102,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|write_bios
 argument_list|)

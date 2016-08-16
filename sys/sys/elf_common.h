@@ -914,6 +914,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_ARM_AEABI
+value|64
+end_define
+
+begin_comment
+comment|/* ARM EABI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_ARM
 value|97
 end_define
@@ -3739,6 +3750,28 @@ end_define
 
 begin_comment
 comment|/* First processor-specific type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ARM_ARCHEXT
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* ARM arch compat information. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ARM_EXIDX
+value|0x70000001
+end_define
+
+begin_comment
+comment|/* ARM exception unwind tables. */
 end_comment
 
 begin_define

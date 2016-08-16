@@ -701,13 +701,13 @@ name|type
 condition|)
 block|{
 case|case
-name|EXCP_LOAD_ACCESS_FAULT
+name|EXCP_FAULT_LOAD
 case|:
 case|case
-name|EXCP_STORE_ACCESS_FAULT
+name|EXCP_FAULT_STORE
 case|:
 case|case
-name|EXCP_INSTR_ACCESS_FAULT
+name|EXCP_FAULT_FETCH
 case|:
 comment|/* Flag a bad address. */
 name|cpu_core

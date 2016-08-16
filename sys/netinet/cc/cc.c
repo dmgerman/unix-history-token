@@ -956,7 +956,7 @@ name|CTLFLAG_RW
 argument_list|,
 name|NULL
 argument_list|,
-literal|"congestion control related settings"
+literal|"Congestion control related settings"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -984,7 +984,7 @@ name|cc_default_algo
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"default congestion control algorithm"
+literal|"Default congestion control algorithm"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1010,7 +1010,7 @@ name|cc_list_available
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"list available congestion control algorithms"
+literal|"List available congestion control algorithms"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

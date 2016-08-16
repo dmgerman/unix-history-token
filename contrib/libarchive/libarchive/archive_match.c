@@ -3275,7 +3275,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* If something error happend, report it immediately. */
+comment|/* If an error occurred, report it immediately. */
 if|if
 condition|(
 name|r

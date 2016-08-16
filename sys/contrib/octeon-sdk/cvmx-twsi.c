@@ -180,9 +180,7 @@ decl_stmt|;
 name|resource_size_t
 name|regsize
 decl_stmt|;
-name|struct
-name|device
-modifier|*
+name|device_t
 name|dev
 decl_stmt|;
 name|int

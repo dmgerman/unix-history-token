@@ -11130,11 +11130,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vputx: usecount not zero"
-argument_list|,
 name|vp
+argument_list|,
+literal|"vputx: usecount not zero for vnode "
 argument_list|)
 expr_stmt|;
 name|panic
@@ -12956,11 +12956,11 @@ if|if
 condition|(
 name|busyprt
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vflush: busy vnode"
-argument_list|,
 name|vp
+argument_list|,
+literal|"vflush: busy vnode "
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14901,11 +14901,11 @@ argument_list|(
 name|vp
 argument_list|)
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|""
-argument_list|,
 name|vp
+argument_list|,
+literal|"vnode "
 argument_list|)
 expr_stmt|;
 block|}
@@ -19460,6 +19460,39 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|vfs_badlock_vnode
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print vnode details on lock violations. */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vfs_badlock_vnode
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vfs_badlock_vnode
+argument_list|,
+literal|0
+argument_list|,
+literal|"Print vnode details on lock violations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -19537,6 +19570,17 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|vfs_badlock_vnode
+condition|)
+name|vn_printf
+argument_list|(
+name|vp
+argument_list|,
+literal|"vnode "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vfs_badlock_print
@@ -19789,22 +19833,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void assert_vop_elocked_other(struct vnode *vp, const char *str) {  	if (!IGNORE_LOCK(vp)&& VOP_ISLOCKED(vp) != LK_EXCLOTHER) 		vfs_badlock("is not exclusive locked by another thread", 		    str, vp); }  void assert_vop_slocked(struct vnode *vp, const char *str) {  	if (!IGNORE_LOCK(vp)&& VOP_ISLOCKED(vp) != LK_SHARED) 		vfs_badlock("is not locked shared but should be", str, vp); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_endif
 endif|#

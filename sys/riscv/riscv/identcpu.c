@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2015-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Portions of this software were developed by SRI International and the  * University of Cambridge Computer Laboratory under DARPA/AFRL contract  * FA8750-10-C-0237 ("CTSRD"), as part of the DARPA CRASH research programme.  *  * Portions of this software were developed by the University of Cambridge  * Computer Laboratory as part of the CTSRD Project, with support from the  * UK Higher Education Innovation Fund (HEIF).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -157,13 +157,6 @@ name|char
 modifier|*
 name|impl_name
 decl_stmt|;
-comment|/* 	 * Part number is implementation defined 	 * so each vendor will have its own set of values and names. 	 */
-specifier|const
-name|struct
-name|cpu_parts
-modifier|*
-name|cpu_parts
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -172,15 +165,11 @@ begin_define
 define|#
 directive|define
 name|CPU_IMPLEMENTER_NONE
-value|{ 0, "Unknown Implementer", cpu_parts_none }
+value|{ 0, "Unknown Implementer" }
 end_define
 
 begin_comment
-comment|/*  * Per-implementer table of (PartNum, CPU Name) pairs.  */
-end_comment
-
-begin_comment
-comment|/* UC Berkeley */
+comment|/*  * CPU base  */
 end_comment
 
 begin_decl_stmt
@@ -188,52 +177,28 @@ specifier|static
 specifier|const
 name|struct
 name|cpu_parts
-name|cpu_parts_ucb
+name|cpu_parts_std
 index|[]
 init|=
 block|{
 block|{
-name|CPU_PART_RV32I
+name|CPU_PART_RV32
 block|,
-literal|"RV32I"
+literal|"RV32"
 block|}
 block|,
 block|{
-name|CPU_PART_RV32E
+name|CPU_PART_RV64
 block|,
-literal|"RV32E"
+literal|"RV64"
 block|}
 block|,
 block|{
-name|CPU_PART_RV64I
+name|CPU_PART_RV128
 block|,
-literal|"RV64I"
+literal|"RV128"
 block|}
 block|,
-block|{
-name|CPU_PART_RV128I
-block|,
-literal|"RV128I"
-block|}
-block|,
-name|CPU_PART_NONE
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Unknown */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|cpu_parts
-name|cpu_parts_none
-index|[]
-init|=
-block|{
 name|CPU_PART_NONE
 block|, }
 decl_stmt|;
@@ -255,8 +220,6 @@ block|{
 name|CPU_IMPL_UCB_ROCKET
 block|,
 literal|"UC Berkeley Rocket"
-block|,
-name|cpu_parts_ucb
 block|}
 block|,
 name|CPU_IMPLEMENTER_NONE
@@ -287,7 +250,7 @@ name|uint64_t
 name|mimpid
 decl_stmt|;
 name|uint64_t
-name|mcpuid
+name|misa
 decl_stmt|;
 name|u_int
 name|cpu
@@ -299,25 +262,15 @@ name|cpu_partsp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* TODO: can we get mimpid and misa somewhere ? */
 name|mimpid
 operator|=
-name|machine_command
-argument_list|(
-name|ECALL_MIMPID_GET
-argument_list|,
 literal|0
-argument_list|)
 expr_stmt|;
-name|mcpuid
+name|misa
 operator|=
-name|machine_command
-argument_list|(
-name|ECALL_MCPUID_GET
-argument_list|,
 literal|0
-argument_list|)
 expr_stmt|;
-comment|/* SMPTODO: use mhartid ? */
 name|cpu
 operator|=
 name|PCPU_GET
@@ -395,12 +348,7 @@ name|impl_name
 expr_stmt|;
 name|cpu_partsp
 operator|=
-name|cpu_implementers
-index|[
-name|i
-index|]
-operator|.
-name|cpu_parts
+name|cpu_parts_std
 expr_stmt|;
 break|break;
 block|}
@@ -409,7 +357,7 @@ name|part_id
 operator|=
 name|CPU_PART
 argument_list|(
-name|mcpuid
+name|misa
 argument_list|)
 expr_stmt|;
 for|for

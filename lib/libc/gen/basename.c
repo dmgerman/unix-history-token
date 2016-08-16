@@ -246,7 +246,6 @@ name|char
 modifier|*
 name|basename
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|path

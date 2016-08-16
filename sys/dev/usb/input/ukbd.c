@@ -806,6 +806,10 @@ name|sc_accents
 decl_stmt|;
 comment|/* accent key index (> 0) */
 name|int
+name|sc_polling
+decl_stmt|;
+comment|/* polling recursion count */
+name|int
 name|sc_led_size
 decl_stmt|;
 name|int
@@ -9511,9 +9515,29 @@ decl_stmt|;
 name|UKBD_LOCK
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Keep a reference count on polling to allow recursive 	 * cngrab() during a panic for example. 	 */
 if|if
 condition|(
 name|on
+condition|)
+name|sc
+operator|->
+name|sc_polling
+operator|++
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_polling
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_polling
+operator|!=
+literal|0
 condition|)
 block|{
 name|sc

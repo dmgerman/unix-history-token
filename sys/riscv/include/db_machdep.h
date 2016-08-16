@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|T_BREAKPOINT
-value|(EXCP_INSTR_BREAKPOINT)
+value|(EXCP_BREAKPOINT)
 end_define
 
 begin_define

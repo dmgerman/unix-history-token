@@ -3434,6 +3434,12 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
+name|busy_lock
+operator|=
+name|VPB_UNBUSIED
+expr_stmt|;
+name|m
+operator|->
 name|phys_addr
 operator|=
 name|pa

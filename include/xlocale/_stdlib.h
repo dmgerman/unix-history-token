@@ -297,7 +297,7 @@ name|MB_CUR_MAX_L
 parameter_list|(
 name|x
 parameter_list|)
-value|(___mb_cur_max_l(x))
+value|((size_t)___mb_cur_max_l(x))
 end_define
 
 end_unit

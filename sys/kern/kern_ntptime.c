@@ -455,93 +455,47 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|ntpadj_lock
+name|ntp_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|MTX_SYSINIT
 argument_list|(
-argument|ntpadj
+name|ntp
 argument_list|,
-argument|&ntpadj_lock
+operator|&
+name|ntp_lock
 argument_list|,
-literal|"ntpadj"
+literal|"ntp"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|PPS_SYNC
-argument|MTX_SPIN
-else|#
-directive|else
-argument|MTX_DEF
-endif|#
-directive|endif
+name|MTX_SPIN
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/*  * When PPS_SYNC is defined, hardpps() function is provided which can  * be legitimately called from interrupt filters.  Due to this, use  * spinlock for ntptime state protection, otherwise sleepable mutex is  * adequate.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPS_SYNC
-end_ifdef
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
 directive|define
-name|NTPADJ_LOCK
+name|NTP_LOCK
 parameter_list|()
-value|mtx_lock_spin(&ntpadj_lock)
+value|mtx_lock_spin(&ntp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 parameter_list|()
-value|mtx_unlock_spin(&ntpadj_lock)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NTPADJ_LOCK
-parameter_list|()
-value|mtx_lock(&ntpadj_lock)
+value|mtx_unlock_spin(&ntp_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTPADJ_UNLOCK
+name|NTP_ASSERT_LOCKED
 parameter_list|()
-value|mtx_unlock(&ntpadj_lock)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NTPADJ_ASSERT_LOCKED
-parameter_list|()
-value|mtx_assert(&ntpadj_lock, MA_OWNED)
+value|mtx_assert(&ntp_lock, MA_OWNED)
 end_define
 
 begin_ifdef
@@ -950,7 +904,7 @@ name|timespec
 name|atv
 decl_stmt|;
 comment|/* nanosecond time */
-name|NTPADJ_ASSERT_LOCKED
+name|NTP_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 name|nanotime
@@ -1070,7 +1024,7 @@ name|struct
 name|ntptimeval
 name|ntv
 decl_stmt|;
-name|NTPADJ_LOCK
+name|NTP_LOCK
 argument_list|()
 expr_stmt|;
 name|ntp_gettime1
@@ -1079,7 +1033,7 @@ operator|&
 name|ntv
 argument_list|)
 expr_stmt|;
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 argument_list|()
 expr_stmt|;
 name|td
@@ -1127,7 +1081,7 @@ name|ntptimeval
 name|ntv
 decl_stmt|;
 comment|/* temporary structure */
-name|NTPADJ_LOCK
+name|NTP_LOCK
 argument_list|()
 expr_stmt|;
 name|ntp_gettime1
@@ -1136,7 +1090,7 @@ operator|&
 name|ntv
 argument_list|)
 expr_stmt|;
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1454,7 +1408,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|NTPADJ_LOCK
+name|NTP_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -1978,7 +1932,7 @@ name|TIME_ERROR
 else|:
 name|time_state
 expr_stmt|;
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -2051,6 +2005,9 @@ name|l_fp
 name|ftemp
 decl_stmt|;
 comment|/* 32/64-bit temporary */
+name|NTP_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * On rollover of the second both the nanosecond and microsecond 	 * clocks are updated and the state machine cranked as 	 * necessary. The phase adjustment to be used for the next 	 * second is calculated and the maximum error is increased by 	 * the tolerance. 	 */
 name|time_maxerror
 operator|+=
@@ -2390,6 +2347,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PPS_SYNC */
+name|NTP_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2520,7 +2480,7 @@ decl_stmt|;
 name|l_fp
 name|ftemp
 decl_stmt|;
-name|NTPADJ_ASSERT_LOCKED
+name|NTP_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Select how the phase is to be controlled and from which 	 * source. If the PPS signal is present and enabled to 	 * discipline the time, the PPS offset is used; otherwise, the 	 * argument offset is used. 	 */
@@ -2796,7 +2756,7 @@ comment|/* temps */
 name|l_fp
 name|ftemp
 decl_stmt|;
-name|NTPADJ_LOCK
+name|NTP_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * The signal is first processed by a range gate and frequency 	 * discriminator. The range gate rejects noise spikes outside 	 * the range +-500 us. The frequency discriminator rejects input 	 * signals with apparent frequency outside the range 1 +-500 	 * PPM. If two hits occur in the same second, we ignore the 	 * later hit; if not and a hit occurs outside the range gate, 	 * keep the later hit for later comparison, but do not process 	 * it. 	 */
@@ -3615,7 +3575,7 @@ name|pps_freq
 expr_stmt|;
 name|out
 label|:
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -3856,7 +3816,7 @@ operator|->
 name|tv_usec
 expr_stmt|;
 block|}
-name|NTPADJ_LOCK
+name|NTP_LOCK
 argument_list|()
 expr_stmt|;
 name|ltr
@@ -3873,7 +3833,7 @@ name|time_adjtime
 operator|=
 name|ltw
 expr_stmt|;
-name|NTPADJ_UNLOCK
+name|NTP_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if

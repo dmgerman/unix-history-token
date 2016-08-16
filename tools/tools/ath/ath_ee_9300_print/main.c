@@ -221,11 +221,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| pwrTableOffset: %d dB, feature_enable: 0x%02x MiscConfig: 0x%02x |\n"
+literal|"| pwrTableOffset: %d dB, TuningCaps=0x%02x 0x%02x feature_enable: 0x%02x MiscConfig: 0x%02x |\n"
 argument_list|,
 name|ee_base
 operator|->
 name|pwrTableOffset
+argument_list|,
+name|ee_base
+operator|->
+name|params_for_tuning_caps
+index|[
+literal|0
+index|]
+argument_list|,
+name|ee_base
+operator|->
+name|params_for_tuning_caps
+index|[
+literal|1
+index|]
 argument_list|,
 name|ee_base
 operator|->

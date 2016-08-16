@@ -2631,6 +2631,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|fdatasync
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * ftruncate() was in the POSIX Realtime Extension (it's used for shared  * memory), but truncate() was not.  */
 end_comment
@@ -3421,6 +3430,25 @@ begin_comment
 comment|/* select(2) */
 end_comment
 
+begin_struct
+struct|struct
+name|crypt_data
+block|{
+name|int
+name|initialized
+decl_stmt|;
+comment|/* For compatibility with glibc. */
+name|char
+name|__buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* Buffer returned by crypt_r(). */
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|int
 name|acct
@@ -3459,6 +3487,26 @@ modifier|*
 name|crypt_get_format
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|crypt_r
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|crypt_data
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -8530,6 +8530,11 @@ operator|=
 name|msdosfs_fsync
 block|,
 operator|.
+name|vop_fdatasync
+operator|=
+name|vop_stdfdatasync_buf
+block|,
+operator|.
 name|vop_getattr
 operator|=
 name|msdosfs_getattr

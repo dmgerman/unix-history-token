@@ -537,6 +537,8 @@ name|INTERPOS_ppoll
 block|,
 name|INTERPOS_map_stacks_exec
 block|,
+name|INTERPOS_fdatasync
+block|,
 name|INTERPOS_MAX
 block|}
 enum|;
@@ -638,6 +640,19 @@ end_comment
 begin_function_decl
 name|void
 name|_malloc_thread_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * This function is used by the threading libraries to notify libc that a  * thread is exiting, so its thread-local dtors should be called.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__cxa_thread_call_dtors
 parameter_list|(
 name|void
 parameter_list|)
@@ -916,6 +931,15 @@ parameter_list|,
 name|int
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_fdatasync
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

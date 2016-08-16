@@ -1954,6 +1954,9 @@ operator|->
 name|header
 operator|.
 name|partition_name
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(

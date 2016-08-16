@@ -340,29 +340,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|table_fill_ntlv
-parameter_list|(
-name|ipfw_obj_ntlv
-modifier|*
-name|ntlv
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|uint32_t
-name|set
-parameter_list|,
-name|uint16_t
-name|uidx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|table_flush_one
 parameter_list|(
@@ -921,7 +898,7 @@ name|char
 modifier|*
 name|tablename
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|set
 decl_stmt|;
 name|void
@@ -1257,13 +1234,36 @@ argument_list|(
 operator|&
 name|oh
 argument_list|)
-operator|!=
+operator|==
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
+literal|"failed to destroy table %s"
+argument_list|,
+name|tablename
+argument_list|)
+expr_stmt|;
+comment|/* ESRCH isn't fatal, warn if not quiet mode */
+if|if
+condition|(
+name|co
+operator|.
+name|do_quiet
+operator|==
+literal|0
+condition|)
+name|warn
+argument_list|(
 literal|"failed to destroy table %s"
 argument_list|,
 name|tablename
@@ -1291,13 +1291,36 @@ operator|&
 name|oh
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
+literal|"failed to flush table %s info"
+argument_list|,
+name|tablename
+argument_list|)
+expr_stmt|;
+comment|/* ESRCH isn't fatal, warn if not quiet mode */
+if|if
+condition|(
+name|co
+operator|.
+name|do_quiet
+operator|==
+literal|0
+condition|)
+name|warn
+argument_list|(
 literal|"failed to flush table %s info"
 argument_list|,
 name|tablename
@@ -1331,6 +1354,7 @@ argument_list|,
 literal|"failed to flush tables list"
 argument_list|)
 expr_stmt|;
+comment|/* XXX: we ignore errors here */
 block|}
 break|break;
 case|case
@@ -1565,7 +1589,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|table_fill_ntlv
 parameter_list|(
@@ -1578,7 +1601,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|uint32_t
+name|uint8_t
 name|set
 parameter_list|,
 name|uint16_t
@@ -3073,9 +3096,6 @@ modifier|*
 name|second
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|table_check_name
@@ -3094,18 +3114,25 @@ argument_list|,
 name|second
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|table_do_swap
 argument_list|(
 name|oh
 argument_list|,
 name|second
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 switch|switch
 condition|(
-name|error
+name|errno
 condition|)
 block|{
 case|case

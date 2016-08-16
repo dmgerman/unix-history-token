@@ -2330,7 +2330,7 @@ name|p
 operator|->
 name|addr
 expr_stmt|;
-comment|/* const void * */
+comment|/* void * */
 name|uarg
 index|[
 literal|1
@@ -18332,6 +18332,35 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
+comment|/* fdatasync */
+case|case
+literal|550
+case|:
+block|{
+name|struct
+name|fdatasync_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -19991,7 +20020,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"void *"
 expr_stmt|;
 break|break;
 case|case
@@ -31491,6 +31520,28 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* fdatasync */
+case|case
+literal|550
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -38521,6 +38572,25 @@ break|break;
 comment|/* numa_setaffinity */
 case|case
 literal|549
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* fdatasync */
+case|case
+literal|550
 case|:
 if|if
 condition|(

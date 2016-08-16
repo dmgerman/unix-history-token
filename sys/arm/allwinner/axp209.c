@@ -3379,9 +3379,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_PASS_RESOURCE
+name|BUS_PASS_INTERRUPT
 operator|+
-name|BUS_PASS_ORDER_MIDDLE
+name|BUS_PASS_ORDER_LATE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3401,15 +3401,15 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_PASS_RESOURCE
+name|BUS_PASS_INTERRUPT
 operator|+
-name|BUS_PASS_ORDER_MIDDLE
+name|BUS_PASS_ORDER_LATE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|EARLY_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|gpioc
 argument_list|,
@@ -3422,10 +3422,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-name|BUS_PASS_RESOURCE
-operator|+
-name|BUS_PASS_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

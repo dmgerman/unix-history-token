@@ -203,6 +203,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -3150,6 +3156,33 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|SV_PROC_FLAG
+argument_list|(
+name|p
+argument_list|,
+name|SV_LP64
+argument_list|)
+condition|)
+name|p
+operator|->
+name|p_model
+operator|=
+name|DATAMODEL_LP64
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|p_model
+operator|=
+name|DATAMODEL_ILP32
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If the ISA-dependent initialization goes to plan, go back to the 	 * beginning and try to install this freshly made tracepoint. 	 */
 if|if
 condition|(

@@ -286,6 +286,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|shmatt_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|shmid_ds
@@ -307,7 +315,7 @@ name|pid_t
 name|shm_cpid
 decl_stmt|;
 comment|/* process ID of creator */
-name|int
+name|shmatt_t
 name|shm_nattch
 decl_stmt|;
 comment|/* number of current attaches */

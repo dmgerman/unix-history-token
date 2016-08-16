@@ -592,7 +592,7 @@ operator|.
 name|bs_r_1
 operator|=
 name|ehci_bs_r_1
-operator|,
+expr_stmt|;
 name|isc
 operator|->
 name|tag
@@ -600,7 +600,7 @@ operator|.
 name|bs_r_2
 operator|=
 name|ehci_bs_r_2
-operator|,
+expr_stmt|;
 name|isc
 operator|->
 name|tag
@@ -608,7 +608,7 @@ operator|.
 name|bs_r_4
 operator|=
 name|ehci_bs_r_4
-operator|,
+expr_stmt|;
 comment|/* write (single) */
 name|isc
 operator|->
@@ -617,7 +617,7 @@ operator|.
 name|bs_w_1
 operator|=
 name|ehci_bs_w_1
-operator|,
+expr_stmt|;
 name|isc
 operator|->
 name|tag
@@ -625,7 +625,7 @@ operator|.
 name|bs_w_2
 operator|=
 name|ehci_bs_w_2
-operator|,
+expr_stmt|;
 name|isc
 operator|->
 name|tag
@@ -633,7 +633,7 @@ operator|.
 name|bs_w_4
 operator|=
 name|ehci_bs_w_4
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|sc_io_tag

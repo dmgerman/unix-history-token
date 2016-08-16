@@ -1575,19 +1575,18 @@ goto|;
 case|case
 name|T_DNA
 case|:
-name|KASSERT
-argument_list|(
-operator|!
+if|if
+condition|(
 name|PCB_USER_FPU
 argument_list|(
 name|td
 operator|->
 name|td_pcb
 argument_list|)
-argument_list|,
-operator|(
+condition|)
+name|panic
+argument_list|(
 literal|"Unregistered use of FPU in kernel"
-operator|)
 argument_list|)
 expr_stmt|;
 name|fpudna

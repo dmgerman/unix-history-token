@@ -21,18 +21,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -62,6 +50,16 @@ name|rd_err_e
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* XXX struct rd_agent should be private. */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|procstat
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -80,6 +78,11 @@ name|rda_preinit_addr
 decl_stmt|;
 name|uintptr_t
 name|rda_postinit_addr
+decl_stmt|;
+name|struct
+name|procstat
+modifier|*
+name|rda_procstat
 decl_stmt|;
 block|}
 name|rd_agent_t

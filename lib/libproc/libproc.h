@@ -391,6 +391,20 @@ name|lwpstatus_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|PR_MODEL_ILP32
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_MODEL_LP64
+value|2
+end_define
+
 begin_comment
 comment|/* Function prototype definitions. */
 end_comment
@@ -676,6 +690,17 @@ end_function_decl
 begin_function_decl
 name|int
 name|proc_state
+parameter_list|(
+name|struct
+name|proc_handle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|proc_getmodel
 parameter_list|(
 name|struct
 name|proc_handle

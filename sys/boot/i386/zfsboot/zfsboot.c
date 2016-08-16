@@ -2707,7 +2707,7 @@ name|dsk
 operator|->
 name|part
 argument_list|)
-operator|,
+expr_stmt|;
 comment|/* Process configuration file */
 name|autoboot
 operator|=

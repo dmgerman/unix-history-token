@@ -122,12 +122,6 @@ directive|include
 file|<stdbool.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_WITH_GETLINE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -486,17 +480,9 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|calendarHomes
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|calendarHomes
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|i

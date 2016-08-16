@@ -110,7 +110,24 @@ block|,
 name|I40E_VIRTCHNL_OP_EVENT
 init|=
 literal|17
-block|, }
+block|,
+comment|/* must ALWAYS be 17 */
+name|I40E_VIRTCHNL_OP_CONFIG_RSS_KEY
+init|=
+literal|23
+block|,
+name|I40E_VIRTCHNL_OP_CONFIG_RSS_LUT
+init|=
+literal|24
+block|,
+name|I40E_VIRTCHNL_OP_GET_RSS_HENA_CAPS
+init|=
+literal|25
+block|,
+name|I40E_VIRTCHNL_OP_SET_RSS_HENA
+init|=
+literal|26
+block|,  }
 enum|;
 end_enum
 
@@ -292,6 +309,13 @@ name|I40E_VIRTCHNL_VF_OFFLOAD_RSS_PCTYPE_V2
 value|0x00040000
 end_define
 
+begin_define
+define|#
+directive|define
+name|I40E_VIRTCHNL_VF_OFFLOAD_RSS_PF
+value|0X00080000
+end_define
+
 begin_struct
 struct|struct
 name|i40e_virtchnl_vf_resource
@@ -312,10 +336,10 @@ name|u32
 name|vf_offload_flags
 decl_stmt|;
 name|u32
-name|max_fcoe_contexts
+name|rss_key_size
 decl_stmt|;
 name|u32
-name|max_fcoe_filters
+name|rss_lut_size
 decl_stmt|;
 name|struct
 name|i40e_virtchnl_vsi_resource
@@ -634,6 +658,67 @@ end_define
 begin_comment
 comment|/* I40E_VIRTCHNL_OP_GET_STATS  * VF sends this message to request stats for the selected VSI. VF uses  * the i40e_virtchnl_queue_select struct to specify the VSI. The queue_id  * field is ignored by the PF.  *  * PF replies with struct i40e_eth_stats in an external buffer.  */
 end_comment
+
+begin_comment
+comment|/* I40E_VIRTCHNL_OP_CONFIG_RSS_KEY  * I40E_VIRTCHNL_OP_CONFIG_RSS_LUT  * VF sends these messages to configure RSS. Only supported if both PF  * and VF drivers set the I40E_VIRTCHNL_VF_OFFLOAD_RSS_PF bit during  * configuration negotiation. If this is the case, then the rss fields in  * the vf resource struct are valid.  * Both the key and LUT are initialized to 0 by the PF, meaning that  * RSS is effectively disabled until set up by the VF.  */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_virtchnl_rss_key
+block|{
+name|u16
+name|vsi_id
+decl_stmt|;
+name|u16
+name|key_len
+decl_stmt|;
+name|u8
+name|key
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* RSS hash key, packed bytes */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|i40e_virtchnl_rss_lut
+block|{
+name|u16
+name|vsi_id
+decl_stmt|;
+name|u16
+name|lut_entries
+decl_stmt|;
+name|u8
+name|lut
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* RSS lookup table*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* I40E_VIRTCHNL_OP_GET_RSS_HENA_CAPS  * I40E_VIRTCHNL_OP_SET_RSS_HENA  * VF sends these messages to get and set the hash filter enable bits for RSS.  * By default, the PF sets these to all possible traffic types that the  * hardware supports. The VF can query this value if it wants to change the  * traffic types that are hashed by the hardware.  * Traffic types are defined in the i40e_filter_pctype enum in i40e_type.h  */
+end_comment
+
+begin_struct
+struct|struct
+name|i40e_virtchnl_rss_hena
+block|{
+name|u64
+name|hena
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* I40E_VIRTCHNL_OP_EVENT  * PF sends this message to inform the VF driver of events that may affect it.  * No direct response is expected from the VF, though it may generate other  * messages in response to this one.  */

@@ -602,6 +602,24 @@ name|d_flags
 operator||=
 name|DISKFLAG_OPEN
 expr_stmt|;
+comment|/* 		 * Do not invoke resize event when initial size was zero. 		 * Some disks report its size only after first opening. 		 */
+if|if
+condition|(
+name|pp
+operator|->
+name|mediasize
+operator|==
+literal|0
+condition|)
+name|pp
+operator|->
+name|mediasize
+operator|=
+name|dp
+operator|->
+name|d_mediasize
+expr_stmt|;
+else|else
 name|g_resize_provider
 argument_list|(
 name|pp

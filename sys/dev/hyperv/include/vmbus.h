@@ -21,6 +21,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
 begin_comment
 comment|/*  * VMBUS version is 32 bit, upper 16 bit for major_number and lower  * 16 bit for minor_number.  *  * 0.13  --  Windows Server 2008  * 1.1   --  Windows 7  * 2.4   --  Windows 8  * 3.0   --  Windows 8.1  */
 end_comment
@@ -197,6 +203,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANPKT_FLAG_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHANPKT_FLAG_RC
 value|0x0001
 end_define
@@ -214,6 +227,21 @@ name|pkt
 parameter_list|)
 define|\
 value|(const void *)((const uint8_t *)(pkt) +	\ 	VMBUS_CHANPKT_GETLEN((pkt)->cph_hlen))
+end_define
+
+begin_comment
+comment|/* Include padding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_DATALEN
+parameter_list|(
+name|pkt
+parameter_list|)
+define|\
+value|(VMBUS_CHANPKT_GETLEN((pkt)->cph_tlen) -\ 	 VMBUS_CHANPKT_GETLEN((pkt)->cph_hlen))
 end_define
 
 begin_struct
@@ -257,20 +285,6 @@ block|}
 name|__packed
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CHAN_SGLIST_MAX
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CHAN_PRPLIST_MAX
-value|32
-end_define
 
 begin_struct_decl
 struct_decl|struct

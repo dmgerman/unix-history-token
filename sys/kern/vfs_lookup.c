@@ -3122,11 +3122,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMEI_DIAGNOSTIC
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"lookup in"
-argument_list|,
 name|dp
+argument_list|,
+literal|"lookup in "
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4359,11 +4359,11 @@ comment|/* 	 * We now have a segment name to search for, and a directory to sear
 ifdef|#
 directive|ifdef
 name|NAMEI_DIAGNOSTIC
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"search in:"
-argument_list|,
 name|dp
+argument_list|,
+literal|"search in "
 argument_list|)
 expr_stmt|;
 endif|#

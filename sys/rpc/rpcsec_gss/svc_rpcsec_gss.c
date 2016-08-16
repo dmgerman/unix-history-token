@@ -2187,6 +2187,10 @@ name|svc_rpc_gss_client_list
 modifier|*
 name|list
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|unsigned
 name|long
 name|hostid
@@ -2208,6 +2212,12 @@ name|td_ucred
 argument_list|,
 operator|&
 name|hostid
+argument_list|)
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
 argument_list|)
 expr_stmt|;
 if|if
@@ -2337,6 +2347,10 @@ name|svc_rpc_gss_client_list
 modifier|*
 name|list
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|unsigned
 name|long
 name|hostid
@@ -2407,6 +2421,12 @@ operator|.
 name|ci_hostid
 operator|=
 name|hostid
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|client
 operator|->

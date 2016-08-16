@@ -40,6 +40,18 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|gtask_fn_t
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|task
@@ -75,10 +87,43 @@ end_struct
 
 begin_struct
 struct|struct
+name|gtask
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|gtask
+argument_list|)
+name|ta_link
+expr_stmt|;
+comment|/* (q) link for queue */
+name|uint16_t
+name|ta_flags
+decl_stmt|;
+comment|/* (q) state flags */
+name|u_short
+name|ta_priority
+decl_stmt|;
+comment|/* (c) Priority */
+name|gtask_fn_t
+modifier|*
+name|ta_func
+decl_stmt|;
+comment|/* (c) task handler */
+name|void
+modifier|*
+name|ta_context
+decl_stmt|;
+comment|/* (c) argument for handler */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|grouptask
 block|{
 name|struct
-name|task
+name|gtask
 name|gt_task
 decl_stmt|;
 name|void

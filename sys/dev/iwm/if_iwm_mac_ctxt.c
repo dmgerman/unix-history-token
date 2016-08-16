@@ -641,13 +641,15 @@ name|iv_myaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX should we error out if in_assoc is 1 and ni == NULL? 	 */
-if|if
-condition|(
-name|in
-operator|->
-name|in_assoc
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if (in->in_assoc) { 		IEEE80211_ADDR_COPY(cmd->bssid_addr, ni->ni_bssid); 	} else {
+comment|/* eth broadcast address */
+block|IEEE80211_ADDR_COPY(cmd->bssid_addr, ieee80211broadcastaddr); 	}
+else|#
+directive|else
+comment|/* 	 * XXX This workaround makes the firmware behave more correctly once 	 *     we are associated, regularly giving us statistics notifications, 	 *     as well as signaling missed beacons to us. 	 *     Since we only call iwm_mvm_mac_ctxt_add() and 	 *     iwm_mvm_mac_ctxt_changed() when already authenticating or 	 *     associating, ni->ni_bssid should always make sense here. 	 */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|cmd
@@ -659,27 +661,8 @@ operator|->
 name|ni_bssid
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* eth broadcast address */
-name|memset
-argument_list|(
-name|cmd
-operator|->
-name|bssid_addr
-argument_list|,
-literal|0xff
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cmd
-operator|->
-name|bssid_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
+endif|#
+directive|endif
 comment|/* 	 * Default to 2ghz if no node information is given. 	 */
 if|if
 condition|(
@@ -1531,11 +1514,7 @@ name|uint32_t
 name|action
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+return|return
 name|iwm_mvm_mac_ctxt_cmd_station
 argument_list|(
 name|sc
@@ -1544,20 +1523,6 @@ name|vap
 argument_list|,
 name|action
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -1675,9 +1640,6 @@ argument_list|(
 name|vap
 argument_list|)
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 if|if
 condition|(
 name|iv
@@ -1704,8 +1666,7 @@ name|EIO
 operator|)
 return|;
 block|}
-name|ret
-operator|=
+return|return
 name|iwm_mvm_mac_ctx_send
 argument_list|(
 name|sc
@@ -1714,20 +1675,6 @@ name|vap
 argument_list|,
 name|IWM_FW_CTXT_ACTION_MODIFY
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
