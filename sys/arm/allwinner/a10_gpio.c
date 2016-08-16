@@ -3478,7 +3478,7 @@ literal|0
 argument_list|,
 name|BUS_PASS_INTERRUPT
 operator|+
-name|BUS_PASS_ORDER_MIDDLE
+name|BUS_PASS_ORDER_LATE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
