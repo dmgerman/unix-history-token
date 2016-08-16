@@ -238,7 +238,19 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printHexImm
+name|printImm
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printImmHex
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

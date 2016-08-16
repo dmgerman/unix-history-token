@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines the AVR subclass for TargetSelectionDAGInfo.
+comment|// This file defines the AVR subclass for SelectionDAGTargetInfo.
 end_comment
 
 begin_comment
@@ -62,19 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/**  * Holds information about the AVR instruction selection DAG.  */
+comment|/// Holds information about the AVR instruction selection DAG.
 name|class
 name|AVRSelectionDAGInfo
 range|:
 name|public
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 block|{
 name|public
 operator|:

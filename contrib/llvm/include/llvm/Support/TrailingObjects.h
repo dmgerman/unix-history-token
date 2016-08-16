@@ -850,7 +850,7 @@ argument_list|()
 condition|?
 name|llvm
 operator|::
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|SizeSoFar
 argument_list|,
@@ -1202,7 +1202,7 @@ return|;
 block|}
 name|public
 label|:
-comment|// make this (privately inherited) class public.
+comment|// Make this (privately inherited) member public.
 name|using
 name|ParentType
 operator|::
@@ -1420,6 +1420,178 @@ operator|...
 argument_list|)
 return|;
 block|}
+comment|/// A type where its ::with_counts template member has a ::type member
+comment|/// suitable for use as uninitialized storage for an object with the given
+comment|/// trailing object counts. The template arguments are similar to those
+comment|/// of additionalSizeToAlloc.
+comment|///
+comment|/// Use with FixedSizeStorageOwner, e.g.:
+comment|///
+comment|/// \code{.cpp}
+comment|///
+comment|/// MyObj::FixedSizeStorage<void *>::with_counts<1u>::type myStackObjStorage;
+comment|/// MyObj::FixedSizeStorageOwner
+comment|///     myStackObjOwner(new ((void *)&myStackObjStorage) MyObj);
+comment|/// MyObj *const myStackObjPtr = myStackObjOwner.get();
+comment|///
+comment|/// \endcode
+name|template
+operator|<
+name|typename
+operator|...
+name|Tys
+operator|>
+expr|struct
+name|FixedSizeStorage
+block|{
+name|template
+operator|<
+name|size_t
+operator|...
+name|Counts
+operator|>
+expr|struct
+name|with_counts
+block|{       enum
+block|{
+name|Size
+operator|=
+name|totalSizeToAlloc
+operator|<
+name|Tys
+operator|...
+operator|>
+operator|(
+name|Counts
+operator|...
+operator|)
+block|}
+block|;
+typedef|typedef
+name|llvm
+operator|::
+name|AlignedCharArray
+operator|<
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|BaseTy
+operator|>
+operator|::
+name|Alignment
+operator|,
+name|Size
+operator|>
+name|type
+expr_stmt|;
+block|}
+block|;   }
+expr_stmt|;
+comment|/// A type that acts as the owner for an object placed into fixed storage.
+name|class
+name|FixedSizeStorageOwner
+block|{
+name|public
+label|:
+name|FixedSizeStorageOwner
+argument_list|(
+name|BaseTy
+operator|*
+name|p
+argument_list|)
+operator|:
+name|p
+argument_list|(
+argument|p
+argument_list|)
+block|{}
+operator|~
+name|FixedSizeStorageOwner
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|p
+operator|&&
+literal|"FixedSizeStorageOwner owns null?"
+argument_list|)
+block|;
+name|p
+operator|->
+expr|~
+name|BaseTy
+argument_list|()
+block|;     }
+name|BaseTy
+operator|*
+name|get
+argument_list|()
+block|{
+return|return
+name|p
+return|;
+block|}
+specifier|const
+name|BaseTy
+operator|*
+name|get
+argument_list|()
+specifier|const
+block|{
+return|return
+name|p
+return|;
+block|}
+name|private
+label|:
+name|FixedSizeStorageOwner
+argument_list|(
+specifier|const
+name|FixedSizeStorageOwner
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|FixedSizeStorageOwner
+argument_list|(
+name|FixedSizeStorageOwner
+operator|&&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|FixedSizeStorageOwner
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|FixedSizeStorageOwner
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|FixedSizeStorageOwner
+modifier|&
+name|operator
+init|=
+operator|(
+name|FixedSizeStorageOwner
+operator|&&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|BaseTy
+modifier|*
+specifier|const
+name|p
+decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

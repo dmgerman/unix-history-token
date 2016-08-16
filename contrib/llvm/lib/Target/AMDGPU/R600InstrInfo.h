@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_R600INSTRINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_R600INSTRINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600INSTRINFO_H
 end_define
 
 begin_include
@@ -72,19 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"R600Defines.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"R600RegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_decl_stmt
@@ -98,9 +86,6 @@ name|class
 name|DFAPacketizer
 decl_stmt|;
 name|class
-name|ScheduleDAG
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -110,7 +95,11 @@ name|class
 name|MachineInstrBuilder
 decl_stmt|;
 name|class
+name|R600Subtarget
+decl_stmt|;
+name|class
 name|R600InstrInfo
+name|final
 range|:
 name|public
 name|AMDGPUInstrInfo
@@ -120,6 +109,11 @@ operator|:
 specifier|const
 name|R600RegisterInfo
 name|RI
+block|;
+specifier|const
+name|R600Subtarget
+operator|&
+name|ST
 block|;
 name|std
 operator|::
@@ -132,11 +126,10 @@ operator|<
 name|int
 block|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|ExtractSrcs
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|const DenseMap<unsigned
 argument_list|,
@@ -204,9 +197,8 @@ name|explicit
 name|R600InstrInfo
 argument_list|(
 specifier|const
-name|AMDGPUSubtarget
+name|R600Subtarget
 operator|&
-name|st
 argument_list|)
 block|;
 specifier|const
@@ -215,8 +207,11 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
-name|override
-block|;
+block|{
+return|return
+name|RI
+return|;
+block|}
 name|void
 name|copyPhysReg
 argument_list|(
@@ -224,7 +219,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -244,20 +239,6 @@ argument|MachineBasicBlock::iterator MBBI
 argument_list|)
 specifier|const
 name|override
-block|;
-name|bool
-name|isTrig
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isPlaceHolderOpcode
-argument_list|(
-argument|unsigned opcode
-argument_list|)
-specifier|const
 block|;
 name|bool
 name|isReductionOp
@@ -296,13 +277,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|isLDSNoRetInstr
-argument_list|(
-argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|isLDSRetInstr
 argument_list|(
 argument|unsigned Opcode
@@ -314,7 +288,7 @@ comment|/// instruction that will be lowered in ExpandSpecialInstrs Pass.
 name|bool
 name|canBeConsideredALU
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -328,7 +302,7 @@ block|;
 name|bool
 name|isTransOnly
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -342,7 +316,7 @@ block|;
 name|bool
 name|isVectorOnly
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -363,7 +337,7 @@ block|;
 name|bool
 name|usesVertexCache
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -377,7 +351,7 @@ block|;
 name|bool
 name|usesTextureCache
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -391,32 +365,21 @@ block|;
 name|bool
 name|usesAddressRegister
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|definesAddressRegister
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|readsLDSSrcReg
 argument_list|(
-argument|const MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-comment|/// \returns The operand index for the given source number.  Legal values
-comment|/// for SrcNum are 0, 1, and 2.
-name|int
-name|getSrcIdx
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|unsigned SrcNum
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -452,7 +415,7 @@ literal|3
 operator|>
 name|getSrcs
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -547,7 +510,6 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
-name|override
 block|;
 name|DFAPacketizer
 operator|*
@@ -567,7 +529,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -593,7 +555,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -609,7 +571,7 @@ block|;
 name|bool
 name|isPredicated
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -617,7 +579,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -671,19 +633,9 @@ block|;
 name|bool
 name|DefinesPredicate
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|std::vector<MachineOperand>&Pred
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|SubsumesPredicate
-argument_list|(
-argument|ArrayRef<MachineOperand> Pred1
-argument_list|,
-argument|ArrayRef<MachineOperand> Pred2
 argument_list|)
 specifier|const
 name|override
@@ -701,7 +653,7 @@ block|;
 name|bool
 name|PredicateInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<MachineOperand> Pred
 argument_list|)
@@ -712,7 +664,7 @@ name|unsigned
 name|int
 name|getPredicationCost
 argument_list|(
-argument|const MachineInstr *
+argument|const MachineInstr&
 argument_list|)
 specifier|const
 name|override
@@ -723,31 +675,17 @@ name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
-name|int
-name|getInstrLatency
-argument_list|(
-argument|const InstrItineraryData *ItinData
-argument_list|,
-argument|SDNode *Node
-argument_list|)
-specifier|const
-name|override
-block|{
-return|return
-literal|1
-return|;
-block|}
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -762,6 +700,13 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// Calculate the "Indirect Address" for the given \p RegIndex and
+comment|/// \p Channel
+comment|///
+comment|/// We model indirect addressing using a virtual address space that can be
+comment|/// accesed with loads and stores.  The "Indirect Address" is the memory
+comment|/// address in this virtual address space that maps to the given \p RegIndex
+comment|/// and \p Channel.
 name|unsigned
 name|calculateIndirectAddress
 argument_list|(
@@ -770,16 +715,37 @@ argument_list|,
 argument|unsigned Channel
 argument_list|)
 specifier|const
-name|override
 block|;
+comment|/// \returns The register class to be used for loading and storing values
+comment|/// from an "Indirect Address" .
 specifier|const
 name|TargetRegisterClass
 operator|*
 name|getIndirectAddrRegClass
 argument_list|()
 specifier|const
-name|override
 block|;
+comment|/// \returns the smallest register index that will be accessed by an indirect
+comment|/// read or write or -1 if indirect addressing is not used by this program.
+name|int
+name|getIndirectIndexBegin
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns the largest register index that will be accessed by an indirect
+comment|/// read or write or -1 if indirect addressing is not used by this program.
+name|int
+name|getIndirectIndexEnd
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Build instruction(s) for an indirect register write.
+comment|///
+comment|/// \returns The instruction that performs the indirect register write
 name|MachineInstrBuilder
 name|buildIndirectWrite
 argument_list|(
@@ -794,8 +760,10 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
-name|override
 block|;
+comment|/// \brief Build instruction(s) for an indirect register read.
+comment|///
+comment|/// \returns The instruction that performs the indirect register read
 name|MachineInstrBuilder
 name|buildIndirectRead
 argument_list|(
@@ -810,17 +778,16 @@ argument_list|,
 argument|unsigned OffsetReg
 argument_list|)
 specifier|const
-name|override
 block|;
 name|unsigned
 name|getMaxAlusPerClause
 argument_list|()
 specifier|const
 block|;
-comment|///buildDefaultInstruction - This function returns a MachineInstr with
-comment|/// all the instruction modifiers initialized to their default values.
-comment|/// You can use this function to avoid manually specifying each instruction
-comment|/// modifier operand when building a new instruction.
+comment|/// buildDefaultInstruction - This function returns a MachineInstr with all
+comment|/// the instruction modifiers initialized to their default values.  You can
+comment|/// use this function to avoid manually specifying each instruction modifier
+comment|/// operand when building a new instruction.
 comment|///
 comment|/// \returns a MachineInstr with all the instruction modifiers initialized
 comment|/// to their default values.
@@ -883,7 +850,6 @@ argument_list|,
 argument|unsigned SrcReg
 argument_list|)
 specifier|const
-name|override
 block|;
 comment|/// \brief Get the index of Op in the MachineInstr.
 comment|///
@@ -913,7 +879,7 @@ comment|/// \brief Helper function for setting instruction flag values.
 name|void
 name|setImmOperand
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Op
 argument_list|,
@@ -921,19 +887,11 @@ argument|int64_t Imm
 argument_list|)
 specifier|const
 block|;
-comment|/// \returns true if this instruction has an operand for storing target flags.
-name|bool
-name|hasFlagOperand
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|)
-specifier|const
-block|;
 comment|///\brief Add one of the MO_FLAG* flags to the specified \p Operand.
 name|void
 name|addFlag
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Operand
 argument_list|,
@@ -961,7 +919,7 @@ name|MachineOperand
 operator|&
 name|getFlagOp
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned SrcIdx =
 literal|0
@@ -975,11 +933,26 @@ comment|/// \brief Clear the specified flag on the instruction.
 name|void
 name|clearFlag
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Operand
 argument_list|,
 argument|unsigned Flag
+argument_list|)
+specifier|const
+block|;
+comment|// Helper functions that check the opcode for status information
+name|bool
+name|isRegisterStore
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isRegisterLoad
+argument_list|(
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|; }

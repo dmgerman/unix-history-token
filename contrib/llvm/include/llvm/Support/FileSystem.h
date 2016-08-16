@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Twine.h"
 end_include
 
@@ -144,19 +150,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/TimeValue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctime>
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iterator>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctime>
 end_include
 
 begin_include
@@ -676,6 +694,9 @@ name|ino_t
 name|fs_st_ino
 decl_stmt|;
 name|time_t
+name|fs_st_atime
+decl_stmt|;
+name|time_t
 name|fs_st_mtime
 decl_stmt|;
 name|uid_t
@@ -693,6 +714,12 @@ name|defined
 argument_list|(
 name|LLVM_ON_WIN32
 argument_list|)
+name|uint32_t
+name|LastAccessedTimeHigh
+decl_stmt|;
+name|uint32_t
+name|LastAccessedTimeLow
+decl_stmt|;
 name|uint32_t
 name|LastWriteTimeHigh
 decl_stmt|;
@@ -754,6 +781,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|fs_st_atime
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|fs_st_mtime
 argument_list|(
 literal|0
@@ -797,6 +829,11 @@ literal|0
 argument_list|)
 operator|,
 name|fs_st_ino
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|fs_st_atime
 argument_list|(
 literal|0
 argument_list|)
@@ -841,6 +878,8 @@ argument|dev_t Dev
 argument_list|,
 argument|ino_t Ino
 argument_list|,
+argument|time_t ATime
+argument_list|,
 argument|time_t MTime
 argument_list|,
 argument|uid_t UID
@@ -858,6 +897,11 @@ operator|,
 name|fs_st_ino
 argument_list|(
 name|Ino
+argument_list|)
+operator|,
+name|fs_st_atime
+argument_list|(
+name|ATime
 argument_list|)
 operator|,
 name|fs_st_mtime
@@ -899,6 +943,16 @@ argument_list|)
 name|file_status
 argument_list|()
 operator|:
+name|LastAccessedTimeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastAccessedTimeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|LastWriteTimeHigh
 argument_list|(
 literal|0
@@ -951,6 +1005,16 @@ argument_list|(
 argument|file_type Type
 argument_list|)
 operator|:
+name|LastAccessedTimeHigh
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastAccessedTimeLow
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|LastWriteTimeHigh
 argument_list|(
 literal|0
@@ -1000,6 +1064,10 @@ name|file_status
 argument_list|(
 argument|file_type Type
 argument_list|,
+argument|uint32_t LastAccessTimeHigh
+argument_list|,
+argument|uint32_t LastAccessTimeLow
+argument_list|,
 argument|uint32_t LastWriteTimeHigh
 argument_list|,
 argument|uint32_t LastWriteTimeLow
@@ -1015,6 +1083,16 @@ argument_list|,
 argument|uint32_t FileIndexLow
 argument_list|)
 operator|:
+name|LastAccessedTimeHigh
+argument_list|(
+name|LastAccessTimeHigh
+argument_list|)
+operator|,
+name|LastAccessedTimeLow
+argument_list|(
+name|LastAccessTimeLow
+argument_list|)
+operator|,
 name|LastWriteTimeHigh
 argument_list|(
 name|LastWriteTimeHigh
@@ -1081,6 +1159,11 @@ return|return
 name|Perms
 return|;
 block|}
+name|TimeValue
+name|getLastAccessedTime
+argument_list|()
+specifier|const
+expr_stmt|;
 name|TimeValue
 name|getLastModificationTime
 argument_list|()
@@ -1287,12 +1370,8 @@ specifier|const
 block|{
 return|return
 name|V
-operator|==
+operator|!=
 name|unknown
-operator|?
-name|false
-operator|:
-name|true
 return|;
 block|}
 name|file_magic
@@ -2125,6 +2204,20 @@ operator|&
 name|ResultPath
 argument_list|)
 expr_stmt|;
+comment|/// @brief Fetch a path to an open file, as specified by a file descriptor
+comment|///
+comment|/// @param FD File descriptor to a currently open file
+comment|/// @param ResultPath The buffer into which to write the path
+name|std
+operator|::
+name|error_code
+name|getPathFromOpenFD
+argument_list|(
+argument|int FD
+argument_list|,
+argument|SmallVectorImpl<char>&ResultPath
+argument_list|)
+expr_stmt|;
 enum|enum
 name|OpenFlags
 enum|:
@@ -2238,6 +2331,15 @@ argument_list|,
 name|int
 operator|&
 name|ResultFD
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RealPath
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// @brief Identify the type of a binary file based on how magical it is.
@@ -2277,6 +2379,27 @@ argument_list|(
 argument|const Twine Path
 argument_list|,
 argument|UniqueID&Result
+argument_list|)
+expr_stmt|;
+comment|/// @brief Get disk space usage information.
+comment|///
+comment|/// Note: Users must be careful about "Time Of Check, Time Of Use" kind of bug.
+comment|/// Note: Windows reports results according to the quota allocated to the user.
+comment|///
+comment|/// @param Path Input path.
+comment|/// @returns a space_info structure filled with the capacity, free, and
+comment|/// available space on the device \a Path is on. A platform specific error_code
+comment|/// is returned on error.
+name|ErrorOr
+operator|<
+name|space_info
+operator|>
+name|disk_space
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+name|Path
 argument_list|)
 expr_stmt|;
 comment|/// This class represents a memory mapped file. It is based on
@@ -2664,6 +2787,7 @@ name|CurrentEntry
 block|;   }
 decl_stmt|;
 block|}
+comment|// end namespace detail
 comment|/// directory_iterator - Iterates through the entries in path. There is no
 comment|/// operator++ because we need an error_code. If it's really needed we can make
 comment|/// it call report_fatal_error on error.
@@ -2976,6 +3100,10 @@ block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace detail
+end_comment
 
 begin_comment
 comment|/// recursive_directory_iterator - Same as directory_iterator except for it
@@ -3518,6 +3646,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_FILESYSTEM_H
+end_comment
 
 end_unit
 

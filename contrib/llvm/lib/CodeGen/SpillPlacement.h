@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SparseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -224,6 +230,13 @@ comment|/// Decision threshold. A node gets the output value 0 if the weighted s
 comment|/// its inputs falls in the open interval (-Threshold;Threshold).
 name|BlockFrequency
 name|Threshold
+block|;
+comment|/// List of nodes that need to be updated in ::iterate.
+name|SparseSet
+operator|<
+name|unsigned
+operator|>
+name|TodoList
 block|;
 name|public
 operator|:
@@ -445,6 +458,12 @@ specifier|const
 name|BlockFrequency
 operator|&
 name|Entry
+argument_list|)
+block|;
+name|bool
+name|update
+argument_list|(
+name|unsigned
 argument_list|)
 block|; }
 decl_stmt|;

@@ -96,6 +96,9 @@ name|class
 name|MCFragment
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|MCSymbolRefExpr
 decl_stmt|;
 name|class

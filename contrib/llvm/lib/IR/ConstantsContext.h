@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -109,18 +109,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tuple>
 end_include
 
 begin_define
@@ -1105,6 +1093,10 @@ name|Type
 operator|*
 name|SrcElementTy
 block|;
+name|Type
+operator|*
+name|ResElementTy
+block|;
 name|void
 name|anchor
 argument_list|()
@@ -1134,50 +1126,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-specifier|static
-name|GetElementPtrConstantExpr
-operator|*
-name|Create
-argument_list|(
-argument|Constant *C
-argument_list|,
-argument|ArrayRef<Constant*> IdxList
-argument_list|,
-argument|Type *DestTy
-argument_list|,
-argument|unsigned Flags
-argument_list|)
-block|{
-return|return
-name|Create
-argument_list|(
-name|cast
-operator|<
-name|PointerType
-operator|>
-operator|(
-name|C
-operator|->
-name|getType
-argument_list|()
-operator|->
-name|getScalarType
-argument_list|()
-operator|)
-operator|->
-name|getElementType
-argument_list|()
-argument_list|,
-name|C
-argument_list|,
-name|IdxList
-argument_list|,
-name|DestTy
-argument_list|,
-name|Flags
-argument_list|)
-return|;
-block|}
 specifier|static
 name|GetElementPtrConstantExpr
 operator|*
@@ -1227,6 +1175,12 @@ block|}
 name|Type
 operator|*
 name|getSourceElementType
+argument_list|()
+specifier|const
+block|;
+name|Type
+operator|*
+name|getResultElementType
 argument_list|()
 specifier|const
 block|;
@@ -3246,6 +3200,24 @@ name|LookupKey
 expr_stmt|;
 end_typedef
 
+begin_comment
+comment|/// Key and hash together, so that we compute the hash only once and reuse it.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|LookupKey
+operator|>
+name|LookupKeyHashed
+expr_stmt|;
+end_typedef
+
 begin_label
 name|private
 label|:
@@ -3306,7 +3278,7 @@ operator|<
 name|Constant
 operator|*
 operator|,
-literal|8
+literal|32
 operator|>
 name|Storage
 expr_stmt|;
@@ -3378,6 +3350,22 @@ argument_list|)
 return|;
 block|}
 specifier|static
+name|unsigned
+name|getHashValue
+parameter_list|(
+specifier|const
+name|LookupKeyHashed
+modifier|&
+name|Val
+parameter_list|)
+block|{
+return|return
+name|Val
+operator|.
+name|first
+return|;
+block|}
+specifier|static
 name|bool
 name|isEqual
 parameter_list|(
@@ -3429,6 +3417,32 @@ operator|==
 name|RHS
 return|;
 block|}
+specifier|static
+name|bool
+name|isEqual
+parameter_list|(
+specifier|const
+name|LookupKeyHashed
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|ConstantClass
+modifier|*
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|isEqual
+argument_list|(
+name|LHS
+operator|.
+name|second
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 end_struct
@@ -3440,12 +3454,10 @@ end_label
 
 begin_typedef
 typedef|typedef
-name|DenseMap
+name|DenseSet
 operator|<
 name|ConstantClass
 operator|*
-operator|,
-name|char
 operator|,
 name|MapInfo
 operator|>
@@ -3474,7 +3486,7 @@ name|typename
 name|MapTy
 operator|::
 name|iterator
-name|map_begin
+name|begin
 argument_list|()
 block|{
 return|return
@@ -3491,7 +3503,7 @@ name|typename
 name|MapTy
 operator|::
 name|iterator
-name|map_end
+name|end
 argument_list|()
 block|{
 return|return
@@ -3516,12 +3528,10 @@ name|I
 operator|:
 name|Map
 control|)
-comment|// Asserts that use_empty().
 name|delete
 name|I
-operator|.
-name|first
 decl_stmt|;
+comment|// Asserts that use_empty().
 block|}
 end_function
 
@@ -3541,6 +3551,10 @@ name|Ty
 parameter_list|,
 name|ValType
 name|V
+parameter_list|,
+name|LookupKeyHashed
+modifier|&
+name|HashKey
 parameter_list|)
 block|{
 name|ConstantClass
@@ -3566,9 +3580,13 @@ operator|&&
 literal|"Type specified is not correct!"
 argument_list|)
 expr_stmt|;
-name|insert
+name|Map
+operator|.
+name|insert_as
 argument_list|(
 name|Result
+argument_list|,
+name|HashKey
 argument_list|)
 expr_stmt|;
 return|return
@@ -3600,11 +3618,25 @@ name|V
 parameter_list|)
 block|{
 name|LookupKey
-name|Lookup
+name|Key
 argument_list|(
 name|Ty
 argument_list|,
 name|V
+argument_list|)
+decl_stmt|;
+comment|/// Hash once, and reuse it for the lookup and the insertion if needed.
+name|LookupKeyHashed
+name|Lookup
+argument_list|(
+name|MapInfo
+operator|::
+name|getHashValue
+argument_list|(
+name|Key
+argument_list|)
+argument_list|,
+name|Key
 argument_list|)
 decl_stmt|;
 name|ConstantClass
@@ -3616,7 +3648,9 @@ decl_stmt|;
 name|auto
 name|I
 init|=
-name|find
+name|Map
+operator|.
+name|find_as
 argument_list|(
 name|Lookup
 argument_list|)
@@ -3637,14 +3671,15 @@ argument_list|(
 name|Ty
 argument_list|,
 name|V
+argument_list|,
+name|Lookup
 argument_list|)
 expr_stmt|;
 else|else
 name|Result
 operator|=
+operator|*
 name|I
-operator|->
-name|first
 expr_stmt|;
 name|assert
 argument_list|(
@@ -3656,54 +3691,6 @@ expr_stmt|;
 return|return
 name|Result
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/// Find the constant by lookup key.
-end_comment
-
-begin_expr_stmt
-name|typename
-name|MapTy
-operator|::
-name|iterator
-name|find
-argument_list|(
-argument|LookupKey Lookup
-argument_list|)
-block|{
-return|return
-name|Map
-operator|.
-name|find_as
-argument_list|(
-name|Lookup
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Insert the constant into its proper slot.
-end_comment
-
-begin_function
-name|void
-name|insert
-parameter_list|(
-name|ConstantClass
-modifier|*
-name|CP
-parameter_list|)
-block|{
-name|Map
-index|[
-name|CP
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 end_function
 
@@ -3747,9 +3734,8 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+operator|*
 name|I
-operator|->
-name|first
 operator|==
 name|CP
 operator|&&
@@ -3803,7 +3789,7 @@ literal|0u
 argument_list|)
 block|{
 name|LookupKey
-name|Lookup
+name|Key
 argument_list|(
 name|CP
 operator|->
@@ -3818,10 +3804,26 @@ name|CP
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/// Hash once, and reuse it for the lookup and the insertion if needed.
+name|LookupKeyHashed
+name|Lookup
+argument_list|(
+name|MapInfo
+operator|::
+name|getHashValue
+argument_list|(
+name|Key
+argument_list|)
+argument_list|,
+name|Key
+argument_list|)
+decl_stmt|;
 name|auto
 name|I
 init|=
-name|find
+name|Map
+operator|.
+name|find_as
 argument_list|(
 name|Lookup
 argument_list|)
@@ -3836,9 +3838,8 @@ name|end
 argument_list|()
 condition|)
 return|return
+operator|*
 name|I
-operator|->
-name|first
 return|;
 comment|// Update to the new value.  Optimize for the case when we have a single
 comment|// operand that we're changing, but handle bulk updates efficiently.
@@ -3934,9 +3935,13 @@ name|To
 argument_list|)
 expr_stmt|;
 block|}
-name|insert
+name|Map
+operator|.
+name|insert_as
 argument_list|(
 name|CP
+argument_list|,
+name|Lookup
 argument_list|)
 expr_stmt|;
 return|return

@@ -667,6 +667,15 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
+comment|/// The next unique ID to use when creating a WinCFI-related section (.pdata
+comment|/// or .xdata). This ID ensures that we have a one-to-one mapping from
+comment|/// code section to unwind info section, which MSVC's incremental linker
+comment|/// requires.
+name|unsigned
+name|NextWinCFIID
+init|=
+literal|0
+decl_stmt|;
 name|protected
 label|:
 name|MCStreamer
@@ -812,6 +821,10 @@ return|return
 name|DwarfFrameInfos
 return|;
 block|}
+name|bool
+name|hasUnfinishedDwarfFrameInfo
+parameter_list|()
+function_decl|;
 name|unsigned
 name|getNumWinFrameInfos
 parameter_list|()
@@ -884,7 +897,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/// \brief Add a textual command.
+comment|/// \brief Add a textual comment.
 comment|///
 comment|/// Typically for comments that can be emitted to the generated .s
 comment|/// file if applicable as a QoI issue to make the output of the compiler
@@ -930,6 +943,24 @@ name|TabPrefix
 init|=
 name|true
 parameter_list|)
+function_decl|;
+comment|/// \brief Add explicit comment T. T is required to be a valid
+comment|/// comment in the output and does not need to be escaped.
+name|virtual
+name|void
+name|addExplicitComment
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit added explicit comments.
+name|virtual
+name|void
+name|emitExplicitComments
+parameter_list|()
 function_decl|;
 comment|/// AddBlankLine - Emit a blank line to a .s file to pretty it up.
 name|virtual
@@ -2161,6 +2192,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Functionally identical to EmitBytes. When emitting textual assembly, this
+end_comment
+
+begin_comment
+comment|/// method uses .byte directives instead of .ascii or .asciz for readability.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitBinaryData
+parameter_list|(
+name|StringRef
+name|Data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Emit the expression \p Value into the output as a native
 end_comment
 
@@ -2437,13 +2487,137 @@ end_comment
 begin_function_decl
 name|virtual
 name|void
-name|EmitFill
+name|emitFill
 parameter_list|(
 name|uint64_t
 name|NumBytes
 parameter_list|,
 name|uint8_t
 name|FillValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit \p Size bytes worth of the value specified by \p FillValue.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .space or .skip.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumBytes - The number of bytes to emit.
+end_comment
+
+begin_comment
+comment|/// \param FillValue - The value to use when filling bytes.
+end_comment
+
+begin_comment
+comment|/// \param Loc - The location of the expression for error reporting.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|emitFill
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|&
+name|NumBytes
+parameter_list|,
+name|uint64_t
+name|FillValue
+parameter_list|,
+name|SMLoc
+name|Loc
+init|=
+name|SMLoc
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit \p NumValues copies of \p Size bytes. Each \p Size bytes is
+end_comment
+
+begin_comment
+comment|/// taken from the lowest order 4 bytes of \p Expr expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .fill.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumValues - The number of copies of \p Size bytes to emit.
+end_comment
+
+begin_comment
+comment|/// \param Size - The size (in bytes) of each repeated value.
+end_comment
+
+begin_comment
+comment|/// \param Expr - The expression from which \p Size bytes are used.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|emitFill
+parameter_list|(
+name|uint64_t
+name|NumValues
+parameter_list|,
+name|int64_t
+name|Size
+parameter_list|,
+name|int64_t
+name|Expr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|emitFill
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|&
+name|NumValues
+parameter_list|,
+name|int64_t
+name|Size
+parameter_list|,
+name|int64_t
+name|Expr
+parameter_list|,
+name|SMLoc
+name|Loc
+init|=
+name|SMLoc
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2775,6 +2949,186 @@ name|FileName
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Associate a filename with a specified logical file number.  This
+end_comment
+
+begin_comment
+comment|/// implements the '.cv_file 4 "foo.c"' assembler directive.
+end_comment
+
+begin_function_decl
+name|virtual
+name|unsigned
+name|EmitCVFileDirective
+parameter_list|(
+name|unsigned
+name|FileNo
+parameter_list|,
+name|StringRef
+name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_loc' assembler directive.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCVLocDirective
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|,
+name|unsigned
+name|FileNo
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|,
+name|bool
+name|PrologueEnd
+parameter_list|,
+name|bool
+name|IsStmt
+parameter_list|,
+name|StringRef
+name|FileName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_linetable' assembler directive.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCVLinetableDirective
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|FnStart
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|FnEnd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_inline_linetable' assembler
+end_comment
+
+begin_comment
+comment|/// directive.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|EmitCVInlineLinetableDirective
+argument_list|(
+name|unsigned
+name|PrimaryFunctionId
+argument_list|,
+name|unsigned
+name|SourceFileId
+argument_list|,
+name|unsigned
+name|SourceLineNum
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|FnStartSym
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|FnEndSym
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|SecondaryFunctionIds
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_def_range' assembler
+end_comment
+
+begin_comment
+comment|/// directive.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|EmitCVDefRangeDirective
+argument_list|(
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+operator|>>
+name|Ranges
+argument_list|,
+name|StringRef
+name|FixedSizePortion
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_stringtable' assembler directive.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitCVStringTableDirective
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|/// \brief This implements the CodeView '.cv_filechecksums' assembler directive.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitCVFileChecksumsDirective
+parameter_list|()
+block|{}
+end_function
 
 begin_comment
 comment|/// Emit the absolute difference between two symbols.
@@ -3204,6 +3558,48 @@ name|virtual
 name|void
 name|EmitWinEHHandlerData
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Get the .pdata section used for the given section. Typically the given
+end_comment
+
+begin_comment
+comment|/// section is either the main .text section or some other COMDAT .text
+end_comment
+
+begin_comment
+comment|/// section, but it may be any section containing code.
+end_comment
+
+begin_function_decl
+name|MCSection
+modifier|*
+name|getAssociatedPDataSection
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|TextSec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Get the .xdata section used for the given section.
+end_comment
+
+begin_function_decl
+name|MCSection
+modifier|*
+name|getAssociatedXDataSection
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|TextSec
+parameter_list|)
 function_decl|;
 end_function_decl
 

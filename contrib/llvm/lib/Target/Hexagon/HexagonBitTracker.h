@@ -123,7 +123,7 @@ name|evaluate
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
@@ -143,7 +143,7 @@ name|evaluate
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|BI
 argument_list|,
 specifier|const
@@ -194,7 +194,7 @@ name|evaluateLoad
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
@@ -213,7 +213,7 @@ name|evaluateFormalCopy
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const

@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/AliasAnalysis.h"
 end_include
 

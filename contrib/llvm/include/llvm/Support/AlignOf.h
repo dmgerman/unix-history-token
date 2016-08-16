@@ -140,9 +140,9 @@ name|private
 operator|:
 name|AlignmentCalcImpl
 argument_list|()
-block|{}
-comment|// Never instantiate.
-block|}
+operator|=
+name|delete
+block|; }
 expr_stmt|;
 comment|// Abstract base class helper, this will have the minimal alignment and size
 comment|// for any abstract class. We don't even define its destructor because this
@@ -181,10 +181,10 @@ name|AlignmentCalcImplBase
 operator|,
 name|T
 block|{
-name|virtual
 operator|~
 name|AlignmentCalcImpl
 argument_list|()
+name|override
 operator|=
 literal|0
 block|; }
@@ -255,6 +255,9 @@ operator|>
 operator|(
 sizeof|sizeof
 argument_list|(
+operator|::
+name|llvm
+operator|::
 name|detail
 operator|::
 name|AlignmentCalcImpl
@@ -792,9 +795,9 @@ name|t10
 block|;
 name|AlignerImpl
 argument_list|()
-block|;
-comment|// Never defined or instantiated.
-block|}
+operator|=
+name|delete
+block|; }
 expr_stmt|;
 name|template
 operator|<
@@ -999,6 +1002,8 @@ name|AlignedCharArray
 operator|<
 name|AlignOf
 operator|<
+name|llvm
+operator|::
 name|detail
 operator|::
 name|AlignerImpl
@@ -1029,6 +1034,9 @@ name|Alignment
 operator|,
 sizeof|sizeof
 argument_list|(
+operator|::
+name|llvm
+operator|::
 name|detail
 operator|::
 name|SizerImpl
@@ -1068,6 +1076,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_ALIGNOF_H
+end_comment
 
 end_unit
 

@@ -1396,7 +1396,7 @@ comment|// we go on stack or in regs, no-one will be using them in future.
 name|unsigned
 name|RegAlign
 init|=
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|Align
 argument_list|,

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Endian.h"
 end_include
 
@@ -118,6 +124,30 @@ operator|>
 name|void
 name|write
 argument_list|(
+argument|ArrayRef<value_type> Vals
+argument_list|)
+block|{
+for|for
+control|(
+name|value_type
+name|V
+range|:
+name|Vals
+control|)
+name|write
+argument_list|(
+name|V
+argument_list|)
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|value_type
+operator|>
+name|void
+name|write
+argument_list|(
 argument|value_type Val
 argument_list|)
 block|{
@@ -151,8 +181,8 @@ name|value_type
 argument_list|)
 argument_list|)
 block|;   }
-block|}
-expr_stmt|;
+expr|}
+block|;
 name|template
 operator|<
 operator|>

@@ -62,6 +62,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolTypeBuiltin
 range|:
@@ -116,10 +119,6 @@ argument|getLexicalParentId
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
-argument|getSymIndexId
-argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
 argument|isUnalignedType
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
@@ -129,11 +128,9 @@ argument_list|)
 block|}
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

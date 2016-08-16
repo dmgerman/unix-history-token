@@ -58,20 +58,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUREGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUREGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUREGISTERINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
 
 begin_include
 include|#
@@ -113,51 +107,9 @@ range|:
 name|public
 name|AMDGPUGenRegisterInfo
 block|{
-specifier|static
-specifier|const
-name|MCPhysReg
-name|CalleeSavedReg
-block|;
 name|AMDGPURegisterInfo
 argument_list|()
 block|;
-name|BitVector
-name|getReservedRegs
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-name|override
-block|{
-name|assert
-argument_list|(
-operator|!
-literal|"Unimplemented"
-argument_list|)
-block|;
-return|return
-name|BitVector
-argument_list|()
-return|;
-block|}
-name|virtual
-name|unsigned
-name|getHWRegIndex
-argument_list|(
-argument|unsigned Reg
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-literal|"Unimplemented"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
 comment|/// \returns the sub reg enum value for the given \p Channel
 comment|/// (e.g. getSubRegFromChannel(0) -> AMDGPU::sub0)
 name|unsigned
@@ -177,20 +129,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
-name|eliminateFrameIndex
-argument_list|(
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|int SPAdj
-argument_list|,
-argument|unsigned FIOperandNum
-argument_list|,
-argument|RegScavenger *RS
-argument_list|)
-specifier|const
-name|override
-block|;
 name|unsigned
 name|getFrameRegister
 argument_list|(
@@ -198,14 +136,7 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
-block|;
-name|unsigned
-name|getIndirectSubReg
-argument_list|(
-argument|unsigned IndirectIndex
-argument_list|)
-specifier|const
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

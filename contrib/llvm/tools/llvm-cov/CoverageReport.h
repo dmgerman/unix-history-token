@@ -155,9 +155,7 @@ name|renderFunctionReports
 argument_list|(
 name|ArrayRef
 operator|<
-name|std
-operator|::
-name|string
+name|StringRef
 operator|>
 name|Files
 argument_list|,

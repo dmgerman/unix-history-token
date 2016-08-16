@@ -87,16 +87,6 @@ name|PassInfo
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createAAEvalPass - This pass implements a simple N^2 alias analysis
-comment|// accuracy evaluator.
-comment|//
-name|FunctionPass
-modifier|*
-name|createAAEvalPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
 comment|// createObjCARCAAWrapperPass - This pass implements ObjC-ARC-based
 comment|// alias analysis.
 comment|//
@@ -121,12 +111,12 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createDependenceAnalysisPass - This creates an instance of the
-comment|// DependenceAnalysis pass.
+comment|// createDependenceAnalysisWrapperPass - This creates an instance of the
+comment|// DependenceAnalysisWrapper pass.
 comment|//
 name|FunctionPass
 modifier|*
-name|createDependenceAnalysisPass
+name|createDependenceAnalysisWrapperPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

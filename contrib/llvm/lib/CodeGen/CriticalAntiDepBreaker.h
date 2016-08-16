@@ -88,18 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineFunction.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
 end_include
 
@@ -115,12 +103,6 @@ directive|include
 file|"llvm/CodeGen/ScheduleDAG.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -133,6 +115,9 @@ name|TargetInstrInfo
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -305,7 +290,7 @@ name|void
 name|Observe
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -328,7 +313,7 @@ name|void
 name|PrescanInstruction
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -336,7 +321,7 @@ name|void
 name|ScanInstruction
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned

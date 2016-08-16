@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ArrayRecycler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/RecyclingAllocator.h"
 end_include
 
@@ -167,7 +173,7 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 decl_stmt|;
 name|class
 name|SDVTListNode
@@ -827,7 +833,7 @@ modifier|&
 name|TM
 decl_stmt|;
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 modifier|*
 name|TSI
 decl_stmt|;
@@ -903,6 +909,12 @@ comment|/// Pool allocation for machine-opcode SDNode operands.
 name|BumpPtrAllocator
 name|OperandAllocator
 decl_stmt|;
+name|ArrayRecycler
+operator|<
+name|SDUse
+operator|>
+name|OperandRecycler
+expr_stmt|;
 comment|/// Pool allocation for misc. objects that are created once per SelectionDAG.
 name|BumpPtrAllocator
 name|Allocator
@@ -1012,6 +1024,77 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
+name|struct
+name|DAGNodeDeletedListener
+range|:
+name|public
+name|DAGUpdateListener
+block|{
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|SDNode
+operator|*
+argument_list|,
+name|SDNode
+operator|*
+argument_list|)
+operator|>
+name|Callback
+block|;
+name|DAGNodeDeletedListener
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|void
+argument_list|(
+name|SDNode
+operator|*
+argument_list|,
+name|SDNode
+operator|*
+argument_list|)
+operator|>
+name|Callback
+argument_list|)
+operator|:
+name|DAGUpdateListener
+argument_list|(
+name|DAG
+argument_list|)
+block|,
+name|Callback
+argument_list|(
+argument|Callback
+argument_list|)
+block|{}
+name|void
+name|NodeDeleted
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SDNode *E
+argument_list|)
+name|override
+block|{
+name|Callback
+argument_list|(
+name|N
+argument_list|,
+name|E
+argument_list|)
+block|; }
+block|}
+decl_stmt|;
 comment|/// When true, additional steps are taken to
 comment|/// ensure that getConstant() and similar functions return DAG nodes that
 comment|/// have legal types. This is important after type legalization since
@@ -1063,6 +1146,207 @@ operator|&
 name|printed
 argument_list|)
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|SDNodeT
+operator|,
+name|typename
+operator|...
+name|ArgTypes
+operator|>
+name|SDNodeT
+operator|*
+name|newSDNode
+argument_list|(
+argument|ArgTypes&&... Args
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|NodeAllocator.template Allocate<SDNodeT>()
+argument_list|)
+name|SDNodeT
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|ArgTypes
+operator|>
+operator|(
+name|Args
+operator|)
+operator|...
+argument_list|)
+return|;
+block|}
+name|void
+name|createOperands
+argument_list|(
+name|SDNode
+operator|*
+name|Node
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDValue
+operator|>
+name|Vals
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Node
+operator|->
+name|OperandList
+operator|&&
+literal|"Node already has operands"
+argument_list|)
+expr_stmt|;
+name|SDUse
+modifier|*
+name|Ops
+init|=
+name|OperandRecycler
+operator|.
+name|allocate
+argument_list|(
+name|ArrayRecycler
+operator|<
+name|SDUse
+operator|>
+operator|::
+name|Capacity
+operator|::
+name|get
+argument_list|(
+name|Vals
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|,
+name|OperandAllocator
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|!=
+name|Vals
+operator|.
+name|size
+argument_list|()
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|Ops
+index|[
+name|I
+index|]
+operator|.
+name|setUser
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+name|Ops
+index|[
+name|I
+index|]
+operator|.
+name|setInitial
+argument_list|(
+name|Vals
+index|[
+name|I
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|Node
+operator|->
+name|NumOperands
+operator|=
+name|Vals
+operator|.
+name|size
+argument_list|()
+expr_stmt|;
+name|Node
+operator|->
+name|OperandList
+operator|=
+name|Ops
+expr_stmt|;
+name|checkForCycles
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|removeOperands
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Node
+operator|->
+name|OperandList
+condition|)
+return|return;
+name|OperandRecycler
+operator|.
+name|deallocate
+argument_list|(
+name|ArrayRecycler
+operator|<
+name|SDUse
+operator|>
+operator|::
+name|Capacity
+operator|::
+name|get
+argument_list|(
+name|Node
+operator|->
+name|NumOperands
+argument_list|)
+argument_list|,
+name|Node
+operator|->
+name|OperandList
+argument_list|)
+expr_stmt|;
+name|Node
+operator|->
+name|NumOperands
+operator|=
+literal|0
+expr_stmt|;
+name|Node
+operator|->
+name|OperandList
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
 name|void
 name|operator
 init|=
@@ -1182,7 +1466,7 @@ name|TLI
 return|;
 block|}
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 operator|&
 name|getSelectionDAGInfo
 argument_list|()
@@ -1690,13 +1974,21 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Node creation methods.
 comment|//
+comment|/// \brief Create a ConstantSDNode wrapping a constant value.
+comment|/// If VT is a vector type, the constant is splatted into a BUILD_VECTOR.
+comment|///
+comment|/// If only legal types can be produced, this does the necessary
+comment|/// transformations (e.g., if the vector element type is illegal).
+comment|/// @{
 name|SDValue
 name|getConstant
 parameter_list|(
 name|uint64_t
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1721,7 +2013,9 @@ name|APInt
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1746,7 +2040,9 @@ name|ConstantInt
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1769,7 +2065,9 @@ parameter_list|(
 name|uint64_t
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|bool
@@ -1784,7 +2082,9 @@ parameter_list|(
 name|uint64_t
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1819,7 +2119,9 @@ name|APInt
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1854,7 +2156,9 @@ name|ConstantInt
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1881,15 +2185,24 @@ name|isOpaque
 argument_list|)
 return|;
 block|}
-comment|// The forms below that take a double should only be used for simple
-comment|// constants that can be exactly represented in VT.  No checks are made.
+comment|/// @}
+comment|/// \brief Create a ConstantFPSDNode wrapping a constant value.
+comment|/// If VT is a vector type, the constant is splatted into a BUILD_VECTOR.
+comment|///
+comment|/// If only legal types can be produced, this does the necessary
+comment|/// transformations (e.g., if the vector element type is illegal).
+comment|/// The forms that take a double should only be used for simple constants
+comment|/// that can be exactly represented in VT.  No checks are made.
+comment|/// @{
 name|SDValue
 name|getConstantFP
 parameter_list|(
 name|double
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1909,7 +2222,9 @@ name|APFloat
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1929,7 +2244,9 @@ name|ConstantFP
 modifier|&
 name|CF
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1947,7 +2264,9 @@ parameter_list|(
 name|double
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -1975,7 +2294,9 @@ name|APFloat
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -2003,7 +2324,9 @@ name|ConstantFP
 modifier|&
 name|Val
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -2023,6 +2346,7 @@ name|true
 argument_list|)
 return|;
 block|}
+comment|/// @}
 name|SDValue
 name|getGlobalAddress
 parameter_list|(
@@ -2031,7 +2355,9 @@ name|GlobalValue
 modifier|*
 name|GV
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -2062,7 +2388,9 @@ name|GlobalValue
 modifier|*
 name|GV
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -2399,7 +2727,9 @@ name|char
 modifier|*
 name|Sym
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -2463,7 +2793,9 @@ function_decl|;
 name|SDValue
 name|getEHLabel
 parameter_list|(
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -2546,7 +2878,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -2594,7 +2928,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -2677,7 +3013,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -2751,7 +3089,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -2812,7 +3152,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|unsigned
@@ -2902,7 +3244,9 @@ argument_list|(
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -2931,32 +3275,13 @@ comment|/// which must be a vector type, must match the number of mask elements
 comment|/// NumElts. An integer mask element equal to -1 is treated as undefined.
 name|SDValue
 name|getVectorShuffle
-parameter_list|(
-name|EVT
-name|VT
-parameter_list|,
-name|SDLoc
-name|dl
-parameter_list|,
-name|SDValue
-name|N1
-parameter_list|,
-name|SDValue
-name|N2
-parameter_list|,
-specifier|const
-name|int
-modifier|*
-name|MaskElts
-parameter_list|)
-function_decl|;
-name|SDValue
-name|getVectorShuffle
 argument_list|(
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -2969,39 +3294,183 @@ name|ArrayRef
 operator|<
 name|int
 operator|>
-name|MaskElts
+name|Mask
+argument_list|)
+decl_stmt|;
+comment|/// Return an ISD::BUILD_VECTOR node. The number of elements in VT,
+comment|/// which must be a vector type, must match the number of operands in Ops.
+comment|/// The operands must have the same type as (or, for integers, a type wider
+comment|/// than) VT's element type.
+name|SDValue
+name|getBuildVector
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|ArrayRef
+operator|<
+name|SDValue
+operator|>
+name|Ops
 argument_list|)
 block|{
+comment|// VerifySDNode (via InsertNode) checks BUILD_VECTOR later.
+return|return
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|BUILD_VECTOR
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|Ops
+argument_list|)
+return|;
+block|}
+comment|/// Return a splat ISD::BUILD_VECTOR node, consisting of Op splatted to all
+comment|/// elements. VT must be a vector type. Op's type must be the same as (or,
+comment|/// for integers, a type wider than) VT's element type.
+name|SDValue
+name|getSplatBuildVector
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|,
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|,
+name|SDValue
+name|Op
+parameter_list|)
+block|{
+comment|// VerifySDNode (via InsertNode) checks BUILD_VECTOR later.
+if|if
+condition|(
+name|Op
+operator|.
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|UNDEF
+condition|)
+block|{
 name|assert
+argument_list|(
+operator|(
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+operator|==
+name|Op
+operator|.
+name|getValueType
+argument_list|()
+operator|||
+operator|(
+name|VT
+operator|.
+name|isInteger
+argument_list|()
+operator|&&
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+operator|.
+name|bitsLE
+argument_list|(
+name|Op
+operator|.
+name|getValueType
+argument_list|()
+argument_list|)
+operator|)
+operator|)
+operator|&&
+literal|"A splatted value must have a width equal or (for integers) "
+literal|"greater than the vector element type!"
+argument_list|)
+expr_stmt|;
+return|return
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|UNDEF
+argument_list|,
+name|SDLoc
+argument_list|()
+argument_list|,
+name|VT
+argument_list|)
+return|;
+block|}
+name|SmallVector
+operator|<
+name|SDValue
+operator|,
+literal|16
+operator|>
+name|Ops
 argument_list|(
 name|VT
 operator|.
 name|getVectorNumElements
 argument_list|()
-operator|==
-name|MaskElts
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Must have the same number of vector elements as mask elements!"
+argument_list|,
+name|Op
 argument_list|)
 expr_stmt|;
 return|return
-name|getVectorShuffle
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|BUILD_VECTOR
+argument_list|,
+name|DL
+argument_list|,
+name|VT
+argument_list|,
+name|Ops
+argument_list|)
+return|;
+block|}
+comment|/// Return a splat ISD::BUILD_VECTOR node, but with Op's SDLoc.
+name|SDValue
+name|getSplatBuildVector
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|,
+name|SDValue
+name|Op
+parameter_list|)
+block|{
+return|return
+name|getSplatBuildVector
 argument_list|(
 name|VT
 argument_list|,
-name|dl
+name|SDLoc
+argument_list|(
+name|Op
+argument_list|)
 argument_list|,
-name|N1
-argument_list|,
-name|N2
-argument_list|,
-name|MaskElts
-operator|.
-name|data
-argument_list|()
+name|Op
 argument_list|)
 return|;
 block|}
@@ -3026,7 +3495,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3041,7 +3512,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3056,7 +3529,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3071,7 +3546,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3088,7 +3565,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3105,7 +3584,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3122,7 +3603,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3138,7 +3621,9 @@ parameter_list|(
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|SL
 parameter_list|,
 name|EVT
@@ -3152,7 +3637,9 @@ comment|/// Create a bitwise NOT operation as (XOR Val, -1).
 name|SDValue
 name|getNOT
 parameter_list|(
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDValue
@@ -3166,7 +3653,9 @@ comment|/// \brief Create a logical NOT operation as (XOR Val, BooleanOne).
 name|SDValue
 name|getLogicalNOT
 parameter_list|(
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDValue
@@ -3187,7 +3676,9 @@ parameter_list|,
 name|SDValue
 name|Op
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|)
 block|{
@@ -3248,7 +3739,9 @@ parameter_list|,
 name|SDValue
 name|InGlue
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|)
 block|{
@@ -3376,7 +3869,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -3395,7 +3890,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -3421,7 +3918,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|ArrayRef
@@ -3443,7 +3942,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|SDVTList
@@ -3463,7 +3964,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3476,7 +3979,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3492,7 +3997,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3518,7 +4025,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3540,7 +4049,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3565,7 +4076,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -3595,7 +4108,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3608,7 +4123,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3624,7 +4141,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3643,7 +4162,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3665,7 +4186,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3690,7 +4213,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -3728,7 +4253,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -3765,7 +4292,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -3799,7 +4328,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -3830,7 +4361,9 @@ comment|///
 name|SDValue
 name|getSetCC
 argument_list|(
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -3925,7 +4458,9 @@ comment|/// have operands and don't want to check for vector.
 name|SDValue
 name|getSelect
 parameter_list|(
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -4011,7 +4546,9 @@ comment|///
 name|SDValue
 name|getSelectCC
 argument_list|(
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|SDValue
@@ -4069,7 +4606,9 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -4095,7 +4634,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -4138,7 +4679,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -4181,7 +4724,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -4217,7 +4762,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -4251,7 +4798,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -4285,7 +4834,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -4320,7 +4871,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -4356,7 +4909,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDVTList
@@ -4406,7 +4961,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDVTList
@@ -4436,66 +4993,76 @@ name|SDValue
 operator|>
 name|Ops
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl_stmt|;
 comment|/// Loads are not normal binary operators: their result type is not
 comment|/// determined by their operands, and they produce a value AND a token chain.
 comment|///
+comment|/// This function will set the MOLoad flag on MMOFlags, but you can set it if
+comment|/// you want.  The MOStore flag must not be set.
 name|SDValue
 name|getLoad
-parameter_list|(
+argument_list|(
 name|EVT
 name|VT
-parameter_list|,
+argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Ptr
-parameter_list|,
+argument_list|,
 name|MachinePointerInfo
 name|PtrInfo
-parameter_list|,
-name|bool
-name|isVolatile
-parameter_list|,
-name|bool
-name|isNonTemporal
-parameter_list|,
-name|bool
-name|isInvariant
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Alignment
-parameter_list|,
+operator|=
+literal|0
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MMOFlags
+operator|=
+name|MachineMemOperand
+operator|::
+name|MONone
+argument_list|,
 specifier|const
 name|AAMDNodes
-modifier|&
+operator|&
 name|AAInfo
-init|=
+operator|=
 name|AAMDNodes
 argument_list|()
-parameter_list|,
+argument_list|,
 specifier|const
 name|MDNode
-modifier|*
+operator|*
 name|Ranges
-init|=
+operator|=
 name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|SDValue
 name|getLoad
 parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -4517,7 +5084,9 @@ operator|::
 name|LoadExtType
 name|ExtType
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -4535,17 +5104,19 @@ argument_list|,
 name|EVT
 name|MemVT
 argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-name|bool
-name|isNonTemporal
-argument_list|,
-name|bool
-name|isInvariant
-argument_list|,
 name|unsigned
 name|Alignment
+operator|=
+literal|0
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MMOFlags
+operator|=
+name|MachineMemOperand
+operator|::
+name|MONone
 argument_list|,
 specifier|const
 name|AAMDNodes
@@ -4564,7 +5135,9 @@ operator|::
 name|LoadExtType
 name|ExtType
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -4590,7 +5163,9 @@ argument_list|(
 name|SDValue
 name|OrigLoad
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -4621,7 +5196,9 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -4639,17 +5216,19 @@ argument_list|,
 name|EVT
 name|MemVT
 argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-name|bool
-name|isNonTemporal
-argument_list|,
-name|bool
-name|isInvariant
-argument_list|,
 name|unsigned
 name|Alignment
+operator|=
+literal|0
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MMOFlags
+operator|=
+name|MachineMemOperand
+operator|::
+name|MONone
 argument_list|,
 specifier|const
 name|AAMDNodes
@@ -4683,7 +5262,9 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -4704,49 +5285,61 @@ name|MMO
 argument_list|)
 decl_stmt|;
 comment|/// Helper function to build ISD::STORE nodes.
+comment|///
+comment|/// This function will set the MOStore flag on MMOFlags, but you can set it if
+comment|/// you want.  The MOLoad and MOInvariant flags must not be set.
 name|SDValue
 name|getStore
-parameter_list|(
+argument_list|(
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Val
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Ptr
-parameter_list|,
+argument_list|,
 name|MachinePointerInfo
 name|PtrInfo
-parameter_list|,
-name|bool
-name|isVolatile
-parameter_list|,
-name|bool
-name|isNonTemporal
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Alignment
-parameter_list|,
+operator|=
+literal|0
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MMOFlags
+operator|=
+name|MachineMemOperand
+operator|::
+name|MONone
+argument_list|,
 specifier|const
 name|AAMDNodes
-modifier|&
+operator|&
 name|AAInfo
-init|=
+operator|=
 name|AAMDNodes
 argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|SDValue
 name|getStore
 parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -4762,50 +5355,59 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|getTruncStore
-parameter_list|(
+argument_list|(
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Val
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Ptr
-parameter_list|,
+argument_list|,
 name|MachinePointerInfo
 name|PtrInfo
-parameter_list|,
+argument_list|,
 name|EVT
 name|TVT
-parameter_list|,
-name|bool
-name|isNonTemporal
-parameter_list|,
-name|bool
-name|isVolatile
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Alignment
-parameter_list|,
+operator|=
+literal|0
+argument_list|,
+name|MachineMemOperand
+operator|::
+name|Flags
+name|MMOFlags
+operator|=
+name|MachineMemOperand
+operator|::
+name|MONone
+argument_list|,
 specifier|const
 name|AAMDNodes
-modifier|&
+operator|&
 name|AAInfo
-init|=
+operator|=
 name|AAMDNodes
 argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|SDValue
 name|getTruncStore
 parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -4828,7 +5430,9 @@ argument_list|(
 name|SDValue
 name|OrigStoe
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -4843,13 +5447,31 @@ name|MemIndexedMode
 name|AM
 argument_list|)
 decl_stmt|;
+comment|/// Returns sum of the base pointer and offset.
+name|SDValue
+name|getMemBasePlusOffset
+parameter_list|(
+name|SDValue
+name|Base
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|,
+specifier|const
+name|SDLoc
+modifier|&
+name|DL
+parameter_list|)
+function_decl|;
 name|SDValue
 name|getMaskedLoad
 argument_list|(
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -4882,7 +5504,9 @@ parameter_list|(
 name|SDValue
 name|Chain
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|SDValue
@@ -4914,7 +5538,9 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|ArrayRef
@@ -4937,7 +5563,9 @@ argument_list|,
 name|EVT
 name|VT
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|ArrayRef
@@ -4987,7 +5615,9 @@ comment|/// Return an AddrSpaceCastSDNode.
 name|SDValue
 name|getAddrSpaceCast
 parameter_list|(
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5505,7 +6135,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5519,7 +6151,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5536,7 +6170,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5556,7 +6192,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5579,7 +6217,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -5599,7 +6239,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5616,7 +6258,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5636,7 +6280,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5659,7 +6305,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5685,7 +6333,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -5708,7 +6358,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5734,7 +6386,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|dl
 parameter_list|,
 name|EVT
@@ -5763,7 +6417,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -5789,7 +6445,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -5818,7 +6476,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|ArrayRef
@@ -5841,7 +6501,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDVTList
@@ -5861,7 +6523,9 @@ parameter_list|(
 name|int
 name|SRIdx
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -5878,7 +6542,9 @@ parameter_list|(
 name|int
 name|SRIdx
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -5942,7 +6608,9 @@ parameter_list|,
 name|uint64_t
 name|Off
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|,
 name|unsigned
@@ -5970,7 +6638,9 @@ parameter_list|,
 name|uint64_t
 name|Off
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|,
 name|unsigned
@@ -5996,7 +6666,9 @@ parameter_list|,
 name|uint64_t
 name|Off
 parameter_list|,
+specifier|const
 name|DebugLoc
+modifier|&
 name|DL
 parameter_list|,
 name|unsigned
@@ -6416,7 +7088,9 @@ name|SD
 argument_list|)
 return|;
 block|}
-comment|/// Transfer SDDbgValues.
+name|private
+label|:
+comment|/// Transfer SDDbgValues. Called via ReplaceAllUses{OfValue}?With
 name|void
 name|TransferDbgValues
 parameter_list|(
@@ -6427,6 +7101,8 @@ name|SDValue
 name|To
 parameter_list|)
 function_decl|;
+name|public
+label|:
 comment|/// Return true if there are any SDDbgValue nodes associated
 comment|/// with this SelectionDAG.
 name|bool
@@ -6499,9 +7175,8 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Create a stack temporary, suitable for holding the
-comment|/// specified value type.  If minAlign is specified, the slot size will have
-comment|/// at least that alignment.
+comment|/// Create a stack temporary, suitable for holding the specified value type.
+comment|/// If minAlign is specified, the slot size will have at least that alignment.
 name|SDValue
 name|CreateStackTemporary
 parameter_list|(
@@ -6514,8 +7189,8 @@ init|=
 literal|1
 parameter_list|)
 function_decl|;
-comment|/// Create a stack temporary suitable for holding
-comment|/// either of the specified value types.
+comment|/// Create a stack temporary suitable for holding either of the specified
+comment|/// value types.
 name|SDValue
 name|CreateStackTemporary
 parameter_list|(
@@ -6527,12 +7202,34 @@ name|VT2
 parameter_list|)
 function_decl|;
 name|SDValue
+name|FoldSymbolOffset
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+specifier|const
+name|GlobalAddressSDNode
+modifier|*
+name|GA
+parameter_list|,
+specifier|const
+name|SDNode
+modifier|*
+name|N2
+parameter_list|)
+function_decl|;
+name|SDValue
 name|FoldConstantArithmetic
 parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -6553,7 +7250,9 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|EVT
@@ -6576,7 +7275,9 @@ argument_list|(
 name|unsigned
 name|Opcode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -6614,7 +7315,9 @@ operator|::
 name|CondCode
 name|Cond
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl_stmt|;
@@ -6679,13 +7382,24 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Return the number of times the sign bit of the
-comment|/// register is replicated into the other bits.  We know that at least 1 bit
-comment|/// is always equal to the sign bit (itself), but other cases can give us
-comment|/// information.  For example, immediately after an "SRA X, 2", we know that
-comment|/// the top 3 bits are all equal to each other, so we return 3.  Targets can
-comment|/// implement the ComputeNumSignBitsForTarget method in the TargetLowering
-comment|/// class to allow target nodes to be understood.
+comment|/// Test if the given value is known to have exactly one bit set. This differs
+comment|/// from computeKnownBits in that it doesn't necessarily determine which bit
+comment|/// is set.
+name|bool
+name|isKnownToBeAPowerOfTwo
+argument_list|(
+name|SDValue
+name|Val
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the number of times the sign bit of the register is replicated into
+comment|/// the other bits. We know that at least 1 bit is always equal to the sign
+comment|/// bit (itself), but other cases can give us information. For example,
+comment|/// immediately after an "SRA X, 2", we know that the top 3 bits are all equal
+comment|/// to each other, so we return 3. Targets can implement the
+comment|/// ComputeNumSignBitsForTarget method in the TargetLowering class to allow
+comment|/// target nodes to be understood.
 name|unsigned
 name|ComputeNumSignBits
 argument_list|(
@@ -6699,10 +7413,10 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Return true if the specified operand is an
-comment|/// ISD::ADD with a ConstantSDNode on the right-hand side, or if it is an
-comment|/// ISD::OR with a ConstantSDNode that is guaranteed to have the same
-comment|/// semantics as an ADD.  This handles the equivalence:
+comment|/// Return true if the specified operand is an ISD::ADD with a ConstantSDNode
+comment|/// on the right-hand side, or if it is an ISD::OR with a ConstantSDNode that
+comment|/// is guaranteed to have the same semantics as an ADD. This handles the
+comment|/// equivalence:
 comment|///     X|Cst == X+Cst iff X&Cst = 0.
 name|bool
 name|isBaseWithConstantOffset
@@ -6721,8 +7435,8 @@ name|Op
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Test whether the given SDValue is known to never be
-comment|/// positive or negative Zero.
+comment|/// Test whether the given SDValue is known to never be positive or negative
+comment|/// zero.
 name|bool
 name|isKnownNeverZero
 argument_list|(
@@ -6777,10 +7491,12 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// Return true if LD is loading 'Bytes' bytes from a location that is 'Dist'
-comment|/// units away from the location that the 'Base' load is loading from.
+comment|/// Return true if loads are next to each other and can be
+comment|/// merged. Check that both are nonvolatile and if LD is loading
+comment|/// 'Bytes' bytes from a location that is 'Dist' units away from the
+comment|/// location that the 'Base' load is loading from.
 name|bool
-name|isConsecutiveLoad
+name|areNonVolatileConsecutiveLoads
 argument_list|(
 name|LoadSDNode
 operator|*
@@ -6968,6 +7684,7 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// Compute the default alignment value for the given type.
 name|unsigned
 name|getEVTAlignment
 argument_list|(
@@ -6976,6 +7693,15 @@ name|MemoryVT
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Test whether the given value is a constant int or similar node.
+name|SDNode
+modifier|*
+name|isConstantIntBuildVectorOrConstantInt
+parameter_list|(
+name|SDValue
+name|N
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|void
@@ -7067,7 +7793,9 @@ name|SDNode
 modifier|*
 name|N
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|loc
 parameter_list|)
 function_decl|;
@@ -7091,14 +7819,16 @@ name|void
 name|allnodes_clear
 parameter_list|()
 function_decl|;
-name|BinarySDNode
+name|SDNode
 modifier|*
 name|GetBinarySDNode
 parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|SDVTList
@@ -7149,7 +7879,9 @@ name|FoldingSetNodeID
 modifier|&
 name|ID
 parameter_list|,
-name|DebugLoc
+specifier|const
+name|SDLoc
+modifier|&
 name|DL
 parameter_list|,
 name|void

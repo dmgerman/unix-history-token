@@ -1211,22 +1211,24 @@ name|MO_HI16
 init|=
 literal|0x2
 block|,
-comment|/// MO_PLT - On a symbol operand, this represents an ELF PLT reference on a
-comment|/// call operand.
-name|MO_PLT
-init|=
-literal|0x3
-block|,
 comment|/// MO_OPTION_MASK - Most flags are mutually exclusive; this mask selects
 comment|/// just that part of the flag set.
 name|MO_OPTION_MASK
 init|=
-literal|0x3f
+literal|0x1f
 block|,
 comment|/// MO_DLLIMPORT - On a symbol operand, this represents that the reference
 comment|/// to the symbol is for an import stub.  This is used for DLL import
 comment|/// storage class indication on Windows.
 name|MO_DLLIMPORT
+init|=
+literal|0x20
+block|,
+comment|/// MO_SECREL - On a symbol operand this indicates that the immediate is
+comment|/// the offset from beginning of section.
+comment|///
+comment|/// This is the TLS offset for the COFF/Windows TLS mechanism.
+name|MO_SECREL
 init|=
 literal|0x40
 block|,

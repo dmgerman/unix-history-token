@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSymbol.h"
 end_include
 
@@ -120,6 +126,10 @@ block|,
 name|SF_SymbolResolver
 operator|=
 literal|0x0100
+block|,
+name|SF_AltEntry
+operator|=
+literal|0x0200
 block|,
 comment|// Common alignment
 name|SF_CommonAlignmentMask
@@ -290,6 +300,30 @@ name|SF_SymbolResolver
 argument_list|)
 block|;   }
 name|void
+name|setAltEntry
+argument_list|()
+specifier|const
+block|{
+name|modifyFlags
+argument_list|(
+name|SF_AltEntry
+argument_list|,
+name|SF_AltEntry
+argument_list|)
+block|;   }
+name|bool
+name|isAltEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlags
+argument_list|()
+operator|&
+name|SF_AltEntry
+return|;
+block|}
+name|void
 name|setDesc
 argument_list|(
 argument|unsigned Value
@@ -320,7 +354,9 @@ comment|/// \brief Get the encoded value of the flags as they will be emitted in
 comment|/// the MachO binary
 name|uint16_t
 name|getEncodedFlags
-argument_list|()
+argument_list|(
+argument|bool EncodeAsAltEntry
+argument_list|)
 specifier|const
 block|{
 name|uint16_t
@@ -407,6 +443,14 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|EncodeAsAltEntry
+condition|)
+name|Flags
+operator||=
+name|SF_AltEntry
+expr_stmt|;
 return|return
 name|Flags
 return|;
@@ -414,9 +458,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const MCSymbol *S
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|S
+parameter_list|)
 block|{
 return|return
 name|S
@@ -425,11 +472,15 @@ name|isMachO
 argument_list|()
 return|;
 block|}
-expr|}
-block|; }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

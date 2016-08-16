@@ -77,30 +77,26 @@ name|llvm
 block|{
 comment|/// Pass which forces specific function attributes into the IR, primarily as
 comment|/// a debugging tool.
-name|class
+name|struct
 name|ForceFunctionAttrsPass
+range|:
+name|PassInfoMixin
+operator|<
+name|ForceFunctionAttrsPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"ForceFunctionAttrsPass"
-return|;
-block|}
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// Create a legacy pass manager instance of a pass to force function attrs.
 name|Pass
 modifier|*

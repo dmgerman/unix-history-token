@@ -162,40 +162,6 @@ name|Type
 modifier|*
 name|Ty
 parameter_list|,
-name|ItTy
-name|It
-parameter_list|)
-block|{
-name|generic_gep_type_iterator
-name|I
-decl_stmt|;
-name|I
-operator|.
-name|CurTy
-operator|.
-name|setPointer
-argument_list|(
-name|Ty
-argument_list|)
-expr_stmt|;
-name|I
-operator|.
-name|OpIt
-operator|=
-name|It
-expr_stmt|;
-return|return
-name|I
-return|;
-block|}
-specifier|static
-name|generic_gep_type_iterator
-name|begin
-parameter_list|(
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
 name|unsigned
 name|AddrSpace
 parameter_list|,
@@ -750,6 +716,8 @@ name|gep_type_begin
 argument_list|(
 argument|Type *Op0
 argument_list|,
+argument|unsigned AS
+argument_list|,
 argument|ArrayRef<T> A
 argument_list|)
 block|{
@@ -764,6 +732,8 @@ operator|::
 name|begin
 argument_list|(
 name|Op0
+argument_list|,
+name|AS
 argument_list|,
 name|A
 operator|.
@@ -791,6 +761,9 @@ name|gep_type_end
 argument_list|(
 argument|Type *
 comment|/*Op0*/
+argument_list|,
+argument|unsigned
+comment|/*AS*/
 argument_list|,
 argument|ArrayRef<T> A
 argument_list|)

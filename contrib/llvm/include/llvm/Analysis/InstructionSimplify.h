@@ -173,8 +173,7 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-comment|/// SimplifyAddInst - Given operands for an Add, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an Add, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyAddInst
@@ -226,8 +225,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifySubInst - Given operands for a Sub, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a Sub, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifySubInst
@@ -279,8 +277,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Given operands for an FAdd, see if we can fold the result.  If not, this
-comment|/// returns null.
+comment|/// Given operands for an FAdd, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFAddInst
@@ -329,8 +326,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Given operands for an FSub, see if we can fold the result.  If not, this
-comment|/// returns null.
+comment|/// Given operands for an FSub, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFSubInst
@@ -379,8 +375,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// Given operands for an FMul, see if we can fold the result.  If not, this
-comment|/// returns null.
+comment|/// Given operands for an FMul, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFMulInst
@@ -429,8 +424,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyMulInst - Given operands for a Mul, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a Mul, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyMulInst
@@ -476,8 +470,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifySDivInst - Given operands for an SDiv, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an SDiv, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifySDivInst
@@ -523,8 +516,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyUDivInst - Given operands for a UDiv, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a UDiv, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyUDivInst
@@ -570,8 +562,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyFDivInst - Given operands for an FDiv, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an FDiv, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFDivInst
@@ -620,8 +611,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifySRemInst - Given operands for an SRem, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an SRem, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifySRemInst
@@ -667,8 +657,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyURemInst - Given operands for a URem, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a URem, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyURemInst
@@ -714,8 +703,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyFRemInst - Given operands for an FRem, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an FRem, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFRemInst
@@ -764,8 +752,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyShlInst - Given operands for a Shl, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a Shl, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyShlInst
@@ -817,8 +804,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyLShrInst - Given operands for a LShr, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a LShr, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyLShrInst
@@ -867,8 +853,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyAShrInst - Given operands for a AShr, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a AShr, fold the result or return nulll.
 name|Value
 modifier|*
 name|SimplifyAShrInst
@@ -917,8 +902,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyAndInst - Given operands for an And, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an And, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyAndInst
@@ -964,8 +948,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyOrInst - Given operands for an Or, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an Or, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyOrInst
@@ -1011,8 +994,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyXorInst - Given operands for a Xor, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an Xor, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyXorInst
@@ -1058,8 +1040,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyICmpInst - Given operands for an ICmpInst, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an ICmpInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyICmpInst
@@ -1108,8 +1089,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyFCmpInst - Given operands for an FCmpInst, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an FCmpInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyFCmpInst
@@ -1161,8 +1141,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifySelectInst - Given operands for a SelectInst, see if we can fold
-comment|/// the result.  If not, this returns null.
+comment|/// Given operands for a SelectInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifySelectInst
@@ -1212,12 +1191,15 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyGEPInst - Given operands for an GetElementPtrInst, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a GetElementPtrInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyGEPInst
 argument_list|(
+name|Type
+operator|*
+name|SrcTy
+argument_list|,
 name|ArrayRef
 operator|<
 name|Value
@@ -1258,8 +1240,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// SimplifyInsertValueInst - Given operands for an InsertValueInst, see if we
-comment|/// can fold the result.  If not, this returns null.
+comment|/// Given operands for an InsertValueInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyInsertValueInst
@@ -1311,8 +1292,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Given operands for an ExtractValueInst, see if we can fold the
-comment|/// result.  If not, this returns null.
+comment|/// Given operands for an ExtractValueInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyExtractValueInst
@@ -1360,8 +1340,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Given operands for an ExtractElementInst, see if we can fold the
-comment|/// result.  If not, this returns null.
+comment|/// Given operands for an ExtractElementInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyExtractElementInst
@@ -1407,8 +1386,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyTruncInst - Given operands for an TruncInst, see if we can fold
-comment|/// the result.  If not, this returns null.
+comment|/// Given operands for an TruncInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyTruncInst
@@ -1455,8 +1433,7 @@ name|nullptr
 parameter_list|)
 function_decl|;
 comment|//=== Helper functions for higher up the class hierarchy.
-comment|/// SimplifyCmpInst - Given operands for a CmpInst, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a CmpInst, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyCmpInst
@@ -1505,8 +1482,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyBinOp - Given operands for a BinaryOperator, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for a BinaryOperator, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyBinOp
@@ -1555,8 +1531,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// SimplifyFPBinOp - Given operands for a BinaryOperator, see if we can
-comment|/// fold the result.  If not, this returns null.
+comment|/// Given operands for an FP BinaryOperator, fold the result or return null.
 comment|/// In contrast to SimplifyBinOp, try to use FastMathFlag when folding the
 comment|/// result. In case we don't need FastMathFlags, simply fall to SimplifyBinOp.
 name|Value
@@ -1612,10 +1587,8 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Given a function and iterators over arguments, see if we can fold
-comment|/// the result.
-comment|///
-comment|/// If this call could not be simplified returns null.
+comment|/// Given a function and iterators over arguments, fold the result or return
+comment|/// null.
 name|Value
 modifier|*
 name|SimplifyCall
@@ -1667,10 +1640,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// \brief Given a function and set of arguments, see if we can fold the
-comment|/// result.
-comment|///
-comment|/// If this call could not be simplified returns null.
+comment|/// Given a function and set of arguments, fold the result or return null.
 name|Value
 modifier|*
 name|SimplifyCall
@@ -1719,8 +1689,8 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// SimplifyInstruction - See if we can compute a simplified version of this
-comment|/// instruction.  If not, this returns null.
+comment|/// See if we can compute a simplified version of this instruction. If not,
+comment|/// return null.
 name|Value
 modifier|*
 name|SimplifyInstruction
@@ -1755,8 +1725,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Replace all uses of 'I' with 'SimpleV' and simplify the uses
-comment|/// recursively.
+comment|/// Replace all uses of 'I' with 'SimpleV' and simplify the uses recursively.
 comment|///
 comment|/// This first performs a normal RAUW of I with SimpleV. It then recursively
 comment|/// attempts to simplify those users updated by the operation. The 'I'
@@ -1795,7 +1764,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// \brief Recursively attempt to simplify an instruction.
+comment|/// Recursively attempt to simplify an instruction.
 comment|///
 comment|/// This routine uses SimplifyInstruction to simplify 'I', and if successful
 comment|/// replaces uses of 'I' with the simplified value. It then recurses on each

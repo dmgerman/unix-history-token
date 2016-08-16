@@ -288,6 +288,16 @@ return|return
 name|EntrySize
 return|;
 block|}
+name|void
+name|setFlags
+argument_list|(
+argument|unsigned F
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|F
+block|; }
 specifier|const
 name|MCSymbolELF
 operator|*

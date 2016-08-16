@@ -123,7 +123,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -173,9 +173,19 @@ name|TargetIRAnalysis
 name|getTargetIRAnalysis
 argument_list|()
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|bool
+name|usesPhysRegsForPEI
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

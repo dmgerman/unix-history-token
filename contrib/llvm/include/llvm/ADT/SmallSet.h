@@ -160,6 +160,18 @@ operator|::
 name|iterator
 name|mutable_iterator
 expr_stmt|;
+comment|// In small mode SmallPtrSet uses linear search for the elements, so it is
+comment|// not a good idea to choose this value too high. You may consider using a
+comment|// DenseSet<> instead if you expect many elements in the set.
+name|static_assert
+argument_list|(
+name|N
+operator|<=
+literal|32
+argument_list|,
+literal|"N should be small"
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 typedef|typedef

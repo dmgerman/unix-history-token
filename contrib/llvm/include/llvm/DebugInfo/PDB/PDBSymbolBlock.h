@@ -55,12 +55,6 @@ directive|include
 file|"PDBTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -68,6 +62,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolBlock
 range|:
@@ -134,14 +131,11 @@ argument|getRelativeVirtualAddress
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
-argument|getSymIndexId
-argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
 argument|getVirtualAddress
 argument_list|)
 block|}
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -86,12 +86,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -105,6 +99,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|dwarf
 block|{
@@ -1312,53 +1309,21 @@ enum|enum
 name|CallingConvention
 block|{
 comment|// Calling convention codes
-name|DW_CC_normal
-init|=
-literal|0x01
-block|,
-name|DW_CC_program
-init|=
-literal|0x02
-block|,
-name|DW_CC_nocall
-init|=
-literal|0x03
-block|,
+define|#
+directive|define
+name|HANDLE_DW_CC
+parameter_list|(
+name|ID
+parameter_list|,
+name|NAME
+parameter_list|)
+value|DW_CC_##NAME = ID,
+include|#
+directive|include
+file|"llvm/Support/Dwarf.def"
 name|DW_CC_lo_user
 init|=
 literal|0x40
-block|,
-name|DW_CC_GNU_borland_fastcall_i386
-init|=
-literal|0x41
-block|,
-name|DW_CC_BORLAND_safecall
-init|=
-literal|0xb0
-block|,
-name|DW_CC_BORLAND_stdcall
-init|=
-literal|0xb1
-block|,
-name|DW_CC_BORLAND_pascal
-init|=
-literal|0xb2
-block|,
-name|DW_CC_BORLAND_msfastcall
-init|=
-literal|0xb3
-block|,
-name|DW_CC_BORLAND_msreturn
-init|=
-literal|0xb4
-block|,
-name|DW_CC_BORLAND_thiscall
-init|=
-literal|0xb5
-block|,
-name|DW_CC_BORLAND_fastcall
-init|=
-literal|0xb6
 block|,
 name|DW_CC_hi_user
 init|=
@@ -1816,7 +1781,7 @@ block|,
 name|DW_LLE_offset_pair_entry
 block|}
 enum|;
-comment|/// Contstants for the DW_APPLE_PROPERTY_attributes attribute.
+comment|/// Constants for the DW_APPLE_PROPERTY_attributes attribute.
 comment|/// Keep this list in sync with clang's DeclSpec.h ObjCPropertyAttributeKind.
 enum|enum
 name|ApplePropertyAttributes
@@ -1869,6 +1834,18 @@ block|,
 name|DW_APPLE_PROPERTY_unsafe_unretained
 init|=
 literal|0x800
+block|,
+name|DW_APPLE_PROPERTY_nullability
+init|=
+literal|0x1000
+block|,
+name|DW_APPLE_PROPERTY_null_resettable
+init|=
+literal|0x2000
+block|,
+name|DW_APPLE_PROPERTY_class
+init|=
+literal|0x4000
 block|}
 enum|;
 comment|// Constants for the DWARF5 Accelerator Table Proposal
@@ -2210,6 +2187,13 @@ parameter_list|)
 function_decl|;
 name|unsigned
 name|getLanguage
+parameter_list|(
+name|StringRef
+name|LanguageString
+parameter_list|)
+function_decl|;
+name|unsigned
+name|getCallingConvention
 parameter_list|(
 name|StringRef
 name|LanguageString

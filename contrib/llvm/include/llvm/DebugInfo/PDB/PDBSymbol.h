@@ -76,19 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unordered_map>
 end_include
 
 begin_define
@@ -107,10 +95,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|IPDBRawSymbol
+name|StringRef
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|namespace
+name|pdb
+block|{
+name|class
+name|IPDBRawSymbol
 decl_stmt|;
 define|#
 directive|define
@@ -207,6 +201,11 @@ decl|const
 decl_stmt|;
 name|PDB_SymType
 name|getSymTag
+argument_list|()
+specifier|const
+expr_stmt|;
+name|uint32_t
+name|getSymIndexId
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -423,11 +422,9 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -96,11 +96,8 @@ block|,
 comment|// 16 bit literal fixup resulting in - R_MIPS_LITERAL.
 name|fixup_Mips_LITERAL
 block|,
-comment|// Global symbol fixup resulting in - R_MIPS_GOT16.
-name|fixup_Mips_GOT_Global
-block|,
-comment|// Local symbol fixup resulting in - R_MIPS_GOT16.
-name|fixup_Mips_GOT_Local
+comment|// Symbol fixup resulting in - R_MIPS_GOT16.
+name|fixup_Mips_GOT
 block|,
 comment|// PC relative branch fixup resulting in - R_MIPS_PC16.
 name|fixup_Mips_PC16
@@ -215,6 +212,18 @@ name|fixup_MICROMIPS_PC10_S1
 block|,
 comment|// resulting in - R_MICROMIPS_PC16_S1
 name|fixup_MICROMIPS_PC16_S1
+block|,
+comment|// resulting in - R_MICROMIPS_PC26_S1
+name|fixup_MICROMIPS_PC26_S1
+block|,
+comment|// resulting in - R_MICROMIPS_PC19_S2
+name|fixup_MICROMIPS_PC19_S2
+block|,
+comment|// resulting in - R_MICROMIPS_PC18_S3
+name|fixup_MICROMIPS_PC18_S3
+block|,
+comment|// resulting in - R_MICROMIPS_PC21_S1
+name|fixup_MICROMIPS_PC21_S1
 block|,
 comment|// resulting in - R_MICROMIPS_CALL16
 name|fixup_MICROMIPS_CALL16

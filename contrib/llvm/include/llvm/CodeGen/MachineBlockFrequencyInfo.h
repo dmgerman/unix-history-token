@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -171,10 +177,27 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|getBlockProfileCount
+argument_list|(
+argument|const MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+expr_stmt|;
 specifier|const
 name|MachineFunction
 operator|*
 name|getFunction
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|MachineBranchProbabilityInfo
+operator|*
+name|getMBPI
 argument_list|()
 specifier|const
 expr_stmt|;

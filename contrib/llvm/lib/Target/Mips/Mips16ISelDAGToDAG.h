@@ -80,14 +80,16 @@ operator|:
 name|explicit
 name|Mips16DAGToDAGISel
 argument_list|(
-name|MipsTargetMachine
-operator|&
-name|TM
+argument|MipsTargetMachine&TM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 operator|:
 name|MipsDAGToDAGISel
 argument_list|(
 argument|TM
+argument_list|,
+argument|OL
 argument_list|)
 block|{}
 name|private
@@ -108,7 +110,7 @@ argument|SDNode *N
 argument_list|,
 argument|unsigned Opc
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -117,10 +119,6 @@ argument_list|,
 argument|bool HasHi
 argument_list|)
 block|;
-name|SDValue
-name|getMips16SPAliasReg
-argument_list|()
-block|;
 name|bool
 name|runOnMachineFunction
 argument_list|(
@@ -128,43 +126,42 @@ argument|MachineFunction&MF
 argument_list|)
 name|override
 block|;
-name|void
-name|getMips16SPRefReg
+name|bool
+name|selectAddr
 argument_list|(
-name|SDNode
-operator|*
-name|Parent
+argument|bool SPAllowed
 argument_list|,
-name|SDValue
-operator|&
-name|AliasReg
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
 argument_list|)
 block|;
 name|bool
 name|selectAddr16
 argument_list|(
-argument|SDNode *Parent
-argument_list|,
-argument|SDValue N
+argument|SDValue Addr
 argument_list|,
 argument|SDValue&Base
 argument_list|,
 argument|SDValue&Offset
-argument_list|,
-argument|SDValue&Alias
 argument_list|)
 name|override
 block|;
-name|std
-operator|::
-name|pair
-operator|<
 name|bool
-block|,
-name|SDNode
-operator|*
-operator|>
-name|selectNode
+name|selectAddr16SP
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+name|override
+block|;
+name|bool
+name|trySelect
 argument_list|(
 argument|SDNode *Node
 argument_list|)
@@ -199,12 +196,17 @@ decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createMips16ISelDag
-parameter_list|(
+argument_list|(
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

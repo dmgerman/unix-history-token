@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_decl_stmt
@@ -138,7 +138,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -257,6 +257,13 @@ name|get
 argument_list|()
 return|;
 block|}
+name|void
+name|addEarlyAsPossiblePasses
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
+block|;
 name|TargetIRAnalysis
 name|getTargetIRAnalysis
 argument_list|()
@@ -289,7 +296,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -322,7 +329,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

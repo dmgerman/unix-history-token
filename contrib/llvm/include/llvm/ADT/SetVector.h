@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -427,7 +433,7 @@ index|]
 return|;
 block|}
 comment|/// \brief Insert a new element into the SetVector.
-comment|/// \returns true iff the element was inserted into the SetVector.
+comment|/// \returns true if the element was inserted into the SetVector.
 name|bool
 name|insert
 parameter_list|(
@@ -577,6 +583,83 @@ return|;
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// Erase a single element from the set vector.
+comment|/// \returns an iterator pointing to the next element that followed the
+comment|/// element erased. This is the end of the SetVector if the last element is
+comment|/// erased.
+name|iterator
+name|erase
+parameter_list|(
+name|iterator
+name|I
+parameter_list|)
+block|{
+specifier|const
+name|key_type
+modifier|&
+name|V
+init|=
+operator|*
+name|I
+decl_stmt|;
+name|assert
+argument_list|(
+name|set_
+operator|.
+name|count
+argument_list|(
+name|V
+argument_list|)
+operator|&&
+literal|"Corrupted SetVector instances!"
+argument_list|)
+expr_stmt|;
+name|set_
+operator|.
+name|erase
+argument_list|(
+name|V
+argument_list|)
+expr_stmt|;
+comment|// FIXME: No need to use the non-const iterator when built with
+comment|// std:vector.erase(const_iterator) as defined in C++11. This is for
+comment|// compatibility with non-standard libstdc++ up to 4.8 (fixed in 4.9).
+name|auto
+name|NI
+init|=
+name|vector_
+operator|.
+name|begin
+argument_list|()
+decl_stmt|;
+name|std
+operator|::
+name|advance
+argument_list|(
+name|NI
+argument_list|,
+name|std
+operator|::
+name|distance
+operator|<
+name|iterator
+operator|>
+operator|(
+name|NI
+operator|,
+name|I
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|vector_
+operator|.
+name|erase
+argument_list|(
+name|NI
+argument_list|)
 return|;
 block|}
 comment|/// \brief Remove items from the set vector based on a predicate function.
@@ -815,6 +898,143 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Compute This := This u S, return whether 'This' changed.
+end_comment
+
+begin_comment
+comment|/// TODO: We should be able to use set_union from SetOperations.h, but
+end_comment
+
+begin_comment
+comment|///       SetVector interface is inconsistent with DenseSet.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|STy
+operator|>
+name|bool
+name|set_union
+argument_list|(
+argument|const STy&S
+argument_list|)
+block|{
+name|bool
+name|Changed
+operator|=
+name|false
+block|;
+for|for
+control|(
+name|typename
+name|STy
+operator|::
+name|const_iterator
+name|SI
+operator|=
+name|S
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|SE
+operator|=
+name|S
+operator|.
+name|end
+argument_list|()
+init|;
+name|SI
+operator|!=
+name|SE
+condition|;
+operator|++
+name|SI
+control|)
+if|if
+condition|(
+name|insert
+argument_list|(
+operator|*
+name|SI
+argument_list|)
+condition|)
+name|Changed
+operator|=
+name|true
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Changed
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Compute This := This - B
+end_comment
+
+begin_comment
+comment|/// TODO: We should be able to use set_subtract from SetOperations.h, but
+end_comment
+
+begin_comment
+comment|///       SetVector interface is inconsistent with DenseSet.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|class
+name|STy
+operator|>
+name|void
+name|set_subtract
+argument_list|(
+argument|const STy&S
+argument_list|)
+block|{
+for|for
+control|(
+name|typename
+name|STy
+operator|::
+name|const_iterator
+name|SI
+operator|=
+name|S
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|SE
+operator|=
+name|S
+operator|.
+name|end
+argument_list|()
+init|;
+name|SI
+operator|!=
+name|SE
+condition|;
+operator|++
+name|SI
+control|)
+name|remove
+argument_list|(
+operator|*
+name|SI
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -863,7 +1083,12 @@ argument_list|)
 operator|:
 name|P
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|P
+argument_list|)
 argument_list|)
 block|,
 name|set_

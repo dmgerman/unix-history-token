@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitmaskEnum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -120,14 +126,13 @@ decl_stmt|;
 name|class
 name|ModuleSlotTracker
 decl_stmt|;
-comment|/// MachinePointerInfo - This class contains a discriminated union of
-comment|/// information about pointers in memory operands, relating them back to LLVM IR
-comment|/// or to virtual locations (such as frame indices) that are exposed during
-comment|/// codegen.
+comment|/// This class contains a discriminated union of information about pointers in
+comment|/// memory operands, relating them back to LLVM IR or to virtual locations (such
+comment|/// as frame indices) that are exposed during codegen.
 struct|struct
 name|MachinePointerInfo
 block|{
-comment|/// V - This is the IR pointer value for the access, or it is null if unknown.
+comment|/// This is the IR pointer value for the access, or it is null if unknown.
 comment|/// If this is null, then the access is to a pointer in the default address
 comment|/// space.
 name|PointerUnion
@@ -254,15 +259,13 @@ name|O
 argument_list|)
 return|;
 block|}
-comment|/// getAddrSpace - Return the LLVM IR address space number that this pointer
-comment|/// points into.
+comment|/// Return the LLVM IR address space number that this pointer points into.
 name|unsigned
 name|getAddrSpace
 argument_list|()
 decl|const
 struct|;
-comment|/// getConstantPool - Return a MachinePointerInfo record that refers to the
-comment|/// constant pool.
+comment|/// Return a MachinePointerInfo record that refers to the constant pool.
 specifier|static
 name|MachinePointerInfo
 name|getConstantPool
@@ -272,8 +275,8 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// getFixedStack - Return a MachinePointerInfo record that refers to the
-comment|/// the specified FrameIndex.
+comment|/// Return a MachinePointerInfo record that refers to the specified
+comment|/// FrameIndex.
 specifier|static
 name|MachinePointerInfo
 name|getFixedStack
@@ -291,8 +294,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// getJumpTable - Return a MachinePointerInfo record that refers to a
-comment|/// jump table entry.
+comment|/// Return a MachinePointerInfo record that refers to a jump table entry.
 specifier|static
 name|MachinePointerInfo
 name|getJumpTable
@@ -302,8 +304,7 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// getGOT - Return a MachinePointerInfo record that refers to a
-comment|/// GOT entry.
+comment|/// Return a MachinePointerInfo record that refers to a GOT entry.
 specifier|static
 name|MachinePointerInfo
 name|getGOT
@@ -313,7 +314,7 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// getStack - stack pointer relative access.
+comment|/// Stack pointer relative access.
 specifier|static
 name|MachinePointerInfo
 name|getStack
@@ -338,7 +339,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// MachineMemOperand - A description of a memory reference used in the backend.
+comment|/// A description of a memory reference used in the backend.
 end_comment
 
 begin_comment
@@ -369,15 +370,95 @@ begin_decl_stmt
 name|class
 name|MachineMemOperand
 block|{
+name|public
+label|:
+comment|/// Flags values. These may be or'd together.
+enum|enum
+name|Flags
+enum|:
+name|uint16_t
+block|{
+comment|// No flags set.
+name|MONone
+init|=
+literal|0
+block|,
+comment|/// The memory access reads data.
+name|MOLoad
+init|=
+literal|1u
+operator|<<
+literal|0
+block|,
+comment|/// The memory access writes data.
+name|MOStore
+init|=
+literal|1u
+operator|<<
+literal|1
+block|,
+comment|/// The memory access is volatile.
+name|MOVolatile
+init|=
+literal|1u
+operator|<<
+literal|2
+block|,
+comment|/// The memory access is non-temporal.
+name|MONonTemporal
+init|=
+literal|1u
+operator|<<
+literal|3
+block|,
+comment|/// The memory access is invariant.
+name|MOInvariant
+init|=
+literal|1u
+operator|<<
+literal|4
+block|,
+comment|// Reserved for use by target-specific passes.
+name|MOTargetFlag1
+init|=
+literal|1u
+operator|<<
+literal|5
+block|,
+name|MOTargetFlag2
+init|=
+literal|1u
+operator|<<
+literal|6
+block|,
+name|MOTargetFlag3
+init|=
+literal|1u
+operator|<<
+literal|7
+block|,
+name|LLVM_MARK_AS_BITMASK_ENUM
+argument_list|(
+comment|/* LargestFlag = */
+argument|MOTargetFlag3
+argument_list|)
+block|}
+enum|;
+name|private
+label|:
 name|MachinePointerInfo
 name|PtrInfo
 decl_stmt|;
 name|uint64_t
 name|Size
 decl_stmt|;
-name|unsigned
 name|Flags
+name|FlagVals
 decl_stmt|;
+name|uint16_t
+name|BaseAlignLog2
+decl_stmt|;
+comment|// log_2(base_alignment) + 1
 name|AAMDNodes
 name|AAInfo
 decl_stmt|;
@@ -388,57 +469,13 @@ name|Ranges
 decl_stmt|;
 name|public
 label|:
-comment|/// Flags values. These may be or'd together.
-enum|enum
-name|MemOperandFlags
-block|{
-comment|/// The memory access reads data.
-name|MOLoad
-init|=
-literal|1
-block|,
-comment|/// The memory access writes data.
-name|MOStore
-init|=
-literal|2
-block|,
-comment|/// The memory access is volatile.
-name|MOVolatile
-init|=
-literal|4
-block|,
-comment|/// The memory access is non-temporal.
-name|MONonTemporal
-init|=
-literal|8
-block|,
-comment|/// The memory access is invariant.
-name|MOInvariant
-init|=
-literal|16
-block|,
-comment|// Target hints allow target passes to annotate memory operations.
-name|MOTargetStartBit
-init|=
-literal|5
-block|,
-name|MOTargetNumBits
-init|=
-literal|3
-block|,
-comment|// This is the number of bits we need to represent flags.
-name|MOMaxBits
-init|=
-literal|8
-block|}
-enum|;
-comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
-comment|/// specified PtrInfo, flags, size, and base alignment.
+comment|/// Construct a MachineMemOperand object with the specified PtrInfo, flags,
+comment|/// size, and base alignment.
 name|MachineMemOperand
 argument_list|(
 argument|MachinePointerInfo PtrInfo
 argument_list|,
-argument|unsigned flags
+argument|Flags flags
 argument_list|,
 argument|uint64_t s
 argument_list|,
@@ -460,8 +497,8 @@ return|return
 name|PtrInfo
 return|;
 block|}
-comment|/// getValue - Return the base address of the memory access. This may either
-comment|/// be a normal LLVM IR Value, or one of the special values used in CodeGen.
+comment|/// Return the base address of the memory access. This may either be a normal
+comment|/// LLVM IR Value, or one of the special values used in CodeGen.
 comment|/// Special values are those obtained via
 comment|/// PseudoSourceValue::getFixedStack(int), PseudoSourceValue::getStack, and
 comment|/// other PseudoSourceValue member functions which return objects which stand
@@ -527,55 +564,31 @@ name|getOpaqueValue
 argument_list|()
 return|;
 block|}
-comment|/// getFlags - Return the raw flags of the source value, \see MemOperandFlags.
-name|unsigned
-name|int
+comment|/// Return the raw flags of the source value, \see Flags.
+name|Flags
 name|getFlags
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-name|MOMaxBits
-operator|)
-operator|-
-literal|1
-operator|)
+name|FlagVals
 return|;
 block|}
 comment|/// Bitwise OR the current flags with the given flags.
 name|void
 name|setFlags
 parameter_list|(
-name|unsigned
+name|Flags
 name|f
 parameter_list|)
 block|{
-name|Flags
+name|FlagVals
 operator||=
-operator|(
 name|f
-operator|&
-operator|(
-operator|(
-literal|1
-operator|<<
-name|MOMaxBits
-operator|)
-operator|-
-literal|1
-operator|)
-operator|)
 expr_stmt|;
 block|}
-comment|/// getOffset - For normal values, this is a byte offset added to the base
-comment|/// address. For PseudoSourceValue::FPRel values, this is the FrameIndex
-comment|/// number.
+comment|/// For normal values, this is a byte offset added to the base address.
+comment|/// For PseudoSourceValue::FPRel values, this is the FrameIndex number.
 name|int64_t
 name|getOffset
 argument_list|()
@@ -599,7 +612,7 @@ name|getAddrSpace
 argument_list|()
 return|;
 block|}
-comment|/// getSize - Return the size in bytes of the memory reference.
+comment|/// Return the size in bytes of the memory reference.
 name|uint64_t
 name|getSize
 argument_list|()
@@ -609,15 +622,15 @@ return|return
 name|Size
 return|;
 block|}
-comment|/// getAlignment - Return the minimum known alignment in bytes of the
-comment|/// actual memory reference.
+comment|/// Return the minimum known alignment in bytes of the actual memory
+comment|/// reference.
 name|uint64_t
 name|getAlignment
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getBaseAlignment - Return the minimum known alignment in bytes of the
-comment|/// base address, without the offset.
+comment|/// Return the minimum known alignment in bytes of the base address, without
+comment|/// the offset.
 name|uint64_t
 name|getBaseAlignment
 argument_list|()
@@ -627,17 +640,13 @@ return|return
 operator|(
 literal|1u
 operator|<<
-operator|(
-name|Flags
-operator|>>
-name|MOMaxBits
-operator|)
+name|BaseAlignLog2
 operator|)
 operator|>>
 literal|1
 return|;
 block|}
-comment|/// getAAInfo - Return the AA tags for the memory reference.
+comment|/// Return the AA tags for the memory reference.
 name|AAMDNodes
 name|getAAInfo
 argument_list|()
@@ -647,7 +656,7 @@ return|return
 name|AAInfo
 return|;
 block|}
-comment|/// getRanges - Return the range tag for the memory reference.
+comment|/// Return the range tag for the memory reference.
 specifier|const
 name|MDNode
 operator|*
@@ -665,7 +674,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
+name|FlagVals
 operator|&
 name|MOLoad
 return|;
@@ -676,7 +685,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
+name|FlagVals
 operator|&
 name|MOStore
 return|;
@@ -687,7 +696,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
+name|FlagVals
 operator|&
 name|MOVolatile
 return|;
@@ -698,7 +707,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
+name|FlagVals
 operator|&
 name|MONonTemporal
 return|;
@@ -709,14 +718,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Flags
+name|FlagVals
 operator|&
 name|MOInvariant
 return|;
 block|}
-comment|/// isUnordered - Returns true if this memory operation doesn't have any
-comment|/// ordering constraints other than normal aliasing. Volatile and atomic
-comment|/// memory operations can't be reordered.
+comment|/// Returns true if this memory operation doesn't have any ordering
+comment|/// constraints other than normal aliasing. Volatile and atomic memory
+comment|/// operations can't be reordered.
 comment|///
 comment|/// Currently, we don't model the difference between volatile and atomic
 comment|/// operations. They should retain their ordering relative to all memory
@@ -732,9 +741,9 @@ name|isVolatile
 argument_list|()
 return|;
 block|}
-comment|/// refineAlignment - Update this MachineMemOperand to reflect the alignment
-comment|/// of MMO, if it has a greater alignment. This must only be used when the
-comment|/// new alignment applies to all users of this MachineMemOperand.
+comment|/// Update this MachineMemOperand to reflect the alignment of MMO, if it has a
+comment|/// greater alignment. This must only be used when the new alignment applies
+comment|/// to all users of this MachineMemOperand.
 name|void
 name|refineAlignment
 parameter_list|(
@@ -744,9 +753,9 @@ modifier|*
 name|MMO
 parameter_list|)
 function_decl|;
-comment|/// setValue - Change the SourceValue for this MachineMemOperand. This
-comment|/// should only be used when an object is being relocated and all references
-comment|/// to it are being updated.
+comment|/// Change the SourceValue for this MachineMemOperand. This should only be
+comment|/// used when an object is being relocated and all references to it are being
+comment|/// updated.
 name|void
 name|setValue
 parameter_list|(

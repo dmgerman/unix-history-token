@@ -112,6 +112,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -139,9 +151,6 @@ name|GlobalValue
 decl_stmt|;
 name|class
 name|Loop
-decl_stmt|;
-name|class
-name|PreservedAnalyses
 decl_stmt|;
 name|class
 name|Type
@@ -459,6 +468,17 @@ name|Arguments
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \returns A value by which our inlining threshold should be multiplied.
+comment|/// This is primarily used to bump up the inlining threshold wholesale on
+comment|/// targets where calls are unusually expensive.
+comment|///
+comment|/// TODO: This is a rather blunt instrument.  Perhaps altering the costs of
+comment|/// individual classes of instructions would be better.
+name|unsigned
+name|getInliningThresholdMultiplier
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Estimate the cost of an intrinsic when lowered.
 comment|///
 comment|/// Mirrors the \c getCallCost method but uses an intrinsic identifier.
@@ -636,6 +656,12 @@ comment|// loop is being fully unrolled.
 name|unsigned
 name|MaxCount
 decl_stmt|;
+comment|/// Set the maximum unrolling factor for full unrolling. Like MaxCount, but
+comment|/// applies even if full unrolling is selected. This allows a target to fall
+comment|/// back to Partial unrolling if full unrolling is above FullUnrollMaxCount.
+name|unsigned
+name|FullUnrollMaxCount
+decl_stmt|;
 comment|/// Allow partial unrolling (unrolling of loops to expand the size of the
 comment|/// loop body, not only to eliminate small constant-trip-count loops).
 name|bool
@@ -647,10 +673,19 @@ comment|/// compile time).
 name|bool
 name|Runtime
 decl_stmt|;
+comment|/// Allow generation of a loop remainder (extra iterations after unroll).
+name|bool
+name|AllowRemainder
+decl_stmt|;
 comment|/// Allow emitting expensive instructions (such as divisions) when computing
 comment|/// the trip count of a loop for runtime unrolling.
 name|bool
 name|AllowExpensiveTripCount
+decl_stmt|;
+comment|/// Apply loop unroll on any kind of loop
+comment|/// (mainly to loops that fail runtime unrolling).
+name|bool
+name|Force
 decl_stmt|;
 block|}
 struct|;
@@ -747,8 +782,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return true if the target supports masked load/store
-comment|/// AVX2 and AVX-512 targets allow masks for consecutive load and store for
-comment|/// 32 and 64 bit elements.
+comment|/// AVX2 and AVX-512 targets allow masks for consecutive load and store
 name|bool
 name|isLegalMaskedStore
 argument_list|(
@@ -892,6 +926,43 @@ name|enableInterleavedAccessVectorization
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Indicate that it is potentially unsafe to automatically vectorize
+comment|/// floating-point operations because the semantics of vector and scalar
+comment|/// floating-point semantics may differ. For example, ARM NEON v7 SIMD math
+comment|/// does not support IEEE-754 denormal numbers, while depending on the
+comment|/// platform, scalar floating-point math does.
+comment|/// This applies to floating-point math operations and calls, not memory
+comment|/// operations, shuffles, or casts.
+name|bool
+name|isFPVectorizationPotentiallyUnsafe
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine if the target supports unaligned memory accesses.
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+name|unsigned
+name|BitWidth
+argument_list|,
+name|unsigned
+name|AddressSpace
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Alignment
+operator|=
+literal|1
+argument_list|,
+name|bool
+operator|*
+name|Fast
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return hardware support for population count.
 name|PopcntSupportKind
 name|getPopcntSupport
@@ -983,6 +1054,33 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return the expected cost for the given integer when optimising
+comment|/// for size. This is different than the other integer immediate cost
+comment|/// functions in that it is subtarget agnostic. This is useful when you e.g.
+comment|/// target one ISA such as Aarch32 but smaller encodings could be possible
+comment|/// with another such as Thumb. This return value is used as a penalty when
+comment|/// the total costs for a constant is calculated (the bigger the cost, the
+comment|/// more beneficial constant hoisting is).
+name|int
+name|getIntImmCodeSizeCost
+argument_list|(
+name|unsigned
+name|Opc
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Imm
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// \name Vector Target Information
 comment|/// @{
@@ -1056,6 +1154,45 @@ name|Vector
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The bitwidth of the largest vector type that should be used to
+comment|/// load/store in the given address space.
+name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+name|unsigned
+name|AddrSpace
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \return The size of a cache line in bytes.
+name|unsigned
+name|getCacheLineSize
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \return How much before a load we should place the prefetch instruction.
+comment|/// This is currently measured in number of instructions.
+name|unsigned
+name|getPrefetchDistance
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \return Some HW prefetchers can handle accesses up to a certain constant
+comment|/// stride.  This is the minimum stride in bytes where it makes sense to start
+comment|/// adding SW prefetches.  The default is 1, i.e. prefetch with any stride.
+name|unsigned
+name|getMinPrefetchStride
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \return The maximum number of iterations to prefetch ahead.  If the
+comment|/// required number of iterations is more than this number, no prefetching is
+comment|/// performed.
+name|unsigned
+name|getMaxPrefetchIterationsAhead
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \return The maximum interleave factor that any transform should try to
 comment|/// perform for this target. This number depends on the level of parallelism
 comment|/// and the number of execution units in the CPU.
@@ -1141,6 +1278,30 @@ argument_list|,
 name|Type
 operator|*
 name|Src
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \return The expected cost of a sign- or zero-extended vector extract. Use
+comment|/// -1 to indicate that there is no information about the index value.
+name|int
+name|getExtractWithExtendCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|Dst
+argument_list|,
+name|VectorType
+operator|*
+name|VecTy
+argument_list|,
+name|unsigned
+name|Index
+operator|=
+operator|-
+literal|1
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1342,6 +1503,9 @@ name|Type
 operator|*
 operator|>
 name|Tys
+argument_list|,
+name|FastMathFlags
+name|FMF
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1364,6 +1528,9 @@ name|Value
 operator|*
 operator|>
 name|Args
+argument_list|,
+name|FastMathFlags
+name|FMF
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1617,6 +1784,13 @@ operator|*
 operator|>
 name|Arguments
 argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getInliningThresholdMultiplier
+argument_list|()
 operator|=
 literal|0
 block|;
@@ -1879,6 +2053,28 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|bool
+name|isFPVectorizationPotentiallyUnsafe
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+argument|unsigned BitWidth
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|bool *Fast
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
 name|PopcntSupportKind
 name|getPopcntSupport
 argument_list|(
@@ -1905,6 +2101,21 @@ argument_list|(
 name|Type
 operator|*
 name|Ty
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
+name|getIntImmCodeSizeCost
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
 argument_list|)
 operator|=
 literal|0
@@ -1975,6 +2186,43 @@ literal|0
 block|;
 name|virtual
 name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getCacheLineSize
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getPrefetchDistance
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMinPrefetchStride
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getMaxPrefetchIterationsAhead
+argument_list|()
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
 name|getMaxInterleaveFactor
 argument_list|(
 argument|unsigned VF
@@ -2025,6 +2273,21 @@ argument_list|,
 argument|Type *Dst
 argument_list|,
 argument|Type *Src
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|int
+name|getExtractWithExtendCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Dst
+argument_list|,
+argument|VectorType *VecTy
+argument_list|,
+argument|unsigned Index
 argument_list|)
 operator|=
 literal|0
@@ -2152,6 +2415,8 @@ argument_list|,
 argument|Type *RetTy
 argument_list|,
 argument|ArrayRef<Type *> Tys
+argument_list|,
+argument|FastMathFlags FMF
 argument_list|)
 operator|=
 literal|0
@@ -2165,6 +2430,8 @@ argument_list|,
 argument|Type *RetTy
 argument_list|,
 argument|ArrayRef<Value *> Args
+argument_list|,
+argument|FastMathFlags FMF
 argument_list|)
 operator|=
 literal|0
@@ -2428,6 +2695,18 @@ name|F
 argument_list|,
 name|Arguments
 argument_list|)
+return|;
+block|}
+name|unsigned
+name|getInliningThresholdMultiplier
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getInliningThresholdMultiplier
+argument_list|()
 return|;
 block|}
 name|int
@@ -2842,6 +3121,46 @@ name|enableInterleavedAccessVectorization
 argument_list|()
 return|;
 block|}
+name|bool
+name|isFPVectorizationPotentiallyUnsafe
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|isFPVectorizationPotentiallyUnsafe
+argument_list|()
+return|;
+block|}
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+argument|unsigned BitWidth
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|bool *Fast
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+name|BitWidth
+argument_list|,
+name|AddressSpace
+argument_list|,
+name|Alignment
+argument_list|,
+name|Fast
+argument_list|)
+return|;
+block|}
 name|PopcntSupportKind
 name|getPopcntSupport
 argument_list|(
@@ -2886,6 +3205,34 @@ name|Impl
 operator|.
 name|getFPOpCost
 argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+name|int
+name|getIntImmCodeSizeCost
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Idx
+argument_list|,
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getIntImmCodeSizeCost
+argument_list|(
+name|Opc
+argument_list|,
+name|Idx
+argument_list|,
+name|Imm
+argument_list|,
 name|Ty
 argument_list|)
 return|;
@@ -2999,6 +3346,70 @@ argument_list|)
 return|;
 block|}
 name|unsigned
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+argument|unsigned AddrSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getLoadStoreVecRegBitWidth
+argument_list|(
+name|AddrSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getCacheLineSize
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getCacheLineSize
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getPrefetchDistance
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getPrefetchDistance
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getMinPrefetchStride
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMinPrefetchStride
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getMaxPrefetchIterationsAhead
+argument_list|()
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getMaxPrefetchIterationsAhead
+argument_list|()
+return|;
+block|}
+name|unsigned
 name|getMaxInterleaveFactor
 argument_list|(
 argument|unsigned VF
@@ -3099,6 +3510,34 @@ argument_list|,
 name|Dst
 argument_list|,
 name|Src
+argument_list|)
+return|;
+block|}
+name|int
+name|getExtractWithExtendCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *Dst
+argument_list|,
+argument|VectorType *VecTy
+argument_list|,
+argument|unsigned Index
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getExtractWithExtendCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|Dst
+argument_list|,
+name|VecTy
+argument_list|,
+name|Index
 argument_list|)
 return|;
 block|}
@@ -3322,6 +3761,8 @@ argument_list|,
 argument|Type *RetTy
 argument_list|,
 argument|ArrayRef<Type *> Tys
+argument_list|,
+argument|FastMathFlags FMF
 argument_list|)
 name|override
 block|{
@@ -3335,6 +3776,8 @@ argument_list|,
 name|RetTy
 argument_list|,
 name|Tys
+argument_list|,
+name|FMF
 argument_list|)
 return|;
 block|}
@@ -3346,6 +3789,8 @@ argument_list|,
 argument|Type *RetTy
 argument_list|,
 argument|ArrayRef<Value *> Args
+argument_list|,
+argument|FastMathFlags FMF
 argument_list|)
 name|override
 block|{
@@ -3359,6 +3804,8 @@ argument_list|,
 name|RetTy
 argument_list|,
 name|Args
+argument_list|,
+name|FMF
 argument_list|)
 return|;
 block|}
@@ -3532,6 +3979,12 @@ comment|/// functions targeting different subtargets in order to support runtime
 comment|/// dispatch according to the observed subtarget.
 name|class
 name|TargetIRAnalysis
+operator|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|TargetIRAnalysis
+operator|>
 block|{
 name|public
 operator|:
@@ -3539,32 +3992,6 @@ typedef|typedef
 name|TargetTransformInfo
 name|Result
 typedef|;
-comment|/// \brief Opaque, unique identifier for this analysis pass.
-specifier|static
-name|void
-operator|*
-name|ID
-argument_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-comment|/// \brief Provide access to a name for this pass for debugging purposes.
-specifier|static
-name|StringRef
-name|name
-argument_list|()
-block|{
-return|return
-literal|"TargetIRAnalysis"
-return|;
-block|}
 comment|/// \brief Default construct a target IR analysis.
 comment|///
 comment|/// This will use the module's datalayout to construct a baseline
@@ -3673,10 +4100,22 @@ specifier|const
 name|Function
 operator|&
 name|F
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Function
+operator|>
+operator|&
 argument_list|)
 block|;
 name|private
 operator|:
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|TargetIRAnalysis
+operator|>
+block|;
 specifier|static
 name|char
 name|PassID

@@ -309,19 +309,13 @@ argument_list|()
 specifier|const
 block|;   }
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
 comment|// Support for tracing ScoreboardHazardRecognizer as a component within
-comment|// another module. Follows the current thread-unsafe model of tracing.
-specifier|static
+comment|// another module.
 specifier|const
 name|char
 modifier|*
 name|DebugType
 decl_stmt|;
-endif|#
-directive|endif
 comment|// Itinerary data for the target.
 specifier|const
 name|InstrItineraryData

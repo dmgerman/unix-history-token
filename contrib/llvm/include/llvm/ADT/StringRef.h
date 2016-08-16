@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -410,6 +416,28 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|iterator_range
+operator|<
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|>
+name|bytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|bytes_begin
+argument_list|()
+argument_list|,
+name|bytes_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name String Operations
 comment|/// @{
@@ -506,6 +534,16 @@ argument|Allocator&A
 argument_list|)
 specifier|const
 block|{
+comment|// Don't request a length 0 copy from the allocator.
+if|if
+condition|(
+name|empty
+argument_list|()
+condition|)
+return|return
+name|StringRef
+argument_list|()
+return|;
 name|char
 operator|*
 name|S
@@ -520,7 +558,7 @@ operator|>
 operator|(
 name|Length
 operator|)
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|copy
@@ -533,7 +571,7 @@ argument_list|()
 argument_list|,
 name|S
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|StringRef
 argument_list|(
@@ -760,9 +798,21 @@ name|Length
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Operator Overloads
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_decl_stmt
 name|char
 name|operator
 index|[]
@@ -788,9 +838,21 @@ name|Index
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Type Conversions
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_expr_stmt
 name|operator
 name|std
 operator|::
@@ -803,10 +865,25 @@ name|str
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name String Predicates
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// Check if this string starts with the given \p Prefix.
+end_comment
+
+begin_decl_stmt
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|startswith
@@ -839,7 +916,13 @@ operator|==
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Check if this string starts with the given \p Prefix, ignoring case.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|startswith_lower
 argument_list|(
@@ -848,7 +931,13 @@ name|Prefix
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Check if this string ends with the given \p Suffix.
+end_comment
+
+begin_decl_stmt
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|bool
 name|endswith
@@ -886,7 +975,13 @@ operator|==
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Check if this string ends with the given \p Suffix, ignoring case.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|endswith_lower
 argument_list|(
@@ -895,13 +990,37 @@ name|Suffix
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name String Searching
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// Search for the first character \p C in the string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The index of the first occurrence of \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 name|size_t
 name|find
@@ -976,10 +1095,25 @@ return|return
 name|npos
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Search for the first string \p Str in the string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The index of the first occurrence of \p Str, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find
 argument_list|(
@@ -993,10 +1127,25 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Search for the last character \p C in the string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The index of the last occurrence of \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|rfind
 argument_list|(
@@ -1053,10 +1202,25 @@ return|return
 name|npos
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Search for the last string \p Str in the string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The index of the last occurrence of \p Str, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|rfind
 argument_list|(
@@ -1065,8 +1229,17 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the first character in the string that is \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found. Same as find.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_first_of
 argument_list|(
@@ -1089,10 +1262,25 @@ name|From
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Find the first character in the string that is in \p Chars, or npos if
+end_comment
+
+begin_comment
 comment|/// not found.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Complexity: O(size() + Chars.size())
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_first_of
 argument_list|(
@@ -1106,8 +1294,17 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the first character in the string that is not \p C or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -1121,10 +1318,25 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the first character in the string that is not in the string
+end_comment
+
+begin_comment
 comment|/// \p Chars, or npos if not found.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Complexity: O(size() + Chars.size())
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_first_not_of
 argument_list|(
@@ -1138,8 +1350,17 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the last character in the string that is \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_last_of
 argument_list|(
@@ -1162,10 +1383,25 @@ name|From
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Find the last character in the string that is in \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Complexity: O(size() + Chars.size())
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_last_of
 argument_list|(
@@ -1179,8 +1415,17 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the last character in the string that is not \p C, or npos if not
+end_comment
+
+begin_comment
 comment|/// found.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_last_not_of
 argument_list|(
@@ -1194,10 +1439,25 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Find the last character in the string that is not in \p Chars, or
+end_comment
+
+begin_comment
 comment|/// npos if not found.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Complexity: O(size() + Chars.size())
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|find_last_not_of
 argument_list|(
@@ -1211,10 +1471,25 @@ name|npos
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Helpful Algorithms
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// Return the number of occurrences of \p C in the string.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|count
 argument_list|(
@@ -1262,8 +1537,17 @@ return|return
 name|Count
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Return the number of non-overlapped occurrences of \p Str in
+end_comment
+
+begin_comment
 comment|/// the string.
+end_comment
+
+begin_decl_stmt
 name|size_t
 name|count
 argument_list|(
@@ -1272,13 +1556,37 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Parse the current string as an integer of the specified radix.  If
+end_comment
+
+begin_comment
 comment|/// \p Radix is specified as zero, this does radix autosensing using
+end_comment
+
+begin_comment
 comment|/// extended C rules: 0 is octal, 0x is hex, 0b is binary.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If the string is invalid or if only a subset of the string is valid,
+end_comment
+
+begin_comment
 comment|/// this returns true to signify the error.  The string is considered
+end_comment
+
+begin_comment
 comment|/// erroneous if empty or if it overflows T.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1343,14 +1651,16 @@ name|Result
 operator|=
 name|LLVal
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|template
+unit|}      template
 operator|<
 name|typename
 name|T
@@ -1739,15 +2049,19 @@ comment|/// \param End The index following the last character to include in the
 end_comment
 
 begin_comment
-comment|/// substring. If this is npos, or less than \p Start, or exceeds the
+comment|/// substring. If this is npos or exceeds the number of characters
 end_comment
 
 begin_comment
-comment|/// number of characters remaining in the string, the string suffix
+comment|/// remaining in the string, the string suffix (starting with \p Start)
 end_comment
 
 begin_comment
-comment|/// (starting with \p Start) will be returned.
+comment|/// will be returned. If this is less than \p Start, an empty string will
+end_comment
+
+begin_comment
+comment|/// be returned.
 end_comment
 
 begin_decl_stmt
@@ -2299,7 +2613,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// Return string with consecutive characters in \p Chars starting from
+comment|/// Return string with consecutive \p Char characters starting from the
 end_comment
 
 begin_comment
@@ -2310,13 +2624,50 @@ begin_macro
 unit|StringRef
 name|ltrim
 argument_list|(
-argument|StringRef Chars =
-literal|" \t\n\v\f\r"
+argument|char Char
 argument_list|)
 end_macro
 
 begin_expr_stmt
 specifier|const
+block|{
+return|return
+name|drop_front
+argument_list|(
+name|std
+operator|::
+name|min
+argument_list|(
+name|Length
+argument_list|,
+name|find_first_not_of
+argument_list|(
+name|Char
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return string with consecutive characters in \p Chars starting from
+end_comment
+
+begin_comment
+comment|/// the left removed.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|ltrim
+argument_list|(
+name|StringRef
+name|Chars
+operator|=
+literal|" \t\n\v\f\r"
+argument_list|)
+decl|const
 block|{
 return|return
 name|drop_front
@@ -2335,7 +2686,47 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
+
+begin_comment
+comment|/// Return string with consecutive \p Char characters starting from the
+end_comment
+
+begin_comment
+comment|/// right removed.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|rtrim
+argument_list|(
+name|char
+name|Char
+argument_list|)
+decl|const
+block|{
+return|return
+name|drop_back
+argument_list|(
+name|Length
+operator|-
+name|std
+operator|::
+name|min
+argument_list|(
+name|Length
+argument_list|,
+name|find_last_not_of
+argument_list|(
+name|Char
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// Return string with consecutive characters in \p Chars starting from
@@ -2374,6 +2765,37 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Return string with consecutive \p Char characters starting from the
+end_comment
+
+begin_comment
+comment|/// left and right removed.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|trim
+argument_list|(
+name|char
+name|Char
+argument_list|)
+decl|const
+block|{
+return|return
+name|ltrim
+argument_list|(
+name|Char
+argument_list|)
+operator|.
+name|rtrim
+argument_list|(
+name|Char
 argument_list|)
 return|;
 block|}

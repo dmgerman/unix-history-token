@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/MapVector.h"
 end_include
 
@@ -96,25 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
 end_include
 
 begin_include
@@ -139,6 +115,17 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 name|class
 name|MCAsmBackend
 decl_stmt|;
@@ -235,7 +222,7 @@ name|MCContext
 decl_stmt|;
 name|friend
 name|class
-name|MCLineEntry
+name|MCDwarfLineEntry
 decl_stmt|;
 name|MCDwarfLoc
 argument_list|(
@@ -453,7 +440,7 @@ comment|/// instruction is assembled and uses an address from a temporary label
 comment|/// created at the current address in the current section and the info from
 comment|/// the last .loc directive seen as stored in the context.
 name|class
-name|MCLineEntry
+name|MCDwarfLineEntry
 range|:
 name|public
 name|MCDwarfLoc
@@ -465,11 +452,11 @@ block|;
 name|private
 operator|:
 comment|// Allow the default copy constructor and assignment operator to be used
-comment|// for an MCLineEntry object.
+comment|// for an MCDwarfLineEntry object.
 name|public
 operator|:
-comment|// Constructor to create an MCLineEntry given a symbol and the dwarf loc.
-name|MCLineEntry
+comment|// Constructor to create an MCDwarfLineEntry given a symbol and the dwarf loc.
+name|MCDwarfLineEntry
 argument_list|(
 argument|MCSymbol *label
 argument_list|,
@@ -527,7 +514,7 @@ name|void
 name|addLineEntry
 parameter_list|(
 specifier|const
-name|MCLineEntry
+name|MCDwarfLineEntry
 modifier|&
 name|LineEntry
 parameter_list|,
@@ -552,18 +539,18 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCLineEntry
+name|MCDwarfLineEntry
 operator|>
-name|MCLineEntryCollection
+name|MCDwarfLineEntryCollection
 expr_stmt|;
 typedef|typedef
-name|MCLineEntryCollection
+name|MCDwarfLineEntryCollection
 operator|::
 name|iterator
 name|iterator
 expr_stmt|;
 typedef|typedef
-name|MCLineEntryCollection
+name|MCDwarfLineEntryCollection
 operator|::
 name|const_iterator
 name|const_iterator
@@ -574,19 +561,19 @@ operator|<
 name|MCSection
 operator|*
 operator|,
-name|MCLineEntryCollection
+name|MCDwarfLineEntryCollection
 operator|>
 name|MCLineDivisionMap
 expr_stmt|;
 name|private
 label|:
-comment|// A collection of MCLineEntry for each section.
+comment|// A collection of MCDwarfLineEntry for each section.
 name|MCLineDivisionMap
 name|MCLineDivisions
 decl_stmt|;
 name|public
 label|:
-comment|// Returns the collection of MCLineEntry for a given Compile Unit ID.
+comment|// Returns the collection of MCDwarfLineEntry for a given Compile Unit ID.
 specifier|const
 name|MCLineDivisionMap
 operator|&

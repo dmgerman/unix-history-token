@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeGenInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Object/Binary.h"
 end_include
 
@@ -852,7 +846,8 @@ comment|/// addGlobalMapping - Tell the execution engine that the specified glob
 comment|/// at the specified location.  This is used internally as functions are JIT'd
 comment|/// and as global variables are laid out in memory.  It can and should also be
 comment|/// used by clients of the EE that want to have an LLVM global overlay
-comment|/// existing data in memory.  Mappings are automatically removed when their
+comment|/// existing data in memory. Values to be mapped should be named, and have
+comment|/// external or weak linkage. Mappings are automatically removed when their
 comment|/// GlobalValue is destroyed.
 name|void
 name|addGlobalMapping
@@ -1326,14 +1321,19 @@ parameter_list|)
 block|{
 name|LazyFunctionCreator
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|C
+argument_list|)
 expr_stmt|;
 block|}
 name|protected
 label|:
 name|ExecutionEngine
 argument_list|(
-argument|const DataLayout DL
+argument|DataLayout DL
 argument_list|)
 block|:
 name|DL
@@ -1506,9 +1506,12 @@ expr_stmt|;
 name|TargetOptions
 name|Options
 decl_stmt|;
+name|Optional
+operator|<
 name|Reloc
 operator|::
 name|Model
+operator|>
 name|RelocModel
 expr_stmt|;
 name|CodeModel

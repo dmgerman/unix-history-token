@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/CodeGen.h"
 end_include
 
@@ -77,10 +71,24 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|Module
 decl_stmt|;
@@ -90,10 +98,14 @@ decl_stmt|;
 name|class
 name|raw_pwrite_stream
 decl_stmt|;
-comment|/// Split M into OSs.size() partitions, and generate code for each. Writes
-comment|/// OSs.size() output files to the output streams in OSs. The resulting output
-comment|/// files if linked together are intended to be equivalent to the single output
-comment|/// file that would have been code generated from M.
+comment|/// Split M into OSs.size() partitions, and generate code for each. Takes a
+comment|/// factory function for the TargetMachine TMFactory. Writes OSs.size() output
+comment|/// files to the output streams in OSs. The resulting output files if linked
+comment|/// together are intended to be equivalent to the single output file that would
+comment|/// have been code generated from M.
+comment|///
+comment|/// Writes bitcode for individual partitions into output streams in BCOSs, if
+comment|/// BCOSs is not empty.
 comment|///
 comment|/// \returns M if OSs.size() == 1, otherwise returns std::unique_ptr<Module>().
 name|std
@@ -108,19 +120,13 @@ argument|std::unique_ptr<Module> M
 argument_list|,
 argument|ArrayRef<raw_pwrite_stream *> OSs
 argument_list|,
-argument|StringRef CPU
+argument|ArrayRef<llvm::raw_pwrite_stream *> BCOSs
 argument_list|,
-argument|StringRef Features
-argument_list|,
-argument|const TargetOptions&Options
-argument_list|,
-argument|Reloc::Model RM = Reloc::Default
-argument_list|,
-argument|CodeModel::Model CM = CodeModel::Default
-argument_list|,
-argument|CodeGenOpt::Level OL = CodeGenOpt::Default
+argument|const std::function<std::unique_ptr<TargetMachine>()>&TMFactory
 argument_list|,
 argument|TargetMachine::CodeGenFileType FT = TargetMachine::CGFT_ObjectFile
+argument_list|,
+argument|bool PreserveLocals = false
 argument_list|)
 expr_stmt|;
 block|}

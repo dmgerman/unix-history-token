@@ -98,6 +98,8 @@ name|public
 label|:
 enum|enum
 name|SimpleValueType
+enum|:
+name|int8_t
 block|{
 comment|// INVALID_SIMPLE_VALUE_TYPE - Simple value types less than zero are
 comment|// considered extended value types.
@@ -510,52 +512,52 @@ block|,
 comment|// Token - A value of type llvm::TokenTy
 name|token
 init|=
-literal|249
+literal|120
 block|,
 comment|// Metadata - This is MDNode or MDString.
 name|Metadata
 init|=
-literal|250
+literal|121
 block|,
 comment|// iPTRAny - An int value the size of the pointer of the current
 comment|// target to any address space. This must only be used internal to
 comment|// tblgen. Other than for overloading, we treat iPTRAny the same as iPTR.
 name|iPTRAny
 init|=
-literal|251
+literal|122
 block|,
 comment|// vAny - A vector with any length and element size. This is used
 comment|// for intrinsics that have overloadings based on vector types.
 comment|// This is only for tblgen's consumption!
 name|vAny
 init|=
-literal|252
+literal|123
 block|,
 comment|// fAny - Any floating-point or vector floating-point value. This is used
 comment|// for intrinsics that have overloadings based on floating-point types.
 comment|// This is only for tblgen's consumption!
 name|fAny
 init|=
-literal|253
+literal|124
 block|,
 comment|// iAny - An integer or vector integer value of any bit width. This is
 comment|// used for intrinsics that have overloadings based on integer bit widths.
 comment|// This is only for tblgen's consumption!
 name|iAny
 init|=
-literal|254
+literal|125
 block|,
 comment|// iPTR - An int value the size of the pointer of the current
 comment|// target.  This should only be used internal to tblgen!
 name|iPTR
 init|=
-literal|255
+literal|126
 block|,
 comment|// Any - Any type. This is used for intrinsics that have overloadings.
 comment|// This is only for tblgen's consumption!
 name|Any
 init|=
-literal|256
+literal|127
 block|}
 enum|;
 name|SimpleValueType
@@ -790,6 +792,29 @@ name|MVT
 operator|::
 name|LAST_INTEGER_VECTOR_VALUETYPE
 operator|)
+operator|)
+return|;
+block|}
+comment|/// isScalarInteger - Return true if this is an integer, not including
+comment|/// vectors.
+name|bool
+name|isScalarInteger
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SimpleTy
+operator|>=
+name|MVT
+operator|::
+name|FIRST_INTEGER_VALUETYPE
+operator|&&
+name|SimpleTy
+operator|<=
+name|MVT
+operator|::
+name|LAST_INTEGER_VALUETYPE
 operator|)
 return|;
 block|}

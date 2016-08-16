@@ -824,6 +824,11 @@ comment|// This list is empty if no ItinRW refers to this Processor.
 name|RecVec
 name|ItinRWDefs
 decl_stmt|;
+comment|// List of unsupported feature.
+comment|// This list is empty if the Processor has no UnsupportedFeatures.
+name|RecVec
+name|UnsupportedFeaturesDefs
+decl_stmt|;
 comment|// All read/write resources associated with this processor.
 name|RecVec
 name|WriteResDefs
@@ -915,6 +920,16 @@ name|PRDef
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|isUnsupported
+argument_list|(
+specifier|const
+name|CodeGenInstruction
+operator|&
+name|Inst
+argument_list|)
+decl|const
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -1002,6 +1017,12 @@ expr_stmt|;
 comment|// Any inferred SchedClass has an index greater than NumInstrSchedClassses.
 name|unsigned
 name|NumInstrSchedClasses
+decl_stmt|;
+name|RecVec
+name|ProcResourceDefs
+decl_stmt|;
+name|RecVec
+name|ProcResGroups
 decl_stmt|;
 comment|// Map each instruction to its unique SchedClass index considering the
 comment|// combination of it's itinerary class, SchedRW list, and InstRW records.
@@ -1403,6 +1424,18 @@ name|end
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|CodeGenProcModel
+operator|>
+name|procModels
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ProcModels
+return|;
+block|}
 comment|// Return true if any processors have itineraries.
 name|bool
 name|hasItineraries
@@ -1732,6 +1765,18 @@ name|end
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|CodeGenSchedClass
+operator|>
+name|schedClasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SchedClasses
+return|;
+block|}
 name|unsigned
 name|numInstrSchedClasses
 argument_list|()
@@ -1982,7 +2027,15 @@ name|collectProcItinRW
 parameter_list|()
 function_decl|;
 name|void
+name|collectProcUnsupportedFeatures
+parameter_list|()
+function_decl|;
+name|void
 name|inferSchedClasses
+parameter_list|()
+function_decl|;
+name|void
+name|checkCompleteness
 parameter_list|()
 function_decl|;
 name|void

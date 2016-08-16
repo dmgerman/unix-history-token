@@ -140,6 +140,14 @@ argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
+comment|/**    * \brief Create branch instruction for PPC::TCRETURN* (tail call return)    *    * \param[in] MBB that is terminated by PPC::TCRETURN*    */
+name|void
+name|createTailCallBranchInstr
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|PPCFrameLowering
@@ -250,7 +258,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF

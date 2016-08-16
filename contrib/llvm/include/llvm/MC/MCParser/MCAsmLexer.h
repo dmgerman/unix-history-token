@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -71,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/SMLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -104,6 +122,11 @@ block|,
 comment|// larger than 64 bits
 comment|// Real values.
 name|Real
+block|,
+comment|// Comments
+name|Comment
+block|,
+name|HashDirective
 block|,
 comment|// No-value.
 name|EndOfStatement
@@ -222,7 +245,7 @@ argument_list|)
 operator|,
 name|IntVal
 argument_list|(
-argument|IntVal
+argument|std::move(IntVal)
 argument_list|)
 block|{}
 name|AsmToken
@@ -563,6 +586,8 @@ name|begin
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|// LexToken may generate multiple tokens via UnLex but will always return
+comment|// the first one. Place returned value at head of CurTok vector.
 if|if
 condition|(
 name|CurTok
@@ -570,14 +595,26 @@ operator|.
 name|empty
 argument_list|()
 condition|)
-name|CurTok
-operator|.
-name|emplace_back
-argument_list|(
+block|{
+name|AsmToken
+name|T
+init|=
 name|LexToken
 argument_list|()
+decl_stmt|;
+name|CurTok
+operator|.
+name|insert
+argument_list|(
+name|CurTok
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|T
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|CurTok
 operator|.

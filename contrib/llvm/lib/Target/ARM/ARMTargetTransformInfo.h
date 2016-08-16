@@ -303,8 +303,42 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Floating-point computation using ARMv8 AArch32 Advanced
+comment|/// SIMD instructions remains unchanged from ARMv7. Only AArch64 SIMD
+comment|/// is IEEE-754 compliant, but it's not covered in this target.
+name|bool
+name|isFPVectorizationPotentiallyUnsafe
+parameter_list|()
+block|{
+return|return
+operator|!
+name|ST
+operator|->
+name|isTargetDarwin
+argument_list|()
+return|;
+block|}
 comment|/// \name Scalar TTI Implementations
 comment|/// @{
+name|int
+name|getIntImmCodeSizeCost
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|unsigned
+name|Idx
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|Imm
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
 name|using
 name|BaseT
 operator|::
@@ -313,6 +347,25 @@ expr_stmt|;
 name|int
 name|getIntImmCost
 parameter_list|(
+specifier|const
+name|APInt
+modifier|&
+name|Imm
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+name|int
+name|getIntImmCost
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|unsigned
+name|Idx
+parameter_list|,
 specifier|const
 name|APInt
 modifier|&
@@ -403,24 +456,11 @@ name|unsigned
 name|VF
 parameter_list|)
 block|{
-comment|// These are out of order CPUs:
-if|if
-condition|(
+return|return
 name|ST
 operator|->
-name|isCortexA15
+name|getMaxInterleaveFactor
 argument_list|()
-operator|||
-name|ST
-operator|->
-name|isSwift
-argument_list|()
-condition|)
-return|return
-literal|2
-return|;
-return|return
-literal|1
 return|;
 block|}
 name|int

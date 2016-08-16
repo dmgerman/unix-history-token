@@ -802,19 +802,19 @@ comment|/// full number is still printed.  Examples:
 end_comment
 
 begin_comment
-comment|///   OS<< format_hex_no_prefix(255, 4)              => ff
-end_comment
-
-begin_comment
-comment|///   OS<< format_hex_no_prefix(255, 4, true)        => FF
-end_comment
-
-begin_comment
-comment|///   OS<< format_hex_no_prefix(255, 6)              => 00ff
-end_comment
-
-begin_comment
 comment|///   OS<< format_hex_no_prefix(255, 2)              => ff
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex_no_prefix(255, 2, true)        => FF
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex_no_prefix(255, 4)              => 00ff
+end_comment
+
+begin_comment
+comment|///   OS<< format_hex_no_prefix(255, 1)              => ff
 end_comment
 
 begin_function
@@ -838,9 +838,9 @@ name|assert
 argument_list|(
 name|Width
 operator|<=
-literal|18
+literal|16
 operator|&&
-literal|"hex width must be<= 18"
+literal|"hex width must be<= 16"
 argument_list|)
 expr_stmt|;
 return|return

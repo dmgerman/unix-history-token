@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Printable.h"
 end_include
 
@@ -237,6 +231,12 @@ comment|/// Whether the class supports two (or more) disjunct subregister indice
 specifier|const
 name|bool
 name|HasDisjunctSubRegs
+decl_stmt|;
+comment|/// Whether a combination of subregisters can cover every register in the
+comment|/// class. See also the CoveredBySubRegs description in Target.td.
+specifier|const
+name|bool
+name|CoveredBySubRegs
 decl_stmt|;
 specifier|const
 name|sc_iterator
@@ -611,8 +611,20 @@ argument_list|)
 return|;
 block|}
 comment|/// Returns a bit vector of subclasses, including this one.
-comment|/// The vector is indexed by class IDs, see hasSubClassEq() above for how to
-comment|/// use it.
+comment|/// The vector is indexed by class IDs.
+comment|///
+comment|/// To use it, consider the returned array as a chunk of memory that
+comment|/// contains an array of bits of size NumRegClasses. Each 32-bit chunk
+comment|/// contains a bitset of the ID of the subclasses in big-endian style.
+comment|/// I.e., the representation of the memory from left to right at the
+comment|/// bit level looks like:
+comment|/// [31 30 ... 1 0] [ 63 62 ... 33 32] ...
+comment|///                     [ XXX NumRegClasses NumRegClasses - 1 ... ]
+comment|/// Where the number represents the class ID and XXX bits that
+comment|/// should be ignored.
+comment|///
+comment|/// See the implementation of hasSubClassEq for an example of how it
+comment|/// can be used.
 specifier|const
 name|uint32_t
 operator|*
@@ -715,7 +727,7 @@ return|;
 block|}
 comment|/// Returns the combination of all lane masks of register in this class.
 comment|/// The lane masks of the registers are the combination of all lane masks
-comment|/// of their subregisters.
+comment|/// of their subregisters. Returns 1 if there are no subregisters.
 name|LaneBitmask
 name|getLaneMask
 argument_list|()
@@ -1888,10 +1900,27 @@ specifier|const
 block|{
 name|llvm_unreachable
 argument_list|(
-literal|"target does not provide no presered mask"
+literal|"target does not provide no preserved mask"
 argument_list|)
 block|;   }
+comment|/// Return true if all bits that are set in mask \p mask0 are also set in
+comment|/// \p mask1.
+name|bool
+name|regmaskSubsetEqual
+argument_list|(
+argument|const uint32_t *mask0
+argument_list|,
+argument|const uint32_t *mask1
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Return all the call-preserved register masks defined for this target.
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|ArrayRef
 operator|<
@@ -2326,6 +2355,65 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Transform a lanemask given for a virtual register to the corresponding
+end_comment
+
+begin_comment
+comment|/// lanemask before using subregister with index \p IdxA.
+end_comment
+
+begin_comment
+comment|/// This is the reverse of composeSubRegIndexLaneMask(), assuming Mask is a
+end_comment
+
+begin_comment
+comment|/// valie lane mask (no invalid bits set) the following holds:
+end_comment
+
+begin_comment
+comment|/// X0 = composeSubRegIndexLaneMask(Idx, Mask)
+end_comment
+
+begin_comment
+comment|/// X1 = reverseComposeSubRegIndexLaneMask(Idx, X0)
+end_comment
+
+begin_comment
+comment|/// => X1 == Mask
+end_comment
+
+begin_decl_stmt
+name|LaneBitmask
+name|reverseComposeSubRegIndexLaneMask
+argument_list|(
+name|unsigned
+name|IdxA
+argument_list|,
+name|LaneBitmask
+name|LaneMask
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|IdxA
+condition|)
+return|return
+name|LaneMask
+return|;
+return|return
+name|reverseComposeSubRegIndexLaneMaskImpl
+argument_list|(
+name|IdxA
+argument_list|,
+name|LaneMask
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Debugging helper: dump register in human readable form to dbgs() stream.
 end_comment
 
@@ -2388,6 +2476,25 @@ begin_decl_stmt
 name|virtual
 name|LaneBitmask
 name|composeSubRegIndexLaneMaskImpl
+argument_list|(
+name|unsigned
+argument_list|,
+name|LaneBitmask
+argument_list|)
+decl|const
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target has no sub-registers"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|LaneBitmask
+name|reverseComposeSubRegIndexLaneMaskImpl
 argument_list|(
 name|unsigned
 argument_list|,
@@ -3786,6 +3893,38 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Return the assembly name for \p Reg.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|StringRef
+name|getRegAsmName
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+comment|// FIXME: We are assuming that the assembly name is equal to the TableGen
+comment|// name converted to lower case
+comment|//
+comment|// The TableGen name is the name of the definition for this register in the
+comment|// target's tablegen files.  For example, the TableGen name of
+comment|// def EAX : Register<...>; is "EAX"
+return|return
+name|StringRef
+argument_list|(
+name|getName
+argument_list|(
+name|Reg
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -4028,8 +4167,9 @@ return|return
 name|SubReg
 return|;
 block|}
-comment|/// Returns the bit mask if register classes that getSubReg() projects into
+comment|/// Returns the bit mask of register classes that getSubReg() projects into
 comment|/// RC.
+comment|/// See TargetRegisterClass::getSubClassMask() for how to use it.
 specifier|const
 name|uint32_t
 operator|*
@@ -4076,6 +4216,279 @@ operator|=
 name|nullptr
 expr_stmt|;
 block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//                           BitMaskClassIterator
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// This class encapuslates the logic to iterate over bitmask returned by
+end_comment
+
+begin_comment
+comment|/// the various RegClass related APIs.
+end_comment
+
+begin_comment
+comment|/// E.g., this class can be used to iterate over the subclasses provided by
+end_comment
+
+begin_comment
+comment|/// TargetRegisterClass::getSubClassMask or SuperRegClassIterator::getMask.
+end_comment
+
+begin_decl_stmt
+name|class
+name|BitMaskClassIterator
+block|{
+comment|/// Total number of register classes.
+specifier|const
+name|unsigned
+name|NumRegClasses
+decl_stmt|;
+comment|/// Base index of CurrentChunk.
+comment|/// In other words, the number of bit we read to get at the
+comment|/// beginning of that chunck.
+name|unsigned
+name|Base
+decl_stmt|;
+comment|/// Adjust base index of CurrentChunk.
+comment|/// Base index + how many bit we read within CurrentChunk.
+name|unsigned
+name|Idx
+decl_stmt|;
+comment|/// Current register class ID.
+name|unsigned
+name|ID
+decl_stmt|;
+comment|/// Mask we are iterating over.
+specifier|const
+name|uint32_t
+modifier|*
+name|Mask
+decl_stmt|;
+comment|/// Current chunk of the Mask we are traversing.
+name|uint32_t
+name|CurrentChunk
+decl_stmt|;
+comment|/// Move ID to the next set bit.
+name|void
+name|moveToNextID
+parameter_list|()
+block|{
+comment|// If the current chunk of memory is empty, move to the next one,
+comment|// while making sure we do not go pass the number of register
+comment|// classes.
+while|while
+condition|(
+operator|!
+name|CurrentChunk
+condition|)
+block|{
+comment|// Move to the next chunk.
+name|Base
+operator|+=
+literal|32
+expr_stmt|;
+if|if
+condition|(
+name|Base
+operator|>=
+name|NumRegClasses
+condition|)
+block|{
+name|ID
+operator|=
+name|NumRegClasses
+expr_stmt|;
+return|return;
+block|}
+name|CurrentChunk
+operator|=
+operator|*
+operator|++
+name|Mask
+expr_stmt|;
+name|Idx
+operator|=
+name|Base
+expr_stmt|;
+block|}
+comment|// Otherwise look for the first bit set from the right
+comment|// (representation of the class ID is big endian).
+comment|// See getSubClassMask for more details on the representation.
+name|unsigned
+name|Offset
+init|=
+name|countTrailingZeros
+argument_list|(
+name|CurrentChunk
+argument_list|)
+decl_stmt|;
+comment|// Add the Offset to the adjusted base number of this chunk: Idx.
+comment|// This is the ID of the register class.
+name|ID
+operator|=
+name|Idx
+operator|+
+name|Offset
+expr_stmt|;
+comment|// Consume the zeros, if any, and the bit we just read
+comment|// so that we are at the right spot for the next call.
+comment|// Do not do Offset + 1 because Offset may be 31 and 32
+comment|// will be UB for the shift, though in that case we could
+comment|// have make the chunk being equal to 0, but that would
+comment|// have introduced a if statement.
+name|moveNBits
+argument_list|(
+name|Offset
+argument_list|)
+expr_stmt|;
+name|moveNBits
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Move \p NumBits Bits forward in CurrentChunk.
+name|void
+name|moveNBits
+parameter_list|(
+name|unsigned
+name|NumBits
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|NumBits
+operator|<
+literal|32
+operator|&&
+literal|"Undefined behavior spotted!"
+argument_list|)
+expr_stmt|;
+comment|// Consume the bit we read for the next call.
+name|CurrentChunk
+operator|>>=
+name|NumBits
+expr_stmt|;
+comment|// Adjust the base for the chunk.
+name|Idx
+operator|+=
+name|NumBits
+expr_stmt|;
+block|}
+name|public
+label|:
+comment|/// Create a BitMaskClassIterator that visits all the register classes
+comment|/// represented by \p Mask.
+comment|///
+comment|/// \pre \p Mask != nullptr
+name|BitMaskClassIterator
+argument_list|(
+specifier|const
+name|uint32_t
+operator|*
+name|Mask
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+operator|:
+name|NumRegClasses
+argument_list|(
+name|TRI
+operator|.
+name|getNumRegClasses
+argument_list|()
+argument_list|)
+operator|,
+name|Base
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Idx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ID
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Mask
+argument_list|(
+name|Mask
+argument_list|)
+operator|,
+name|CurrentChunk
+argument_list|(
+argument|*Mask
+argument_list|)
+block|{
+comment|// Move to the first ID.
+name|moveToNextID
+argument_list|()
+block|;   }
+comment|/// Returns true if this iterator is still pointing at a valid entry.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getID
+argument_list|()
+operator|!=
+name|NumRegClasses
+return|;
+block|}
+comment|/// Returns the current register class ID.
+name|unsigned
+name|getID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+return|;
+block|}
+comment|/// Advance iterator to the next entry.
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot move iterator past end."
+argument_list|)
+block|;
+name|moveToNextID
+argument_list|()
+block|;   }
 block|}
 end_decl_stmt
 

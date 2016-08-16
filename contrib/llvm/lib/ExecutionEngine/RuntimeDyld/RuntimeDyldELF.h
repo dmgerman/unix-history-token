@@ -82,6 +82,13 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|object
+block|{
+name|class
+name|ELFObjectFileBase
+decl_stmt|;
+block|}
 name|class
 name|RuntimeDyldELF
 range|:
@@ -396,7 +403,7 @@ name|Obj
 argument_list|)
 name|override
 decl_stmt|;
-name|void
+name|Error
 name|findPPC64TOCSection
 parameter_list|(
 specifier|const
@@ -413,7 +420,7 @@ modifier|&
 name|Rel
 parameter_list|)
 function_decl|;
-name|void
+name|Error
 name|findOPDEntrySection
 parameter_list|(
 specifier|const
@@ -661,30 +668,24 @@ name|Value
 argument_list|)
 name|override
 decl_stmt|;
+name|Expected
+operator|<
 name|relocation_iterator
+operator|>
 name|processRelocationRef
 argument_list|(
-name|unsigned
-name|SectionID
+argument|unsigned SectionID
 argument_list|,
-name|relocation_iterator
-name|RelI
+argument|relocation_iterator RelI
 argument_list|,
-specifier|const
-name|ObjectFile
-operator|&
-name|Obj
+argument|const ObjectFile&Obj
 argument_list|,
-name|ObjSectionToIDMap
-operator|&
-name|ObjSectionToID
+argument|ObjSectionToIDMap&ObjSectionToID
 argument_list|,
-name|StubMap
-operator|&
-name|Stubs
+argument|StubMap&Stubs
 argument_list|)
 name|override
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|isCompatibleFile
 argument_list|(
@@ -708,7 +709,7 @@ name|deregisterEHFrames
 argument_list|()
 name|override
 expr_stmt|;
-name|void
+name|Error
 name|finalizeLoad
 argument_list|(
 specifier|const

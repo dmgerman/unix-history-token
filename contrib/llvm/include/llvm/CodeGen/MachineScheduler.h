@@ -272,14 +272,6 @@ comment|// overrideSchedPolicy(MachineSchedPolicy&Policy,
 end_comment
 
 begin_comment
-comment|//                     MachineInstr *begin,
-end_comment
-
-begin_comment
-comment|//                     MachineInstr *end,
-end_comment
-
-begin_comment
 comment|//                     unsigned NumRegionInstrs) const {
 end_comment
 
@@ -333,6 +325,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/ScheduleDAGInstrs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
 end_include
 
 begin_include
@@ -568,6 +566,11 @@ comment|// Allow the scheduler to disable register pressure tracking.
 name|bool
 name|ShouldTrackPressure
 decl_stmt|;
+comment|/// Track LaneMasks to allow reordering of independent subregister writes
+comment|/// of the same vreg. \sa MachineSchedStrategy::shouldTrackLaneMasks()
+name|bool
+name|ShouldTrackLaneMasks
+decl_stmt|;
 comment|// Allow the scheduler to force top-down or bottom-up scheduling. If neither
 comment|// is true, the scheduler runs in both directions and converges.
 name|bool
@@ -585,6 +588,11 @@ name|MachineSchedPolicy
 argument_list|()
 operator|:
 name|ShouldTrackPressure
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ShouldTrackLaneMasks
 argument_list|(
 name|false
 argument_list|)
@@ -673,6 +681,19 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Returns true if lanemasks should be tracked. LaneMask tracking is
+comment|/// necessary to reorder independent subregister defs for the same vreg.
+comment|/// This has to be enabled in combination with shouldTrackPressure().
+name|virtual
+name|bool
+name|shouldTrackLaneMasks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Initialize the strategy after building the DAG for a new region.
 name|virtual
 name|void
@@ -758,44 +779,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// Mutate the DAG as a postpass after normal DAG building.
-end_comment
-
-begin_decl_stmt
-name|class
-name|ScheduleDAGMutation
-block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
-name|public
-label|:
-name|virtual
-operator|~
-name|ScheduleDAGMutation
-argument_list|()
-block|{}
-name|virtual
-name|void
-name|apply
-argument_list|(
-name|ScheduleDAGMI
-operator|*
-name|DAG
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1313,6 +1296,9 @@ comment|/// Register pressure in this region computed by initRegPressure.
 name|bool
 name|ShouldTrackPressure
 block|;
+name|bool
+name|ShouldTrackLaneMasks
+block|;
 name|IntervalPressure
 name|RegPressure
 block|;
@@ -1343,6 +1329,11 @@ name|BotPressure
 block|;
 name|RegPressureTracker
 name|BotRPTracker
+block|;
+comment|/// True if disconnected subregister components are already renamed.
+comment|/// The renaming is only done on demand if lane masks are tracked.
+name|bool
+name|DisconnectedComponentsRenamed
 block|;
 name|public
 operator|:
@@ -1393,6 +1384,11 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|ShouldTrackLaneMasks
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|RPTracker
 argument_list|(
 name|RegPressure
@@ -1405,7 +1401,12 @@ argument_list|)
 block|,
 name|BotRPTracker
 argument_list|(
-argument|BotPressure
+name|BotPressure
+argument_list|)
+block|,
+name|DisconnectedComponentsRenamed
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~
@@ -1590,6 +1591,26 @@ name|void
 name|buildDAGWithRegPressure
 argument_list|()
 block|;
+comment|/// Release ExitSU predecessors and setup scheduler queues. Re-position
+comment|/// the Top RP tracker in case the region beginning has changed.
+name|void
+name|initQueues
+argument_list|(
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|TopRoots
+argument_list|,
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|BotRoots
+argument_list|)
+block|;
 comment|/// Move an instruction and update register pressure.
 name|void
 name|scheduleMI
@@ -1609,7 +1630,7 @@ name|updatePressureDiffs
 argument_list|(
 name|ArrayRef
 operator|<
-name|unsigned
+name|RegisterMaskPair
 operator|>
 name|LiveUses
 argument_list|)
@@ -2713,8 +2734,12 @@ comment|/// Represent the type of SchedCandidate found within a single queue.
 comment|/// pickNodeBidirectional depends on these listed by decreasing priority.
 expr|enum
 name|CandReason
+operator|:
+name|uint8_t
 block|{
 name|NoCand
+block|,
+name|Only1
 block|,
 name|PhysRegCopy
 block|,
@@ -2792,7 +2817,59 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CandPolicy
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|ReduceLatency
+operator|==
+name|RHS
+operator|.
+name|ReduceLatency
+operator|&&
+name|ReduceResIdx
+operator|==
+name|RHS
+operator|.
+name|ReduceResIdx
+operator|&&
+name|DemandResIdx
+operator|==
+name|RHS
+operator|.
+name|DemandResIdx
+return|;
 block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|CandPolicy
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// Status of an instruction's critical resource consumption.
 block|struct
@@ -2883,9 +2960,9 @@ comment|// The reason for this candidate.
 name|CandReason
 name|Reason
 block|;
-comment|// Set of reasons that apply to multiple candidates.
-name|uint32_t
-name|RepeatReasonSet
+comment|// Whether this candidate should be scheduled at top/bottom.
+name|bool
+name|AtTop
 block|;
 comment|// Register pressure values for the best candidate.
 name|RegPressureDelta
@@ -2896,33 +2973,56 @@ name|SchedResourceDelta
 name|ResDelta
 block|;
 name|SchedCandidate
+argument_list|()
+block|{
+name|reset
 argument_list|(
-specifier|const
 name|CandPolicy
-operator|&
-name|policy
+argument_list|()
 argument_list|)
-operator|:
+block|; }
+name|SchedCandidate
+argument_list|(
+argument|const CandPolicy&Policy
+argument_list|)
+block|{
+name|reset
+argument_list|(
 name|Policy
-argument_list|(
-name|policy
 argument_list|)
-block|,
+block|; }
+name|void
+name|reset
+argument_list|(
+argument|const CandPolicy&NewPolicy
+argument_list|)
+block|{
+name|Policy
+operator|=
+name|NewPolicy
+block|;
 name|SU
-argument_list|(
+operator|=
 name|nullptr
-argument_list|)
-block|,
+block|;
 name|Reason
-argument_list|(
+operator|=
 name|NoCand
-argument_list|)
-block|,
-name|RepeatReasonSet
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+block|;
+name|AtTop
+operator|=
+name|false
+block|;
+name|RPDelta
+operator|=
+name|RegPressureDelta
+argument_list|()
+block|;
+name|ResDelta
+operator|=
+name|SchedResourceDelta
+argument_list|()
+block|;     }
 name|bool
 name|isValid
 argument_list|()
@@ -2962,6 +3062,12 @@ name|Best
 operator|.
 name|Reason
 block|;
+name|AtTop
+operator|=
+name|Best
+operator|.
+name|AtTop
+block|;
 name|RPDelta
 operator|=
 name|Best
@@ -2974,36 +3080,6 @@ name|Best
 operator|.
 name|ResDelta
 block|;     }
-name|bool
-name|isRepeat
-argument_list|(
-argument|CandReason R
-argument_list|)
-block|{
-return|return
-name|RepeatReasonSet
-operator|&
-operator|(
-literal|1
-operator|<<
-name|R
-operator|)
-return|;
-block|}
-name|void
-name|setRepeat
-argument_list|(
-argument|CandReason R
-argument_list|)
-block|{
-name|RepeatReasonSet
-operator||=
-operator|(
-literal|1
-operator|<<
-name|R
-operator|)
-block|; }
 name|void
 name|initResourceDelta
 argument_list|(
@@ -3111,6 +3187,14 @@ block|;
 name|SchedBoundary
 name|Bot
 block|;
+comment|/// Candidate last picked from Top boundary.
+name|SchedCandidate
+name|TopCand
+block|;
+comment|/// Candidate last picked from Bot boundary.
+name|SchedCandidate
+name|BotCand
+block|;
 name|MachineSchedPolicy
 name|RegionPolicy
 block|;
@@ -3178,6 +3262,18 @@ operator|.
 name|ShouldTrackPressure
 return|;
 block|}
+name|bool
+name|shouldTrackLaneMasks
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|RegionPolicy
+operator|.
+name|ShouldTrackLaneMasks
+return|;
+block|}
 name|void
 name|initialize
 argument_list|(
@@ -3215,6 +3311,12 @@ name|releaseTopNode
 argument_list|(
 name|SU
 argument_list|)
+block|;
+name|TopCand
+operator|.
+name|SU
+operator|=
+name|nullptr
 block|;   }
 name|void
 name|releaseBottomNode
@@ -3229,6 +3331,12 @@ name|releaseBottomNode
 argument_list|(
 name|SU
 argument_list|)
+block|;
+name|BotCand
+operator|.
+name|SU
+operator|=
+name|nullptr
 block|;   }
 name|void
 name|registerRoots
@@ -3242,6 +3350,20 @@ name|checkAcyclicLatency
 argument_list|()
 block|;
 name|void
+name|initCandidate
+argument_list|(
+argument|SchedCandidate&Cand
+argument_list|,
+argument|SUnit *SU
+argument_list|,
+argument|bool AtTop
+argument_list|,
+argument|const RegPressureTracker&RPTracker
+argument_list|,
+argument|RegPressureTracker&TempTracker
+argument_list|)
+block|;
+name|void
 name|tryCandidate
 argument_list|(
 name|SchedCandidate
@@ -3253,17 +3375,8 @@ operator|&
 name|TryCand
 argument_list|,
 name|SchedBoundary
-operator|&
+operator|*
 name|Zone
-argument_list|,
-specifier|const
-name|RegPressureTracker
-operator|&
-name|RPTracker
-argument_list|,
-name|RegPressureTracker
-operator|&
-name|TempTracker
 argument_list|)
 block|;
 name|SUnit
@@ -3281,6 +3394,11 @@ argument_list|(
 name|SchedBoundary
 operator|&
 name|Zone
+argument_list|,
+specifier|const
+name|CandPolicy
+operator|&
+name|ZonePolicy
 argument_list|,
 specifier|const
 name|RegPressureTracker

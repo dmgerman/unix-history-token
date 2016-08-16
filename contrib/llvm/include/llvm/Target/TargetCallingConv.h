@@ -80,13 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
+file|<climits>
 end_include
 
 begin_decl_stmt
@@ -293,6 +287,40 @@ name|uint64_t
 name|SplitEndOffs
 init|=
 literal|13
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|SwiftSelf
+init|=
+literal|1ULL
+operator|<<
+literal|14
+decl_stmt|;
+comment|///< Swift self parameter
+specifier|static
+specifier|const
+name|uint64_t
+name|SwiftSelfOffs
+init|=
+literal|14
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|SwiftError
+init|=
+literal|1ULL
+operator|<<
+literal|15
+decl_stmt|;
+comment|///< Swift error parameter
+specifier|static
+specifier|const
+name|uint64_t
+name|SwiftErrorOffs
+init|=
+literal|15
 decl_stmt|;
 specifier|static
 specifier|const
@@ -512,6 +540,50 @@ operator||=
 name|One
 operator|<<
 name|InAllocaOffs
+expr_stmt|;
+block|}
+name|bool
+name|isSwiftSelf
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|SwiftSelf
+return|;
+block|}
+name|void
+name|setSwiftSelf
+parameter_list|()
+block|{
+name|Flags
+operator||=
+name|One
+operator|<<
+name|SwiftSelfOffs
+expr_stmt|;
+block|}
+name|bool
+name|isSwiftError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|SwiftError
+return|;
+block|}
+name|void
+name|setSwiftError
+parameter_list|()
+block|{
+name|Flags
+operator||=
+name|One
+operator|<<
+name|SwiftErrorOffs
 expr_stmt|;
 block|}
 name|bool
@@ -1038,6 +1110,7 @@ block|;     }
 block|}
 struct|;
 block|}
+comment|// end namespace ISD
 block|}
 end_decl_stmt
 
@@ -1049,6 +1122,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETCALLINGCONV_H
+end_comment
 
 end_unit
 

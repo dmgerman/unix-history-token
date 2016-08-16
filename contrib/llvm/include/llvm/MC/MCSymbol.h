@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAssembler.h"
+file|"llvm/MC/MCFragment.h"
 end_include
 
 begin_include
@@ -209,7 +209,7 @@ range|:
 literal|1
 decl_stmt|;
 name|mutable
-name|bool
+name|unsigned
 name|IsRegistered
 range|:
 literal|1

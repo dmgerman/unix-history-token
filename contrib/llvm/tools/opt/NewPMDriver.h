@@ -87,16 +87,13 @@ directive|define
 name|LLVM_TOOLS_OPT_NEWPMDRIVER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;

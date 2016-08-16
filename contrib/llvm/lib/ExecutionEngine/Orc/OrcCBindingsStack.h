@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/OrcBindings.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -88,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/OrcBindings.h"
+file|"llvm/Support/Error.h"
 end_include
 
 begin_decl_stmt
@@ -338,26 +344,6 @@ typedef|typedef
 name|unsigned
 name|ModuleHandleT
 typedef|;
-specifier|static
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CompileCallbackMgr
-operator|>
-name|createCompileCallbackMgr
-argument_list|(
-argument|Triple T
-argument_list|)
-expr_stmt|;
-specifier|static
-name|IndirectStubsManagerBuilder
-name|createIndirectStubsMgrBuilder
-parameter_list|(
-name|Triple
-name|T
-parameter_list|)
-function_decl|;
 name|OrcCBindingsStack
 argument_list|(
 argument|TargetMachine&TM
@@ -372,6 +358,12 @@ argument_list|(
 name|TM
 operator|.
 name|createDataLayout
+argument_list|()
+argument_list|)
+operator|,
+name|IndirectStubsMgr
+argument_list|(
+name|IndirectStubsMgrBuilder
 argument_list|()
 argument_list|)
 operator|,
@@ -411,6 +403,7 @@ operator|&
 name|F
 operator|)
 block|{
+return|return
 name|std
 operator|::
 name|set
@@ -418,18 +411,12 @@ operator|<
 name|Function
 operator|*
 operator|>
-name|S
-block|;
-name|S
-operator|.
-name|insert
-argument_list|(
+operator|(
+block|{
 operator|&
 name|F
-argument_list|)
-block|;
-return|return
-name|S
+block|}
+operator|)
 return|;
 block|}
 operator|,
@@ -447,12 +434,6 @@ argument_list|)
 operator|,
 name|false
 block|)
-decl_stmt|,
-name|IndirectStubsMgr
-argument_list|(
-name|IndirectStubsMgrBuilder
-argument_list|()
-argument_list|)
 decl_stmt|,
 name|CXXRuntimeOverrides
 argument_list|(
@@ -602,7 +583,7 @@ name|CCInfo
 operator|.
 name|setCompileAction
 argument_list|(
-argument|[=]() -> orc::TargetAddress {         return Callback(wrap(this), CallbackCtx);       }
+argument|[=]() -> orc::TargetAddress {       return Callback(wrap(this), CallbackCtx);     }
 argument_list|)
 block|;
 return|return
@@ -615,7 +596,7 @@ block|}
 end_expr_stmt
 
 begin_decl_stmt
-name|void
+name|LLVMOrcErrorCode
 name|createIndirectStub
 argument_list|(
 name|StringRef
@@ -627,6 +608,9 @@ name|TargetAddress
 name|Addr
 argument_list|)
 block|{
+return|return
+name|mapError
+argument_list|(
 name|IndirectStubsMgr
 operator|->
 name|createStub
@@ -639,12 +623,13 @@ name|JITSymbolFlags
 operator|::
 name|Exported
 argument_list|)
-expr_stmt|;
+argument_list|)
+return|;
 block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|LLVMOrcErrorCode
 name|setIndirectStubPointer
 argument_list|(
 name|StringRef
@@ -656,6 +641,9 @@ name|TargetAddress
 name|Addr
 argument_list|)
 block|{
+return|return
+name|mapError
+argument_list|(
 name|IndirectStubsMgr
 operator|->
 name|updatePointer
@@ -664,14 +652,15 @@ name|Name
 argument_list|,
 name|Addr
 argument_list|)
-expr_stmt|;
+argument_list|)
+return|;
 block|}
 end_decl_stmt
 
 begin_expr_stmt
 name|std
 operator|::
-name|shared_ptr
+name|unique_ptr
 operator|<
 name|RuntimeDyld
 operator|::
@@ -684,9 +673,7 @@ argument_list|,
 argument|void *ExternalResolverCtx
 argument_list|)
 block|{
-name|auto
-name|Resolver
-operator|=
+return|return
 name|orc
 operator|::
 name|createLambdaResolver
@@ -726,20 +713,10 @@ name|true
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
 name|Sym
 operator|.
-name|getAddress
+name|toRuntimeDyldSymbol
 argument_list|()
-argument_list|,
-name|Sym
-operator|.
-name|getFlags
-argument_list|()
-argument_list|)
 return|;
 if|if
 condition|(
@@ -825,27 +802,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_return
-return|return
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
-operator|>
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Resolver
-argument_list|)
-operator|)
-return|;
-end_return
 
 begin_expr_stmt
 unit|}    template
@@ -1123,7 +1079,7 @@ begin_macro
 unit|}    ModuleHandleT
 name|addIRModuleEager
 argument_list|(
-argument|Module* M
+argument|Module *M
 argument_list|,
 argument|LLVMOrcSymbolResolverFn ExternalResolver
 argument_list|,
@@ -1325,6 +1281,22 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getErrorMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ErrMsg
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -1427,17 +1399,93 @@ name|NewHandle
 return|;
 end_return
 
-begin_expr_stmt
-unit|}    DataLayout
-name|DL
+begin_macro
+unit|}    LLVMOrcErrorCode
+name|mapError
+argument_list|(
+argument|Error Err
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|LLVMOrcErrorCode
+name|Result
+init|=
+name|LLVMOrcErrSuccess
+decl_stmt|;
+name|handleAllErrors
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Err
+argument_list|)
+argument_list|,
+index|[
+operator|&
+index|]
+operator|(
+name|ErrorInfoBase
+operator|&
+name|EIB
+operator|)
+block|{
+comment|// Handler of last resort.
+name|Result
+operator|=
+name|LLVMOrcErrGeneric
+block|;
+name|ErrMsg
+operator|=
+literal|""
+block|;
+name|raw_string_ostream
+name|ErrStream
+argument_list|(
+name|ErrMsg
+argument_list|)
+block|;
+name|EIB
+operator|.
+name|log
+argument_list|(
+name|ErrStream
+argument_list|)
+block|;     }
+argument_list|)
 expr_stmt|;
-end_expr_stmt
+return|return
+name|Result
+return|;
+block|}
+end_block
+
+begin_decl_stmt
+name|DataLayout
+name|DL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|SectionMemoryManager
 name|CCMgrMemMgr
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|orc
+operator|::
+name|IndirectStubsManager
+operator|>
+name|IndirectStubsMgr
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -1467,19 +1515,6 @@ name|CODLayerT
 name|CODLayer
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|orc
-operator|::
-name|IndirectStubsManager
-operator|>
-name|IndirectStubsMgr
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -1527,6 +1562,14 @@ operator|<
 name|OrcCBindingsStack
 operator|>>
 name|IRStaticDestructorRunners
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|ErrMsg
 expr_stmt|;
 end_expr_stmt
 

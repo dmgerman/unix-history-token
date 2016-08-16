@@ -67,16 +67,13 @@ directive|define
 name|LLVM_TRANSFORMS_UTILS_UNROLLLOOP_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|AssumptionCache
 decl_stmt|;
@@ -115,6 +112,9 @@ name|unsigned
 name|TripCount
 parameter_list|,
 name|bool
+name|Force
+parameter_list|,
+name|bool
 name|AllowRuntime
 parameter_list|,
 name|bool
@@ -144,7 +144,7 @@ name|PreserveLCSSA
 parameter_list|)
 function_decl|;
 name|bool
-name|UnrollRuntimeLoopProlog
+name|UnrollRuntimeLoopRemainder
 parameter_list|(
 name|Loop
 modifier|*
@@ -155,6 +155,9 @@ name|Count
 parameter_list|,
 name|bool
 name|AllowExpensiveTripCount
+parameter_list|,
+name|bool
+name|UseEpilogRemainder
 parameter_list|,
 name|LoopInfo
 modifier|*

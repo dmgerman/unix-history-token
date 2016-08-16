@@ -133,9 +133,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// IntrinsicInst - A useful wrapper class for inspecting calls to intrinsic
-comment|/// functions.  This allows the standard isa/dyncast/cast functionality to
-comment|/// work with calls to intrinsic functions.
+comment|/// A wrapper class for inspecting calls to intrinsic functions.
+comment|/// This allows the standard isa/dyncast/cast functionality to work with calls
+comment|/// to intrinsic functions.
 name|class
 name|IntrinsicInst
 range|:
@@ -169,8 +169,7 @@ name|delete
 block|;
 name|public
 operator|:
-comment|/// getIntrinsicID - Return the intrinsic ID of this intrinsic.
-comment|///
+comment|/// Return the intrinsic ID of this intrinsic.
 name|Intrinsic
 operator|::
 name|ID
@@ -257,11 +256,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// DbgInfoIntrinsic - This is the common base class for debug info intrinsics
-end_comment
-
-begin_comment
-comment|///
+comment|/// This is the common base class for debug info intrinsics.
 end_comment
 
 begin_decl_stmt
@@ -273,6 +268,17 @@ name|IntrinsicInst
 block|{
 name|public
 operator|:
+comment|/// Get the location corresponding to the variable referenced by the debug
+comment|/// info intrinsic.  Depending on the intrinsic, this could be the
+comment|/// variable's value or its address.
+name|Value
+operator|*
+name|getVariableLocation
+argument_list|(
+argument|bool AllowNullOp = true
+argument_list|)
+specifier|const
+block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -338,31 +344,12 @@ operator|)
 argument_list|)
 return|;
 block|}
-specifier|static
-name|Value
-operator|*
-name|StripCast
-argument_list|(
-name|Value
-operator|*
-name|C
-argument_list|)
-block|;   }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// DbgDeclareInst - This represents the llvm.dbg.declare instruction.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
+expr|}
+block|;
+comment|/// This represents the llvm.dbg.declare instruction.
 name|class
 name|DbgDeclareInst
-range|:
+operator|:
 name|public
 name|DbgInfoIntrinsic
 block|{
@@ -373,7 +360,12 @@ operator|*
 name|getAddress
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|getVariableLocation
+argument_list|()
+return|;
+block|}
 name|DILocalVariable
 operator|*
 name|getVariable
@@ -503,8 +495,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// DbgValueInst - This represents the llvm.dbg.value instruction.
-comment|///
+comment|/// This represents the llvm.dbg.value instruction.
 name|class
 name|DbgValueInst
 operator|:
@@ -513,18 +504,20 @@ name|DbgInfoIntrinsic
 block|{
 name|public
 operator|:
-specifier|const
 name|Value
 operator|*
 name|getValue
 argument_list|()
 specifier|const
-block|;
-name|Value
-operator|*
-name|getValue
-argument_list|()
-block|;
+block|{
+return|return
+name|getVariableLocation
+argument_list|(
+comment|/* AllowNullOp = */
+name|false
+argument_list|)
+return|;
+block|}
 name|uint64_t
 name|getOffset
 argument_list|()
@@ -682,8 +675,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemIntrinsic - This is the common base class for memset/memcpy/memmove.
-comment|///
+comment|/// This is the common base class for memset/memcpy/memmove.
 name|class
 name|MemIntrinsic
 operator|:
@@ -885,7 +877,7 @@ name|getAddressSpace
 argument_list|()
 return|;
 block|}
-comment|/// getDest - This is just like getRawDest, but it strips off any cast
+comment|/// This is just like getRawDest, but it strips off any cast
 comment|/// instructions that feed it, giving the original input.  The returned
 comment|/// value is guaranteed to be a pointer.
 name|Value
@@ -902,8 +894,7 @@ name|stripPointerCasts
 argument_list|()
 return|;
 block|}
-comment|/// set* - Set the specified arguments of the instruction.
-comment|///
+comment|/// Set the specified arguments of the instruction.
 name|void
 name|setDest
 argument_list|(
@@ -1076,8 +1067,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemSetInst - This class wraps the llvm.memset intrinsic.
-comment|///
+comment|/// This class wraps the llvm.memset intrinsic.
 name|class
 name|MemSetInst
 operator|:
@@ -1086,8 +1076,7 @@ name|MemIntrinsic
 block|{
 name|public
 operator|:
-comment|/// get* - Return the arguments to the instruction.
-comment|///
+comment|/// Return the arguments to the instruction.
 name|Value
 operator|*
 name|getValue
@@ -1214,8 +1203,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemTransferInst - This class wraps the llvm.memcpy/memmove intrinsics.
-comment|///
+comment|/// This class wraps the llvm.memcpy/memmove intrinsics.
 name|class
 name|MemTransferInst
 operator|:
@@ -1224,8 +1212,7 @@ name|MemIntrinsic
 block|{
 name|public
 operator|:
-comment|/// get* - Return the arguments to the instruction.
-comment|///
+comment|/// Return the arguments to the instruction.
 name|Value
 operator|*
 name|getRawSource
@@ -1272,7 +1259,7 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getSource - This is just like getRawSource, but it strips off any cast
+comment|/// This is just like getRawSource, but it strips off any cast
 comment|/// instructions that feed it, giving the original input.  The returned
 comment|/// value is guaranteed to be a pointer.
 name|Value
@@ -1400,8 +1387,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemCpyInst - This class wraps the llvm.memcpy intrinsic.
-comment|///
+comment|/// This class wraps the llvm.memcpy intrinsic.
 name|class
 name|MemCpyInst
 operator|:
@@ -1461,8 +1447,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MemMoveInst - This class wraps the llvm.memmove intrinsic.
-comment|///
+comment|/// This class wraps the llvm.memmove intrinsic.
 name|class
 name|MemMoveInst
 operator|:
@@ -1522,8 +1507,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// VAStartInst - This represents the llvm.va_start intrinsic.
-comment|///
+comment|/// This represents the llvm.va_start intrinsic.
 name|class
 name|VAStartInst
 operator|:
@@ -1602,8 +1586,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// VAEndInst - This represents the llvm.va_end intrinsic.
-comment|///
+comment|/// This represents the llvm.va_end intrinsic.
 name|class
 name|VAEndInst
 operator|:
@@ -1682,8 +1665,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// VACopyInst - This represents the llvm.va_copy intrinsic.
-comment|///
+comment|/// This represents the llvm.va_copy intrinsic.
 name|class
 name|VACopyInst
 operator|:

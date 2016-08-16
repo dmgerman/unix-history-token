@@ -227,8 +227,6 @@ argument|bool Debug
 argument_list|)
 name|override
 block|;
-name|protected
-operator|:
 name|MCFragment
 operator|*
 name|getCurrentFragment
@@ -279,6 +277,8 @@ operator|*
 name|getOrCreateDataFragment
 argument_list|()
 block|;
+name|protected
+operator|:
 name|bool
 name|changeSectionImpl
 argument_list|(
@@ -517,6 +517,74 @@ name|Label
 argument_list|)
 block|;
 name|void
+name|EmitCVLocDirective
+argument_list|(
+argument|unsigned FunctionId
+argument_list|,
+argument|unsigned FileNo
+argument_list|,
+argument|unsigned Line
+argument_list|,
+argument|unsigned Column
+argument_list|,
+argument|bool PrologueEnd
+argument_list|,
+argument|bool IsStmt
+argument_list|,
+argument|StringRef FileName
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitCVLinetableDirective
+argument_list|(
+argument|unsigned FunctionId
+argument_list|,
+argument|const MCSymbol *Begin
+argument_list|,
+argument|const MCSymbol *End
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitCVInlineLinetableDirective
+argument_list|(
+argument|unsigned PrimaryFunctionId
+argument_list|,
+argument|unsigned SourceFileId
+argument_list|,
+argument|unsigned SourceLineNum
+argument_list|,
+argument|const MCSymbol *FnStartSym
+argument_list|,
+argument|const MCSymbol *FnEndSym
+argument_list|,
+argument|ArrayRef<unsigned> SecondaryFunctionIds
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitCVDefRangeDirective
+argument_list|(
+argument|ArrayRef<std::pair<const MCSymbol *
+argument_list|,
+argument|const MCSymbol *>> Ranges
+argument_list|,
+argument|StringRef FixedSizePortion
+argument_list|)
+name|override
+block|;
+name|void
+name|EmitCVStringTableDirective
+argument_list|()
+name|override
+block|;
+name|void
+name|EmitCVFileChecksumsDirective
+argument_list|()
+name|override
+block|;
+name|void
 name|EmitGPRel32Value
 argument_list|(
 argument|const MCExpr *Value
@@ -543,12 +611,41 @@ argument|SMLoc Loc
 argument_list|)
 name|override
 block|;
+name|using
+name|MCStreamer
+operator|::
+name|emitFill
+block|;
 name|void
-name|EmitFill
+name|emitFill
 argument_list|(
 argument|uint64_t NumBytes
 argument_list|,
 argument|uint8_t FillValue
+argument_list|)
+name|override
+block|;
+name|void
+name|emitFill
+argument_list|(
+argument|const MCExpr&NumBytes
+argument_list|,
+argument|uint64_t FillValue
+argument_list|,
+argument|SMLoc Loc = SMLoc()
+argument_list|)
+name|override
+block|;
+name|void
+name|emitFill
+argument_list|(
+argument|const MCExpr&NumValues
+argument_list|,
+argument|int64_t Size
+argument_list|,
+argument|int64_t Expr
+argument_list|,
+argument|SMLoc Loc = SMLoc()
 argument_list|)
 name|override
 block|;

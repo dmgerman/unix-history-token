@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<system_error>
 end_include
 
@@ -81,6 +75,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 comment|/// \brief Class that manages the creation of a lock file to aid
 comment|/// implicit coordination between different processes.
 comment|///
@@ -167,6 +164,11 @@ operator|::
 name|error_code
 operator|>
 name|Error
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|ErrorDiagMsg
 expr_stmt|;
 name|LockFileManager
 argument_list|(
@@ -259,6 +261,42 @@ name|error_code
 name|unsafeRemoveLockFile
 argument_list|()
 expr_stmt|;
+comment|/// \brief Get error message, or "" if there is no error.
+name|std
+operator|::
+name|string
+name|getErrorMessage
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set error and error message
+name|void
+name|setError
+argument_list|(
+name|std
+operator|::
+name|error_code
+operator|&
+name|EC
+argument_list|,
+name|StringRef
+name|ErrorMsg
+operator|=
+literal|""
+argument_list|)
+block|{
+name|Error
+operator|=
+name|EC
+expr_stmt|;
+name|ErrorDiagMsg
+operator|=
+name|ErrorMsg
+operator|.
+name|str
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

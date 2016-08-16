@@ -100,6 +100,10 @@ comment|/// MergeableConst16 - This is a section used by 16-byte constants,
 comment|/// for example, vectors.
 name|MergeableConst16
 block|,
+comment|/// MergeableConst32 - This is a section used by 32-byte constants,
+comment|/// for example, vectors.
+name|MergeableConst32
+block|,
 comment|/// Writeable - This is the base of all segments that need to be written
 comment|/// to during program runtime.
 comment|/// ThreadLocal - This is the base of all TLS segments.  All TLS
@@ -253,6 +257,10 @@ operator|||
 name|K
 operator|==
 name|MergeableConst16
+operator|||
+name|K
+operator|==
+name|MergeableConst32
 return|;
 block|}
 name|bool
@@ -286,6 +294,17 @@ return|return
 name|K
 operator|==
 name|MergeableConst16
+return|;
+block|}
+name|bool
+name|isMergeableConst32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|K
+operator|==
+name|MergeableConst32
 return|;
 block|}
 name|bool
@@ -561,6 +580,18 @@ return|return
 name|get
 argument_list|(
 name|MergeableConst16
+argument_list|)
+return|;
+block|}
+specifier|static
+name|SectionKind
+name|getMergeableConst32
+parameter_list|()
+block|{
+return|return
+name|get
+argument_list|(
+name|MergeableConst32
 argument_list|)
 return|;
 block|}

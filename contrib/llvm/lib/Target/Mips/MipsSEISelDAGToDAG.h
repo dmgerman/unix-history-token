@@ -80,14 +80,16 @@ operator|:
 name|explicit
 name|MipsSEDAGToDAGISel
 argument_list|(
-name|MipsTargetMachine
-operator|&
-name|TM
+argument|MipsTargetMachine&TM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 operator|:
 name|MipsDAGToDAGISel
 argument_list|(
 argument|TM
+argument_list|,
+argument|OL
 argument_list|)
 block|{}
 name|private
@@ -144,7 +146,7 @@ argument|SDNode *N
 argument_list|,
 argument|unsigned Opc
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -153,8 +155,7 @@ argument_list|,
 argument|bool HasHi
 argument_list|)
 block|;
-name|SDNode
-operator|*
+name|void
 name|selectAddESubE
 argument_list|(
 argument|unsigned MOp
@@ -163,7 +164,7 @@ argument|SDValue InFlag
 argument_list|,
 argument|SDValue CmpLHS
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDNode *Node
 argument_list|)
@@ -195,18 +196,6 @@ specifier|const
 block|;
 name|bool
 name|selectAddrRegImm
-argument_list|(
-argument|SDValue Addr
-argument_list|,
-argument|SDValue&Base
-argument_list|,
-argument|SDValue&Offset
-argument_list|)
-specifier|const
-name|override
-block|;
-name|bool
-name|selectAddrRegReg
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -264,6 +253,17 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|selectAddrRegImm11
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|selectAddrRegImm12
 argument_list|(
 argument|SDValue Addr
@@ -286,7 +286,31 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|selectIntAddrMM
+name|selectIntAddr11MM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddr12MM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|selectIntAddr16MM
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -483,16 +507,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|std
-operator|::
-name|pair
-operator|<
 name|bool
-block|,
-name|SDNode
-operator|*
-operator|>
-name|selectNode
+name|trySelect
 argument_list|(
 argument|SDNode *Node
 argument_list|)
@@ -530,12 +546,17 @@ decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createMipsSEISelDag
-parameter_list|(
+argument_list|(
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

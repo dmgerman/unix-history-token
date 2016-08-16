@@ -1753,6 +1753,49 @@ file|"llvm/IR/Instruction.def"
 specifier|static
 name|BinaryOperator
 operator|*
+name|CreateWithCopiedFlags
+argument_list|(
+argument|BinaryOps Opc
+argument_list|,
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|BinaryOperator *CopyBO
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|Create
+argument_list|(
+name|Opc
+argument_list|,
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|copyIRFlags
+argument_list|(
+name|CopyBO
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
 name|CreateNSW
 argument_list|(
 argument|BinaryOps Opc
@@ -2575,70 +2618,6 @@ comment|///
 name|bool
 name|swapOperands
 argument_list|()
-block|;
-comment|/// Set or clear the nsw flag on this instruction, which must be an operator
-comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
-name|void
-name|setHasNoUnsignedWrap
-argument_list|(
-argument|bool b = true
-argument_list|)
-block|;
-comment|/// Set or clear the nsw flag on this instruction, which must be an operator
-comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
-name|void
-name|setHasNoSignedWrap
-argument_list|(
-argument|bool b = true
-argument_list|)
-block|;
-comment|/// Set or clear the exact flag on this instruction, which must be an operator
-comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
-name|void
-name|setIsExact
-argument_list|(
-argument|bool b = true
-argument_list|)
-block|;
-comment|/// Determine whether the no unsigned wrap flag is set.
-name|bool
-name|hasNoUnsignedWrap
-argument_list|()
-specifier|const
-block|;
-comment|/// Determine whether the no signed wrap flag is set.
-name|bool
-name|hasNoSignedWrap
-argument_list|()
-specifier|const
-block|;
-comment|/// Determine whether the exact flag is set.
-name|bool
-name|isExact
-argument_list|()
-specifier|const
-block|;
-comment|/// Convenience method to copy supported wrapping, exact, and fast-math flags
-comment|/// from V to this instruction.
-name|void
-name|copyIRFlags
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-block|;
-comment|/// Logical 'and' of any supported wrapping, exact, and fast-math flags of
-comment|/// V and this instruction.
-name|void
-name|andIRFlags
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
 block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -3625,6 +3604,10 @@ comment|/// This enumeration lists the possible predicates for CmpInst subclasse
 comment|/// Values in the range 0-31 are reserved for FCmpInst, while values in the
 comment|/// range 32-64 are reserved for ICmpInst. This is necessary to ensure the
 comment|/// predicate values are not overlapping between the classes.
+comment|///
+comment|/// Some passes (e.g. InstCombine) depend on the bit-wise characteristics of
+comment|/// FCMP_* values. Changing the bit patterns requires a potential change to
+comment|/// those passes.
 expr|enum
 name|Predicate
 block|{
@@ -4194,6 +4177,42 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// @brief Determine if Pred1 implies Pred2 is true when two compares have
+comment|/// matching operands.
+name|bool
+name|isImpliedTrueByMatchingCmp
+argument_list|(
+argument|Predicate Pred2
+argument_list|)
+block|{
+return|return
+name|isImpliedTrueByMatchingCmp
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|,
+name|Pred2
+argument_list|)
+return|;
+block|}
+comment|/// @brief Determine if Pred1 implies Pred2 is false when two compares have
+comment|/// matching operands.
+name|bool
+name|isImpliedFalseByMatchingCmp
+argument_list|(
+argument|Predicate Pred2
+argument_list|)
+block|{
+return|return
+name|isImpliedFalseByMatchingCmp
+argument_list|(
+name|getPredicate
+argument_list|()
+argument_list|,
+name|Pred2
+argument_list|)
+return|;
+block|}
 comment|/// @returns true if the predicate is unsigned, false otherwise.
 comment|/// @brief Determine if the predicate is an unsigned operation.
 specifier|static
@@ -4242,6 +4261,28 @@ name|bool
 name|isFalseWhenEqual
 argument_list|(
 argument|Predicate predicate
+argument_list|)
+block|;
+comment|/// Determine if Pred1 implies Pred2 is true when two compares have matching
+comment|/// operands.
+specifier|static
+name|bool
+name|isImpliedTrueByMatchingCmp
+argument_list|(
+argument|Predicate Pred1
+argument_list|,
+argument|Predicate Pred2
+argument_list|)
+block|;
+comment|/// Determine if Pred1 implies Pred2 is false when two compares have matching
+comment|/// operands.
+specifier|static
+name|bool
+name|isImpliedFalseByMatchingCmp
+argument_list|(
+argument|Predicate Pred1
+argument_list|,
+argument|Predicate Pred2
 argument_list|)
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
@@ -5869,6 +5910,91 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// \brief Return true if this operand bundle user contains operand bundles
+end_comment
+
+begin_comment
+comment|/// with tags other than those specified in \p IDs.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|hasOperandBundlesOtherThan
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint32_t
+operator|>
+name|IDs
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|getNumOperandBundles
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|uint32_t
+name|ID
+init|=
+name|getOperandBundleAt
+argument_list|(
+name|i
+argument_list|)
+operator|.
+name|getTagID
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|std
+operator|::
+name|find
+argument_list|(
+name|IDs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|IDs
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|ID
+argument_list|)
+operator|==
+name|IDs
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
 
 begin_label
 name|protected

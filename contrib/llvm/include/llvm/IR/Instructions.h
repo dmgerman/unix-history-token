@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AtomicOrdering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -153,39 +159,6 @@ name|class
 name|LLVMContext
 decl_stmt|;
 enum|enum
-name|AtomicOrdering
-block|{
-name|NotAtomic
-init|=
-literal|0
-block|,
-name|Unordered
-init|=
-literal|1
-block|,
-name|Monotonic
-init|=
-literal|2
-block|,
-comment|// Consume = 3,  // Not specified yet.
-name|Acquire
-init|=
-literal|4
-block|,
-name|Release
-init|=
-literal|5
-block|,
-name|AcquireRelease
-init|=
-literal|6
-block|,
-name|SequentiallyConsistent
-init|=
-literal|7
-block|}
-enum|;
-enum|enum
 name|SynchronizationScope
 block|{
 name|SingleThread
@@ -197,58 +170,6 @@ init|=
 literal|1
 block|}
 enum|;
-comment|/// Returns true if the ordering is at least as strong as acquire
-comment|/// (i.e. acquire, acq_rel or seq_cst)
-specifier|inline
-name|bool
-name|isAtLeastAcquire
-parameter_list|(
-name|AtomicOrdering
-name|Ord
-parameter_list|)
-block|{
-return|return
-operator|(
-name|Ord
-operator|==
-name|Acquire
-operator|||
-name|Ord
-operator|==
-name|AcquireRelease
-operator|||
-name|Ord
-operator|==
-name|SequentiallyConsistent
-operator|)
-return|;
-block|}
-comment|/// Returns true if the ordering is at least as strong as release
-comment|/// (i.e. release, acq_rel or seq_cst)
-specifier|inline
-name|bool
-name|isAtLeastRelease
-parameter_list|(
-name|AtomicOrdering
-name|Ord
-parameter_list|)
-block|{
-return|return
-operator|(
-name|Ord
-operator|==
-name|Release
-operator|||
-name|Ord
-operator|==
-name|AcquireRelease
-operator|||
-name|Ord
-operator|==
-name|SequentiallyConsistent
-operator|)
-return|;
-block|}
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -551,6 +472,46 @@ name|V
 operator|?
 literal|32
 operator|:
+literal|0
+operator|)
+argument_list|)
+block|;   }
+comment|/// \brief Return true if this alloca is used as a swifterror argument to a
+comment|/// call.
+name|bool
+name|isSwiftError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+literal|64
+return|;
+block|}
+comment|/// \brief Specify whether this alloca is used to represent a swifterror.
+name|void
+name|setSwiftError
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|setInstructionSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+operator|~
+literal|64
+operator|)
+operator||
+operator|(
+name|V
+condition|?
+literal|64
+else|:
 literal|0
 operator|)
 argument_list|)
@@ -1062,6 +1023,9 @@ operator|)
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|7
@@ -1156,10 +1120,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|getOrdering
 argument_list|()
-operator|<=
+operator|==
+name|AtomicOrdering
+operator|::
+name|NotAtomic
+operator|||
+name|getOrdering
+argument_list|()
+operator|==
+name|AtomicOrdering
+operator|::
 name|Unordered
+operator|)
 operator|&&
 operator|!
 name|isVolatile
@@ -1584,6 +1559,9 @@ operator|)
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|7
@@ -1678,10 +1656,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|getOrdering
 argument_list|()
-operator|<=
+operator|==
+name|AtomicOrdering
+operator|::
+name|NotAtomic
+operator|||
+name|getOrdering
+argument_list|()
+operator|==
+name|AtomicOrdering
+operator|::
 name|Unordered
+operator|)
 operator|&&
 operator|!
 name|isVolatile
@@ -1983,6 +1972,9 @@ literal|1
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|1
@@ -2297,6 +2289,8 @@ name|assert
 argument_list|(
 name|Ordering
 operator|!=
+name|AtomicOrdering
+operator|::
 name|NotAtomic
 operator|&&
 literal|"CmpXchg instructions can only be atomic."
@@ -2313,6 +2307,9 @@ literal|0x1c
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|2
@@ -2329,6 +2326,8 @@ name|assert
 argument_list|(
 name|Ordering
 operator|!=
+name|AtomicOrdering
+operator|::
 name|NotAtomic
 operator|&&
 literal|"CmpXchg instructions can only be atomic."
@@ -2345,6 +2344,9 @@ literal|0xe0
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|5
@@ -2568,27 +2570,43 @@ literal|"invalid cmpxchg success ordering"
 argument_list|)
 expr_stmt|;
 case|case
+name|AtomicOrdering
+operator|::
 name|Release
 case|:
 case|case
+name|AtomicOrdering
+operator|::
 name|Monotonic
 case|:
 return|return
+name|AtomicOrdering
+operator|::
 name|Monotonic
 return|;
 case|case
+name|AtomicOrdering
+operator|::
 name|AcquireRelease
 case|:
 case|case
+name|AtomicOrdering
+operator|::
 name|Acquire
 case|:
 return|return
+name|AtomicOrdering
+operator|::
 name|Acquire
 return|;
 case|case
+name|AtomicOrdering
+operator|::
 name|SequentiallyConsistent
 case|:
 return|return
+name|AtomicOrdering
+operator|::
 name|SequentiallyConsistent
 return|;
 block|}
@@ -2928,6 +2946,8 @@ name|assert
 argument_list|(
 name|Ordering
 operator|!=
+name|AtomicOrdering
+operator|::
 name|NotAtomic
 operator|&&
 literal|"atomicrmw instructions can only be atomic."
@@ -2948,6 +2968,9 @@ operator|)
 operator|)
 operator||
 operator|(
+operator|(
+name|unsigned
+operator|)
 name|Ordering
 operator|<<
 literal|2
@@ -6169,6 +6192,104 @@ operator|=
 literal|""
 argument_list|)
 block|;
+specifier|static
+name|Instruction
+operator|*
+name|CreateMalloc
+argument_list|(
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|,
+name|Type
+operator|*
+name|IntPtrTy
+argument_list|,
+name|Type
+operator|*
+name|AllocTy
+argument_list|,
+name|Value
+operator|*
+name|AllocSize
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+operator|=
+name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|Bundles
+operator|=
+name|None
+argument_list|,
+name|Function
+operator|*
+name|MallocF
+operator|=
+name|nullptr
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+block|;
+specifier|static
+name|Instruction
+operator|*
+name|CreateMalloc
+argument_list|(
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|,
+name|Type
+operator|*
+name|IntPtrTy
+argument_list|,
+name|Type
+operator|*
+name|AllocTy
+argument_list|,
+name|Value
+operator|*
+name|AllocSize
+argument_list|,
+name|Value
+operator|*
+name|ArraySize
+operator|=
+name|nullptr
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|Bundles
+operator|=
+name|None
+argument_list|,
+name|Function
+operator|*
+name|MallocF
+operator|=
+name|nullptr
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+block|;
 comment|/// CreateFree - Generate the IR for a call to the builtin free function.
 specifier|static
 name|Instruction
@@ -6192,6 +6313,46 @@ argument_list|(
 name|Value
 operator|*
 name|Source
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+specifier|static
+name|Instruction
+operator|*
+name|CreateFree
+argument_list|(
+name|Value
+operator|*
+name|Source
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|Bundles
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|)
+block|;
+specifier|static
+name|Instruction
+operator|*
+name|CreateFree
+argument_list|(
+name|Value
+operator|*
+name|Source
+argument_list|,
+name|ArrayRef
+operator|<
+name|OperandBundleDef
+operator|>
+name|Bundles
 argument_list|,
 name|BasicBlock
 operator|*
@@ -6593,6 +6754,14 @@ name|i
 argument_list|)
 return|;
 block|}
+comment|/// If one of the arguments has the 'returned' attribute, return its
+comment|/// operand value. Otherwise, return nullptr.
+name|Value
+operator|*
+name|getReturnedArgOperand
+argument_list|()
+specifier|const
+block|;
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -6696,7 +6865,7 @@ name|addAttribute
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute::AttrKind attr
+argument|Attribute::AttrKind Kind
 argument_list|)
 block|;
 comment|/// addAttribute - adds the attribute to the list of attributes.
@@ -6710,13 +6879,40 @@ argument_list|,
 argument|StringRef Value
 argument_list|)
 block|;
+comment|/// addAttribute - adds the attribute to the list of attributes.
+name|void
+name|addAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|;
 comment|/// removeAttribute - removes the attribute from the list of attributes.
 name|void
 name|removeAttribute
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute attr
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|;
+comment|/// removeAttribute - removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+block|;
+comment|/// removeAttribute - removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute Attr
 argument_list|)
 block|;
 comment|/// \brief adds the dereferenceable attribute to the list of attributes.
@@ -6742,13 +6938,13 @@ comment|/// \brief Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-argument|Attribute::AttrKind A
+argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|A
+name|Kind
 operator|!=
 name|Attribute
 operator|::
@@ -6760,7 +6956,7 @@ block|;
 return|return
 name|hasFnAttrImpl
 argument_list|(
-name|A
+name|Kind
 argument_list|)
 return|;
 block|}
@@ -6768,14 +6964,14 @@ comment|/// \brief Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-argument|StringRef A
+argument|StringRef Kind
 argument_list|)
 specifier|const
 block|{
 return|return
 name|hasFnAttrImpl
 argument_list|(
-name|A
+name|Kind
 argument_list|)
 return|;
 block|}
@@ -6785,7 +6981,27 @@ name|paramHasAttr
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute::AttrKind A
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the attribute of a given kind at a position.
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Get the attribute of a given kind at a position.
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
 argument_list|)
 specifier|const
 block|;
@@ -6807,7 +7023,7 @@ name|dataOperandHasImpliedAttr
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute::AttrKind A
+argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|;
@@ -7034,6 +7250,39 @@ operator|::
 name|ReadOnly
 argument_list|)
 block|;   }
+comment|/// \brief Determine if the call does not access or only writes memory.
+name|bool
+name|doesNotReadMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|doesNotAccessMemory
+argument_list|()
+operator|||
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setDoesNotReadMemory
+argument_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+block|;   }
 comment|/// @brief Determine if the call can access memmory only using pointers based
 comment|/// on its arguments.
 name|bool
@@ -7183,6 +7432,29 @@ argument_list|,
 name|Attribute
 operator|::
 name|Convergent
+argument_list|)
+block|;   }
+name|void
+name|setNotConvergent
+argument_list|()
+block|{
+name|removeAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
 argument_list|)
 block|;   }
 comment|/// \brief Determine if the call returns a structure through first
@@ -8026,6 +8298,51 @@ operator|(
 operator|)
 return|;
 block|}
+name|void
+name|setCondition
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+operator|=
+name|V
+block|; }
+name|void
+name|setTrueValue
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+name|Op
+operator|<
+literal|1
+operator|>
+operator|(
+operator|)
+operator|=
+name|V
+block|; }
+name|void
+name|setFalseValue
+argument_list|(
+argument|Value *V
+argument_list|)
+block|{
+name|Op
+operator|<
+literal|2
+operator|>
+operator|(
+operator|)
+operator|=
+name|V
+block|; }
 comment|/// areInvalidOperands - Return a string if the specified operands are invalid
 comment|/// for a select operation, otherwise return null.
 specifier|static
@@ -11104,6 +11421,14 @@ name|hasConstantValue
 argument_list|()
 specifier|const
 block|;
+comment|/// hasConstantOrUndefValue - Whether the specified PHI node always merges
+comment|/// together the same value, assuming undefs are equal to a unique
+comment|/// non-undef value.
+name|bool
+name|hasConstantOrUndefValue
+argument_list|()
+specifier|const
+block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -12385,7 +12710,7 @@ comment|//===-------------------------------------------------------------------
 comment|//                               SwitchInst Class
 comment|//===----------------------------------------------------------------------===//
 comment|//===---------------------------------------------------------------------------
-comment|/// SwitchInst - Multiway switch
+comment|/// Multiway switch
 comment|///
 name|class
 name|SwitchInst
@@ -12453,10 +12778,10 @@ name|s
 argument_list|)
 return|;
 block|}
-comment|/// SwitchInst ctor - Create a new switch instruction, specifying a value to
-comment|/// switch on and a default destination.  The number of additional cases can
-comment|/// be specified here to make memory allocation more efficient.  This
-comment|/// constructor can also autoinsert before another instruction.
+comment|/// Create a new switch instruction, specifying a value to switch on and a
+comment|/// default destination. The number of additional cases can be specified here
+comment|/// to make memory allocation more efficient. This constructor can also
+comment|/// auto-insert before another instruction.
 name|SwitchInst
 argument_list|(
 argument|Value *Value
@@ -12468,10 +12793,10 @@ argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
 block|;
-comment|/// SwitchInst ctor - Create a new switch instruction, specifying a value to
-comment|/// switch on and a default destination.  The number of additional cases can
-comment|/// be specified here to make memory allocation more efficient.  This
-comment|/// constructor also autoinserts at the end of the specified BasicBlock.
+comment|/// Create a new switch instruction, specifying a value to switch on and a
+comment|/// default destination. The number of additional cases can be specified here
+comment|/// to make memory allocation more efficient. This constructor also
+comment|/// auto-inserts at the end of the specified BasicBlock.
 name|SwitchInst
 argument_list|(
 argument|Value *Value
@@ -13173,8 +13498,8 @@ name|DefaultCase
 operator|)
 argument_list|)
 block|;   }
-comment|/// getNumCases - return the number of 'cases' in this switch instruction,
-comment|/// except the default case
+comment|/// Return the number of 'cases' in this switch instruction, excluding the
+comment|/// default case.
 name|unsigned
 name|getNumCases
 argument_list|()
@@ -13189,8 +13514,8 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// Returns a read/write iterator that points to the first
-comment|/// case in SwitchInst.
+comment|/// Returns a read/write iterator that points to the first case in the
+comment|/// SwitchInst.
 name|CaseIt
 name|case_begin
 argument_list|()
@@ -13204,8 +13529,8 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Returns a read-only iterator that points to the first
-comment|/// case in the SwitchInst.
+comment|/// Returns a read-only iterator that points to the first case in the
+comment|/// SwitchInst.
 name|ConstCaseIt
 name|case_begin
 argument_list|()
@@ -13220,8 +13545,8 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Returns a read/write iterator that points one past the last
-comment|/// in the SwitchInst.
+comment|/// Returns a read/write iterator that points one past the last in the
+comment|/// SwitchInst.
 name|CaseIt
 name|case_end
 argument_list|()
@@ -13236,8 +13561,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Returns a read-only iterator that points one past the last
-comment|/// in the SwitchInst.
+comment|/// Returns a read-only iterator that points one past the last in the
+comment|/// SwitchInst.
 name|ConstCaseIt
 name|case_end
 argument_list|()
@@ -13253,7 +13578,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// cases - iteration adapter for range-for loops.
+comment|/// Iteration adapter for range-for loops.
 name|iterator_range
 operator|<
 name|CaseIt
@@ -13272,7 +13597,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// cases - iteration adapter for range-for loops.
+comment|/// Constant iteration adapter for range-for loops.
 name|iterator_range
 operator|<
 name|ConstCaseIt
@@ -13324,10 +13649,10 @@ name|DefaultPseudoIndex
 argument_list|)
 return|;
 block|}
-comment|/// findCaseValue - Search all of the case values for the specified constant.
-comment|/// If it is explicitly handled, return the case iterator of it, otherwise
-comment|/// return default case iterator to indicate
-comment|/// that it is handled by the default handler.
+comment|/// Search all of the case values for the specified constant. If it is
+comment|/// explicitly handled, return the case iterator of it, otherwise return
+comment|/// default case iterator to indicate that it is handled by the default
+comment|/// handler.
 name|CaseIt
 name|findCaseValue
 argument_list|(
@@ -13415,8 +13740,8 @@ name|case_default
 argument_list|()
 return|;
 block|}
-comment|/// findCaseDest - Finds the unique case value for a given successor. Returns
-comment|/// null if the successor is not found, not unique, or is the default case.
+comment|/// Finds the unique case value for a given successor. Returns null if the
+comment|/// successor is not found, not unique, or is the default case.
 name|ConstantInt
 operator|*
 name|findCaseDest
@@ -13493,7 +13818,7 @@ return|return
 name|CI
 return|;
 block|}
-comment|/// addCase - Add an entry to the switch instruction...
+comment|/// Add an entry to the switch instruction.
 comment|/// Note:
 comment|/// This action invalidates case_end(). Old case_end() iterator will
 comment|/// point to the added case.
@@ -13509,9 +13834,9 @@ operator|*
 name|Dest
 argument_list|)
 block|;
-comment|/// removeCase - This method removes the specified case and its successor
-comment|/// from the switch instruction. Note that this operation may reorder the
-comment|/// remaining cases at index idx and above.
+comment|/// This method removes the specified case and its successor from the switch
+comment|/// instruction. Note that this operation may reorder the remaining cases at
+comment|/// index idx and above.
 comment|/// Note:
 comment|/// This action invalidates iterators for all cases following the one removed,
 comment|/// including the case_end() iterator.
@@ -15191,6 +15516,14 @@ name|i
 argument_list|)
 return|;
 block|}
+comment|/// If one of the arguments has the 'returned' attribute, return its
+comment|/// operand value. Otherwise, return nullptr.
+name|Value
+operator|*
+name|getReturnedArgOperand
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -15293,7 +15626,31 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|attr
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// addAttribute - adds the attribute to the list of attributes.
+name|void
+name|addAttribute
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|Attribute
+name|Attr
+parameter_list|)
+function_decl|;
+comment|/// removeAttribute - removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
 argument_list|)
 decl_stmt|;
 comment|/// removeAttribute - removes the attribute from the list of attributes.
@@ -15303,8 +15660,19 @@ parameter_list|(
 name|unsigned
 name|i
 parameter_list|,
+name|StringRef
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// removeAttribute - removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
 name|Attribute
-name|attr
+name|Attr
 parameter_list|)
 function_decl|;
 comment|/// \brief adds the dereferenceable attribute to the list of attributes.
@@ -15337,13 +15705,13 @@ argument_list|(
 name|Attribute
 operator|::
 name|AttrKind
-name|A
+name|Kind
 argument_list|)
 decl|const
 block|{
 name|assert
 argument_list|(
-name|A
+name|Kind
 operator|!=
 name|Attribute
 operator|::
@@ -15355,7 +15723,7 @@ expr_stmt|;
 return|return
 name|hasFnAttrImpl
 argument_list|(
-name|A
+name|Kind
 argument_list|)
 return|;
 block|}
@@ -15364,14 +15732,14 @@ name|bool
 name|hasFnAttr
 argument_list|(
 name|StringRef
-name|A
+name|Kind
 argument_list|)
 decl|const
 block|{
 return|return
 name|hasFnAttrImpl
 argument_list|(
-name|A
+name|Kind
 argument_list|)
 return|;
 block|}
@@ -15385,7 +15753,33 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|A
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the attribute of a given kind at a position.
+name|Attribute
+name|getAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the attribute of a given kind at a position.
+name|Attribute
+name|getAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|StringRef
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -15412,7 +15806,7 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|A
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -15618,6 +16012,40 @@ name|ReadOnly
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Determine if the call does not access or only writes memory.
+name|bool
+name|doesNotReadMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|doesNotAccessMemory
+argument_list|()
+operator|||
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setDoesNotReadMemory
+parameter_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// @brief Determine if the call access memmory only using it's pointer
 comment|/// arguments.
 name|bool
@@ -15740,6 +16168,61 @@ argument_list|,
 name|Attribute
 operator|::
 name|NoDuplicate
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Determine if the invoke is convergent
+name|bool
+name|isConvergent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
+return|;
+block|}
+name|void
+name|setConvergent
+parameter_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setNotConvergent
+parameter_list|()
+block|{
+name|removeAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -18379,9 +18862,11 @@ return|return
 literal|1
 return|;
 block|}
+comment|/// Get the parentPad of this catchret's catchpad's catchswitch.
+comment|/// The successor block is implicitly a member of this funclet.
 name|Value
 operator|*
-name|getParentPad
+name|getCatchSwitchParentPad
 argument_list|()
 specifier|const
 block|{
@@ -20876,6 +21361,75 @@ operator|(
 name|V
 operator|)
 argument_list|)
+return|;
+block|}
+comment|/// \brief Gets the pointer operand.
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// \brief Gets the pointer operand.
+specifier|const
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// \brief Gets the operand index of the pointer operand.
+specifier|static
+name|unsigned
+name|getPointerOperandIndex
+argument_list|()
+block|{
+return|return
+literal|0U
+return|;
+block|}
+comment|/// \brief Returns the address space of the pointer operand.
+name|unsigned
+name|getSrcAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperand
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getPointerAddressSpace
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns the address space of the result.
+name|unsigned
+name|getDestAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getType
+argument_list|()
+operator|->
+name|getPointerAddressSpace
+argument_list|()
 return|;
 block|}
 expr|}

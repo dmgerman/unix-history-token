@@ -78,6 +78,9 @@ decl_stmt|;
 name|class
 name|GlobalValue
 decl_stmt|;
+name|class
+name|Triple
+decl_stmt|;
 name|namespace
 name|object
 block|{
@@ -276,6 +279,22 @@ specifier|const
 name|ObjectFile
 operator|&
 name|Obj
+argument_list|)
+block|;
+comment|/// Parse inline ASM and collect the symbols that are not defined in
+comment|/// the current module.
+comment|///
+comment|/// For each found symbol, call \p AsmUndefinedRefs with the name of the
+comment|/// symbol found and the associated flags.
+specifier|static
+name|void
+name|CollectAsmUndefinedRefs
+argument_list|(
+argument|const Triple&TheTriple
+argument_list|,
+argument|StringRef InlineAsm
+argument_list|,
+argument|function_ref<void(StringRef, BasicSymbolRef::Flags)> AsmUndefinedRefs
 argument_list|)
 block|;
 comment|/// \brief Finds and returns bitcode in the given memory buffer (which may

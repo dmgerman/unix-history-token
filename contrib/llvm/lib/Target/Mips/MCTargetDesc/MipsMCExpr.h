@@ -74,23 +74,65 @@ block|{
 name|public
 operator|:
 expr|enum
-name|VariantKind
+name|MipsExprKind
 block|{
-name|VK_Mips_None
+name|MEK_None
 block|,
-name|VK_Mips_LO
+name|MEK_CALL_HI16
 block|,
-name|VK_Mips_HI
+name|MEK_CALL_LO16
 block|,
-name|VK_Mips_HIGHER
+name|MEK_DTPREL_HI
 block|,
-name|VK_Mips_HIGHEST
-block|}
+name|MEK_DTPREL_LO
+block|,
+name|MEK_GOT
+block|,
+name|MEK_GOTTPREL
+block|,
+name|MEK_GOT_CALL
+block|,
+name|MEK_GOT_DISP
+block|,
+name|MEK_GOT_HI16
+block|,
+name|MEK_GOT_LO16
+block|,
+name|MEK_GOT_OFST
+block|,
+name|MEK_GOT_PAGE
+block|,
+name|MEK_GPREL
+block|,
+name|MEK_HI
+block|,
+name|MEK_HIGHER
+block|,
+name|MEK_HIGHEST
+block|,
+name|MEK_LO
+block|,
+name|MEK_NEG
+block|,
+name|MEK_PCREL_HI16
+block|,
+name|MEK_PCREL_LO16
+block|,
+name|MEK_TLSGD
+block|,
+name|MEK_TLSLDM
+block|,
+name|MEK_TPREL_HI
+block|,
+name|MEK_TPREL_LO
+block|,
+name|MEK_Special
+block|,   }
 block|;
 name|private
 operator|:
 specifier|const
-name|VariantKind
+name|MipsExprKind
 name|Kind
 block|;
 specifier|const
@@ -101,7 +143,7 @@ block|;
 name|explicit
 name|MipsMCExpr
 argument_list|(
-argument|VariantKind Kind
+argument|MipsExprKind Kind
 argument_list|,
 argument|const MCExpr *Expr
 argument_list|)
@@ -119,29 +161,33 @@ block|{}
 name|public
 operator|:
 specifier|static
-name|bool
-name|isSupportedBinaryExpr
-argument_list|(
-argument|MCSymbolRefExpr::VariantKind VK
-argument_list|,
-argument|const MCBinaryExpr *BE
-argument_list|)
-block|;
-specifier|static
 specifier|const
 name|MipsMCExpr
 operator|*
 name|create
 argument_list|(
-argument|MCSymbolRefExpr::VariantKind VK
+argument|MipsExprKind Kind
 argument_list|,
 argument|const MCExpr *Expr
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
 block|;
-comment|/// getOpcode - Get the kind of this expression.
-name|VariantKind
+specifier|static
+specifier|const
+name|MipsMCExpr
+operator|*
+name|createGpOff
+argument_list|(
+argument|MipsExprKind Kind
+argument_list|,
+argument|const MCExpr *Expr
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|;
+comment|/// Get the kind of this expression.
+name|MipsExprKind
 name|getKind
 argument_list|()
 specifier|const
@@ -150,7 +196,7 @@ return|return
 name|Kind
 return|;
 block|}
-comment|/// getSubExpr - Get the child of this expression.
+comment|/// Get the child of this expression.
 specifier|const
 name|MCExpr
 operator|*
@@ -207,7 +253,6 @@ name|findAssociatedFragment
 argument_list|()
 return|;
 block|}
-comment|// There are no TLS MipsMCExprs at the moment.
 name|void
 name|fixELFSymbolsInTLSFixups
 argument_list|(
@@ -215,7 +260,7 @@ argument|MCAssembler&Asm
 argument_list|)
 specifier|const
 name|override
-block|{}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -232,6 +277,28 @@ operator|==
 name|MCExpr
 operator|::
 name|Target
+return|;
+block|}
+name|bool
+name|isGpOff
+argument_list|(
+argument|MipsExprKind&Kind
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isGpOff
+argument_list|()
+specifier|const
+block|{
+name|MipsExprKind
+name|Kind
+block|;
+return|return
+name|isGpOff
+argument_list|(
+name|Kind
+argument_list|)
 return|;
 block|}
 expr|}

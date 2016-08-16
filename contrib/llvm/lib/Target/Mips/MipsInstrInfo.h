@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsAnalyzeImmediate.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MipsRegisterInfo.h"
 end_include
 
@@ -196,7 +190,7 @@ argument_list|)
 block|;
 comment|/// Branch Analysis
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -230,7 +224,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -244,7 +238,7 @@ specifier|const
 name|override
 block|;
 name|BranchType
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -256,7 +250,31 @@ argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
 argument|bool AllowModify
 argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&BranchInstrs
+argument|SmallVectorImpl<MachineInstr *>&BranchInstrs
+argument_list|)
+specifier|const
+block|;
+comment|/// Determine the opcode of a non-delay slot form for a branch if one exists.
+name|unsigned
+name|getEquivalentCompactForm
+argument_list|(
+argument|const MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+comment|/// Predicate to determine if an instruction can go in a forbidden slot.
+name|bool
+name|SafeInForbiddenSlot
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|/// Predicate to determine if an instruction has a forbidden slot.
+name|bool
+name|HasForbiddenSlot
+argument_list|(
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -299,7 +317,7 @@ comment|/// Return the number of bytes of code the specified instruction may be.
 name|unsigned
 name|GetInstSizeInBytes
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -467,7 +485,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|int FI
 argument_list|,
-argument|unsigned Flag
+argument|MachineMemOperand::Flags Flags
 argument_list|)
 specifier|const
 block|;
@@ -503,7 +521,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock *TBB
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|)

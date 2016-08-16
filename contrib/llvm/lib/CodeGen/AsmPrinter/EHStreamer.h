@@ -88,9 +88,6 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|AsmPrinter
-decl_stmt|;
-name|class
 name|MCSymbol
 decl_stmt|;
 name|class

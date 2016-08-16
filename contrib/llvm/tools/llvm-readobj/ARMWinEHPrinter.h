@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"StreamWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Object/COFF.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ScopedPrinter.h"
 end_include
 
 begin_decl_stmt
@@ -82,7 +82,7 @@ specifier|const
 name|size_t
 name|PDataEntrySize
 decl_stmt|;
-name|StreamWriter
+name|ScopedPrinter
 modifier|&
 name|SW
 decl_stmt|;
@@ -728,7 +728,7 @@ name|public
 label|:
 name|Decoder
 argument_list|(
-name|StreamWriter
+name|ScopedPrinter
 operator|&
 name|SW
 argument_list|)

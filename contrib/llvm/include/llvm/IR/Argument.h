@@ -228,6 +228,18 @@ name|hasByValAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if this argument has the swiftself attribute.
+name|bool
+name|hasSwiftSelfAttr
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Return true if this argument has the swifterror attribute.
+name|bool
+name|hasSwiftErrorAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return true if this argument has the byval attribute or inalloca
 comment|/// attribute on it in its containing function.  These attributes both
 comment|/// represent arguments being passed by value.
@@ -313,6 +325,34 @@ name|AttributeSet
 name|AS
 parameter_list|)
 function_decl|;
+name|void
+name|addAttr
+argument_list|(
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+block|{
+name|addAttr
+argument_list|(
+name|AttributeSet
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getArgNo
+argument_list|()
+operator|+
+literal|1
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Remove a Attribute from an argument.
 name|void
 name|removeAttr
@@ -321,6 +361,45 @@ name|AttributeSet
 name|AS
 parameter_list|)
 function_decl|;
+name|void
+name|removeAttr
+argument_list|(
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+block|{
+name|removeAttr
+argument_list|(
+name|AttributeSet
+operator|::
+name|get
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|,
+name|getArgNo
+argument_list|()
+operator|+
+literal|1
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Checks if an argument has a given attribute.
+name|bool
+name|hasAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Method for support type inquiry through isa, cast, and
 comment|/// dyn_cast.
 specifier|static

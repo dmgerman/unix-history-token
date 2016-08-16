@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_R600REGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600REGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_R600REGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600REGISTERINFO_H
 end_define
 
 begin_include
@@ -78,6 +78,7 @@ name|AMDGPUSubtarget
 decl_stmt|;
 name|struct
 name|R600RegisterInfo
+name|final
 range|:
 name|public
 name|AMDGPURegisterInfo
@@ -110,7 +111,6 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
-name|override
 block|;
 comment|/// \brief get the register class of the specified type to use in the
 comment|/// CFGStructurizer
@@ -133,13 +133,28 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|// \returns true if \p Reg can be defined in one ALU caluse and used in another.
+comment|// \returns true if \p Reg can be defined in one ALU clause and used in
+comment|// another.
 name|bool
 name|isPhysRegLiveAcrossClauses
 argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
+block|;
+name|void
+name|eliminateFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|int SPAdj
+argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
+argument|RegScavenger *RS = nullptr
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -225,12 +219,6 @@ name|std
 operator|::
 name|string
 name|Name
-expr_stmt|;
-comment|/// The AT&T AsmString for the instruction
-name|std
-operator|::
-name|string
-name|AsmString
 expr_stmt|;
 comment|/// Indicates whether the instruction should be emitted into the decode
 comment|/// tables; regardless, it will be emitted into the instruction info table
@@ -471,7 +459,6 @@ operator|&
 name|physicalOperandIndex
 argument_list|,
 name|unsigned
-operator|&
 name|numPhysicalOperands
 argument_list|,
 specifier|const

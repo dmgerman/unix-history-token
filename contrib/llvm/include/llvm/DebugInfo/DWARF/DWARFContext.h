@@ -115,12 +115,6 @@ directive|include
 file|"llvm/DebugInfo/DWARF/DWARFTypeUnit.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -164,7 +158,7 @@ name|CUs
 block|;
 name|std
 operator|::
-name|vector
+name|deque
 operator|<
 name|DWARFUnitSection
 operator|<
@@ -232,6 +226,14 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|DWARFDebugFrame
+operator|>
+name|EHFrame
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DWARFDebugMacro
 operator|>
 name|Macro
@@ -244,7 +246,7 @@ name|DWOCUs
 block|;
 name|std
 operator|::
-name|vector
+name|deque
 operator|<
 name|DWARFUnitSection
 operator|<
@@ -343,6 +345,8 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|DIDumpType DumpType = DIDT_All
+argument_list|,
+argument|bool DumpEH = false
 argument_list|)
 name|override
 block|;
@@ -367,14 +371,10 @@ expr_stmt|;
 typedef|typedef
 name|iterator_range
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DWARFUnitSection
-operator|<
-name|DWARFTypeUnit
-operator|>>
+name|decltype
+argument_list|(
+name|TUs
+argument_list|)
 operator|::
 name|iterator
 operator|>
@@ -630,6 +630,13 @@ modifier|*
 name|getDebugFrame
 parameter_list|()
 function_decl|;
+comment|/// Get a pointer to the parsed eh frame information object.
+specifier|const
+name|DWARFDebugFrame
+modifier|*
+name|getEHFrame
+parameter_list|()
+function_decl|;
 comment|/// Get a pointer to the parsed DebugMacro object.
 specifier|const
 name|DWARFDebugMacro
@@ -776,6 +783,13 @@ function_decl|;
 name|virtual
 name|StringRef
 name|getDebugFrameSection
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|StringRef
+name|getEHFrameSection
 parameter_list|()
 init|=
 literal|0
@@ -1062,6 +1076,9 @@ block|;
 name|StringRef
 name|DebugFrameSection
 block|;
+name|StringRef
+name|EHFrameSection
+block|;
 name|DWARFSection
 name|LineSection
 block|;
@@ -1240,6 +1257,15 @@ name|override
 block|{
 return|return
 name|DebugFrameSection
+return|;
+block|}
+name|StringRef
+name|getEHFrameSection
+argument_list|()
+name|override
+block|{
+return|return
+name|EHFrameSection
 return|;
 block|}
 specifier|const

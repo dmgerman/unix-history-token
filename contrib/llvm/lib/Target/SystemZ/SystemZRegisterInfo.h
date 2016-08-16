@@ -121,6 +121,29 @@ operator|:
 name|SystemZRegisterInfo
 argument_list|()
 block|;
+comment|/// getPointerRegClass - Return the register class to use to hold pointers.
+comment|/// This is currently only used by LOAD_STACK_GUARD, which requires a non-%r0
+comment|/// register, hence ADDR64.
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Kind=
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|SystemZ
+operator|::
+name|ADDR64BitRegClass
+return|;
+block|}
 comment|// Override TargetRegisterInfo.h.
 name|bool
 name|requiresRegisterScavenging

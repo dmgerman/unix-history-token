@@ -1704,13 +1704,14 @@ name|assert
 argument_list|(
 name|BB
 operator|!=
+operator|&
 name|getHeader
 argument_list|()
 operator|->
 name|getParent
 argument_list|()
 operator|->
-name|begin
+name|front
 argument_list|()
 operator|&&
 literal|"Loop contains function entry block!"

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUASMPRINTER_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUASMPRINTER_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUASMPRINTER_H
 end_define
 
 begin_include
@@ -81,6 +81,7 @@ name|llvm
 block|{
 name|class
 name|AMDGPUAsmPrinter
+name|final
 range|:
 name|public
 name|AsmPrinter
@@ -173,6 +174,34 @@ argument_list|(
 name|false
 argument_list|)
 block|,
+name|ReservedVGPRFirst
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ReservedVGPRCount
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DebuggerWavefrontPrivateSegmentOffsetSGPR
+argument_list|(
+operator|(
+name|uint16_t
+operator|)
+operator|-
+literal|1
+argument_list|)
+block|,
+name|DebuggerPrivateSegmentBufferSGPR
+argument_list|(
+operator|(
+name|uint16_t
+operator|)
+operator|-
+literal|1
+argument_list|)
+block|,
 name|VCCUsed
 argument_list|(
 name|false
@@ -235,6 +264,26 @@ name|LDSSize
 block|;
 name|bool
 name|FlatUsed
+block|;
+comment|// If ReservedVGPRCount is 0 then must be 0. Otherwise, this is the first
+comment|// fixed VGPR number reserved.
+name|uint16_t
+name|ReservedVGPRFirst
+block|;
+comment|// The number of consecutive VGPRs reserved.
+name|uint16_t
+name|ReservedVGPRCount
+block|;
+comment|// Fixed SGPR number used to hold wave scratch offset for entire kernel
+comment|// execution, or uint16_t(-1) if the register is not used or not known.
+name|uint16_t
+name|DebuggerWavefrontPrivateSegmentOffsetSGPR
+block|;
+comment|// Fixed SGPR number of the first 4 SGPRs used to hold scratch V# for entire
+comment|// kernel execution, or uint16_t(-1) if the register is not used or not
+comment|// known.
+name|uint16_t
+name|DebuggerPrivateSegmentBufferSGPR
 block|;
 comment|// Bonus information for debugging.
 name|bool
@@ -381,6 +430,24 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 name|override
+block|;
+name|void
+name|emitStartOfRuntimeMetadata
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|void
+name|emitRuntimeMetadata
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|F
+argument_list|)
 block|;
 name|protected
 operator|:

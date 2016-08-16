@@ -108,6 +108,30 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Note that this analysis specifically identifies *Loops* not cycles or SCCs
+end_comment
+
+begin_comment
+comment|// in the CFG.  There can be strongly connected compontents in the CFG which
+end_comment
+
+begin_comment
+comment|// this analysis will not recognize and that will not be represented by a Loop
+end_comment
+
+begin_comment
+comment|// instance.  In particular, a Loop might be inside such a non-loop SCC, or a
+end_comment
+
+begin_comment
+comment|// non-loop SCC might contain a sub-SCC which is a Loop.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -174,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -187,19 +217,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// FIXME: Replace this brittle forward declaration with the include of the new
-comment|// PassManager.h when doing so doesn't break the PassManagerBuilder.
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|class
-name|AnalysisManager
-expr_stmt|;
-name|class
-name|PreservedAnalyses
-decl_stmt|;
 name|class
 name|DominatorTree
 decl_stmt|;
@@ -1839,6 +1856,14 @@ operator|,
 extern|Loop>;
 end_extern
 
+begin_comment
+comment|/// Represents a single loop in the control flow graph.  Note that not all SCCs
+end_comment
+
+begin_comment
+comment|/// in the CFG are neccessarily loops.
+end_comment
+
 begin_decl_stmt
 name|class
 name|Loop
@@ -2070,62 +2095,36 @@ name|DebugLoc
 name|getStartLoc
 argument_list|()
 specifier|const
+expr_stmt|;
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
 block|{
+if|if
+condition|(
 name|BasicBlock
-operator|*
-name|HeadBB
-block|;
-comment|// Try the pre-header first.
-if|if
-condition|(
-operator|(
-name|HeadBB
-operator|=
-name|getLoopPreheader
-argument_list|()
-operator|)
-operator|!=
-name|nullptr
-condition|)
-if|if
-condition|(
-name|DebugLoc
-name|DL
+modifier|*
+name|Header
 init|=
-name|HeadBB
-operator|->
-name|getTerminator
-argument_list|()
-operator|->
-name|getDebugLoc
-argument_list|()
-condition|)
-return|return
-name|DL
-return|;
-comment|// If we have no pre-header or there are no instructions with debug
-comment|// info in it, try the header.
-name|HeadBB
-operator|=
 name|getHeader
 argument_list|()
-expr_stmt|;
+condition|)
 if|if
 condition|(
-name|HeadBB
+name|Header
+operator|->
+name|hasName
+argument_list|()
 condition|)
 return|return
-name|HeadBB
+name|Header
 operator|->
-name|getTerminator
-argument_list|()
-operator|->
-name|getDebugLoc
+name|getName
 argument_list|()
 return|;
 return|return
-name|DebugLoc
-argument_list|()
+literal|"<unnamed loop>"
 return|;
 block|}
 end_decl_stmt
@@ -3795,43 +3794,29 @@ end_comment
 begin_decl_stmt
 name|class
 name|LoopAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|LoopAnalysis
+operator|>
 block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|LoopAnalysis
+operator|>
+block|;
 specifier|static
 name|char
 name|PassID
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 typedef|typedef
 name|LoopInfo
 name|Result
 typedef|;
-comment|/// \brief Opaque, unique identifier for this analysis pass.
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-comment|/// \brief Provide a name for the analysis for debugging and logging.
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"LoopAnalysis"
-return|;
-block|}
 name|LoopInfo
 name|run
 argument_list|(
@@ -3843,31 +3828,33 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
 decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// \brief Printer pass for the \c LoopAnalysis results.
 end_comment
 
 begin_decl_stmt
 name|class
 name|LoopPrinterPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|LoopPrinterPass
+operator|>
 block|{
 name|raw_ostream
-modifier|&
+operator|&
 name|OS
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|LoopPrinterPass
 argument_list|(
@@ -3892,25 +3879,12 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
-expr_stmt|;
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"LoopPrinterPass"
-return|;
-block|}
-block|}
+block|; }
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/// \brief The legacy pass manager's analysis pass to compute loop information.
@@ -4022,21 +3996,27 @@ end_comment
 begin_decl_stmt
 name|class
 name|PrintLoopPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|PrintLoopPass
+operator|>
 block|{
 name|raw_ostream
-modifier|&
+operator|&
 name|OS
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|string
 name|Banner
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|PrintLoopPass
 argument_list|()
-expr_stmt|;
+block|;
 name|PrintLoopPass
 argument_list|(
 name|raw_ostream
@@ -4052,30 +4032,23 @@ name|Banner
 operator|=
 literal|""
 argument_list|)
-expr_stmt|;
+block|;
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Loop
-modifier|&
+operator|&
 name|L
-parameter_list|)
-function_decl|;
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"PrintLoopPass"
-return|;
-block|}
-block|}
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Loop
+operator|>
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 unit|}

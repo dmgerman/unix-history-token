@@ -62,37 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -299,7 +293,7 @@ argument_list|)
 block|:
 name|Costs
 argument_list|(
-argument|Costs
+argument|std::move(Costs)
 argument_list|)
 block|{}
 name|AdjEdgeIdx
@@ -421,7 +415,7 @@ argument_list|)
 block|:
 name|Costs
 argument_list|(
-argument|Costs
+argument|std::move(Costs)
 argument_list|)
 block|{
 name|NIds
@@ -1898,7 +1892,12 @@ argument_list|)
 operator|:
 name|Metadata
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Metadata
+argument_list|)
 argument_list|)
 operator|,
 name|Solver

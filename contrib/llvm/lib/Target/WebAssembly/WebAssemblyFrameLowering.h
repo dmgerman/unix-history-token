@@ -78,6 +78,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineFrameInfo
+decl_stmt|;
+name|class
 name|WebAssemblyFrameLowering
 name|final
 range|:
@@ -86,6 +89,16 @@ name|TargetFrameLowering
 block|{
 name|public
 operator|:
+comment|/// Size of the red zone for the user stack (leaf functions can use this much
+comment|/// space below the stack pointer without writing it back to memory).
+comment|// TODO: (ABI) Revisit and decide how large it should be.
+specifier|static
+specifier|const
+name|size_t
+name|RedZoneSize
+operator|=
+literal|128
+block|;
 name|WebAssemblyFrameLowering
 argument_list|()
 operator|:
@@ -106,7 +119,9 @@ comment|/*StackRealignable=*/
 argument|true
 argument_list|)
 block|{}
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF
@@ -154,6 +169,26 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
+block|;
+name|private
+operator|:
+name|bool
+name|needsSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|const MachineFrameInfo&MFI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsSPWriteback
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|const MachineFrameInfo&MFI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

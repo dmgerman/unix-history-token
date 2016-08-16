@@ -21,11 +21,33 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @defgroup LLVMCDisassembler Disassembler  * @ingroup LLVMC  *  * @{  */
@@ -653,7 +675,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(LLVM_C_DISASSEMBLER_H) */
+comment|/* LLVM_C_DISASSEMBLER_H */
 end_comment
 
 end_unit

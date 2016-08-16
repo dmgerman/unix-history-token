@@ -53,7 +53,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/**  * Lowering for an AVR ELF32 object file.  */
+comment|/// Lowering for an AVR ELF32 object file.
 name|class
 name|AVRTargetObjectFile
 range|:

@@ -157,6 +157,8 @@ name|kw_protected
 block|,
 name|kw_unnamed_addr
 block|,
+name|kw_local_unnamed_addr
+block|,
 name|kw_externally_initialized
 block|,
 name|kw_extern_weak
@@ -196,6 +198,8 @@ block|,
 name|kw_target
 block|,
 name|kw_triple
+block|,
+name|kw_source_filename
 block|,
 name|kw_unwind
 block|,
@@ -248,6 +252,8 @@ name|kw_section
 block|,
 name|kw_alias
 block|,
+name|kw_ifunc
+block|,
 name|kw_module
 block|,
 name|kw_asm
@@ -292,6 +298,10 @@ name|kw_arm_aapcs_vfpcc
 block|,
 name|kw_msp430_intrcc
 block|,
+name|kw_avr_intrcc
+block|,
+name|kw_avr_signalcc
+block|,
 name|kw_ptx_kernel
 block|,
 name|kw_ptx_device
@@ -308,6 +318,8 @@ name|kw_webkit_jscc
 block|,
 name|kw_anyregcc
 block|,
+name|kw_swiftcc
+block|,
 name|kw_preserve_mostcc
 block|,
 name|kw_preserve_allcc
@@ -322,8 +334,20 @@ name|kw_hhvm_ccc
 block|,
 name|kw_cxx_fast_tlscc
 block|,
+name|kw_amdgpu_vs
+block|,
+name|kw_amdgpu_gs
+block|,
+name|kw_amdgpu_ps
+block|,
+name|kw_amdgpu_cs
+block|,
+name|kw_amdgpu_kernel
+block|,
 comment|// Attributes:
 name|kw_attributes
+block|,
+name|kw_allocsize
 block|,
 name|kw_alwaysinline
 block|,
@@ -413,7 +437,13 @@ name|kw_sanitize_thread
 block|,
 name|kw_sanitize_memory
 block|,
+name|kw_swifterror
+block|,
+name|kw_swiftself
+block|,
 name|kw_uwtable
+block|,
+name|kw_writeonly
 block|,
 name|kw_zeroext
 block|,
@@ -671,6 +701,12 @@ comment|// DW_VIRTUALITY_foo
 name|DwarfLang
 block|,
 comment|// DW_LANG_foo
+name|DwarfCC
+block|,
+comment|// DW_CC_foo
+name|EmissionKind
+block|,
+comment|// lineTablesOnly
 name|DwarfOp
 block|,
 comment|// DW_OP_foo

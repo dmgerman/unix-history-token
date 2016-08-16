@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/Analysis.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -110,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Statepoint.h"
+file|"llvm/IR/Constants.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Constants.h"
+file|"llvm/IR/Statepoint.h"
 end_include
 
 begin_include
@@ -129,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_include
@@ -375,14 +375,19 @@ argument_list|)
 operator|,
 name|dl
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|DL
+argument_list|)
 argument_list|)
 operator|,
 name|SDNodeOrder
 argument_list|(
 argument|SDNO
 argument_list|)
-block|{ }
+block|{}
 specifier|const
 name|DbgValueInst
 operator|*
@@ -972,12 +977,22 @@ argument_list|)
 block|:
 name|First
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|F
+argument_list|)
 argument_list|)
 operator|,
 name|Last
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|L
+argument_list|)
 argument_list|)
 operator|,
 name|SValue
@@ -1115,12 +1130,22 @@ argument_list|)
 block|:
 name|First
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|F
+argument_list|)
 argument_list|)
 operator|,
 name|Range
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|)
 operator|,
 name|SValue
@@ -1215,14 +1240,6 @@ name|DefaultProb
 decl_stmt|;
 block|}
 struct|;
-comment|/// Minimum jump table density, in percent.
-enum|enum
-block|{
-name|MinJumpTableDensity
-init|=
-literal|40
-block|}
-enum|;
 comment|/// Check whether a range of clusters is dense enough for a jump table.
 name|bool
 name|isDense
@@ -1241,6 +1258,9 @@ name|First
 parameter_list|,
 name|unsigned
 name|Last
+parameter_list|,
+name|unsigned
+name|MinDensity
 parameter_list|)
 function_decl|;
 comment|/// Build a jump table cluster from Clusters[First..Last]. Returns false if it
@@ -1559,7 +1579,14 @@ comment|///        compare.
 comment|///
 comment|///     c. After we finish selecting the basic block, in FinishBasicBlock if
 comment|///        the StackProtectorDescriptor attached to the SelectionDAGBuilder is
-comment|///        initialized, we first find a splice point in the parent basic block
+comment|///        initialized, we produce the validation code with one of these
+comment|///        techniques:
+comment|///          1) with a call to a guard check function
+comment|///          2) with inlined instrumentation
+comment|///
+comment|///        1) We insert a call to the check function before the terminator.
+comment|///
+comment|///        2) We first find a splice point in the parent basic block
 comment|///        before the terminator and then splice the terminator of said basic
 comment|///        block into the success basic block. Then we code-gen a new tail for
 comment|///        the parent basic block consisting of the two loads, the comparison,
@@ -1587,19 +1614,9 @@ argument_list|)
 operator|,
 name|FailureMBB
 argument_list|(
-name|nullptr
+argument|nullptr
 argument_list|)
-operator|,
-name|Guard
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|GuardReg
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+block|{}
 comment|/// Returns true if all fields of the stack protector descriptor are
 comment|/// initialized implying that we should/are ready to emit a stack protector.
 name|bool
@@ -1613,8 +1630,21 @@ operator|&&
 name|SuccessMBB
 operator|&&
 name|FailureMBB
+return|;
+block|}
+name|bool
+name|shouldEmitFunctionBasedCheckStackProtector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParentMBB
 operator|&&
-name|Guard
+operator|!
+name|SuccessMBB
+operator|&&
+operator|!
+name|FailureMBB
 return|;
 block|}
 comment|/// Initialize the stack protector descriptor structure for a new basic
@@ -1631,10 +1661,8 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|,
-specifier|const
-name|CallInst
-modifier|&
-name|StackProtCheckCall
+name|bool
+name|FunctionBasedInstrumentation
 parameter_list|)
 block|{
 comment|// Make sure we are not initialized yet.
@@ -1652,6 +1680,12 @@ name|ParentMBB
 operator|=
 name|MBB
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|FunctionBasedInstrumentation
+condition|)
+block|{
 name|SuccessMBB
 operator|=
 name|AddSuccessorMBB
@@ -1678,20 +1712,7 @@ argument_list|,
 name|FailureMBB
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Guard
-condition|)
-name|Guard
-operator|=
-name|StackProtCheckCall
-operator|.
-name|getArgOperand
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 comment|/// Reset state that changes when we handle different basic blocks.
 comment|///
@@ -1733,14 +1754,6 @@ name|FailureMBB
 operator|=
 name|nullptr
 expr_stmt|;
-name|Guard
-operator|=
-name|nullptr
-expr_stmt|;
-name|GuardReg
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|MachineBasicBlock
 modifier|*
@@ -1769,37 +1782,6 @@ return|return
 name|FailureMBB
 return|;
 block|}
-specifier|const
-name|Value
-modifier|*
-name|getGuard
-parameter_list|()
-block|{
-return|return
-name|Guard
-return|;
-block|}
-name|unsigned
-name|getGuardReg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GuardReg
-return|;
-block|}
-name|void
-name|setGuardReg
-parameter_list|(
-name|unsigned
-name|R
-parameter_list|)
-block|{
-name|GuardReg
-operator|=
-name|R
-expr_stmt|;
-block|}
 name|private
 label|:
 comment|/// The basic block for which we are generating the stack protector.
@@ -1824,17 +1806,6 @@ comment|/// contain a call to __stack_chk_fail().
 name|MachineBasicBlock
 modifier|*
 name|FailureMBB
-decl_stmt|;
-comment|/// The guard variable which we will compare against the stored value in the
-comment|/// stack protector stack slot.
-specifier|const
-name|Value
-modifier|*
-name|Guard
-decl_stmt|;
-comment|/// The virtual register holding the stack guard value.
-name|unsigned
-name|GuardReg
 decl_stmt|;
 comment|/// Add a successor machine basic block to ParentMBB. If the successor mbb
 comment|/// has not been created yet (i.e. if SuccMBB = 0), then the machine basic
@@ -2426,63 +2397,53 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-name|std
-operator|::
-name|pair
-operator|<
+comment|// Lower range metadata from 0 to N to assert zext to an integer of nearest
+comment|// floor power of two.
 name|SDValue
-operator|,
-name|SDValue
-operator|>
-name|lowerCallOperands
-argument_list|(
-argument|ImmutableCallSite CS
-argument_list|,
-argument|unsigned ArgIdx
-argument_list|,
-argument|unsigned NumArgs
-argument_list|,
-argument|SDValue Callee
-argument_list|,
-argument|Type *ReturnTy
-argument_list|,
-argument|const BasicBlock *EHPadBB = nullptr
-argument_list|,
-argument|bool IsPatchPoint = false
-argument_list|)
-expr_stmt|;
-comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
-comment|/// references that need to refer to the last resulting block.
-name|void
-name|UpdateSplitBlock
+name|lowerRangeToAssertZExt
 parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|First
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|Last
-parameter_list|)
-function_decl|;
-comment|// This function is responsible for the whole statepoint lowering process.
-comment|// It uniformly handles invoke and call statepoints.
-name|void
-name|LowerStatepoint
-parameter_list|(
-name|ImmutableStatepoint
-name|Statepoint
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|,
 specifier|const
-name|BasicBlock
-modifier|*
-name|EHPadBB
-init|=
-name|nullptr
+name|Instruction
+modifier|&
+name|I
+parameter_list|,
+name|SDValue
+name|Op
 parameter_list|)
 function_decl|;
-name|private
-label|:
+name|void
+name|populateCallLoweringInfo
+argument_list|(
+name|TargetLowering
+operator|::
+name|CallLoweringInfo
+operator|&
+name|CLI
+argument_list|,
+name|ImmutableCallSite
+name|CS
+argument_list|,
+name|unsigned
+name|ArgIdx
+argument_list|,
+name|unsigned
+name|NumArgs
+argument_list|,
+name|SDValue
+name|Callee
+argument_list|,
+name|Type
+operator|*
+name|ReturnTy
+argument_list|,
+name|bool
+name|IsPatchPoint
+argument_list|)
+decl_stmt|;
 name|std
 operator|::
 name|pair
@@ -2507,6 +2468,219 @@ operator|=
 name|nullptr
 argument_list|)
 expr_stmt|;
+comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
+comment|/// references that need to refer to the last resulting block.
+name|void
+name|UpdateSplitBlock
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|First
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|Last
+parameter_list|)
+function_decl|;
+comment|/// Describes a gc.statepoint or a gc.statepoint like thing for the purposes
+comment|/// of lowering into a STATEPOINT node.
+struct|struct
+name|StatepointLoweringInfo
+block|{
+comment|/// Bases[i] is the base pointer for Ptrs[i].  Together they denote the set
+comment|/// of gc pointers this STATEPOINT has to relocate.
+name|SmallVector
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|16
+operator|>
+name|Bases
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|16
+operator|>
+name|Ptrs
+expr_stmt|;
+comment|/// The set of gc.relocate calls associated with this gc.statepoint.
+name|SmallVector
+operator|<
+specifier|const
+name|GCRelocateInst
+operator|*
+operator|,
+literal|16
+operator|>
+name|GCRelocates
+expr_stmt|;
+comment|/// The full list of gc arguments to the gc.statepoint being lowered.
+name|ArrayRef
+operator|<
+specifier|const
+name|Use
+operator|>
+name|GCArgs
+expr_stmt|;
+comment|/// The gc.statepoint instruction.
+specifier|const
+name|Instruction
+modifier|*
+name|StatepointInstr
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The list of gc transition arguments present in the gc.statepoint being
+comment|/// lowered.
+name|ArrayRef
+operator|<
+specifier|const
+name|Use
+operator|>
+name|GCTransitionArgs
+expr_stmt|;
+comment|/// The ID that the resulting STATEPOINT instruction has to report.
+name|unsigned
+name|ID
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/// Information regarding the underlying call instruction.
+name|TargetLowering
+operator|::
+name|CallLoweringInfo
+name|CLI
+expr_stmt|;
+comment|/// The deoptimization state associated with this gc.statepoint call, if
+comment|/// any.
+name|ArrayRef
+operator|<
+specifier|const
+name|Use
+operator|>
+name|DeoptState
+expr_stmt|;
+comment|/// Flags associated with the meta arguments being lowered.
+name|uint64_t
+name|StatepointFlags
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/// The number of patchable bytes the call needs to get lowered into.
+name|unsigned
+name|NumPatchBytes
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/// The exception handling unwind destination, in case this represents an
+comment|/// invoke of gc.statepoint.
+specifier|const
+name|BasicBlock
+modifier|*
+name|EHPadBB
+init|=
+name|nullptr
+decl_stmt|;
+name|explicit
+name|StatepointLoweringInfo
+argument_list|(
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+operator|:
+name|CLI
+argument_list|(
+argument|DAG
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// Lower \p SLI into a STATEPOINT instruction.
+name|SDValue
+name|LowerAsSTATEPOINT
+parameter_list|(
+name|StatepointLoweringInfo
+modifier|&
+name|SLI
+parameter_list|)
+function_decl|;
+comment|// This function is responsible for the whole statepoint lowering process.
+comment|// It uniformly handles invoke and call statepoints.
+name|void
+name|LowerStatepoint
+parameter_list|(
+name|ImmutableStatepoint
+name|Statepoint
+parameter_list|,
+specifier|const
+name|BasicBlock
+modifier|*
+name|EHPadBB
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+name|void
+name|LowerCallSiteWithDeoptBundle
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|SDValue
+name|Callee
+parameter_list|,
+specifier|const
+name|BasicBlock
+modifier|*
+name|EHPadBB
+parameter_list|)
+function_decl|;
+name|void
+name|LowerDeoptimizeCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|*
+name|CI
+parameter_list|)
+function_decl|;
+name|void
+name|LowerDeoptimizingReturn
+parameter_list|()
+function_decl|;
+name|void
+name|LowerCallSiteWithDeoptBundleImpl
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|SDValue
+name|Callee
+parameter_list|,
+specifier|const
+name|BasicBlock
+modifier|*
+name|EHPadBB
+parameter_list|,
+name|bool
+name|VarArgDisallowed
+parameter_list|,
+name|bool
+name|ForceVoidReturnTy
+parameter_list|)
+function_decl|;
+name|private
+label|:
 comment|// Terminator instructions.
 name|void
 name|visitRet
@@ -3512,6 +3686,24 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitLoadFromSwiftError
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitStoreToSwiftError
+parameter_list|(
+specifier|const
+name|StoreInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitInlineAsm
 parameter_list|(
 name|ImmutableCallSite
@@ -3603,16 +3795,7 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|// These three are implemented in StatepointLowering.cpp
-name|void
-name|visitStatepoint
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
+comment|// These two are implemented in StatepointLowering.cpp
 name|void
 name|visitGCRelocate
 parameter_list|(
@@ -3626,7 +3809,7 @@ name|void
 name|visitGCResult
 parameter_list|(
 specifier|const
-name|CallInst
+name|GCResultInst
 modifier|&
 name|I
 parameter_list|)
@@ -3683,6 +3866,18 @@ specifier|const
 name|BasicBlock
 modifier|*
 name|LLVMBB
+parameter_list|)
+function_decl|;
+name|void
+name|emitInlineAsmError
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Message
 parameter_list|)
 function_decl|;
 comment|/// EmitFuncArgumentDbgValue - If V is an function argument then create
@@ -3904,7 +4099,9 @@ name|FunctionLoweringInfo
 operator|&
 name|FuncInfo
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -3939,7 +4136,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -3983,7 +4182,9 @@ argument_list|,
 name|unsigned
 name|MatchingIdx
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG

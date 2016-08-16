@@ -32,15 +32,15 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|// This class implements rendering for code coverage of source code.
+comment|/// \file This class implements rendering for code coverage of source code.
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/CoverageMapping.h"
+file|"llvm/ProfileData/Coverage/CoverageMapping.h"
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ block|{
 name|class
 name|SourceCoverageView
 decl_stmt|;
-comment|/// \brief A view that represents a macro or include expansion
+comment|/// \brief A view that represents a macro or include expansion.
 struct|struct
 name|ExpansionView
 block|{
@@ -263,7 +263,7 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// \brief A view that represents a function instantiation
+comment|/// \brief A view that represents a function instantiation.
 struct|struct
 name|InstantiationView
 block|{
@@ -417,16 +417,9 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// \brief A code coverage view of a specific source file.
-comment|/// It can have embedded coverage views.
-name|class
-name|SourceCoverageView
-block|{
-name|private
-label|:
-comment|/// \brief Coverage information for a single line.
+comment|/// \brief Coverage statistics for a single line.
 struct|struct
-name|LineCoverageInfo
+name|LineCoverageStats
 block|{
 name|uint64_t
 name|ExecutionCount
@@ -437,7 +430,7 @@ decl_stmt|;
 name|bool
 name|Mapped
 decl_stmt|;
-name|LineCoverageInfo
+name|LineCoverageStats
 argument_list|()
 operator|:
 name|ExecutionCount
@@ -521,21 +514,199 @@ expr_stmt|;
 block|}
 block|}
 struct|;
+comment|/// \brief A file manager that handles format-aware file creation.
+name|class
+name|CoveragePrinter
+block|{
+specifier|const
+name|CoverageViewOptions
+modifier|&
+name|Opts
+decl_stmt|;
+name|public
+label|:
+struct|struct
+name|StreamDestructor
+block|{
+name|void
+name|operator
+argument_list|()
+operator|(
+name|raw_ostream
+operator|*
+name|OS
+operator|)
+specifier|const
+expr_stmt|;
+block|}
+struct|;
+name|using
+name|OwnedStream
+init|=
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+decl_stmt|,
+name|StreamDestructor
+decl|>
+decl_stmt|;
+name|protected
+label|:
+name|CoveragePrinter
+argument_list|(
+specifier|const
+name|CoverageViewOptions
+operator|&
+name|Opts
+argument_list|)
+operator|:
+name|Opts
+argument_list|(
+argument|Opts
+argument_list|)
+block|{}
+comment|/// \brief Return `OutputDir/ToplevelDir/Path.Extension`. If \p InToplevel is
+comment|/// false, skip the ToplevelDir component. If \p Relative is false, skip the
+comment|/// OutputDir component.
+name|std
+operator|::
+name|string
+name|getOutputPath
+argument_list|(
+argument|StringRef Path
+argument_list|,
+argument|StringRef Extension
+argument_list|,
+argument|bool InToplevel
+argument_list|,
+argument|bool Relative = true
+argument_list|)
+expr_stmt|;
+comment|/// \brief If directory output is enabled, create a file in that directory
+comment|/// at the path given by getOutputPath(). Otherwise, return stdout.
+name|Expected
+operator|<
+name|OwnedStream
+operator|>
+name|createOutputStream
+argument_list|(
+argument|StringRef Path
+argument_list|,
+argument|StringRef Extension
+argument_list|,
+argument|bool InToplevel
+argument_list|)
+expr_stmt|;
+comment|/// \brief Return the sub-directory name for file coverage reports.
+specifier|static
+name|StringRef
+name|getCoverageDir
+parameter_list|()
+block|{
+return|return
+literal|"coverage"
+return|;
+block|}
+name|public
+label|:
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CoveragePrinter
+operator|>
+name|create
+argument_list|(
+specifier|const
+name|CoverageViewOptions
+operator|&
+name|Opts
+argument_list|)
+expr_stmt|;
+name|virtual
+operator|~
+name|CoveragePrinter
+argument_list|()
+block|{}
+comment|/// @name File Creation Interface
+comment|/// @{
+comment|/// \brief Create a file to print a coverage view into.
+name|virtual
+name|Expected
+operator|<
+name|OwnedStream
+operator|>
+name|createViewFile
+argument_list|(
+argument|StringRef Path
+argument_list|,
+argument|bool InToplevel
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Close a file which has been used to print a coverage view.
+name|virtual
+name|void
+name|closeViewFile
+parameter_list|(
+name|OwnedStream
+name|OS
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Create an index which lists reports for the given source files.
+name|virtual
+name|Error
+name|createIndexFile
+argument_list|(
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|SourceFiles
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// @}
+block|}
+empty_stmt|;
+comment|/// \brief A code coverage view of a source file or function.
+comment|///
+comment|/// A source coverage view and its nested sub-views form a file-oriented
+comment|/// representation of code coverage data. This view can be printed out by a
+comment|/// renderer which implements the Rendering Interface.
+name|class
+name|SourceCoverageView
+block|{
+comment|/// A function or file name.
+name|StringRef
+name|SourceName
+decl_stmt|;
+comment|/// A memory buffer backing the source on display.
 specifier|const
 name|MemoryBuffer
 modifier|&
 name|File
 decl_stmt|;
+comment|/// Various options to guide the coverage renderer.
 specifier|const
 name|CoverageViewOptions
 modifier|&
 name|Options
 decl_stmt|;
+comment|/// Complete coverage information about the source on display.
 name|coverage
 operator|::
 name|CoverageData
 name|CoverageInfo
 expr_stmt|;
+comment|/// A container for all expansions (e.g macros) in the source on display.
 name|std
 operator|::
 name|vector
@@ -544,6 +715,8 @@ name|ExpansionView
 operator|>
 name|ExpansionSubViews
 expr_stmt|;
+comment|/// A container for all instantiations (e.g template functions) in the source
+comment|/// on display.
 name|std
 operator|::
 name|vector
@@ -552,27 +725,39 @@ name|InstantiationView
 operator|>
 name|InstantiationSubViews
 expr_stmt|;
-comment|/// \brief Render a source line with highlighting.
-name|void
-name|renderLine
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
+name|protected
+label|:
+struct|struct
+name|LineRef
+block|{
 name|StringRef
 name|Line
-argument_list|,
+decl_stmt|;
 name|int64_t
-name|LineNumber
+name|LineNo
+decl_stmt|;
+name|LineRef
+argument_list|(
+argument|StringRef Line
 argument_list|,
-specifier|const
-name|coverage
-operator|::
-name|CoverageSegment
-operator|*
-name|WrappedSegment
-argument_list|,
+argument|int64_t LineNo
+argument_list|)
+block|:
+name|Line
+argument_list|(
+name|Line
+argument_list|)
+operator|,
+name|LineNo
+argument_list|(
+argument|LineNo
+argument_list|)
+block|{}
+block|}
+struct|;
+name|using
+name|CoverageSegmentArray
+init|=
 name|ArrayRef
 operator|<
 specifier|const
@@ -581,38 +766,123 @@ operator|::
 name|CoverageSegment
 operator|*
 operator|>
+decl_stmt|;
+comment|/// @name Rendering Interface
+comment|/// @{
+comment|/// \brief Render a header for the view.
+name|virtual
+name|void
+name|renderViewHeader
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render a footer for the view.
+name|virtual
+name|void
+name|renderViewFooter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render the source name for the view.
+name|virtual
+name|void
+name|renderSourceName
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render the line prefix at the given \p ViewDepth.
+name|virtual
+name|void
+name|renderLinePrefix
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|unsigned
+name|ViewDepth
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render the line suffix at the given \p ViewDepth.
+name|virtual
+name|void
+name|renderLineSuffix
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|unsigned
+name|ViewDepth
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render a view divider at the given \p ViewDepth.
+name|virtual
+name|void
+name|renderViewDivider
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|unsigned
+name|ViewDepth
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render a source line with highlighting.
+name|virtual
+name|void
+name|renderLine
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|LineRef
+name|L
+argument_list|,
+specifier|const
+name|coverage
+operator|::
+name|CoverageSegment
+operator|*
+name|WrappedSegment
+argument_list|,
+name|CoverageSegmentArray
 name|Segments
 argument_list|,
 name|unsigned
 name|ExpansionCol
+argument_list|,
+name|unsigned
+name|ViewDepth
 argument_list|)
+init|=
+literal|0
 decl_stmt|;
-name|void
-name|renderIndent
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|unsigned
-name|Level
-parameter_list|)
-function_decl|;
-name|void
-name|renderViewDivider
-parameter_list|(
-name|unsigned
-name|Offset
-parameter_list|,
-name|unsigned
-name|Length
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
-function_decl|;
 comment|/// \brief Render the line's execution count column.
+name|virtual
 name|void
 name|renderLineCoverageColumn
 parameter_list|(
@@ -621,12 +891,15 @@ modifier|&
 name|OS
 parameter_list|,
 specifier|const
-name|LineCoverageInfo
+name|LineCoverageStats
 modifier|&
 name|Line
 parameter_list|)
+init|=
+literal|0
 function_decl|;
 comment|/// \brief Render the line number column.
+name|virtual
 name|void
 name|renderLineNumberColumn
 parameter_list|(
@@ -637,61 +910,139 @@ parameter_list|,
 name|unsigned
 name|LineNo
 parameter_list|)
+init|=
+literal|0
 function_decl|;
 comment|/// \brief Render all the region's execution counts on a line.
+name|virtual
 name|void
 name|renderRegionMarkers
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|CoverageSegmentArray
+name|Segments
+parameter_list|,
+name|unsigned
+name|ViewDepth
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Render the site of an expansion.
+name|virtual
+name|void
+name|renderExpansionSite
 argument_list|(
 name|raw_ostream
 operator|&
 name|OS
 argument_list|,
-name|ArrayRef
-operator|<
+name|LineRef
+name|L
+argument_list|,
 specifier|const
 name|coverage
 operator|::
 name|CoverageSegment
 operator|*
-operator|>
+name|WrappedSegment
+argument_list|,
+name|CoverageSegmentArray
 name|Segments
+argument_list|,
+name|unsigned
+name|ExpansionCol
+argument_list|,
+name|unsigned
+name|ViewDepth
 argument_list|)
-decl_stmt|;
-specifier|static
-specifier|const
-name|unsigned
-name|LineCoverageColumnWidth
 init|=
-literal|7
+literal|0
 decl_stmt|;
-specifier|static
-specifier|const
+comment|/// \brief Render an expansion view and any nested views.
+name|virtual
+name|void
+name|renderExpansionView
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|ExpansionView
+modifier|&
+name|ESV
+parameter_list|,
 name|unsigned
-name|LineNumberColumnWidth
+name|ViewDepth
+parameter_list|)
 init|=
-literal|5
+literal|0
+function_decl|;
+comment|/// \brief Render an instantiation view and any nested views.
+name|virtual
+name|void
+name|renderInstantiationView
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|InstantiationView
+modifier|&
+name|ISV
+parameter_list|,
+name|unsigned
+name|ViewDepth
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// @}
+comment|/// \brief Format a count using engineering notation with 3 significant
+comment|/// digits.
+specifier|static
+name|std
+operator|::
+name|string
+name|formatCount
+argument_list|(
+argument|uint64_t N
+argument_list|)
+expr_stmt|;
+comment|/// \brief Check if region marker output is expected for a line.
+name|bool
+name|shouldRenderRegionMarkers
+argument_list|(
+name|bool
+name|LineHasMultipleRegions
+argument_list|)
+decl|const
 decl_stmt|;
-name|public
-label|:
+comment|/// \brief Check if there are any sub-views attached to this view.
+name|bool
+name|hasSubViews
+argument_list|()
+specifier|const
+decl_stmt|;
 name|SourceCoverageView
 argument_list|(
-specifier|const
-name|MemoryBuffer
-operator|&
-name|File
+argument|StringRef SourceName
 argument_list|,
-specifier|const
-name|CoverageViewOptions
-operator|&
-name|Options
+argument|const MemoryBuffer&File
 argument_list|,
-name|coverage
-operator|::
-name|CoverageData
-operator|&&
-name|CoverageInfo
+argument|const CoverageViewOptions&Options
+argument_list|,
+argument|coverage::CoverageData&&CoverageInfo
 argument_list|)
-operator|:
+block|:
+name|SourceName
+argument_list|(
+name|SourceName
+argument_list|)
+operator|,
 name|File
 argument_list|(
 name|File
@@ -707,6 +1058,40 @@ argument_list|(
 argument|std::move(CoverageInfo)
 argument_list|)
 block|{}
+name|public
+operator|:
+specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SourceCoverageView
+operator|>
+name|create
+argument_list|(
+argument|StringRef SourceName
+argument_list|,
+argument|const MemoryBuffer&File
+argument_list|,
+argument|const CoverageViewOptions&Options
+argument_list|,
+argument|coverage::CoverageData&&CoverageInfo
+argument_list|)
+expr_stmt|;
+name|virtual
+operator|~
+name|SourceCoverageView
+argument_list|()
+block|{}
+name|StringRef
+name|getSourceName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceName
+return|;
+block|}
 specifier|const
 name|CoverageViewOptions
 operator|&
@@ -737,22 +1122,7 @@ name|SourceCoverageView
 operator|>
 name|View
 argument_list|)
-block|{
-name|ExpansionSubViews
-operator|.
-name|emplace_back
-argument_list|(
-name|Region
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|View
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/// \brief Add a function instantiation subview to this view.
 name|void
 name|addInstantiation
@@ -771,28 +1141,11 @@ name|SourceCoverageView
 operator|>
 name|View
 argument_list|)
-block|{
-name|InstantiationSubViews
-operator|.
-name|emplace_back
-argument_list|(
-name|FunctionName
-argument_list|,
-name|Line
-argument_list|,
-name|std
-operator|::
-name|move
-argument_list|(
-name|View
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Print the code coverage information for a specific
-comment|/// portion of a source file to the output stream.
+decl_stmt|;
+comment|/// \brief Print the code coverage information for a specific portion of a
+comment|/// source file to the output stream.
 name|void
-name|render
+name|print
 parameter_list|(
 name|raw_ostream
 modifier|&
@@ -801,8 +1154,11 @@ parameter_list|,
 name|bool
 name|WholeFile
 parameter_list|,
+name|bool
+name|ShowSourceName
+parameter_list|,
 name|unsigned
-name|IndentLevel
+name|ViewDepth
 init|=
 literal|0
 parameter_list|)

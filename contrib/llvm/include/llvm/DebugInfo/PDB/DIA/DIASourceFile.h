@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|DIASession
 decl_stmt|;
@@ -117,13 +120,27 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|IPDBEnumSymbols
-operator|>
+name|IPDBEnumChildren
+operator|<
+name|PDBSymbolCompiland
+operator|>>
 name|getCompilands
 argument_list|()
 specifier|const
 name|override
 block|;
+name|CComPtr
+operator|<
+name|IDiaSourceFile
+operator|>
+name|getDiaFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceFile
+return|;
+block|}
 name|private
 operator|:
 specifier|const
@@ -138,6 +155,7 @@ operator|>
 name|SourceFile
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

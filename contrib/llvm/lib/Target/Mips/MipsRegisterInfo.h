@@ -95,31 +95,40 @@ name|MipsGenRegisterInfo
 block|{
 name|public
 operator|:
+expr|enum
+name|class
+name|MipsPtrClass
+block|{
+comment|/// The default register class for integer values.
+name|Default
+operator|=
+literal|0
+block|,
+comment|/// The subset of registers permitted in certain microMIPS instructions
+comment|/// such as lw16.
+name|GPR16MM
+operator|=
+literal|1
+block|,
+comment|/// The stack pointer only.
+name|StackPointer
+operator|=
+literal|2
+block|,
+comment|/// The global pointer only.
+name|GlobalPointer
+operator|=
+literal|3
+block|,   }
+block|;
 name|MipsRegisterInfo
 argument_list|()
-block|;
-comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
-comment|/// Mips::RA, return the number that it corresponds to (e.g. 31).
-specifier|static
-name|unsigned
-name|getRegisterNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
 block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
 name|getPICCallReg
 argument_list|()
-block|;
-comment|/// Adjust the Mips stack frame.
-name|void
-name|adjustMipsStackFrame
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
@@ -211,15 +220,6 @@ argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
 name|override
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = nullptr
-argument_list|)
-specifier|const
 block|;
 comment|// Stack realignment queries.
 name|bool

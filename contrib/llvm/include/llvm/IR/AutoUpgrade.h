@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -80,6 +80,9 @@ name|Function
 decl_stmt|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 name|class
 name|Module
@@ -146,6 +149,16 @@ modifier|*
 name|GV
 parameter_list|)
 function_decl|;
+comment|/// This checks for module flags which should be upgraded. It returns true if
+comment|/// module is modified.
+name|bool
+name|UpgradeModuleFlags
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|)
+function_decl|;
 comment|/// If the TBAA tag for the given instruction uses the scalar TBAA format,
 comment|/// we upgrade it to the struct-path aware TBAA format.
 name|void
@@ -208,17 +221,34 @@ modifier|&
 name|M
 parameter_list|)
 function_decl|;
-comment|/// Upgrade a metadata string constant in place.
-name|void
-name|UpgradeMDStringConstant
+comment|/// Check whether a string looks like an old loop attachment tag.
+specifier|inline
+name|bool
+name|mayBeOldLoopAttachmentTag
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+block|{
+return|return
+name|Name
+operator|.
+name|startswith
 argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|String
+literal|"llvm.vectorizer."
 argument_list|)
-decl_stmt|;
+return|;
+block|}
+comment|/// Upgrade the loop attachment metadata node.
+name|MDNode
+modifier|*
+name|upgradeInstructionLoopAttachment
+parameter_list|(
+name|MDNode
+modifier|&
+name|N
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

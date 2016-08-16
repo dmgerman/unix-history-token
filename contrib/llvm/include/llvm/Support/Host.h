@@ -77,6 +77,11 @@ name|defined
 argument_list|(
 name|__GNU__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__HAIKU__
+argument_list|)
 end_if
 
 begin_include

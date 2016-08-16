@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/MC/MCAsmInfo.h"
 end_include
 
 begin_decl_stmt
@@ -90,9 +90,6 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|Module
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|namespace
 name|FloatABI
@@ -268,12 +265,12 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|EnableFastISel
+name|StackSymbolOrdering
 argument_list|(
-name|false
+name|true
 argument_list|)
 operator|,
-name|PositionIndependentExecutable
+name|EnableFastISel
 argument_list|(
 name|false
 argument_list|)
@@ -289,6 +286,11 @@ name|false
 argument_list|)
 operator|,
 name|CompressDebugSections
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|RelaxELFRelocations
 argument_list|(
 name|false
 argument_list|)
@@ -314,6 +316,11 @@ name|false
 argument_list|)
 operator|,
 name|EmulatedTLS
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|EnableIPRA
 argument_list|(
 name|false
 argument_list|)
@@ -361,7 +368,14 @@ argument_list|)
 operator|,
 name|DebuggerTuning
 argument_list|(
-argument|DebuggerKind::Default
+name|DebuggerKind
+operator|::
+name|Default
+argument_list|)
+operator|,
+name|ExceptionModel
+argument_list|(
+argument|ExceptionHandling::None
 argument_list|)
 block|{}
 comment|/// PrintMachineCode - This flag is enabled when the -print-machineinstrs
@@ -468,20 +482,20 @@ comment|/// StackAlignmentOverride - Override default stack alignment for target
 name|unsigned
 name|StackAlignmentOverride
 decl_stmt|;
+comment|/// StackSymbolOrdering - When true, this will allow CodeGen to order
+comment|/// the local stack symbols (for code size, code locality, or any other
+comment|/// heuristics). When false, the local symbols are left in whatever order
+comment|/// they were generated. Default is true.
+name|unsigned
+name|StackSymbolOrdering
+range|:
+literal|1
+decl_stmt|;
 comment|/// EnableFastISel - This flag enables fast-path instruction selection
 comment|/// which trades away generated code quality in favor of reducing
 comment|/// compile time.
 name|unsigned
 name|EnableFastISel
-range|:
-literal|1
-decl_stmt|;
-comment|/// PositionIndependentExecutable - This flag indicates whether the code
-comment|/// will eventually be linked into a single executable, despite the PIC
-comment|/// relocation model being in use. It's value is undefined (and irrelevant)
-comment|/// if the relocation model is anything other than PIC.
-name|unsigned
-name|PositionIndependentExecutable
 range|:
 literal|1
 decl_stmt|;
@@ -501,6 +515,11 @@ decl_stmt|;
 comment|/// Compress DWARF debug sections.
 name|unsigned
 name|CompressDebugSections
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|RelaxELFRelocations
 range|:
 literal|1
 decl_stmt|;
@@ -531,6 +550,12 @@ comment|/// EmulatedTLS - This flag enables emulated TLS model, using emutls
 comment|/// function in the runtime library..
 name|unsigned
 name|EmulatedTLS
+range|:
+literal|1
+decl_stmt|;
+comment|/// This flag enables InterProcedural Register Allocation (IPRA).
+name|unsigned
+name|EnableIPRA
 range|:
 literal|1
 decl_stmt|;
@@ -591,6 +616,10 @@ decl_stmt|;
 comment|/// Which debugger to tune for.
 name|DebuggerKind
 name|DebuggerTuning
+decl_stmt|;
+comment|/// What exception model to use
+name|ExceptionHandling
+name|ExceptionModel
 decl_stmt|;
 comment|/// Machine level options.
 name|MCTargetOptions
@@ -665,11 +694,6 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
-name|PositionIndependentExecutable
-argument_list|)
-operator|&&
-name|ARE_EQUAL
-argument_list|(
 name|UseInitArray
 argument_list|)
 operator|&&
@@ -720,7 +744,17 @@ argument_list|)
 operator|&&
 name|ARE_EQUAL
 argument_list|(
+name|ExceptionModel
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
 name|MCOptions
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|EnableIPRA
 argument_list|)
 return|;
 undef|#

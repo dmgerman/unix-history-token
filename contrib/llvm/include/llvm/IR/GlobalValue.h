@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MD5.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<system_error>
 end_include
 
@@ -259,9 +265,14 @@ argument_list|(
 name|DefaultVisibility
 argument_list|)
 block|,
-name|UnnamedAddr
+name|UnnamedAddrVal
 argument_list|(
-literal|0
+name|unsigned
+argument_list|(
+name|UnnamedAddr
+operator|::
+name|None
+argument_list|)
 argument_list|)
 block|,
 name|DllStorageClass
@@ -298,12 +309,12 @@ name|Type
 operator|*
 name|ValueType
 block|;
-comment|// Note: VC++ treats enums as signed, so an extra bit is required to prevent
-comment|// Linkage and Visibility from turning into negative values.
-name|LinkageTypes
+comment|// All bitfields use unsigned as the underlying type so that MSVC will pack
+comment|// them.
+name|unsigned
 name|Linkage
 operator|:
-literal|5
+literal|4
 block|;
 comment|// The linkage of this global
 name|unsigned
@@ -313,9 +324,9 @@ literal|2
 block|;
 comment|// The visibility style of this global
 name|unsigned
-name|UnnamedAddr
+name|UnnamedAddrVal
 operator|:
-literal|1
+literal|2
 block|;
 comment|// This value's address is not significant
 name|unsigned
@@ -341,7 +352,7 @@ block|;
 name|private
 operator|:
 comment|// Give subclasses access to what otherwise would be wasted padding.
-comment|// (19 + 3 + 2 + 1 + 2 + 5) == 32.
+comment|// (19 + 4 + 2 + 2 + 2 + 3) == 32.
 name|unsigned
 name|SubClassData
 operator|:
@@ -366,12 +377,69 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
+comment|/// Returns true if the definition of this global may be replaced by a
+comment|/// differently optimized variant of the same source level function at link
+comment|/// time.
+name|bool
+name|mayBeDerefined
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getLinkage
+argument_list|()
+condition|)
+block|{
+case|case
+name|WeakODRLinkage
+case|:
+case|case
+name|LinkOnceODRLinkage
+case|:
+case|case
+name|AvailableExternallyLinkage
+case|:
+return|return
+name|true
+return|;
+case|case
+name|WeakAnyLinkage
+case|:
+case|case
+name|LinkOnceAnyLinkage
+case|:
+case|case
+name|CommonLinkage
+case|:
+case|case
+name|ExternalWeakLinkage
+case|:
+case|case
+name|ExternalLinkage
+case|:
+case|case
+name|AppendingLinkage
+case|:
+case|case
+name|InternalLinkage
+case|:
+case|case
+name|PrivateLinkage
+case|:
+return|return
+name|isInterposable
+argument_list|()
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Fully covered switch above!"
+argument_list|)
+expr_stmt|;
+block|}
 name|protected
 operator|:
 comment|/// \brief The intrinsic ID for this subclass (which must be a Function).
@@ -454,26 +522,131 @@ name|unsigned
 name|getAlignment
 argument_list|()
 specifier|const
+block|;    enum
+name|class
+name|UnnamedAddr
+block|{
+name|None
+block|,
+name|Local
+block|,
+name|Global
+block|,   }
 block|;
 name|bool
-name|hasUnnamedAddr
+name|hasGlobalUnnamedAddr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnnamedAddr
+argument_list|()
+operator|==
+name|UnnamedAddr
+operator|::
+name|Global
+return|;
+block|}
+comment|/// Returns true if this value's address is not significant in this module.
+comment|/// This attribute is intended to be used only by the code generator and LTO
+comment|/// to allow the linker to decide whether the global needs to be in the symbol
+comment|/// table. It should probably not be used in optimizations, as the value may
+comment|/// have uses outside the module; use hasGlobalUnnamedAddr() instead.
+name|bool
+name|hasAtLeastLocalUnnamedAddr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnnamedAddr
+argument_list|()
+operator|!=
+name|UnnamedAddr
+operator|::
+name|None
+return|;
+block|}
+name|UnnamedAddr
+name|getUnnamedAddr
 argument_list|()
 specifier|const
 block|{
 return|return
 name|UnnamedAddr
+argument_list|(
+name|UnnamedAddrVal
+argument_list|)
 return|;
 block|}
 name|void
 name|setUnnamedAddr
 argument_list|(
-argument|bool Val
+argument|UnnamedAddr Val
 argument_list|)
 block|{
-name|UnnamedAddr
+name|UnnamedAddrVal
 operator|=
+name|unsigned
+argument_list|(
 name|Val
+argument_list|)
 block|; }
+specifier|static
+name|UnnamedAddr
+name|getMinUnnamedAddr
+argument_list|(
+argument|UnnamedAddr A
+argument_list|,
+argument|UnnamedAddr B
+argument_list|)
+block|{
+if|if
+condition|(
+name|A
+operator|==
+name|UnnamedAddr
+operator|::
+name|None
+operator|||
+name|B
+operator|==
+name|UnnamedAddr
+operator|::
+name|None
+condition|)
+return|return
+name|UnnamedAddr
+operator|::
+name|None
+return|;
+if|if
+condition|(
+name|A
+operator|==
+name|UnnamedAddr
+operator|::
+name|Local
+operator|||
+name|B
+operator|==
+name|UnnamedAddr
+operator|::
+name|Local
+condition|)
+return|return
+name|UnnamedAddr
+operator|::
+name|Local
+return|;
+return|return
+name|UnnamedAddr
+operator|::
+name|Global
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|hasComdat
 argument_list|()
@@ -486,11 +659,17 @@ operator|!=
 name|nullptr
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|Comdat
-operator|*
+modifier|*
 name|getComdat
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|Comdat
 operator|*
@@ -512,6 +691,9 @@ name|getComdat
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|VisibilityTypes
 name|getVisibility
 argument_list|()
@@ -524,6 +706,9 @@ name|Visibility
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasDefaultVisibility
 argument_list|()
@@ -535,6 +720,9 @@ operator|==
 name|DefaultVisibility
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasHiddenVisibility
 argument_list|()
@@ -546,6 +734,9 @@ operator|==
 name|HiddenVisibility
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasProtectedVisibility
 argument_list|()
@@ -557,11 +748,15 @@ operator|==
 name|ProtectedVisibility
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setVisibility
-argument_list|(
-argument|VisibilityTypes V
-argument_list|)
+parameter_list|(
+name|VisibilityTypes
+name|V
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -577,12 +772,19 @@ operator|)
 operator|&&
 literal|"local linkage requires default visibility"
 argument_list|)
-block|;
+expr_stmt|;
 name|Visibility
 operator|=
 name|V
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// If the value is "Thread Local", its value isn't shared by the threads.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isThreadLocal
 argument_list|()
@@ -595,26 +797,35 @@ operator|!=
 name|NotThreadLocal
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setThreadLocal
-argument_list|(
-argument|bool Val
-argument_list|)
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
 block|{
 name|setThreadLocalMode
 argument_list|(
 name|Val
-operator|?
+condition|?
 name|GeneralDynamicTLSModel
-operator|:
+else|:
 name|NotThreadLocal
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setThreadLocalMode
-argument_list|(
-argument|ThreadLocalMode Val
-argument_list|)
+parameter_list|(
+name|ThreadLocalMode
+name|Val
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -629,11 +840,15 @@ name|Value
 operator|::
 name|FunctionVal
 argument_list|)
-block|;
+expr_stmt|;
 name|ThreadLocal
 operator|=
 name|Val
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|ThreadLocalMode
 name|getThreadLocalMode
 argument_list|()
@@ -649,6 +864,9 @@ name|ThreadLocal
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|DLLStorageClassTypes
 name|getDLLStorageClass
 argument_list|()
@@ -661,6 +879,9 @@ name|DllStorageClass
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasDLLImportStorageClass
 argument_list|()
@@ -672,6 +893,9 @@ operator|==
 name|DLLImportStorageClass
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasDLLExportStorageClass
 argument_list|()
@@ -683,16 +907,24 @@ operator|==
 name|DLLExportStorageClass
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setDLLStorageClass
-argument_list|(
-argument|DLLStorageClassTypes C
-argument_list|)
+parameter_list|(
+name|DLLStorageClassTypes
+name|C
+parameter_list|)
 block|{
 name|DllStorageClass
 operator|=
 name|C
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|hasSection
 argument_list|()
@@ -700,30 +932,28 @@ specifier|const
 block|{
 return|return
 operator|!
-name|StringRef
-argument_list|(
 name|getSection
 argument_list|()
-argument_list|)
 operator|.
 name|empty
 argument_list|()
 return|;
 block|}
-comment|// It is unfortunate that we have to use "char *" in here since this is
-comment|// always non NULL, but:
-comment|// * The C API expects a null terminated string, so we cannot use StringRef.
-comment|// * The C API expects us to own it, so we cannot use a std:string.
-comment|// * For GlobalAliases we can fail to find the section and we have to
-comment|//   return "", so we cannot use a "const std::string&".
-specifier|const
-name|char
-operator|*
+end_expr_stmt
+
+begin_expr_stmt
+name|StringRef
 name|getSection
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Global values are always pointers.
+end_comment
+
+begin_expr_stmt
 name|PointerType
 operator|*
 name|getType
@@ -743,6 +973,9 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Type
 operator|*
 name|getValueType
@@ -753,12 +986,16 @@ return|return
 name|ValueType
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|LinkageTypes
 name|getLinkOnceLinkage
-argument_list|(
-argument|bool ODR
-argument_list|)
+parameter_list|(
+name|bool
+name|ODR
+parameter_list|)
 block|{
 return|return
 name|ODR
@@ -768,12 +1005,16 @@ else|:
 name|LinkOnceAnyLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|LinkageTypes
 name|getWeakLinkage
-argument_list|(
-argument|bool ODR
-argument_list|)
+parameter_list|(
+name|bool
+name|ODR
+parameter_list|)
 block|{
 return|return
 name|ODR
@@ -783,12 +1024,16 @@ else|:
 name|WeakAnyLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isExternalLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -796,12 +1041,16 @@ operator|==
 name|ExternalLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isAvailableExternallyLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -809,12 +1058,16 @@ operator|==
 name|AvailableExternallyLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isLinkOnceODRLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -822,12 +1075,16 @@ operator|==
 name|LinkOnceODRLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isLinkOnceLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -839,12 +1096,16 @@ operator|==
 name|LinkOnceODRLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isWeakAnyLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -852,12 +1113,16 @@ operator|==
 name|WeakAnyLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isWeakODRLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -865,12 +1130,16 @@ operator|==
 name|WeakODRLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isWeakLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|isWeakAnyLinkage
@@ -884,12 +1153,16 @@ name|Linkage
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isAppendingLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -897,12 +1170,16 @@ operator|==
 name|AppendingLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isInternalLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -910,12 +1187,16 @@ operator|==
 name|InternalLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isPrivateLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -923,12 +1204,16 @@ operator|==
 name|PrivateLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isLocalLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|isInternalLinkage
@@ -942,12 +1227,16 @@ name|Linkage
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isExternalWeakLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -955,12 +1244,16 @@ operator|==
 name|ExternalWeakLinkage
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isCommonLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -968,14 +1261,122 @@ operator|==
 name|CommonLinkage
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|isValidDeclarationLinkage
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
+block|{
+return|return
+name|isExternalWeakLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isExternalLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Whether the definition of this global may be replaced by something
+end_comment
+
+begin_comment
+comment|/// non-equivalent at link time. For example, if a function has weak linkage
+end_comment
+
+begin_comment
+comment|/// then the code defining it may be replaced by different code.
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isInterposableLinkage
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Linkage
+condition|)
+block|{
+case|case
+name|WeakAnyLinkage
+case|:
+case|case
+name|LinkOnceAnyLinkage
+case|:
+case|case
+name|CommonLinkage
+case|:
+case|case
+name|ExternalWeakLinkage
+case|:
+return|return
+name|true
+return|;
+case|case
+name|AvailableExternallyLinkage
+case|:
+case|case
+name|LinkOnceODRLinkage
+case|:
+case|case
+name|WeakODRLinkage
+case|:
+comment|// The above three cannot be overridden but can be de-refined.
+case|case
+name|ExternalLinkage
+case|:
+case|case
+name|AppendingLinkage
+case|:
+case|case
+name|InternalLinkage
+case|:
+case|case
+name|PrivateLinkage
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Fully covered switch above!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// Whether the definition of this global may be discarded if it is not used
+end_comment
+
+begin_comment
 comment|/// in its compilation unit.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isDiscardableIfUnused
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|isLinkOnceLinkage
@@ -994,44 +1395,32 @@ name|Linkage
 argument_list|)
 return|;
 block|}
-comment|/// Whether the definition of this global may be replaced by something
-comment|/// non-equivalent at link time. For example, if a function has weak linkage
-comment|/// then the code defining it may be replaced by different code.
-specifier|static
-name|bool
-name|mayBeOverridden
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|WeakAnyLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkOnceAnyLinkage
-operator|||
-name|Linkage
-operator|==
-name|CommonLinkage
-operator|||
-name|Linkage
-operator|==
-name|ExternalWeakLinkage
-return|;
-block|}
+end_function
+
+begin_comment
 comment|/// Whether the definition of this global may be replaced at link time.  NB:
+end_comment
+
+begin_comment
 comment|/// Using this method outside of the code generators is almost always a
-comment|/// mistake: when working at the IR level use mayBeOverridden instead as it
+end_comment
+
+begin_comment
+comment|/// mistake: when working at the IR level use isInterposable instead as it
+end_comment
+
+begin_comment
 comment|/// knows about ODR semantics.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|isWeakForLinker
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|Linkage
+parameter_list|)
 block|{
 return|return
 name|Linkage
@@ -1059,6 +1448,185 @@ operator|==
 name|ExternalWeakLinkage
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// Return true if the currently visible definition of this global (if any) is
+end_comment
+
+begin_comment
+comment|/// exactly the definition we will see at runtime.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Non-exact linkage types inhibits most non-inlining IPO, since a
+end_comment
+
+begin_comment
+comment|/// differently optimized variant of the same function can have different
+end_comment
+
+begin_comment
+comment|/// observable or undefined behavior than in the variant currently visible.
+end_comment
+
+begin_comment
+comment|/// For instance, we could have started with
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   void foo(int *v) {
+end_comment
+
+begin_comment
+comment|///     int t = 5 / v[0];
+end_comment
+
+begin_comment
+comment|///     (void) t;
+end_comment
+
+begin_comment
+comment|///   }
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// and "refined" it to
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   void foo(int *v) { }
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// However, we cannot infer readnone for `foo`, since that would justify
+end_comment
+
+begin_comment
+comment|/// DSE'ing a store to `v[0]` across a call to `foo`, which can cause
+end_comment
+
+begin_comment
+comment|/// undefined behavior if the linker replaces the actual call destination with
+end_comment
+
+begin_comment
+comment|/// the unoptimized `foo`.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Inlining is okay across non-exact linkage types as long as they're not
+end_comment
+
+begin_comment
+comment|/// interposable (see \c isInterposable), since in such cases the currently
+end_comment
+
+begin_comment
+comment|/// visible variant is *a* correct implementation of the original source
+end_comment
+
+begin_comment
+comment|/// function; it just isn't the *only* correct implementation.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDefinitionExact
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|mayBeDerefined
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return true if this global has an exact defintion.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasExactDefinition
+argument_list|()
+specifier|const
+block|{
+comment|// While this computes exactly the same thing as
+comment|// isStrongDefinitionForLinker, the intended uses are different.  This
+comment|// function is intended to help decide if specific inter-procedural
+comment|// transforms are correct, while isStrongDefinitionForLinker's intended use
+comment|// is in low level code generation.
+return|return
+operator|!
+name|isDeclaration
+argument_list|()
+operator|&&
+name|isDefinitionExact
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return true if this global's definition can be substituted with an
+end_comment
+
+begin_comment
+comment|/// *arbitrary* definition at link time.  We cannot do any IPO or inlinining
+end_comment
+
+begin_comment
+comment|/// across interposable call edges, since the callee can be replaced with
+end_comment
+
+begin_comment
+comment|/// something arbitrary at link time.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isInterposable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isInterposableLinkage
+argument_list|(
+name|getLinkage
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasExternalLinkage
 argument_list|()
@@ -1067,10 +1635,14 @@ block|{
 return|return
 name|isExternalLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasAvailableExternallyLinkage
 argument_list|()
@@ -1079,10 +1651,14 @@ block|{
 return|return
 name|isAvailableExternallyLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasLinkOnceLinkage
 argument_list|()
@@ -1091,10 +1667,14 @@ block|{
 return|return
 name|isLinkOnceLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasLinkOnceODRLinkage
 argument_list|()
@@ -1103,10 +1683,14 @@ block|{
 return|return
 name|isLinkOnceODRLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasWeakLinkage
 argument_list|()
@@ -1115,10 +1699,14 @@ block|{
 return|return
 name|isWeakLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasWeakAnyLinkage
 argument_list|()
@@ -1127,10 +1715,14 @@ block|{
 return|return
 name|isWeakAnyLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasWeakODRLinkage
 argument_list|()
@@ -1139,10 +1731,14 @@ block|{
 return|return
 name|isWeakODRLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasAppendingLinkage
 argument_list|()
@@ -1151,10 +1747,14 @@ block|{
 return|return
 name|isAppendingLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasInternalLinkage
 argument_list|()
@@ -1163,10 +1763,14 @@ block|{
 return|return
 name|isInternalLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasPrivateLinkage
 argument_list|()
@@ -1175,10 +1779,14 @@ block|{
 return|return
 name|isPrivateLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasLocalLinkage
 argument_list|()
@@ -1187,10 +1795,14 @@ block|{
 return|return
 name|isLocalLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasExternalWeakLinkage
 argument_list|()
@@ -1199,10 +1811,14 @@ block|{
 return|return
 name|isExternalWeakLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|hasCommonLinkage
 argument_list|()
@@ -1211,15 +1827,36 @@ block|{
 return|return
 name|isCommonLinkage
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasValidDeclarationLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isValidDeclarationLinkage
+argument_list|(
+name|getLinkage
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setLinkage
-argument_list|(
-argument|LinkageTypes LT
-argument_list|)
+parameter_list|(
+name|LinkageTypes
+name|LT
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1235,16 +1872,26 @@ expr_stmt|;
 name|Linkage
 operator|=
 name|LT
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|LinkageTypes
 name|getLinkage
 argument_list|()
 specifier|const
 block|{
 return|return
+name|LinkageTypes
+argument_list|(
 name|Linkage
+argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isDiscardableIfUnused
 argument_list|()
@@ -1253,22 +1900,14 @@ block|{
 return|return
 name|isDiscardableIfUnused
 argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|mayBeOverridden
+name|getLinkage
 argument_list|()
-specifier|const
-block|{
-return|return
-name|mayBeOverridden
-argument_list|(
-name|Linkage
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isWeakForLinker
 argument_list|()
@@ -1277,12 +1916,22 @@ block|{
 return|return
 name|isWeakForLinker
 argument_list|(
-name|Linkage
+name|getLinkage
+argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Copy all additional attributes (those not needed to create a GlobalValue)
+end_comment
+
+begin_comment
 comment|/// from the GlobalValue Src to this one.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|copyAttributesFrom
@@ -1293,9 +1942,21 @@ modifier|*
 name|Src
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// If special LLVM prefix that is used to inform the asm printer to not emit
+end_comment
+
+begin_comment
 comment|/// usual symbol prefix before the symbol name is used then return linkage
+end_comment
+
+begin_comment
 comment|/// name after skipping this special LLVM prefix.
+end_comment
+
+begin_function
 specifier|static
 name|StringRef
 name|getRealLinkageName
@@ -1331,36 +1992,214 @@ return|return
 name|Name
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// Return the modified name for a global value suitable to be
+end_comment
+
+begin_comment
+comment|/// used as the key for a global lookup (e.g. profile or ThinLTO).
+end_comment
+
+begin_comment
+comment|/// The value's original name is \c Name and has linkage of type
+end_comment
+
+begin_comment
+comment|/// \c Linkage. The value is defined in module \c FileName.
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|string
+name|getGlobalIdentifier
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|GlobalValue::LinkageTypes Linkage
+argument_list|,
+argument|StringRef FileName
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Return the modified name for this global value suitable to be
+end_comment
+
+begin_comment
+comment|/// used as the key for a global lookup (e.g. profile or ThinLTO).
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|getGlobalIdentifier
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Declare a type to represent a global unique identifier for a global value.
+end_comment
+
+begin_comment
+comment|/// This is a 64 bits hash that is used by PGO and ThinLTO to have a compact
+end_comment
+
+begin_comment
+comment|/// unique way to identify a symbol.
+end_comment
+
+begin_decl_stmt
+name|using
+name|GUID
+init|=
+name|uint64_t
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Return a 64-bit global unique ID constructed from global value name
+end_comment
+
+begin_comment
+comment|/// (i.e. returned by getGlobalIdentifier()).
+end_comment
+
+begin_function
+specifier|static
+name|GUID
+name|getGUID
+parameter_list|(
+name|StringRef
+name|GlobalName
+parameter_list|)
+block|{
+return|return
+name|MD5Hash
+argument_list|(
+name|GlobalName
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Return a 64-bit global unique ID constructed from global value name
+end_comment
+
+begin_comment
+comment|/// (i.e. returned by getGlobalIdentifier()).
+end_comment
+
+begin_expr_stmt
+name|GUID
+name|getGUID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getGUID
+argument_list|(
+name|getGlobalIdentifier
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @name Materialization
-comment|/// Materialization is used to construct functions only as they're needed. This
+end_comment
+
+begin_comment
+comment|/// Materialization is used to construct functions only as they're needed.
+end_comment
+
+begin_comment
+comment|/// This
+end_comment
+
+begin_comment
 comment|/// is useful to reduce memory usage in LLVM or parsing work done by the
+end_comment
+
+begin_comment
 comment|/// BitcodeReader to load the Module.
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// If this function's Module is being lazily streamed in functions from disk
+end_comment
+
+begin_comment
 comment|/// or some other source, this method can be used to check to see if the
+end_comment
+
+begin_comment
 comment|/// function has been read in yet or not.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isMaterializable
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Make sure this GlobalValue is fully read. If the module is corrupt, this
+end_comment
+
+begin_comment
 comment|/// returns true and fills in the optional string with information about the
+end_comment
+
+begin_comment
 comment|/// problem.  If successful, this returns false.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|error_code
 name|materialize
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// Return true if the primary definition of this global value is outside of
+end_comment
+
+begin_comment
 comment|/// the current translation unit.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDeclaration
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isDeclarationForLinker
 argument_list|()
@@ -1374,14 +2213,17 @@ condition|)
 return|return
 name|true
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|isDeclaration
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// Returns true if this global's definition will be the one chosen by the
 end_comment
 
@@ -1389,10 +2231,29 @@ begin_comment
 comment|/// linker.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// NB! Ideally this should not be used at the IR level at all.  If you're
+end_comment
+
+begin_comment
+comment|/// interested in optimization constraints implied by the linker's ability to
+end_comment
+
+begin_comment
+comment|/// choose an implementation, prefer using \c hasExactDefinition.
+end_comment
+
+begin_macro
+unit|bool
 name|isStrongDefinitionForLinker
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1528,6 +2389,15 @@ operator|==
 name|Value
 operator|::
 name|GlobalAliasVal
+operator|||
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|Value
+operator|::
+name|GlobalIFuncVal
 return|;
 block|}
 end_function

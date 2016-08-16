@@ -117,10 +117,18 @@ parameter_list|)
 function_decl|;
 comment|/// When an error signal (such as SIBABRT or SIGSEGV) is delivered to the
 comment|/// process, print a stack trace and then exit.
-comment|/// @brief Print a stack trace if a fatal signal occurs.
+comment|/// \brief Print a stack trace if a fatal signal occurs.
+comment|/// \param Argv0 the current binary name, used to find the symbolizer
+comment|///        relative to the current binary before searching $PATH; can be
+comment|///        StringRef(), in which case we will only search $PATH.
+comment|/// \param DisableCrashReporting if \c true, disable the normal crash
+comment|///        reporting mechanisms on the underlying operating system.
 name|void
 name|PrintStackTraceOnErrorSignal
 parameter_list|(
+name|StringRef
+name|Argv0
+parameter_list|,
 name|bool
 name|DisableCrashReporting
 init|=

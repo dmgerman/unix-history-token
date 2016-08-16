@@ -107,6 +107,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createAArch64RedundantCopyEliminationPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createAArch64ConditionalCompares
 parameter_list|()
 function_decl|;
@@ -183,6 +188,13 @@ name|FunctionPass
 modifier|*
 name|createAArch64CollectLOHPass
 parameter_list|()
+function_decl|;
+name|void
+name|initializeAArch64ExpandPseudoPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

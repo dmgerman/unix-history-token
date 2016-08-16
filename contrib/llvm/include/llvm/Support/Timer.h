@@ -490,6 +490,16 @@ operator|!=
 name|nullptr
 return|;
 block|}
+comment|/// Check if the timer is currently running.
+name|bool
+name|isRunning
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Running
+return|;
+block|}
 comment|/// Check if startTimer() has ever been called on this timer.
 name|bool
 name|hasTriggered

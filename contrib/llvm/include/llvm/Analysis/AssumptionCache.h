@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -119,19 +125,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// FIXME: Replace this brittle forward declaration with the include of the new
-comment|// PassManager.h when doing so doesn't break the PassManagerBuilder.
-name|template
-operator|<
-name|typename
-name|IRUnitT
-operator|>
-name|class
-name|AnalysisManager
-expr_stmt|;
-name|class
-name|PreservedAnalyses
-decl_stmt|;
 comment|/// \brief A cache of @llvm.assume calls within a function.
 comment|///
 comment|/// This cache provides fast lookup of assumptions within a function by caching
@@ -275,43 +268,29 @@ end_comment
 begin_decl_stmt
 name|class
 name|AssumptionAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|AssumptionAnalysis
+operator|>
 block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|AssumptionAnalysis
+operator|>
+block|;
 specifier|static
 name|char
 name|PassID
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 typedef|typedef
 name|AssumptionCache
 name|Result
 typedef|;
-comment|/// \brief Opaque, unique identifier for this analysis pass.
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-comment|/// \brief Provide a name for the analysis for debugging and logging.
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"AssumptionAnalysis"
-return|;
-block|}
 name|AssumptionAnalysis
 argument_list|()
 block|{}
@@ -326,9 +305,9 @@ argument|AssumptionAnalysis&&Arg
 argument_list|)
 block|{}
 name|AssumptionAnalysis
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|AssumptionAnalysis
@@ -341,6 +320,9 @@ operator|*
 name|this
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|AssumptionAnalysis
 modifier|&
 name|operator
@@ -356,12 +338,18 @@ operator|*
 name|this
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|AssumptionCache
 name|run
 parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|,
+name|FunctionAnalysisManager
+modifier|&
 parameter_list|)
 block|{
 return|return
@@ -371,27 +359,29 @@ name|F
 argument_list|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// \brief Printer pass for the \c AssumptionAnalysis results.
 end_comment
 
 begin_decl_stmt
 name|class
 name|AssumptionPrinterPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|AssumptionPrinterPass
+operator|>
 block|{
 name|raw_ostream
-modifier|&
+operator|&
 name|OS
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|AssumptionPrinterPass
 argument_list|(
@@ -416,25 +406,12 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
-expr_stmt|;
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"AssumptionPrinterPass"
-return|;
-block|}
-block|}
+block|; }
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/// \brief An immutable pass that tracks lazily created \c AssumptionCache

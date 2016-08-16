@@ -55,12 +55,6 @@ directive|include
 file|"PDBTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -68,6 +62,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolExe
 range|:
@@ -136,10 +133,6 @@ name|FORWARD_SYMBOL_METHOD
 argument_list|(
 argument|getSymbolsFileName
 argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
-argument|getSymIndexId
-argument_list|)
 name|private
 operator|:
 name|void
@@ -157,11 +150,9 @@ specifier|const
 block|; }
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

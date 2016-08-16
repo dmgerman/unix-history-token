@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Options.h"
 end_include
 
@@ -101,11 +95,22 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|MDString
+decl_stmt|;
+name|class
+name|DICompositeType
+decl_stmt|;
+name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
 name|DiagnosticInfo
 decl_stmt|;
+enum_decl|enum
+name|DiagnosticSeverity
+enum_decl|:
+name|char
+enum_decl|;
 name|template
 operator|<
 name|typename
@@ -119,6 +124,9 @@ name|Function
 decl_stmt|;
 name|class
 name|DebugLoc
+decl_stmt|;
+name|class
+name|OptBisect
 decl_stmt|;
 comment|/// This is an important class for using LLVM in a threaded context.  It
 comment|/// (opaquely) owns and manages the core "global" data of LLVM's core
@@ -234,7 +242,18 @@ comment|// "invariant.group"
 name|MD_align
 init|=
 literal|17
+block|,
 comment|// "align"
+name|MD_loop
+init|=
+literal|18
+block|,
+comment|// "llvm.loop"
+name|MD_type
+init|=
+literal|19
+block|,
+comment|// "type"
 block|}
 enum|;
 comment|/// Known operand bundle tag IDs, which always have the same value.  All
@@ -253,6 +272,11 @@ init|=
 literal|1
 block|,
 comment|// "funclet"
+name|OB_gc_transition
+init|=
+literal|2
+block|,
+comment|// "gc-transition"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -343,6 +367,39 @@ name|Function
 modifier|&
 name|Fn
 parameter_list|)
+function_decl|;
+comment|/// Return true if the Context runtime configuration is set to discard all
+comment|/// value names. When true, only GlobalValue names will be available in the
+comment|/// IR.
+name|bool
+name|shouldDiscardValueNames
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Set the Context runtime configuration to discard all value name (but
+comment|/// GlobalValue). Clients can use this flag to save memory and runtime,
+comment|/// especially in release mode.
+name|void
+name|setDiscardValueNames
+parameter_list|(
+name|bool
+name|Discard
+parameter_list|)
+function_decl|;
+comment|/// Whether there is a string map for uniquing debug info
+comment|/// identifiers across the context.  Off by default.
+name|bool
+name|isODRUniquingDebugTypes
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|enableDebugTypeODRUniquing
+parameter_list|()
+function_decl|;
+name|void
+name|disableDebugTypeODRUniquing
+parameter_list|()
 function_decl|;
 typedef|typedef
 name|void
@@ -477,6 +534,34 @@ name|getDiagnosticContext
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return if a code hotness metric should be included in optimization
+comment|/// diagnostics.
+name|bool
+name|getDiagnosticHotnessRequested
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Set if a code hotness metric should be included in optimization
+comment|/// diagnostics.
+name|void
+name|setDiagnosticHotnessRequested
+parameter_list|(
+name|bool
+name|Requested
+parameter_list|)
+function_decl|;
+comment|/// \brief Get the prefix that should be printed in front of a diagnostic of
+comment|///        the given \p Severity
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getDiagnosticMessagePrefix
+parameter_list|(
+name|DiagnosticSeverity
+name|Severity
+parameter_list|)
+function_decl|;
 comment|/// \brief Report a message to the currently installed diagnostic handler.
 comment|///
 comment|/// This function returns, in particular in the case of error reporting
@@ -616,6 +701,13 @@ operator|(
 operator|)
 return|;
 block|}
+comment|/// \brief Access the object which manages optimization bisection for failure
+comment|/// analysis.
+name|OptBisect
+modifier|&
+name|getOptBisect
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|LLVMContext
@@ -660,14 +752,6 @@ name|Module
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that
-comment|/// only care about operating on a single thread.
-specifier|extern
-name|LLVMContext
-modifier|&
-name|getGlobalContext
-parameter_list|()
-function_decl|;
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
 argument_list|(

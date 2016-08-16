@@ -101,6 +101,12 @@ directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/ObjCARCInstKind.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

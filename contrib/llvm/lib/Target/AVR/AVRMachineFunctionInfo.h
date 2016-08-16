@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"AVRConfig.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
@@ -75,7 +69,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/**  * Contains AVR-specific information for each MachineFunction.  */
+comment|/// Contains AVR-specific information for each MachineFunction.
 name|class
 name|AVRMachineFunctionInfo
 range|:

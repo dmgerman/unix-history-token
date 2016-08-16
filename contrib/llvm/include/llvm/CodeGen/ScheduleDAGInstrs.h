@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/MapVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SparseMultiSet.h"
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<list>
 end_include
 
 begin_decl_stmt
@@ -312,6 +324,81 @@ name|VirtReg2IndexFunctor
 operator|>
 name|VReg2SUnitOperIdxMultiMap
 expr_stmt|;
+typedef|typedef
+name|PointerUnion
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+specifier|const
+name|PseudoSourceValue
+operator|*
+operator|>
+name|ValueType
+expr_stmt|;
+name|struct
+name|UnderlyingObject
+range|:
+name|PointerIntPair
+operator|<
+name|ValueType
+decl_stmt|, 1,
+name|bool
+decl|>
+block|{
+name|UnderlyingObject
+argument_list|(
+argument|ValueType V
+argument_list|,
+argument|bool MayAlias
+argument_list|)
+block|:
+name|PointerIntPair
+operator|<
+name|ValueType
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+operator|(
+name|V
+operator|,
+name|MayAlias
+operator|)
+block|{}
+name|ValueType
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|mayAlias
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInt
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|UnderlyingObject
+operator|,
+literal|4
+operator|>
+name|UnderlyingObjectsVector
+expr_stmt|;
 comment|/// ScheduleDAGInstrs - A ScheduleDAG subclass for scheduling lists of
 comment|/// MachineInstrs.
 name|class
@@ -416,18 +503,172 @@ comment|/// Tracks the last instructions in this region using each virtual regis
 name|VReg2SUnitOperIdxMultiMap
 name|CurrentVRegUses
 block|;
-comment|/// PendingLoads - Remember where unknown loads are after the most recent
-comment|/// unknown store, as we iterate. As with Defs and Uses, this is here
-comment|/// to minimize construction/destruction.
+name|AliasAnalysis
+operator|*
+name|AAForDep
+block|;
+comment|/// Remember a generic side-effecting instruction as we proceed.
+comment|/// No other SU ever gets scheduled around it (except in the special
+comment|/// case of a huge region that gets reduced).
+name|SUnit
+operator|*
+name|BarrierChain
+block|;
+name|public
+operator|:
+comment|/// A list of SUnits, used in Value2SUsMap, during DAG construction.
+comment|/// Note: to gain speed it might be worth investigating an optimized
+comment|/// implementation of this data structure, such as a singly linked list
+comment|/// with a memory pool (SmallVector was tried but slow and SparseSet is not
+comment|/// applicable).
+typedef|typedef
 name|std
 operator|::
-name|vector
+name|list
 operator|<
 name|SUnit
 operator|*
 operator|>
-name|PendingLoads
-block|;
+name|SUList
+expr_stmt|;
+name|protected
+operator|:
+comment|/// A map from ValueType to SUList, used during DAG construction,
+comment|/// as a means of remembering which SUs depend on which memory
+comment|/// locations.
+name|class
+name|Value2SUsMap
+decl_stmt|;
+comment|/// Remove in FIFO order some SUs from huge maps.
+name|void
+name|reduceHugeMemNodeMaps
+parameter_list|(
+name|Value2SUsMap
+modifier|&
+name|stores
+parameter_list|,
+name|Value2SUsMap
+modifier|&
+name|loads
+parameter_list|,
+name|unsigned
+name|N
+parameter_list|)
+function_decl|;
+comment|/// Add a chain edge between SUa and SUb, but only if both AliasAnalysis
+comment|/// and Target fail to deny the dependency.
+name|void
+name|addChainDependency
+parameter_list|(
+name|SUnit
+modifier|*
+name|SUa
+parameter_list|,
+name|SUnit
+modifier|*
+name|SUb
+parameter_list|,
+name|unsigned
+name|Latency
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Add dependencies as needed from all SUs in list to SU.
+name|void
+name|addChainDependencies
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|,
+name|SUList
+modifier|&
+name|sus
+parameter_list|,
+name|unsigned
+name|Latency
+parameter_list|)
+block|{
+for|for
+control|(
+name|auto
+operator|*
+name|su
+operator|:
+name|sus
+control|)
+name|addChainDependency
+argument_list|(
+name|SU
+argument_list|,
+name|su
+argument_list|,
+name|Latency
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Add dependencies as needed from all SUs in map, to SU.
+name|void
+name|addChainDependencies
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|,
+name|Value2SUsMap
+modifier|&
+name|Val2SUsMap
+parameter_list|)
+function_decl|;
+comment|/// Add dependencies as needed to SU, from all SUs mapped to V.
+name|void
+name|addChainDependencies
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|,
+name|Value2SUsMap
+modifier|&
+name|Val2SUsMap
+parameter_list|,
+name|ValueType
+name|V
+parameter_list|)
+function_decl|;
+comment|/// Add barrier chain edges from all SUs in map, and then clear
+comment|/// the map. This is equivalent to insertBarrierChain(), but
+comment|/// optimized for the common case where the new BarrierChain (a
+comment|/// global memory object) has a higher NodeNum than all SUs in
+comment|/// map. It is assumed BarrierChain has been set before calling
+comment|/// this.
+name|void
+name|addBarrierChain
+parameter_list|(
+name|Value2SUsMap
+modifier|&
+name|map
+parameter_list|)
+function_decl|;
+comment|/// Insert a barrier chain in a huge region, far below current
+comment|/// SU. Add barrier chain edges from all SUs in map with higher
+comment|/// NodeNums than this new BarrierChain, and remove them from
+comment|/// map. It is assumed BarrierChain has been set before calling
+comment|/// this.
+name|void
+name|insertBarrierChain
+parameter_list|(
+name|Value2SUsMap
+modifier|&
+name|map
+parameter_list|)
+function_decl|;
+comment|/// For an unanalyzable memory access, this Value is used in maps.
+name|UndefValue
+modifier|*
+name|UnknownValue
+decl_stmt|;
 comment|/// DbgValues - Remember instruction that precedes DBG_VALUE.
 comment|/// These are generated by buildSchedGraph but persist so they can be
 comment|/// referenced when emitting the final schedule.
@@ -650,6 +891,12 @@ parameter_list|,
 name|PressureDiffs
 modifier|*
 name|PDiffs
+init|=
+name|nullptr
+parameter_list|,
+name|LiveIntervals
+modifier|*
+name|LIS
 init|=
 name|nullptr
 parameter_list|,

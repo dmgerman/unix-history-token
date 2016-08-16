@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/DebugInfo/DIContext.h"
 end_include
 
 begin_include
@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/DIContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -107,10 +101,19 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|object
 block|{
@@ -126,6 +129,70 @@ name|class
 name|OwningBinary
 expr_stmt|;
 block|}
+comment|/// Base class for errors originating in RuntimeDyld, e.g. missing relocation
+comment|/// support.
+name|class
+name|RuntimeDyldError
+range|:
+name|public
+name|ErrorInfo
+operator|<
+name|RuntimeDyldError
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+name|RuntimeDyldError
+argument_list|(
+argument|std::string ErrMsg
+argument_list|)
+operator|:
+name|ErrMsg
+argument_list|(
+argument|std::move(ErrMsg)
+argument_list|)
+block|{}
+name|void
+name|log
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getErrorMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ErrMsg
+return|;
+block|}
+name|std
+operator|::
+name|error_code
+name|convertToErrorCode
+argument_list|()
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|string
+name|ErrMsg
+block|; }
+decl_stmt|;
 name|class
 name|RuntimeDyldImpl
 decl_stmt|;
@@ -289,9 +356,9 @@ argument_list|)
 block|,
 name|ObjSecToIDMap
 argument_list|(
-argument|ObjSecToIDMap
+argument|std::move(ObjSecToIDMap)
 argument_list|)
-block|{ }
+block|{}
 name|virtual
 name|object
 operator|::
@@ -613,15 +680,21 @@ operator|~
 name|SymbolResolver
 argument_list|()
 block|{}
-comment|/// This method returns the address of the specified function or variable.
-comment|/// It is used to resolve symbols during module linking.
+comment|/// This method returns the address of the specified symbol if it exists
+comment|/// within the logical dynamic library represented by this
+comment|/// RTDyldMemoryManager. Unlike findSymbol, queries through this
+comment|/// interface should return addresses for hidden symbols.
 comment|///
-comment|/// If the returned symbol's address is equal to ~0ULL then RuntimeDyld will
-comment|/// skip all relocations for that symbol, and the client will be responsible
-comment|/// for handling them manually.
+comment|/// This is of particular importance for the Orc JIT APIs, which support lazy
+comment|/// compilation by breaking up modules: Each of those broken out modules
+comment|/// must be able to resolve hidden symbols provided by the others. Clients
+comment|/// writing memory managers for MCJIT can usually ignore this method.
+comment|///
+comment|/// This method will be queried by RuntimeDyld when checking for previous
+comment|/// definitions of common symbols.
 name|virtual
 name|SymbolInfo
-name|findSymbol
+name|findSymbolInLogicalDylib
 argument_list|(
 specifier|const
 name|std
@@ -633,26 +706,15 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/// This method returns the address of the specified symbol if it exists
-comment|/// within the logical dynamic library represented by this
-comment|/// RTDyldMemoryManager. Unlike getSymbolAddress, queries through this
-comment|/// interface should return addresses for hidden symbols.
+comment|/// This method returns the address of the specified function or variable.
+comment|/// It is used to resolve symbols during module linking.
 comment|///
-comment|/// This is of particular importance for the Orc JIT APIs, which support lazy
-comment|/// compilation by breaking up modules: Each of those broken out modules
-comment|/// must be able to resolve hidden symbols provided by the others. Clients
-comment|/// writing memory managers for MCJIT can usually ignore this method.
-comment|///
-comment|/// This method will be queried by RuntimeDyld when checking for previous
-comment|/// definitions of common symbols. It will *not* be queried by default when
-comment|/// resolving external symbols (this minimises the link-time overhead for
-comment|/// MCJIT clients who don't care about Orc features). If you are writing a
-comment|/// RTDyldMemoryManager for Orc and want "external" symbol resolution to
-comment|/// search the logical dylib, you should override your getSymbolAddress
-comment|/// method call this method directly.
+comment|/// If the returned symbol's address is equal to ~0ULL then RuntimeDyld will
+comment|/// skip all relocations for that symbol, and the client will be responsible
+comment|/// for handling them manually.
 name|virtual
 name|SymbolInfo
-name|findSymbolInLogicalDylib
+name|findSymbol
 argument_list|(
 specifier|const
 name|std

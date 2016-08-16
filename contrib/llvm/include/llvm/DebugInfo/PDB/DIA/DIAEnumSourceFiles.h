@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|DIASession
 decl_stmt|;
@@ -133,6 +136,7 @@ operator|>
 name|Enumerator
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -134,7 +134,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|unsigned DestReg
 argument_list|,

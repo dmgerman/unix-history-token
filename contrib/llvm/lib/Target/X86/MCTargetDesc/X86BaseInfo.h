@@ -299,11 +299,6 @@ comment|/// reference is actually to the "__imp_FOO" symbol.  This is used for
 comment|/// dllimport linkage on windows.
 name|MO_DLLIMPORT
 block|,
-comment|/// MO_DARWIN_STUB - On a symbol operand "FOO", this indicates that the
-comment|/// reference is actually to the "FOO$stub" symbol.  This is used for calls
-comment|/// and jumps to external functions on Tiger and earlier.
-name|MO_DARWIN_STUB
-block|,
 comment|/// MO_DARWIN_NONLAZY - On a symbol operand "FOO", this indicates that the
 comment|/// reference is actually to the "FOO$non_lazy_ptr" symbol, which is a
 comment|/// non-PIC-base-relative reference to a non-hidden dyld lazy pointer stub.
@@ -313,12 +308,6 @@ comment|/// MO_DARWIN_NONLAZY_PIC_BASE - On a symbol operand "FOO", this indicat
 comment|/// that the reference is actually to "FOO$non_lazy_ptr - PICBASE", which is
 comment|/// a PIC-base-relative reference to a non-hidden dyld lazy pointer stub.
 name|MO_DARWIN_NONLAZY_PIC_BASE
-block|,
-comment|/// MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE - On a symbol operand "FOO", this
-comment|/// indicates that the reference is actually to "FOO$non_lazy_ptr -PICBASE",
-comment|/// which is a PIC-base-relative reference to a hidden dyld lazy pointer
-comment|/// stub.
-name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
 block|,
 comment|/// MO_TLVP - On a symbol operand this indicates that the immediate is
 comment|/// some TLS offset.
@@ -1842,9 +1831,6 @@ name|getMemoryOperandNo
 parameter_list|(
 name|uint64_t
 name|TSFlags
-parameter_list|,
-name|unsigned
-name|Opcode
 parameter_list|)
 block|{
 name|bool
@@ -2414,10 +2400,10 @@ if|if
 condition|(
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|XMM7
+name|XMM8
 operator|&&
 name|RegNo
 operator|<=
@@ -2428,10 +2414,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|XMM23
+name|XMM24
 operator|&&
 name|RegNo
 operator|<=
@@ -2442,10 +2428,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|YMM7
+name|YMM8
 operator|&&
 name|RegNo
 operator|<=
@@ -2456,10 +2442,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|YMM23
+name|YMM24
 operator|&&
 name|RegNo
 operator|<=
@@ -2470,10 +2456,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|ZMM7
+name|ZMM8
 operator|&&
 name|RegNo
 operator|<=
@@ -2484,10 +2470,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|ZMM23
+name|ZMM24
 operator|&&
 name|RegNo
 operator|<=
@@ -2729,10 +2715,10 @@ return|return
 operator|(
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|XMM15
+name|XMM16
 operator|&&
 name|RegNo
 operator|<=
@@ -2743,10 +2729,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|YMM15
+name|YMM16
 operator|&&
 name|RegNo
 operator|<=
@@ -2757,10 +2743,10 @@ operator|)
 operator|||
 operator|(
 name|RegNo
-operator|>
+operator|>=
 name|X86
 operator|::
-name|ZMM15
+name|ZMM16
 operator|&&
 name|RegNo
 operator|<=

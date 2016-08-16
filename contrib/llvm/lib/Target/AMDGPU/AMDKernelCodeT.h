@@ -186,6 +186,43 @@ enum|;
 end_enum
 
 begin_comment
+comment|// Sets val bits for specified mask in specified dst packed instance.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMD_HSA_BITS_SET
+parameter_list|(
+name|dst
+parameter_list|,
+name|mask
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|dst&= (~(1<< mask ## _SHIFT)& ~mask);                                     \   dst |= (((val)<< mask ## _SHIFT)& mask)
+end_define
+
+begin_comment
+comment|// Gets bits for specified mask from specified src packed instance.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMD_HSA_BITS_GET
+parameter_list|(
+name|src
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|((src& mask)>> mask ## _SHIFT)
+end_define
+
+begin_comment
+unit|\
 comment|/// The values used to define the number of bytes to use for the
 end_comment
 
@@ -503,12 +540,34 @@ operator|)
 operator|<<
 name|AMD_CODE_PROPERTY_ENABLE_SGPR_GRID_WORKGROUP_COUNT_Z_SHIFT
 block|,
+name|AMD_CODE_PROPERTY_RESERVED1_SHIFT
+init|=
+literal|10
+block|,
+name|AMD_CODE_PROPERTY_RESERVED1_WIDTH
+init|=
+literal|6
+block|,
+name|AMD_CODE_PROPERTY_RESERVED1
+init|=
+operator|(
+operator|(
+literal|1
+operator|<<
+name|AMD_CODE_PROPERTY_RESERVED1_WIDTH
+operator|)
+operator|-
+literal|1
+operator|)
+operator|<<
+name|AMD_CODE_PROPERTY_RESERVED1_SHIFT
+block|,
 comment|/// Control wave ID base counter for GDS ordered-append. Used to set
 comment|/// COMPUTE_DISPATCH_INITIATOR.ORDERED_APPEND_ENBL. (Not sure if
 comment|/// ORDERED_APPEND_MODE also needs to be settable)
 name|AMD_CODE_PROPERTY_ENABLE_ORDERED_APPEND_GDS_SHIFT
 init|=
-literal|10
+literal|16
 block|,
 name|AMD_CODE_PROPERTY_ENABLE_ORDERED_APPEND_GDS_WIDTH
 init|=
@@ -551,7 +610,7 @@ comment|///
 comment|/// uSE VALUES FROM THE AMD_ELEMENT_BYTE_SIZE_T ENUM.
 name|AMD_CODE_PROPERTY_PRIVATE_ELEMENT_SIZE_SHIFT
 init|=
-literal|11
+literal|17
 block|,
 name|AMD_CODE_PROPERTY_PRIVATE_ELEMENT_SIZE_WIDTH
 init|=
@@ -578,7 +637,7 @@ comment|/// SH_MEM_CONFIG.PTR32 (GFX6 (SI)/GFX7 (CI)),
 comment|/// SH_MEM_CONFIG.ADDRESS_MODE (GFX8 (VI)+).
 name|AMD_CODE_PROPERTY_IS_PTR64_SHIFT
 init|=
-literal|13
+literal|19
 block|,
 name|AMD_CODE_PROPERTY_IS_PTR64_WIDTH
 init|=
@@ -608,7 +667,7 @@ comment|/// know private segment size, and additional space must be added
 comment|/// for the call stack.
 name|AMD_CODE_PROPERTY_IS_DYNAMIC_CALLSTACK_SHIFT
 init|=
-literal|14
+literal|20
 block|,
 name|AMD_CODE_PROPERTY_IS_DYNAMIC_CALLSTACK_WIDTH
 init|=
@@ -631,7 +690,7 @@ block|,
 comment|/// Indicate if code generated has support for debugging.
 name|AMD_CODE_PROPERTY_IS_DEBUG_SUPPORTED_SHIFT
 init|=
-literal|15
+literal|21
 block|,
 name|AMD_CODE_PROPERTY_IS_DEBUG_SUPPORTED_WIDTH
 init|=
@@ -653,7 +712,7 @@ name|AMD_CODE_PROPERTY_IS_DEBUG_SUPPORTED_SHIFT
 block|,
 name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_SHIFT
 init|=
-literal|15
+literal|22
 block|,
 name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_WIDTH
 init|=
@@ -672,6 +731,28 @@ literal|1
 operator|)
 operator|<<
 name|AMD_CODE_PROPERTY_IS_XNACK_SUPPORTED_SHIFT
+block|,
+name|AMD_CODE_PROPERTY_RESERVED2_SHIFT
+init|=
+literal|23
+block|,
+name|AMD_CODE_PROPERTY_RESERVED2_WIDTH
+init|=
+literal|9
+block|,
+name|AMD_CODE_PROPERTY_RESERVED2
+init|=
+operator|(
+operator|(
+literal|1
+operator|<<
+name|AMD_CODE_PROPERTY_RESERVED2_WIDTH
+operator|)
+operator|-
+literal|1
+operator|)
+operator|<<
+name|AMD_CODE_PROPERTY_RESERVED2_SHIFT
 block|}
 enum|;
 end_enum

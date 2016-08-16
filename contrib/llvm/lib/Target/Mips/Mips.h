@@ -135,6 +135,11 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createMipsHazardSchedule
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createMipsLongBranchPass
 parameter_list|(
 name|MipsTargetMachine
@@ -145,11 +150,7 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createMipsConstantIslandPass
-parameter_list|(
-name|MipsTargetMachine
-modifier|&
-name|tm
-parameter_list|)
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

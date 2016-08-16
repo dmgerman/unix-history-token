@@ -91,8 +91,13 @@ name|unsigned
 name|SRetReturnReg
 block|;
 name|unsigned
-name|StackAlignBaseReg
+name|StackAlignBaseVReg
 block|;
+comment|// Aligned-stack base register (virtual)
+name|unsigned
+name|StackAlignBasePhysReg
+block|;
+comment|//                             (physical)
 name|std
 operator|::
 name|vector
@@ -138,7 +143,12 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|StackAlignBaseReg
+name|StackAlignBaseVReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|StackAlignBasePhysReg
 argument_list|(
 literal|0
 argument_list|)
@@ -165,7 +175,12 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|StackAlignBaseReg
+name|StackAlignBaseVReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|StackAlignBasePhysReg
 argument_list|(
 literal|0
 argument_list|)
@@ -388,7 +403,7 @@ argument_list|(
 argument|unsigned R
 argument_list|)
 block|{
-name|StackAlignBaseReg
+name|StackAlignBaseVReg
 operator|=
 name|R
 block|; }
@@ -398,7 +413,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|StackAlignBaseReg
+name|StackAlignBaseVReg
+return|;
+block|}
+name|void
+name|setStackAlignBasePhysReg
+argument_list|(
+argument|unsigned R
+argument_list|)
+block|{
+name|StackAlignBasePhysReg
+operator|=
+name|R
+block|; }
+name|unsigned
+name|getStackAlignBasePhysReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackAlignBasePhysReg
 return|;
 block|}
 expr|}

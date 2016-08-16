@@ -131,10 +131,14 @@ comment|/// \brief True if this function contains a call to setjmp or other func
 comment|/// with attribute "returns twice" without having the attribute itself.
 name|bool
 name|exposesReturnsTwice
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief True if this function calls itself.
 name|bool
 name|isRecursive
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief True if this function cannot be duplicated.
 comment|///
@@ -142,18 +146,32 @@ comment|/// True if this function contains one or more indirect branches, or it 
 comment|/// one or more 'noduplicate' instructions.
 name|bool
 name|notDuplicatable
+init|=
+name|false
+decl_stmt|;
+comment|/// \brief True if this function contains a call to a convergent function.
+name|bool
+name|convergent
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief True if this function calls alloca (in the C sense).
 name|bool
 name|usesDynamicAlloca
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Number of instructions in the analyzed blocks.
 name|unsigned
 name|NumInsts
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Number of analyzed blocks.
 name|unsigned
 name|NumBlocks
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief Keeps track of basic block code size estimates.
 name|DenseMap
@@ -169,6 +187,8 @@ expr_stmt|;
 comment|/// \brief Keep track of the number of calls to 'big' functions.
 name|unsigned
 name|NumCalls
+init|=
+name|false
 decl_stmt|;
 comment|/// \brief The number of calls to internal functions with a single caller.
 comment|///
@@ -176,70 +196,23 @@ comment|/// These are likely targets for future inlining, likely exposed by
 comment|/// interleaved devirtualization.
 name|unsigned
 name|NumInlineCandidates
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief How many instructions produce vector values.
 comment|///
 comment|/// The inliner is more aggressive with inlining vector kernels.
 name|unsigned
 name|NumVectorInsts
+init|=
+literal|0
 decl_stmt|;
 comment|/// \brief How many 'ret' instructions the blocks contain.
 name|unsigned
 name|NumRets
+init|=
+literal|0
 decl_stmt|;
-name|CodeMetrics
-argument_list|()
-operator|:
-name|exposesReturnsTwice
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|isRecursive
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|notDuplicatable
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|usesDynamicAlloca
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|NumInsts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumBlocks
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumCalls
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumInlineCandidates
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumVectorInsts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRets
-argument_list|(
-literal|0
-argument_list|)
-block|{}
 comment|/// \brief Add information about a block to the current state.
 name|void
 name|analyzeBasicBlock
@@ -263,7 +236,7 @@ operator|>
 operator|&
 name|EphValues
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Collect a loop's ephemeral values (those used only by an assume
 comment|/// or similar intrinsics in the loop).
 specifier|static

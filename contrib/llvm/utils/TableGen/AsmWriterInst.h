@@ -111,6 +111,11 @@ name|isLiteralStatementOperand
 block|}
 name|OperandType
 enum|;
+comment|/// MiOpNo - For isMachineInstrOperand, this is the operand number of the
+comment|/// machine instruction.
+name|unsigned
+name|MIOpNo
+decl_stmt|;
 comment|/// Str - For isLiteralTextOperand, this IS the literal text.  For
 comment|/// isMachineInstrOperand, this is the PrinterMethodName for the operand..
 comment|/// For isLiteralStatementOperand, this is the code to insert verbatim
@@ -120,16 +125,6 @@ operator|::
 name|string
 name|Str
 expr_stmt|;
-comment|/// CGIOpNo - For isMachineInstrOperand, this is the index of the operand in
-comment|/// the CodeGenInstruction.
-name|unsigned
-name|CGIOpNo
-decl_stmt|;
-comment|/// MiOpNo - For isMachineInstrOperand, this is the operand number of the
-comment|/// machine instruction.
-name|unsigned
-name|MIOpNo
-decl_stmt|;
 comment|/// MiModifier - For isMachineInstrOperand, this is the modifier string for
 comment|/// an operand, specified with syntax like ${opname:modifier}.
 name|std
@@ -137,12 +132,6 @@ operator|::
 name|string
 name|MiModifier
 expr_stmt|;
-comment|// PassSubtarget - Pass MCSubtargetInfo to the print method if this is
-comment|// equal to 1.
-comment|// FIXME: Remove after all ports are updated.
-name|unsigned
-name|PassSubtarget
-decl_stmt|;
 comment|// To make VS STL happy
 name|AsmWriterOperand
 argument_list|(
@@ -175,13 +164,9 @@ name|AsmWriterOperand
 argument_list|(
 argument|const std::string&Printer
 argument_list|,
-argument|unsigned _CGIOpNo
-argument_list|,
 argument|unsigned _MIOpNo
 argument_list|,
 argument|const std::string&Modifier
-argument_list|,
-argument|unsigned PassSubtarget
 argument_list|,
 argument|OpType op = isMachineInstrOperand
 argument_list|)
@@ -191,29 +176,19 @@ argument_list|(
 name|op
 argument_list|)
 operator|,
-name|Str
-argument_list|(
-name|Printer
-argument_list|)
-operator|,
-name|CGIOpNo
-argument_list|(
-name|_CGIOpNo
-argument_list|)
-operator|,
 name|MIOpNo
 argument_list|(
 name|_MIOpNo
 argument_list|)
 operator|,
-name|MiModifier
+name|Str
 argument_list|(
-name|Modifier
+name|Printer
 argument_list|)
 operator|,
-name|PassSubtarget
+name|MiModifier
 argument_list|(
-argument|PassSubtarget
+argument|Modifier
 argument_list|)
 block|{}
 name|bool
@@ -292,7 +267,10 @@ name|std
 decl|::
 name|string
 name|getCode
-argument_list|()
+argument_list|(
+name|bool
+name|PassSubtarget
+argument_list|)
 decl|const
 struct|;
 block|}
@@ -321,13 +299,16 @@ name|CodeGenInstruction
 modifier|*
 name|CGI
 decl_stmt|;
+name|unsigned
+name|CGIIndex
+decl_stmt|;
 name|AsmWriterInst
 argument_list|(
 argument|const CodeGenInstruction&CGI
 argument_list|,
-argument|unsigned Variant
+argument|unsigned CGIIndex
 argument_list|,
-argument|unsigned PassSubtarget
+argument|unsigned Variant
 argument_list|)
 empty_stmt|;
 comment|/// MatchesAllButOneOp - If this instruction is exactly identical to the

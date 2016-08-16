@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines the SystemZ subclass for TargetSelectionDAGInfo.
+comment|// This file defines the SystemZ subclass for SelectionDAGTargetInfo.
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -76,7 +76,7 @@ name|class
 name|SystemZSelectionDAGInfo
 range|:
 name|public
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 block|{
 name|public
 operator|:
@@ -91,7 +91,7 @@ name|EmitTargetCodeForMemcpy
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -119,7 +119,7 @@ name|EmitTargetCodeForMemset
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -150,7 +150,7 @@ name|EmitTargetCodeForMemcmp
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -179,7 +179,7 @@ name|EmitTargetCodeForMemchr
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -206,7 +206,7 @@ name|EmitTargetCodeForStrcpy
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -235,7 +235,7 @@ name|EmitTargetCodeForStrcmp
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -262,7 +262,7 @@ name|EmitTargetCodeForStrlen
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -285,7 +285,7 @@ name|EmitTargetCodeForStrnlen
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,

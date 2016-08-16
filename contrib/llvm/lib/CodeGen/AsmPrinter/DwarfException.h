@@ -71,6 +71,12 @@ directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDwarf.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -105,6 +111,11 @@ name|void
 name|markFunctionEnd
 argument_list|()
 name|override
+block|;
+name|void
+name|endFragment
+argument_list|()
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -117,6 +128,10 @@ block|{
 comment|/// Per-function flag to indicate if .cfi_personality should be emitted.
 name|bool
 name|shouldEmitPersonality
+block|;
+comment|/// Per-function flag to indicate if .cfi_personality must be emitted.
+name|bool
+name|forceEmitPersonality
 block|;
 comment|/// Per-function flag to indicate if .cfi_lsda should be emitted.
 name|bool
@@ -168,6 +183,15 @@ name|void
 name|endFunction
 argument_list|(
 argument|const MachineFunction *
+argument_list|)
+name|override
+block|;
+name|void
+name|beginFragment
+argument_list|(
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|ExceptionSymbolProvider ESP
 argument_list|)
 name|override
 block|; }

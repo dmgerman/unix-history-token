@@ -172,8 +172,8 @@ decl_stmt|;
 comment|// 'dbg' Metadata cache.
 enum|enum
 block|{
-comment|/// HasMetadataBit - This is a bit stored in the SubClassData field which
-comment|/// indicates whether this instruction has metadata attached to it or not.
+comment|/// This is a bit stored in the SubClassData field which indicates whether
+comment|/// this instruction has metadata attached to it or not.
 name|HasMetadataBit
 init|=
 literal|1
@@ -189,8 +189,8 @@ name|Instruction
 argument_list|()
 name|override
 expr_stmt|;
-comment|/// user_back - Specialize the methods defined in Value, as we know that an
-comment|/// instruction can only be used by other instructions.
+comment|/// Specialize the methods defined in Value, as we know that an instruction
+comment|/// can only be used by other instructions.
 name|Instruction
 modifier|*
 name|user_back
@@ -249,7 +249,7 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// \brief Return the module owning the function this instruction belongs to
+comment|/// Return the module owning the function this instruction belongs to
 comment|/// or nullptr it the function does not have a module.
 comment|///
 comment|/// Note: this is undefined behavior if the instruction does not have a
@@ -266,7 +266,7 @@ modifier|*
 name|getModule
 parameter_list|()
 function_decl|;
-comment|/// \brief Return the function this instruction belongs to.
+comment|/// Return the function this instruction belongs to.
 comment|///
 comment|/// Note: it is undefined behavior to call this on an instruction not
 comment|/// currently inserted into a function.
@@ -282,15 +282,13 @@ modifier|*
 name|getFunction
 parameter_list|()
 function_decl|;
-comment|/// removeFromParent - This method unlinks 'this' from the containing basic
-comment|/// block, but does not delete it.
-comment|///
+comment|/// This method unlinks 'this' from the containing basic block, but does not
+comment|/// delete it.
 name|void
 name|removeFromParent
 parameter_list|()
 function_decl|;
-comment|/// eraseFromParent - This method unlinks 'this' from the containing basic
-comment|/// block and deletes it.
+comment|/// This method unlinks 'this' from the containing basic block and deletes it.
 comment|///
 comment|/// \returns an iterator pointing to the element after the erased one
 name|SymbolTableList
@@ -322,9 +320,8 @@ modifier|*
 name|InsertPos
 parameter_list|)
 function_decl|;
-comment|/// moveBefore - Unlink this instruction from its current basic block and
-comment|/// insert it into the basic block that MovePos lives in, right before
-comment|/// MovePos.
+comment|/// Unlink this instruction from its current basic block and insert it into
+comment|/// the basic block that MovePos lives in, right before MovePos.
 name|void
 name|moveBefore
 parameter_list|(
@@ -336,7 +333,7 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Subclass classification.
 comment|//===--------------------------------------------------------------------===//
-comment|/// getOpcode() returns a member of one of the enums like Instruction::Add.
+comment|/// Returns a member of one of the enums like Instruction::Add.
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -476,7 +473,7 @@ operator|<
 name|BinaryOpsEnd
 return|;
 block|}
-comment|/// @brief Determine if the Opcode is one of the shift instructions.
+comment|/// Determine if the Opcode is one of the shift instructions.
 specifier|static
 specifier|inline
 name|bool
@@ -496,8 +493,7 @@ operator|<=
 name|AShr
 return|;
 block|}
-comment|/// isLogicalShift - Return true if this is a logical shift left or a logical
-comment|/// shift right.
+comment|/// Return true if this is a logical shift left or a logical shift right.
 specifier|inline
 name|bool
 name|isLogicalShift
@@ -516,7 +512,7 @@ operator|==
 name|LShr
 return|;
 block|}
-comment|/// isArithmeticShift - Return true if this is an arithmetic shift right.
+comment|/// Return true if this is an arithmetic shift right.
 specifier|inline
 name|bool
 name|isArithmeticShift
@@ -530,7 +526,7 @@ operator|==
 name|AShr
 return|;
 block|}
-comment|/// @brief Determine if the OpCode is one of the CastInst instructions.
+comment|/// Determine if the OpCode is one of the CastInst instructions.
 specifier|static
 specifier|inline
 name|bool
@@ -550,7 +546,7 @@ operator|<
 name|CastOpsEnd
 return|;
 block|}
-comment|/// @brief Determine if the OpCode is one of the FuncletPadInst instructions.
+comment|/// Determine if the OpCode is one of the FuncletPadInst instructions.
 specifier|static
 specifier|inline
 name|bool
@@ -573,8 +569,7 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Metadata manipulation.
 comment|//===--------------------------------------------------------------------===//
-comment|/// hasMetadata() - Return true if this instruction has any metadata attached
-comment|/// to it.
+comment|/// Return true if this instruction has any metadata attached to it.
 name|bool
 name|hasMetadata
 argument_list|()
@@ -587,8 +582,8 @@ name|hasMetadataHashEntry
 argument_list|()
 return|;
 block|}
-comment|/// hasMetadataOtherThanDebugLoc - Return true if this instruction has
-comment|/// metadata attached to it other than a debug location.
+comment|/// Return true if this instruction has metadata attached to it other than a
+comment|/// debug location.
 name|bool
 name|hasMetadataOtherThanDebugLoc
 argument_list|()
@@ -599,7 +594,7 @@ name|hasMetadataHashEntry
 argument_list|()
 return|;
 block|}
-comment|/// getMetadata - Get the metadata of given kind attached to this Instruction.
+comment|/// Get the metadata of given kind attached to this Instruction.
 comment|/// If the metadata is not found then return null.
 name|MDNode
 modifier|*
@@ -626,7 +621,7 @@ name|KindID
 argument_list|)
 return|;
 block|}
-comment|/// getMetadata - Get the metadata of given kind attached to this Instruction.
+comment|/// Get the metadata of given kind attached to this Instruction.
 comment|/// If the metadata is not found then return null.
 name|MDNode
 modifier|*
@@ -653,9 +648,9 @@ name|Kind
 argument_list|)
 return|;
 block|}
-comment|/// getAllMetadata - Get all metadata attached to this Instruction.  The first
-comment|/// element of each pair returned is the KindID, the second element is the
-comment|/// metadata value.  This list is returned sorted by the KindID.
+comment|/// Get all metadata attached to this Instruction. The first element of each
+comment|/// pair returned is the KindID, the second element is the metadata value.
+comment|/// This list is returned sorted by the KindID.
 name|void
 name|getAllMetadata
 argument_list|(
@@ -686,8 +681,8 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getAllMetadataOtherThanDebugLoc - This does the same thing as
-comment|/// getAllMetadata, except that it filters out the debug location.
+comment|/// This does the same thing as getAllMetadata, except that it filters out the
+comment|/// debug location.
 name|void
 name|getAllMetadataOtherThanDebugLoc
 argument_list|(
@@ -718,9 +713,9 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getAAMetadata - Fills the AAMDNodes structure with AA metadata from
-comment|/// this instruction. When Merge is true, the existing AA metadata is
-comment|/// merged with that from this instruction providing the most-general result.
+comment|/// Fills the AAMDNodes structure with AA metadata from this instruction.
+comment|/// When Merge is true, the existing AA metadata is merged with that from this
+comment|/// instruction providing the most-general result.
 name|void
 name|getAAMetadata
 argument_list|(
@@ -735,9 +730,8 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// setMetadata - Set the metadata of the specified kind to the specified
-comment|/// node.  This updates/replaces metadata if already present, or removes it if
-comment|/// Node is null.
+comment|/// Set the metadata of the specified kind to the specified node. This updates
+comment|/// or replaces metadata if already present, or removes it if Node is null.
 name|void
 name|setMetadata
 parameter_list|(
@@ -830,8 +824,7 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
-comment|/// setAAMetadata - Sets the metadata on this instruction from the
-comment|/// AAMDNodes structure.
+comment|/// Sets the metadata on this instruction from the AAMDNodes structure.
 name|void
 name|setAAMetadata
 parameter_list|(
@@ -841,7 +834,33 @@ modifier|&
 name|N
 parameter_list|)
 function_decl|;
-comment|/// setDebugLoc - Set the debug location information for this instruction.
+comment|/// Retrieve the raw weight values of a conditional branch or select.
+comment|/// Returns true on success with profile weights filled in.
+comment|/// Returns false if no metadata or invalid metadata was found.
+name|bool
+name|extractProfMetadata
+parameter_list|(
+name|uint64_t
+modifier|&
+name|TrueVal
+parameter_list|,
+name|uint64_t
+modifier|&
+name|FalseVal
+parameter_list|)
+function_decl|;
+comment|/// Retrieve total raw weight values of a branch.
+comment|/// Returns true on success with profile total weights filled in.
+comment|/// Returns false if no metadata was found.
+name|bool
+name|extractProfTotalWeight
+parameter_list|(
+name|uint64_t
+modifier|&
+name|TotalVal
+parameter_list|)
+function_decl|;
+comment|/// Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
 parameter_list|(
@@ -859,7 +878,7 @@ name|Loc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getDebugLoc - Return the debug location for this node as a DebugLoc.
+comment|/// Return the debug location for this node as a DebugLoc.
 specifier|const
 name|DebugLoc
 operator|&
@@ -871,6 +890,57 @@ return|return
 name|DbgLoc
 return|;
 block|}
+comment|/// Set or clear the nsw flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
+name|void
+name|setHasNoUnsignedWrap
+parameter_list|(
+name|bool
+name|b
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// Set or clear the nsw flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
+name|void
+name|setHasNoSignedWrap
+parameter_list|(
+name|bool
+name|b
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// Set or clear the exact flag on this instruction, which must be an operator
+comment|/// which supports this flag. See LangRef.html for the meaning of this flag.
+name|void
+name|setIsExact
+parameter_list|(
+name|bool
+name|b
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// Determine whether the no unsigned wrap flag is set.
+name|bool
+name|hasNoUnsignedWrap
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Determine whether the no signed wrap flag is set.
+name|bool
+name|hasNoSignedWrap
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Determine whether the exact flag is set.
+name|bool
+name|isExact
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Set or clear the unsafe-algebra flag on this instruction, which must be an
 comment|/// operator which supports this flag. See LangRef.html for the meaning of
 comment|/// this flag.
@@ -989,10 +1059,31 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+comment|/// Convenience method to copy supported wrapping, exact, and fast-math flags
+comment|/// from V to this instruction.
+name|void
+name|copyIRFlags
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// Logical 'and' of any supported wrapping, exact, and fast-math flags of
+comment|/// V and this instruction.
+name|void
+name|andIRFlags
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 name|private
 label|:
-comment|/// hasMetadataHashEntry - Return true if we have an entry in the on-the-side
-comment|/// metadata hash.
+comment|/// Return true if we have an entry in the on-the-side metadata hash.
 name|bool
 name|hasMetadataHashEntry
 argument_list|()
@@ -1064,6 +1155,7 @@ operator|&
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Clear all hashtable-based metadata from this instruction.
 name|void
 name|clearMetadataHashEntries
 parameter_list|()
@@ -1073,7 +1165,7 @@ label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Predicates and helper methods.
 comment|//===--------------------------------------------------------------------===//
-comment|/// isAssociative - Return true if the instruction is associative:
+comment|/// Return true if the instruction is associative:
 comment|///
 comment|///   Associative operators satisfy:  x op (y op z) === (x op y) op z
 comment|///
@@ -1092,7 +1184,7 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
-comment|/// isCommutative - Return true if the instruction is commutative:
+comment|/// Return true if the instruction is commutative:
 comment|///
 comment|///   Commutative operators satisfy: (x op y) === (y op x)
 comment|///
@@ -1120,7 +1212,7 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
-comment|/// isIdempotent - Return true if the instruction is idempotent:
+comment|/// Return true if the instruction is idempotent:
 comment|///
 comment|///   Idempotent operators satisfy:  x op x === x
 comment|///
@@ -1147,7 +1239,7 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
-comment|/// isNilpotent - Return true if the instruction is nilpotent:
+comment|/// Return true if the instruction is nilpotent:
 comment|///
 comment|///   Nilpotent operators satisfy:  x op x === Id,
 comment|///
@@ -1177,23 +1269,19 @@ name|unsigned
 name|op
 parameter_list|)
 function_decl|;
-comment|/// mayWriteToMemory - Return true if this instruction may modify memory.
-comment|///
+comment|/// Return true if this instruction may modify memory.
 name|bool
 name|mayWriteToMemory
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// mayReadFromMemory - Return true if this instruction may read memory.
-comment|///
+comment|/// Return true if this instruction may read memory.
 name|bool
 name|mayReadFromMemory
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// mayReadOrWriteMemory - Return true if this instruction may read or
-comment|/// write memory.
-comment|///
+comment|/// Return true if this instruction may read or write memory.
 name|bool
 name|mayReadOrWriteMemory
 argument_list|()
@@ -1207,31 +1295,69 @@ name|mayWriteToMemory
 argument_list|()
 return|;
 block|}
-comment|/// isAtomic - Return true if this instruction has an
-comment|/// AtomicOrdering of unordered or higher.
-comment|///
+comment|/// Return true if this instruction has an AtomicOrdering of unordered or
+comment|/// higher.
 name|bool
 name|isAtomic
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// mayThrow - Return true if this instruction may throw an exception.
-comment|///
+comment|/// Return true if this instruction may throw an exception.
 name|bool
 name|mayThrow
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// mayReturn - Return true if this is a function that may return.
-comment|/// this is true for all normal instructions. The only exception
-comment|/// is functions that are marked with the 'noreturn' attribute.
-comment|///
+comment|/// Return true if this instruction behaves like a memory fence: it can load
+comment|/// or store to memory location without being given a memory location.
 name|bool
-name|mayReturn
+name|isFenceLike
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// mayHaveSideEffects - Return true if the instruction may have side effects.
+block|{
+switch|switch
+condition|(
+name|getOpcode
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+comment|// This list should be kept in sync with the list in mayWriteToMemory for
+comment|// all opcodes which don't have a memory location.
+case|case
+name|Instruction
+operator|::
+name|Fence
+case|:
+case|case
+name|Instruction
+operator|::
+name|CatchPad
+case|:
+case|case
+name|Instruction
+operator|::
+name|CatchRet
+case|:
+case|case
+name|Instruction
+operator|::
+name|Call
+case|:
+case|case
+name|Instruction
+operator|::
+name|Invoke
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
+comment|/// Return true if the instruction may have side effects.
 comment|///
 comment|/// Note that this does not consider malloc and alloca to have side
 comment|/// effects because the newly allocated memory is completely invisible to
@@ -1248,13 +1374,9 @@ argument_list|()
 operator|||
 name|mayThrow
 argument_list|()
-operator|||
-operator|!
-name|mayReturn
-argument_list|()
 return|;
 block|}
-comment|/// \brief Return true if the instruction is a variety of EH-block.
+comment|/// Return true if the instruction is a variety of EH-block.
 name|bool
 name|isEHPad
 argument_list|()
@@ -1295,8 +1417,8 @@ name|false
 return|;
 block|}
 block|}
-comment|/// clone() - Create a copy of 'this' instruction that is identical in all
-comment|/// ways except the following:
+comment|/// Create a copy of 'this' instruction that is identical in all ways except
+comment|/// the following:
 comment|///   * The instruction has no parent
 comment|///   * The instruction has no name
 comment|///
@@ -1306,9 +1428,9 @@ name|clone
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isIdenticalTo - Return true if the specified instruction is exactly
-comment|/// identical to the current one.  This means that all operands match and any
-comment|/// extra information (e.g. load is volatile) agree.
+comment|/// Return true if the specified instruction is exactly identical to the
+comment|/// current one. This means that all operands match and any extra information
+comment|/// (e.g. load is volatile) agree.
 name|bool
 name|isIdenticalTo
 argument_list|(
@@ -1319,9 +1441,9 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isIdenticalToWhenDefined - This is like isIdenticalTo, except that it
-comment|/// ignores the SubclassOptionalData flags, which specify conditions
-comment|/// under which the instruction's result is undefined.
+comment|/// This is like isIdenticalTo, except that it ignores the
+comment|/// SubclassOptionalData flags, which specify conditions under which the
+comment|/// instruction's result is undefined.
 name|bool
 name|isIdenticalToWhenDefined
 argument_list|(
@@ -1376,10 +1498,9 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isUsedOutsideOfBlock - Return true if there are any uses of this
-comment|/// instruction in blocks other than the specified block.  Note that PHI nodes
-comment|/// are considered to evaluate their operands in the corresponding predecessor
-comment|/// block.
+comment|/// Return true if there are any uses of this instruction in blocks other than
+comment|/// the specified block. Note that PHI nodes are considered to evaluate their
+comment|/// operands in the corresponding predecessor block.
 name|bool
 name|isUsedOutsideOfBlock
 argument_list|(

@@ -46,25 +46,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_R600MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600MACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_R600MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_R600MACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"AMDGPUMachineFunction.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/BitVector.h"
 end_include
 
 begin_include
@@ -85,6 +79,7 @@ name|llvm
 block|{
 name|class
 name|R600MachineFunctionInfo
+name|final
 range|:
 name|public
 name|AMDGPUMachineFunction

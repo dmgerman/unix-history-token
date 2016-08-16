@@ -128,27 +128,13 @@ name|uint8_t
 operator|*
 name|getPointer
 argument_list|(
-argument|uint64_t address
+argument|uint64_t Address
 argument_list|,
-argument|uint64_t size
+argument|uint64_t Size
 argument_list|)
 specifier|const
 name|override
-block|{
-comment|// FIXME: This could be fixed by ensuring the bytes are fetched and
-comment|// making a copy, requiring that the bitcode size be known, or
-comment|// otherwise ensuring that the memory doesn't go away/get reallocated,
-comment|// but it's not currently necessary. Users that need the pointer (any
-comment|// that need Blobs) don't stream.
-name|report_fatal_error
-argument_list|(
-literal|"getPointer in streaming memory objects not allowed"
-argument_list|)
 block|;
-return|return
-name|nullptr
-return|;
-block|}
 name|bool
 name|isValidAddress
 argument_list|(

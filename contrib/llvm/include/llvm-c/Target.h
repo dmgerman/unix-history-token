@@ -501,6 +501,25 @@ endif|#
 directive|endif
 block|}
 comment|/*===-- Target Data -------------------------------------------------------===*/
+comment|/**  * Obtain the data layout for a module.  *  * @see Module::getDataLayout()  */
+name|LLVMTargetDataRef
+name|LLVMGetModuleDataLayout
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|)
+function_decl|;
+comment|/**  * Set the data layout for a module.  *  * @see Module::setDataLayout()  */
+name|void
+name|LLVMSetModuleDataLayout
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|LLVMTargetDataRef
+name|DL
+parameter_list|)
+function_decl|;
 comment|/** Creates target data from a target layout string.     See the constructor llvm::DataLayout::DataLayout. */
 name|LLVMTargetDataRef
 name|LLVMCreateTargetData
@@ -511,15 +530,12 @@ modifier|*
 name|StringRep
 parameter_list|)
 function_decl|;
-comment|/** Adds target data information to a pass manager. This does not take ownership     of the target data.     See the method llvm::PassManagerBase::add. */
+comment|/** Deallocates a TargetData.     See the destructor llvm::DataLayout::~DataLayout. */
 name|void
-name|LLVMAddTargetData
+name|LLVMDisposeTargetData
 parameter_list|(
 name|LLVMTargetDataRef
 name|TD
-parameter_list|,
-name|LLVMPassManagerRef
-name|PM
 parameter_list|)
 function_decl|;
 comment|/** Adds target library information to a pass manager. This does not take     ownership of the target library info.     See the method llvm::PassManagerBase::add. */
@@ -727,14 +743,6 @@ name|StructTy
 parameter_list|,
 name|unsigned
 name|Element
-parameter_list|)
-function_decl|;
-comment|/** Deallocates a TargetData.     See the destructor llvm::DataLayout::~DataLayout. */
-name|void
-name|LLVMDisposeTargetData
-parameter_list|(
-name|LLVMTargetDataRef
-name|TD
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

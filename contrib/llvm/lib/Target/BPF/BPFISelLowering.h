@@ -162,7 +162,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -212,13 +212,19 @@ argument|bool IsVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+block|;
+comment|// Maximum number of arguments to a call
+specifier|static
+specifier|const
+name|unsigned
+name|MaxArgs
 block|;
 comment|// Lower a call into CALLSEQ_START - BPFISD:CALL - CALLSEQ_END chain
 name|SDValue
@@ -243,7 +249,7 @@ argument|bool IsVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -265,7 +271,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

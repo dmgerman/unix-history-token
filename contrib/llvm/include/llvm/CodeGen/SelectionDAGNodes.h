@@ -201,7 +201,7 @@ name|class
 name|SDNode
 decl_stmt|;
 name|class
-name|BinaryWithFlagsSDNode
+name|HandleSDNode
 decl_stmt|;
 name|class
 name|Value
@@ -276,8 +276,23 @@ name|namespace
 name|ISD
 block|{
 comment|/// Node predicates
-comment|/// Return true if the specified node is a
-comment|/// BUILD_VECTOR where all of the elements are ~0 or undef.
+comment|/// If N is a BUILD_VECTOR node whose elements are all the same constant or
+comment|/// undefined, return true and return the constant value in \p SplatValue.
+name|bool
+name|isConstantSplatVector
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|APInt
+modifier|&
+name|SplatValue
+parameter_list|)
+function_decl|;
+comment|/// Return true if the specified node is a BUILD_VECTOR where all of the
+comment|/// elements are ~0 or undef.
 name|bool
 name|isBuildVectorAllOnes
 parameter_list|(
@@ -287,8 +302,8 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// Return true if the specified node is a
-comment|/// BUILD_VECTOR where all of the elements are 0 or undef.
+comment|/// Return true if the specified node is a BUILD_VECTOR where all of the
+comment|/// elements are 0 or undef.
 name|bool
 name|isBuildVectorAllZeros
 parameter_list|(
@@ -298,8 +313,8 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// \brief Return true if the specified node is a BUILD_VECTOR node of
-comment|/// all ConstantSDNode or undef.
+comment|/// Return true if the specified node is a BUILD_VECTOR node of all
+comment|/// ConstantSDNode or undef.
 name|bool
 name|isBuildVectorOfConstantSDNodes
 parameter_list|(
@@ -309,8 +324,8 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// \brief Return true if the specified node is a BUILD_VECTOR node of
-comment|/// all ConstantFPSDNode or undef.
+comment|/// Return true if the specified node is a BUILD_VECTOR node of all
+comment|/// ConstantFPSDNode or undef.
 name|bool
 name|isBuildVectorOfConstantFPSDNodes
 parameter_list|(
@@ -320,8 +335,8 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// Return true if the node has at least one operand
-comment|/// and all operands of the specified node are ISD::UNDEF.
+comment|/// Return true if the node has at least one operand and all operands of the
+comment|/// specified node are ISD::UNDEF.
 name|bool
 name|allOperandsUndef
 parameter_list|(
@@ -1196,6 +1211,11 @@ name|friend
 name|class
 name|SDNode
 decl_stmt|;
+comment|// TODO: unfriend HandleSDNode once we fix its operand handling.
+name|friend
+name|class
+name|HandleSDNode
+decl_stmt|;
 name|void
 name|setUser
 parameter_list|(
@@ -1408,6 +1428,11 @@ name|AllowReciprocal
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|VectorReduction
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 comment|/// Default constructor turns off all optimization flags.
@@ -1443,6 +1468,10 @@ operator|=
 name|false
 expr_stmt|;
 name|AllowReciprocal
+operator|=
+name|false
+expr_stmt|;
+name|VectorReduction
 operator|=
 name|false
 expr_stmt|;
@@ -1544,6 +1573,18 @@ operator|=
 name|b
 expr_stmt|;
 block|}
+name|void
+name|setVectorReduction
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|VectorReduction
+operator|=
+name|b
+expr_stmt|;
+block|}
 comment|// These are accessors for each flag.
 name|bool
 name|hasNoUnsignedWrap
@@ -1615,6 +1656,15 @@ specifier|const
 block|{
 return|return
 name|AllowReciprocal
+return|;
+block|}
+name|bool
+name|hasVectorReduction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VectorReduction
 return|;
 block|}
 comment|/// Return a raw encoding of the flags.
@@ -1764,13 +1814,6 @@ comment|/// The operation that this node performs.
 name|int16_t
 name|NodeType
 decl_stmt|;
-comment|/// This is true if OperandList was new[]'d.  If true,
-comment|/// then they will be delete[]'d when the node is destroyed.
-name|uint16_t
-name|OperandsNeedDelete
-range|:
-literal|1
-decl_stmt|;
 comment|/// This tracks whether this node has one or more dbg_value
 comment|/// nodes corresponding to it.
 name|uint16_t
@@ -1786,7 +1829,7 @@ comment|/// This field is initialized to zero by the ctor.
 name|uint16_t
 name|SubclassData
 range|:
-literal|14
+literal|15
 decl_stmt|;
 name|private
 label|:
@@ -1852,6 +1895,11 @@ operator|<
 name|SDNode
 operator|>
 expr_stmt|;
+comment|// TODO: unfriend HandleSDNode once we fix its operand handling.
+name|friend
+name|class
+name|HandleSDNode
+decl_stmt|;
 name|public
 label|:
 comment|/// Unique and persistent id per SDNode in the DAG.
@@ -2650,42 +2698,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Return true if N is a predecessor of this node.
+comment|/// Returns true if N is a predecessor of any node in Worklist. This
 end_comment
 
 begin_comment
-comment|/// N is either an operand of this node, or can be reached by recursively
+comment|/// helper keeps Visited and Worklist sets externally to allow unions
 end_comment
 
 begin_comment
-comment|/// traversing up the operands.
+comment|/// searches to be performed in parallel, caching of results across
 end_comment
 
 begin_comment
-comment|/// In this helper the Visited and worklist sets are held externally to
+comment|/// queries and incremental addition to Worklist. Stops early if N is
 end_comment
 
 begin_comment
-comment|/// cache predecessors over multiple invocations. If you want to test for
+comment|/// found but will resume. Remember to clear Visited and Worklists
 end_comment
 
 begin_comment
-comment|/// multiple predecessors this method is preferable to multiple calls to
-end_comment
-
-begin_comment
-comment|/// hasPredecessor. Be sure to clear Visited and Worklist if the DAG
-end_comment
-
-begin_comment
-comment|/// changes.
-end_comment
-
-begin_comment
-comment|/// NOTE: This is still very expensive. Use carefully.
+comment|/// if DAG changes.
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|hasPredecessorHelper
 argument_list|(
@@ -2712,8 +2749,106 @@ operator|>
 operator|&
 name|Worklist
 argument_list|)
-decl|const
+block|{
+if|if
+condition|(
+name|Visited
+operator|.
+name|count
+argument_list|(
+name|N
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+while|while
+condition|(
+operator|!
+name|Worklist
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+specifier|const
+name|SDNode
+modifier|*
+name|M
+init|=
+name|Worklist
+operator|.
+name|pop_back_val
+argument_list|()
 decl_stmt|;
+name|bool
+name|Found
+init|=
+name|false
+decl_stmt|;
+for|for
+control|(
+specifier|const
+name|SDValue
+modifier|&
+name|OpV
+range|:
+name|M
+operator|->
+name|op_values
+argument_list|()
+control|)
+block|{
+name|SDNode
+modifier|*
+name|Op
+init|=
+name|OpV
+operator|.
+name|getNode
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|Visited
+operator|.
+name|insert
+argument_list|(
+name|Op
+argument_list|)
+operator|.
+name|second
+condition|)
+name|Worklist
+operator|.
+name|push_back
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Op
+operator|==
+name|N
+condition|)
+name|Found
+operator|=
+name|true
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Found
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -3648,6 +3783,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Create an SDNode.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// SDNodes are created without any operands, and never own the operand
+end_comment
+
+begin_comment
+comment|/// storage. To add operands, see SelectionDAG::createOperands.
+end_comment
+
 begin_macro
 name|SDNode
 argument_list|(
@@ -3658,8 +3809,6 @@ argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
-argument_list|,
-argument|ArrayRef<SDValue> Ops
 argument_list|)
 end_macro
 
@@ -3670,193 +3819,6 @@ argument_list|(
 name|Opc
 argument_list|)
 operator|,
-name|OperandsNeedDelete
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|HasDebugValue
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|SubclassData
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NodeId
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|,
-name|OperandList
-argument_list|(
-argument|Ops.size() ? new SDUse[Ops.size()] : nullptr
-argument_list|)
-operator|,
-name|ValueList
-argument_list|(
-name|VTs
-operator|.
-name|VTs
-argument_list|)
-operator|,
-name|UseList
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|NumOperands
-argument_list|(
-name|Ops
-operator|.
-name|size
-argument_list|()
-argument_list|)
-operator|,
-name|NumValues
-argument_list|(
-name|VTs
-operator|.
-name|NumVTs
-argument_list|)
-operator|,
-name|IROrder
-argument_list|(
-name|Order
-argument_list|)
-operator|,
-name|debugLoc
-argument_list|(
-argument|std::move(dl)
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|debugLoc
-operator|.
-name|hasTrivialDestructor
-argument_list|()
-operator|&&
-literal|"Expected trivial destructor"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|NumOperands
-operator|==
-name|Ops
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"NumOperands wasn't wide enough for its operands!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|NumValues
-operator|==
-name|VTs
-operator|.
-name|NumVTs
-operator|&&
-literal|"NumValues wasn't wide enough for its operands!"
-argument_list|)
-block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|Ops
-operator|.
-name|size
-argument_list|()
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|assert
-argument_list|(
-name|OperandList
-operator|&&
-literal|"no operands available"
-argument_list|)
-expr_stmt|;
-name|OperandList
-index|[
-name|i
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-name|OperandList
-index|[
-name|i
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Ops
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|/// This constructor adds no operands itself; operands can be
-end_comment
-
-begin_comment
-comment|/// set later with InitOperands.
-end_comment
-
-begin_expr_stmt
-unit|SDNode
-operator|(
-name|unsigned
-name|Opc
-operator|,
-name|unsigned
-name|Order
-operator|,
-name|DebugLoc
-name|dl
-operator|,
-name|SDVTList
-name|VTs
-operator|)
-operator|:
-name|NodeType
-argument_list|(
-name|Opc
-argument_list|)
-operator|,
-name|OperandsNeedDelete
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|HasDebugValue
 argument_list|(
 name|false
@@ -3933,396 +3895,8 @@ operator|&&
 literal|"NumValues wasn't wide enough for its operands!"
 argument_list|)
 block|;   }
-comment|/// Initialize the operands list of this with 1 operand.
-name|void
-name|InitOperands
-argument_list|(
-argument|SDUse *Ops
-argument_list|,
-argument|const SDValue&Op0
-argument_list|)
-block|{
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op0
-argument_list|)
-block|;
-name|NumOperands
-operator|=
-literal|1
-block|;
-name|OperandList
-operator|=
-name|Ops
-block|;
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-block|;   }
-comment|/// Initialize the operands list of this with 2 operands.
-name|void
-name|InitOperands
-argument_list|(
-argument|SDUse *Ops
-argument_list|,
-argument|const SDValue&Op0
-argument_list|,
-argument|const SDValue&Op1
-argument_list|)
-block|{
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op0
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op1
-argument_list|)
-block|;
-name|NumOperands
-operator|=
-literal|2
-block|;
-name|OperandList
-operator|=
-name|Ops
-block|;
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-block|;   }
-comment|/// Initialize the operands list of this with 3 operands.
-name|void
-name|InitOperands
-argument_list|(
-argument|SDUse *Ops
-argument_list|,
-argument|const SDValue&Op0
-argument_list|,
-argument|const SDValue&Op1
-argument_list|,
-argument|const SDValue&Op2
-argument_list|)
-block|{
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op0
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op1
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|2
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|2
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op2
-argument_list|)
-block|;
-name|NumOperands
-operator|=
-literal|3
-block|;
-name|OperandList
-operator|=
-name|Ops
-block|;
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-block|;   }
-comment|/// Initialize the operands list of this with 4 operands.
-name|void
-name|InitOperands
-argument_list|(
-argument|SDUse *Ops
-argument_list|,
-argument|const SDValue&Op0
-argument_list|,
-argument|const SDValue&Op1
-argument_list|,
-argument|const SDValue&Op2
-argument_list|,
-argument|const SDValue&Op3
-argument_list|)
-block|{
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|0
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op0
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|1
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op1
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|2
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|2
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op2
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|3
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-block|;
-name|Ops
-index|[
-literal|3
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Op3
-argument_list|)
-block|;
-name|NumOperands
-operator|=
-literal|4
-block|;
-name|OperandList
-operator|=
-name|Ops
-block|;
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-block|;   }
-comment|/// Initialize the operands list of this with N operands.
-name|void
-name|InitOperands
-argument_list|(
-argument|SDUse *Ops
-argument_list|,
-argument|const SDValue *Vals
-argument_list|,
-argument|unsigned N
-argument_list|)
-block|{
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|N
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|Ops
-index|[
-name|i
-index|]
-operator|.
-name|setUser
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-name|Ops
-index|[
-name|i
-index|]
-operator|.
-name|setInitial
-argument_list|(
-name|Vals
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|NumOperands
-operator|=
-name|N
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|assert
-argument_list|(
-name|NumOperands
-operator|==
-name|N
-operator|&&
-literal|"NumOperands wasn't wide enough for its operands!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|OperandList
-operator|=
-name|Ops
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|checkForCycles
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
 comment|/// Release the operands and set this node to have zero operands.
-end_comment
-
-begin_expr_stmt
-unit|void
+name|void
 name|DropOperands
 argument_list|()
 expr_stmt|;
@@ -4371,31 +3945,21 @@ name|SDLoc
 block|{
 name|private
 label|:
-comment|// Ptr could be used for either Instruction* or SDNode*. It is used for
-comment|// Instruction* if IROrder is not -1.
-specifier|const
-name|void
-modifier|*
-name|Ptr
+name|DebugLoc
+name|DL
 decl_stmt|;
 name|int
 name|IROrder
+init|=
+literal|0
 decl_stmt|;
 name|public
 label|:
 name|SDLoc
 argument_list|()
-operator|:
-name|Ptr
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|IROrder
-argument_list|(
-literal|0
-argument_list|)
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|SDLoc
 argument_list|(
 specifier|const
@@ -4404,50 +3968,29 @@ operator|*
 name|N
 argument_list|)
 operator|:
-name|Ptr
+name|DL
 argument_list|(
 name|N
-argument_list|)
-operator|,
-name|IROrder
-argument_list|(
-argument|-
-literal|1
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|N
-operator|&&
-literal|"null SDNode"
-argument_list|)
-block|;   }
-name|SDLoc
-argument_list|(
-argument|const SDValue V
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-name|V
-operator|.
-name|getNode
+operator|->
+name|getDebugLoc
 argument_list|()
 argument_list|)
 operator|,
 name|IROrder
 argument_list|(
-argument|-
-literal|1
+argument|N->getIROrder()
 argument_list|)
-block|{
-name|assert
+block|{}
+name|SDLoc
 argument_list|(
-name|Ptr
-operator|&&
-literal|"null SDNode"
+argument|const SDValue V
 argument_list|)
-block|;   }
+operator|:
+name|SDLoc
+argument_list|(
+argument|V.getNode()
+argument_list|)
+block|{}
 name|SDLoc
 argument_list|(
 argument|const Instruction *I
@@ -4455,11 +3998,6 @@ argument_list|,
 argument|int Order
 argument_list|)
 operator|:
-name|Ptr
-argument_list|(
-name|I
-argument_list|)
-operator|,
 name|IROrder
 argument_list|(
 argument|Order
@@ -4473,121 +4011,47 @@ literal|0
 operator|&&
 literal|"bad IROrder"
 argument_list|)
-block|;   }
+block|;
+if|if
+condition|(
+name|I
+condition|)
+name|DL
+operator|=
+name|I
+operator|->
+name|getDebugLoc
+argument_list|()
+expr_stmt|;
+block|}
 name|unsigned
 name|getIROrder
 argument_list|()
-block|{
-if|if
-condition|(
-name|IROrder
-operator|>=
-literal|0
-operator|||
-name|Ptr
-operator|==
-name|nullptr
-condition|)
+specifier|const
 block|{
 return|return
-operator|(
-name|unsigned
-operator|)
 name|IROrder
 return|;
 block|}
 specifier|const
-name|SDNode
-modifier|*
-name|N
-init|=
-operator|(
-specifier|const
-name|SDNode
-operator|*
-operator|)
-operator|(
-name|Ptr
-operator|)
-decl_stmt|;
-return|return
-name|N
-operator|->
-name|getIROrder
+name|DebugLoc
+operator|&
+name|getDebugLoc
 argument_list|()
+specifier|const
+block|{
+return|return
+name|DL
 return|;
+block|}
 block|}
 end_decl_stmt
 
-begin_function
-name|DebugLoc
-name|getDebugLoc
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|Ptr
-condition|)
-block|{
-return|return
-name|DebugLoc
-argument_list|()
-return|;
-block|}
-if|if
-condition|(
-name|IROrder
-operator|>=
-literal|0
-condition|)
-block|{
-specifier|const
-name|Instruction
-modifier|*
-name|I
-init|=
-operator|(
-specifier|const
-name|Instruction
-operator|*
-operator|)
-operator|(
-name|Ptr
-operator|)
-decl_stmt|;
-return|return
-name|I
-operator|->
-name|getDebugLoc
-argument_list|()
-return|;
-block|}
-specifier|const
-name|SDNode
-modifier|*
-name|N
-init|=
-operator|(
-specifier|const
-name|SDNode
-operator|*
-operator|)
-operator|(
-name|Ptr
-operator|)
-decl_stmt|;
-return|return
-name|N
-operator|->
-name|getDebugLoc
-argument_list|()
-return|;
-block|}
-end_function
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// Define inline functions from the SDValue class.
 end_comment
 
@@ -5050,136 +4514,11 @@ end_if
 
 begin_comment
 unit|}
-comment|/// This class is used for single-operand SDNodes.  This is solely
-end_comment
-
-begin_comment
-comment|/// to allow co-allocation of node operands with the node itself.
-end_comment
-
-begin_label
-unit|class
-name|UnarySDNode
-label|:
-end_label
-
-begin_decl_stmt
-name|public
-name|SDNode
-block|{
-name|SDUse
-name|Op
-decl_stmt|;
-name|public
-label|:
-name|UnarySDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTs
-argument_list|,
-argument|SDValue X
-argument_list|)
-block|:
-name|SDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTs
-argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-operator|&
-name|Op
-argument_list|,
-name|X
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// This class is used for two-operand SDNodes.  This is solely
-end_comment
-
-begin_comment
-comment|/// to allow co-allocation of node operands with the node itself.
-end_comment
-
-begin_decl_stmt
-name|class
-name|BinarySDNode
-range|:
-name|public
-name|SDNode
-block|{
-name|SDUse
-name|Ops
-index|[
-literal|2
-index|]
-block|;
-name|public
-operator|:
-name|BinarySDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTs
-argument_list|,
-argument|SDValue X
-argument_list|,
-argument|SDValue Y
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTs
-argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|X
-argument_list|,
-name|Y
-argument_list|)
-block|;   }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Returns true if the opcode is a binary operation with flags.
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|bool
 name|isBinOpWithFlags
 parameter_list|(
@@ -5281,7 +4620,7 @@ name|class
 name|BinaryWithFlagsSDNode
 range|:
 name|public
-name|BinarySDNode
+name|SDNode
 block|{
 name|public
 operator|:
@@ -5294,18 +4633,14 @@ argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
-argument_list|,
-argument|SDValue X
-argument_list|,
-argument|SDValue Y
 argument_list|,
 argument|const SDNodeFlags&NodeFlags
 argument_list|)
 operator|:
-name|BinarySDNode
+name|SDNode
 argument_list|(
 name|Opc
 argument_list|,
@@ -5314,10 +4649,6 @@ argument_list|,
 name|dl
 argument_list|,
 name|VTs
-argument_list|,
-name|X
-argument_list|,
-name|Y
 argument_list|)
 block|,
 name|Flags
@@ -5343,63 +4674,6 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;
-comment|/// This class is used for three-operand SDNodes. This is solely
-comment|/// to allow co-allocation of node operands with the node itself.
-name|class
-name|TernarySDNode
-operator|:
-name|public
-name|SDNode
-block|{
-name|SDUse
-name|Ops
-index|[
-literal|3
-index|]
-block|;
-name|public
-operator|:
-name|TernarySDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTs
-argument_list|,
-argument|SDValue X
-argument_list|,
-argument|SDValue Y
-argument_list|,
-argument|SDValue Z
-argument_list|)
-operator|:
-name|SDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTs
-argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|X
-argument_list|,
-name|Y
-argument_list|,
-name|Z
-argument_list|)
-block|;   }
-block|}
 block|;
 comment|/// This class is used to form a handle around another node that
 comment|/// is persistent and is updated across invocations of replaceAllUsesWith on its
@@ -5439,13 +4713,32 @@ name|PersistentId
 operator|=
 literal|0xffff
 block|;
-name|InitOperands
-argument_list|(
-operator|&
+comment|// Manually set up the operand list. This node type is special in that it's
+comment|// always stack allocated and SelectionDAG does not manage its operands.
+comment|// TODO: This should either (a) not be in the SDNode hierarchy, or (b) not
+comment|// be so special.
 name|Op
-argument_list|,
+operator|.
+name|setUser
+argument_list|(
+name|this
+argument_list|)
+block|;
+name|Op
+operator|.
+name|setInitial
+argument_list|(
 name|X
 argument_list|)
+block|;
+name|NumOperands
+operator|=
+literal|1
+block|;
+name|OperandList
+operator|=
+operator|&
+name|Op
 block|;   }
 operator|~
 name|HandleSDNode
@@ -5468,7 +4761,7 @@ name|class
 name|AddrSpaceCastSDNode
 operator|:
 name|public
-name|UnarySDNode
+name|SDNode
 block|{
 name|private
 operator|:
@@ -5484,11 +4777,9 @@ name|AddrSpaceCastSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|EVT VT
-argument_list|,
-argument|SDValue X
 argument_list|,
 argument|unsigned SrcAS
 argument_list|,
@@ -5561,26 +4852,9 @@ argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
-argument_list|,
-argument|EVT MemoryVT
-argument_list|,
-argument|MachineMemOperand *MMO
-argument_list|)
-block|;
-name|MemSDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTs
-argument_list|,
-argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|EVT MemoryVT
 argument_list|,
@@ -6105,12 +5379,6 @@ operator|:
 name|public
 name|MemSDNode
 block|{
-name|SDUse
-name|Ops
-index|[
-literal|4
-index|]
-block|;
 comment|/// For cmpxchg instructions, the ordering requirements when a store does not
 comment|/// occur.
 name|AtomicOrdering
@@ -6129,11 +5397,17 @@ block|{
 comment|// This must match encodeMemSDNodeFlags() in SelectionDAG.cpp.
 name|assert
 argument_list|(
+call|(
+name|AtomicOrdering
+call|)
+argument_list|(
 operator|(
+name|unsigned
+operator|)
 name|SuccessOrdering
 operator|&
 literal|15
-operator|)
+argument_list|)
 operator|==
 name|SuccessOrdering
 operator|&&
@@ -6142,11 +5416,17 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+call|(
+name|AtomicOrdering
+call|)
+argument_list|(
 operator|(
+name|unsigned
+operator|)
 name|FailureOrdering
 operator|&
 literal|15
-operator|)
+argument_list|)
 operator|==
 name|FailureOrdering
 operator|&&
@@ -6168,6 +5448,9 @@ argument_list|)
 block|;
 name|SubclassData
 operator||=
+operator|(
+name|unsigned
+operator|)
 name|SuccessOrdering
 operator|<<
 literal|8
@@ -6216,211 +5499,17 @@ argument_list|)
 block|;   }
 name|public
 operator|:
-comment|// Opc:   opcode for atomic
-comment|// VTL:    value type list
-comment|// Chain:  memory chain for operaand
-comment|// Ptr:    address to update as a SDValue
-comment|// Cmp:    compare value
-comment|// Swp:    swap value
-comment|// SrcVal: address to update as a Value (used for MemOperand)
-comment|// Align:  alignment of memory
 name|AtomicSDNode
 argument_list|(
 argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTL
 argument_list|,
 argument|EVT MemVT
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Ptr
-argument_list|,
-argument|SDValue Cmp
-argument_list|,
-argument|SDValue Swp
-argument_list|,
-argument|MachineMemOperand *MMO
-argument_list|,
-argument|AtomicOrdering Ordering
-argument_list|,
-argument|SynchronizationScope SynchScope
-argument_list|)
-operator|:
-name|MemSDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTL
-argument_list|,
-argument|MemVT
-argument_list|,
-argument|MMO
-argument_list|)
-block|{
-name|InitAtomic
-argument_list|(
-name|Ordering
-argument_list|,
-name|Ordering
-argument_list|,
-name|SynchScope
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Chain
-argument_list|,
-name|Ptr
-argument_list|,
-name|Cmp
-argument_list|,
-name|Swp
-argument_list|)
-block|;   }
-name|AtomicSDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTL
-argument_list|,
-argument|EVT MemVT
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Ptr
-argument_list|,
-argument|SDValue Val
-argument_list|,
-argument|MachineMemOperand *MMO
-argument_list|,
-argument|AtomicOrdering Ordering
-argument_list|,
-argument|SynchronizationScope SynchScope
-argument_list|)
-operator|:
-name|MemSDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTL
-argument_list|,
-argument|MemVT
-argument_list|,
-argument|MMO
-argument_list|)
-block|{
-name|InitAtomic
-argument_list|(
-name|Ordering
-argument_list|,
-name|Ordering
-argument_list|,
-name|SynchScope
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Chain
-argument_list|,
-name|Ptr
-argument_list|,
-name|Val
-argument_list|)
-block|;   }
-name|AtomicSDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTL
-argument_list|,
-argument|EVT MemVT
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Ptr
-argument_list|,
-argument|MachineMemOperand *MMO
-argument_list|,
-argument|AtomicOrdering Ordering
-argument_list|,
-argument|SynchronizationScope SynchScope
-argument_list|)
-operator|:
-name|MemSDNode
-argument_list|(
-argument|Opc
-argument_list|,
-argument|Order
-argument_list|,
-argument|dl
-argument_list|,
-argument|VTL
-argument_list|,
-argument|MemVT
-argument_list|,
-argument|MMO
-argument_list|)
-block|{
-name|InitAtomic
-argument_list|(
-name|Ordering
-argument_list|,
-name|Ordering
-argument_list|,
-name|SynchScope
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Chain
-argument_list|,
-name|Ptr
-argument_list|)
-block|;   }
-name|AtomicSDNode
-argument_list|(
-argument|unsigned Opc
-argument_list|,
-argument|unsigned Order
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDVTList VTL
-argument_list|,
-argument|EVT MemVT
-argument_list|,
-argument|const SDValue* AllOps
-argument_list|,
-argument|SDUse *DynOps
-argument_list|,
-argument|unsigned NumOps
 argument_list|,
 argument|MachineMemOperand *MMO
 argument_list|,
@@ -6453,35 +5542,6 @@ argument_list|,
 name|FailureOrdering
 argument_list|,
 name|SynchScope
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|DynOps
-operator|||
-name|NumOps
-operator|<=
-name|array_lengthof
-argument_list|(
-name|Ops
-argument_list|)
-operator|)
-operator|&&
-literal|"Too many ops for internal storage!"
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|DynOps
-condition|?
-name|DynOps
-else|:
-name|Ops
-argument_list|,
-name|AllOps
-argument_list|,
-name|NumOps
 argument_list|)
 block|;   }
 specifier|const
@@ -6723,11 +5783,9 @@ argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
-argument_list|,
-argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|EVT MemoryVT
 argument_list|,
@@ -6743,8 +5801,6 @@ argument_list|,
 argument|dl
 argument_list|,
 argument|VTs
-argument_list|,
-argument|Ops
 argument_list|,
 argument|MemoryVT
 argument_list|,
@@ -6804,12 +5860,6 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|SDUse
-name|Ops
-index|[
-literal|2
-index|]
-block|;
 comment|// The memory for Mask is owned by the SelectionDAG's OperandAllocator, and
 comment|// is freed when the SelectionDAG object is destroyed.
 specifier|const
@@ -6829,11 +5879,7 @@ argument|EVT VT
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue N1
-argument_list|,
-argument|SDValue N2
+argument|const DebugLoc&dl
 argument_list|,
 argument|const int *M
 argument_list|)
@@ -6858,16 +5904,7 @@ name|Mask
 argument_list|(
 argument|M
 argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|N1
-argument_list|,
-name|N2
-argument_list|)
-block|;   }
+block|{}
 name|public
 operator|:
 name|ArrayRef
@@ -7024,7 +6061,7 @@ specifier|static
 name|void
 name|commuteMask
 argument_list|(
-argument|SmallVectorImpl<int>&Mask
+argument|MutableArrayRef<int> Mask
 argument_list|)
 block|{
 name|unsigned
@@ -7139,7 +6176,7 @@ argument|bool isOpaque
 argument_list|,
 argument|const ConstantInt *val
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|EVT VT
 argument_list|)
@@ -7326,7 +6363,7 @@ argument|bool isTarget
 argument_list|,
 argument|const ConstantFP *val
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|EVT VT
 argument_list|)
@@ -7357,7 +6394,7 @@ name|Value
 argument_list|(
 argument|val
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
 specifier|const
@@ -7560,6 +6597,14 @@ argument_list|(
 argument|SDValue V
 argument_list|)
 block|;
+comment|/// Returns true if \p V is a bitwise not operation. Assumes that an all ones
+comment|/// constant is canonicalized to be operand 1.
+name|bool
+name|isBitwiseNot
+argument_list|(
+argument|SDValue V
+argument_list|)
+block|;
 name|class
 name|GlobalAddressSDNode
 operator|:
@@ -7588,7 +6633,7 @@ argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|const GlobalValue *GA
 argument_list|,
@@ -8978,9 +8023,6 @@ operator|:
 name|public
 name|SDNode
 block|{
-name|SDUse
-name|Chain
-block|;
 name|MCSymbol
 operator|*
 name|Label
@@ -8993,9 +8035,7 @@ name|EHLabelSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue ch
+argument|const DebugLoc&dl
 argument_list|,
 argument|MCSymbol *L
 argument_list|)
@@ -9022,15 +8062,7 @@ name|Label
 argument_list|(
 argument|L
 argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-operator|&
-name|Chain
-argument_list|,
-name|ch
-argument_list|)
-block|;   }
+block|{}
 name|public
 operator|:
 name|MCSymbol
@@ -9355,9 +8387,7 @@ argument|EVT VT
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|ArrayRef<SDValue> Ops
+argument|const DebugLoc&dl
 argument_list|,
 argument|ISD::CvtCode Code
 argument_list|)
@@ -9376,27 +8406,13 @@ name|getSDVTList
 argument_list|(
 name|VT
 argument_list|)
-argument_list|,
-name|Ops
 argument_list|)
 block|,
 name|CvtCode
 argument_list|(
 argument|Code
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Ops
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|5
-operator|&&
-literal|"wrong number of operations"
-argument_list|)
-block|;   }
+block|{   }
 name|public
 operator|:
 name|ISD
@@ -9513,14 +8529,6 @@ operator|:
 name|public
 name|MemSDNode
 block|{
-comment|//! Operand array for load and store
-comment|/*!     \note Moving this array to the base class captures more     common functionality shared between LoadSDNode and     StoreSDNode    */
-name|SDUse
-name|Ops
-index|[
-literal|4
-index|]
-block|;
 name|public
 operator|:
 name|LSBaseSDNode
@@ -9529,11 +8537,7 @@ argument|ISD::NodeType NodeTy
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue *Operands
-argument_list|,
-argument|unsigned numOperands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -9573,35 +8577,6 @@ operator|==
 name|AM
 operator|&&
 literal|"MemIndexedMode encoding error!"
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Operands
-argument_list|,
-name|numOperands
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|(
-name|getOffset
-argument_list|()
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|ISD
-operator|::
-name|UNDEF
-operator|||
-name|isIndexed
-argument_list|()
-operator|)
-operator|&&
-literal|"Only indexed loads and stores have a non-undef offset operand"
 argument_list|)
 block|;   }
 specifier|const
@@ -9723,11 +8698,9 @@ name|SelectionDAG
 block|;
 name|LoadSDNode
 argument_list|(
-argument|SDValue *ChainPtrOff
-argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -9747,10 +8720,6 @@ argument_list|,
 argument|Order
 argument_list|,
 argument|dl
-argument_list|,
-argument|ChainPtrOff
-argument_list|,
-literal|3
 argument_list|,
 argument|VTs
 argument_list|,
@@ -9879,11 +8848,9 @@ name|SelectionDAG
 block|;
 name|StoreSDNode
 argument_list|(
-argument|SDValue *ChainValuePtrOff
-argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -9903,10 +8870,6 @@ argument_list|,
 argument|Order
 argument_list|,
 argument|dl
-argument_list|,
-argument|ChainValuePtrOff
-argument_list|,
-literal|4
 argument_list|,
 argument|VTs
 argument_list|,
@@ -10037,13 +9000,6 @@ operator|:
 name|public
 name|MemSDNode
 block|{
-comment|// Operands
-name|SDUse
-name|Ops
-index|[
-literal|4
-index|]
-block|;
 name|public
 operator|:
 name|friend
@@ -10056,11 +9012,7 @@ argument|ISD::NodeType NodeTy
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue *Operands
-argument_list|,
-argument|unsigned numOperands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10083,16 +9035,7 @@ argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Operands
-argument_list|,
-name|numOperands
-argument_list|)
-block|;   }
+block|{}
 comment|// In the both nodes address is Op1, mask is Op2:
 comment|// MaskedLoadSDNode (Chain, ptr, mask, src0), src0 is a passthru value
 comment|// MaskedStoreSDNode (Chain, ptr, mask, data)
@@ -10171,11 +9114,7 @@ name|MaskedLoadSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue *Operands
-argument_list|,
-argument|unsigned numOperands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10193,10 +9132,6 @@ argument_list|,
 argument|Order
 argument_list|,
 argument|dl
-argument_list|,
-argument|Operands
-argument_list|,
-argument|numOperands
 argument_list|,
 argument|VTs
 argument_list|,
@@ -10282,11 +9217,7 @@ name|MaskedStoreSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue *Operands
-argument_list|,
-argument|unsigned numOperands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10304,10 +9235,6 @@ argument_list|,
 argument|Order
 argument_list|,
 argument|dl
-argument_list|,
-argument|Operands
-argument_list|,
-argument|numOperands
 argument_list|,
 argument|VTs
 argument_list|,
@@ -10381,13 +9308,6 @@ operator|:
 name|public
 name|MemSDNode
 block|{
-comment|// Operands
-name|SDUse
-name|Ops
-index|[
-literal|5
-index|]
-block|;
 name|public
 operator|:
 name|friend
@@ -10400,9 +9320,7 @@ argument|ISD::NodeType NodeTy
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|ArrayRef<SDValue> Operands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10425,34 +9343,7 @@ argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Operands
-operator|.
-name|size
-argument_list|()
-operator|==
-literal|5
-operator|&&
-literal|"Incompatible number of operands"
-argument_list|)
-block|;
-name|InitOperands
-argument_list|(
-name|Ops
-argument_list|,
-name|Operands
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|Operands
-operator|.
-name|size
-argument_list|()
-argument_list|)
-block|;   }
+block|{}
 comment|// In the both nodes address is Op1, mask is Op2:
 comment|// MaskedGatherSDNode  (Chain, src0, mask, base, index), src0 is a passthru value
 comment|// MaskedScatterSDNode (Chain, value, mask, base, index)
@@ -10560,9 +9451,7 @@ name|MaskedGatherSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|ArrayRef<SDValue> Operands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10579,75 +9468,13 @@ argument|Order
 argument_list|,
 argument|dl
 argument_list|,
-argument|Operands
-argument_list|,
 argument|VTs
 argument_list|,
 argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|getValue
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|==
-name|getValueType
-argument_list|(
-literal|0
-argument_list|)
-operator|&&
-literal|"Incompatible type of the PassThru value in MaskedGatherSDNode"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getMask
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-name|getValueType
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|&&
-literal|"Vector width mismatch between mask and data"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getIndex
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-name|getValueType
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|&&
-literal|"Vector width mismatch between index and data"
-argument_list|)
-block|;   }
+block|{}
 specifier|static
 name|bool
 name|classof
@@ -10686,9 +9513,7 @@ name|MaskedScatterSDNode
 argument_list|(
 argument|unsigned Order
 argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|ArrayRef<SDValue> Operands
+argument|const DebugLoc&dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
@@ -10705,61 +9530,13 @@ argument|Order
 argument_list|,
 argument|dl
 argument_list|,
-argument|Operands
-argument_list|,
 argument|VTs
 argument_list|,
 argument|MemVT
 argument_list|,
 argument|MMO
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|getMask
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-name|getValue
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|&&
-literal|"Vector width mismatch between mask and data"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|getIndex
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-name|getValue
-argument_list|()
-operator|.
-name|getValueType
-argument_list|()
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|&&
-literal|"Vector width mismatch between index and data"
-argument_list|)
-block|;   }
+block|{}
 specifier|static
 name|bool
 name|classof
@@ -10809,7 +9586,7 @@ argument|unsigned Opc
 argument_list|,
 argument|unsigned Order
 argument_list|,
-argument|const DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|SDVTList VTs
 argument_list|)
@@ -10835,14 +9612,6 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-comment|/// Operands for this instruction, if they fit here. If
-comment|/// they don't, this field is unused.
-name|SDUse
-name|LocalOperands
-index|[
-literal|4
-index|]
-block|;
 comment|/// Memory reference descriptions for this instruction.
 name|mmo_iterator
 name|MemRefs
@@ -11247,11 +10016,23 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// The largest SDNode class.
+comment|/// A representation of the largest SDNode, for use in sizeof().
+comment|///
+comment|/// This needs to be a union because the largest node differs on 32 bit systems
+comment|/// with 4 and 8 byte pointer alignment, respectively.
 typedef|typedef
-name|MaskedGatherScatterSDNode
+name|AlignedCharArrayUnion
+operator|<
+name|AtomicSDNode
+operator|,
+name|TargetIndexSDNode
+operator|,
+name|BlockAddressSDNode
+operator|,
+name|GlobalAddressSDNode
+operator|>
 name|LargestSDNode
-typedef|;
+expr_stmt|;
 comment|/// The SDNode class with the greatest alignment requirement.
 typedef|typedef
 name|GlobalAddressSDNode

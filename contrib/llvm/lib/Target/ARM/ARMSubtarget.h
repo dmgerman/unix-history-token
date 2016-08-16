@@ -206,6 +206,10 @@ name|CortexR5
 block|,
 name|CortexR7
 block|,
+name|CortexM3
+block|,
+name|CortexA32
+block|,
 name|CortexA35
 block|,
 name|CortexA53
@@ -213,6 +217,8 @@ block|,
 name|CortexA57
 block|,
 name|CortexA72
+block|,
+name|CortexA73
 block|,
 name|Krait
 block|,
@@ -279,261 +285,549 @@ block|,
 name|ARMv81a
 block|,
 name|ARMv82a
+block|,
+name|ARMv8mMainline
+block|,
+name|ARMv8mBaseline
 block|}
 block|;
+name|public
+operator|:
+comment|/// What kind of timing do load multiple/store multiple instructions have.
+expr|enum
+name|ARMLdStMultipleTiming
+block|{
+comment|/// Can load/store 2 registers/cycle.
+name|DoubleIssue
+block|,
+comment|/// Can load/store 2 registers/cycle, but needs an extra cycle if the access
+comment|/// is not 64-bit aligned.
+name|DoubleIssueCheckUnalignedAccess
+block|,
+comment|/// Can load/store 1 register/cycle.
+name|SingleIssue
+block|,
+comment|/// Can load/store 1 register/cycle, but needs an extra cycle for address
+comment|/// computation and potentially also for register writeback.
+name|SingleIssuePlusExtras
+block|,   }
+block|;
+name|protected
+operator|:
 comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
 name|ARMProcFamilyEnum
 name|ARMProcFamily
+operator|=
+name|Others
 block|;
 comment|/// ARMProcClass - ARM processor class: None, AClass, RClass or MClass.
 name|ARMProcClassEnum
 name|ARMProcClass
+operator|=
+name|None
 block|;
 comment|/// ARMArch - ARM architecture
 name|ARMArchEnum
 name|ARMArch
+operator|=
+name|ARMv4t
 block|;
 comment|/// HasV4TOps, HasV5TOps, HasV5TEOps,
 comment|/// HasV6Ops, HasV6MOps, HasV6KOps, HasV6T2Ops, HasV7Ops, HasV8Ops -
 comment|/// Specify whether target support specific ARM ISA variants.
 name|bool
 name|HasV4TOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV5TOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV5TEOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV6Ops
+operator|=
+name|false
 block|;
 name|bool
 name|HasV6MOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV6KOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV6T2Ops
+operator|=
+name|false
 block|;
 name|bool
 name|HasV7Ops
+operator|=
+name|false
 block|;
 name|bool
 name|HasV8Ops
+operator|=
+name|false
 block|;
 name|bool
 name|HasV8_1aOps
+operator|=
+name|false
 block|;
 name|bool
 name|HasV8_2aOps
+operator|=
+name|false
+block|;
+name|bool
+name|HasV8MBaselineOps
+operator|=
+name|false
+block|;
+name|bool
+name|HasV8MMainlineOps
+operator|=
+name|false
 block|;
 comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasFPARMv8, HasNEON - Specify what
 comment|/// floating point ISAs are supported.
 name|bool
 name|HasVFPv2
+operator|=
+name|false
 block|;
 name|bool
 name|HasVFPv3
+operator|=
+name|false
 block|;
 name|bool
 name|HasVFPv4
+operator|=
+name|false
 block|;
 name|bool
 name|HasFPARMv8
+operator|=
+name|false
 block|;
 name|bool
 name|HasNEON
+operator|=
+name|false
 block|;
 comment|/// UseNEONForSinglePrecisionFP - if the NEONFP attribute has been
 comment|/// specified. Use the method useNEONForSinglePrecisionFP() to
 comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
+operator|=
+name|false
 block|;
 comment|/// UseMulOps - True if non-microcoded fused integer multiply-add and
 comment|/// multiply-subtract instructions should be used.
 name|bool
 name|UseMulOps
+operator|=
+name|false
 block|;
 comment|/// SlowFPVMLx - If the VFP2 / NEON instructions are available, indicates
 comment|/// whether the FP VML[AS] instructions are slow (if so, don't use them).
 name|bool
 name|SlowFPVMLx
+operator|=
+name|false
 block|;
 comment|/// HasVMLxForwarding - If true, NEON has special multiplier accumulator
 comment|/// forwarding to allow mul + mla being issued back to back.
 name|bool
 name|HasVMLxForwarding
+operator|=
+name|false
 block|;
 comment|/// SlowFPBrcc - True if floating point compare + branch is slow.
 name|bool
 name|SlowFPBrcc
+operator|=
+name|false
 block|;
 comment|/// InThumbMode - True if compiling for Thumb, false for ARM.
 name|bool
 name|InThumbMode
+operator|=
+name|false
 block|;
 comment|/// UseSoftFloat - True if we're using software floating point features.
 name|bool
 name|UseSoftFloat
+operator|=
+name|false
 block|;
 comment|/// HasThumb2 - True if Thumb2 instructions are supported.
 name|bool
 name|HasThumb2
+operator|=
+name|false
 block|;
 comment|/// NoARM - True if subtarget does not support ARM mode execution.
 name|bool
 name|NoARM
+operator|=
+name|false
 block|;
 comment|/// ReserveR9 - True if R9 is not available as a general purpose register.
 name|bool
 name|ReserveR9
+operator|=
+name|false
 block|;
 comment|/// NoMovt - True if MOVT / MOVW pairs are not used for materialization of
 comment|/// 32-bit imms (including global addresses).
 name|bool
 name|NoMovt
+operator|=
+name|false
 block|;
 comment|/// SupportsTailCall - True if the OS supports tail call. The dynamic linker
 comment|/// must be able to synthesize call stubs for interworking between ARM and
 comment|/// Thumb.
 name|bool
 name|SupportsTailCall
+operator|=
+name|false
 block|;
 comment|/// HasFP16 - True if subtarget supports half-precision FP conversions
 name|bool
 name|HasFP16
+operator|=
+name|false
 block|;
 comment|/// HasFullFP16 - True if subtarget supports half-precision FP operations
 name|bool
 name|HasFullFP16
+operator|=
+name|false
 block|;
 comment|/// HasD16 - True if subtarget is limited to 16 double precision
 comment|/// FP registers for VFPv3.
 name|bool
 name|HasD16
+operator|=
+name|false
 block|;
 comment|/// HasHardwareDivide - True if subtarget supports [su]div
 name|bool
 name|HasHardwareDivide
+operator|=
+name|false
 block|;
 comment|/// HasHardwareDivideInARM - True if subtarget supports [su]div in ARM mode
 name|bool
 name|HasHardwareDivideInARM
+operator|=
+name|false
 block|;
 comment|/// HasT2ExtractPack - True if subtarget supports thumb2 extract/pack
 comment|/// instructions.
 name|bool
 name|HasT2ExtractPack
+operator|=
+name|false
 block|;
 comment|/// HasDataBarrier - True if the subtarget supports DMB / DSB data barrier
 comment|/// instructions.
 name|bool
 name|HasDataBarrier
+operator|=
+name|false
+block|;
+comment|/// HasV7Clrex - True if the subtarget supports CLREX instructions
+name|bool
+name|HasV7Clrex
+operator|=
+name|false
+block|;
+comment|/// HasAcquireRelease - True if the subtarget supports v8 atomics (LDA/LDAEX etc)
+comment|/// instructions
+name|bool
+name|HasAcquireRelease
+operator|=
+name|false
 block|;
 comment|/// Pref32BitThumb - If true, codegen would prefer 32-bit Thumb instructions
 comment|/// over 16-bit ones.
 name|bool
 name|Pref32BitThumb
+operator|=
+name|false
 block|;
 comment|/// AvoidCPSRPartialUpdate - If true, codegen would avoid using instructions
 comment|/// that partially update CPSR and add false dependency on the previous
 comment|/// CPSR setting instruction.
 name|bool
 name|AvoidCPSRPartialUpdate
+operator|=
+name|false
 block|;
 comment|/// AvoidMOVsShifterOperand - If true, codegen should avoid using flag setting
 comment|/// movs with shifter operand (i.e. asr, lsl, lsr).
 name|bool
 name|AvoidMOVsShifterOperand
+operator|=
+name|false
 block|;
-comment|/// HasRAS - Some processors perform return stack prediction. CodeGen should
+comment|/// HasRetAddrStack - Some processors perform return stack prediction. CodeGen should
 comment|/// avoid issue "normal" call instructions to callees which do not return.
 name|bool
-name|HasRAS
+name|HasRetAddrStack
+operator|=
+name|false
 block|;
 comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
 comment|/// extension (ARMv7 only).
 name|bool
 name|HasMPExtension
+operator|=
+name|false
 block|;
 comment|/// HasVirtualization - True if the subtarget supports the Virtualization
 comment|/// extension.
 name|bool
 name|HasVirtualization
+operator|=
+name|false
 block|;
 comment|/// FPOnlySP - If true, the floating point unit only supports single
 comment|/// precision.
 name|bool
 name|FPOnlySP
+operator|=
+name|false
 block|;
 comment|/// If true, the processor supports the Performance Monitor Extensions. These
 comment|/// include a generic cycle-counter as well as more fine-grained (often
 comment|/// implementation-specific) events.
 name|bool
 name|HasPerfMon
+operator|=
+name|false
 block|;
 comment|/// HasTrustZone - if true, processor supports TrustZone security extensions
 name|bool
 name|HasTrustZone
+operator|=
+name|false
+block|;
+comment|/// Has8MSecExt - if true, processor supports ARMv8-M Security Extensions
+name|bool
+name|Has8MSecExt
+operator|=
+name|false
 block|;
 comment|/// HasCrypto - if true, processor supports Cryptography extensions
 name|bool
 name|HasCrypto
+operator|=
+name|false
 block|;
 comment|/// HasCRC - if true, processor supports CRC instructions
 name|bool
 name|HasCRC
+operator|=
+name|false
+block|;
+comment|/// HasRAS - if true, the processor supports RAS extensions
+name|bool
+name|HasRAS
+operator|=
+name|false
 block|;
 comment|/// If true, the instructions "vmov.i32 d0, #0" and "vmov.i32 q0, #0" are
 comment|/// particularly effective at zeroing a VFP register.
 name|bool
 name|HasZeroCycleZeroing
+operator|=
+name|false
+block|;
+comment|/// If true, if conversion may decide to leave some instructions unpredicated.
+name|bool
+name|IsProfitableToUnpredicate
+operator|=
+name|false
+block|;
+comment|/// If true, VMOV will be favored over VGETLNi32.
+name|bool
+name|HasSlowVGETLNi32
+operator|=
+name|false
+block|;
+comment|/// If true, VMOV will be favored over VDUP.
+name|bool
+name|HasSlowVDUP32
+operator|=
+name|false
+block|;
+comment|/// If true, VMOVSR will be favored over VMOVDRR.
+name|bool
+name|PreferVMOVSR
+operator|=
+name|false
+block|;
+comment|/// If true, ISHST barriers will be used for Release semantics.
+name|bool
+name|PreferISHST
+operator|=
+name|false
+block|;
+comment|/// If true, a VLDM/VSTM starting with an odd register number is considered to
+comment|/// take more microops than single VLDRS/VSTRS.
+name|bool
+name|SlowOddRegister
+operator|=
+name|false
+block|;
+comment|/// If true, loading into a D subregister will be penalized.
+name|bool
+name|SlowLoadDSubregister
+operator|=
+name|false
+block|;
+comment|/// If true, the AGU and NEON/FPU units are multiplexed.
+name|bool
+name|HasMuxedUnits
+operator|=
+name|false
+block|;
+comment|/// If true, VMOVS will never be widened to VMOVD
+name|bool
+name|DontWidenVMOVS
+operator|=
+name|false
+block|;
+comment|/// If true, run the MLx expansion pass.
+name|bool
+name|ExpandMLx
+operator|=
+name|false
+block|;
+comment|/// If true, VFP/NEON VMLA/VMLS have special RAW hazards.
+name|bool
+name|HasVMLxHazards
+operator|=
+name|false
+block|;
+comment|/// If true, VMOVRS, VMOVSR and VMOVS will be converted from VFP to NEON.
+name|bool
+name|UseNEONForFPMovs
+operator|=
+name|false
+block|;
+comment|/// If true, VLDn instructions take an extra cycle for unaligned accesses.
+name|bool
+name|CheckVLDnAlign
+operator|=
+name|false
+block|;
+comment|/// If true, VFP instructions are not pipelined.
+name|bool
+name|NonpipelinedVFP
+operator|=
+name|false
 block|;
 comment|/// StrictAlign - If true, the subtarget disallows unaligned memory
 comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsMisalignedMemoryAccesses().
 name|bool
 name|StrictAlign
+operator|=
+name|false
 block|;
 comment|/// RestrictIT - If true, the subtarget disallows generation of deprecated IT
 comment|///  blocks to conform to ARMv8 rule.
 name|bool
 name|RestrictIT
+operator|=
+name|false
 block|;
 comment|/// HasDSP - If true, the subtarget supports the DSP (saturating arith
 comment|/// and such) instructions.
 name|bool
 name|HasDSP
+operator|=
+name|false
 block|;
 comment|/// NaCl TRAP instruction is generated instead of the regular TRAP.
 name|bool
 name|UseNaClTrap
+operator|=
+name|false
 block|;
 comment|/// Generate calls via indirect call instructions.
 name|bool
 name|GenLongCalls
+operator|=
+name|false
 block|;
 comment|/// Target machine allowed unsafe FP math (such as use of NEON fp)
 name|bool
 name|UnsafeFPMath
+operator|=
+name|false
 block|;
 comment|/// UseSjLjEH - If true, the target uses SjLj exception handling (e.g. iOS).
 name|bool
 name|UseSjLjEH
+operator|=
+name|false
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
 name|stackAlignment
+operator|=
+literal|4
 block|;
 comment|/// CPUString - String name of used CPU.
 name|std
 operator|::
 name|string
 name|CPUString
+block|;
+name|unsigned
+name|MaxInterleaveFactor
+operator|=
+literal|1
+block|;
+comment|/// Clearance before partial register updates (in number of instructions)
+name|unsigned
+name|PartialUpdateClearance
+operator|=
+literal|0
+block|;
+comment|/// What kind of timing do load multiple/store multiple have (double issue,
+comment|/// single issue etc).
+name|ARMLdStMultipleTiming
+name|LdStMultipleTiming
+operator|=
+name|SingleIssue
+block|;
+comment|/// The adjustment that we need to apply to get the operand latency from the
+comment|/// operand cycle returned by the itinerary data for pre-ISel operands.
+name|int
+name|PreISelOperandLatencyAdjustment
+operator|=
+literal|2
 block|;
 comment|/// IsLittle - The target is Little Endian
 name|bool
@@ -837,6 +1131,27 @@ name|HasV8_2aOps
 return|;
 block|}
 name|bool
+name|hasV8MBaselineOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8MBaselineOps
+return|;
+block|}
+name|bool
+name|hasV8MMainlineOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8MMainlineOps
+return|;
+block|}
+comment|/// @{
+comment|/// These functions are obsolete, please consider adding subtarget features
+comment|/// or properties instead of calling them.
+name|bool
 name|isCortexA5
 argument_list|()
 specifier|const
@@ -908,9 +1223,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CPUString
+name|ARMProcFamily
 operator|==
-literal|"cortex-m3"
+name|CortexM3
 return|;
 block|}
 name|bool
@@ -951,6 +1266,7 @@ operator|==
 name|Krait
 return|;
 block|}
+comment|/// @}
 name|bool
 name|hasARMOps
 argument_list|()
@@ -1025,6 +1341,15 @@ name|HasCRC
 return|;
 block|}
 name|bool
+name|hasRAS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRAS
+return|;
+block|}
+name|bool
 name|hasVirtualization
 argument_list|()
 specifier|const
@@ -1079,6 +1404,24 @@ specifier|const
 block|{
 return|return
 name|HasDataBarrier
+return|;
+block|}
+name|bool
+name|hasV7Clrex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV7Clrex
+return|;
+block|}
+name|bool
+name|hasAcquireRelease
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAcquireRelease
 return|;
 block|}
 name|bool
@@ -1164,12 +1507,147 @@ name|HasTrustZone
 return|;
 block|}
 name|bool
+name|has8MSecExt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Has8MSecExt
+return|;
+block|}
+name|bool
 name|hasZeroCycleZeroing
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasZeroCycleZeroing
+return|;
+block|}
+name|bool
+name|isProfitableToUnpredicate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsProfitableToUnpredicate
+return|;
+block|}
+name|bool
+name|hasSlowVGETLNi32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSlowVGETLNi32
+return|;
+block|}
+name|bool
+name|hasSlowVDUP32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSlowVDUP32
+return|;
+block|}
+name|bool
+name|preferVMOVSR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreferVMOVSR
+return|;
+block|}
+name|bool
+name|preferISHSTBarriers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreferISHST
+return|;
+block|}
+name|bool
+name|expandMLx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExpandMLx
+return|;
+block|}
+name|bool
+name|hasVMLxHazards
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVMLxHazards
+return|;
+block|}
+name|bool
+name|hasSlowOddRegister
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlowOddRegister
+return|;
+block|}
+name|bool
+name|hasSlowLoadDSubregister
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlowLoadDSubregister
+return|;
+block|}
+name|bool
+name|hasMuxedUnits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMuxedUnits
+return|;
+block|}
+name|bool
+name|dontWidenVMOVS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DontWidenVMOVS
+return|;
+block|}
+name|bool
+name|useNEONForFPMovs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseNEONForFPMovs
+return|;
+block|}
+name|bool
+name|checkVLDnAccessAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CheckVLDnAlign
+return|;
+block|}
+name|bool
+name|nonpipelinedVFP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NonpipelinedVFP
 return|;
 block|}
 name|bool
@@ -1200,12 +1678,12 @@ name|AvoidMOVsShifterOperand
 return|;
 block|}
 name|bool
-name|hasRAS
+name|hasRetAddrStack
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasRAS
+name|HasRetAddrStack
 return|;
 block|}
 name|bool
@@ -1324,6 +1802,18 @@ return|return
 name|TargetTriple
 operator|.
 name|isWatchOS
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetWatchABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWatchABI
 argument_list|()
 return|;
 block|}
@@ -1488,6 +1978,41 @@ name|isTargetWindows
 argument_list|()
 return|;
 block|}
+name|bool
+name|isTargetMuslAEABI
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABI
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABIHF
+operator|)
+operator|&&
+operator|!
+name|isTargetDarwin
+argument_list|()
+operator|&&
+operator|!
+name|isTargetWindows
+argument_list|()
+return|;
+block|}
 comment|// ARM Targets that support EHABI exception handling standard
 comment|// Darwin uses SjLj. Other targets might need more checks.
 name|bool
@@ -1522,6 +2047,15 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
+name|MuslEABI
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
 name|EABIHF
 operator|||
 name|TargetTriple
@@ -1532,6 +2066,15 @@ operator|==
 name|Triple
 operator|::
 name|GNUEABIHF
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABIHF
 operator|||
 name|isTargetAndroid
 argument_list|()
@@ -1561,6 +2104,15 @@ operator|==
 name|Triple
 operator|::
 name|GNUEABIHF
+operator|||
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABIHF
 operator|||
 name|TargetTriple
 operator|.
@@ -1707,6 +2259,19 @@ operator|:
 name|ReserveR9
 return|;
 block|}
+comment|/// Returns true if the frame setup is split into two separate pushes (first
+comment|/// r0-r7,lr then r8-r11), principally so that the frame pointer is adjacent
+comment|/// to lr.
+name|bool
+name|splitFramePushPop
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTargetMachO
+argument_list|()
+return|;
+block|}
 name|bool
 name|useStride4VFPs
 argument_list|(
@@ -1831,14 +2396,47 @@ return|return
 name|stackAlignment
 return|;
 block|}
-comment|/// GVIsIndirectSymbol - true if the GV will be accessed via an indirect
-comment|/// symbol.
+name|unsigned
+name|getMaxInterleaveFactor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxInterleaveFactor
+return|;
+block|}
+name|unsigned
+name|getPartialUpdateClearance
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PartialUpdateClearance
+return|;
+block|}
+name|ARMLdStMultipleTiming
+name|getLdStMultipleTiming
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LdStMultipleTiming
+return|;
+block|}
+name|int
+name|getPreISelOperandLatencyAdjustment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreISelOperandLatencyAdjustment
+return|;
+block|}
+comment|/// True if the GV will be accessed via an indirect symbol.
 name|bool
-name|GVIsIndirectSymbol
+name|isGVIndirectSymbol
 argument_list|(
 argument|const GlobalValue *GV
-argument_list|,
-argument|Reloc::Model RelocM
 argument_list|)
 specifier|const
 block|;

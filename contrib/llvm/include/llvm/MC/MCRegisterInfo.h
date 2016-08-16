@@ -591,6 +591,15 @@ operator|>
 name|L2SEHRegs
 expr_stmt|;
 comment|// LLVM to SEH regs mapping
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|int
+operator|>
+name|L2CVRegs
+expr_stmt|;
+comment|// LLVM to CV regs mapping
 name|public
 label|:
 comment|/// DiffListIterator - Base iterator class that can traverse the
@@ -999,6 +1008,24 @@ operator|=
 name|SEHReg
 expr_stmt|;
 block|}
+name|void
+name|mapLLVMRegToCVReg
+parameter_list|(
+name|unsigned
+name|LLVMReg
+parameter_list|,
+name|int
+name|CVReg
+parameter_list|)
+block|{
+name|L2CVRegs
+index|[
+name|LLVMReg
+index|]
+operator|=
+name|CVReg
+expr_stmt|;
+block|}
 comment|/// \brief This method should return the register where the return
 comment|/// address can be found.
 name|unsigned
@@ -1230,6 +1257,16 @@ name|RegNum
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Map a target register to an equivalent CodeView register
+comment|/// number.
+name|int
+name|getCodeViewRegNum
+argument_list|(
+name|unsigned
+name|RegNum
+argument_list|)
+decl|const
+decl_stmt|;
 name|regclass_iterator
 name|regclass_begin
 argument_list|()
@@ -1413,6 +1450,35 @@ return|return
 name|RegA
 operator|==
 name|RegB
+operator|||
+name|isSuperRegister
+argument_list|(
+name|RegA
+argument_list|,
+name|RegB
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if RegB is a super-register or sub-register of RegA
+comment|/// or if RegB == RegA.
+name|bool
+name|isSuperOrSubRegisterEq
+argument_list|(
+name|unsigned
+name|RegA
+argument_list|,
+name|unsigned
+name|RegB
+argument_list|)
+decl|const
+block|{
+return|return
+name|isSubRegisterEq
+argument_list|(
+name|RegA
+argument_list|,
+name|RegB
+argument_list|)
 operator|||
 name|isSuperRegister
 argument_list|(

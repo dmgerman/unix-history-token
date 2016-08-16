@@ -204,7 +204,6 @@ comment|/// \brief Sets the runtime alias checks for versioning the loop.
 name|void
 name|setAliasChecks
 argument_list|(
-specifier|const
 name|SmallVector
 operator|<
 name|RuntimePointerChecking
@@ -222,6 +221,39 @@ name|setSCEVChecks
 parameter_list|(
 name|SCEVUnionPredicate
 name|Check
+parameter_list|)
+function_decl|;
+comment|/// \brief Annotate memory instructions in the versioned loop with no-alias
+comment|/// metadata based on the memchecks issued.
+comment|///
+comment|/// This is just wrapper that calls prepareNoAliasMetadata and
+comment|/// annotateInstWithNoAlias on the instructions of the versioned loop.
+name|void
+name|annotateLoopWithNoAlias
+parameter_list|()
+function_decl|;
+comment|/// \brief Set up the aliasing scopes based on the memchecks.  This needs to
+comment|/// be called before the first call to annotateInstWithNoAlias.
+name|void
+name|prepareNoAliasMetadata
+parameter_list|()
+function_decl|;
+comment|/// \brief Add the noalias annotations to \p VersionedInst.
+comment|///
+comment|/// \p OrigInst is the instruction corresponding to \p VersionedInst in the
+comment|/// original loop.  Initialize the aliasing scopes with
+comment|/// prepareNoAliasMetadata once before this can be called.
+name|void
+name|annotateInstWithNoAlias
+parameter_list|(
+name|Instruction
+modifier|*
+name|VersionedInst
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|OrigInst
 parameter_list|)
 function_decl|;
 name|private
@@ -244,6 +276,24 @@ operator|&
 name|DefsUsedOutside
 argument_list|)
 decl_stmt|;
+comment|/// \brief Add the noalias annotations to \p I.  Initialize the aliasing
+comment|/// scopes with prepareNoAliasMetadata once before this can be called.
+name|void
+name|annotateInstWithNoAlias
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+block|{
+name|annotateInstWithNoAlias
+argument_list|(
+name|I
+argument_list|,
+name|I
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief The original loop.  This becomes the "versioned" one.  I.e.,
 comment|/// control flows here if pointers in the loop don't alias.
 name|Loop
@@ -276,6 +326,50 @@ comment|/// \brief The set of SCEV checks that we are versioning for.
 name|SCEVUnionPredicate
 name|Preds
 decl_stmt|;
+comment|/// \brief Maps a pointer to the pointer checking group that the pointer
+comment|/// belongs to.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+specifier|const
+name|RuntimePointerChecking
+operator|::
+name|CheckingPtrGroup
+operator|*
+operator|>
+name|PtrToGroup
+expr_stmt|;
+comment|/// \brief The alias scope corresponding to a pointer checking group.
+name|DenseMap
+operator|<
+specifier|const
+name|RuntimePointerChecking
+operator|::
+name|CheckingPtrGroup
+operator|*
+operator|,
+name|MDNode
+operator|*
+operator|>
+name|GroupToScope
+expr_stmt|;
+comment|/// \brief The list of alias scopes that a pointer checking group can't alias.
+name|DenseMap
+operator|<
+specifier|const
+name|RuntimePointerChecking
+operator|::
+name|CheckingPtrGroup
+operator|*
+operator|,
+name|MDNode
+operator|*
+operator|>
+name|GroupToNonAliasingScopeList
+expr_stmt|;
 comment|/// \brief Analyses used.
 specifier|const
 name|LoopAccessInfo

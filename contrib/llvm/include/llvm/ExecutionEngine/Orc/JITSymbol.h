@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -189,6 +195,30 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// @brief Create a JITSymbol from a RuntimeDyld::SymbolInfo.
+name|JITSymbol
+argument_list|(
+specifier|const
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+operator|&
+name|Sym
+argument_list|)
+operator|:
+name|JITSymbolBase
+argument_list|(
+name|Sym
+operator|.
+name|getFlags
+argument_list|()
+argument_list|)
+operator|,
+name|CachedAddr
+argument_list|(
+argument|Sym.getAddress()
+argument_list|)
+block|{}
 comment|/// @brief Returns true if the symbol exists, false otherwise.
 name|explicit
 name|operator
@@ -232,6 +262,26 @@ expr_stmt|;
 block|}
 return|return
 name|CachedAddr
+return|;
+block|}
+comment|/// @brief Convert this JITSymbol to a RuntimeDyld::SymbolInfo.
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|toRuntimeDyldSymbol
+argument_list|()
+block|{
+return|return
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+argument_list|(
+name|getAddress
+argument_list|()
+argument_list|,
+name|getFlags
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|private

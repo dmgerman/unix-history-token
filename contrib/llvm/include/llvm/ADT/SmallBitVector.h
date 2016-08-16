@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -87,13 +81,11 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// SmallBitVector - This is a 'bitvector' (really, a variable-sized bit array),
-comment|/// optimized for the case when the array is small.  It contains one
-comment|/// pointer-sized field, which is directly used as a plain collection of bits
-comment|/// when possible, or as a pointer to a larger heap-allocated array when
-comment|/// necessary.  This allows normal "small" cases to be fast without losing
-comment|/// generality for large inputs.
-comment|///
+comment|/// This is a 'bitvector' (really, a variable-sized bit array), optimized for
+comment|/// the case when the array is small. It contains one pointer-sized field, which
+comment|/// is directly used as a plain collection of bits when possible, or as a
+comment|/// pointer to a larger heap-allocated array when necessary. This allows normal
+comment|/// "small" cases to be fast without losing generality for large inputs.
 name|class
 name|SmallBitVector
 block|{
@@ -521,7 +513,7 @@ expr_stmt|;
 block|}
 name|public
 label|:
-comment|/// SmallBitVector default ctor - Creates an empty bitvector.
+comment|/// Creates an empty bitvector.
 name|SmallBitVector
 argument_list|()
 operator|:
@@ -530,8 +522,8 @@ argument_list|(
 literal|1
 argument_list|)
 block|{}
-comment|/// SmallBitVector ctor - Creates a bitvector of specified number of bits. All
-comment|/// bits are initialized to the specified value.
+comment|/// Creates a bitvector of specified number of bits. All bits are initialized
+comment|/// to the specified value.
 name|explicit
 name|SmallBitVector
 argument_list|(
@@ -627,7 +619,7 @@ name|getPointer
 parameter_list|()
 function_decl|;
 block|}
-comment|/// empty - Tests whether there are no bits in this bitvector.
+comment|/// Tests whether there are no bits in this bitvector.
 name|bool
 name|empty
 argument_list|()
@@ -649,7 +641,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// size - Returns the number of bits in this bitvector.
+comment|/// Returns the number of bits in this bitvector.
 name|size_t
 name|size
 argument_list|()
@@ -669,7 +661,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// count - Returns the number of bits which are set.
+comment|/// Returns the number of bits which are set.
 name|size_type
 name|count
 argument_list|()
@@ -702,7 +694,7 @@ name|count
 argument_list|()
 return|;
 block|}
-comment|/// any - Returns true if any bit is set.
+comment|/// Returns true if any bit is set.
 name|bool
 name|any
 argument_list|()
@@ -730,7 +722,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// all - Returns true if all bits are set.
+comment|/// Returns true if all bits are set.
 end_comment
 
 begin_expr_stmt
@@ -774,7 +766,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// none - Returns true if none of the bits are set.
+comment|/// Returns true if none of the bits are set.
 end_comment
 
 begin_macro
@@ -811,11 +803,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// find_first - Returns the index of the first set bit, -1 if none
-end_comment
-
-begin_comment
-comment|/// of the bits are set.
+comment|/// Returns the index of the first set bit, -1 if none of the bits are set.
 end_comment
 
 begin_macro
@@ -870,11 +858,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/// find_next - Returns the index of the next set bit following the
+comment|/// Returns the index of the next set bit following the "Prev" bit.
 end_comment
 
 begin_comment
-comment|/// "Prev" bit. Returns -1 if the next set bit is not found.
+comment|/// Returns -1 if the next set bit is not found.
 end_comment
 
 begin_macro
@@ -955,7 +943,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// clear - Clear all bits.
+comment|/// Clear all bits.
 end_comment
 
 begin_macro
@@ -987,7 +975,7 @@ block|}
 end_block
 
 begin_comment
-comment|/// resize - Grow or shrink the bitvector.
+comment|/// Grow or shrink the bitvector.
 end_comment
 
 begin_function
@@ -1333,7 +1321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// set - Efficiently set a range of bits in [I, E)
+comment|/// Efficiently set a range of bits in [I, E)
 end_comment
 
 begin_function
@@ -1518,7 +1506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// reset - Efficiently reset a range of bits in [I, E)
+comment|/// Efficiently reset a range of bits in [I, E)
 end_comment
 
 begin_function
@@ -2146,7 +2134,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// reset - Reset bits that are set in RHS. Same as *this&= ~RHS.
+comment|/// Reset bits that are set in RHS. Same as *this&= ~RHS.
 end_comment
 
 begin_expr_stmt
@@ -2259,11 +2247,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// test - Check if (This - RHS) is zero.
-end_comment
-
-begin_comment
-comment|/// This is the same as reset(RHS) and any().
+comment|/// Check if (This - RHS) is zero. This is the same as reset(RHS) and any().
 end_comment
 
 begin_macro
@@ -2774,7 +2758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// setBitsInMask - Add '1' bits from Mask to this vector. Don't resize.
+comment|/// Add '1' bits from Mask to this vector. Don't resize.
 end_comment
 
 begin_comment
@@ -2829,11 +2813,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// clearBitsInMask - Clear any bits in this vector that are set in Mask.
+comment|/// Clear any bits in this vector that are set in Mask. Don't resize.
 end_comment
 
 begin_comment
-comment|/// Don't resize. This computes "*this&= ~Mask".
+comment|/// This computes "*this&= ~Mask".
 end_comment
 
 begin_function
@@ -2884,11 +2868,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// setBitsNotInMask - Add a bit to this vector for every '0' bit in Mask.
+comment|/// Add a bit to this vector for every '0' bit in Mask. Don't resize.
 end_comment
 
 begin_comment
-comment|/// Don't resize.  This computes "*this |= ~Mask".
+comment|/// This computes "*this |= ~Mask".
 end_comment
 
 begin_function
@@ -2939,11 +2923,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// clearBitsNotInMask - Clear a bit in this vector for every '0' bit in Mask.
+comment|/// Clear a bit in this vector for every '0' bit in Mask. Don't resize.
 end_comment
 
 begin_comment
-comment|/// Don't resize.  This computes "*this&= Mask".
+comment|/// This computes "*this&= Mask".
 end_comment
 
 begin_function

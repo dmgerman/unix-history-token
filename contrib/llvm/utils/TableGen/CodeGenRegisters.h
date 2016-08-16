@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SetVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SparseBitVector.h"
 end_include
 
@@ -132,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -139,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<set>
 end_include
 
 begin_include
@@ -159,12 +153,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<deque>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -172,6 +160,20 @@ block|{
 name|class
 name|CodeGenRegBank
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Vector
+operator|,
+name|typename
+name|Set
+operator|>
+name|class
+name|SetVector
+expr_stmt|;
 comment|/// Used to encode a step in a register lane mask transformation.
 comment|/// Mask the bits specified in Mask, then rotate them Rol bits to the left
 comment|/// assuming a wraparound at 32bits.
@@ -1194,6 +1196,9 @@ decl_stmt|;
 comment|/// True if there are at least 2 subregisters which do not interfere.
 name|bool
 name|HasDisjunctSubRegs
+decl_stmt|;
+name|bool
+name|CoveredBySubRegs
 decl_stmt|;
 comment|// Return the Record that defined this class, or NULL if the class was
 comment|// created by TableGen.

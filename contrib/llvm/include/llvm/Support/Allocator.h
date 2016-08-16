@@ -1384,12 +1384,24 @@ return|;
 end_return
 
 begin_macro
-unit|}    void
-name|PrintStats
+unit|}    size_t
+name|getBytesAllocated
 argument_list|()
 end_macro
 
 begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|BytesAllocated
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|void
+name|PrintStats
+argument_list|()
 specifier|const
 block|{
 name|detail
