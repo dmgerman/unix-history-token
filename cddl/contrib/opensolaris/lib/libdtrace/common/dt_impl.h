@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1405,6 +1405,10 @@ name|uint64_t
 name|dt_last_timestamp
 decl_stmt|;
 comment|/* most recently consumed timestamp */
+name|boolean_t
+name|dt_has_sugar
+decl_stmt|;
+comment|/* syntactic sugar used? */
 block|}
 struct|;
 comment|/*  * Values for the user arg of the ECB.  */

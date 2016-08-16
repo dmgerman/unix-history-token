@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -419,15 +419,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_13
+value|DT_VERSION_NUMBER(1, 13, 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_12_1
+value|DT_VERS_1_13
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.12.1"
+value|"Sun D 1.13"
 end_define
 
 begin_decl_stmt
@@ -506,6 +513,9 @@ comment|/* D API 1.12 */
 name|DT_VERS_1_12_1
 block|,
 comment|/* D API 1.12.1 */
+name|DT_VERS_1_13
+block|,
+comment|/* D API 1.13 */
 literal|0
 block|}
 decl_stmt|;
