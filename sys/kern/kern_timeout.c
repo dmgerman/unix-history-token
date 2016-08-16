@@ -4804,6 +4804,13 @@ name|cc
 argument_list|,
 name|direct
 argument_list|)
+operator|||
+name|cc_exec_drain
+argument_list|(
+name|cc
+argument_list|,
+name|dir
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Someone has called callout_drain to kill this 			 * callout.  Don't reschedule. 			 */
