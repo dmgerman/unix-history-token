@@ -4809,7 +4809,7 @@ name|cc_exec_drain
 argument_list|(
 name|cc
 argument_list|,
-name|dir
+name|direct
 argument_list|)
 condition|)
 block|{
