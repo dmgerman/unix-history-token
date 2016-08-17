@@ -2948,6 +2948,11 @@ name|NodeType
 typedef|;
 typedef|typedef
 name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+typedef|typedef
+name|MachineBasicBlock
 operator|::
 name|succ_iterator
 name|ChildIteratorType
@@ -3025,6 +3030,15 @@ name|MachineBasicBlock
 name|NodeType
 typedef|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -3141,6 +3155,14 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|MachineBasicBlock
 operator|::
 name|pred_iterator
 name|ChildIteratorType
@@ -3231,6 +3253,15 @@ name|MachineBasicBlock
 name|NodeType
 typedef|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

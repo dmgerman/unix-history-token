@@ -197,6 +197,12 @@ init|=
 literal|1
 operator|<<
 literal|25
+block|,
+name|DisableWQM
+init|=
+literal|1
+operator|<<
+literal|26
 block|}
 enum|;
 block|}

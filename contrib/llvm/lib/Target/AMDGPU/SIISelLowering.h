@@ -198,7 +198,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFastFDIV
+name|lowerFastUnsafeFDIV
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFDIV_FAST
 argument_list|(
 argument|SDValue Op
 argument_list|,

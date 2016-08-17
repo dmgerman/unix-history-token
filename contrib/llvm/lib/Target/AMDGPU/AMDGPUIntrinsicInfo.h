@@ -123,6 +123,15 @@ operator|:
 name|AMDGPUIntrinsicInfo
 argument_list|()
 block|;
+name|StringRef
+name|getName
+argument_list|(
+argument|unsigned IntrId
+argument_list|,
+argument|ArrayRef<Type *> Tys = None
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|string
@@ -132,7 +141,7 @@ argument|unsigned IntrId
 argument_list|,
 argument|Type **Tys = nullptr
 argument_list|,
-argument|unsigned numTys =
+argument|unsigned NumTys =
 literal|0
 argument_list|)
 specifier|const
@@ -166,11 +175,35 @@ argument|unsigned ID
 argument_list|,
 argument|Type **Tys = nullptr
 argument_list|,
-argument|unsigned numTys =
+argument|unsigned NumTys =
 literal|0
 argument_list|)
 specifier|const
 name|override
+block|;
+name|Function
+operator|*
+name|getDeclaration
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ArrayRef<Type *> = None
+argument_list|)
+specifier|const
+block|;
+name|FunctionType
+operator|*
+name|getType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ArrayRef<Type*> Tys = None
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

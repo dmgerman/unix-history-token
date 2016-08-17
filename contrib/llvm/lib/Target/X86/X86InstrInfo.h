@@ -978,6 +978,10 @@ argument_list|,
 name|MachineOperand
 operator|&
 name|ImplicitOp
+argument_list|,
+name|LiveVariables
+operator|*
+name|LV
 argument_list|)
 decl|const
 decl_stmt|;

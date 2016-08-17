@@ -75,6 +75,9 @@ decl_stmt|;
 name|class
 name|FunctionPass
 decl_stmt|;
+name|class
+name|GCNTargetMachine
+decl_stmt|;
 struct_decl|struct
 name|MachineSchedContext
 struct_decl|;
@@ -228,7 +231,7 @@ modifier|*
 name|createAMDGPUCodeGenPreparePass
 parameter_list|(
 specifier|const
-name|TargetMachine
+name|GCNTargetMachine
 modifier|*
 name|TM
 init|=

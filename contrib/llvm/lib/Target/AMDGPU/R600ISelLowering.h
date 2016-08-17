@@ -321,7 +321,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFPTOUINT
+name|lowerFP_TO_UINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFP_TO_SINT
 argument_list|(
 argument|SDValue Op
 argument_list|,

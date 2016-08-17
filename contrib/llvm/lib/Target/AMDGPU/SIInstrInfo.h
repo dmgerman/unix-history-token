@@ -1422,6 +1422,46 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isDisableWQM
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DisableWQM
+return|;
+block|}
+name|bool
+name|isDisableWQM
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DisableWQM
+return|;
+block|}
+specifier|static
+name|bool
 name|isVGPRSpill
 argument_list|(
 argument|const MachineInstr&MI

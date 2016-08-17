@@ -652,6 +652,11 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 decl_stmt|;

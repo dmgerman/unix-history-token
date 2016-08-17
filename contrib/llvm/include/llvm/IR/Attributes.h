@@ -641,6 +641,10 @@ name|friend
 name|class
 name|AttributeSetImpl
 decl_stmt|;
+name|friend
+name|class
+name|AttributeSetNode
+decl_stmt|;
 name|template
 operator|<
 name|typename

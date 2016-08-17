@@ -7692,6 +7692,19 @@ argument|const SDNode *N
 argument_list|)
 specifier|const
 block|;
+comment|/// Return a constant of type VT that contains a true value that respects
+comment|/// getBooleanContents()
+name|SDValue
+name|getConstTrueVal
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|const SDLoc&DL
+argument_list|)
+specifier|const
+block|;
 comment|/// Return if \p N is a True value when extended to \p VT.
 name|bool
 name|isExtendedTrueVal
