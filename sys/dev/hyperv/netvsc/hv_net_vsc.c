@@ -2811,18 +2811,6 @@ return|return
 name|NULL
 return|;
 comment|/* Initialize the NetVSC channel extension */
-name|sema_init
-argument_list|(
-operator|&
-name|net_dev
-operator|->
-name|channel_init_sema
-argument_list|,
-literal|0
-argument_list|,
-literal|"netdev_sema"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Open the channel 	 */
 name|KASSERT
 argument_list|(
@@ -2915,14 +2903,6 @@ expr_stmt|;
 name|cleanup
 label|:
 comment|/* 	 * Free the packet buffers on the netvsc device packet queue. 	 * Release other resources. 	 */
-name|sema_destroy
-argument_list|(
-operator|&
-name|net_dev
-operator|->
-name|channel_init_sema
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|net_dev
@@ -2983,14 +2963,6 @@ argument_list|(
 name|sc
 operator|->
 name|hn_prichan
-argument_list|)
-expr_stmt|;
-name|sema_destroy
-argument_list|(
-operator|&
-name|net_dev
-operator|->
-name|channel_init_sema
 argument_list|)
 expr_stmt|;
 name|free
