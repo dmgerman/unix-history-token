@@ -2340,6 +2340,16 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"testcase fails with SIGSEGV on FreeBSD; bug # 211924"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fd
 operator|=
 name|open
