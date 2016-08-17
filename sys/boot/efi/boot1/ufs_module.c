@@ -135,7 +135,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"dskread: failed dev: %p, id: %u, lba: %zu, size: %d, "
+literal|"dskread: failed dev: %p, id: %u, lba: %ju, size: %d, "
 literal|"status: %lu\n"
 argument_list|,
 name|devinfo
@@ -150,6 +150,9 @@ name|Media
 operator|->
 name|MediaId
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lba
 argument_list|,
 name|size
