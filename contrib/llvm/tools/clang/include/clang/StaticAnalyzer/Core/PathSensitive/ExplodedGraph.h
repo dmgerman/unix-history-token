@@ -1842,6 +1842,15 @@ name|ExplodedNode
 name|NodeType
 expr_stmt|;
 typedef|typedef
+name|clang
+operator|::
+name|ento
+operator|::
+name|ExplodedNode
+operator|*
+name|NodeRef
+expr_stmt|;
+typedef|typedef
 name|NodeType
 operator|::
 name|succ_iterator
@@ -1973,6 +1982,19 @@ name|ExplodedNode
 name|NodeType
 expr_stmt|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|clang
+operator|::
+name|ento
+operator|::
+name|ExplodedNode
+operator|*
+name|NodeRef
+expr_stmt|;
+end_typedef
 
 begin_typedef
 typedef|typedef

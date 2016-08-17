@@ -34207,9 +34207,6 @@ name|__m512i
 name|__A
 parameter_list|)
 block|{
-name|__v8si
-name|__O
-decl_stmt|;
 return|return
 operator|(
 name|__m256i

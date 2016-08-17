@@ -2393,11 +2393,7 @@ name|isPIEDefault
 argument_list|()
 specifier|const
 name|override
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 name|SanitizerMask
 name|getSupportedSanitizers
 argument_list|()

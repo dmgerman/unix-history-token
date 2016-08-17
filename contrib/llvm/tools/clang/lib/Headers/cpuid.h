@@ -375,6 +375,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|bit_PCLMUL
+value|bit_PCLMULQDQ
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|bit_DTES64
 value|0x00000004
 end_define
@@ -487,9 +498,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|bit_SSE4_1
+value|bit_SSE41
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|bit_SSE42
 value|0x00100000
 end_define
+
+begin_define
+define|#
+directive|define
+name|bit_SSE4_2
+value|bit_SSE42
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
 
 begin_define
 define|#
@@ -529,6 +562,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|bit_AES
+value|bit_AESNI
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|bit_XSAVE
 value|0x04000000
 end_define
@@ -545,6 +589,13 @@ define|#
 directive|define
 name|bit_AVX
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|bit_F16C
+value|0x20000000
 end_define
 
 begin_define
@@ -620,6 +671,17 @@ directive|define
 name|bit_CX8
 value|0x00000100
 end_define
+
+begin_define
+define|#
+directive|define
+name|bit_CMPXCHG8B
+value|bit_CX8
+end_define
+
+begin_comment
+comment|/* for gcc compat */
+end_comment
 
 begin_define
 define|#

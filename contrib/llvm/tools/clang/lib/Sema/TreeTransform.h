@@ -54937,14 +54937,6 @@ operator|)
 operator|.
 name|getParams
 argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getCallOperator
-argument_list|()
-operator|->
-name|isConstexpr
-argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
