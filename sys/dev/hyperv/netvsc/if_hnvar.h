@@ -78,8 +78,7 @@ name|vmbus_channel
 modifier|*
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -341,10 +340,9 @@ modifier|*
 name|chan
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
-name|msg
+name|data
 parameter_list|,
 name|int
 name|dlen

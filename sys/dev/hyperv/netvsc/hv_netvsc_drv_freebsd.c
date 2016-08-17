@@ -3797,10 +3797,9 @@ modifier|*
 name|chan
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
-name|msg
+name|data
 name|__unused
 parameter_list|,
 name|int

@@ -282,10 +282,8 @@ modifier|*
 name|chan
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
-name|msg
 parameter_list|,
 name|int
 parameter_list|)
@@ -3032,10 +3030,9 @@ name|chan
 name|__unused
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
-name|msg
+name|data
 parameter_list|,
 name|int
 name|dlen
@@ -3047,7 +3044,7 @@ name|sndc
 operator|->
 name|hn_cbarg
 argument_list|,
-name|msg
+name|data
 argument_list|,
 name|dlen
 argument_list|)
@@ -3079,10 +3076,9 @@ name|chan
 name|__unused
 parameter_list|,
 specifier|const
-name|struct
-name|nvsp_msg_
+name|void
 modifier|*
-name|msg
+name|data
 name|__unused
 parameter_list|,
 name|int
