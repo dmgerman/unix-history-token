@@ -157,6 +157,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_TYPE_VFASSOC_NOTE
+value|128
+end_define
+
+begin_comment
+comment|/* notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_SET_DATAPATH
+value|129
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_TYPE_SUBCH_REQ
 value|133
 end_define
@@ -170,6 +188,17 @@ end_define
 
 begin_comment
 comment|/* same as SUBCH_REQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_TXTBL_NOTE
+value|134
+end_define
+
+begin_comment
+comment|/* notification */
 end_comment
 
 begin_comment
