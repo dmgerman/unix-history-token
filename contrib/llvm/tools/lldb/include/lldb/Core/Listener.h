@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -92,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Predicate.h"
+file|"lldb/Core/Broadcaster.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Condition.h"
 end_include
 
 begin_include
@@ -107,9 +119,17 @@ name|lldb_private
 block|{
 name|class
 name|Listener
+range|:
+name|public
+name|std
+operator|::
+name|enable_shared_from_this
+operator|<
+name|Listener
+operator|>
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|bool
 argument_list|(
@@ -139,7 +159,26 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
+comment|//
+comment|// Listeners have to be constructed into shared pointers - at least if you want them to listen to
+comment|// Broadcasters,
+name|protected
+label|:
 name|Listener
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
+name|public
+label|:
+specifier|static
+name|lldb
+operator|::
+name|ListenerSP
+name|MakeListener
 argument_list|(
 specifier|const
 name|char
@@ -180,30 +219,32 @@ return|;
 block|}
 name|uint32_t
 name|StartListeningForEventSpec
-parameter_list|(
-name|BroadcasterManager
-modifier|&
-name|manager
-parameter_list|,
+argument_list|(
+name|lldb
+operator|::
+name|BroadcasterManagerSP
+name|manager_sp
+argument_list|,
 specifier|const
 name|BroadcastEventSpec
-modifier|&
+operator|&
 name|event_spec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|StopListeningForEventSpec
-parameter_list|(
-name|BroadcasterManager
-modifier|&
-name|manager
-parameter_list|,
+argument_list|(
+name|lldb
+operator|::
+name|BroadcasterManagerSP
+name|manager_sp
+argument_list|,
 specifier|const
 name|BroadcastEventSpec
-modifier|&
+operator|&
 name|event_spec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|uint32_t
 name|StartListeningForEvents
 parameter_list|(
@@ -428,10 +469,19 @@ operator|::
 name|multimap
 operator|<
 name|Broadcaster
-operator|*
+operator|::
+name|BroadcasterImplWP
 operator|,
 name|BroadcasterInfo
-operator|>
+operator|,
+name|std
+operator|::
+name|owner_less
+operator|<
+name|Broadcaster
+operator|::
+name|BroadcasterImplWP
+operator|>>
 name|broadcaster_collection
 expr_stmt|;
 typedef|typedef
@@ -450,14 +500,21 @@ name|std
 operator|::
 name|vector
 operator|<
-name|BroadcasterManager
-operator|*
+name|lldb
+operator|::
+name|BroadcasterManagerWP
 operator|>
 name|broadcaster_manager_collection
 expr_stmt|;
 name|bool
 name|FindNextEventInternal
 argument_list|(
+name|Mutex
+operator|::
+name|Locker
+operator|&
+name|lock
+argument_list|,
 name|Broadcaster
 operator|*
 name|broadcaster
@@ -552,9 +609,11 @@ expr_stmt|;
 name|broadcaster_collection
 name|m_broadcasters
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_broadcasters_mutex
-decl_stmt|;
+expr_stmt|;
 comment|// Protects m_broadcasters
 name|event_collection
 name|m_events
@@ -563,12 +622,9 @@ name|Mutex
 name|m_events_mutex
 decl_stmt|;
 comment|// Protects m_broadcasters and m_events
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_cond_wait
-expr_stmt|;
+name|Condition
+name|m_events_condition
+decl_stmt|;
 name|broadcaster_manager_collection
 name|m_broadcaster_managers
 decl_stmt|;
@@ -581,12 +637,13 @@ parameter_list|)
 function_decl|;
 name|void
 name|BroadcasterManagerWillDestruct
-parameter_list|(
-name|BroadcasterManager
-modifier|*
-name|manager
-parameter_list|)
-function_decl|;
+argument_list|(
+name|lldb
+operator|::
+name|BroadcasterManagerSP
+name|manager_sp
+argument_list|)
+decl_stmt|;
 comment|//    broadcaster_collection::iterator
 comment|//    FindBroadcasterWithMask (Broadcaster *broadcaster,
 comment|//                             uint32_t event_mask,
@@ -600,11 +657,14 @@ name|Listener
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb_private
 end_comment
 

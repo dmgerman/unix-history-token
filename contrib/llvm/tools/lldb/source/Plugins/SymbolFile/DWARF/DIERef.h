@@ -61,6 +61,12 @@ name|DWARFFormValue
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|class
+name|SymbolFileDWARF
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|DIERef
@@ -68,13 +74,6 @@ block|{
 name|DIERef
 argument_list|()
 expr_stmt|;
-name|explicit
-name|DIERef
-parameter_list|(
-name|dw_offset_t
-name|d
-parameter_list|)
-function_decl|;
 name|DIERef
 argument_list|(
 argument|dw_offset_t c
@@ -82,6 +81,12 @@ argument_list|,
 argument|dw_offset_t d
 argument_list|)
 empty_stmt|;
+comment|//----------------------------------------------------------------------
+comment|// In order to properly decode a lldb::user_id_t back into a DIERef we
+comment|// need the DWARF file since it knows if DWARF in .o files is being used
+comment|// (MacOSX) or if DWO files are being used. The encoding of the user ID
+comment|// differs between the two types of DWARF.
+comment|//----------------------------------------------------------------------
 name|explicit
 name|DIERef
 argument_list|(
@@ -89,6 +94,10 @@ name|lldb
 operator|::
 name|user_id_t
 name|uid
+argument_list|,
+name|SymbolFileDWARF
+operator|*
+name|dwarf
 argument_list|)
 decl_stmt|;
 name|explicit
@@ -100,11 +109,19 @@ modifier|&
 name|form_value
 parameter_list|)
 function_decl|;
+comment|//----------------------------------------------------------------------
+comment|// In order to properly encode a DIERef unto a lldb::user_id_t we need
+comment|// the DWARF file since it knows if DWARF in .o files is being used
+comment|// (MacOSX) or if DWO files are being used. The encoding of the user ID
+comment|// differs between the two types of DWARF.
+comment|//----------------------------------------------------------------------
 name|lldb
 operator|::
 name|user_id_t
 name|GetUID
-argument_list|()
+argument_list|(
+argument|SymbolFileDWARF *dwarf
+argument_list|)
 specifier|const
 expr_stmt|;
 name|bool

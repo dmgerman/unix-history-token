@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -1711,9 +1717,11 @@ name|IFormatChangeListener
 modifier|*
 name|m_change_listener
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|ConstString
 name|m_name
 decl_stmt|;

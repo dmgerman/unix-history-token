@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -1173,6 +1179,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|uint32_t reg_num
 argument_list|,
+comment|// Must be the eRegisterKindProcessPlugin register number, to be sent to the remote
 argument|StringExtractorGDBRemote&response
 argument_list|)
 block|;
@@ -1454,7 +1461,9 @@ name|m_num_supported_hardware_watchpoints
 block|;
 comment|// If we need to send a packet while the target is running, the m_async_XXX
 comment|// member variables take care of making this happen.
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_async_mutex
 block|;
 name|Predicate

@@ -114,11 +114,6 @@ argument|const ConstString&name
 argument_list|)
 name|override
 block|;
-operator|~
-name|VectorIteratorSyntheticFrontEnd
-argument_list|()
-name|override
-block|;
 name|private
 operator|:
 name|ExecutionContextRef

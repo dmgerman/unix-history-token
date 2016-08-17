@@ -492,8 +492,6 @@ name|addr_t
 name|FindSpace
 argument_list|(
 argument|size_t size
-argument_list|,
-argument|bool zero_memory = false
 argument_list|)
 expr_stmt|;
 name|bool

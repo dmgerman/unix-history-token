@@ -166,6 +166,13 @@ argument_list|)
 name|override
 block|;
 name|bool
+name|IsSoftFloat
+argument_list|(
+argument|uint32_t fp_flag
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa

@@ -240,6 +240,14 @@ name|SBListener
 decl_stmt|;
 name|class
 name|LLDB_API
+name|SBMemoryRegionInfo
+decl_stmt|;
+name|class
+name|LLDB_API
+name|SBMemoryRegionInfoList
+decl_stmt|;
+name|class
+name|LLDB_API
 name|SBModule
 decl_stmt|;
 name|class

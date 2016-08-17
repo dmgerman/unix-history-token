@@ -57,6 +57,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -102,10 +102,8 @@ name|m_stop_id_to_section_load_list
 argument_list|()
 operator|,
 name|m_mutex
-argument_list|(
-argument|Mutex::eMutexTypeRecursive
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 operator|~
 name|SectionLoadHistory
 argument_list|()
@@ -266,9 +264,11 @@ name|StopIDToSectionLoadList
 name|m_stop_id_to_section_load_list
 decl_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

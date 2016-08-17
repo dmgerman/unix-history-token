@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-forward.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Connection.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -434,7 +434,9 @@ comment|// the port number.
 name|Pipe
 name|m_pipe
 block|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
 block|;
 name|std

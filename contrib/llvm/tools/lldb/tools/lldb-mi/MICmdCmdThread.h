@@ -218,6 +218,22 @@ name|m_constStrArgNamedThreadId
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// mi value of current-thread-id if multiple threads are requested
+end_comment
+
+begin_decl_stmt
+name|bool
+name|m_bHasCurrentThread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CMICmnMIValue
+name|m_miValueCurrThreadId
+decl_stmt|;
+end_decl_stmt
+
 unit|};
 end_unit
 

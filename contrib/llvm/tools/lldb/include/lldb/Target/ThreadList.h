@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -71,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/ThreadCollection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/Thread.h"
 end_include
 
 begin_decl_stmt
@@ -138,6 +150,97 @@ name|ThreadSP
 name|GetSelectedThread
 argument_list|()
 block|;
+comment|// Manage the thread to use for running expressions.  This is usually the Selected thread,
+comment|// but sometimes (e.g. when evaluating breakpoint conditions& stop hooks) it isn't.
+name|class
+name|ExpressionExecutionThreadPusher
+block|{
+name|public
+operator|:
+name|ExpressionExecutionThreadPusher
+argument_list|(
+argument|ThreadList&thread_list
+argument_list|,
+argument|lldb::tid_t tid
+argument_list|)
+operator|:
+name|m_thread_list
+argument_list|(
+operator|&
+name|thread_list
+argument_list|)
+block|,
+name|m_tid
+argument_list|(
+argument|tid
+argument_list|)
+block|{
+name|m_thread_list
+operator|->
+name|PushExpressionExecutionThread
+argument_list|(
+name|m_tid
+argument_list|)
+block|;         }
+name|ExpressionExecutionThreadPusher
+argument_list|(
+argument|lldb::ThreadSP thread_sp
+argument_list|)
+block|;
+operator|~
+name|ExpressionExecutionThreadPusher
+argument_list|()
+block|{
+if|if
+condition|(
+name|m_thread_list
+operator|&&
+name|m_tid
+operator|!=
+name|LLDB_INVALID_THREAD_ID
+condition|)
+name|m_thread_list
+operator|->
+name|PopExpressionExecutionThread
+argument_list|(
+name|m_tid
+argument_list|)
+expr_stmt|;
+block|}
+name|private
+operator|:
+name|ThreadList
+operator|*
+name|m_thread_list
+block|;
+name|lldb
+operator|::
+name|tid_t
+name|m_tid
+block|;     }
+block|;
+name|lldb
+operator|::
+name|ThreadSP
+name|GetExpressionExecutionThread
+argument_list|()
+block|;
+name|protected
+operator|:
+name|void
+name|PushExpressionExecutionThread
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
+block|;
+name|void
+name|PopExpressionExecutionThread
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|)
+block|;
+name|public
+operator|:
 name|bool
 name|SetSelectedThreadByID
 argument_list|(
@@ -307,7 +410,9 @@ argument_list|(
 argument|uint32_t stop_id
 argument_list|)
 block|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -353,6 +458,16 @@ name|tid_t
 name|m_selected_tid
 block|;
 comment|///< For targets that need the notion of a current thread.
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|tid_t
+operator|>
+name|m_expression_tid_stack
+block|;
 name|private
 operator|:
 name|ThreadList

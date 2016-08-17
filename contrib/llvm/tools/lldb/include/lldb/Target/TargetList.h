@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Broadcaster.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -419,9 +419,11 @@ name|TargetSP
 name|m_dummy_target_sp
 expr_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_target_list_mutex
-decl_stmt|;
+expr_stmt|;
 name|uint32_t
 name|m_selected_target_idx
 decl_stmt|;

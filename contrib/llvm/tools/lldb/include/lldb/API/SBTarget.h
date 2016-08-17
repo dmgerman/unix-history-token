@@ -1151,6 +1151,18 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
+name|BreakpointCreateByLocation
+argument_list|(
+argument|const lldb::SBFileSpec&file_spec
+argument_list|,
+argument|uint32_t line
+argument_list|,
+argument|lldb::addr_t offset
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
 name|BreakpointCreateByName
 argument_list|(
 specifier|const
@@ -1259,6 +1271,27 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
+name|BreakpointCreateByNames
+argument_list|(
+argument|const char *symbol_name[]
+argument_list|,
+argument|uint32_t num_names
+argument_list|,
+argument|uint32_t name_type_mask
+argument_list|,
+comment|// Logical OR one or more FunctionNameType enum bits
+argument|lldb::LanguageType symbol_language
+argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
+argument|const SBFileSpecList&module_list
+argument_list|,
+argument|const SBFileSpecList&comp_unit_list
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
 name|BreakpointCreateByRegex
 argument_list|(
 specifier|const
@@ -1351,6 +1384,32 @@ specifier|const
 name|SBFileSpecList
 operator|&
 name|source_file
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBBreakpoint
+name|BreakpointCreateBySourceRegex
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|source_regex
+argument_list|,
+specifier|const
+name|SBFileSpecList
+operator|&
+name|module_list
+argument_list|,
+specifier|const
+name|SBFileSpecList
+operator|&
+name|source_file
+argument_list|,
+specifier|const
+name|SBStringList
+operator|&
+name|func_names
 argument_list|)
 expr_stmt|;
 name|lldb

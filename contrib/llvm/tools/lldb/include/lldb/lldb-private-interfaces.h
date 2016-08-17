@@ -444,9 +444,10 @@ operator|::
 name|TargetSP
 name|target_sp
 operator|,
-name|Listener
-operator|&
-name|listener
+name|lldb
+operator|::
+name|ListenerSP
+name|listener_sp
 operator|,
 specifier|const
 name|FileSpec

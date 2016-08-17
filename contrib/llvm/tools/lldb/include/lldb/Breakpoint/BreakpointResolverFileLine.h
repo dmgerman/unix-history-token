@@ -90,6 +90,8 @@ argument|const FileSpec&resolver
 argument_list|,
 argument|uint32_t line_no
 argument_list|,
+argument|lldb::addr_t m_offset
+argument_list|,
 argument|bool check_inlines
 argument_list|,
 argument|bool skip_prologue

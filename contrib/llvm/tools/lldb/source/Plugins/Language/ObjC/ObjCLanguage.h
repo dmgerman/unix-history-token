@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -537,7 +543,7 @@ argument_list|,
 literal|':'
 argument_list|)
 operator|==
-name|NULL
+name|nullptr
 condition|)
 return|return
 name|true

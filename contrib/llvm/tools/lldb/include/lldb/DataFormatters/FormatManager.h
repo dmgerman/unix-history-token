@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -1072,11 +1078,13 @@ name|m_format_cache
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|recursive_mutex
 name|m_language_categories_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|LanguageCategories

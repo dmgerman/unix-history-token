@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Symbol/UnwindPlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -331,6 +337,24 @@ name|reg_info
 argument_list|)
 operator|=
 literal|0
+block|;
+name|virtual
+name|bool
+name|GetFallbackRegisterLocation
+argument_list|(
+specifier|const
+name|RegisterInfo
+operator|*
+name|reg_info
+argument_list|,
+name|UnwindPlan
+operator|::
+name|Row
+operator|::
+name|RegisterLocation
+operator|&
+name|unwind_regloc
+argument_list|)
 block|;
 comment|// Should take a look at a call frame address (CFA) which is just the stack
 comment|// pointer value upon entry to a function. ABIs usually impose alignment

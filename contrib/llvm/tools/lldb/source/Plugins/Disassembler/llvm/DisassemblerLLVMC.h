@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/PluginManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_comment
@@ -527,7 +527,7 @@ argument_list|)
 block|{
 name|m_mutex
 operator|.
-name|Lock
+name|lock
 argument_list|()
 block|;
 name|m_inst
@@ -552,7 +552,7 @@ name|NULL
 block|;
 name|m_mutex
 operator|.
-name|Unlock
+name|unlock
 argument_list|()
 block|;     }
 specifier|const
@@ -566,9 +566,9 @@ name|InstructionLLVMC
 operator|*
 name|m_inst
 block|;
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|mutex
 name|m_mutex
 block|;
 name|bool

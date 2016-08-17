@@ -290,6 +290,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LIBLLDB_LOG_DEMANGLE
+value|(1u<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LIBLLDB_LOG_ALL
 value|(UINT32_MAX)
 end_define

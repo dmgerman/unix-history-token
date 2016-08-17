@@ -132,6 +132,31 @@ argument|lldb::LanguageType language
 argument_list|)
 name|override
 block|;
+name|DWARFDIE
+name|GetDIE
+argument_list|(
+argument|const DIERef&die_ref
+argument_list|)
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SymbolFileDWARFDwo
+operator|>
+name|GetDwoSymbolFileForCompileUnit
+argument_list|(
+argument|DWARFCompileUnit&dwarf_cu
+argument_list|,
+argument|const DWARFDebugInfoEntry&cu_die
+argument_list|)
+name|override
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 name|protected
 operator|:
 name|void

@@ -62,6 +62,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-private-enumerations.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/IOHandler.h"
 end_include
 
@@ -163,10 +169,16 @@ name|g_option_table
 index|[]
 block|;
 name|bool
+name|top_level
+block|;
+name|bool
 name|unwind_on_error
 block|;
 name|bool
 name|ignore_breakpoints
+block|;
+name|bool
+name|allow_jit
 block|;
 name|bool
 name|show_types
@@ -190,6 +202,9 @@ name|language
 block|;
 name|LanguageRuntimeDescriptionDisplayVerbosity
 name|m_verbosity
+block|;
+name|LazyBool
+name|auto_apply_fixits
 block|;     }
 decl_stmt|;
 name|CommandObjectExpression
@@ -230,26 +245,19 @@ name|line
 argument_list|)
 name|override
 decl_stmt|;
-name|virtual
-name|LineStatus
-name|IOHandlerLinesUpdated
-parameter_list|(
+name|bool
+name|IOHandlerIsInputComplete
+argument_list|(
 name|IOHandler
-modifier|&
+operator|&
 name|io_handler
-parameter_list|,
+argument_list|,
 name|StringList
-modifier|&
+operator|&
 name|lines
-parameter_list|,
-name|uint32_t
-name|line_idx
-parameter_list|,
-name|Error
-modifier|&
-name|error
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|bool
 name|DoExecute
 argument_list|(
@@ -315,6 +323,12 @@ name|string
 name|m_expr_lines
 expr_stmt|;
 comment|// Multi-line expression support
+name|std
+operator|::
+name|string
+name|m_fixed_expression
+expr_stmt|;
+comment|// Holds the current expression's fixed text.
 block|}
 empty_stmt|;
 block|}

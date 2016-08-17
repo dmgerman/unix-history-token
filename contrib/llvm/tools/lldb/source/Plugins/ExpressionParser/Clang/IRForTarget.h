@@ -447,70 +447,6 @@ name|value_ptr
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Build a function pointer given a type and a raw pointer.
-comment|///
-comment|/// @param[in] type
-comment|///     The type of the function pointer to be built.
-comment|///
-comment|/// @param[in] ptr
-comment|///     The value of the pointer.
-comment|///
-comment|/// @return
-comment|///     The pointer.
-comment|//------------------------------------------------------------------
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|BuildFunctionPointer
-argument_list|(
-argument|llvm::Type *type
-argument_list|,
-argument|uint64_t ptr
-argument_list|)
-block|;
-name|void
-name|RegisterFunctionMetadata
-argument_list|(
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|context
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|function_ptr
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
-comment|/// The top-level pass implementation
-comment|///
-comment|/// @param[in] llvm_function
-comment|///     The function currently being processed.
-comment|///
-comment|/// @return
-comment|///     True if the function has side effects (or if this cannot
-comment|///     be determined); false otherwise.
-comment|//------------------------------------------------------------------
-name|bool
-name|ResolveFunctionPointers
-argument_list|(
-name|llvm
-operator|::
-name|Module
-operator|&
-name|llvm_module
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// A function-level pass to take the generated global value
 comment|/// $__lldb_expr_result and make it into a persistent variable.
 comment|/// Also see ASTResultSynthesizer.
@@ -990,44 +926,6 @@ name|basic_block
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// A module-level pass to allocate all string literals in a separate
-comment|/// allocation and redirect references to them.
-comment|//------------------------------------------------------------------
-comment|//------------------------------------------------------------------
-comment|/// The top-level pass implementation
-comment|///
-comment|/// @return
-comment|///     True on success; false otherwise
-comment|//------------------------------------------------------------------
-name|bool
-name|ReplaceStrings
-argument_list|()
-block|;
-comment|//------------------------------------------------------------------
-comment|/// A basic block-level pass to find all literals that will be
-comment|/// allocated as statics by the JIT (in contrast to the Strings,
-comment|/// which already are statics) and synthesize loads for them.
-comment|//------------------------------------------------------------------
-comment|//------------------------------------------------------------------
-comment|/// The top-level pass implementation
-comment|///
-comment|/// @param[in] basic_block
-comment|///     The basic block currently being processed.
-comment|///
-comment|/// @return
-comment|///     True on success; false otherwise
-comment|//------------------------------------------------------------------
-name|bool
-name|ReplaceStaticLiterals
-argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|&
-name|basic_block
-argument_list|)
-block|;
-comment|//------------------------------------------------------------------
 comment|/// A function-level pass to make all external variable references
 comment|/// point at the correct offsets from the void* passed into the
 comment|/// function.  ClangExpressionDeclMap::DoStructLayout() must be called
@@ -1052,93 +950,14 @@ operator|&
 name|llvm_function
 argument_list|)
 block|;
-comment|//------------------------------------------------------------------
-comment|/// A module-level pass to remove all global variables from the
-comment|/// module since it no longer should export or import any symbols.
-comment|//------------------------------------------------------------------
-comment|//------------------------------------------------------------------
-comment|/// The top-level pass implementation
-comment|///
-comment|/// @param[in] llvm_module
-comment|///     The module currently being processed.
-comment|///
-comment|/// @return
-comment|///     True on success; false otherwise
-comment|//------------------------------------------------------------------
-name|bool
-name|StripAllGVs
-argument_list|(
-name|llvm
-operator|::
-name|Module
-operator|&
-name|llvm_module
-argument_list|)
-block|;
-name|class
-name|StaticDataAllocator
-block|{
-name|public
-operator|:
-name|StaticDataAllocator
-argument_list|(
-name|lldb_private
-operator|::
-name|IRExecutionUnit
-operator|&
-name|execution_unit
-argument_list|)
-block|;
-name|lldb_private
-operator|::
-name|StreamString
-operator|&
-name|GetStream
-argument_list|()
-block|{
-return|return
-name|m_stream_string
-return|;
-block|}
-name|lldb
-operator|::
-name|addr_t
-name|Allocate
-argument_list|()
-block|;
-name|lldb
-operator|::
-name|TargetSP
-name|GetTarget
-argument_list|()
-block|;
-name|private
-operator|:
-name|lldb_private
-operator|::
-name|IRExecutionUnit
-operator|&
-name|m_execution_unit
-block|;
-name|lldb_private
-operator|::
-name|StreamString
-name|m_stream_string
-block|;
-name|lldb
-operator|::
-name|addr_t
-name|m_allocation
-block|;     }
-block|;
 comment|/// Flags
 name|bool
 name|m_resolve_vars
 block|;
 comment|///< True if external variable references and persistent variable references should be resolved
-name|std
+name|lldb_private
 operator|::
-name|string
+name|ConstString
 name|m_func_name
 block|;
 comment|///< The name of the function to translate
@@ -1179,24 +998,22 @@ operator|*
 name|m_decl_map
 block|;
 comment|///< The DeclMap containing the Decls
-name|StaticDataAllocator
-name|m_data_allocator
-block|;
-comment|///< The allocator to use for constant strings
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|m_CFStringCreateWithBytes
 block|;
-comment|///< The address of the function CFStringCreateWithBytes, cast to the appropriate function pointer type
+comment|///< The address of the function CFStringCreateWithBytes, cast to the
+comment|///appropriate function pointer type
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|m_sel_registerName
 block|;
-comment|///< The address of the function sel_registerName, cast to the appropriate function pointer type
+comment|///< The address of the function sel_registerName, cast to the appropriate
+comment|///function pointer type
 name|llvm
 operator|::
 name|IntegerType
@@ -1211,24 +1028,34 @@ operator|*
 name|m_error_stream
 block|;
 comment|///< If non-NULL, the stream on which errors should be printed
+name|lldb_private
+operator|::
+name|IRExecutionUnit
+operator|&
+name|m_execution_unit
+block|;
+comment|///< The execution unit containing the IR being created.
 name|llvm
 operator|::
 name|StoreInst
 operator|*
 name|m_result_store
 block|;
-comment|///< If non-NULL, the store instruction that writes to the result variable.  If m_has_side_effects is true, this is NULL.
+comment|///< If non-NULL, the store instruction that writes to the result variable.  If
+comment|///m_has_side_effects is true, this is NULL.
 name|bool
 name|m_result_is_pointer
 block|;
-comment|///< True if the function's result in the AST is a pointer (see comments in ASTResultSynthesizer::SynthesizeBodyResult)
+comment|///< True if the function's result in the AST is a pointer (see comments in
+comment|///ASTResultSynthesizer::SynthesizeBodyResult)
 name|llvm
 operator|::
 name|GlobalVariable
 operator|*
 name|m_reloc_placeholder
 block|;
-comment|///< A placeholder that will be replaced by a pointer to the final location of the static allocation.
+comment|///< A placeholder that will be replaced by a pointer to the final
+comment|///location of the static allocation.
 comment|//------------------------------------------------------------------
 comment|/// UnfoldConstant operates on a constant [Old] which has just been
 comment|/// replaced with a value [New].  We assume that new_value has

@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/OptionValue.h"
 end_include
 
@@ -291,6 +285,30 @@ operator|&
 name|name
 argument_list|)
 expr_stmt|;
+comment|// We sometimes need to introduce a setting to enable experimental features,
+comment|// but then we don't want the setting for these to cause errors when the setting
+comment|// goes away.  Add a sub-topic of the settings using this experimental name, and
+comment|// two things will happen.  One is that settings that don't find the name will not
+comment|// be treated as errors.  Also, if you decide to keep the settings just move them into
+comment|// the containing properties, and we will auto-forward the experimental settings to the
+comment|// real one.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|GetExperimentalSettingsName
+parameter_list|()
+function_decl|;
+specifier|static
+name|bool
+name|IsSettingExperimental
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|setting
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|lldb

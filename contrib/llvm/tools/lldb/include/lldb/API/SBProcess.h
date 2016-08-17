@@ -994,6 +994,44 @@ operator|*
 name|file_name
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Query the address load_addr and store the details of the memory
+comment|/// region that contains it in the supplied SBMemoryRegionInfo object.
+comment|/// To iterate over all memory regions use GetMemoryRegionList.
+comment|///
+comment|/// @param[in] load_addr
+comment|///     The address to be queried.
+comment|///
+comment|/// @param[out] region_info
+comment|///     A reference to an SBMemoryRegionInfo object that will contain
+comment|///     the details of the memory region containing load_addr.
+comment|///
+comment|/// @return
+comment|///     An error object describes any errors that occurred while
+comment|///     querying load_addr.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBError
+name|GetMemoryRegionInfo
+argument_list|(
+argument|lldb::addr_t load_addr
+argument_list|,
+argument|lldb::SBMemoryRegionInfo&region_info
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return the list of memory regions within the process.
+comment|///
+comment|/// @return
+comment|///     A list of all witin the process memory regions.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBMemoryRegionInfoList
+name|GetMemoryRegions
+argument_list|()
+expr_stmt|;
 name|protected
 label|:
 name|friend

@@ -183,6 +183,8 @@ argument_list|(
 argument|const lldb::ModuleSP module
 argument_list|,
 argument|const lldb::ThreadSP thread
+argument_list|,
+argument|lldb::addr_t tls_file_addr
 argument_list|)
 name|override
 block|;

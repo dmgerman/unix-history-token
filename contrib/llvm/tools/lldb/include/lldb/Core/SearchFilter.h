@@ -228,7 +228,6 @@ operator|~
 name|SearchFilter
 argument_list|()
 expr_stmt|;
-specifier|const
 name|SearchFilter
 modifier|&
 name|operator
@@ -653,7 +652,6 @@ name|SearchFilterByModule
 argument_list|()
 name|override
 block|;
-specifier|const
 name|SearchFilterByModule
 operator|&
 name|operator
@@ -790,7 +788,6 @@ name|SearchFilterByModuleList
 argument_list|()
 name|override
 block|;
-specifier|const
 name|SearchFilterByModuleList
 operator|&
 name|operator
@@ -932,7 +929,6 @@ name|SearchFilterByModuleListAndCU
 argument_list|()
 name|override
 block|;
-specifier|const
 name|SearchFilterByModuleListAndCU
 operator|&
 name|operator

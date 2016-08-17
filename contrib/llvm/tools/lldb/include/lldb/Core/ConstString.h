@@ -510,6 +510,49 @@ name|nullptr
 expr_stmt|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Equal to operator
+comment|///
+comment|/// Returns true if this string is equal to the string in \a rhs.
+comment|/// If case sensitive equality is tested, this operation is very
+comment|/// fast as it results in a pointer comparison since all strings
+comment|/// are in a uniqued in a global string pool.
+comment|///
+comment|/// @param[in] rhs
+comment|///     The Left Hand Side const ConstString object reference.
+comment|///
+comment|/// @param[in] rhs
+comment|///     The Right Hand Side const ConstString object reference.
+comment|///
+comment|/// @param[in] case_sensitive
+comment|///     Case sensitivity. If true, case sensitive equality
+comment|///     will be tested, otherwise character case will be ignored
+comment|///
+comment|/// @return
+comment|///     @li \b true if this object is equal to \a rhs.
+comment|///     @li \b false if this object is not equal to \a rhs.
+comment|//------------------------------------------------------------------
+specifier|static
+name|bool
+name|Equals
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|lhs
+parameter_list|,
+specifier|const
+name|ConstString
+modifier|&
+name|rhs
+parameter_list|,
+specifier|const
+name|bool
+name|case_sensitive
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Compare two string objects.
 comment|///
 comment|/// Compares the C string values contained in \a lhs and \a rhs and
@@ -525,6 +568,10 @@ comment|///     The Left Hand Side const ConstString object reference.
 comment|///
 comment|/// @param[in] rhs
 comment|///     The Right Hand Side const ConstString object reference.
+comment|///
+comment|/// @param[in] case_sensitive
+comment|///     Case sensitivity of compare. If true, case sensitive compare
+comment|///     will be performed, otherwise character case will be ignored
 comment|///
 comment|/// @return
 comment|///     @li -1 if lhs< rhs
@@ -544,6 +591,12 @@ specifier|const
 name|ConstString
 modifier|&
 name|rhs
+parameter_list|,
+specifier|const
+name|bool
+name|case_sensitive
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------

@@ -140,6 +140,16 @@ name|size_t
 name|idx
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetStringAtIndex
+argument_list|(
+name|size_t
+name|idx
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|Clear
 parameter_list|()

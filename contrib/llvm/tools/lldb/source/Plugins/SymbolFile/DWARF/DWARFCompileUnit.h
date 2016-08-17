@@ -380,6 +380,13 @@ modifier|*
 name|debug_aranges
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|ByteOrder
+name|GetByteOrder
+argument_list|()
+specifier|const
+expr_stmt|;
 name|lldb_private
 operator|::
 name|TypeSystem

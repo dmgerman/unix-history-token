@@ -192,6 +192,15 @@ name|description
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|AppendPathComponent
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file_or_directory
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|friend

@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -118,6 +118,10 @@ operator|&
 name|sc
 argument_list|)
 expr_stmt|;
+name|bool
+name|GetAllowAssemblyEmulationUnwindPlans
+parameter_list|()
+function_decl|;
 comment|// Normally when we create a new FuncUnwinders object we track it in this UnwindTable so it can
 comment|// be reused later.  But for the target modules show-unwind we want to create brand new
 comment|// UnwindPlans for the function of interest - so ignore any existing FuncUnwinders for that
@@ -201,9 +205,11 @@ name|bool
 name|m_initialized
 decl_stmt|;
 comment|// delay some initialization until ObjectFile is set up
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr

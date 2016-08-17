@@ -232,6 +232,8 @@ operator|&
 name|description
 argument_list|)
 decl_stmt|;
+comment|// deprecated, these two functions do not take
+comment|// ownership of file handle
 name|void
 name|SetImmediateOutputFile
 parameter_list|(
@@ -246,6 +248,28 @@ parameter_list|(
 name|FILE
 modifier|*
 name|fh
+parameter_list|)
+function_decl|;
+name|void
+name|SetImmediateOutputFile
+parameter_list|(
+name|FILE
+modifier|*
+name|fh
+parameter_list|,
+name|bool
+name|transfer_ownership
+parameter_list|)
+function_decl|;
+name|void
+name|SetImmediateErrorFile
+parameter_list|(
+name|FILE
+modifier|*
+name|fh
+parameter_list|,
+name|bool
+name|transfer_ownership
 parameter_list|)
 function_decl|;
 name|void

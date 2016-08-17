@@ -92,13 +92,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Target/LanguageRuntime.h"
+file|"lldb/Core/Module.h"
 end_include
 
 begin_include
@@ -110,7 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/Module.h"
+file|"lldb/Target/LanguageRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
 end_include
 
 begin_decl_stmt
@@ -159,6 +159,17 @@ operator|<
 name|RSKernelDescriptor
 operator|>
 name|RSKernelDescriptorSP
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|array
+operator|<
+name|uint32_t
+operator|,
+literal|3
+operator|>
+name|RSCoordinate
 expr_stmt|;
 comment|// Breakpoint Resolvers decide where a breakpoint is placed,
 comment|// so having our own allows us to limit the search scope to RS kernel modules.
@@ -355,7 +366,7 @@ name|m_name
 argument_list|(
 argument|name
 argument_list|)
-block|{     }
+block|{}
 name|void
 name|Dump
 argument_list|(
@@ -392,7 +403,7 @@ name|m_module
 argument_list|(
 argument|module
 argument_list|)
-block|{     }
+block|{}
 operator|~
 name|RSModuleDescriptor
 argument_list|()
@@ -595,9 +606,9 @@ block|;
 name|TypeAndOrName
 name|FixUpDynamicType
 argument_list|(
-argument|const TypeAndOrName& type_and_or_name
+argument|const TypeAndOrName&type_and_or_name
 argument_list|,
-argument|ValueObject& static_value
+argument|ValueObject&static_value
 argument_list|)
 name|override
 block|;
@@ -632,12 +643,6 @@ operator|&
 name|module_sp
 argument_list|)
 block|;
-name|bool
-name|ProbeModules
-argument_list|(
-argument|const ModuleList module_list
-argument_list|)
-block|;
 name|void
 name|DumpModules
 argument_list|(
@@ -664,7 +669,7 @@ name|DumpAllocation
 argument_list|(
 argument|Stream&strm
 argument_list|,
-argument|StackFrame* frame_ptr
+argument|StackFrame *frame_ptr
 argument_list|,
 argument|const uint32_t id
 argument_list|)
@@ -674,9 +679,21 @@ name|ListAllocations
 argument_list|(
 argument|Stream&strm
 argument_list|,
-argument|StackFrame* frame_ptr
+argument|StackFrame *frame_ptr
 argument_list|,
-argument|bool recompute
+argument|const uint32_t index
+argument_list|)
+block|;
+name|bool
+name|RecomputeAllAllocations
+argument_list|(
+name|Stream
+operator|&
+name|strm
+argument_list|,
+name|StackFrame
+operator|*
+name|frame_ptr
 argument_list|)
 block|;
 name|void
@@ -725,9 +742,9 @@ argument|Stream&strm
 argument_list|,
 argument|const uint32_t alloc_id
 argument_list|,
-argument|const char* filename
+argument|const char *filename
 argument_list|,
-argument|StackFrame* frame_ptr
+argument|StackFrame *frame_ptr
 argument_list|)
 block|;
 name|bool
@@ -737,9 +754,9 @@ argument|Stream&strm
 argument_list|,
 argument|const uint32_t alloc_id
 argument_list|,
-argument|const char* filename
+argument|const char *filename
 argument_list|,
-argument|StackFrame* frame_ptr
+argument|StackFrame *frame_ptr
 argument_list|)
 block|;
 name|void
@@ -764,6 +781,21 @@ name|uint32_t
 name|GetPluginVersion
 argument_list|()
 name|override
+block|;
+specifier|static
+name|bool
+name|GetKernelCoordinate
+argument_list|(
+name|lldb_renderscript
+operator|::
+name|RSCoordinate
+operator|&
+name|coord
+argument_list|,
+name|Thread
+operator|*
+name|thread_ptr
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -852,7 +884,7 @@ name|BreakOnModuleKernels
 argument_list|(
 argument|const lldb_renderscript::RSModuleDescriptorSP rsmodule_sp
 argument_list|)
-block|;          struct
+block|;      struct
 name|RuntimeHook
 block|;
 typedef|typedef
@@ -1020,7 +1052,7 @@ name|std
 operator|::
 name|shared_ptr
 operator|<
-name|int
+name|uint32_t
 operator|>>
 name|m_conditional_breaks
 expr_stmt|;
@@ -1052,39 +1084,6 @@ name|s_runtimeHookCount
 decl_stmt|;
 name|private
 label|:
-comment|// Used to index expression format strings
-enum|enum
-name|ExpressionStrings
-block|{
-name|eExprGetOffsetPtr
-init|=
-literal|0
-block|,
-name|eExprAllocGetType
-block|,
-name|eExprTypeDimX
-block|,
-name|eExprTypeDimY
-block|,
-name|eExprTypeDimZ
-block|,
-name|eExprTypeElemPtr
-block|,
-name|eExprElementType
-block|,
-name|eExprElementKind
-block|,
-name|eExprElementVec
-block|,
-name|eExprElementFieldCount
-block|,
-name|eExprSubelementsId
-block|,
-name|eExprSubelementsName
-block|,
-name|eExprSubelementsArrSize
-block|}
-enum|;
 name|RenderScriptRuntime
 argument_list|(
 name|Process
@@ -1151,23 +1150,8 @@ modifier|&
 name|context
 parameter_list|)
 function_decl|;
-name|bool
-name|GetArgSimple
-parameter_list|(
-name|ExecutionContext
-modifier|&
-name|context
-parameter_list|,
-name|uint32_t
-name|arg
-parameter_list|,
-name|uint64_t
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
 name|void
-name|CaptureScriptInit1
+name|CaptureScriptInit
 parameter_list|(
 name|RuntimeHook
 modifier|*
@@ -1179,7 +1163,7 @@ name|context
 parameter_list|)
 function_decl|;
 name|void
-name|CaptureAllocationInit1
+name|CaptureAllocationInit
 parameter_list|(
 name|RuntimeHook
 modifier|*
@@ -1203,7 +1187,19 @@ name|context
 parameter_list|)
 function_decl|;
 name|void
-name|CaptureSetGlobalVar1
+name|CaptureSetGlobalVar
+parameter_list|(
+name|RuntimeHook
+modifier|*
+name|hook_info
+parameter_list|,
+name|ExecutionContext
+modifier|&
+name|context
+parameter_list|)
+function_decl|;
+name|void
+name|CaptureScriptInvokeForEachMulti
 parameter_list|(
 name|RuntimeHook
 modifier|*
@@ -1316,15 +1312,6 @@ function_decl|;
 comment|//
 comment|// Helper functions for jitting the runtime
 comment|//
-specifier|const
-name|char
-modifier|*
-name|JITTemplate
-parameter_list|(
-name|ExpressionStrings
-name|e
-parameter_list|)
-function_decl|;
 name|bool
 name|JITDataPointer
 parameter_list|(
@@ -1336,20 +1323,17 @@ name|StackFrame
 modifier|*
 name|frame_ptr
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 name|x
 init|=
 literal|0
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 name|y
 init|=
 literal|0
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 name|z
 init|=
 literal|0

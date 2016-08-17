@@ -508,6 +508,10 @@ modifier|&
 name|b
 parameter_list|)
 function_decl|;
+name|void
+name|Clear
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 specifier|const

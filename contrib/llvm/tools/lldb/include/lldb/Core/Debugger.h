@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -200,9 +206,6 @@ name|UserID
 decl_stmt|,
 name|public
 name|Properties
-decl_stmt|,
-name|public
-name|BroadcasterManager
 block|{
 name|friend
 name|class
@@ -468,13 +471,14 @@ operator|*
 name|m_command_interpreter_ap
 return|;
 block|}
-name|Listener
-modifier|&
+name|lldb
+operator|::
+name|ListenerSP
 name|GetListener
-parameter_list|()
+argument_list|()
 block|{
 return|return
-name|m_listener
+name|m_listener_sp
 return|;
 block|}
 comment|// This returns the Debugger's scratch source manager.  It won't be able to look up files in debug
@@ -1020,6 +1024,16 @@ modifier|*
 name|GetDummyTarget
 parameter_list|()
 function_decl|;
+name|lldb
+operator|::
+name|BroadcasterManagerSP
+name|GetBroadcasterManager
+argument_list|()
+block|{
+return|return
+name|m_broadcaster_manager_sp
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -1163,6 +1177,14 @@ operator|::
 name|StreamFileSP
 name|m_error_file_sp
 expr_stmt|;
+name|lldb
+operator|::
+name|BroadcasterManagerSP
+name|m_broadcaster_manager_sp
+expr_stmt|;
+comment|// The debugger acts as a broadcaster manager of last resort.
+comment|// It needs to get constructed before the target_list or any other
+comment|// member that might want to broadcast through the debugger.
 name|TerminalState
 name|m_terminal_state
 decl_stmt|;
@@ -1172,9 +1194,11 @@ decl_stmt|;
 name|PlatformList
 name|m_platform_list
 decl_stmt|;
-name|Listener
-name|m_listener
-decl_stmt|;
+name|lldb
+operator|::
+name|ListenerSP
+name|m_listener_sp
+expr_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -1261,6 +1285,11 @@ name|lldb
 operator|::
 name|ListenerSP
 name|m_forward_listener_sp
+expr_stmt|;
+name|std
+operator|::
+name|once_flag
+name|m_clear_once
 expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Events for m_sync_broadcaster

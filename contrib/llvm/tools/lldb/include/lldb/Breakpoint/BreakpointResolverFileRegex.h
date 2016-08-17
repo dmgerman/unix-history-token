@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Breakpoint/BreakpointResolver.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ConstString.h"
 end_include
 
 begin_decl_stmt
@@ -87,6 +99,8 @@ argument_list|(
 argument|Breakpoint *bkpt
 argument_list|,
 argument|RegularExpression&regex
+argument_list|,
+argument|const std::unordered_set<std::string>&func_name_set
 argument_list|,
 argument|bool exact_match
 argument_list|)
@@ -132,6 +146,15 @@ argument|Stream *s
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|AddFunctionName
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|func_name
+argument_list|)
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -187,6 +210,18 @@ comment|// This is the line expression that we are looking for.
 name|bool
 name|m_exact_match
 block|;
+comment|// If true, then if the source we match is in a comment, we won't set a location there.
+name|std
+operator|::
+name|unordered_set
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|m_function_names
+block|;
+comment|// Limit the search to functions in the comp_unit passed in.
 name|private
 operator|:
 name|DISALLOW_COPY_AND_ASSIGN
