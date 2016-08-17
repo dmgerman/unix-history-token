@@ -3503,9 +3503,6 @@ operator|->
 name|ifp
 operator|->
 name|if_index
-operator|%
-name|netisr_get_cpucount
-argument_list|()
 argument_list|)
 expr_stmt|;
 name|scb
@@ -3519,9 +3516,6 @@ operator|->
 name|ifp
 operator|->
 name|if_index
-operator|%
-name|netisr_get_cpucount
-argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Initialise pseudo media types. */
