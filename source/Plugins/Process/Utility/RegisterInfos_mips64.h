@@ -55,6 +55,12 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/dwarf.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -169,7 +175,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR_linux_mips*)0)->reg), GPR_OFFSET(reg), eEncodingUint, \           eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((GPR_linux_mips*)0)->reg), GPR_OFFSET(reg), eEncodingUint, \           eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
 
 begin_else
@@ -195,7 +201,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR_freebsd_mips*)0)->reg), GPR_OFFSET(reg), eEncodingUint, \           eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((GPR_freebsd_mips*)0)->reg), GPR_OFFSET(reg), eEncodingUint, \           eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
 
 begin_endif
@@ -221,8 +227,62 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR_linux_mips*)0)->reg) / 2, GPR_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((GPR_linux_mips*)0)->reg) / 2, GPR_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
+
+begin_decl_stmt
+specifier|const
+name|uint8_t
+name|dwarf_opcode_mips64
+index|[]
+init|=
+block|{
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_regx
+block|,
+name|dwarf_sr_mips64
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit1
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit26
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_shl
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_and
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit26
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_shr
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -242,7 +302,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((FPR_linux_mips*)0)->reg), FPR_OFFSET(reg), eEncodingIEEE754,  \       eFormatFloat, { kind1, kind2, kind3, kind4, fpr_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((FPR_linux_mips*)0)->reg), FPR_OFFSET(reg), eEncodingIEEE754,  \       eFormatFloat, { kind1, kind2, kind3, kind4, fpr_##reg##_mips64 }, NULL, NULL, dwarf_opcode_mips64, sizeof(dwarf_opcode_mips64)}
 end_define
 
 begin_define
@@ -263,7 +323,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((FPR_linux_mips*)0)->reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, fpr_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((FPR_linux_mips*)0)->reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, fpr_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
 
 begin_define
@@ -284,7 +344,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingVector,   \       eFormatVectorOfUInt8, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingVector,   \       eFormatVectorOfUInt8, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
 
 begin_define
@@ -305,7 +365,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL }
+value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, msa_##reg##_mips64 }, NULL, NULL, NULL, 0}
 end_define
 
 begin_decl_stmt

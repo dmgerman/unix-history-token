@@ -61,20 +61,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_isatty
-value|isatty
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYS_tgkill
-value|__NR_tgkill
-end_define
-
 begin_decl_stmt
 name|namespace
 name|std

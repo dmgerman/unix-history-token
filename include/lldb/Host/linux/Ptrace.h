@@ -53,18 +53,11 @@ directive|include
 file|<sys/ptrace.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ANDROID_NDK__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PT_DETACH
-value|PTRACE_DETACH
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GLIBC__
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -92,12 +85,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PT_GETREGS
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|PTRACE_GETREGS
 end_ifndef
 
@@ -112,17 +99,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PT_SETREGS
-end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -142,17 +118,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PT_GETFPREGS
-end_ifndef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -171,17 +136,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PT_SETFPREGS
-end_ifndef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -194,11 +148,6 @@ directive|define
 name|PTRACE_SETFPREGS
 value|15
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
