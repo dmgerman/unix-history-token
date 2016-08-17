@@ -415,6 +415,8 @@ name|UnknownEnvironment
 block|,
 name|GNU
 block|,
+name|GNUABI64
+block|,
 name|GNUEABI
 block|,
 name|GNUEABIHF
@@ -1402,6 +1404,12 @@ operator|==
 name|Triple
 operator|::
 name|GNU
+operator|||
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNUABI64
 operator|||
 name|Env
 operator|==

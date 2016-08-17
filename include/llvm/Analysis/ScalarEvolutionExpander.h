@@ -743,6 +743,26 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+comment|/// \brief Insert code to directly compute the specified SCEV expression
+comment|/// into the program.  The inserted code is inserted into the SCEVExpander's
+comment|/// current insertion point. If a type is specified, the result will be
+comment|/// expanded to have that type, with a cast if necessary.
+name|Value
+modifier|*
+name|expandCodeFor
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|SH
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// \brief Generates a code sequence that evaluates this predicate.
 comment|/// The inserted instructions will be at position \p Loc.
 comment|/// The result will be of type i1 and will have a value of 0 when the
@@ -920,6 +940,31 @@ block|{
 name|LSRMode
 operator|=
 name|true
+expr_stmt|;
+block|}
+comment|/// \brief Set the current insertion point. This is useful if multiple calls
+comment|/// to expandCodeFor() are going to be made with the same insert point and
+comment|/// the insert point may be moved during one of the expansions (e.g. if the
+comment|/// insert point is not a block terminator).
+name|void
+name|setInsertPoint
+parameter_list|(
+name|Instruction
+modifier|*
+name|IP
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|IP
+argument_list|)
+expr_stmt|;
+name|Builder
+operator|.
+name|SetInsertPoint
+argument_list|(
+name|IP
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Clear the current insertion point. This is useful if the
@@ -1167,26 +1212,6 @@ specifier|const
 name|SCEV
 modifier|*
 name|S
-parameter_list|)
-function_decl|;
-comment|/// \brief Insert code to directly compute the specified SCEV expression
-comment|/// into the program.  The inserted code is inserted into the SCEVExpander's
-comment|/// current insertion point. If a type is specified, the result will be
-comment|/// expanded to have that type, with a cast if necessary.
-name|Value
-modifier|*
-name|expandCodeFor
-parameter_list|(
-specifier|const
-name|SCEV
-modifier|*
-name|SH
-parameter_list|,
-name|Type
-modifier|*
-name|Ty
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine the most "relevant" loop for the given SCEV.

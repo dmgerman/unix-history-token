@@ -1595,6 +1595,14 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|CallGraphNode
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|CallGraphNode
 operator|::
 name|CallRecord
 name|CGNPairTy
@@ -1740,6 +1748,15 @@ name|CallGraphNode
 name|NodeType
 typedef|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|CallGraphNode
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

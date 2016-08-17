@@ -91,12 +91,18 @@ expr|struct
 name|GraphTraits
 block|{
 comment|// Elements to provide:
+comment|// NOTICE: We are in a transition from migration interfaces that require
+comment|// NodeType *, to NodeRef. NodeRef is required to be cheap to copy, but does
+comment|// not have to be a raw pointer. In the transition, user should define
+comment|// NodeType, and NodeRef = NodeType *.
+comment|//
 comment|// typedef NodeType          - Type of Node in the graph
+comment|// typedef NodeRef           - NodeType *
 comment|// typedef ChildIteratorType - Type used to iterate over children in graph
-comment|// static NodeType *getEntryNode(const GraphType&)
+comment|// static NodeRef getEntryNode(const GraphType&)
 comment|//    Return the entry node of the graph
-comment|// static ChildIteratorType child_begin(NodeType *)
-comment|// static ChildIteratorType child_end  (NodeType *)
+comment|// static ChildIteratorType child_begin(NodeRef)
+comment|// static ChildIteratorType child_end  (NodeRef)
 comment|//    Return iterators that point to the beginning and ending of the child
 comment|//    node list for the specified node.
 comment|//
@@ -119,7 +125,7 @@ name|typename
 name|GraphType
 operator|::
 name|UnknownGraphTypeError
-name|NodeType
+name|NodeRef
 expr_stmt|;
 block|}
 empty_stmt|;

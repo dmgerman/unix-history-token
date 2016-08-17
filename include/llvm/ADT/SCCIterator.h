@@ -166,8 +166,7 @@ operator|<
 name|typename
 name|GT
 operator|::
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 operator|,
 name|ptrdiff_t
@@ -177,8 +176,8 @@ typedef|typedef
 name|typename
 name|GT
 operator|::
-name|NodeType
-name|NodeType
+name|NodeRef
+name|NodeRef
 expr_stmt|;
 typedef|typedef
 name|typename
@@ -192,8 +191,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|SccTy
 expr_stmt|;
@@ -208,8 +206,7 @@ comment|/// Element of VisitStack during DFS.
 struct|struct
 name|StackElement
 block|{
-name|NodeType
-modifier|*
+name|NodeRef
 name|Node
 decl_stmt|;
 comment|///< The current node pointer.
@@ -223,7 +220,7 @@ decl_stmt|;
 comment|///< Minimum uplink value of all children of Node.
 name|StackElement
 argument_list|(
-argument|NodeType *Node
+argument|NodeRef Node
 argument_list|,
 argument|const ChildItTy&Child
 argument_list|,
@@ -287,8 +284,7 @@ name|visitNum
 decl_stmt|;
 name|DenseMap
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|,
 name|unsigned
 operator|>
@@ -299,8 +295,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|>
 name|SCCNodeStack
 expr_stmt|;
@@ -322,8 +317,7 @@ comment|/// A single "visit" within the non-recursive DFS traversal.
 name|void
 name|DFSVisitOne
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|N
 parameter_list|)
 function_decl|;
@@ -339,11 +333,9 @@ parameter_list|()
 function_decl|;
 name|scc_iterator
 argument_list|(
-name|NodeType
-operator|*
-name|entryN
+argument|NodeRef entryN
 argument_list|)
-operator|:
+block|:
 name|visitNum
 argument_list|(
 literal|0
@@ -353,22 +345,26 @@ name|DFSVisitOne
 argument_list|(
 name|entryN
 argument_list|)
-block|;
+expr_stmt|;
 name|GetNextSCC
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 comment|/// End is when the DFS stack is empty.
 name|scc_iterator
 argument_list|()
 block|{}
 name|public
-operator|:
+label|:
 specifier|static
 name|scc_iterator
 name|begin
-argument_list|(
-argument|const GraphT&G
-argument_list|)
+parameter_list|(
+specifier|const
+name|GraphT
+modifier|&
+name|G
+parameter_list|)
 block|{
 return|return
 name|scc_iterator
@@ -500,12 +496,10 @@ comment|/// has been deleted, and \c New is to be used in its place.
 name|void
 name|ReplaceNode
 parameter_list|(
-name|NodeType
-modifier|*
+name|NodeRef
 name|Old
 parameter_list|,
-name|NodeType
-modifier|*
+name|NodeRef
 name|New
 parameter_list|)
 block|{
@@ -565,7 +559,7 @@ operator|>
 operator|::
 name|DFSVisitOne
 argument_list|(
-argument|NodeType *N
+argument|NodeRef N
 argument_list|)
 block|{
 operator|++
@@ -663,8 +657,7 @@ argument_list|)
 condition|)
 block|{
 comment|// TOS has at least one more child so continue DFS
-name|NodeType
-modifier|*
+name|NodeRef
 name|childN
 init|=
 operator|*
@@ -679,8 +672,7 @@ decl_stmt|;
 name|typename
 name|DenseMap
 operator|<
-name|NodeType
-operator|*
+name|NodeRef
 operator|,
 name|unsigned
 operator|>
@@ -785,8 +777,7 @@ name|DFSVisitChildren
 argument_list|()
 expr_stmt|;
 comment|// Pop the leaf on top of the VisitStack.
-name|NodeType
-modifier|*
+name|NodeRef
 name|visitingN
 init|=
 name|VisitStack
@@ -969,8 +960,7 @@ condition|)
 return|return
 name|true
 return|;
-name|NodeType
-operator|*
+name|NodeRef
 name|N
 operator|=
 name|CurrentSCC
