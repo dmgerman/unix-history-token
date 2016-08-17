@@ -4415,7 +4415,7 @@ name|mda
 operator|.
 name|mda_mode
 operator|=
-literal|0600
+literal|0644
 expr_stmt|;
 name|mda
 operator|.
@@ -4470,7 +4470,7 @@ name|sc
 operator|->
 name|mmap_allow_write
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
