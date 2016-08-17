@@ -50,7 +50,7 @@ name|unsigned
 name|int
 name|ql83xx_minidump_version_sub
 init|=
-literal|51
+literal|58
 decl_stmt|;
 end_decl_stmt
 
@@ -119,9 +119,9 @@ literal|0x00
 block|,
 literal|0x52
 block|,
-literal|0x17
+literal|0x1d
 block|,
-literal|0x55
+literal|0x95
 block|,
 literal|0x7b
 block|,
@@ -69647,7 +69647,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x24
+literal|0x22
 block|,
 literal|0xd5
 block|,
@@ -69841,7 +69841,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x80
+literal|0x60
 block|,
 literal|0x03
 block|,
@@ -72335,7 +72335,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0xea
+literal|0xe8
 block|,
 literal|0xd4
 block|,
@@ -72431,9 +72431,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0xd6
+literal|0xd4
 block|,
-literal|0x96
+literal|0x76
 block|,
 literal|0x03
 block|,
@@ -262153,7 +262153,7 @@ literal|0x05
 block|,
 literal|0x04
 block|,
-literal|0x33
+literal|0x3a
 block|,
 literal|0x00
 block|,
@@ -262168,6 +262168,10 @@ block|,
 literal|0xe0
 block|,
 literal|0xff
+block|,
+literal|0x01
+block|,
+literal|0x00
 block|,
 literal|0x01
 block|,
@@ -262193,15 +262197,11 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x35
+literal|0x34
 block|,
 literal|0x39
 block|,
-literal|0x8b
+literal|0x84
 block|,
 literal|0xbf
 block|}
