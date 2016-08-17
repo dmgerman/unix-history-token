@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sema.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signal.h>
 end_include
 
@@ -174,31 +180,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/include/hyperv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/netvsc/hv_net_vsc.h>
 end_include
 
 begin_include
@@ -1350,16 +1332,6 @@ name|devcnt
 index|]
 decl_stmt|;
 name|struct
-name|hn_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|struct
 name|vmbus_channel
 modifier|*
 name|chan
@@ -1370,7 +1342,7 @@ index|[
 name|HYPERV_GUID_STRLEN
 index|]
 decl_stmt|;
-comment|/* 			 * Trying to find GUID of Network Device 			 * TODO: need vmbus interface. 			 */
+comment|/* 			 * Trying to find GUID of Network Device 			 */
 name|chan
 operator|=
 name|vmbus_get_channel
@@ -1433,11 +1405,10 @@ name|kvp_ip_val
 operator|.
 name|adapter_id
 argument_list|,
-name|sc
-operator|->
-name|hn_ifp
-operator|->
-name|if_xname
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MAX_ADAPTER_ID_SIZE
 argument_list|)
