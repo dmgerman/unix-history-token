@@ -517,7 +517,7 @@ literal|"#130"
 block|,
 literal|"#131"
 block|,
-literal|"#132"
+literal|"SCTP"
 block|,
 literal|"#133"
 block|,
@@ -525,7 +525,7 @@ literal|"#134"
 block|,
 literal|"#135"
 block|,
-literal|"#136"
+literal|"UDPLite"
 block|,
 literal|"#137"
 block|,
