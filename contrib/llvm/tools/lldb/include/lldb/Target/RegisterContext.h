@@ -142,6 +142,22 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|// Detect the register size dynamically.
+name|uint32_t
+name|UpdateDynamicRegisterSize
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|,
+name|RegisterInfo
+operator|*
+name|reg_info
+argument_list|)
+decl_stmt|;
 name|virtual
 name|size_t
 name|GetRegisterSetCount
