@@ -1372,6 +1372,18 @@ comment|// Z7GMLT: "-debug-info-kind=line-tables-only"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl -gline-tables-only /c -### -- %s 2>&1 | FileCheck -check-prefix=ZGMLT %s
+end_comment
+
+begin_comment
+comment|// ZGMLT: "-gcodeview"
+end_comment
+
+begin_comment
+comment|// ZGMLT: "-debug-info-kind=line-tables-only"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=BreproDefault %s
 end_comment
 

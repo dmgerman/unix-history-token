@@ -108,6 +108,13 @@ typedef|typedef
 name|clang
 operator|::
 name|Stmt
+operator|*
+name|NodeRef
+expr_stmt|;
+typedef|typedef
+name|clang
+operator|::
+name|Stmt
 operator|::
 name|child_iterator
 name|ChildIteratorType
@@ -257,6 +264,17 @@ name|Stmt
 name|NodeType
 expr_stmt|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|clang
+operator|::
+name|Stmt
+operator|*
+name|NodeRef
+expr_stmt|;
+end_typedef
 
 begin_typedef
 typedef|typedef

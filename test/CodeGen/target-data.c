@@ -128,7 +128,7 @@ comment|// RUN: FileCheck %s -check-prefix=MIPS-64EL
 end_comment
 
 begin_comment
-comment|// MIPS-64EL: target datalayout = "e-m:m-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+comment|// MIPS-64EL: target datalayout = "e-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128"
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|// RUN: %s | FileCheck %s -check-prefix=MIPS-64EL-N32
 end_comment
 
 begin_comment
-comment|// MIPS-64EL-N32: target datalayout = "e-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+comment|// MIPS-64EL-N32: target datalayout = "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32:64-S128"
 end_comment
 
 begin_comment
@@ -152,7 +152,7 @@ comment|// RUN: FileCheck %s -check-prefix=MIPS-64EB
 end_comment
 
 begin_comment
-comment|// MIPS-64EB: target datalayout = "E-m:m-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+comment|// MIPS-64EB: target datalayout = "E-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128"
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ comment|// RUN: | FileCheck %s -check-prefix=MIPS-64EB-N32
 end_comment
 
 begin_comment
-comment|// MIPS-64EB-N32: target datalayout = "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+comment|// MIPS-64EB-N32: target datalayout = "E-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32:64-S128"
 end_comment
 
 begin_comment

@@ -24869,9 +24869,6 @@ name|ParmVarDecl
 operator|*
 operator|>
 name|Params
-argument_list|,
-name|bool
-name|IsConstexprSpecified
 argument_list|)
 decl_stmt|;
 end_decl_stmt

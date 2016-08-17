@@ -1765,7 +1765,7 @@ name|B
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvtsd_ss
-comment|// CHECK: fptrunc double %{{.*}} to float
+comment|// CHECK: call<4 x float> @llvm.x86.sse2.cvtsd2ss(<4 x float> %{{.*}},<2 x double> %{{.*}})
 return|return
 name|_mm_cvtsd_ss
 argument_list|(
@@ -1964,7 +1964,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvttps_epi32
-comment|// CHECK: fptosi<4 x float> %{{.*}} to<4 x i32>
+comment|// CHECK: call<4 x i32> @llvm.x86.sse2.cvttps2dq(<4 x float> %{{.*}})
 return|return
 name|_mm_cvttps_epi32
 argument_list|(
@@ -1983,8 +1983,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvttsd_si32
-comment|// CHECK: extractelement<2 x double> %{{.*}}, i32 0
-comment|// CHECK: fptosi double %{{.*}} to i32
+comment|// CHECK: call i32 @llvm.x86.sse2.cvttsd2si(<2 x double> %{{.*}})
 return|return
 name|_mm_cvttsd_si32
 argument_list|(
@@ -2004,8 +2003,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvttsd_si64
-comment|// CHECK: extractelement<2 x double> %{{.*}}, i32 0
-comment|// CHECK: fptosi double %{{.*}} to i64
+comment|// CHECK: call i64 @llvm.x86.sse2.cvttsd2si64(<2 x double> %{{.*}})
 return|return
 name|_mm_cvttsd_si64
 argument_list|(

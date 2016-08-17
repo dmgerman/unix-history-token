@@ -992,7 +992,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_cvttpd_epi32
-comment|// CHECK: fptosi<4 x double> %{{.*}} to<4 x i32>
+comment|// CHECK: call<4 x i32> @llvm.x86.avx.cvtt.pd2dq.256(<4 x double> %{{.*}})
 return|return
 name|_mm256_cvttpd_epi32
 argument_list|(
@@ -1011,7 +1011,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm256_cvttps_epi32
-comment|// CHECK: fptosi<8 x float> %{{.*}} to<8 x i32>
+comment|// CHECK: call<8 x i32> @llvm.x86.avx.cvtt.ps2dq.256(<8 x float> %{{.*}})
 return|return
 name|_mm256_cvttps_epi32
 argument_list|(

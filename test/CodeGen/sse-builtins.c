@@ -1020,8 +1020,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvtt_ss2si
-comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
-comment|// CHECK: fptosi float %{{.*}} to i32
+comment|// CHECK: call i32 @llvm.x86.sse.cvttss2si(<4 x float> %{{.*}})
 return|return
 name|_mm_cvtt_ss2si
 argument_list|(
@@ -1040,8 +1039,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvttss_si32
-comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
-comment|// CHECK: fptosi float %{{.*}} to i32
+comment|// CHECK: call i32 @llvm.x86.sse.cvttss2si(<4 x float> %{{.*}})
 return|return
 name|_mm_cvttss_si32
 argument_list|(
@@ -1061,8 +1059,7 @@ name|A
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: test_mm_cvttss_si64
-comment|// CHECK: extractelement<4 x float> %{{.*}}, i32 0
-comment|// CHECK: fptosi float %{{.*}} to i64
+comment|// CHECK: call i64 @llvm.x86.sse.cvttss2si64(<4 x float> %{{.*}})
 return|return
 name|_mm_cvttss_si64
 argument_list|(

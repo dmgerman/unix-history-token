@@ -404,10 +404,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -1 to 3}}
-end_comment
-
 begin_typedef
 typedef|typedef
 name|__typeof__

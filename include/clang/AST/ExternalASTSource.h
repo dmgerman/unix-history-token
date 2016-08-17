@@ -1719,6 +1719,12 @@ block|,
 name|T
 block|,
 name|int
+block|,
+name|T
+operator|*
+block|,
+name|T
+operator|&
 operator|>
 block|{
 name|LazyVector

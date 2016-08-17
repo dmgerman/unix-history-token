@@ -384,5 +384,75 @@ comment|// expected-error 3 {{use of undeclared identifier}}
 block|}
 end_function
 
+begin_comment
+comment|// Two typos in a parenthesized expression or argument list with a conditional
+end_comment
+
+begin_comment
+comment|// expression caused a crash in C mode.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// r272587 fixed a similar bug for binary operations. The same fix was needed for
+end_comment
+
+begin_comment
+comment|// conditional expressions.
+end_comment
+
+begin_function
+name|int
+name|g
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+block|{
+return|return
+name|x
+operator|+
+name|y
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|h
+parameter_list|()
+block|{
+name|g
+argument_list|(
+name|x
+argument_list|,
+literal|5
+condition|?
+name|z
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error 2 {{use of undeclared identifier}}
+operator|(
+name|x
+operator|,
+literal|5
+condition|?
+name|z
+else|:
+literal|0
+operator|)
+expr_stmt|;
+comment|// expected-error 2 {{use of undeclared identifier}}
+block|}
+end_function
+
 end_unit
 
