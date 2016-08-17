@@ -1359,7 +1359,7 @@ name|i
 parameter_list|)
 value|do {\ 		switch(i) {
 comment|/* XXX hardcoding in each case */
-value|\ 		case 1:\ 			p(s, "\t\t{ke:name/interface-locals}{:count/%ju} " \ 			  "{N:/interface-local%s}\n");	\ 			break;\ 		case 2:\ 			p(s,"\t\t{ke:name/link-locals}{:count/%ju} " \ 			"{N:/link-local%s}\n"); \ 			break;\ 		case 5:\ 			p(s,"\t\t{ke:name/site-locals}{:count/%ju} " \ 			  "{N:/site-local%s}\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t{ke:name/globals}{:count/%ju} " \ 			  "{N:/global%s}\n");\ 			break;\ 		default:\ 			xo_emit("\t\t{qke:name/%x}{:count/%ju} " \ 				"addresses scope=%x\n",\ 				i, (uintmax_t)ip6stat.s, i);	   \ 		}\ 	} while (0);
+value|\ 		case 1:\ 			p(s, "\t\t{ke:name/interface-locals}{:count/%ju} " \ 			  "{N:/interface-local%s}\n");	\ 			break;\ 		case 2:\ 			p(s,"\t\t{ke:name/link-locals}{:count/%ju} " \ 			"{N:/link-local%s}\n"); \ 			break;\ 		case 5:\ 			p(s,"\t\t{ke:name/site-locals}{:count/%ju} " \ 			  "{N:/site-local%s}\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t{ke:name/globals}{:count/%ju} " \ 			  "{N:/global%s}\n");\ 			break;\ 		default:\ 			xo_emit("\t\t{qke:name/%#x}{:count/%ju} " \ 				"{N:/addresses scope=%#x}\n",\ 				i, (uintmax_t)ip6stat.s, i);	   \ 		}\ 	} while (0);
 name|xo_open_container
 argument_list|(
 literal|"source-address-selection"
