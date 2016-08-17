@@ -2408,7 +2408,7 @@ name|pkt
 operator|->
 name|status
 operator|=
-name|nvsp_status_failure
+name|HN_NVS_STATUS_FAILED
 expr_stmt|;
 name|if_printf
 argument_list|(
@@ -2472,7 +2472,7 @@ name|pkt
 operator|->
 name|status
 operator|=
-name|nvsp_status_failure
+name|HN_NVS_STATUS_FAILED
 expr_stmt|;
 name|if_printf
 argument_list|(
@@ -2580,7 +2580,7 @@ name|pkt
 operator|->
 name|status
 operator|=
-name|nvsp_status_failure
+name|HN_NVS_STATUS_FAILED
 expr_stmt|;
 return|return
 operator|(
@@ -2611,7 +2611,7 @@ name|pkt
 operator|->
 name|status
 operator|=
-name|nvsp_status_failure
+name|HN_NVS_STATUS_FAILED
 expr_stmt|;
 return|return
 operator|(

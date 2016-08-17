@@ -3442,7 +3442,7 @@ decl_stmt|;
 name|int
 name|status
 init|=
-name|nvsp_status_success
+name|HN_NVS_STATUS_OK
 decl_stmt|;
 comment|/* Make sure that this is a RNDIS message. */
 name|nvs_hdr
@@ -3538,7 +3538,7 @@ name|net_vsc_pkt
 operator|->
 name|status
 operator|=
-name|nvsp_status_success
+name|HN_NVS_STATUS_OK
 expr_stmt|;
 name|net_vsc_pkt
 operator|->
@@ -3585,20 +3585,19 @@ argument_list|,
 name|net_vsc_pkt
 argument_list|)
 expr_stmt|;
+comment|/* XXX pretty broken; whack it */
 if|if
 condition|(
 name|net_vsc_pkt
 operator|->
 name|status
 operator|!=
-name|nvsp_status_success
+name|HN_NVS_STATUS_OK
 condition|)
-block|{
 name|status
 operator|=
-name|nvsp_status_failure
+name|HN_NVS_STATUS_FAILED
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Moved completion call back here so that all received  	 * messages (not just data messages) will trigger a response 	 * message back to the host. 	 */
 name|hv_nv_on_receive_completion
