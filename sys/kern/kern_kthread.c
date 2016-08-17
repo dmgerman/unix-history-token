@@ -1254,16 +1254,25 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|p
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|td
 operator|=
 name|curthread
+expr_stmt|;
+name|p
+operator|=
+name|td
 operator|->
 name|td_proc
 expr_stmt|;
 comment|/* A module may be waiting for us to exit. */
 name|wakeup
 argument_list|(
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The last exiting thread in a kernel process must tear down 	 * the whole process. 	 */
@@ -1306,7 +1315,7 @@ expr_stmt|;
 block|}
 name|LIST_REMOVE
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 name|td_hash
 argument_list|)
@@ -1319,7 +1328,12 @@ argument_list|)
 expr_stmt|;
 name|umtx_thread_exit
 argument_list|(
-name|curthread
+name|td
+argument_list|)
+expr_stmt|;
+name|tdsigcleanup
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|PROC_SLOCK
