@@ -2550,15 +2550,7 @@ if|if
 condition|(
 name|vm_guest
 operator|==
-name|VM_GUEST_VM
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|hv_vendor
-argument_list|,
-literal|"KVMKVMKVM"
-argument_list|)
+name|VM_GUEST_KVM
 condition|)
 block|{
 if|if
