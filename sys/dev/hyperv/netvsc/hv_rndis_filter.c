@@ -211,6 +211,7 @@ name|rndis_device
 modifier|*
 name|device
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|response
@@ -227,6 +228,7 @@ name|rndis_device
 modifier|*
 name|device
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|response
@@ -244,6 +246,7 @@ name|hn_rx_ring
 modifier|*
 name|rxr
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|message
@@ -1345,6 +1348,7 @@ name|rndis_device
 modifier|*
 name|device
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|response
@@ -1893,11 +1897,13 @@ name|rndis_device
 modifier|*
 name|device
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|response
 parameter_list|)
 block|{
+specifier|const
 name|rndis_indicate_status
 modifier|*
 name|indicate
@@ -2318,6 +2324,7 @@ name|hn_rx_ring
 modifier|*
 name|rxr
 parameter_list|,
+specifier|const
 name|rndis_msg
 modifier|*
 name|message
@@ -2327,6 +2334,7 @@ modifier|*
 name|pkt
 parameter_list|)
 block|{
+specifier|const
 name|rndis_packet
 modifier|*
 name|rndis_pkt
@@ -2494,6 +2502,7 @@ name|rndis_device
 modifier|*
 name|rndis_dev
 decl_stmt|;
+specifier|const
 name|rndis_msg
 modifier|*
 name|rndis_hdr
