@@ -6207,7 +6207,7 @@ name|p2
 decl_stmt|;
 return|return
 operator|(
-name|strcmp
+name|strcoll
 argument_list|(
 name|s1
 argument_list|,
