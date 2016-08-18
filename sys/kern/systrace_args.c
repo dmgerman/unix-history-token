@@ -6832,58 +6832,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* openbsd_poll */
-case|case
-literal|252
-case|:
-block|{
-name|struct
-name|openbsd_poll_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|fds
-expr_stmt|;
-comment|/* struct pollfd * */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-name|p
-operator|->
-name|nfds
-expr_stmt|;
-comment|/* u_int */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|timeout
-expr_stmt|;
-comment|/* int */
-operator|*
-name|n_args
-operator|=
-literal|3
-expr_stmt|;
-break|break;
-block|}
 comment|/* issetugid */
 case|case
 literal|253
@@ -23087,44 +23035,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* openbsd_poll */
-case|case
-literal|252
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"struct pollfd *"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"u_int"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
 comment|/* issetugid */
 case|case
 literal|253
@@ -34044,25 +33954,6 @@ break|break;
 comment|/* rfork */
 case|case
 literal|251
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* openbsd_poll */
-case|case
-literal|252
 case|:
 if|if
 condition|(
