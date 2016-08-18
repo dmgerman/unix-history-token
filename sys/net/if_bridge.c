@@ -456,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|BRIDGE_IFCAPS_MASK
-value|(IFCAP_TOE|IFCAP_TSO|IFCAP_TXCSUM)
+value|(IFCAP_TOE|IFCAP_TSO|IFCAP_TXCSUM|\ 					 IFCAP_TXCSUM_IPV6)
 end_define
 
 begin_comment
