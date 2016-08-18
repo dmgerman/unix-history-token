@@ -163,49 +163,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|RCR_PRO
+name|RCR_PROMISC
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_AMALL
+name|RCR_ACPT_ALL_MCAST
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_AB
+name|RCR_AUTOPAD_BNDRY
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_ACPT_BCAST
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_AM
+name|RCR_ACPT_MCAST
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_AP
+name|RCR_ACPT_PHY_MCAST
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_SO
+name|RCR_START
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|RCR_DROP_CRCE
+name|RCR_DROP_CRCERR
 value|0x0100
 end_define
 

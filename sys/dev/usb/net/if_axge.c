@@ -3670,7 +3670,7 @@ condition|)
 block|{
 name|rxmode
 operator||=
-name|RCR_AMALL
+name|RCR_ACPT_ALL_MCAST
 expr_stmt|;
 name|axge_write_cmd_2
 argument_list|(
@@ -3690,7 +3690,7 @@ block|}
 name|rxmode
 operator|&=
 operator|~
-name|RCR_AMALL
+name|RCR_ACPT_ALL_MCAST
 expr_stmt|;
 name|if_maddr_rlock
 argument_list|(
@@ -3856,13 +3856,13 @@ name|IFF_PROMISC
 condition|)
 name|rxmode
 operator||=
-name|RCR_PRO
+name|RCR_PROMISC
 expr_stmt|;
 else|else
 name|rxmode
 operator|&=
 operator|~
-name|RCR_PRO
+name|RCR_PROMISC
 expr_stmt|;
 name|axge_write_cmd_2
 argument_list|(
@@ -4052,11 +4052,11 @@ comment|/* Configure RX settings. */
 name|rxmode
 operator|=
 operator|(
-name|RCR_AM
+name|RCR_ACPT_MCAST
 operator||
-name|RCR_SO
+name|RCR_START
 operator||
-name|RCR_DROP_CRCE
+name|RCR_DROP_CRCERR
 operator|)
 expr_stmt|;
 if|if
@@ -4086,7 +4086,7 @@ name|IFF_PROMISC
 condition|)
 name|rxmode
 operator||=
-name|RCR_PRO
+name|RCR_PROMISC
 expr_stmt|;
 if|if
 condition|(
@@ -4098,7 +4098,7 @@ name|IFF_BROADCAST
 condition|)
 name|rxmode
 operator||=
-name|RCR_AB
+name|RCR_ACPT_BCAST
 expr_stmt|;
 name|axge_write_cmd_2
 argument_list|(
