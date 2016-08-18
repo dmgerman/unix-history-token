@@ -574,8 +574,6 @@ name|qp
 argument_list|)
 operator|-
 name|ETHER_HDR_LEN
-operator|-
-name|ETHER_CRC_LEN
 expr_stmt|;
 name|ntb_transport_link_up
 argument_list|(
@@ -806,8 +804,6 @@ name|qp
 argument_list|)
 operator|-
 name|ETHER_HDR_LEN
-operator|-
-name|ETHER_CRC_LEN
 condition|)
 block|{
 name|error
