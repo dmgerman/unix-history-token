@@ -400,10 +400,6 @@ parameter_list|)
 value|((BSWAP_32(x)<< 32) | BSWAP_32((x)>> 32))
 end_define
 
-begin_comment
-comment|/*  * Note: the boot loader can't actually read blocks larger than 128KB,  * due to lack of memory.  Therefore its SPA_MAXBLOCKSIZE is still 128KB.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -414,8 +410,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPA_MAXBLOCKSHIFT
+name|SPA_OLDMAXBLOCKSHIFT
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_MAXBLOCKSHIFT
+value|24
 end_define
 
 begin_define
@@ -423,6 +426,13 @@ define|#
 directive|define
 name|SPA_MINBLOCKSIZE
 value|(1ULL<< SPA_MINBLOCKSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_OLDMAXBLOCKSIZE
+value|(1ULL<< SPA_OLDMAXBLOCKSHIFT)
 end_define
 
 begin_define
@@ -506,6 +516,26 @@ index|]
 decl_stmt|;
 block|}
 name|zio_cksum_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Some checksums/hashes need a 256-bit initialization salt. This salt is kept  * secret and is suitable for use in MAC algorithms as the key.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|zio_cksum_salt
+block|{
+name|uint8_t
+name|zcs_bytes
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|zio_cksum_salt_t
 typedef|;
 end_typedef
 
@@ -1509,6 +1539,14 @@ block|,
 name|ZIO_CHECKSUM_SHA256
 block|,
 name|ZIO_CHECKSUM_ZILOG2
+block|,
+name|ZIO_CHECKSUM_NOPARITY
+block|,
+name|ZIO_CHECKSUM_SHA512
+block|,
+name|ZIO_CHECKSUM_SKEIN
+block|,
+name|ZIO_CHECKSUM_EDONR
 block|,
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
@@ -3832,6 +3870,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DMU_POOL_CHECKSUM_SALT
+value|"org.illumos:checksum_salt"
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZAP_MAGIC
 value|0x2F52AB2ABULL
 end_define
@@ -4736,6 +4781,12 @@ name|vdev
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|spa
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -4877,6 +4928,12 @@ modifier|*
 name|v_read_priv
 decl_stmt|;
 comment|/* private data for read function */
+name|struct
+name|spa
+modifier|*
+name|spa
+decl_stmt|;
+comment|/* link to spa */
 block|}
 name|vdev_t
 typedef|;
@@ -4936,6 +4993,17 @@ name|objset_phys_t
 name|spa_mos
 decl_stmt|;
 comment|/* MOS for this pool */
+name|zio_cksum_salt_t
+name|spa_cksum_salt
+decl_stmt|;
+comment|/* secret salt for cksum */
+name|void
+modifier|*
+name|spa_cksum_tmpls
+index|[
+name|ZIO_CHECKSUM_FUNCTIONS
+index|]
+decl_stmt|;
 name|int
 name|spa_inited
 decl_stmt|;

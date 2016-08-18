@@ -456,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|HEAP_MIN
-value|(3 * 1024 * 1024)
+value|(64 * 1024 * 1024)
 end_define
 
 begin_decl_stmt
