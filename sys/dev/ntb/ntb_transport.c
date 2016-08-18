@@ -4360,6 +4360,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entry
+operator|->
+name|buf
+operator|==
+name|NULL
+condition|)
+name|entry
+operator|->
+name|len
+operator|=
+operator|-
+name|ENOMEM
+expr_stmt|;
 comment|/* Ensure that the data is globally visible before clearing the flag */
 name|wmb
 argument_list|()
