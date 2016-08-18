@@ -1625,19 +1625,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_phyno
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|locked
 operator|=
 name|mtx_owned
@@ -2308,12 +2295,6 @@ argument_list|(
 name|ue
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_phyno
-operator|=
-literal|3
-expr_stmt|;
 comment|/* Initialize controller and get station address. */
 name|axge_chip_init
 argument_list|(
@@ -2486,9 +2467,7 @@ name|ue_mii_sts
 argument_list|,
 name|BMSR_DEFCAPMASK
 argument_list|,
-name|sc
-operator|->
-name|sc_phyno
+name|AXGE_PHY_ADDR
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,

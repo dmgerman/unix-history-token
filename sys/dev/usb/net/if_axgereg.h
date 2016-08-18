@@ -699,6 +699,13 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|AXGE_PHY_ADDR
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|axge_softc
@@ -718,9 +725,6 @@ name|sc_xfer
 index|[
 name|AXGE_N_TRANSFER
 index|]
-decl_stmt|;
-name|int
-name|sc_phyno
 decl_stmt|;
 name|int
 name|sc_flags
