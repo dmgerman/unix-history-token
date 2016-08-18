@@ -7054,8 +7054,7 @@ name|int
 name|plen
 decl_stmt|,
 name|hlen
-decl_stmt|;
-name|uint8_t
+decl_stmt|,
 name|proto
 decl_stmt|;
 comment|/* 	 * XXX: we expect ipfw_chk() did m_pullup() up to upper level 	 * protocol's headers. Also we skip some checks, that ip6_input(), 	 * ip6_forward(), ip6_fastfwd() and ipfw_chk() already did. 	 */
