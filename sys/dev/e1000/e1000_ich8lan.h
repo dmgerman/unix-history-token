@@ -1317,8 +1317,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HV_PM_CTRL_PLL_STOP_IN_K1_GIGA
-value|0x100
+name|HV_PM_CTRL_K1_CLK_REQ
+value|0x200
 end_define
 
 begin_define
