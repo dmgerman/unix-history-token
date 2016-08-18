@@ -8930,7 +8930,7 @@ argument_list|)
 expr_stmt|;
 name|ntb_reg_write
 argument_list|(
-literal|8
+literal|4
 argument_list|,
 name|lmt_reg
 argument_list|,
