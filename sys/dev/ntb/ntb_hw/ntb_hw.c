@@ -8428,7 +8428,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Set limit registers first to avoid an errata where setting the base 	 * registers locks the limit registers. 	 */
 if|if
 condition|(
 operator|!
@@ -8444,7 +8443,7 @@ name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|lmt_reg
+name|base_reg
 argument_list|,
 name|bar_addr
 argument_list|)
@@ -8455,7 +8454,7 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|lmt_reg
+name|base_reg
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8467,7 +8466,7 @@ name|ntb_reg_write
 argument_list|(
 literal|4
 argument_list|,
-name|base_reg
+name|lmt_reg
 argument_list|,
 name|bar_addr
 argument_list|)
@@ -8478,7 +8477,7 @@ name|ntb_reg_read
 argument_list|(
 literal|4
 argument_list|,
-name|base_reg
+name|lmt_reg
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8493,7 +8492,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|lmt_reg
+name|base_reg
 argument_list|,
 name|bar_addr
 argument_list|)
@@ -8504,7 +8503,7 @@ name|ntb_reg_read
 argument_list|(
 literal|8
 argument_list|,
-name|lmt_reg
+name|base_reg
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8516,7 +8515,7 @@ name|ntb_reg_write
 argument_list|(
 literal|8
 argument_list|,
-name|base_reg
+name|lmt_reg
 argument_list|,
 name|bar_addr
 argument_list|)
@@ -8527,7 +8526,7 @@ name|ntb_reg_read
 argument_list|(
 literal|8
 argument_list|,
-name|base_reg
+name|lmt_reg
 argument_list|)
 expr_stmt|;
 operator|(
