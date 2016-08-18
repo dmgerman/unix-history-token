@@ -4373,7 +4373,9 @@ literal|"RX: copied entry %p to mbuf %p."
 argument_list|,
 name|entry
 argument_list|,
-name|m
+name|entry
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 name|ntb_rx_copy_callback
