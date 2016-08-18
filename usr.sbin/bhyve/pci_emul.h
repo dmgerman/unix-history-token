@@ -982,7 +982,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pci_msi_msgnum
+name|pci_msi_maxmsgnum
 parameter_list|(
 name|struct
 name|pci_devinst
