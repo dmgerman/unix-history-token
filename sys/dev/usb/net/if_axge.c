@@ -2851,9 +2851,19 @@ argument_list|,
 literal|"allocating USB transfers failed\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|detach
-goto|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|ue
 operator|->
