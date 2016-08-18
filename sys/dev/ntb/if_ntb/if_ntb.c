@@ -2644,11 +2644,6 @@ name|counter
 init|=
 literal|0
 decl_stmt|;
-name|uint32_t
-name|seed
-init|=
-name|ticks
-decl_stmt|;
 name|eaddr
 index|[
 literal|0
@@ -2656,7 +2651,7 @@ index|]
 operator|=
 name|EUI48_LOCALLY_ADMINISTERED
 expr_stmt|;
-name|memcpy
+name|arc4rand
 argument_list|(
 operator|&
 name|eaddr
@@ -2664,13 +2659,9 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|&
-name|seed
+literal|4
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|eaddr
