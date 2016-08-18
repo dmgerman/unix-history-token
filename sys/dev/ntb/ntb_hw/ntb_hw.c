@@ -13703,6 +13703,13 @@ condition|)
 goto|goto
 name|reschedule
 goto|;
+name|intel_ntb_spad_clear
+argument_list|(
+name|ntb
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
 name|ntb
 operator|->
 name|peer_msix_good
