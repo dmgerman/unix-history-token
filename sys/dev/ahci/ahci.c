@@ -3145,6 +3145,14 @@ argument_list|,
 name|AHCI_IS
 argument_list|)
 expr_stmt|;
+name|is
+operator|&=
+operator|(
+literal|0xffffffff
+operator|<<
+name|unit
+operator|)
+expr_stmt|;
 block|}
 comment|/* CCC interrupt is edge triggered. */
 if|if
