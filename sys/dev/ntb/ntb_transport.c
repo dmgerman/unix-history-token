@@ -2305,20 +2305,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nt
-operator|->
-name|qp_count
-operator|%
-name|mw_count
-operator|&&
 name|mw_num
-operator|+
-literal|1
 operator|<
 name|nt
 operator|->
 name|qp_count
-operator|/
+operator|%
 name|mw_count
 condition|)
 name|num_qps_mw
@@ -2832,7 +2824,7 @@ argument_list|(
 operator|&
 name|nt
 operator|->
-name|qp_bitmap
+name|qp_bitmap_free
 argument_list|)
 expr_stmt|;
 if|if
@@ -3077,7 +3069,11 @@ name|ntb_printf
 argument_list|(
 literal|2
 argument_list|,
-literal|"qp client ready\n"
+literal|"qp %d client ready\n"
+argument_list|,
+name|qp
+operator|->
+name|qp_num
 argument_list|)
 expr_stmt|;
 if|if
@@ -5813,20 +5809,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|nt
-operator|->
-name|qp_count
-operator|%
-name|mw_count
-operator|&&
 name|mw_num
-operator|+
-literal|1
 operator|<
 name|nt
 operator|->
 name|qp_count
-operator|/
+operator|%
 name|mw_count
 condition|)
 name|num_qps_mw
@@ -6127,7 +6115,11 @@ name|ntb_printf
 argument_list|(
 literal|2
 argument_list|,
-literal|"qp link up\n"
+literal|"qp %d link up\n"
+argument_list|,
+name|qp
+operator|->
+name|qp_num
 argument_list|)
 expr_stmt|;
 name|qp
