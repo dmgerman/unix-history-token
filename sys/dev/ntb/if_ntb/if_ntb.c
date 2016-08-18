@@ -200,7 +200,7 @@ specifier|static
 name|unsigned
 name|g_if_ntb_num_queues
 init|=
-literal|1
+name|UINT_MAX
 decl_stmt|;
 end_decl_stmt
 
@@ -646,7 +646,15 @@ name|sc
 operator|->
 name|num_queues
 operator|=
+name|min
+argument_list|(
 name|g_if_ntb_num_queues
+argument_list|,
+name|ntb_transport_queue_count
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -721,15 +729,14 @@ name|qp
 operator|=
 name|ntb_transport_create_queue
 argument_list|(
-name|q
-argument_list|,
-name|device_get_parent
-argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+name|i
 argument_list|,
 operator|&
 name|handlers
+argument_list|,
+name|q
 argument_list|)
 expr_stmt|;
 if|if
@@ -860,6 +867,17 @@ operator|->
 name|num_queues
 operator|=
 name|i
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%d queue(s)\n"
+argument_list|,
+name|sc
+operator|->
+name|num_queues
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
