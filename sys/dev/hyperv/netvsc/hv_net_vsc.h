@@ -918,9 +918,6 @@ typedef|typedef
 struct|struct
 name|netvsc_packet_
 block|{
-name|uint16_t
-name|vlan_tci
-decl_stmt|;
 name|uint32_t
 name|status
 decl_stmt|;

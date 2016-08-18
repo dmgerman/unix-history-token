@@ -3758,6 +3758,12 @@ name|hn_tx_ring
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|hn_recvinfo
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|netvsc_recv
@@ -3772,21 +3778,10 @@ modifier|*
 name|packet
 parameter_list|,
 specifier|const
-name|rndis_tcp_ip_csum_info
-modifier|*
-name|csum_info
-parameter_list|,
-specifier|const
 name|struct
-name|rndis_hash_info
+name|hn_recvinfo
 modifier|*
-name|hash_info
-parameter_list|,
-specifier|const
-name|struct
-name|rndis_hash_value
-modifier|*
-name|hash_value
+name|info
 parameter_list|)
 function_decl|;
 end_function_decl
