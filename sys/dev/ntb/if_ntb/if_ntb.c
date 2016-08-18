@@ -1094,13 +1094,33 @@ name|ifp
 init|=
 name|qp_data
 decl_stmt|;
-name|CTR0
+name|CTR1
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"RX: rx handler"
+literal|"RX: rx handler (%d)"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+block|{
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|m
 operator|->
 name|m_pkthdr
