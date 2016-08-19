@@ -1224,7 +1224,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|ufs2_daddr_t
 name|bflag
 decl_stmt|;
 end_decl_stmt
