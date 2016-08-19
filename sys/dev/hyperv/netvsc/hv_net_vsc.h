@@ -738,9 +738,6 @@ name|void
 modifier|*
 name|extension
 decl_stmt|;
-name|uint8_t
-name|destroy
-decl_stmt|;
 name|uint32_t
 name|num_channel
 decl_stmt|;

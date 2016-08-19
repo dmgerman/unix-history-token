@@ -345,12 +345,6 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
-name|net_dev
-operator|->
-name|destroy
-operator|=
-name|FALSE
-expr_stmt|;
 name|sc
 operator|->
 name|net_dev
@@ -2943,13 +2937,6 @@ operator|->
 name|net_dev
 decl_stmt|;
 empty_stmt|;
-comment|/* Stop outbound traffic ie sends and receives completions */
-name|net_dev
-operator|->
-name|destroy
-operator|=
-name|TRUE
-expr_stmt|;
 name|hv_nv_disconnect_from_vsp
 argument_list|(
 name|net_dev
