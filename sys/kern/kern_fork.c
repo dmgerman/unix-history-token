@@ -3075,6 +3075,12 @@ name|td_rfppwait_p
 operator|=
 name|p2
 expr_stmt|;
+name|td
+operator|->
+name|td_dbgflags
+operator||=
+name|TDB_VFORK
+expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(

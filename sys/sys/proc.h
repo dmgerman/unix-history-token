@@ -1606,6 +1606,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDB_VFORK
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* vfork indicator for ptrace() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDB_FSTP
 value|0x00001000
 end_define

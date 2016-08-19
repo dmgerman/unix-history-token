@@ -458,6 +458,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTRACE_VFORK
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTRACE_DEFAULT
 value|(PTRACE_EXEC)
 end_define
@@ -614,6 +621,16 @@ directive|define
 name|PL_FLAG_EXITED
 value|0x200
 comment|/* exiting LWP */
+define|#
+directive|define
+name|PL_FLAG_VFORKED
+value|0x400
+comment|/* new child via vfork */
+define|#
+directive|define
+name|PL_FLAG_VFORK_DONE
+value|0x800
+comment|/* vfork parent has resumed */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
