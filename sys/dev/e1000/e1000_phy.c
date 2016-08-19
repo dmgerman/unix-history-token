@@ -14301,7 +14301,6 @@ if|if
 condition|(
 name|locked
 condition|)
-block|{
 name|ready
 operator|=
 name|e1000_is_mphy_ready
@@ -14318,7 +14317,6 @@ return|return
 operator|-
 name|E1000_ERR_PHY
 return|;
-block|}
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -14530,7 +14528,6 @@ if|if
 condition|(
 name|locked
 condition|)
-block|{
 name|ready
 operator|=
 name|e1000_is_mphy_ready
@@ -14547,7 +14544,6 @@ return|return
 operator|-
 name|E1000_ERR_PHY
 return|;
-block|}
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
