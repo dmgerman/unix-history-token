@@ -81,6 +81,12 @@ directive|include
 file|<machine/armreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -127,7 +133,17 @@ begin_function_decl
 name|void
 name|__startC
 parameter_list|(
-name|void
+name|unsigned
+name|r0
+parameter_list|,
+name|unsigned
+name|r1
+parameter_list|,
+name|unsigned
+name|r2
+parameter_list|,
+name|unsigned
+name|r3
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -648,6 +664,18 @@ name|arm_dcache_l2_linesize
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Boot parameters  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|arm_boot_params
+name|s_boot_params
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -891,7 +919,17 @@ begin_function
 name|void
 name|_startC
 parameter_list|(
-name|void
+name|unsigned
+name|r0
+parameter_list|,
+name|unsigned
+name|r1
+parameter_list|,
+name|unsigned
+name|r2
+parameter_list|,
+name|unsigned
+name|r3
 parameter_list|)
 block|{
 name|int
@@ -921,6 +959,30 @@ name|pc
 decl_stmt|,
 name|kernphysaddr
 decl_stmt|;
+name|s_boot_params
+operator|.
+name|abp_r0
+operator|=
+name|r0
+expr_stmt|;
+name|s_boot_params
+operator|.
+name|abp_r1
+operator|=
+name|r1
+expr_stmt|;
+name|s_boot_params
+operator|.
+name|abp_r2
+operator|=
+name|r2
+expr_stmt|;
+name|s_boot_params
+operator|.
+name|abp_r3
+operator|=
+name|r3
+expr_stmt|;
 comment|/* 	 * Figure out the physical address the kernel was loaded at.  This 	 * assumes the entry point (this code right here) is in the first page, 	 * which will always be the case for this trampoline code. 	 */
 asm|__asm __volatile("mov %0, pc\n"
 block|:
@@ -1090,6 +1152,10 @@ expr_stmt|;
 comment|/* Temporary set the sp and jump to the new location. */
 asm|__asm __volatile(
 literal|"mov sp, %1\n"
+literal|"mov r0, %2\n"
+literal|"mov r1, %3\n"
+literal|"mov r2, %4\n"
+literal|"mov r3, %5\n"
 literal|"mov pc, %0\n"
 operator|:
 operator|:
@@ -1102,6 +1168,43 @@ literal|"r"
 operator|(
 name|tmp_sp
 operator|)
+operator|,
+literal|"r"
+operator|(
+name|s_boot_params
+operator|.
+name|abp_r0
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|s_boot_params
+operator|.
+name|abp_r1
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|s_boot_params
+operator|.
+name|abp_r2
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|s_boot_params
+operator|.
+name|abp_r3
+operator|)
+operator|,
+operator|:
+literal|"r0"
+operator|,
+literal|"r1"
+operator|,
+literal|"r2"
+operator|,
+literal|"r3"
 block|)
 empty_stmt|;
 end_if
@@ -2341,6 +2444,10 @@ name|Elf_Dyn
 modifier|*
 name|dp
 decl_stmt|;
+name|struct
+name|arm_boot_params
+name|local_boot_params
+decl_stmt|;
 name|eh
 operator|=
 operator|(
@@ -2851,6 +2958,21 @@ operator|)
 name|lastaddr
 operator|)
 return|;
+comment|/* 	 * Now the stack is fixed, copy boot params 	 * before it's overrided 	 */
+name|memcpy
+argument_list|(
+operator|&
+name|local_boot_params
+argument_list|,
+operator|&
+name|s_boot_params
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|local_boot_params
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|j
 operator|=
 name|eh
@@ -3261,7 +3383,13 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|void
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|,
+name|unsigned
 argument_list|)
 operator|)
 operator|(
@@ -3273,6 +3401,21 @@ name|curaddr
 operator|)
 operator|)
 operator|(
+name|local_boot_params
+operator|.
+name|abp_r0
+operator|,
+name|local_boot_params
+operator|.
+name|abp_r1
+operator|,
+name|local_boot_params
+operator|.
+name|abp_r2
+operator|,
+name|local_boot_params
+operator|.
+name|abp_r3
 operator|)
 expr_stmt|;
 end_expr_stmt
