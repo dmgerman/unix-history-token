@@ -2435,9 +2435,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 operator|=
 name|protocol_list
 index|[
@@ -2448,17 +2448,19 @@ if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Netvsc: got version 0x%x\n"
+literal|"NVS version 0x%x\n"
 argument_list|,
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -2490,9 +2492,9 @@ block|}
 comment|/* 	 * Set the MTU if supported by this NVSP protocol version 	 * This needs to be right after the NVSP init message per Haiyang 	 */
 if|if
 condition|(
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 operator|>=
 name|NVSP_PROTOCOL_VERSION_2
 condition|)
@@ -2535,9 +2537,9 @@ name|NDIS_VERSION_MAJOR_6
 expr_stmt|;
 if|if
 condition|(
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 operator|<=
 name|NVSP_PROTOCOL_VERSION_4
 condition|)
@@ -2602,9 +2604,9 @@ block|}
 comment|/* Post the big receive buffer to NetVSP */
 if|if
 condition|(
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 operator|<=
 name|NVSP_PROTOCOL_VERSION_2
 condition|)

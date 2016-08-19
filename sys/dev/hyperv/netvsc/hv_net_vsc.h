@@ -741,10 +741,6 @@ decl_stmt|;
 name|uint8_t
 name|destroy
 decl_stmt|;
-comment|/* Negotiated NVSP version */
-name|uint32_t
-name|nvsp_version
-decl_stmt|;
 name|uint32_t
 name|num_channel
 decl_stmt|;
@@ -1335,6 +1331,9 @@ name|struct
 name|vmbus_xact_ctx
 modifier|*
 name|hn_xact
+decl_stmt|;
+name|uint32_t
+name|hn_nvs_ver
 decl_stmt|;
 block|}
 name|hn_softc_t

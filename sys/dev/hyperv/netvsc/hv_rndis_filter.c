@@ -1578,13 +1578,6 @@ operator|->
 name|net_dev
 decl_stmt|;
 name|uint32_t
-name|vsp_version
-init|=
-name|net_dev
-operator|->
-name|nvsp_version
-decl_stmt|;
-name|uint32_t
 name|extlen
 init|=
 sizeof|sizeof
@@ -1597,7 +1590,9 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|vsp_version
+name|sc
+operator|->
+name|hn_nvs_ver
 operator|<=
 name|NVSP_PROTOCOL_VERSION_4
 condition|)
@@ -4673,9 +4668,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|net_dev
+name|sc
 operator|->
-name|nvsp_version
+name|hn_nvs_ver
 operator|<
 name|NVSP_PROTOCOL_VERSION_5
 operator|||
