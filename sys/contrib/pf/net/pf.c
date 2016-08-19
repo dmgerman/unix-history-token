@@ -9144,15 +9144,15 @@ argument|int pf_match_addr_range(struct pf_addr *b, struct pf_addr *e,     struc
 ifdef|#
 directive|ifdef
 name|INET
-argument|case AF_INET: 		if ((a->addr32[
+argument|case AF_INET: 		if ((ntohl(a->addr32[
 literal|0
-argument|]< b->addr32[
+argument|])< ntohl(b->addr32[
 literal|0
-argument|]) || 		    (a->addr32[
+argument|])) || 		    (ntohl(a->addr32[
 literal|0
-argument|]> e->addr32[
+argument|])> ntohl(e->addr32[
 literal|0
-argument|])) 			return (
+argument|]))) 			return (
 literal|0
 argument|); 		break;
 endif|#
@@ -9167,7 +9167,7 @@ argument|for (i =
 literal|0
 argument|; i<
 literal|4
-argument|; ++i) 			if (a->addr32[i]> b->addr32[i]) 				break; 			else if (a->addr32[i]< b->addr32[i]) 				return (
+argument|; ++i) 			if (ntohl(a->addr32[i])> ntohl(b->addr32[i])) 				break; 			else if (ntohl(a->addr32[i])< ntohl(b->addr32[i])) 				return (
 literal|0
 argument|);
 comment|/* check a<= e */
@@ -9175,7 +9175,7 @@ argument|for (i =
 literal|0
 argument|; i<
 literal|4
-argument|; ++i) 			if (a->addr32[i]< e->addr32[i]) 				break; 			else if (a->addr32[i]> e->addr32[i]) 				return (
+argument|; ++i) 			if (ntohl(a->addr32[i])< ntohl(e->addr32[i])) 				break; 			else if (ntohl(a->addr32[i])> ntohl(e->addr32[i])) 				return (
 literal|0
 argument|); 		break; 	}
 endif|#
