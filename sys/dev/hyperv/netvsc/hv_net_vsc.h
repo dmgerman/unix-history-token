@@ -719,28 +719,10 @@ name|long
 modifier|*
 name|send_section_bitsmap
 decl_stmt|;
-comment|/* Receive buffer allocated by us but managed by NetVSP */
-name|void
-modifier|*
-name|rx_buf
-decl_stmt|;
-name|uint32_t
-name|rx_buf_size
-decl_stmt|;
-name|uint32_t
-name|rx_buf_gpadl_handle
-decl_stmt|;
-name|uint32_t
-name|rx_section_count
-decl_stmt|;
 comment|/* Holds rndis device info */
 name|void
 modifier|*
 name|extension
-decl_stmt|;
-name|struct
-name|hyperv_dma
-name|rxbuf_dma
 decl_stmt|;
 name|struct
 name|hyperv_dma
@@ -984,6 +966,11 @@ name|void
 modifier|*
 name|hn_rdbuf
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|hn_rxbuf
+decl_stmt|;
+comment|/* shadow sc->hn_rxbuf */
 name|int
 name|hn_rx_idx
 decl_stmt|;
@@ -1329,10 +1316,31 @@ decl_stmt|;
 name|uint32_t
 name|hn_nvs_ver
 decl_stmt|;
+name|uint32_t
+name|hn_flags
+decl_stmt|;
+name|void
+modifier|*
+name|hn_rxbuf
+decl_stmt|;
+name|uint32_t
+name|hn_rxbuf_gpadl
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|hn_rxbuf_dma
+decl_stmt|;
 block|}
 name|hn_softc_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_RXBUF_CONNECTED
+value|0x0001
+end_define
 
 begin_comment
 comment|/*  * Externs  */

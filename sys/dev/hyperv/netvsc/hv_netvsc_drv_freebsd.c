@@ -1620,7 +1620,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|hn_create_rx_data
 parameter_list|(
 name|struct
@@ -2414,6 +2414,8 @@ condition|)
 goto|goto
 name|failed
 goto|;
+name|error
+operator|=
 name|hn_create_rx_data
 argument_list|(
 name|sc
@@ -2421,6 +2423,13 @@ argument_list|,
 name|ring_cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|failed
+goto|;
 comment|/* 	 * Associate the first TX/RX ring w/ the primary channel. 	 */
 name|hn_channel_attach
 argument_list|(
@@ -9903,7 +9912,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|hn_create_rx_data
 parameter_list|(
 name|struct
@@ -9958,6 +9967,58 @@ directive|endif
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Create RXBUF for reception. 	 * 	 * NOTE: 	 * - It is shared by all channels. 	 * - A large enough buffer is allocated, certain version of NVSes 	 *   may further limit the usable space. 	 */
+name|sc
+operator|->
+name|hn_rxbuf
+operator|=
+name|hyperv_dmamem_alloc
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|PAGE_SIZE
+argument_list|,
+literal|0
+argument_list|,
+name|NETVSC_RECEIVE_BUFFER_SIZE
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|hn_rxbuf_dma
+argument_list|,
+name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_rxbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_dev
+argument_list|,
+literal|"allocate rxbuf failed\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|hn_rx_ring_cnt
@@ -10185,6 +10246,14 @@ operator|->
 name|hn_rx_idx
 operator|=
 name|i
+expr_stmt|;
+name|rxr
+operator|->
+name|hn_rxbuf
+operator|=
+name|sc
+operator|->
+name|hn_rxbuf
 expr_stmt|;
 comment|/* 		 * Initialize LRO. 		 */
 if|#
@@ -10844,6 +10913,11 @@ argument_list|,
 literal|"# used RX rings"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -10957,6 +11031,34 @@ name|hn_rx_ring_inuse
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_rxbuf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|hyperv_dmamem_free
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|hn_rxbuf_dma
+argument_list|,
+name|sc
+operator|->
+name|hn_rxbuf
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|hn_rxbuf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
