@@ -260,6 +260,7 @@ modifier|*
 name|additl_info
 parameter_list|,
 name|int
+modifier|*
 name|nchan
 parameter_list|,
 name|struct
