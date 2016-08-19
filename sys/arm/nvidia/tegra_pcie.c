@@ -2848,7 +2848,6 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-comment|//printf("%s: i: %d, reg: 0x%08X, bit: 0x%08X, addr: 0x%08llX\n", __func__, i, reg, bit, rman_get_start(sc->afi_mem_res));
 comment|/* Send EOI */
 name|AFI_WR4
 argument_list|(
