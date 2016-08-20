@@ -20341,6 +20341,10 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+name|sec
+operator|==
+name|NULL
+operator|||
 operator|!
 name|h
 operator|->
