@@ -9007,6 +9007,8 @@ name|vectors
 index|[
 name|i
 index|]
+operator|-
+literal|1
 index|]
 operator|.
 name|mv_irq
@@ -9096,6 +9098,8 @@ name|vectors
 index|[
 name|i
 index|]
+operator|-
+literal|1
 index|]
 operator|.
 name|mv_irq
