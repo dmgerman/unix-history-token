@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|FREEBSD_CC_VERSION
-value|1100005
+value|1100006
 end_define
 
 end_unit
