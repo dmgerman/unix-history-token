@@ -639,6 +639,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * This function is used by the threading libraries to notify libc that a  * thread is exiting, so its thread-local dtors should be called.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__cxa_thread_call_dtors
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * These functions are used by the threading libraries in order to protect  * malloc across fork().  */
 end_comment
 

@@ -134,6 +134,10 @@ name|_thread_autoinit_dummy_decl
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * We're dealing with cleaning up thread_local destructors in the case of 	 * the process termination through main() exit. 	 * Other cases are handled elsewhere. 	 */
+name|__cxa_thread_call_dtors
+argument_list|()
+expr_stmt|;
 name|__cxa_finalize
 argument_list|(
 name|NULL

@@ -594,10 +594,16 @@ if|if
 condition|(
 name|done
 condition|)
+block|{
+comment|/* Tell libc that it should call non-trivial TLS dtors. */
+name|__cxa_thread_call_dtors
+argument_list|()
+expr_stmt|;
 name|exit_thread
 argument_list|()
 expr_stmt|;
 comment|/* Never return! */
+block|}
 return|return
 operator|(
 name|_URC_NO_REASON
@@ -951,6 +957,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|__cxa_thread_call_dtors
+argument_list|()
+expr_stmt|;
 name|exit_thread
 argument_list|()
 expr_stmt|;
@@ -972,6 +981,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|__cxa_thread_call_dtors
+argument_list|()
+expr_stmt|;
 name|exit_thread
 argument_list|()
 expr_stmt|;
