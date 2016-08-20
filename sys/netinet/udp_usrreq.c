@@ -464,6 +464,13 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_udp_require_l2_bcast
+value|VNET(udp_require_l2_bcast)
+end_define
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2422,10 +2429,7 @@ operator|||
 operator|(
 operator|(
 operator|!
-name|VNET_NAME
-argument_list|(
-name|udp_require_l2_bcast
-argument_list|)
+name|V_udp_require_l2_bcast
 operator|||
 name|m
 operator|->
