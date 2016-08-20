@@ -9,12 +9,42 @@ directive|ifdef
 name|JEMALLOC_H_TYPES
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_POSIX_MONOTONIC_CLOCK
+argument_list|)
+operator|&&
+name|_POSIX_MONOTONIC_CLOCK
+operator|>=
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|JEMALLOC_CLOCK_GETTIME
-value|defined(_POSIX_MONOTONIC_CLOCK) \&& _POSIX_MONOTONIC_CLOCK>= 0
+value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_CLOCK_GETTIME
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
