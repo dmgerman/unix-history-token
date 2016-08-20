@@ -21,6 +21,12 @@ directive|include
 file|<dev/bhnd/bhnd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bhnd_sprom_parser.h"
+end_include
+
 begin_expr_stmt
 name|DECLARE_CLASS
 argument_list|(
@@ -28,12 +34,6 @@ name|bhnd_sprom_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|bhnd_sprom
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
@@ -87,135 +87,6 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int
-name|bhnd_sprom_init
-parameter_list|(
-name|struct
-name|bhnd_sprom
-modifier|*
-name|sprom
-parameter_list|,
-name|struct
-name|bhnd_resource
-modifier|*
-name|r
-parameter_list|,
-name|bus_size_t
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bhnd_sprom_fini
-parameter_list|(
-name|struct
-name|bhnd_sprom
-modifier|*
-name|sprom
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|bhnd_sprom_getvar
-parameter_list|(
-name|struct
-name|bhnd_sprom
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-modifier|*
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|bhnd_sprom_setvar
-parameter_list|(
-name|struct
-name|bhnd_sprom
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * bhnd sprom parser instance state.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_sprom
-block|{
-name|device_t
-name|dev
-decl_stmt|;
-comment|/**< sprom parent device */
-name|uint8_t
-name|sp_rev
-decl_stmt|;
-comment|/**< sprom revision */
-name|struct
-name|bhnd_resource
-modifier|*
-name|sp_res
-decl_stmt|;
-comment|/**< sprom resource. */
-name|bus_size_t
-name|sp_res_off
-decl_stmt|;
-comment|/**< offset to sprom image */
-name|uint8_t
-modifier|*
-name|sp_shadow
-decl_stmt|;
-comment|/**< sprom shadow */
-name|bus_size_t
-name|sp_size_max
-decl_stmt|;
-comment|/**< maximum possible sprom length */
-name|size_t
-name|sp_size
-decl_stmt|;
-comment|/**< shadow size */
-name|size_t
-name|sp_capacity
-decl_stmt|;
-comment|/**< shadow buffer capacity */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/**  * bhnd_sprom driver instance state. Must be first member of all subclass  * softc structures.  */

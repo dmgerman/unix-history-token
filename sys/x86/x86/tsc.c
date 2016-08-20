@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/acpica/acpi_hpet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cpufreq_if.h"
 end_include
 
@@ -483,6 +489,53 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|uint32_t
+name|x86_tsc_vdso_timehands
+parameter_list|(
+name|struct
+name|vdso_timehands
+modifier|*
+name|vdso_th
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|x86_tsc_vdso_timehands32
+parameter_list|(
+name|struct
+name|vdso_timehands32
+modifier|*
+name|vdso_th32
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -490,25 +543,43 @@ name|timecounter
 name|tsc_timecounter
 init|=
 block|{
+operator|.
+name|tc_get_timecount
+operator|=
 name|tsc_get_timecount
 block|,
-comment|/* get_timecount */
-literal|0
-block|,
-comment|/* no poll_pps */
+operator|.
+name|tc_counter_mask
+operator|=
 operator|~
 literal|0u
 block|,
-comment|/* counter_mask */
-literal|0
-block|,
-comment|/* frequency */
+operator|.
+name|tc_name
+operator|=
 literal|"TSC"
 block|,
-comment|/* name */
+operator|.
+name|tc_quality
+operator|=
 literal|800
 block|,
-comment|/* quality (adjusted in code) */
+comment|/* adjusted in code */
+operator|.
+name|tc_fill_vdso_timehands
+operator|=
+name|x86_tsc_vdso_timehands
+block|,
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+operator|.
+name|tc_fill_vdso_timehands32
+operator|=
+name|x86_tsc_vdso_timehands32
+block|,
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3023,8 +3094,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uint32_t
-name|cpu_fill_vdso_timehands
+name|x86_tsc_vdso_timehands
 parameter_list|(
 name|struct
 name|vdso_timehands
@@ -3039,6 +3111,12 @@ parameter_list|)
 block|{
 name|vdso_th
 operator|->
+name|th_algo
+operator|=
+name|VDSO_TH_ALGO_X86_TSC
+expr_stmt|;
+name|vdso_th
+operator|->
 name|th_x86_shift
 operator|=
 operator|(
@@ -3050,6 +3128,12 @@ operator|)
 name|tc
 operator|->
 name|tc_priv
+expr_stmt|;
+name|vdso_th
+operator|->
+name|th_x86_hpet_idx
+operator|=
+literal|0xffffffff
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -3067,10 +3151,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|tc
-operator|==
-operator|&
-name|tsc_timecounter
+literal|1
 operator|)
 return|;
 block|}
@@ -3083,8 +3164,9 @@ name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_function
+specifier|static
 name|uint32_t
-name|cpu_fill_vdso_timehands32
+name|x86_tsc_vdso_timehands32
 parameter_list|(
 name|struct
 name|vdso_timehands32
@@ -3099,6 +3181,12 @@ parameter_list|)
 block|{
 name|vdso_th32
 operator|->
+name|th_algo
+operator|=
+name|VDSO_TH_ALGO_X86_TSC
+expr_stmt|;
+name|vdso_th32
+operator|->
 name|th_x86_shift
 operator|=
 operator|(
@@ -3110,6 +3198,12 @@ operator|)
 name|tc
 operator|->
 name|tc_priv
+expr_stmt|;
+name|vdso_th32
+operator|->
+name|th_x86_hpet_idx
+operator|=
+literal|0xffffffff
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -3127,10 +3221,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|tc
-operator|==
-operator|&
-name|tsc_timecounter
+literal|1
 operator|)
 return|;
 block|}

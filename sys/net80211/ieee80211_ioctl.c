@@ -17214,6 +17214,11 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Check if the MAC address was changed 			 * via SIOCSIFLLADDR ioctl. 			 */
+name|if_addr_rlock
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -17249,6 +17254,11 @@ name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|if_addr_runlock
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}

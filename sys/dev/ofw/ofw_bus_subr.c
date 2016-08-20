@@ -2493,12 +2493,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INTRNG
-end_ifndef
-
 begin_function
 name|int
 name|ofw_bus_intr_to_rl
@@ -2883,11 +2877,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int

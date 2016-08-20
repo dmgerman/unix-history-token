@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/allwinner/allwinner_machdep.h>
+file|<arm/allwinner/aw_machdep.h>
 end_include
 
 begin_include

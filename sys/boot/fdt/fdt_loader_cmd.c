@@ -1004,9 +1004,15 @@ operator|==
 operator|-
 name|FDT_ERR_BADVERSION
 condition|)
-name|sprintf
+block|{
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"incompatible blob version: %d, should be: %d"
 argument_list|,
@@ -1018,10 +1024,17 @@ argument_list|,
 name|FDT_LAST_SUPPORTED_VERSION
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-name|sprintf
+block|{
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"error validating blob: %s"
 argument_list|,
@@ -1031,6 +1044,7 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -1156,9 +1170,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"error validating blob: %s"
 argument_list|,
@@ -1281,9 +1300,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"failed to load file '%s'"
 argument_list|,
@@ -2883,9 +2907,14 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"Could not fixup '/memory' "
 literal|"node, error code : %d!\n"
@@ -2966,9 +2995,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"Could not fixup '/memory' node : "
 literal|"%s %s property not found in root node!\n"
@@ -4236,9 +4270,14 @@ operator|==
 name|addr
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"Invalid address: %s"
 argument_list|,
@@ -4424,9 +4463,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"could not find node: '%s'"
 argument_list|,
@@ -4453,9 +4497,14 @@ operator|)
 return|;
 name|fail
 label|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"path too long: %d, max allowed: %d"
 argument_list|,
@@ -4882,9 +4931,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"could not find node: '%s'"
 argument_list|,
@@ -6898,9 +6952,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"could not find node: '%s'"
 argument_list|,
@@ -7112,9 +7171,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"could not find node: '%s'"
 argument_list|,
@@ -7497,12 +7561,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"could not delete"
-literal|"%s\n"
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
+argument_list|,
+literal|"could not delete %s\n"
 argument_list|,
 operator|(
 name|rv

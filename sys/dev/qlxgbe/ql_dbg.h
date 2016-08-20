@@ -161,6 +161,13 @@ name|INJCT_TEMPERATURE_FAILURE
 value|0x0000A
 end_define
 
+begin_define
+define|#
+directive|define
+name|INJCT_M_GETCL_M_GETJCL_FAILURE
+value|0x0000B
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -3679,6 +3679,12 @@ begin_comment
 comment|/* forward declarations for Standard C */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|in_ifaddr
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|in_broadcast
@@ -3688,6 +3694,20 @@ name|in_addr
 parameter_list|,
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_ifaddr_broadcast
+parameter_list|(
+name|struct
+name|in_addr
+parameter_list|,
+name|struct
+name|in_ifaddr
 modifier|*
 parameter_list|)
 function_decl|;

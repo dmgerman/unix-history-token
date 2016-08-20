@@ -4559,6 +4559,8 @@ expr_stmt|;
 name|proc_set_traced
 argument_list|(
 name|p
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|CTR2

@@ -5533,6 +5533,9 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|,
+name|bool
+name|stop
 parameter_list|)
 function_decl|;
 end_function_decl

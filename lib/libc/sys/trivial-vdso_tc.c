@@ -49,7 +49,7 @@ name|__vdso_gettc
 end_pragma
 
 begin_function
-name|u_int
+name|int
 name|__vdso_gettc
 parameter_list|(
 specifier|const
@@ -57,11 +57,15 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|th
+parameter_list|,
+name|u_int
+modifier|*
+name|tc
 parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+name|ENOSYS
 operator|)
 return|;
 block|}

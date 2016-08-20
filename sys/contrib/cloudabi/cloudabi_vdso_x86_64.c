@@ -150,7 +150,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -231,7 +231,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -324,7 +324,7 @@ name|nwaiters
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -364,7 +364,7 @@ name|fd
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -412,7 +412,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -489,7 +489,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		, "=r"(reg_rdx) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax), "=r"(reg_rdx)       : "r"(reg_rax), "r"(reg_rdi)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -554,7 +554,7 @@ name|fd
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -602,7 +602,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -717,7 +717,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10)       : "memory", "rcx", "r8", "r9", "r11");
 if|if
 condition|(
 name|okay
@@ -832,7 +832,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10)       : "memory", "rcx", "r8", "r9", "r11");
 if|if
 condition|(
 name|okay
@@ -931,7 +931,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -1004,7 +1004,7 @@ name|to
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1084,7 +1084,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -1158,7 +1158,7 @@ name|buf
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1232,7 +1232,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1272,7 +1272,7 @@ name|fd
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1354,7 +1354,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -1459,7 +1459,7 @@ name|advice
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1531,7 +1531,7 @@ name|len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1621,7 +1621,7 @@ name|type
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1748,7 +1748,7 @@ name|path2len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		, "r"(reg_r9) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10), "r"(reg_r8), "r"(reg_r9)                : "memory", "rcx", "r11");
 return|return
 name|reg_rax
 return|;
@@ -1867,7 +1867,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10),         "r"(reg_r8)       : "memory", "rcx", "r9", "r11");
 if|if
 condition|(
 name|okay
@@ -1981,7 +1981,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10)       : "memory", "rcx", "r8", "r9", "r11");
 if|if
 condition|(
 name|okay
@@ -2113,7 +2113,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10),         "r"(reg_r8)       : "memory", "rcx", "r9", "r11");
 if|if
 condition|(
 name|okay
@@ -2254,7 +2254,7 @@ name|newlen
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		, "r"(reg_r9) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10), "r"(reg_r8), "r"(reg_r9)                : "memory", "rcx", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2311,7 +2311,7 @@ name|buf
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2385,7 +2385,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2479,7 +2479,7 @@ name|buf
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2590,7 +2590,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10), "r"(reg_r8)                : "memory", "rcx", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2698,7 +2698,7 @@ name|path2len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10), "r"(reg_r8)                : "memory", "rcx", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2788,7 +2788,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2848,7 +2848,7 @@ name|scope
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2921,7 +2921,7 @@ name|advice
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -2979,7 +2979,7 @@ name|len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3109,7 +3109,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		, "r"(reg_r9) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10),         "r"(reg_r8), "r"(reg_r9)       : "memory", "rcx", "r11");
 if|if
 condition|(
 name|okay
@@ -3200,7 +3200,7 @@ name|prot
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3273,7 +3273,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3331,7 +3331,7 @@ name|len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3388,7 +3388,7 @@ name|len
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3471,7 +3471,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -3535,7 +3535,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|57
+literal|40
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3621,7 +3621,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		, "r"(reg_r9) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx), "r"(reg_r10),         "r"(reg_r8), "r"(reg_r9)       : "memory", "rcx", "r11");
 if|if
 condition|(
 name|okay
@@ -3677,7 +3677,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|40
+literal|41
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3746,7 +3746,7 @@ name|fdslen
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		, "r"(reg_r8) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10), "r"(reg_r8)                : "memory", "rcx", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3770,7 +3770,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|41
+literal|42
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3787,7 +3787,7 @@ name|rval
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                :                : "r"(reg_rax), "r"(reg_rdi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 for|for
 control|(
 init|;
@@ -3818,7 +3818,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|42
+literal|43
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3834,7 +3834,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		, "=r"(reg_rdx) 		: "r"(reg_rax) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax), "=r"(reg_rdx)       : "r"(reg_rax)       : "memory", "rcx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -3882,7 +3882,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|43
+literal|44
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3899,7 +3899,7 @@ name|sig
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3926,7 +3926,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|44
+literal|45
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -3956,7 +3956,7 @@ name|nbyte
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -3977,91 +3977,6 @@ parameter_list|,
 name|cloudabi_fd_t
 modifier|*
 name|conn
-parameter_list|)
-block|{
-specifier|register
-name|uint64_t
-name|reg_rax
-name|asm
-argument_list|(
-literal|"rax"
-argument_list|)
-init|=
-literal|45
-decl_stmt|;
-specifier|register
-name|uint64_t
-name|reg_rdi
-name|asm
-argument_list|(
-literal|"rdi"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|sock
-decl_stmt|;
-specifier|register
-name|uint64_t
-name|reg_rsi
-name|asm
-argument_list|(
-literal|"rsi"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|buf
-decl_stmt|;
-specifier|register
-name|char
-name|okay
-decl_stmt|;
-asm|asm
-specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
-if|if
-condition|(
-name|okay
-condition|)
-block|{
-operator|*
-name|conn
-operator|=
-operator|(
-name|cloudabi_fd_t
-operator|)
-name|reg_rax
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-return|return
-name|reg_rax
-return|;
-block|}
-end_function
-
-begin_function
-name|cloudabi_errno_t
-name|cloudabi_sys_sock_bind
-parameter_list|(
-name|cloudabi_fd_t
-name|sock
-parameter_list|,
-name|cloudabi_fd_t
-name|fd
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|size_t
-name|pathlen
 parameter_list|)
 block|{
 specifier|register
@@ -4098,37 +4013,32 @@ init|=
 operator|(
 name|uint64_t
 operator|)
-name|fd
+name|buf
 decl_stmt|;
 specifier|register
-name|uint64_t
-name|reg_rdx
-name|asm
-argument_list|(
-literal|"rdx"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|path
-decl_stmt|;
-specifier|register
-name|uint64_t
-name|reg_r10
-name|asm
-argument_list|(
-literal|"r10"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|pathlen
+name|char
+name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+if|if
+condition|(
+name|okay
+condition|)
+block|{
+operator|*
+name|conn
+operator|=
+operator|(
+name|cloudabi_fd_t
+operator|)
+name|reg_rax
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 return|return
 name|reg_rax
 return|;
@@ -4137,7 +4047,7 @@ end_function
 
 begin_function
 name|cloudabi_errno_t
-name|cloudabi_sys_sock_connect
+name|cloudabi_sys_sock_bind
 parameter_list|(
 name|cloudabi_fd_t
 name|sock
@@ -4218,7 +4128,7 @@ name|pathlen
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		, "r"(reg_r10) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4227,13 +4137,21 @@ end_function
 
 begin_function
 name|cloudabi_errno_t
-name|cloudabi_sys_sock_listen
+name|cloudabi_sys_sock_connect
 parameter_list|(
 name|cloudabi_fd_t
 name|sock
 parameter_list|,
-name|cloudabi_backlog_t
-name|backlog
+name|cloudabi_fd_t
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|size_t
+name|pathlen
 parameter_list|)
 block|{
 specifier|register
@@ -4270,11 +4188,37 @@ init|=
 operator|(
 name|uint64_t
 operator|)
-name|backlog
+name|fd
+decl_stmt|;
+specifier|register
+name|uint64_t
+name|reg_rdx
+name|asm
+argument_list|(
+literal|"rdx"
+argument_list|)
+init|=
+operator|(
+name|uint64_t
+operator|)
+name|path
+decl_stmt|;
+specifier|register
+name|uint64_t
+name|reg_r10
+name|asm
+argument_list|(
+literal|"r10"
+argument_list|)
+init|=
+operator|(
+name|uint64_t
+operator|)
+name|pathlen
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx),                  "r"(reg_r10)                : "memory", "rcx", "r8", "r9", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4283,19 +4227,13 @@ end_function
 
 begin_function
 name|cloudabi_errno_t
-name|cloudabi_sys_sock_recv
+name|cloudabi_sys_sock_listen
 parameter_list|(
 name|cloudabi_fd_t
 name|sock
 parameter_list|,
-specifier|const
-name|cloudabi_recv_in_t
-modifier|*
-name|in
-parameter_list|,
-name|cloudabi_recv_out_t
-modifier|*
-name|out
+name|cloudabi_backlog_t
+name|backlog
 parameter_list|)
 block|{
 specifier|register
@@ -4332,24 +4270,11 @@ init|=
 operator|(
 name|uint64_t
 operator|)
-name|in
-decl_stmt|;
-specifier|register
-name|uint64_t
-name|reg_rdx
-name|asm
-argument_list|(
-literal|"rdx"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|out
+name|backlog
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4358,17 +4283,17 @@ end_function
 
 begin_function
 name|cloudabi_errno_t
-name|cloudabi_sys_sock_send
+name|cloudabi_sys_sock_recv
 parameter_list|(
 name|cloudabi_fd_t
 name|sock
 parameter_list|,
 specifier|const
-name|cloudabi_send_in_t
+name|cloudabi_recv_in_t
 modifier|*
 name|in
 parameter_list|,
-name|cloudabi_send_out_t
+name|cloudabi_recv_out_t
 modifier|*
 name|out
 parameter_list|)
@@ -4424,7 +4349,7 @@ name|out
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4433,13 +4358,19 @@ end_function
 
 begin_function
 name|cloudabi_errno_t
-name|cloudabi_sys_sock_shutdown
+name|cloudabi_sys_sock_send
 parameter_list|(
 name|cloudabi_fd_t
 name|sock
 parameter_list|,
-name|cloudabi_sdflags_t
-name|how
+specifier|const
+name|cloudabi_send_in_t
+modifier|*
+name|in
+parameter_list|,
+name|cloudabi_send_out_t
+modifier|*
+name|out
 parameter_list|)
 block|{
 specifier|register
@@ -4476,11 +4407,80 @@ init|=
 operator|(
 name|uint64_t
 operator|)
+name|in
+decl_stmt|;
+specifier|register
+name|uint64_t
+name|reg_rdx
+name|asm
+argument_list|(
+literal|"rdx"
+argument_list|)
+init|=
+operator|(
+name|uint64_t
+operator|)
+name|out
+decl_stmt|;
+asm|asm
+specifier|volatile
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
+return|return
+name|reg_rax
+return|;
+block|}
+end_function
+
+begin_function
+name|cloudabi_errno_t
+name|cloudabi_sys_sock_shutdown
+parameter_list|(
+name|cloudabi_fd_t
+name|sock
+parameter_list|,
+name|cloudabi_sdflags_t
+name|how
+parameter_list|)
+block|{
+specifier|register
+name|uint64_t
+name|reg_rax
+name|asm
+argument_list|(
+literal|"rax"
+argument_list|)
+init|=
+literal|52
+decl_stmt|;
+specifier|register
+name|uint64_t
+name|reg_rdi
+name|asm
+argument_list|(
+literal|"rdi"
+argument_list|)
+init|=
+operator|(
+name|uint64_t
+operator|)
+name|sock
+decl_stmt|;
+specifier|register
+name|uint64_t
+name|reg_rsi
+name|asm
+argument_list|(
+literal|"rsi"
+argument_list|)
+init|=
+operator|(
+name|uint64_t
+operator|)
 name|how
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4510,7 +4510,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|52
+literal|53
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -4553,7 +4553,7 @@ name|flags
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		, "r"(reg_rdx) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi), "r"(reg_rdx)                : "memory", "rcx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;
@@ -4581,7 +4581,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|53
+literal|54
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -4602,7 +4602,7 @@ name|okay
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		"\tsetnc %0\n" 		: "=r"(okay) 		, "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|(       "\tsyscall\n"       "\tsetnc %0\n"       : "=r"(okay), "=r"(reg_rax)       : "r"(reg_rax), "r"(reg_rdi)       : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 if|if
 condition|(
 name|okay
@@ -4650,7 +4650,7 @@ argument_list|(
 literal|"rax"
 argument_list|)
 init|=
-literal|54
+literal|55
 decl_stmt|;
 specifier|register
 name|uint64_t
@@ -4680,54 +4680,13 @@ name|scope
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: 		: "r"(reg_rax) 		, "r"(reg_rdi) 		, "r"(reg_rsi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                :                : "r"(reg_rax), "r"(reg_rdi), "r"(reg_rsi)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 for|for
 control|(
 init|;
 condition|;
 control|)
 empty_stmt|;
-block|}
-end_function
-
-begin_function
-name|cloudabi_errno_t
-name|cloudabi_sys_thread_tcb_set
-parameter_list|(
-name|void
-modifier|*
-name|tcb
-parameter_list|)
-block|{
-specifier|register
-name|uint64_t
-name|reg_rax
-name|asm
-argument_list|(
-literal|"rax"
-argument_list|)
-init|=
-literal|55
-decl_stmt|;
-specifier|register
-name|uint64_t
-name|reg_rdi
-name|asm
-argument_list|(
-literal|"rdi"
-argument_list|)
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|tcb
-decl_stmt|;
-asm|asm
-specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		, "r"(reg_rdi) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
-return|return
-name|reg_rax
-return|;
 block|}
 end_function
 
@@ -4750,7 +4709,7 @@ literal|56
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|( 		"\tsyscall\n" 		: "=r"(reg_rax) 		: "r"(reg_rax) 		: "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
+asm|("\tsyscall\n"                : "=r"(reg_rax)                : "r"(reg_rax)                : "memory", "rcx", "rdx", "r8", "r9", "r10", "r11");
 return|return
 name|reg_rax
 return|;

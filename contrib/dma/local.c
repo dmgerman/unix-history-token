@@ -692,7 +692,7 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|,
-literal|"%sFrom %s\t%s"
+literal|"%sFrom %s %s"
 argument_list|,
 name|newline
 argument_list|,

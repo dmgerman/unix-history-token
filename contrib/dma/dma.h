@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|ERRMSG_SIZE
-value|200
+value|1024
 end_define
 
 begin_define

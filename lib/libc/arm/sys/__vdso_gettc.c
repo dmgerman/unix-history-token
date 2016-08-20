@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
@@ -122,7 +128,7 @@ name|__vdso_gettc
 end_pragma
 
 begin_function
-name|u_int
+name|int
 name|__vdso_gettc
 parameter_list|(
 specifier|const
@@ -130,11 +136,25 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|th
+parameter_list|,
+name|u_int
+modifier|*
+name|tc
 parameter_list|)
 block|{
-name|uint64_t
-name|val
-decl_stmt|;
+if|if
+condition|(
+name|th
+operator|->
+name|th_algo
+operator|!=
+name|VDSO_TH_ALGO_ARM_GENTIM
+condition|)
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 if|#
 directive|if
 name|__ARM_ARCH
@@ -143,7 +163,8 @@ literal|6
 comment|/* 	 * Userspace gettimeofday() is only enabled on ARMv7 CPUs, but 	 * libc is compiled for ARMv6.  Due to clang issues, .arch 	 * armv7-a directive does not work. 	 */
 asm|__asm __volatile(".word\t0xf57ff06f" : : : "memory");
 comment|/* isb */
-name|val
+operator|*
+name|tc
 operator|=
 name|th
 operator|->
@@ -157,19 +178,25 @@ else|:
 name|cp15_cntpct_get
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 else|#
 directive|else
-name|val
+operator|*
+name|tc
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
-name|val
+name|ENOSYS
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

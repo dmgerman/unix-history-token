@@ -494,6 +494,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_CREAT
+operator||
+name|O_NOFOLLOW
 argument_list|,
 literal|0600
 argument_list|)

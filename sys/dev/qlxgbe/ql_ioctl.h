@@ -203,11 +203,11 @@ name|uint16_t
 name|pci_func
 decl_stmt|;
 name|uint32_t
-name|template_size
+name|minidump_size
 decl_stmt|;
 name|void
 modifier|*
-name|md_template
+name|minidump
 decl_stmt|;
 block|}
 struct|;

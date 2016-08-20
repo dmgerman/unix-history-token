@@ -21,6 +21,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"nvram/bhnd_nvram.h"
+end_include
+
 begin_comment
 comment|/** bhnd(4) device classes. */
 end_comment

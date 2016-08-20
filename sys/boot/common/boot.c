@@ -164,9 +164,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't boot '%s', kernel module already loaded"
 argument_list|,
@@ -441,9 +446,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"bad delay '%s'"
 argument_list|,

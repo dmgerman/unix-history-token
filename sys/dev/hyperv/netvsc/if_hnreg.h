@@ -73,6 +73,13 @@ name|HN_NVS_STATUS_OK
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_NVS_STATUS_FAILED
+value|2
+end_define
+
 begin_comment
 comment|/*  * NVS request/response message types.  */
 end_comment
@@ -150,8 +157,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_TYPE_RNDIS_ACK
+value|108
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_TYPE_NDIS_CONF
 value|125
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_VFASSOC_NOTE
+value|128
+end_define
+
+begin_comment
+comment|/* notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_SET_DATAPATH
+value|129
 end_define
 
 begin_define
@@ -170,6 +202,17 @@ end_define
 
 begin_comment
 comment|/* same as SUBCH_REQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_TXTBL_NOTE
+value|134
+end_define
+
+begin_comment
+comment|/* notification */
 end_comment
 
 begin_comment
@@ -704,6 +747,43 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|hn_nvs_rndis
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|hn_nvs_rndis_ack
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_RNDIS_ACK */
+name|uint32_t
+name|nvs_status
+decl_stmt|;
+comment|/* HN_NVS_STATUS_ */
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|24
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_rndis_ack
 argument_list|)
 operator|>=
 name|HN_NVS_REQSIZE_MIN

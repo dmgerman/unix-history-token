@@ -559,9 +559,14 @@ name|cp
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"bad path '%s'"
 argument_list|,
@@ -603,9 +608,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"open '%s' failed: %s"
 argument_list|,
@@ -634,9 +644,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"stat failed: %s"
 argument_list|,
@@ -661,9 +676,14 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: %s"
 argument_list|,

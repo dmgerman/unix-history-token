@@ -268,6 +268,12 @@ name|line
 name|__unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
