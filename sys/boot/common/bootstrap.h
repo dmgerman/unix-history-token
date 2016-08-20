@@ -55,6 +55,13 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|COMMAND_ERRBUFSZ
+value|(256)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -67,13 +74,11 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|command_errbuf
-index|[]
+index|[
+name|COMMAND_ERRBUFSZ
+index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX blah, length */
-end_comment
 
 begin_define
 define|#

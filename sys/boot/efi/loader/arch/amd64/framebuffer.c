@@ -2219,12 +2219,16 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"%s: Graphics Output Protocol not "
-literal|"present (error=%lu)"
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
+argument_list|,
+literal|"%s: Graphics Output Protocol not present (error=%lu)"
 argument_list|,
 name|argv
 index|[
@@ -2336,12 +2340,16 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"%s: Unable to set mode to "
-literal|"%u (error=%lu)"
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
+argument_list|,
+literal|"%s: Unable to set mode to %u (error=%lu)"
 argument_list|,
 name|argv
 index|[
@@ -2542,9 +2550,14 @@ operator|)
 return|;
 name|usage
 label|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"usage: %s [list | get | set<mode>]"
 argument_list|,
@@ -2629,12 +2642,16 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"%s: UGA Protocol not present "
-literal|"(error=%lu)"
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
+argument_list|,
+literal|"%s: UGA Protocol not present (error=%lu)"
 argument_list|,
 name|argv
 index|[
@@ -2675,9 +2692,14 @@ operator|!=
 name|CMD_OK
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"%s: Unable to get UGA information"
 argument_list|,
@@ -2716,9 +2738,14 @@ operator|)
 return|;
 name|usage
 label|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"usage: %s"
 argument_list|,

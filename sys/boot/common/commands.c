@@ -42,18 +42,18 @@ name|command_errmsg
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX should have procedural interface for setting, size limit? */
+end_comment
+
 begin_decl_stmt
 name|char
 name|command_errbuf
 index|[
-literal|256
+name|COMMAND_ERRBUFSZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX should have procedural interface for setting, size limit? */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -852,9 +852,14 @@ operator|!
 name|matched
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"no help available for '%s'"
 argument_list|,
@@ -1195,9 +1200,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"variable '%s' not found"
 argument_list|,
@@ -1683,9 +1693,14 @@ operator|==
 name|optarg
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"bad timeout '%s'"
 argument_list|,
@@ -1994,15 +2009,22 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|sprintf
+block|{
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"error showing %s"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|result
 return|;
