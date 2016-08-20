@@ -6321,6 +6321,11 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+name|AUDIT_ARG_VNODE1
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
