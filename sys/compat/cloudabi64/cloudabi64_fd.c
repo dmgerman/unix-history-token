@@ -71,6 +71,12 @@ directive|include
 file|<compat/cloudabi64/cloudabi64_proto.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<compat/cloudabi64/cloudabi64_util.h>
+end_include
+
 begin_comment
 comment|/* Copies in 64-bit iovec structures from userspace. */
 end_comment
@@ -255,13 +261,12 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|TO_PTR
+argument_list|(
 name|iovobj
 operator|.
 name|iov_base
+argument_list|)
 expr_stmt|;
 name|iov
 index|[
@@ -437,14 +442,12 @@ name|error
 operator|=
 name|cloudabi64_copyinuio
 argument_list|(
-operator|(
-specifier|const
-name|cloudabi64_iovec_t
-operator|*
-operator|)
+name|TO_PTR
+argument_list|(
 name|uap
 operator|->
 name|iov
+argument_list|)
 argument_list|,
 name|uap
 operator|->
@@ -602,14 +605,12 @@ name|error
 operator|=
 name|cloudabi64_copyinuio
 argument_list|(
-operator|(
-specifier|const
-name|cloudabi64_iovec_t
-operator|*
-operator|)
+name|TO_PTR
+argument_list|(
 name|uap
 operator|->
 name|iov
+argument_list|)
 argument_list|,
 name|uap
 operator|->

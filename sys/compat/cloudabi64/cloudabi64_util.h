@@ -52,6 +52,16 @@ name|cloudabi64_brand
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|TO_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|((void *)(uintptr_t)(x))
+end_define
+
 begin_comment
 comment|/* Stack initialization during process execution. */
 end_comment
