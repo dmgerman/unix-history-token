@@ -283,7 +283,7 @@ index|]
 operator|.
 name|iov_len
 operator|>
-name|SSIZE_MAX
+name|INT64_MAX
 operator|-
 name|uio
 operator|->
