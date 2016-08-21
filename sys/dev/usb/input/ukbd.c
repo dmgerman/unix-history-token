@@ -1455,7 +1455,7 @@ literal|124
 block|,
 literal|125
 block|,
-literal|126
+literal|84
 block|,
 literal|127
 block|,
@@ -8047,47 +8047,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* XXX: I don't like these... */
-case|case
-literal|0x5c
-case|:
-comment|/* print screen */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|ALTS
-condition|)
-block|{
-name|keycode
-operator|=
-literal|0x54
-expr_stmt|;
-comment|/* sysrq */
-block|}
-break|break;
-case|case
-literal|0x68
-case|:
-comment|/* pause/break */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|CTLS
-condition|)
-block|{
-name|keycode
-operator|=
-literal|0x6c
-expr_stmt|;
-comment|/* break */
-block|}
-break|break;
 block|}
 comment|/* return the key code in the K_CODE mode */
 if|if
@@ -9828,8 +9787,6 @@ literal|0x135
 block|,
 comment|/* Divide */
 literal|0x137
-operator||
-name|SCAN_PREFIX_SHIFT
 block|,
 comment|/* PrintScreen */
 literal|0x138
@@ -9988,13 +9945,47 @@ literal|89
 index|]
 expr_stmt|;
 block|}
+comment|/* PrintScreen */
+if|if
+condition|(
+name|code
+operator|==
+literal|0x137
+operator|&&
+operator|(
+operator|!
+operator|(
+name|shift
+operator|&
+operator|(
+name|MOD_CONTROL_L
+operator||
+name|MOD_CONTROL_R
+operator||
+name|MOD_ALT_L
+operator||
+name|MOD_ALT_R
+operator||
+name|MOD_SHIFT_L
+operator||
+name|MOD_SHIFT_R
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+name|code
+operator||=
+name|SCAN_PREFIX_SHIFT
+expr_stmt|;
+block|}
 comment|/* Pause/Break */
 if|if
 condition|(
 operator|(
 name|code
 operator|==
-literal|104
+literal|0x146
 operator|)
 operator|&&
 operator|(
@@ -10020,23 +10011,6 @@ name|SCAN_PREFIX_E1
 operator||
 name|SCAN_PREFIX_CTL
 operator|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|shift
-operator|&
-operator|(
-name|MOD_SHIFT_L
-operator||
-name|MOD_SHIFT_R
-operator|)
-condition|)
-block|{
-name|code
-operator|&=
-operator|~
-name|SCAN_PREFIX_SHIFT
 expr_stmt|;
 block|}
 name|code
