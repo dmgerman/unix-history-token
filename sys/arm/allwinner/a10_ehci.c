@@ -1622,7 +1622,8 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ehci_softc_t
+expr|struct
+name|aw_ehci_softc
 argument_list|)
 block|, }
 decl_stmt|;
