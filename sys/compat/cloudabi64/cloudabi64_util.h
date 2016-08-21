@@ -21,6 +21,13 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__ELF_WORD_SIZE
+value|64
+end_define
+
 begin_include
 include|#
 directive|include
