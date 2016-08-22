@@ -1196,7 +1196,6 @@ name|s_boot_params
 operator|.
 name|abp_r3
 operator|)
-operator|,
 operator|:
 literal|"r0"
 operator|,
