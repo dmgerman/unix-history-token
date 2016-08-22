@@ -2648,7 +2648,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* (b) Process name. */
+comment|/* (x) Process name. */
 name|void
 modifier|*
 name|p_pad0
