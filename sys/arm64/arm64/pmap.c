@@ -13572,19 +13572,14 @@ literal|"Attempting to remove an unmapped page"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+switch|switch
+condition|(
 name|lvl
-operator|==
+condition|)
+block|{
+case|case
 literal|2
-argument_list|,
-operator|(
-literal|"Invalid page directory level: %d"
-operator|,
-name|lvl
-operator|)
-argument_list|)
-expr_stmt|;
+case|:
 name|pte
 operator|=
 name|pmap_l2_to_l3
@@ -13596,17 +13591,6 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pte
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"Attempting to remove an unmapped page"
-operator|)
-argument_list|)
-expr_stmt|;
 name|tpte
 operator|=
 name|pmap_load
@@ -13614,6 +13598,34 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|tpte
+operator|&
+name|ATTR_DESCR_MASK
+operator|)
+operator|==
+name|L3_PAGE
+argument_list|,
+operator|(
+literal|"Attempting to remove an invalid "
+literal|"page: %lx"
+operator|,
+name|tpte
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Invalid page directory level: %d"
+argument_list|,
+name|lvl
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*  * We cannot remove wired pages from a process' mapping at this time  */
 if|if
 condition|(
@@ -13754,11 +13766,23 @@ argument_list|(
 name|ATTR_AP_RW
 argument_list|)
 condition|)
+block|{
+switch|switch
+condition|(
+name|lvl
+condition|)
+block|{
+case|case
+literal|2
+case|:
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
 name|CHANGE_PV_LIST_LOCK_TO_VM_PAGE
 argument_list|(
 operator|&
@@ -13777,6 +13801,14 @@ index|]
 operator||=
 name|bitmask
 expr_stmt|;
+switch|switch
+condition|(
+name|lvl
+condition|)
+block|{
+case|case
+literal|2
+case|:
 name|pmap_resident_count_dec
 argument_list|(
 name|pmap
@@ -13805,6 +13837,8 @@ operator|.
 name|pv_gen
 operator|++
 expr_stmt|;
+break|break;
+block|}
 name|pmap_unuse_l3
 argument_list|(
 name|pmap
