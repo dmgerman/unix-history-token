@@ -559,6 +559,47 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|hn_nvs_req_send
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|void
+modifier|*
+name|req
+parameter_list|,
+name|int
+name|reqlen
+parameter_list|)
+block|{
+return|return
+operator|(
+name|hn_nvs_send
+argument_list|(
+name|sc
+operator|->
+name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_NONE
+argument_list|,
+name|req
+argument_list|,
+name|reqlen
+argument_list|,
+operator|&
+name|hn_send_ctx_none
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Net VSC initialize receive buffer with net VSP  *   * Net VSP:  Network virtual services client, also known as the  *     Hyper-V extensible switch and the synthetic data path.  */
 end_comment
@@ -1454,13 +1495,9 @@ expr_stmt|;
 comment|/* NOTE: No response. */
 name|ret
 operator|=
-name|hn_nvs_send
+name|hn_nvs_req_send
 argument_list|(
 name|sc
-operator|->
-name|hn_prichan
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_NONE
 argument_list|,
 operator|&
 name|disconn
@@ -1469,9 +1506,6 @@ sizeof|sizeof
 argument_list|(
 name|disconn
 argument_list|)
-argument_list|,
-operator|&
-name|hn_send_ctx_none
 argument_list|)
 expr_stmt|;
 if|if
@@ -1630,13 +1664,9 @@ expr_stmt|;
 comment|/* NOTE: No response. */
 name|ret
 operator|=
-name|hn_nvs_send
+name|hn_nvs_req_send
 argument_list|(
 name|sc
-operator|->
-name|hn_prichan
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_NONE
 argument_list|,
 operator|&
 name|disconn
@@ -1645,9 +1675,6 @@ sizeof|sizeof
 argument_list|(
 name|disconn
 argument_list|)
-argument_list|,
-operator|&
-name|hn_send_ctx_none
 argument_list|)
 expr_stmt|;
 if|if
@@ -2082,13 +2109,9 @@ expr_stmt|;
 comment|/* NOTE: No response. */
 name|error
 operator|=
-name|hn_nvs_send
+name|hn_nvs_req_send
 argument_list|(
 name|sc
-operator|->
-name|hn_prichan
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_NONE
 argument_list|,
 operator|&
 name|conf
@@ -2097,9 +2120,6 @@ sizeof|sizeof
 argument_list|(
 name|conf
 argument_list|)
-argument_list|,
-operator|&
-name|hn_send_ctx_none
 argument_list|)
 expr_stmt|;
 if|if
@@ -2349,13 +2369,9 @@ expr_stmt|;
 comment|/* NOTE: No response. */
 name|ret
 operator|=
-name|hn_nvs_send
+name|hn_nvs_req_send
 argument_list|(
 name|sc
-operator|->
-name|hn_prichan
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_NONE
 argument_list|,
 operator|&
 name|ndis
@@ -2364,9 +2380,6 @@ sizeof|sizeof
 argument_list|(
 name|ndis
 argument_list|)
-argument_list|,
-operator|&
-name|hn_send_ctx_none
 argument_list|)
 expr_stmt|;
 if|if
