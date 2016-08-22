@@ -250,13 +250,13 @@ name|pdu
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|pdu
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -278,6 +278,8 @@ name|pdu_bhs
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -285,8 +287,6 @@ name|pdu
 operator|->
 name|pdu_bhs
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
