@@ -10064,6 +10064,8 @@ name|pmap
 argument_list|,
 name|va
 argument_list|,
+name|va
+operator|+
 name|size
 argument_list|)
 expr_stmt|;
