@@ -2587,6 +2587,9 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|,
+name|bool
+name|stop
 parameter_list|)
 block|{
 name|PROC_LOCK_ASSERT
@@ -2602,6 +2605,10 @@ name|p_flag
 operator||=
 name|P_TRACED
 expr_stmt|;
+if|if
+condition|(
+name|stop
+condition|)
 name|p
 operator|->
 name|p_flag2
@@ -3409,6 +3416,8 @@ comment|/* set my trace flag and "owner" so it can read/write me */
 name|proc_set_traced
 argument_list|(
 name|p
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -3445,6 +3454,8 @@ comment|/* 		 * It would be nice if the tracing relationship was separate 		 * f
 name|proc_set_traced
 argument_list|(
 name|p
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
