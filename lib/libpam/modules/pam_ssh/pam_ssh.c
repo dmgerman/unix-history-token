@@ -233,6 +233,9 @@ comment|/* SSH2 DSA key */
 literal|".ssh/id_ecdsa"
 block|,
 comment|/* SSH2 ECDSA key */
+literal|".ssh/id_ed25519"
+block|,
+comment|/* SSH2 Ed25519 key */
 name|NULL
 block|}
 decl_stmt|;
