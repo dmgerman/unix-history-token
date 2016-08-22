@@ -679,30 +679,6 @@ begin_comment
 comment|/*  * Data types  */
 end_comment
 
-begin_comment
-comment|/*  * Per netvsc channel-specific  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|netvsc_dev_
-block|{
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-decl_stmt|;
-comment|/* Holds rndis device info */
-name|void
-modifier|*
-name|extension
-decl_stmt|;
-block|}
-name|netvsc_dev
-typedef|;
-end_typedef
-
 begin_struct_decl
 struct_decl|struct
 name|vmbus_channel
@@ -1196,9 +1172,10 @@ comment|/* See hv_netvsc_drv_freebsd.c for rules on how to use */
 name|int
 name|temp_unusable
 decl_stmt|;
-name|netvsc_dev
+name|struct
+name|rndis_device_
 modifier|*
-name|net_dev
+name|rndis_dev
 decl_stmt|;
 name|struct
 name|vmbus_channel
@@ -1343,18 +1320,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|netvsc_dev
-modifier|*
+name|int
 name|hv_nv_on_device_add
 parameter_list|(
 name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|void
-modifier|*
-name|additional_info
 parameter_list|,
 name|struct
 name|hn_rx_ring
