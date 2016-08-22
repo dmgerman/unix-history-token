@@ -1457,7 +1457,7 @@ literal|124
 block|,
 literal|125
 block|,
-literal|84
+literal|126
 block|,
 literal|127
 block|,
@@ -1900,6 +1900,18 @@ ifdef|#
 directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE
 end_ifdef
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|ukbd_atkeycode
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -7715,13 +7727,16 @@ directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE
 name|keycode
 operator|=
-name|ukbd_trtab
-index|[
-name|KEY_INDEX
+name|ukbd_atkeycode
 argument_list|(
 name|usbcode
+argument_list|,
+name|sc
+operator|->
+name|sc_ndata
+operator|.
+name|modifiers
 argument_list|)
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -8021,13 +8036,16 @@ name|UKBD_EMULATE_ATSCANCODE
 comment|/* USB key index -> key code -> AT scan code */
 name|keycode
 operator|=
-name|ukbd_trtab
-index|[
-name|KEY_INDEX
+name|ukbd_atkeycode
 argument_list|(
 name|usbcode
+argument_list|,
+name|sc
+operator|->
+name|sc_ndata
+operator|.
+name|modifiers
 argument_list|)
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -9911,6 +9929,65 @@ end_ifdef
 
 begin_function
 specifier|static
+name|uint32_t
+name|ukbd_atkeycode
+parameter_list|(
+name|int
+name|usbcode
+parameter_list|,
+name|int
+name|shift
+parameter_list|)
+block|{
+name|uint32_t
+name|keycode
+decl_stmt|;
+name|keycode
+operator|=
+name|ukbd_trtab
+index|[
+name|KEY_INDEX
+argument_list|(
+name|usbcode
+argument_list|)
+index|]
+expr_stmt|;
+comment|/* 	 * Translate Alt-PrintScreen to SysRq. 	 * 	 * Some or all AT keyboards connected through USB have already 	 * mapped Alted PrintScreens to an unusual usbcode (0x8a). 	 * ukbd_trtab translates this to 0x7e, and key2scan() would 	 * translate that to 0x79 (Intl' 4).  Assume that if we have 	 * an Alted 0x7e here then it actually is an Alted PrintScreen. 	 * 	 * The usual usbcode for all PrintScreens is 0x46.  ukbd_trtab 	 * translates this to 0x5c, so the Alt check to classify 0x5c 	 * is routine. 	 */
+if|if
+condition|(
+operator|(
+name|keycode
+operator|==
+literal|0x5c
+operator|||
+name|keycode
+operator|==
+literal|0x7e
+operator|)
+operator|&&
+name|shift
+operator|&
+operator|(
+name|MOD_ALT_L
+operator||
+name|MOD_ALT_R
+operator|)
+condition|)
+return|return
+operator|(
+literal|0x54
+operator|)
+return|;
+return|return
+operator|(
+name|keycode
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|ukbd_key2scan
 parameter_list|(
@@ -9986,7 +10063,7 @@ block|,
 comment|/* Delete */
 literal|0x146
 block|,
-comment|/* XXX Pause/Break */
+comment|/* Pause/Break */
 literal|0x15b
 block|,
 comment|/* Win_L(Super_L) */
@@ -10122,10 +10199,6 @@ operator|(
 name|MOD_CONTROL_L
 operator||
 name|MOD_CONTROL_R
-operator||
-name|MOD_ALT_L
-operator||
-name|MOD_ALT_R
 operator||
 name|MOD_SHIFT_L
 operator||
