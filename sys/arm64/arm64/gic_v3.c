@@ -1839,11 +1839,16 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"SGI %u on UP system detected\n"
+literal|"SGI %ju on UP system detected\n"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|active_irq
 operator|-
 name|GIC_FIRST_SGI
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
