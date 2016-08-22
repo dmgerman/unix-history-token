@@ -35,7 +35,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|netvsc_dev_
+name|hn_softc
 struct_decl|;
 end_struct_decl
 
@@ -64,7 +64,7 @@ name|hn_send_ctx
 modifier|*
 parameter_list|,
 name|struct
-name|netvsc_dev_
+name|hn_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -380,9 +380,9 @@ modifier|*
 name|sndc
 parameter_list|,
 name|struct
-name|netvsc_dev_
+name|hn_softc
 modifier|*
-name|net_dev
+name|sc
 parameter_list|,
 name|struct
 name|vmbus_channel
@@ -401,13 +401,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|hn_chim_alloc
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|hn_chim_free
 parameter_list|(
 name|struct
-name|netvsc_dev_
+name|hn_softc
 modifier|*
-name|net_dev
+name|sc
 parameter_list|,
 name|uint32_t
 name|chim_idx
