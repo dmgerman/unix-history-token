@@ -1294,7 +1294,11 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"trying delivery"
+literal|"<%s> trying delivery"
+argument_list|,
+name|it
+operator|->
+name|addr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1335,7 +1339,11 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"delivery successful"
+literal|"<%s> delivery successful"
+argument_list|,
+name|it
+operator|->
+name|addr
 argument_list|)
 expr_stmt|;
 name|exit
