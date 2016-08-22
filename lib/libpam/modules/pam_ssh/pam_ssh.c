@@ -221,9 +221,6 @@ name|pam_ssh_keyfiles
 index|[]
 init|=
 block|{
-literal|".ssh/identity"
-block|,
-comment|/* SSH1 RSA key */
 literal|".ssh/id_rsa"
 block|,
 comment|/* SSH2 RSA key */
