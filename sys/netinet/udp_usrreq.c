@@ -460,7 +460,7 @@ argument_list|,
 name|udp_require_l2_bcast
 argument_list|)
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 end_expr_stmt
 
