@@ -2413,7 +2413,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
