@@ -161,6 +161,9 @@ comment|// :upper16:
 name|fixup_t2_movw_lo16
 block|,
 comment|// :lower16:
+comment|// fixup_arm_mod_imm - Fixup for mod_imm
+name|fixup_arm_mod_imm
+block|,
 comment|// Marker
 name|LastTargetFixupKind
 block|,
