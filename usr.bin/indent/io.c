@@ -2969,12 +2969,12 @@ name|memset
 argument_list|(
 name|f
 argument_list|,
-literal|0
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|fstate
+operator|*
+name|f
 argument_list|)
 argument_list|)
 expr_stmt|;
