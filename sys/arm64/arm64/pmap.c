@@ -4434,10 +4434,14 @@ name|vm_page_pa_tryrelock
 argument_list|(
 name|pmap
 argument_list|,
+operator|(
 name|tpte
 operator|&
 operator|~
 name|ATTR_MASK
+operator|)
+operator||
+name|off
 argument_list|,
 operator|&
 name|pa
