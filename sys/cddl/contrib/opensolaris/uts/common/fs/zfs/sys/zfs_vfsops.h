@@ -215,6 +215,10 @@ name|boolean_t
 name|z_use_sa
 decl_stmt|;
 comment|/* version allow system attributes */
+name|boolean_t
+name|z_use_namecache
+decl_stmt|;
+comment|/* make use of FreeBSD name cache */
 name|uint64_t
 name|z_version
 decl_stmt|;
