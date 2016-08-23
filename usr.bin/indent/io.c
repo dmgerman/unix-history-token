@@ -989,6 +989,7 @@ argument_list|,
 name|output
 argument_list|)
 expr_stmt|;
+comment|/* add a backslash to escape the '\' */
 default|default:
 name|putc
 argument_list|(

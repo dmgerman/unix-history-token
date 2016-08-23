@@ -302,6 +302,7 @@ operator|.
 name|tos
 index|]
 expr_stmt|;
+comment|/* the rest is the same as for dolit and forstmt */
 case|case
 name|dolit
 case|:
@@ -1117,6 +1118,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|decl
 case|:
