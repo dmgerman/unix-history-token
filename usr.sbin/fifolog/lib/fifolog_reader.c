@@ -145,11 +145,13 @@ name|fr
 operator|=
 name|calloc
 argument_list|(
-sizeof|sizeof
-expr|*
-name|fr
-argument_list|,
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
