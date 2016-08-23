@@ -1984,6 +1984,8 @@ block|,
 literal|"JMicron JMB361"
 block|,
 name|AHCI_Q_NOFORCE
+operator||
+name|AHCI_Q_1CH
 block|}
 block|,
 block|{
