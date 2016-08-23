@@ -2513,6 +2513,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|GB_NOCREAT
+operator||
+name|GB_UNMAPPED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5932,6 +5934,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|GB_NOCREAT
+operator||
+name|GB_UNMAPPED
 argument_list|)
 expr_stmt|;
 if|if
