@@ -14136,6 +14136,9 @@ case|:
 case|case
 name|FSL_E5500
 case|:
+case|case
+name|FSL_E6500
+case|:
 name|entry
 operator|->
 name|mas7
@@ -14303,6 +14306,9 @@ name|FSL_E500mc
 case|:
 case|case
 name|FSL_E5500
+case|:
+case|case
+name|FSL_E6500
 case|:
 name|mtspr
 argument_list|(
