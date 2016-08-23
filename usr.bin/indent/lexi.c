@@ -2834,7 +2834,7 @@ name|p
 index|]
 argument_list|)
 operator|)
-operator|>=
+operator|>
 literal|0
 condition|;
 name|p
