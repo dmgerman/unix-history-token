@@ -1213,8 +1213,9 @@ condition|)
 name|e_com
 operator|--
 expr_stmt|;
-name|cur_col
-operator|=
+operator|(
+name|void
+operator|)
 name|pad_output
 argument_list|(
 name|cur_col
