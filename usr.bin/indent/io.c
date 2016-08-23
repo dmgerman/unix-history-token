@@ -989,6 +989,7 @@ argument_list|,
 name|output
 argument_list|)
 expr_stmt|;
+comment|/* add a backslash to escape the '\' */
 default|default:
 name|putc
 argument_list|(
@@ -1212,8 +1213,9 @@ condition|)
 name|e_com
 operator|--
 expr_stmt|;
-name|cur_col
-operator|=
+operator|(
+name|void
+operator|)
 name|pad_output
 argument_list|(
 name|cur_col
@@ -2967,12 +2969,12 @@ name|memset
 argument_list|(
 name|f
 argument_list|,
-literal|0
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|fstate
+operator|*
+name|f
 argument_list|)
 argument_list|)
 expr_stmt|;

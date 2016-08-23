@@ -155,12 +155,6 @@ directive|include
 file|<dev/extres/hwreset/hwreset.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dt-bindings/pinctrl/sun4i-a10.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -3010,11 +3004,11 @@ operator|&&
 operator|(
 name|pin_pull
 operator|==
-name|SUN4I_PINCTRL_PULL_UP
+name|A10_GPIO_PULLUP
 operator|||
 name|pin_pull
 operator|==
-name|SUN4I_PINCTRL_PULL_DOWN
+name|A10_GPIO_PULLDOWN
 operator|)
 condition|)
 name|a10_gpio_set_pud

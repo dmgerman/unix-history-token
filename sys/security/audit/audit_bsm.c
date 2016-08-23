@@ -5924,7 +5924,7 @@ name|ARG_IS_VALID
 argument_list|(
 name|kar
 argument_list|,
-name|ARG_TEXT
+name|ARG_LOGIN
 argument_list|)
 condition|)
 block|{
@@ -5934,7 +5934,7 @@ name|au_to_text
 argument_list|(
 name|ar
 operator|->
-name|ar_arg_text
+name|ar_arg_login
 argument_list|)
 expr_stmt|;
 name|kau_write

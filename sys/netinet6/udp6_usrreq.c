@@ -3915,10 +3915,7 @@ name|m
 argument_list|,
 name|optp
 argument_list|,
-operator|&
-name|inp
-operator|->
-name|inp_route6
+name|NULL
 argument_list|,
 name|flags
 argument_list|,

@@ -21,6 +21,13 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__ELF_WORD_SIZE
+value|64
+end_define
+
 begin_include
 include|#
 directive|include
@@ -51,6 +58,16 @@ name|Elf64_Brandinfo
 name|cloudabi64_brand
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TO_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|((void *)(uintptr_t)(x))
+end_define
 
 begin_comment
 comment|/* Stack initialization during process execution. */

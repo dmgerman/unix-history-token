@@ -121,6 +121,7 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+comment|/* WEOF or error: return partial line, see fgetln(3). */
 while|while
 condition|(
 operator|(
@@ -172,9 +173,17 @@ name|wchar_t
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 operator|*
 operator|(
 operator|(

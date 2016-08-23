@@ -5482,10 +5482,6 @@ name|flushed_nl
 condition|)
 block|{
 comment|/* we should force a broken line here */
-name|flushed_nl
-operator|=
-name|false
-expr_stmt|;
 name|dump_line
 argument_list|()
 expr_stmt|;
