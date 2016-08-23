@@ -583,6 +583,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* ??? */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 name|FUNLOCKFILE
 argument_list|(
 name|fp
