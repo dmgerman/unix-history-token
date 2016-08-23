@@ -12305,7 +12305,7 @@ argument_list|)
 operator||
 name|ATTR_AP
 argument_list|(
-name|ATTR_AP_RW
+name|ATTR_AP_RO
 argument_list|)
 operator||
 name|L3_PAGE
