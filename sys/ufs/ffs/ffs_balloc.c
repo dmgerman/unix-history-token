@@ -1588,6 +1588,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
 operator|++
 name|reclaimed
 operator|==
@@ -1999,6 +2004,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
 operator|++
 name|reclaimed
 operator|==
@@ -4996,6 +5006,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
 operator|++
 name|reclaimed
 operator|==
@@ -5407,6 +5422,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
 operator|++
 name|reclaimed
 operator|==
