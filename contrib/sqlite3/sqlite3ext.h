@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SQLITE3EXT_H_
+name|SQLITE3EXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SQLITE3EXT_H_
+name|SQLITE3EXT_H
 end_define
 
 begin_include
@@ -20,14 +20,6 @@ include|#
 directive|include
 file|"sqlite3.h"
 end_include
-
-begin_typedef
-typedef|typedef
-name|struct
-name|sqlite3_api_routines
-name|sqlite3_api_routines
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* ** The following structure holds pointers to all of the SQLite API ** routines. ** ** WARNING:  In order to maintain backwards compatibility, add new ** interfaces to the end of this structure only.  If you insert new ** interfaces in the middle of this structure, then older different ** versions of SQLite will not be able to load each other's shared ** libraries! */
@@ -3516,9 +3508,85 @@ name|sqlite3
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Version 3.14.0 and later */
+name|int
+function_decl|(
+modifier|*
+name|trace_v2
+function_decl|)
+parameter_list|(
+name|sqlite3
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|unsigned
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|expanded_sql
+function_decl|)
+parameter_list|(
+name|sqlite3_stmt
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* ** This is the function signature used for all extension entry points.  It ** is also defined in the file "loadext.c". */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sqlite3_loadext_entry
+function_decl|)
+parameter_list|(
+name|sqlite3
+modifier|*
+name|db
+parameter_list|,
+comment|/* Handle to the database. */
+name|char
+modifier|*
+modifier|*
+name|pzErrMsg
+parameter_list|,
+comment|/* Used to set error string on failure. */
+specifier|const
+name|sqlite3_api_routines
+modifier|*
+name|pThunk
+comment|/* Extension API function pointers. */
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
 comment|/* ** The following macros redefine the API routines so that they are ** redirected through the global sqlite3_api structure. ** ** This header file is also used by the loadext.c source file ** (part of the main SQLite library - not an extension) so that ** it can get access to the sqlite3_api_routines structure ** definition.  But the main library does not want to redefine ** the API.  So the redefinition macros are only valid if the ** SQLITE_CORE macros is undefined. */
@@ -5127,6 +5195,24 @@ name|sqlite3_system_errno
 value|sqlite3_api->system_errno
 end_define
 
+begin_comment
+comment|/* Version 3.14.0 and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sqlite3_trace_v2
+value|sqlite3_api->trace_v2
+end_define
+
+begin_define
+define|#
+directive|define
+name|sqlite3_expanded_sql
+value|sqlite3_api->expanded_sql
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -5235,7 +5321,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SQLITE3EXT_H_ */
+comment|/* SQLITE3EXT_H */
 end_comment
 
 end_unit
