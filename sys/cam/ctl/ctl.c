@@ -11236,6 +11236,20 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.cam.ctl.ha_mode"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|softc
+operator|->
+name|ha_mode
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
@@ -11271,6 +11285,16 @@ literal|"HA mode (0 - act/stby, 1 - serialize only, 2 - xfer)"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * In Copan's HA scheme, the "master" and "slave" roles are 	 * figured out through the slot the controller is in.  Although it 	 * is an active/active system, someone has to be in charge. 	 */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.cam.ctl.ha_id"
+argument_list|,
+operator|&
+name|softc
+operator|->
+name|ha_id
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
