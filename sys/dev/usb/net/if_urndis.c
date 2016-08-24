@@ -3256,7 +3256,7 @@ name|rm_ver_major
 operator|=
 name|htole32
 argument_list|(
-literal|1
+name|RNDIS_VERSION_MAJOR
 argument_list|)
 expr_stmt|;
 name|msg

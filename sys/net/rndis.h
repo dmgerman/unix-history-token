@@ -23,6 +23,24 @@ directive|define
 name|_NET_RNDIS_H_
 end_define
 
+begin_comment
+comment|/* Canonical major/minor version as of 22th Aug. 2016. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_VERSION_MAJOR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_VERSION_MINOR
+value|0x00000000
+end_define
+
 begin_define
 define|#
 directive|define
