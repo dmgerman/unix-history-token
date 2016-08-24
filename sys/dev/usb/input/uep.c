@@ -4,7 +4,7 @@ comment|/*-  * Copyright 2010, Gleb Smirnoff<glebius@FreeBSD.org>  * All rights 
 end_comment
 
 begin_comment
-comment|/*  *  http://home.eeti.com.tw/web20/drivers/Software%20Programming%20Guide_v2.0.pdf  */
+comment|/*  *  http://www.eeti.com.tw/pdf/Software%20Programming%20Guide_v2.0.pdf  */
 end_comment
 
 begin_include
