@@ -44,22 +44,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_BUFFER_OVERFLOW
-value|0x80000005L
+name|RNDIS_STATUS_SUCCESS
+value|0x00000000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_FAILURE
-value|0xC0000001L
-end_define
-
-begin_define
-define|#
-directive|define
-name|RNDIS_STATUS_INVALID_DATA
-value|0xC0010015L
+name|RNDIS_STATUS_PENDING
+value|0x00000103L
 end_define
 
 begin_define
@@ -79,20 +72,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_NOT_SUPPORTED
-value|0xC00000BBL
+name|RNDIS_STATUS_BUFFER_OVERFLOW
+value|0x80000005L
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_PENDING
-value|STATUS_PENDING
+name|RNDIS_STATUS_FAILURE
+value|0xC0000001L
 end_define
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_define
+define|#
+directive|define
+name|RNDIS_STATUS_NOT_SUPPORTED
+value|0xC00000BBL
+end_define
 
 begin_define
 define|#
@@ -104,8 +100,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_SUCCESS
-value|0x00000000L
+name|RNDIS_STATUS_INVALID_DATA
+value|0xC0010015L
 end_define
 
 begin_define
