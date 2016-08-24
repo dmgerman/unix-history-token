@@ -725,6 +725,20 @@ name|tty
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|sc_cnstate
+block|{
+name|u_char
+name|kbd_opened
+decl_stmt|;
+name|u_char
+name|scr_opened
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -869,6 +883,17 @@ name|blink_in_progress
 decl_stmt|;
 name|int
 name|grab_level
+decl_stmt|;
+comment|/* 2 is just enough for kdb to grab for stepping normal grabbing: */
+name|struct
+name|sc_cnstate
+name|grab_state
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|kbd_open_level
 decl_stmt|;
 name|struct
 name|mtx
