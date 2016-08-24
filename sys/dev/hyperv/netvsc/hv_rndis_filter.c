@@ -1470,31 +1470,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|response
-operator|->
-name|ndis_msg_type
-operator|==
-name|REMOTE_NDIS_RESET_CMPLT
-condition|)
-block|{
-comment|/* Does not have a request id field */
-name|request
-operator|->
-name|response_msg
-operator|.
-name|msg
-operator|.
-name|reset_complete
-operator|.
-name|status
-operator|=
-name|STATUS_BUFFER_OVERFLOW
-expr_stmt|;
-block|}
-else|else
-block|{
 name|request
 operator|->
 name|response_msg
@@ -1507,7 +1482,6 @@ name|status
 operator|=
 name|STATUS_BUFFER_OVERFLOW
 expr_stmt|;
-block|}
 block|}
 name|sema_post
 argument_list|(
@@ -2517,9 +2491,6 @@ case|case
 name|REMOTE_NDIS_SET_CMPLT
 case|:
 case|case
-name|REMOTE_NDIS_RESET_CMPLT
-case|:
-case|case
 name|REMOTE_NDIS_KEEPALIVE_CMPLT
 case|:
 name|hv_rf_receive_response
@@ -2542,10 +2513,28 @@ name|rndis_hdr
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|printf
+case|case
+name|REMOTE_NDIS_RESET_CMPLT
+case|:
+comment|/* 		 * Reset completed, no rid. 		 * 		 * NOTE: 		 * RESET is not issued by hn(4), so this message should 		 * _not_ be observed. 		 */
+name|if_printf
 argument_list|(
-literal|"hv_rf_on_receive():  Unknown msg_type 0x%x\n"
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"RESET CMPLT received\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"unknown RNDIS message 0x%x\n"
 argument_list|,
 name|rndis_hdr
 operator|->
