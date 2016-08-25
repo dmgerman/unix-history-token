@@ -592,6 +592,10 @@ literal|"aligned_alloc: success when alignment was not "
 literal|"a power of 2"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+comment|/* 			 * NetBSD-specific invariant 			 * 			 * From aligned_alloc(3) on FreeBSD: 			 * 			 * Behavior is undefined if size is not an integral 			 * multiple of alignment. 			 */
 name|ATF_REQUIRE_EQ_MSG
 argument_list|(
 name|size
@@ -610,6 +614,8 @@ literal|"aligned_alloc: success when size was not an "
 literal|"integer multiple of alignment"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_EQ_MSG
 argument_list|(
 operator|(
