@@ -18,13 +18,23 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/kdb.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_mutex.h>
 end_include
 
 begin_comment
@@ -895,11 +905,6 @@ decl_stmt|;
 name|int
 name|kbd_open_level
 decl_stmt|;
-name|struct
-name|mtx
-name|scr_lock
-decl_stmt|;
-comment|/* mutex for sc_puts() */
 name|struct
 name|mtx
 name|video_mtx
@@ -2111,7 +2116,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {							\ 			if (!cold)					\ 				mtx_lock_spin(&(sc)->video_mtx);	\ 		} while(0)
+value|do {							\ 			if (!kdb_active)				\ 				mtx_lock_spin(&(sc)->video_mtx);	\ 		} while(0)
 end_define
 
 begin_define
@@ -2122,7 +2127,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {							\ 			if (!cold)					\ 				mtx_unlock_spin(&(sc)->video_mtx);	\ 		} while(0)
+value|do {							\ 			if (!kdb_active)				\ 				mtx_unlock_spin(&(sc)->video_mtx);	\ 		} while(0)
 end_define
 
 begin_comment
