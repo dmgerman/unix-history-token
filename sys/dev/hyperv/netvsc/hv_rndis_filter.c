@@ -1480,7 +1480,7 @@ name|init_complete
 operator|.
 name|status
 operator|=
-name|STATUS_BUFFER_OVERFLOW
+name|RNDIS_STATUS_BUFFER_OVERFLOW
 expr_stmt|;
 block|}
 name|sema_post
@@ -1793,7 +1793,7 @@ name|set_complete
 operator|->
 name|status
 operator|==
-name|STATUS_NOT_SUPPORTED
+name|RNDIS_STATUS_NOT_SUPPORTED
 condition|)
 block|{
 name|device_printf
@@ -3839,13 +3839,13 @@ name|init
 operator|->
 name|major_version
 operator|=
-name|RNDIS_MAJOR_VERSION
+name|RNDIS_VERSION_MAJOR
 expr_stmt|;
 name|init
 operator|->
 name|minor_version
 operator|=
-name|RNDIS_MINOR_VERSION
+name|RNDIS_VERSION_MINOR
 expr_stmt|;
 comment|/* 	 * Per the RNDIS document, this should be set to the max MTU 	 * plus the header size.  However, 2048 works fine, so leaving 	 * it as is. 	 */
 name|init
