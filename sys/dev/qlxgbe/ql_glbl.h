@@ -434,6 +434,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|ql_minidump_init
+parameter_list|(
+name|qla_host_t
+modifier|*
+name|ha
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * from ql_misc.c  */
 end_comment

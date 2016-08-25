@@ -250,13 +250,13 @@ name|pdu
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|pdu
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -278,6 +278,8 @@ name|pdu_bhs
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -285,8 +287,6 @@ name|pdu
 operator|->
 name|pdu_bhs
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -404,7 +404,11 @@ name|assert
 argument_list|(
 name|len
 operator|<=
-name|MAX_DATA_SEGMENT_LENGTH
+name|pdu
+operator|->
+name|pdu_connection
+operator|->
+name|conn_max_recv_data_segment_length
 argument_list|)
 expr_stmt|;
 name|pdu
@@ -603,6 +607,11 @@ modifier|*
 name|pdu
 parameter_list|)
 block|{
+name|struct
+name|connection
+modifier|*
+name|conn
+decl_stmt|;
 name|size_t
 name|len
 decl_stmt|,
@@ -638,11 +647,15 @@ operator|==
 name|false
 argument_list|)
 expr_stmt|;
-name|pdu_read
-argument_list|(
+name|conn
+operator|=
 name|pdu
 operator|->
 name|pdu_connection
+expr_stmt|;
+name|pdu_read
+argument_list|(
+name|conn
 operator|->
 name|conn_socket
 argument_list|,
@@ -699,9 +712,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|len
 operator|>
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_max_recv_data_segment_length
 condition|)
 block|{
 name|log_errx
@@ -711,7 +729,9 @@ argument_list|,
 literal|"protocol error: received PDU "
 literal|"with DataSegmentLength exceeding %d"
 argument_list|,
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_max_recv_data_segment_length
 argument_list|)
 expr_stmt|;
 block|}
@@ -747,9 +767,7 @@ argument_list|)
 expr_stmt|;
 name|pdu_read
 argument_list|(
-name|pdu
-operator|->
-name|pdu_connection
+name|conn
 operator|->
 name|conn_socket
 argument_list|,
@@ -792,9 +810,7 @@ argument_list|)
 expr_stmt|;
 name|pdu_read
 argument_list|(
-name|pdu
-operator|->
-name|pdu_connection
+name|conn
 operator|->
 name|conn_socket
 argument_list|,

@@ -176,6 +176,9 @@ name|Media
 operator|->
 name|MediaId
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|lba
 argument_list|,
 name|bytes

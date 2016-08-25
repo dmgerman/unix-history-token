@@ -1720,7 +1720,7 @@ parameter_list|,
 name|exp
 parameter_list|)
 define|\
-value|res = read_remote(fd, 0, NULL); \ 	if (res == 5) { \ 		syslog(LOG_ERR, "remote delivery to %s [%s] failed after %s: %s", \ 		       host->host, host->addr, c, neterr); \ 		snprintf(errmsg, sizeof(errmsg), "%s [%s] did not like our %s:\n%s", \ 			 host->host, host->addr, c, neterr); \ 		return (-1); \ 	} else if (res != exp) { \ 		syslog(LOG_NOTICE, "remote delivery deferred: %s [%s] failed after %s: %s", \ 		       host->host, host->addr, c, neterr); \ 		return (1); \ 	}
+value|res = read_remote(fd, 0, NULL); \ 	if (res == 5) { \ 		syslog(LOG_ERR, "remote delivery to %s [%s] failed after %s: %s", \ 		       host->host, host->addr, c, neterr); \ 		snprintf(errmsg, sizeof(errmsg), "%s [%s] did not like our %s:\n%s", \ 			 host->host, host->addr, c, neterr); \ 		error = -1; \ 		goto out; \ 	} else if (res != exp) { \ 		syslog(LOG_NOTICE, "remote delivery deferred: %s [%s] failed after %s: %s", \ 		       host->host, host->addr, c, neterr); \ 		error = 1; \ 		goto out; \ 	}
 comment|/* Check first reply from remote host */
 if|if
 condition|(
@@ -1944,12 +1944,14 @@ operator|->
 name|host
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* SMTP login is not available, so try without */
 elseif|else

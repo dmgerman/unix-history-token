@@ -216,6 +216,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTRNG
+end_ifdef
+
 begin_struct
 struct|struct
 name|intr_map_data_gpio
@@ -236,6 +242,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

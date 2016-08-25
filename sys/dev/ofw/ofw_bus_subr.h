@@ -21,6 +21,23 @@ directive|include
 file|<sys/bus.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTRNG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/intr.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -85,6 +102,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTRNG
+end_ifdef
+
 begin_struct
 struct|struct
 name|intr_map_data_fdt
@@ -100,12 +123,17 @@ name|u_int
 name|ncells
 decl_stmt|;
 name|pcell_t
-modifier|*
 name|cells
+index|[]
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -323,12 +351,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INTRNG
-end_ifndef
-
 begin_function_decl
 name|int
 name|ofw_bus_intr_to_rl
@@ -346,11 +368,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int

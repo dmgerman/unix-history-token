@@ -7,10 +7,6 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_comment
-comment|/*#pragma ident	"%Z%%M%	%I%	%E% SMI"*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -23,6 +19,12 @@ name|buf
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ctx_template
+name|__unused
 parameter_list|,
 name|zio_cksum_t
 modifier|*
@@ -133,6 +135,12 @@ name|buf
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ctx_template
+name|__unused
 parameter_list|,
 name|zio_cksum_t
 modifier|*
@@ -250,6 +258,12 @@ parameter_list|,
 name|uint64_t
 name|size
 parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ctx_template
+name|__unused
+parameter_list|,
 name|zio_cksum_t
 modifier|*
 name|zcp
@@ -355,6 +369,12 @@ name|buf
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ctx_template
+name|__unused
 parameter_list|,
 name|zio_cksum_t
 modifier|*

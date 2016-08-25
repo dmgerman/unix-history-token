@@ -2898,13 +2898,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-block|{
-literal|"scrlock"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -2984,6 +2977,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"syscons video lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"sleepq chain"
 block|,
 operator|&
@@ -3034,13 +3034,6 @@ block|}
 block|,
 block|{
 literal|"entropy harvest mutex"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"syscons video lock"
 block|,
 operator|&
 name|lock_class_mtx_spin

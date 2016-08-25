@@ -12434,7 +12434,7 @@ operator|(
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_flag2
 operator|&
 name|P2_PTRACE_FSTP
 operator|)

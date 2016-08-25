@@ -9032,6 +9032,11 @@ name|error
 operator|)
 return|;
 block|}
+name|AUDIT_ARG_LOGIN
+argument_list|(
+name|logintmp
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p

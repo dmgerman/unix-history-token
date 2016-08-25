@@ -1019,6 +1019,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUDIT_ARG_LOGIN
+parameter_list|(
+name|login
+parameter_list|)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_login((login));				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUDIT_ARG_MODE
 parameter_list|(
 name|mode
@@ -1442,6 +1452,15 @@ parameter_list|(
 name|gidset
 parameter_list|,
 name|gidset_size
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_LOGIN
+parameter_list|(
+name|login
 parameter_list|)
 end_define
 

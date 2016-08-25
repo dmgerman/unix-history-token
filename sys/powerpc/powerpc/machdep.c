@@ -794,12 +794,6 @@ directive|endif
 argument|} 	} else { 		bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start); 		init_static_kenv(NULL,
 literal|0
 argument|); 	}
-ifdef|#
-directive|ifdef
-name|BOOKE
-argument|tlb1_init();
-endif|#
-directive|endif
 comment|/* Store boot environment state */
 argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
 comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */

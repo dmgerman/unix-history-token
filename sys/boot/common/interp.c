@@ -811,9 +811,14 @@ literal|1
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't open '%s': %s"
 argument_list|,
@@ -1000,12 +1005,16 @@ name|se
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
 argument_list|,
-literal|"file '%s' line %d: memory allocation "
-literal|"failure - aborting"
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
+argument_list|,
+literal|"file '%s' line %d: memory allocation failure - aborting"
 argument_list|,
 name|filename
 argument_list|,
@@ -1149,9 +1158,14 @@ operator|!=
 name|VM_OUTOFTEXT
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"Error while including %s, in the line:\n%s"
 argument_list|,

@@ -4862,6 +4862,11 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+name|uint16_t
+name|link_sta
+decl_stmt|,
+name|slot_sta
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4931,24 +4936,87 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Handling of slots with a power controller needs to be 	 * reexamined.  Ignore hotplug on such slots for now. 	 */
 if|if
 condition|(
-name|sc
-operator|->
-name|pcie_slot_cap
-operator|&
-name|PCIEM_SLOT_CAP_PCP
-condition|)
-return|return;
-if|if
-condition|(
+operator|(
 name|sc
 operator|->
 name|pcie_slot_cap
 operator|&
 name|PCIEM_SLOT_CAP_HPC
+operator|)
+operator|==
+literal|0
 condition|)
+return|return;
+comment|/* 	 * Some devices report that they have an MRL when they actually 	 * do not.  Since they always report that the MRL is open, child 	 * devices would be ignored.  Try to detect these devices and 	 * ignore their claim of HotPlug support. 	 * 	 * If there is an open MRL but the Data Link Layer is active, 	 * the MRL is not real. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|pcie_slot_cap
+operator|&
+name|PCIEM_SLOT_CAP_MRLSP
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|pcie_link_cap
+operator|&
+name|PCIEM_LINK_CAP_DL_ACTIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|link_sta
+operator|=
+name|pcie_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIER_LINK_STA
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|slot_sta
+operator|=
+name|pcie_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIER_SLOT_STA
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|slot_sta
+operator|&
+name|PCIEM_SLOT_STA_MRLSS
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|link_sta
+operator|&
+name|PCIEM_LINK_STA_DL_ACTIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+return|return;
+block|}
+block|}
 name|sc
 operator|->
 name|flags
@@ -5031,6 +5099,21 @@ operator|==
 name|ctl
 condition|)
 return|return;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"HotPlug command: %04x -> %04x\n"
+argument_list|,
+name|ctl
+argument_list|,
+name|new
+argument_list|)
+expr_stmt|;
 name|pcie_write_config
 argument_list|(
 name|dev
@@ -5265,15 +5348,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|device_t
-name|dev
-decl_stmt|;
-name|dev
-operator|=
-name|sc
-operator|->
-name|dev
-expr_stmt|;
 comment|/* Card must be inserted. */
 if|if
 condition|(
@@ -5373,7 +5447,7 @@ name|card_inserted
 decl_stmt|,
 name|ei_engaged
 decl_stmt|;
-comment|/* Clear DETACHING if Present Detect has cleared. */
+comment|/* Clear DETACHING if Presence Detect has cleared. */
 if|if
 condition|(
 operator|(
@@ -5510,7 +5584,7 @@ operator||=
 name|PCIEM_SLOT_CTL_EIC
 expr_stmt|;
 block|}
-comment|/* 	 * Start a timer to see if the Data Link Layer times out. 	 * Note that we only start the timer if Presence Detect 	 * changed on this interrupt.  Stop any scheduled timer if 	 * the Data Link Layer is active. 	 */
+comment|/* 	 * Start a timer to see if the Data Link Layer times out. 	 * Note that we only start the timer if Presence Detect or MRL Sensor 	 * changed on this interrupt.  Stop any scheduled timer if 	 * the Data Link Layer is active. 	 */
 if|if
 condition|(
 name|sc
@@ -5537,7 +5611,11 @@ name|sc
 operator|->
 name|pcie_slot_sta
 operator|&
+operator|(
+name|PCIEM_SLOT_STA_MRLSC
+operator||
 name|PCIEM_SLOT_STA_PDC
+operator|)
 condition|)
 block|{
 if|if
@@ -5688,6 +5766,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"HotPlug interrupt: %#x\n"
+argument_list|,
+name|sc
+operator|->
+name|pcie_slot_sta
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sc
 operator|->
 name|pcie_slot_sta
@@ -5814,7 +5907,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Present Detect Changed to %s\n"
+literal|"Presence Detect Changed to %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -6153,7 +6246,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Hotplug Command Timed Out - forcing detach\n"
+literal|"HotPlug Command Timed Out - forcing detach\n"
 argument_list|)
 expr_stmt|;
 name|sc

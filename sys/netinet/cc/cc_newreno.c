@@ -344,6 +344,10 @@ name|ccv
 operator|->
 name|bytes_this_ack
 argument_list|,
+name|ccv
+operator|->
+name|nsegs
+operator|*
 name|V_tcp_abc_l_var
 operator|*
 name|CCV

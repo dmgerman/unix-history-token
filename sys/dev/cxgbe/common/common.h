@@ -891,6 +891,153 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* VF-only parameters. */
+end_comment
+
+begin_comment
+comment|/*  * Global Receive Side Scaling (RSS) parameters in host-native format.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rss_params
+block|{
+name|unsigned
+name|int
+name|mode
+decl_stmt|;
+comment|/* RSS mode */
+union|union
+block|{
+struct|struct
+block|{
+name|u_int
+name|synmapen
+range|:
+literal|1
+decl_stmt|;
+comment|/* SYN Map Enable */
+name|u_int
+name|syn4tupenipv6
+range|:
+literal|1
+decl_stmt|;
+comment|/* enable hashing 4-tuple IPv6 SYNs */
+name|u_int
+name|syn2tupenipv6
+range|:
+literal|1
+decl_stmt|;
+comment|/* enable hashing 2-tuple IPv6 SYNs */
+name|u_int
+name|syn4tupenipv4
+range|:
+literal|1
+decl_stmt|;
+comment|/* enable hashing 4-tuple IPv4 SYNs */
+name|u_int
+name|syn2tupenipv4
+range|:
+literal|1
+decl_stmt|;
+comment|/* enable hashing 2-tuple IPv4 SYNs */
+name|u_int
+name|ofdmapen
+range|:
+literal|1
+decl_stmt|;
+comment|/* Offload Map Enable */
+name|u_int
+name|tnlmapen
+range|:
+literal|1
+decl_stmt|;
+comment|/* Tunnel Map Enable */
+name|u_int
+name|tnlalllookup
+range|:
+literal|1
+decl_stmt|;
+comment|/* Tunnel All Lookup */
+name|u_int
+name|hashtoeplitz
+range|:
+literal|1
+decl_stmt|;
+comment|/* use Toeplitz hash */
+block|}
+name|basicvirtual
+struct|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Maximum resources provisioned for a PCI VF.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vf_resources
+block|{
+name|unsigned
+name|int
+name|nvi
+decl_stmt|;
+comment|/* N virtual interfaces */
+name|unsigned
+name|int
+name|neq
+decl_stmt|;
+comment|/* N egress Qs */
+name|unsigned
+name|int
+name|nethctrl
+decl_stmt|;
+comment|/* N egress ETH or CTRL Qs */
+name|unsigned
+name|int
+name|niqflint
+decl_stmt|;
+comment|/* N ingress Qs/w free list(s)& intr */
+name|unsigned
+name|int
+name|niq
+decl_stmt|;
+comment|/* N ingress Qs */
+name|unsigned
+name|int
+name|tc
+decl_stmt|;
+comment|/* PCI-E traffic class */
+name|unsigned
+name|int
+name|pmask
+decl_stmt|;
+comment|/* port access rights mask */
+name|unsigned
+name|int
+name|nexactf
+decl_stmt|;
+comment|/* N exact MPS filters */
+name|unsigned
+name|int
+name|r_caps
+decl_stmt|;
+comment|/* read capabilities */
+name|unsigned
+name|int
+name|wx_caps
+decl_stmt|;
+comment|/* write/execute capabilities */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|adapter_params
@@ -903,6 +1050,7 @@ name|struct
 name|tp_params
 name|tp
 decl_stmt|;
+comment|/* PF-only */
 name|struct
 name|vpd_params
 name|vpd
@@ -915,6 +1063,17 @@ name|struct
 name|devlog_params
 name|devlog
 decl_stmt|;
+comment|/* PF-only */
+name|struct
+name|rss_params
+name|rss
+decl_stmt|;
+comment|/* VF-only */
+name|struct
+name|vf_resources
+name|vfres
+decl_stmt|;
+comment|/* VF-only */
 name|unsigned
 name|int
 name|sf_size

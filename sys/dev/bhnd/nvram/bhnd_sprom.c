@@ -467,7 +467,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|bhnd_sprom_getvar_meth
+name|bhnd_sprom_getvar_method
 parameter_list|(
 name|device_t
 name|dev
@@ -484,6 +484,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 block|{
 name|struct
@@ -520,6 +523,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 name|SPROM_UNLOCK
@@ -542,7 +547,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|bhnd_sprom_setvar_meth
+name|bhnd_sprom_setvar_method
 parameter_list|(
 name|device_t
 name|dev
@@ -559,6 +564,9 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|bhnd_nvram_type
+name|type
 parameter_list|)
 block|{
 name|struct
@@ -595,6 +603,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 name|SPROM_UNLOCK
@@ -658,14 +668,14 @@ name|DEVMETHOD
 argument_list|(
 name|bhnd_nvram_getvar
 argument_list|,
-name|bhnd_sprom_getvar_meth
+name|bhnd_sprom_getvar_method
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bhnd_nvram_setvar
 argument_list|,
-name|bhnd_sprom_setvar_meth
+name|bhnd_sprom_setvar_method
 argument_list|)
 block|,
 name|DEVMETHOD_END

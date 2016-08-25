@@ -532,6 +532,18 @@ literal|"Killer E2200 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_ATHEROS
+block|,
+name|DEVICEID_ATHEROS_E2400
+block|,
+literal|9
+operator|*
+literal|1024
+block|,
+literal|"Killer E2400 Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1838,6 +1850,8 @@ block|,
 literal|2048
 block|,
 literal|4096
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -6202,6 +6216,9 @@ case|case
 name|DEVICEID_ATHEROS_E2200
 case|:
 case|case
+name|DEVICEID_ATHEROS_E2400
+case|:
+case|case
 name|DEVICEID_ATHEROS_AR8162
 case|:
 case|case
@@ -7761,6 +7778,19 @@ name|deviceid
 condition|)
 block|{
 case|case
+name|DEVICEID_ATHEROS_E2200
+case|:
+case|case
+name|DEVICEID_ATHEROS_E2400
+case|:
+name|sc
+operator|->
+name|alc_flags
+operator||=
+name|ALC_FLAG_E2X00
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|DEVICEID_ATHEROS_AR8161
 case|:
 if|if
@@ -7792,9 +7822,6 @@ operator||=
 name|ALC_FLAG_LINK_WAR
 expr_stmt|;
 comment|/* FALLTHROUGH */
-case|case
-name|DEVICEID_ATHEROS_E2200
-case|:
 case|case
 name|DEVICEID_ATHEROS_AR8171
 case|:
@@ -8119,6 +8146,25 @@ operator|->
 name|alc_dma_wr_burst
 operator|=
 literal|3
+expr_stmt|;
+comment|/* 		 * Force maximum payload size to 128 bytes for E2200/E2400. 		 * Otherwise it triggers DMA write error. 		 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|alc_flags
+operator|&
+name|ALC_FLAG_E2X00
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|alc_dma_wr_burst
+operator|=
+literal|0
 expr_stmt|;
 name|alc_init_pcie
 argument_list|(
@@ -22588,6 +22634,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|reg
 operator||=
 operator|(
@@ -22598,6 +22645,25 @@ operator|)
 operator|&
 name|RXQ_CFG_816X_IDT_TBL_SIZE_MASK
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|alc_flags
+operator|&
+name|ALC_FLAG_FASTETHER
+operator|)
+operator|==
+literal|0
+condition|)
+name|reg
+operator||=
+name|RXQ_CFG_ASPM_THROUGHPUT_LIMIT_100M
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -22620,8 +22686,9 @@ name|DEVICEID_ATHEROS_AR8151_V2
 condition|)
 name|reg
 operator||=
-name|RXQ_CFG_ASPM_THROUGHPUT_LIMIT_1M
+name|RXQ_CFG_ASPM_THROUGHPUT_LIMIT_100M
 expr_stmt|;
+block|}
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -22756,7 +22823,7 @@ name|AR816X_REV_A1
 case|:
 name|reg
 operator||=
-name|DMA_CFG_RD_CHNL_SEL_1
+name|DMA_CFG_RD_CHNL_SEL_2
 expr_stmt|;
 break|break;
 case|case
@@ -22766,7 +22833,7 @@ comment|/* FALLTHROUGH */
 default|default:
 name|reg
 operator||=
-name|DMA_CFG_RD_CHNL_SEL_3
+name|DMA_CFG_RD_CHNL_SEL_4
 expr_stmt|;
 break|break;
 block|}

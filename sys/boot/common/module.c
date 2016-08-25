@@ -586,9 +586,14 @@ condition|(
 name|fp
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"warning: file '%s' already loaded"
 argument_list|,
@@ -687,9 +692,14 @@ operator|==
 name|EEXIST
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"warning: KLD '%s' already loaded"
 argument_list|,
@@ -745,9 +755,14 @@ operator|==
 name|EEXIST
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"warning: module '%s' already loaded"
 argument_list|,
@@ -895,9 +910,14 @@ operator|==
 name|optarg
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"bad key index '%s'"
 argument_list|,
@@ -1563,9 +1583,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't load file '%s': %s"
 argument_list|,
@@ -1733,9 +1758,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"module '%s' exists but with wrong version"
 argument_list|,
@@ -1888,9 +1918,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't find '%s'"
 argument_list|,
@@ -1919,9 +1954,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't open '%s': %s"
 argument_list|,
@@ -2012,9 +2052,14 @@ literal|0
 condition|)
 block|{
 comment|/* error */
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"error reading '%s': %s"
 argument_list|,
@@ -2260,9 +2305,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"warning: module '%s' already loaded"
 argument_list|,
@@ -2294,9 +2344,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't find '%s'"
 argument_list|,
@@ -2382,9 +2437,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"can't find '%s'"
 argument_list|,
@@ -2412,9 +2472,14 @@ condition|(
 name|fp
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"warning: KLD '%s' already loaded"
 argument_list|,
@@ -2549,15 +2614,22 @@ name|err
 operator|==
 name|EFTYPE
 condition|)
-name|sprintf
+block|{
+name|snprintf
 argument_list|(
 name|command_errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|command_errbuf
+argument_list|)
 argument_list|,
 literal|"don't know how to load module '%s'"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err

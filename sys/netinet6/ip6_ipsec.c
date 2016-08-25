@@ -268,30 +268,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_FILTERTUNNEL
-end_ifdef
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|ip6_ipsec6_filtertunnel
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -304,11 +280,6 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

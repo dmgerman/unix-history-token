@@ -23,6 +23,13 @@ define|\
 value|uint32_t	th_physical;		\ 	uint32_t	th_res[7];
 end_define
 
+begin_define
+define|#
+directive|define
+name|VDSO_TH_ALGO_ARM_GENTIM
+value|VDSO_TH_ALGO_1
+end_define
+
 begin_endif
 endif|#
 directive|endif

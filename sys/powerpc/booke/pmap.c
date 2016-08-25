@@ -14136,6 +14136,9 @@ case|:
 case|case
 name|FSL_E5500
 case|:
+case|case
+name|FSL_E6500
+case|:
 name|entry
 operator|->
 name|mas7
@@ -14303,6 +14306,9 @@ name|FSL_E500mc
 case|:
 case|case
 name|FSL_E5500
+case|:
+case|case
+name|FSL_E6500
 case|:
 name|mtspr
 argument_list|(
@@ -15002,7 +15008,13 @@ argument|) ? tsize2size(tsz) :
 literal|0
 argument|;
 comment|/* Setup TLB miss defaults */
-argument|set_mas4_defaults(); }  vm_offset_t  pmap_early_io_map(vm_paddr_t pa, vm_size_t size) { 	vm_paddr_t pa_base; 	vm_offset_t va
+argument|set_mas4_defaults(); }  void pmap_early_io_unmap(vm_offset_t va, vm_size_t size) { 	int i; 	tlb_entry_t e;  	for (i =
+literal|0
+argument|; i< TLB1_ENTRIES&& size>
+literal|0
+argument|; i ++) { 		tlb1_read_entry(&e, i); 		if (!(e.mas1& MAS1_VALID)) 			continue;
+comment|/* 		 * FIXME: this code does not work if VA region 		 * spans multiple TLB entries. This does not cause 		 * problems right now but shall be fixed in the future 		 */
+argument|if (va>= e.virt&& (va + size)<= (e.virt + e.size)) { 			size -= e.size; 			e.mas1&= ~MAS1_VALID; 			tlb1_write_entry(&e, i); 		} 	} }	 		 vm_offset_t  pmap_early_io_map(vm_paddr_t pa, vm_size_t size) { 	vm_paddr_t pa_base; 	vm_offset_t va
 argument_list|,
 argument|sz; 	int i; 	tlb_entry_t e;  	KASSERT(!pmap_bootstrapped, (
 literal|"Do not use after PMAP is up!"

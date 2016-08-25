@@ -1130,6 +1130,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_early_io_unmap
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
