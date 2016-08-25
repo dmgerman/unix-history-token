@@ -424,11 +424,6 @@ name|err
 operator|)
 return|;
 block|}
-operator|*
-name|dev
-operator|=
-name|idev
-expr_stmt|;
 name|cp
 operator|=
 name|strchr
