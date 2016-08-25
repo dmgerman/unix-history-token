@@ -462,7 +462,8 @@ block|{
 comment|/* If fp is at EOF already, we just need space for the NUL. */
 if|if
 condition|(
-name|__sferror
+operator|!
+name|__sfeof
 argument_list|(
 name|fp
 argument_list|)
@@ -560,7 +561,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|__sferror
+operator|!
+name|__sfeof
 argument_list|(
 name|fp
 argument_list|)
