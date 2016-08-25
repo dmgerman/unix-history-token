@@ -180,6 +180,10 @@ decl_stmt|;
 block|}
 name|ccvc
 union|;
+name|uint16_t
+name|nsegs
+decl_stmt|;
+comment|/* # segments coalesced into current chain. */
 block|}
 struct|;
 end_struct
