@@ -820,6 +820,34 @@ name|netvsc_device_info
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|HN_XACT_REQ_PGCNT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XACT_RESP_PGCNT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XACT_REQ_SIZE
+value|(HN_XACT_REQ_PGCNT * PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XACT_RESP_SIZE
+value|(HN_XACT_RESP_PGCNT * PAGE_SIZE)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1267,6 +1295,9 @@ decl_stmt|;
 name|struct
 name|hyperv_dma
 name|hn_chim_dma
+decl_stmt|;
+name|uint32_t
+name|hn_rndis_rid
 decl_stmt|;
 block|}
 name|hn_softc_t
