@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/ProcessMessage.h"
+file|"ProcessMessage.h"
 end_include
 
 begin_include

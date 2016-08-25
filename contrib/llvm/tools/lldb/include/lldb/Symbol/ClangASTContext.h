@@ -173,11 +173,9 @@ name|DWARFASTParserClang
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|class
-name|PDBASTParser
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|//class PDBASTParser;
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -2015,13 +2013,13 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-name|PDBASTParser
-modifier|*
-name|GetPDBParser
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|//  PDBASTParser *
+end_comment
+
+begin_comment
+comment|//  GetPDBParser();
+end_comment
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -5163,16 +5161,9 @@ name|m_dwarf_ast_parser_ap
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|PDBASTParser
-operator|>
-name|m_pdb_ast_parser_ap
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|//  std::unique_ptr<PDBASTParser>                   m_pdb_ast_parser_ap;
+end_comment
 
 begin_expr_stmt
 name|std
