@@ -434,12 +434,6 @@ struct|struct
 name|cxgbei_data
 block|{
 name|u_int
-name|max_txsz
-decl_stmt|;
-name|u_int
-name|max_rxsz
-decl_stmt|;
-name|u_int
 name|llimit
 decl_stmt|;
 name|u_int
@@ -459,6 +453,12 @@ name|idx_mask
 decl_stmt|;
 name|uint32_t
 name|rsvd_tag_mask
+decl_stmt|;
+name|u_int
+name|max_tx_pdu_len
+decl_stmt|;
+name|u_int
+name|max_rx_pdu_len
 decl_stmt|;
 name|struct
 name|mtx
