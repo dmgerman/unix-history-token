@@ -9709,7 +9709,7 @@ condition|(
 name|lev
 operator|>=
 literal|0
-operator|||
+operator|&&
 name|lev
 operator|<
 literal|2
@@ -9775,7 +9775,7 @@ condition|(
 name|lev
 operator|>=
 literal|0
-operator|||
+operator|&&
 name|lev
 operator|<
 literal|2
