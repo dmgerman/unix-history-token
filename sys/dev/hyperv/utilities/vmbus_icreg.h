@@ -215,6 +215,40 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/* VMBUS_ICMSG_TYPE_HEARTBEAT */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_icmsg_heartbeat
+block|{
+name|struct
+name|vmbus_icmsg_hdr
+name|ic_hdr
+decl_stmt|;
+name|uint64_t
+name|ic_seq
+decl_stmt|;
+name|uint32_t
+name|ic_rsvd
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VMBUS_ICMSG_HEARTBEAT_SIZE_MIN
+define|\
+value|__offsetof(struct vmbus_icmsg_heartbeat, ic_rsvd[0])
+end_define
+
 begin_endif
 endif|#
 directive|endif
