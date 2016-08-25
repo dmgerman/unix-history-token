@@ -2873,7 +2873,7 @@ name|_rv
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set\tpush\n\t" 	    ".set\tmips64r2\n\t" 	    "rdhwr\t%0, $29\n\t" 	    ".set\tpop" 	    : "=v" (_rv));
+asm|( 	    ".set\tpush\n\t" 	    ".set\tmips64r2\n\t" 	    "rdhwr\t%0, $29\n\t" 	    ".set\tpop" 	    : "=r" (_rv));
 comment|/* 	 * XXXSS See 'git show c6be4f4d2d1b71c04de5d3bbb6933ce2dbcdb317' 	 * 	 * Remove the offset since this really a request to get the TLS 	 * pointer via sysarch() (in theory).  Of course, this may go away 	 * once the TLS code is rewritten. 	 */
 name|_rv
 operator|=
@@ -2915,7 +2915,7 @@ name|_rv
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set\tpush\n\t" 	    ".set\tmips32r2\n\t" 	    "rdhwr\t%0, $29\n\t" 	    ".set\tpop" 	    : "=v" (_rv));
+asm|( 	    ".set\tpush\n\t" 	    ".set\tmips32r2\n\t" 	    "rdhwr\t%0, $29\n\t" 	    ".set\tpop" 	    : "=r" (_rv));
 comment|/* 	 * XXXSS See 'git show c6be4f4d2d1b71c04de5d3bbb6933ce2dbcdb317' 	 * 	 * Remove the offset since this really a request to get the TLS 	 * pointer via sysarch() (in theory).  Of course, this may go away 	 * once the TLS code is rewritten. 	 */
 name|_rv
 operator|=
