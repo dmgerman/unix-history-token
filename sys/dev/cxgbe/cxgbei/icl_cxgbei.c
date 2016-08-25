@@ -1739,9 +1739,9 @@ if|if
 condition|(
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator|&
-name|SBUF_ULP_FLAG_DATA_DDPED
+name|ICPF_RX_DDP
 condition|)
 return|return;
 comment|/* data is DDP'ed, no need to copy */

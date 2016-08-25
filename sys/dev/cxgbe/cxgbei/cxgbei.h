@@ -177,12 +177,68 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* PDU flags and signature. */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|ICPF_RX_HDR
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+comment|/* PDU header received. */
+name|ICPF_RX_FLBUF
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/* PDU payload received in a freelist. */
+name|ICPF_RX_DDP
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+comment|/* PDU payload DDP'd. */
+name|ICPF_RX_STATUS
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|/* Rx status received. */
+name|ICPF_HCRC_ERR
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/* Header digest error. */
+name|ICPF_DCRC_ERR
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|/* Data digest error. */
+name|ICPF_PAD_ERR
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
+comment|/* Padding error. */
 name|CXGBEI_PDU_SIGNATURE
-value|0x12344321
-end_define
+init|=
+literal|0x12344321
+block|}
+enum|;
+end_enum
 
 begin_struct
 struct|struct
@@ -197,11 +253,11 @@ name|uint32_t
 name|icp_signature
 decl_stmt|;
 name|uint32_t
-name|pdu_seq
+name|icp_seq
 decl_stmt|;
 comment|/* For debug only */
 name|u_int
-name|pdu_flags
+name|icp_flags
 decl_stmt|;
 block|}
 struct|;
@@ -327,55 +383,6 @@ parameter_list|(
 name|_sgel
 parameter_list|)
 value|_sgel + 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_HDR_RCVD
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_DATA_RCVD
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_STATUS_RCVD
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_HCRC_ERROR
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_DCRC_ERROR
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_PAD_ERROR
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUF_ULP_FLAG_DATA_DDPED
-value|0x80
 end_define
 
 begin_comment

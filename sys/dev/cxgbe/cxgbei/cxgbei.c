@@ -3280,7 +3280,7 @@ argument_list|)
 expr_stmt|;
 name|icp
 operator|->
-name|pdu_seq
+name|icp_seq
 operator|=
 name|ntohl
 argument_list|(
@@ -3291,9 +3291,9 @@ argument_list|)
 expr_stmt|;
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator|=
-name|SBUF_ULP_FLAG_HDR_RCVD
+name|ICPF_RX_HDR
 expr_stmt|;
 comment|/* This is the start of a new PDU.  There should be no old state. */
 name|MPASS
@@ -3421,9 +3421,9 @@ name|MPASS
 argument_list|(
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator|==
-name|SBUF_ULP_FLAG_HDR_RCVD
+name|ICPF_RX_HDR
 argument_list|)
 expr_stmt|;
 name|MPASS
@@ -3461,9 +3461,9 @@ argument_list|)
 expr_stmt|;
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_DATA_RCVD
+name|ICPF_RX_FLBUF
 expr_stmt|;
 name|icp
 operator|->
@@ -3639,9 +3639,9 @@ name|MPASS
 argument_list|(
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator|&
-name|SBUF_ULP_FLAG_HDR_RCVD
+name|ICPF_RX_HDR
 argument_list|)
 expr_stmt|;
 comment|/* Data is optional. */
@@ -3654,9 +3654,9 @@ name|ip
 expr_stmt|;
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_STATUS_RCVD
+name|ICPF_RX_STATUS
 expr_stmt|;
 name|val
 operator|=
@@ -3675,9 +3675,9 @@ name|F_DDP_PADDING_ERR
 condition|)
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_PAD_ERROR
+name|ICPF_PAD_ERR
 expr_stmt|;
 if|if
 condition|(
@@ -3687,9 +3687,9 @@ name|F_DDP_HDRCRC_ERR
 condition|)
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_HCRC_ERROR
+name|ICPF_HCRC_ERR
 expr_stmt|;
 if|if
 condition|(
@@ -3699,9 +3699,9 @@ name|F_DDP_DATACRC_ERR
 condition|)
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_DCRC_ERROR
+name|ICPF_DCRC_ERR
 expr_stmt|;
 if|if
 condition|(
@@ -3715,9 +3715,9 @@ block|{
 comment|/* XXXNP: what should ip->ip_data_len be, and why? */
 name|icp
 operator|->
-name|pdu_flags
+name|icp_flags
 operator||=
-name|SBUF_ULP_FLAG_DATA_DDPED
+name|ICPF_RX_DDP
 expr_stmt|;
 block|}
 name|pdu_len
@@ -3808,7 +3808,7 @@ name|MPASS
 argument_list|(
 name|icp
 operator|->
-name|pdu_seq
+name|icp_seq
 operator|==
 name|tp
 operator|->
@@ -4134,18 +4134,18 @@ argument_list|)
 expr_stmt|;
 name|icp0
 operator|->
-name|pdu_seq
+name|icp_seq
 operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
 name|icp0
 operator|->
-name|pdu_flags
+name|icp_flags
 operator|=
-name|SBUF_ULP_FLAG_HDR_RCVD
+name|ICPF_RX_HDR
 operator||
-name|SBUF_ULP_FLAG_STATUS_RCVD
+name|ICPF_RX_STATUS
 expr_stmt|;
 name|m_copydata
 argument_list|(
@@ -4190,7 +4190,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|CTR4(KTR_CXGBE, "%s: tid %u, pdu_len %u, pdu_flags 0x%x", 	    __func__, tid, pdu_len, icp->pdu_flags);
+block|CTR4(KTR_CXGBE, "%s: tid %u, pdu_len %u, pdu_flags 0x%x", 	    __func__, tid, pdu_len, icp->icp_flags);
 endif|#
 directive|endif
 name|STAILQ_INSERT_TAIL
