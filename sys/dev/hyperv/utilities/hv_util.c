@@ -92,14 +92,25 @@ name|VMBUS_IC_BRSIZE
 value|(4 * PAGE_SIZE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_IC_VERCNT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_IC_NEGOSZ
+define|\
+value|__offsetof(struct vmbus_icmsg_negotiate, ic_ver[VMBUS_IC_VERCNT])
+end_define
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vmbus_icmsg_negotiate
-argument_list|)
+name|VMBUS_IC_NEGOSZ
 operator|<
 name|VMBUS_IC_BRSIZE
 argument_list|)
@@ -120,7 +131,8 @@ modifier|*
 name|data
 parameter_list|,
 name|int
-name|dlen
+modifier|*
+name|dlen0
 parameter_list|)
 block|{
 name|struct
@@ -132,6 +144,11 @@ name|int
 name|cnt
 decl_stmt|,
 name|major
+decl_stmt|,
+name|dlen
+init|=
+operator|*
+name|dlen0
 decl_stmt|;
 comment|/* 	 * Preliminary message size verification 	 */
 if|if
@@ -278,29 +295,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Data contains two versions */
+comment|/* Update data size */
 name|nego
 operator|->
 name|ic_hdr
 operator|.
 name|ic_dsize
 operator|=
-name|__offsetof
-argument_list|(
-expr|struct
-name|vmbus_icmsg_negotiate
-argument_list|,
-name|ic_ver
-index|[
-literal|2
-index|]
-argument_list|)
+name|VMBUS_IC_NEGOSZ
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|vmbus_icmsg_hdr
 argument_list|)
+expr_stmt|;
+comment|/* Update total size, if necessary */
+if|if
+condition|(
+name|dlen
+operator|<
+name|VMBUS_IC_NEGOSZ
+condition|)
+operator|*
+name|dlen0
+operator|=
+name|VMBUS_IC_NEGOSZ
 expr_stmt|;
 return|return
 literal|0

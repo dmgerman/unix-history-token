@@ -128,6 +128,7 @@ modifier|*
 name|data
 parameter_list|,
 name|int
+modifier|*
 name|dlen
 parameter_list|)
 function_decl|;

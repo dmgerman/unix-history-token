@@ -270,6 +270,7 @@ name|sc
 argument_list|,
 name|data
 argument_list|,
+operator|&
 name|dlen
 argument_list|)
 expr_stmt|;
