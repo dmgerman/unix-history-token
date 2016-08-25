@@ -179,6 +179,20 @@ define|\
 value|(HV_RF_RECVINFO_VLAN |		\ 	 HV_RF_RECVINFO_CSUM |		\ 	 HV_RF_RECVINFO_HASHINF |	\ 	 HV_RF_RECVINFO_HASHVAL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_RNDIS_RID_COMPAT_MASK
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RNDIS_RID_COMPAT_MAX
+value|HN_RNDIS_RID_COMPAT_MASK
+end_define
+
 begin_comment
 comment|/*  * Forward declarations  */
 end_comment
@@ -869,13 +883,8 @@ name|new_request_id
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-comment|/* Increment to get the new value (call above returns old value) */
-name|set
-operator|->
-name|request_id
-operator|+=
-literal|1
+operator|&
+name|HN_RNDIS_RID_COMPAT_MASK
 expr_stmt|;
 comment|/* Add to the request list */
 name|mtx_lock
@@ -2436,6 +2445,12 @@ name|rndis_msg
 modifier|*
 name|rndis_hdr
 decl_stmt|;
+specifier|const
+name|struct
+name|rndis_comp_hdr
+modifier|*
+name|comp
+decl_stmt|;
 name|rndis_dev
 operator|=
 name|sc
@@ -2493,6 +2508,20 @@ case|:
 case|case
 name|REMOTE_NDIS_KEEPALIVE_CMPLT
 case|:
+name|comp
+operator|=
+name|data
+expr_stmt|;
+if|if
+condition|(
+name|comp
+operator|->
+name|rm_rid
+operator|<=
+name|HN_RNDIS_RID_COMPAT_MAX
+condition|)
+block|{
+comment|/* Transition time compat code */
 name|hv_rf_receive_response
 argument_list|(
 name|rndis_dev
@@ -2500,6 +2529,7 @@ argument_list|,
 name|rndis_hdr
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* notification message */
 case|case
