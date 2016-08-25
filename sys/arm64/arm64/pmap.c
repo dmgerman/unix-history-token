@@ -19445,11 +19445,11 @@ operator|~
 name|ATTR_DESCR_MASK
 operator|)
 operator||
-name|L3_PAGE
+name|L2_BLOCK
 operator|)
 argument_list|,
 operator|(
-literal|"Invalid l3 page (%lx != %lx"
+literal|"Invalid l2 page (%lx != %lx)"
 operator|,
 name|l2
 index|[
@@ -19463,7 +19463,7 @@ operator|~
 name|ATTR_DESCR_MASK
 operator|)
 operator||
-name|L3_PAGE
+name|L2_BLOCK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -19898,7 +19898,7 @@ name|L3_PAGE
 operator|)
 argument_list|,
 operator|(
-literal|"Invalid l3 page (%lx != %lx"
+literal|"Invalid l3 page (%lx != %lx)"
 operator|,
 name|l3
 index|[
