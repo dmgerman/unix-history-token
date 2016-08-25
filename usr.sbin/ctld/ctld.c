@@ -8051,7 +8051,7 @@ expr_stmt|;
 comment|/* 	 * Default values, from RFC 3720, section 12. 	 */
 name|conn
 operator|->
-name|conn_max_data_segment_length
+name|conn_max_recv_data_segment_length
 operator|=
 literal|8192
 expr_stmt|;
@@ -8060,6 +8060,12 @@ operator|->
 name|conn_max_burst_length
 operator|=
 literal|262144
+expr_stmt|;
+name|conn
+operator|->
+name|conn_first_burst_length
+operator|=
+literal|65536
 expr_stmt|;
 name|conn
 operator|->

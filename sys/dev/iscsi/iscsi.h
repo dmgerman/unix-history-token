@@ -135,10 +135,10 @@ decl_stmt|;
 name|int
 name|is_initial_r2t
 decl_stmt|;
-name|size_t
+name|int
 name|is_max_burst_length
 decl_stmt|;
-name|size_t
+name|int
 name|is_first_burst_length
 decl_stmt|;
 name|uint8_t
@@ -153,8 +153,11 @@ decl_stmt|;
 name|bool
 name|is_immediate_data
 decl_stmt|;
-name|size_t
-name|is_max_data_segment_length
+name|int
+name|is_max_recv_data_segment_length
+decl_stmt|;
+name|int
+name|is_max_send_data_segment_length
 decl_stmt|;
 name|char
 name|is_target_alias
