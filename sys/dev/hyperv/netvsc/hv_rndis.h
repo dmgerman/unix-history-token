@@ -63,29 +63,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDIS_VERSION_MAJOR_6
-value|6
+name|NDIS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((ver)& 0xffff0000)>> 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NDIS_VERSION_MINOR_1
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDIS_VERSION_MINOR_30
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDIS_VERSION
-value|(NDIS_VERSION_5_1)
+name|NDIS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|((ver)& 0xffff)
 end_define
 
 begin_comment

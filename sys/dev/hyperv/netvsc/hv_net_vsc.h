@@ -1299,6 +1299,9 @@ decl_stmt|;
 name|uint32_t
 name|hn_rndis_rid
 decl_stmt|;
+name|uint32_t
+name|hn_ndis_ver
+decl_stmt|;
 block|}
 name|hn_softc_t
 typedef|;
