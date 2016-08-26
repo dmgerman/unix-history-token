@@ -1603,6 +1603,16 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|va_mode

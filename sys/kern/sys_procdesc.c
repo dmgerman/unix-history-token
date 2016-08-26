@@ -1896,6 +1896,8 @@ decl_stmt|;
 name|struct
 name|timeval
 name|pstart
+decl_stmt|,
+name|boottime
 decl_stmt|;
 comment|/* 	 * XXXRW: Perhaps we should cache some more information from the 	 * process so that we can return it reliably here even after it has 	 * died.  For example, caching its credential data. 	 */
 name|bzero
@@ -1947,6 +1949,12 @@ operator|->
 name|p_stats
 operator|->
 name|p_start
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|timevaladd
 argument_list|(

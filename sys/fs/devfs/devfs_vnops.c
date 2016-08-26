@@ -3424,9 +3424,6 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|devfs_dirent
 modifier|*
@@ -3441,6 +3438,13 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|error
 operator|=
@@ -3621,6 +3625,12 @@ operator|=
 name|vp
 operator|->
 name|v_type
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 define|#
 directive|define

@@ -163,6 +163,10 @@ name|char
 modifier|*
 name|sep
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|int
 name|pid
 decl_stmt|,
@@ -511,6 +515,12 @@ operator|->
 name|p_stats
 operator|->
 name|p_start
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|timevaladd
 argument_list|(

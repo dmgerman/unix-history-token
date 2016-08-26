@@ -1028,6 +1028,10 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1257,6 +1261,12 @@ operator|->
 name|p_stats
 operator|->
 name|p_start
+expr_stmt|;
+name|getboottime
+argument_list|(
+operator|&
+name|boottime
+argument_list|)
 expr_stmt|;
 name|timevaladd
 argument_list|(
