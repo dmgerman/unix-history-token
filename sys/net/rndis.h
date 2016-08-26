@@ -772,6 +772,14 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RNDIS_SET_REQ_INFOBUFOFFSET
+define|\
+value|(sizeof(struct rndis_set_req) -		\ 	 __offsetof(struct rndis_set_req, rm_rid))
+end_define
+
 begin_struct
 struct|struct
 name|rndis_set_comp
