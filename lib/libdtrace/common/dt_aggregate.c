@@ -8,7 +8,7 @@ comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2016, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5419,8 +5419,15 @@ operator|->
 name|dtrd_action
 operator|==
 name|DTRACEAGG_LQUANTIZE
+operator|||
+name|rec
+operator|->
+name|dtrd_action
+operator|==
+name|DTRACEAGG_LLQUANTIZE
 condition|)
 block|{
+comment|/* 			 * For lquantize() and llquantize(), we want to be 			 * sure to not zero the aggregation parameters; step 			 * over them and adjust our size accordingly. 			 */
 name|offs
 operator|=
 sizeof|sizeof
@@ -8802,7 +8809,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* 		 * Now for the more complicated part.  If (and only if) this 		 * is an lquantize() aggregating action, zero-filled data is 		 * not equivalent to an empty record:  we must also get the 		 * parameters for the lquantize(). 		 */
+comment|/* 		 * Now for the more complicated part.  For the lquantize() and 		 * llquantize() aggregating actions, zero-filled data is not 		 * equivalent to an empty record:  we must also get the 		 * parameters for the lquantize()/llquantize(). 		 */
 if|if
 condition|(
 name|rec
@@ -8810,6 +8817,12 @@ operator|->
 name|dtrd_action
 operator|==
 name|DTRACEAGG_LQUANTIZE
+operator|||
+name|rec
+operator|->
+name|dtrd_action
+operator|==
+name|DTRACEAGG_LLQUANTIZE
 condition|)
 block|{
 if|if
@@ -8845,7 +8858,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * We don't have any prototype data.  As a 				 * result, we know that we _do_ have the 				 * compiler-generated information.  (If this 				 * were an anonymous enabling, all of our 				 * zero-filled data would have prototype data 				 * -- either directly or indirectly.) So as 				 * gross as it is, we'll grovel around in the 				 * compiler-generated information to find the 				 * lquantize() parameters. 				 */
+comment|/* 				 * We don't have any prototype data.  As a 				 * result, we know that we _do_ have the 				 * compiler-generated information.  (If this 				 * were an anonymous enabling, all of our 				 * zero-filled data would have prototype data 				 * -- either directly or indirectly.) So as 				 * gross as it is, we'll grovel around in the 				 * compiler-generated information to find the 				 * lquantize()/llquantize() parameters. 				 */
 name|dtrace_stmtdesc_t
 modifier|*
 name|sdp
