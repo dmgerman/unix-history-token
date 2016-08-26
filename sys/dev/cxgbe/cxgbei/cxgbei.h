@@ -618,6 +618,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* icl_cxgbei.c */
+end_comment
+
+begin_function_decl
+name|int
+name|icl_cxgbei_mod_load
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|icl_cxgbei_mod_unload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
