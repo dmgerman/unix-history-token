@@ -1707,6 +1707,11 @@ name|eh_type
 decl_stmt|,
 name|tcp_data_len
 decl_stmt|;
+name|int
+name|force_flush
+init|=
+literal|0
+decl_stmt|;
 comment|/* We expect a contiguous header [eh, ip, tcp]. */
 name|eh
 operator|=
@@ -2001,11 +2006,26 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|th
+operator|->
+name|th_flags
+operator|&
+name|TH_SYN
+condition|)
 return|return
 operator|(
 name|TCP_LRO_CANNOT
 operator|)
 return|;
+comment|/* 		 * Make sure that previously seen segements/ACKs are delivered 		 * before this segement, e.g. FIN. 		 */
+name|force_flush
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* XXX-BZ We lose a ACK|PUSH flag concatenating multiple segments. */
 comment|/* XXX-BZ Ideally we'd flush on PUSH? */
 comment|/* 	 * Check for timestamps. 	 * Since the only option we handle are timestamps, we only have to 	 * handle the simple case of aligned timestamps. 	 */
@@ -2080,11 +2100,13 @@ argument_list|)
 operator|)
 operator|)
 condition|)
-return|return
-operator|(
-name|TCP_LRO_CANNOT
-operator|)
-return|;
+block|{
+comment|/* 		 * Make sure that previously seen segements/ACKs are delivered 		 * before this segement. 		 */
+name|force_flush
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* If the driver did not pass in the checksum, set it now. */
 if|if
 condition|(
@@ -2236,6 +2258,39 @@ continue|continue;
 break|break;
 endif|#
 directive|endif
+block|}
+if|if
+condition|(
+name|force_flush
+condition|)
+block|{
+comment|/* Timestamps mismatch; this is a FIN, etc */
+name|SLIST_REMOVE
+argument_list|(
+operator|&
+name|lc
+operator|->
+name|lro_active
+argument_list|,
+name|le
+argument_list|,
+name|lro_entry
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+name|tcp_lro_flush
+argument_list|(
+name|lc
+argument_list|,
+name|le
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TCP_LRO_CANNOT
+operator|)
+return|;
 block|}
 comment|/* Flush now if appending will result in overflow. */
 if|if
@@ -2558,6 +2613,18 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|force_flush
+condition|)
+block|{
+comment|/* 		 * Nothing to flush, but this segment can not be further 		 * aggregated/delayed. 		 */
+return|return
+operator|(
+name|TCP_LRO_CANNOT
 operator|)
 return|;
 block|}
