@@ -40,6 +40,35 @@ parameter_list|)
 value|((hwrev) == 4 || (hwrev)>= 6)
 end_define
 
+begin_comment
+comment|/** Evaluates to true if the given ChipCommon core revision supports  *  the CHIPC_CAPABILITIES_EXT register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_HWREV_HAS_CAP_EXT
+parameter_list|(
+name|hwrev
+parameter_list|)
+value|((hwrev)>= 35)
+end_define
+
+begin_comment
+comment|/** Evaluates to true if the chipcommon core (determined from the provided  * @p _chipid (CHIPC_ID) register value) provides a pointer to the enumeration  * table via CHIPC_EROMPTR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_HAS_EROMPTR
+parameter_list|(
+name|_chipid
+parameter_list|)
+define|\
+value|(CHIPC_GET_BITS((_chipid), CHIPC_ID_BUS) != BHND_CHIPTYPE_SIBA)
+end_define
+
 begin_define
 define|#
 directive|define

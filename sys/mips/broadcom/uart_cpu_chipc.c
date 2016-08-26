@@ -89,12 +89,6 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"bcm_socinfo.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -123,6 +117,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"bcm_machdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bcm_socinfo.h"
+end_include
 
 begin_decl_stmt
 name|bus_space_tag_t
@@ -270,8 +276,10 @@ operator|=
 operator|(
 name|bus_space_handle_t
 operator|)
-name|BCM_SOCREG
+name|BCM_CORE_ADDR
 argument_list|(
+name|cc_addr
+argument_list|,
 name|CHIPC_UART
 argument_list|(
 name|uart
@@ -432,10 +440,10 @@ return|;
 comment|/* Fetch device handle */
 name|fd
 operator|=
-name|cfe_getstdhandle
-argument_list|(
-name|CFE_STDHANDLE_CONSOLE
-argument_list|)
+name|bcm_get_platform
+argument_list|()
+operator|->
+name|cfe_console
 expr_stmt|;
 if|if
 condition|(

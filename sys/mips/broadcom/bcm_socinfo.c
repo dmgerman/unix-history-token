@@ -26,6 +26,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/cores/chipc/chipcreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bcm_machdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bcm_socinfo.h"
 end_include
 
@@ -285,9 +297,9 @@ decl_stmt|;
 comment|/* 	 * We need Chip ID + Revision + Package 	 * --------------------------------------------------------------          * | 	Mask		| Usage					|          * -------------------------------------------------------------- 	 * |	0x0000FFFF	| Chip ID				| 	 * |	0x000F0000	| Chip Revision				| 	 * |	0x00F00000	| Package Options			| 	 * |	0x0F000000	| Number of Cores (ChipCommon Rev.>= 4)| 	 * |	0xF0000000	| Chip Type				| 	 * -------------------------------------------------------------- 	 */
 name|socid
 operator|=
-name|BCM_READ_REG32
+name|BCM_CHIPC_READ_4
 argument_list|(
-name|BCM_REG_CHIPC_ID
+name|CHIPC_ID
 argument_list|)
 operator|&
 literal|0x00FFFFFF
