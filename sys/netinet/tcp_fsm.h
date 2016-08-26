@@ -274,7 +274,8 @@ name|TCPS_HAVERCVDFIN
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)>= TCPS_TIME_WAIT)
+define|\
+value|((s) == TCPS_CLOSE_WAIT || ((s)>= TCPS_CLOSING&& (s) != TCPS_FIN_WAIT_2))
 end_define
 
 begin_ifdef
