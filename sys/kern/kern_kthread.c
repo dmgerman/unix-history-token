@@ -1056,6 +1056,12 @@ name|td_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newtd
+operator|->
+name|td_sleeptimo
+operator|=
+literal|0
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
