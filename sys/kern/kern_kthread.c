@@ -1043,6 +1043,12 @@ name|td_su
 operator|=
 name|NULL
 expr_stmt|;
+name|newtd
+operator|->
+name|td_sleeptimo
+operator|=
+literal|0
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
