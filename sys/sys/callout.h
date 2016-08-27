@@ -187,6 +187,17 @@ begin_comment
 comment|/* event time is absolute. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|C_PRECALC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* event time is pre-calculated. */
+end_comment
+
 begin_struct
 struct|struct
 name|callout_handle
@@ -600,6 +611,30 @@ name|callout_process
 parameter_list|(
 name|sbintime_t
 name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|callout_when
+parameter_list|(
+name|sbintime_t
+name|sbt
+parameter_list|,
+name|sbintime_t
+name|precision
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|sbintime_t
+modifier|*
+name|sbt_res
+parameter_list|,
+name|sbintime_t
+modifier|*
+name|prec_res
 parameter_list|)
 function_decl|;
 end_function_decl
