@@ -15274,6 +15274,34 @@ block|{
 return|return;
 comment|/* Not a command ack. */
 block|}
+comment|/* XXX wide commands? */
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_CMD
+argument_list|,
+literal|"cmd notification type 0x%x qid %d idx %d\n"
+argument_list|,
+name|pkt
+operator|->
+name|hdr
+operator|.
+name|code
+argument_list|,
+name|pkt
+operator|->
+name|hdr
+operator|.
+name|qid
+argument_list|,
+name|pkt
+operator|->
+name|hdr
+operator|.
+name|idx
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 operator|&
