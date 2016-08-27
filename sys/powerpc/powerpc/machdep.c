@@ -791,7 +791,19 @@ name|DDB
 argument|ksym_start = MD_FETCH(kmdp, MODINFOMD_SSYM, uintptr_t); 			ksym_end = MD_FETCH(kmdp, MODINFOMD_ESYM, uintptr_t); 			db_fetch_ksymtab(ksym_start, ksym_end);
 endif|#
 directive|endif
-argument|} 	} else { 		bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start); 		init_static_kenv(NULL,
+argument|} 	} else {
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+comment|/* 		 * On BOOKE the BSS is already cleared and some variables 		 * initialized.  Do not wipe them out. 		 */
+argument|bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start);
+endif|#
+directive|endif
+argument|init_static_kenv(NULL,
 literal|0
 argument|); 	}
 comment|/* Store boot environment state */

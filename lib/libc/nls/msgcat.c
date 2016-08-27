@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nl_types.h>
 end_include
 
@@ -132,12 +126,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../locale/setlocale.h"
+file|"../locale/xlocale_private.h"
 end_include
-
-begin_comment
-comment|/* for ENCODING_LEN */
-end_comment
 
 begin_define
 define|#
@@ -320,9 +310,6 @@ modifier|*
 name|cptr1
 decl_stmt|,
 modifier|*
-name|lang
-decl_stmt|,
-modifier|*
 name|nlspath
 decl_stmt|,
 modifier|*
@@ -337,14 +324,19 @@ name|plang
 decl_stmt|,
 modifier|*
 name|pter
-decl_stmt|,
-modifier|*
-name|tmpptr
 decl_stmt|;
 name|int
 name|saverr
 decl_stmt|,
 name|spcleft
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|lang
+decl_stmt|,
+modifier|*
+name|tmpptr
 decl_stmt|;
 name|char
 name|path
@@ -395,11 +387,12 @@ name|NL_CAT_LOCALE
 condition|)
 name|lang
 operator|=
-name|setlocale
+name|querylocale
 argument_list|(
-name|LC_MESSAGES
+name|LC_MESSAGES_MASK
 argument_list|,
-name|NULL
+name|__get_locale
+argument_list|()
 argument_list|)
 expr_stmt|;
 else|else

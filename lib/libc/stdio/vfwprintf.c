@@ -1941,6 +1941,9 @@ modifier|*
 name|convbuf
 decl_stmt|;
 comment|/* multibyte to wide conversion result */
+name|int
+name|savserr
+decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -2066,6 +2069,21 @@ name|EOF
 operator|)
 return|;
 block|}
+name|savserr
+operator|=
+name|fp
+operator|->
+name|_flags
+operator|&
+name|__SERR
+expr_stmt|;
+name|fp
+operator|->
+name|_flags
+operator|&=
+operator|~
+name|__SERR
+expr_stmt|;
 name|convbuf
 operator|=
 name|NULL
@@ -4561,6 +4579,13 @@ condition|)
 name|ret
 operator|=
 name|EOF
+expr_stmt|;
+else|else
+name|fp
+operator|->
+name|_flags
+operator||=
+name|savserr
 expr_stmt|;
 if|if
 condition|(

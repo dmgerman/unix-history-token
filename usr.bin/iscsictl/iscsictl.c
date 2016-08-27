@@ -2561,7 +2561,7 @@ expr_stmt|;
 comment|/* 			 * Display-only modifier as this information 			 * is also present within the 'session' container 			 */
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:sessionId/%u}\n"
+literal|"{L:/%-25s}{V:sessionId/%u}\n"
 argument_list|,
 literal|"Session ID:"
 argument_list|,
@@ -2577,7 +2577,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:name/%s}\n"
+literal|"{L:/%-25s}{V:name/%s}\n"
 argument_list|,
 literal|"Initiator name:"
 argument_list|,
@@ -2588,7 +2588,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:portal/%s}\n"
+literal|"{L:/%-25s}{V:portal/%s}\n"
 argument_list|,
 literal|"Initiator portal:"
 argument_list|,
@@ -2599,7 +2599,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:alias/%s}\n"
+literal|"{L:/%-25s}{V:alias/%s}\n"
 argument_list|,
 literal|"Initiator alias:"
 argument_list|,
@@ -2620,7 +2620,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:name/%s}\n"
+literal|"{L:/%-25s}{V:name/%s}\n"
 argument_list|,
 literal|"Target name:"
 argument_list|,
@@ -2631,7 +2631,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:portal/%s}\n"
+literal|"{L:/%-25s}{V:portal/%s}\n"
 argument_list|,
 literal|"Target portal:"
 argument_list|,
@@ -2642,7 +2642,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:alias/%s}\n"
+literal|"{L:/%-25s}{V:alias/%s}\n"
 argument_list|,
 literal|"Target alias:"
 argument_list|,
@@ -2663,7 +2663,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:user/%s}\n"
+literal|"{L:/%-25s}{V:user/%s}\n"
 argument_list|,
 literal|"User:"
 argument_list|,
@@ -2674,7 +2674,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:secret/%s}\n"
+literal|"{L:/%-25s}{V:secret/%s}\n"
 argument_list|,
 literal|"Secret:"
 argument_list|,
@@ -2685,7 +2685,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:mutualUser/%s}\n"
+literal|"{L:/%-25s}{V:mutualUser/%s}\n"
 argument_list|,
 literal|"Mutual user:"
 argument_list|,
@@ -2696,7 +2696,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:mutualSecret/%s}\n"
+literal|"{L:/%-25s}{V:mutualSecret/%s}\n"
 argument_list|,
 literal|"Mutual secret:"
 argument_list|,
@@ -2712,7 +2712,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:type/%s}\n"
+literal|"{L:/%-25s}{V:type/%s}\n"
 argument_list|,
 literal|"Session type:"
 argument_list|,
@@ -2727,7 +2727,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:enable/%s}\n"
+literal|"{L:/%-25s}{V:enable/%s}\n"
 argument_list|,
 literal|"Enable:"
 argument_list|,
@@ -2742,7 +2742,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:state/%s}\n"
+literal|"{L:/%-25s}{V:state/%s}\n"
 argument_list|,
 literal|"Session state:"
 argument_list|,
@@ -2757,7 +2757,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:failureReason/%s}\n"
+literal|"{L:/%-25s}{V:failureReason/%s}\n"
 argument_list|,
 literal|"Failure reason:"
 argument_list|,
@@ -2768,7 +2768,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:headerDigest/%s}\n"
+literal|"{L:/%-25s}{V:headerDigest/%s}\n"
 argument_list|,
 literal|"Header digest:"
 argument_list|,
@@ -2785,7 +2785,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:dataDigest/%s}\n"
+literal|"{L:/%-25s}{V:dataDigest/%s}\n"
 argument_list|,
 literal|"Data digest:"
 argument_list|,
@@ -2802,18 +2802,29 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:dataSegmentLen/%d}\n"
+literal|"{L:/%-25s}{V:recvDataSegmentLen/%d}\n"
 argument_list|,
-literal|"DataSegmentLen:"
+literal|"MaxRecvDataSegmentLength:"
 argument_list|,
 name|state
 operator|->
-name|iss_max_data_segment_length
+name|iss_max_recv_data_segment_length
 argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:maxBurstLen/%d}\n"
+literal|"{L:/%-25s}{V:sendDataSegmentLen/%d}\n"
+argument_list|,
+literal|"MaxSendDataSegmentLength:"
+argument_list|,
+name|state
+operator|->
+name|iss_max_send_data_segment_length
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-25s}{V:maxBurstLen/%d}\n"
 argument_list|,
 literal|"MaxBurstLen:"
 argument_list|,
@@ -2824,7 +2835,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:firstBurstLen/%d}\n"
+literal|"{L:/%-25s}{V:firstBurstLen/%d}\n"
 argument_list|,
 literal|"FirstBurstLen:"
 argument_list|,
@@ -2835,7 +2846,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:immediateData/%s}\n"
+literal|"{L:/%-25s}{V:immediateData/%s}\n"
 argument_list|,
 literal|"ImmediateData:"
 argument_list|,
@@ -2850,7 +2861,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:iSER/%s}\n"
+literal|"{L:/%-25s}{V:iSER/%s}\n"
 argument_list|,
 literal|"iSER (RDMA):"
 argument_list|,
@@ -2865,7 +2876,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}{V:offloadDriver/%s}\n"
+literal|"{L:/%-25s}{V:offloadDriver/%s}\n"
 argument_list|,
 literal|"Offload driver:"
 argument_list|,
@@ -2876,7 +2887,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{L:/%-18s}"
+literal|"{L:/%-25s}"
 argument_list|,
 literal|"Device nodes:"
 argument_list|)

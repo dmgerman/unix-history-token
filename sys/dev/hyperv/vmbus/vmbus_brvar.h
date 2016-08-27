@@ -229,6 +229,46 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|vmbus_br_nelem
+parameter_list|(
+name|int
+name|br_size
+parameter_list|,
+name|int
+name|elem_size
+parameter_list|)
+block|{
+comment|/* Strip bufring header */
+name|br_size
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmbus_bufring
+argument_list|)
+expr_stmt|;
+comment|/* Add per-element trailing index */
+name|elem_size
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|br_size
+operator|/
+name|elem_size
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 name|vmbus_br_sysctl_create

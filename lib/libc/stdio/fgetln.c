@@ -463,8 +463,19 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|__sfeof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
 break|break;
-comment|/* EOF or error: return partial line */
+goto|goto
+name|error
+goto|;
+block|}
 if|if
 condition|(
 operator|(

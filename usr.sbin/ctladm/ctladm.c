@@ -13340,7 +13340,11 @@ name|data_digest
 decl_stmt|;
 name|char
 modifier|*
-name|max_data_segment_length
+name|max_recv_data_segment_length
+decl_stmt|;
+name|char
+modifier|*
+name|max_send_data_segment_length
 decl_stmt|;
 name|char
 modifier|*
@@ -14084,7 +14088,7 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-literal|"max_data_segment_length"
+literal|"max_recv_data_segment_length"
 argument_list|)
 operator|==
 literal|0
@@ -14092,7 +14096,31 @@ condition|)
 block|{
 name|cur_conn
 operator|->
-name|max_data_segment_length
+name|max_recv_data_segment_length
+operator|=
+name|str
+expr_stmt|;
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"max_send_data_segment_length"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cur_conn
+operator|->
+name|max_send_data_segment_length
 operator|=
 name|str
 expr_stmt|;
@@ -14710,7 +14738,9 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Session ID:       %d\n"
+literal|"%-25s %d\n"
+argument_list|,
+literal|"Session ID:"
 argument_list|,
 name|conn
 operator|->
@@ -14719,7 +14749,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator name:   %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Initiator name:"
 argument_list|,
 name|conn
 operator|->
@@ -14728,7 +14760,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator portal: %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Initiator portal:"
 argument_list|,
 name|conn
 operator|->
@@ -14737,7 +14771,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Initiator alias:  %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Initiator alias:"
 argument_list|,
 name|conn
 operator|->
@@ -14746,7 +14782,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target name:      %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Target name:"
 argument_list|,
 name|conn
 operator|->
@@ -14755,7 +14793,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Target alias:     %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Target alias:"
 argument_list|,
 name|conn
 operator|->
@@ -14764,7 +14804,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Header digest:    %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Header digest:"
 argument_list|,
 name|conn
 operator|->
@@ -14773,7 +14815,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Data digest:      %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Data digest:"
 argument_list|,
 name|conn
 operator|->
@@ -14782,16 +14826,31 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DataSegmentLen:   %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"MaxRecvDataSegmentLength:"
 argument_list|,
 name|conn
 operator|->
-name|max_data_segment_length
+name|max_recv_data_segment_length
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"MaxBurstLen:      %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"MaxSendDataSegmentLength:"
+argument_list|,
+name|conn
+operator|->
+name|max_send_data_segment_length
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-25s %s\n"
+argument_list|,
+literal|"MaxBurstLen:"
 argument_list|,
 name|conn
 operator|->
@@ -14800,7 +14859,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"FirstBurstLen:    %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"FirstBurstLen:"
 argument_list|,
 name|conn
 operator|->
@@ -14809,7 +14870,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ImmediateData:    %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"ImmediateData:"
 argument_list|,
 name|conn
 operator|->
@@ -14822,7 +14885,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"iSER (RDMA):      %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"iSER (RDMA):"
 argument_list|,
 name|conn
 operator|->
@@ -14835,7 +14900,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Offload driver:   %s\n"
+literal|"%-25s %s\n"
+argument_list|,
+literal|"Offload driver:"
 argument_list|,
 name|conn
 operator|->

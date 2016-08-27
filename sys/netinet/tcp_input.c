@@ -1552,6 +1552,9 @@ modifier|*
 name|th
 parameter_list|,
 name|uint16_t
+name|nsegs
+parameter_list|,
+name|uint16_t
 name|type
 parameter_list|)
 block|{
@@ -1561,6 +1564,14 @@ name|tp
 operator|->
 name|t_inpcb
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|ccv
+operator|->
+name|nsegs
+operator|=
+name|nsegs
 expr_stmt|;
 name|tp
 operator|->
@@ -1633,6 +1644,8 @@ name|ccv
 operator|->
 name|bytes_this_ack
 argument_list|,
+name|nsegs
+operator|*
 name|V_tcp_abc_l_var
 operator|*
 name|tcp_maxseg
@@ -6821,6 +6834,9 @@ decl_stmt|;
 name|u_long
 name|tiwin
 decl_stmt|;
+name|uint16_t
+name|nsegs
+decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -6889,6 +6905,19 @@ expr_stmt|;
 name|sack_changed
 operator|=
 literal|0
+expr_stmt|;
+name|nsegs
+operator|=
+name|max
+argument_list|(
+literal|1
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|lro_nsegs
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is either a state-changing packet or current state isn't 	 * established, we require a write lock on tcbinfo.  Otherwise, we 	 * allow the tcbinfo to be in either alocked or unlocked, as the 	 * caller may have unnecessarily acquired a write lock due to a race. 	 */
 if|if
@@ -7912,9 +7941,11 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
-name|TCPSTAT_INC
+name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackpack
+argument_list|,
+name|nsegs
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_ADD
@@ -7974,6 +8005,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|th
+argument_list|,
+name|nsegs
 argument_list|,
 name|CC_ACK
 argument_list|)
@@ -8225,9 +8258,11 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
-name|TCPSTAT_INC
+name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvpack
+argument_list|,
+name|nsegs
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_ADD
@@ -10747,6 +10782,8 @@ name|tp
 argument_list|,
 name|th
 argument_list|,
+name|nsegs
+argument_list|,
 name|CC_DUPACK
 argument_list|)
 expr_stmt|;
@@ -10947,6 +10984,8 @@ name|tp
 argument_list|,
 name|th
 argument_list|,
+name|nsegs
+argument_list|,
 name|CC_DUPACK
 argument_list|)
 expr_stmt|;
@@ -11103,6 +11142,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|th
+argument_list|,
+name|nsegs
 argument_list|,
 name|CC_DUPACK
 argument_list|)
@@ -11533,9 +11574,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-name|TCPSTAT_INC
+name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackpack
+argument_list|,
+name|nsegs
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_ADD
@@ -11766,6 +11809,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|th
+argument_list|,
+name|nsegs
 argument_list|,
 name|CC_ACK
 argument_list|)

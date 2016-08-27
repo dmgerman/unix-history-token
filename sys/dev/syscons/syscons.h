@@ -18,13 +18,23 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/kdb.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_mutex.h>
 end_include
 
 begin_comment
@@ -725,6 +735,20 @@ name|tty
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|sc_cnstate
+block|{
+name|u_char
+name|kbd_opened
+decl_stmt|;
+name|u_char
+name|scr_opened
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -870,11 +894,17 @@ decl_stmt|;
 name|int
 name|grab_level
 decl_stmt|;
+comment|/* 2 is just enough for kdb to grab for stepping normal grabbing: */
 name|struct
-name|mtx
-name|scr_lock
+name|sc_cnstate
+name|grab_state
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* mutex for sc_puts() */
+name|int
+name|kbd_open_level
+decl_stmt|;
 name|struct
 name|mtx
 name|video_mtx
@@ -2086,7 +2116,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {							\ 			if (!cold)					\ 				mtx_lock_spin(&(sc)->video_mtx);	\ 		} while(0)
+value|do {							\ 			if (!kdb_active)				\ 				mtx_lock_spin(&(sc)->video_mtx);	\ 		} while(0)
 end_define
 
 begin_define
@@ -2097,7 +2127,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {							\ 			if (!cold)					\ 				mtx_unlock_spin(&(sc)->video_mtx);	\ 		} while(0)
+value|do {							\ 			if (!kdb_active)				\ 				mtx_unlock_spin(&(sc)->video_mtx);	\ 		} while(0)
 end_define
 
 begin_comment

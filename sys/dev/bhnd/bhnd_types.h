@@ -153,6 +153,117 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/**  * bhnd(4) clock types.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+comment|/** 	 * Dynamically select an appropriate clock source based on all 	 * outstanding clock requests. 	 */
+name|BHND_CLOCK_DYN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/** 	 * Idle Low-Power (ILP). 	 *  	 * No register access is required, or long request latency is 	 * acceptable. 	 */
+name|BHND_CLOCK_ILP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/** 	 * Active Low-Power (ALP). 	 *  	 * Low-latency register access and low-rate DMA. 	 */
+name|BHND_CLOCK_ALP
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/** 	 * High Throughput (HT). 	 *  	 * High bus throughput and lowest-latency register access. 	 */
+name|BHND_CLOCK_HT
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|}
+name|bhnd_clock
+typedef|;
+end_typedef
+
+begin_comment
+comment|/**  * Given two clock types, return the type with the highest precedence.   */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bhnd_clock
+name|bhnd_clock_max
+parameter_list|(
+name|bhnd_clock
+name|a
+parameter_list|,
+name|bhnd_clock
+name|b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|a
+operator|>
+name|b
+condition|?
+name|a
+else|:
+name|b
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * bhnd(4) clock sources.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+comment|/** 	 * Clock is provided by the PCI bus clock 	 */
+name|BHND_CLKSRC_PCI
+init|=
+literal|0
+block|,
+comment|/** Clock is provided by a crystal. */
+name|BHND_CLKSRC_XTAL
+init|=
+literal|1
+block|,
+comment|/** Clock is provided by a low power oscillator. */
+name|BHND_CLKSRC_LPO
+init|=
+literal|2
+block|,
+comment|/** Clock source is unknown */
+name|BHND_CLKSRC_UNKNOWN
+init|=
+literal|3
+block|}
+name|bhnd_clksrc
+typedef|;
+end_typedef
+
+begin_comment
 comment|/** Evaluates to true if @p cls is a device class that can be configured  *  as a host bridge device. */
 end_comment
 

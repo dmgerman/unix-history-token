@@ -219,6 +219,17 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* Set device description */
+name|bhnd_set_default_bus_desc
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bcma_cid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

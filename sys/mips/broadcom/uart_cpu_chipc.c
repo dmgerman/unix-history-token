@@ -89,12 +89,6 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"bcm_socinfo.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -123,6 +117,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"bcm_machdep.h"
+end_include
 
 begin_decl_stmt
 name|bus_space_tag_t
@@ -215,11 +215,6 @@ name|int
 name|baudrate
 parameter_list|)
 block|{
-name|struct
-name|bcm_socinfo
-modifier|*
-name|socinfo
-decl_stmt|;
 if|if
 condition|(
 name|uart
@@ -231,11 +226,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|socinfo
-operator|=
-name|bcm_get_socinfo
-argument_list|()
-expr_stmt|;
 name|di
 operator|->
 name|ops
@@ -270,8 +260,13 @@ operator|=
 operator|(
 name|bus_space_handle_t
 operator|)
-name|BCM_SOCREG
+name|BCM_CORE_ADDR
 argument_list|(
+name|bcm_get_platform
+argument_list|()
+argument_list|,
+name|cc_addr
+argument_list|,
 name|CHIPC_UART
 argument_list|(
 name|uart
@@ -292,11 +287,12 @@ name|bas
 operator|.
 name|rclk
 operator|=
-name|socinfo
-operator|->
-name|uartrate
+name|bcm_get_uart_rclk
+argument_list|(
+name|bcm_get_platform
+argument_list|()
+argument_list|)
 expr_stmt|;
-comment|/* in Hz */
 name|di
 operator|->
 name|baudrate
@@ -432,10 +428,10 @@ return|;
 comment|/* Fetch device handle */
 name|fd
 operator|=
-name|cfe_getstdhandle
-argument_list|(
-name|CFE_STDHANDLE_CONSOLE
-argument_list|)
+name|bcm_get_platform
+argument_list|()
+operator|->
+name|cfe_console
 expr_stmt|;
 if|if
 condition|(

@@ -21221,7 +21221,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* We have a TCB to abort, send notification too */
 name|vtag
 operator|=
 name|stcb
@@ -21230,20 +21229,6 @@ name|asoc
 operator|.
 name|peer_vtag
 expr_stmt|;
-name|sctp_abort_notification
-argument_list|(
-name|stcb
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|SCTP_SO_NOT_LOCKED
-argument_list|)
-expr_stmt|;
-comment|/* get the assoc vrf id and table id */
 name|vrf_id
 operator|=
 name|stcb
@@ -21251,14 +21236,6 @@ operator|->
 name|asoc
 operator|.
 name|vrf_id
-expr_stmt|;
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|state
-operator||=
-name|SCTP_STATE_WAS_ABORTED
 expr_stmt|;
 block|}
 name|sctp_send_abort
@@ -21297,6 +21274,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* We have a TCB to abort, send notification too */
+name|sctp_abort_notification
+argument_list|(
+name|stcb
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
+argument_list|)
+expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|state
+operator||=
+name|SCTP_STATE_WAS_ABORTED
+expr_stmt|;
 comment|/* Ok, now lets free it */
 if|#
 directive|if
@@ -22038,34 +22037,6 @@ operator||=
 name|SCTP_STATE_WAS_ABORTED
 expr_stmt|;
 block|}
-comment|/* notify the ulp */
-if|if
-condition|(
-operator|(
-name|inp
-operator|->
-name|sctp_flags
-operator|&
-name|SCTP_PCB_FLAGS_SOCKET_GONE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|sctp_abort_notification
-argument_list|(
-name|stcb
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|so_locked
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* notify the peer */
 name|sctp_send_abort_tcb
 argument_list|(
@@ -22111,6 +22082,34 @@ block|{
 name|SCTP_STAT_DECR_GAUGE32
 argument_list|(
 name|sctps_currestab
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* notify the ulp */
+if|if
+condition|(
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_SOCKET_GONE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sctp_abort_notification
+argument_list|(
+name|stcb
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 block|}
@@ -33200,6 +33199,10 @@ operator|*
 name|totaddr
 operator|=
 name|i
+expr_stmt|;
+name|incr
+operator|=
+literal|0
 expr_stmt|;
 comment|/* we are done */
 break|break;

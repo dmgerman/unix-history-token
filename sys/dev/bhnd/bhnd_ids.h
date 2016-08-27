@@ -4489,6 +4489,21 @@ comment|/**< bcma(4) interconnect */
 end_comment
 
 begin_comment
+comment|/** Evaluates to true if @p _type uses a BCMA EROM table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_CHIPTYPE_HAS_EROM
+parameter_list|(
+name|_type
+parameter_list|)
+define|\
+value|((_type) == BHND_CHIPTYPE_BCMA ||	\ 	 (_type) == BHND_CHIPTYPE_BCMA_ALT ||	\ 	 (_type) == BHND_CHIPTYPE_UBUS)
+end_define
+
+begin_comment
 comment|/* Boardflags */
 end_comment
 
@@ -5910,54 +5925,6 @@ end_define
 
 begin_comment
 comment|/* GPIO 4  */
-end_comment
-
-begin_comment
-comment|/* Power Control Defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIPC_PLL_DELAY
-value|150
-end_define
-
-begin_comment
-comment|/* us pll on delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIPC_FREF_DELAY
-value|200
-end_define
-
-begin_comment
-comment|/* us fref change delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIPC_MIN_SLOW_CLK
-value|32
-end_define
-
-begin_comment
-comment|/* us Slow clock period */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BHND_CHIPC_XTAL_ON_DELAY
-value|1000
-end_define
-
-begin_comment
-comment|/* us crystal power-on delay */
 end_comment
 
 begin_comment

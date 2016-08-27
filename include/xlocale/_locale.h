@@ -15,6 +15,10 @@ directive|define
 name|_XLOCALE_LOCALE_H
 end_define
 
+begin_comment
+comment|/* Bit shifting order of LC_*_MASK should match XLC_* and LC_* order. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -32,28 +36,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|LC_MESSAGES_MASK
+name|LC_MONETARY_MASK
 value|(1<<2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LC_MONETARY_MASK
+name|LC_NUMERIC_MASK
 value|(1<<3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LC_NUMERIC_MASK
+name|LC_TIME_MASK
 value|(1<<4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LC_TIME_MASK
+name|LC_MESSAGES_MASK
 value|(1<<5)
 end_define
 

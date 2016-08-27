@@ -589,6 +589,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|lro_nsegs
+value|tso_segsz
+end_define
+
+begin_define
+define|#
+directive|define
 name|csum_phsum
 value|PH_per.sixteen[2]
 end_define

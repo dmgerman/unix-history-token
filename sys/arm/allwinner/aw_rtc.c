@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|IS_SUN7I
-value|(allwinner_soc_family() == ALLWINNERSOC_SUN7I)
+value|(sc->type == A20_RTC)
 end_define
 
 begin_define
@@ -485,6 +485,9 @@ name|struct
 name|resource
 modifier|*
 name|res
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|bus_size_t
 name|rtc_date
@@ -777,8 +780,10 @@ name|ENXIO
 operator|)
 return|;
 block|}
-switch|switch
-condition|(
+name|sc
+operator|->
+name|type
+operator|=
 name|ofw_bus_search_compatible
 argument_list|(
 name|dev
@@ -787,6 +792,12 @@ name|compat_data
 argument_list|)
 operator|->
 name|ocd_data
+expr_stmt|;
+switch|switch
+condition|(
+name|sc
+operator|->
+name|type
 condition|)
 block|{
 case|case

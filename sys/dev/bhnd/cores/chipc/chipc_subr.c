@@ -704,7 +704,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ExtBus:  0x%02x  | PwCtl: %s\n"
+literal|"ExtBus:  0x%02x  | PwrCtrl: %s\n"
 argument_list|,
 name|caps
 operator|->
@@ -712,7 +712,7 @@ name|extbus_type
 argument_list|,
 name|CC_TFS
 argument_list|(
-name|power_control
+name|pwr_ctrl
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -23,25 +23,36 @@ directive|define
 name|_NET_RNDIS_H_
 end_define
 
+begin_comment
+comment|/* Canonical major/minor version as of 22th Aug. 2016. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_BUFFER_OVERFLOW
-value|0x80000005L
+name|RNDIS_VERSION_MAJOR
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_FAILURE
-value|0xC0000001L
+name|RNDIS_VERSION_MINOR
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_INVALID_DATA
-value|0xC0010015L
+name|RNDIS_STATUS_SUCCESS
+value|0x00000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_STATUS_PENDING
+value|0x00000103L
 end_define
 
 begin_define
@@ -61,20 +72,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_NOT_SUPPORTED
-value|0xC00000BBL
+name|RNDIS_STATUS_BUFFER_OVERFLOW
+value|0x80000005L
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_PENDING
-value|STATUS_PENDING
+name|RNDIS_STATUS_FAILURE
+value|0xC0000001L
 end_define
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_define
+define|#
+directive|define
+name|RNDIS_STATUS_NOT_SUPPORTED
+value|0xC00000BBL
+end_define
 
 begin_define
 define|#
@@ -86,8 +100,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_STATUS_SUCCESS
-value|0x00000000L
+name|RNDIS_STATUS_INVALID_DATA
+value|0xC0010015L
 end_define
 
 begin_define
@@ -583,6 +597,14 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RNDIS_INIT_COMP_SIZE_MIN
+define|\
+value|__offsetof(struct rndis_init_comp, rm_aflistsz)
+end_define
+
 begin_comment
 comment|/* Halt the device.  No response sent. */
 end_comment
@@ -658,6 +680,14 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RNDIS_QUERY_REQ_INFOBUFOFFSET
+define|\
+value|(sizeof(struct rndis_query_req) -	\ 	 __offsetof(struct rndis_query_req, rm_rid))
+end_define
+
 begin_struct
 struct|struct
 name|rndis_query_comp
@@ -683,6 +713,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_QUERY_COMP_INFOBUFABS
+parameter_list|(
+name|ofs
+parameter_list|)
+define|\
+value|((ofs) + __offsetof(struct rndis_query_req, rm_rid))
+end_define
 
 begin_comment
 comment|/* Send a set object request. */
@@ -730,6 +771,14 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_SET_REQ_INFOBUFOFFSET
+define|\
+value|(sizeof(struct rndis_set_req) -		\ 	 __offsetof(struct rndis_set_req, rm_rid))
+end_define
 
 begin_struct
 struct|struct

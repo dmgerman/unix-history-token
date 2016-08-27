@@ -38,7 +38,9 @@ end_include
 begin_function
 name|char
 modifier|*
+function|(
 name|dirname
+function|)
 parameter_list|(
 name|char
 modifier|*

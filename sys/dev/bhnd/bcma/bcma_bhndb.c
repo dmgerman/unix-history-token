@@ -96,6 +96,28 @@ name|bhnd_chipid
 modifier|*
 name|cid
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+comment|/* Defer to default probe implementation */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bcma_probe
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Check bus type */
 name|cid
 operator|=
@@ -122,13 +144,17 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* Delegate to default probe implementation */
-return|return
-operator|(
-name|bcma_probe
+comment|/* Set device description */
+name|bhnd_set_default_bus_desc
 argument_list|(
 name|dev
+argument_list|,
+name|cid
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

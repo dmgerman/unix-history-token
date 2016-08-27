@@ -3542,6 +3542,9 @@ modifier|*
 name|th
 parameter_list|,
 name|uint16_t
+name|nsegs
+parameter_list|,
+name|uint16_t
 name|type
 parameter_list|)
 function_decl|;
