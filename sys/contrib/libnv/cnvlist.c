@@ -132,10 +132,10 @@ name|ftype
 parameter_list|,
 name|type
 parameter_list|,
-name|nvtype
+name|NVTYPE
 parameter_list|)
 define|\
-value|ftype									\ cnvlist_get_##type(void *cookiep)					\ {									\ 									\         if (nvpair_type(cookiep) != NV_TYPE_##nvtype)			\ 		nvlist_report_missing(NV_TYPE_##nvtype,			\ 		    nvpair_name(cookiep));				\         return (nvpair_get_##type(cookiep));				\ }
+value|ftype									\ cnvlist_get_##type(void *cookiep)					\ {									\ 									\ 	if (nvpair_type(cookiep) != NV_TYPE_##NVTYPE) {			\ 		nvlist_report_missing(NV_TYPE_##NVTYPE,			\ 		    nvpair_name(cookiep));				\ 	}								\         return (nvpair_get_##type(cookiep));				\ }
 end_define
 
 begin_macro
@@ -219,10 +219,10 @@ name|ftype
 parameter_list|,
 name|type
 parameter_list|,
-name|nvtype
+name|NVTYPE
 parameter_list|)
 define|\
-value|ftype									\ cnvlist_get_##type(void *cookiep, size_t *nitemsp)			\ {									\ 									\         if (nvpair_type(cookiep) != NV_TYPE_##nvtype)			\ 		nvlist_report_missing(NV_TYPE_##nvtype,			\ 		    nvpair_name(cookiep));				\         return (nvpair_get_##type(cookiep, nitemsp));			\ }
+value|ftype									\ cnvlist_get_##type(void *cookiep, size_t *nitemsp)			\ {									\ 									\ 	if (nvpair_type(cookiep) != NV_TYPE_##NVTYPE) {			\ 		nvlist_report_missing(NV_TYPE_##NVTYPE,			\ 		    nvpair_name(cookiep));				\ 	}								\ 	return (nvpair_get_##type(cookiep, nitemsp));			\ }
 end_define
 
 begin_macro
@@ -353,10 +353,10 @@ name|ftype
 parameter_list|,
 name|type
 parameter_list|,
-name|nvtype
+name|NVTYPE
 parameter_list|)
 define|\
-value|ftype									\ cnvlist_take_##type(nvlist_t *nvl, void *cookiep)			\ {									\ 	ftype value;							\ 									\         if (nvpair_type(cookiep) != NV_TYPE_##nvtype)			\ 		nvlist_report_missing(NV_TYPE_##nvtype,			\ 		    nvpair_name(cookiep));				\ 	value = (ftype)(intptr_t)nvpair_get_##type(cookiep);		\ 	nvlist_remove_nvpair(nvl, cookiep);				\ 	nvpair_free_structure(cookiep);					\ 	return (value);							\ }
+value|ftype									\ cnvlist_take_##type(nvlist_t *nvl, void *cookiep)			\ {									\ 	ftype value;							\ 									\ 	if (nvpair_type(cookiep) != NV_TYPE_##NVTYPE) {			\ 		nvlist_report_missing(NV_TYPE_##NVTYPE,			\ 		    nvpair_name(cookiep));				\ 	}								\ 	value = (ftype)(intptr_t)nvpair_get_##type(cookiep);		\ 	nvlist_remove_nvpair(nvl, cookiep);				\ 	nvpair_free_structure(cookiep);					\ 	return (value);							\ }
 end_define
 
 begin_macro
@@ -440,10 +440,10 @@ name|ftype
 parameter_list|,
 name|type
 parameter_list|,
-name|nvtype
+name|NVTYPE
 parameter_list|)
 define|\
-value|ftype									\ cnvlist_take_##type(nvlist_t *nvl, void *cookiep, size_t *nitemsp)	\ {									\ 	ftype value;							\ 									\         if (nvpair_type(cookiep) != NV_TYPE_##nvtype)			\ 		nvlist_report_missing(NV_TYPE_##nvtype,			\ 		    nvpair_name(cookiep));				\ 	value = (ftype)(intptr_t)nvpair_get_##type(cookiep, nitemsp);	\ 	nvlist_remove_nvpair(nvl, cookiep);				\ 	nvpair_free_structure(cookiep);					\ 	return (value);							\ }
+value|ftype									\ cnvlist_take_##type(nvlist_t *nvl, void *cookiep, size_t *nitemsp)	\ {									\ 	ftype value;							\ 									\ 	if (nvpair_type(cookiep) != NV_TYPE_##NVTYPE) {			\ 		nvlist_report_missing(NV_TYPE_##NVTYPE,			\ 		    nvpair_name(cookiep));				\ 	}								\ 	value = (ftype)(intptr_t)nvpair_get_##type(cookiep, nitemsp);	\ 	nvlist_remove_nvpair(nvl, cookiep);				\ 	nvpair_free_structure(cookiep);					\ 	return (value);							\ }
 end_define
 
 begin_macro
@@ -603,8 +603,6 @@ directive|define
 name|CNVLIST_FREE
 parameter_list|(
 name|type
-parameter_list|,
-name|nvtype
 parameter_list|)
 define|\
 value|void									\ cnvlist_free_##type(nvlist_t *nvl, void *cookiep)			\ {									\ 									\ 	nvlist_free_nvpair(nvl, cookiep);				\ }
@@ -614,8 +612,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|bool
-argument_list|,
-argument|BOOL
 argument_list|)
 end_macro
 
@@ -623,8 +619,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|number
-argument_list|,
-argument|NUMBER
 argument_list|)
 end_macro
 
@@ -632,8 +626,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|string
-argument_list|,
-argument|STRING
 argument_list|)
 end_macro
 
@@ -641,8 +633,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|nvlist
-argument_list|,
-argument|NVLIST
 argument_list|)
 end_macro
 
@@ -650,8 +640,6 @@ begin_expr_stmt
 name|CNVLIST_FREE
 argument_list|(
 name|binary
-argument_list|,
-name|BINARY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -660,8 +648,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|bool_array
-argument_list|,
-argument|BOOL_ARRAY
 argument_list|)
 end_macro
 
@@ -669,8 +655,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|number_array
-argument_list|,
-argument|NUMBER_ARRAY
 argument_list|)
 end_macro
 
@@ -678,8 +662,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|string_array
-argument_list|,
-argument|STRING_ARRAY
 argument_list|)
 end_macro
 
@@ -687,8 +669,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|nvlist_array
-argument_list|,
-argument|NVLIST_ARRAY
 argument_list|)
 end_macro
 
@@ -702,8 +682,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|descriptor
-argument_list|,
-argument|DESCRIPTOR
 argument_list|)
 end_macro
 
@@ -711,8 +689,6 @@ begin_macro
 name|CNVLIST_FREE
 argument_list|(
 argument|descriptor_array
-argument_list|,
-argument|DESCRIPTOR_ARRAY
 argument_list|)
 end_macro
 
