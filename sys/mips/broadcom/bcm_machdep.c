@@ -284,6 +284,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/cores/pmu/bhnd_pmureg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bcm_machdep.h"
 end_include
 
@@ -1370,7 +1376,7 @@ condition|)
 block|{
 name|BCM_CHIPC_WRITE_4
 argument_list|(
-name|CHIPC_PMU_WATCHDOG
+name|BHND_PMU_WATCHDOG
 argument_list|,
 literal|1
 argument_list|)

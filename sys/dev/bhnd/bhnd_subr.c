@@ -4398,15 +4398,18 @@ argument_list|,
 name|BOARDREV
 argument_list|)
 expr_stmt|;
-name|REQ_BHND_GV
+name|OPT_BHND_GV
 argument_list|(
 name|info
 operator|->
 name|board_srom_rev
 argument_list|,
 name|SROMREV
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* missing in 								   some SoC 								   NVRAM */
 name|REQ_BHND_GV
 argument_list|(
 name|info
