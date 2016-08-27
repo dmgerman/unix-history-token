@@ -1270,7 +1270,7 @@ name|cc
 operator|->
 name|cc_firstevent
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 for|for
 control|(
@@ -2553,7 +2553,7 @@ name|NO_EVENTTIMERS
 comment|/* 	 * Inform the eventtimers(4) subsystem there's a new callout 	 * that has been inserted, but only if really required. 	 */
 if|if
 condition|(
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|c
 operator|->
@@ -2567,7 +2567,7 @@ name|c
 operator|->
 name|c_precision
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|c
 operator|->
@@ -4257,7 +4257,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|to_sbt
 operator|<
@@ -4265,7 +4265,7 @@ name|sbt
 condition|)
 name|to_sbt
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 else|else
 name|to_sbt

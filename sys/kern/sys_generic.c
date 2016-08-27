@@ -5278,7 +5278,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)
@@ -7902,7 +7902,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)

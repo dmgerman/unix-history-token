@@ -1020,7 +1020,7 @@ name|state
 operator|->
 name|nextcallopt
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 name|callout_process
 argument_list|(
@@ -2295,7 +2295,7 @@ name|state
 operator|->
 name|nextevent
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 else|else
 name|state
@@ -2744,13 +2744,13 @@ name|state
 operator|->
 name|nextcall
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 name|state
 operator|->
 name|nextcallopt
 operator|=
-name|INT64_MAX
+name|SBT_MAX
 expr_stmt|;
 block|}
 name|periodic
