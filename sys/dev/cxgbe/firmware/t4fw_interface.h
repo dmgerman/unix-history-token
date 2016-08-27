@@ -18701,6 +18701,14 @@ block|,
 name|FW_PARAMS_PARAM_DEV_RSSINFO
 init|=
 literal|0x19
+block|,
+name|FW_PARAMS_PARAM_DEV_SCFGREV
+init|=
+literal|0x1A
+block|,
+name|FW_PARAMS_PARAM_DEV_VPDREV
+init|=
+literal|0x1B
 block|, }
 enum|;
 end_enum

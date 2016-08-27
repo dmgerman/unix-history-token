@@ -3005,7 +3005,13 @@ literal|16
 index|]
 decl_stmt|;
 name|char
-name|exprom_version
+name|er_version
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|bs_version
 index|[
 literal|16
 index|]
