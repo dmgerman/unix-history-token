@@ -33,6 +33,51 @@ directive|include
 file|<dev/bhnd/bhnd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/bhnd/cores/pmu/bhnd_pmuvar.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|bhnd_pmu_io
+name|bcm_pmu_soc_io
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bcm_bus_find_core
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_chipid
+modifier|*
+name|chipid
+parameter_list|,
+name|bhnd_devclass_t
+name|devclass
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|bhnd_core_info
+modifier|*
+name|info
+parameter_list|,
+name|uintptr_t
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|bcm_platform
@@ -68,7 +113,12 @@ comment|/**< PMU core info */
 name|uintptr_t
 name|pmu_addr
 decl_stmt|;
-comment|/**< PMU core phys address. */
+comment|/**< PMU core phys address, or 						     0x0 if no PMU */
+name|struct
+name|bhnd_pmu_query
+name|pmu
+decl_stmt|;
+comment|/**< PMU query instance */
 ifdef|#
 directive|ifdef
 name|CFE
@@ -82,36 +132,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|bcm_bus_find_core
-function_decl|)
-parameter_list|(
-name|struct
-name|bhnd_chipid
-modifier|*
-name|chipid
-parameter_list|,
-name|bhnd_devclass_t
-name|devclass
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
-name|struct
-name|bhnd_core_info
-modifier|*
-name|info
-parameter_list|,
-name|uintptr_t
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 name|struct
 name|bcm_platform
@@ -119,6 +139,66 @@ modifier|*
 name|bcm_get_platform
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|bcm_get_cpufreq
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|bcm_get_sifreq
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|bcm_get_alpfreq
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|bcm_get_ilpfreq
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|bcm_get_uart_rclk
+parameter_list|(
+name|struct
+name|bcm_platform
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -187,12 +267,14 @@ define|#
 directive|define
 name|BCM_CORE_ADDR
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_name
 parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|BCM_SOC_ADDR(bcm_get_platform()->_name, (_reg))
+value|BCM_SOC_ADDR(_bp->_name, (_reg))
 end_define
 
 begin_define
@@ -200,12 +282,14 @@ define|#
 directive|define
 name|BCM_CORE_READ_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_name
 parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|readl(BCM_CORE_ADDR(_name, (_reg)))
+value|readl(BCM_CORE_ADDR(_bp, _name, (_reg)))
 end_define
 
 begin_define
@@ -213,6 +297,8 @@ define|#
 directive|define
 name|BCM_CORE_WRITE_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_name
 parameter_list|,
 name|_reg
@@ -220,7 +306,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|writel(BCM_CORE_ADDR(_name, (_reg)), (_val))
+value|writel(BCM_CORE_ADDR(_bp, _name, (_reg)), (_val))
 end_define
 
 begin_define
@@ -228,9 +314,12 @@ define|#
 directive|define
 name|BCM_CHIPC_READ_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_reg
 parameter_list|)
-value|BCM_CORE_READ_4(cc_addr, (_reg))
+define|\
+value|BCM_CORE_READ_4(_bp, cc_addr, (_reg))
 end_define
 
 begin_define
@@ -238,12 +327,14 @@ define|#
 directive|define
 name|BCM_CHIPC_WRITE_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|BCM_CORE_WRITE_4(cc_addr, (_reg), (_val))
+value|BCM_CORE_WRITE_4(_bp, cc_addr, (_reg), (_val))
 end_define
 
 begin_define
@@ -251,9 +342,12 @@ define|#
 directive|define
 name|BCM_PMU_READ_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_reg
 parameter_list|)
-value|BCM_CORE_READ_4(pmu_addr, (_reg))
+define|\
+value|BCM_CORE_READ_4(_bp, pmu_addr, (_reg))
 end_define
 
 begin_define
@@ -261,12 +355,14 @@ define|#
 directive|define
 name|BCM_PMU_WRITE_4
 parameter_list|(
+name|_bp
+parameter_list|,
 name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|BCM_CORE_WRITE_4(pmu_addr, (_reg), (_val))
+value|BCM_CORE_WRITE_4(_bp, pmu_addr, (_reg), (_val))
 end_define
 
 begin_endif

@@ -33,6 +33,18 @@ directive|include
 file|"bhnd_pmu.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|bhnd_pmu_query
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bhnd_pmu_io
+struct_decl|;
+end_struct_decl
+
 begin_expr_stmt
 name|DECLARE_CLASS
 argument_list|(
@@ -103,6 +115,107 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bhnd_pmu_query_init
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|query
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|bhnd_chipid
+name|id
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_pmu_io
+modifier|*
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhnd_pmu_query_fini
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|query
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_pmu_si_clock
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_pmu_cpu_clock
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_pmu_mem_clock
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_pmu_alp_clock
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|bhnd_pmu_ilp_clock
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*   * BHND PMU device quirks / features  */
 end_comment
@@ -122,6 +235,104 @@ literal|1
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/**  * PMU read-only query support.  *   * Provides support for querying PMU information prior to availability of  * the bhnd(4) bus.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_pmu_query
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/**< owning device, or NULL */
+name|struct
+name|bhnd_chipid
+name|cid
+decl_stmt|;
+comment|/**< chip identification */
+name|uint32_t
+name|caps
+decl_stmt|;
+comment|/**< pmu capability flags. */
+specifier|const
+name|struct
+name|bhnd_pmu_io
+modifier|*
+name|io
+decl_stmt|;
+comment|/**< I/O operations */
+name|void
+modifier|*
+name|io_ctx
+decl_stmt|;
+comment|/**< I/O callback context */
+name|uint32_t
+name|ilp_cps
+decl_stmt|;
+comment|/**< measured ILP cycles per second, or 0 */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * PMU abstract I/O operations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bhnd_pmu_io
+block|{
+comment|/* Read 4 bytes from PMU @p reg */
+name|uint32_t
+function_decl|(
+modifier|*
+name|rd4
+function_decl|)
+parameter_list|(
+name|bus_size_t
+name|reg
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* Read 4 bytes to PMU @p reg */
+name|void
+function_decl|(
+modifier|*
+name|wr4
+function_decl|)
+parameter_list|(
+name|bus_size_t
+name|reg
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* Read ChipCommon's CHIP_ST register */
+name|uint32_t
+function_decl|(
+modifier|*
+name|rd_chipst
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/**  * bhnd_pmu driver instance state.  */
@@ -148,6 +359,11 @@ name|cid
 decl_stmt|;
 comment|/**< chip identification */
 name|struct
+name|bhnd_pmu_query
+name|query
+decl_stmt|;
+comment|/**< query instance */
+name|struct
 name|bhnd_board_info
 name|board
 decl_stmt|;
@@ -171,10 +387,17 @@ name|mtx
 name|mtx
 decl_stmt|;
 comment|/**< state mutex */
-name|uint32_t
-name|ilp_cps
+comment|/* For compatibility with bhnd_pmu_query APIs and the shared 	 * BHND_PMU_(READ|WRITE) macros. */
+specifier|const
+name|struct
+name|bhnd_pmu_io
+modifier|*
+name|io
 decl_stmt|;
-comment|/**< measured ILP cycles per 						     second, or 0 */
+name|void
+modifier|*
+name|io_ctx
+decl_stmt|;
 block|}
 struct|;
 end_struct

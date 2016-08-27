@@ -34,67 +34,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BHND_PMU_READ_1
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|)
-value|bhnd_bus_read_1((_sc)->res, (_reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PMU_READ_2
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|)
-value|bhnd_bus_read_2((_sc)->res, (_reg))
-end_define
-
-begin_define
-define|#
-directive|define
 name|BHND_PMU_READ_4
 parameter_list|(
 name|_sc
 parameter_list|,
 name|_reg
 parameter_list|)
-value|bhnd_bus_read_4((_sc)->res, (_reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PMU_WRITE_1
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|,
-name|_val
-parameter_list|)
-define|\
-value|bhnd_bus_write_1((_sc)->res, (_reg), (_val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_PMU_WRITE_2
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|,
-name|_val
-parameter_list|)
-define|\
-value|bhnd_bus_write_2((_sc)->res, (_reg), (_val))
+value|(_sc)->io->rd4((_reg), (_sc)->io_ctx)
 end_define
 
 begin_define
@@ -109,7 +55,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bhnd_bus_write_4((_sc)->res, (_reg), (_val))
+value|(_sc)->io->wr4((_reg), (_val), (_sc)->io_ctx)
 end_define
 
 begin_define
@@ -158,7 +104,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|bhnd_pmu_ind_read((_sc), BHND_PMU_ ## _src ## _ADDR,	\ 	    BHND_PMU_ ## _src ## _DATA, (_reg))
+value|bhnd_pmu_ind_read((_sc)->io, (_sc)->io_ctx,		\ 	    BHND_PMU_ ## _src ## _ADDR, BHND_PMU_ ## _src ## _DATA, (_reg))
 end_define
 
 begin_define
@@ -177,7 +123,7 @@ parameter_list|,
 name|_mask
 parameter_list|)
 define|\
-value|bhnd_pmu_ind_write(sc, BHND_PMU_ ## _src ## _ADDR,	\ 	    BHND_PMU_ ## _src ## _DATA, (_reg), (_val), (_mask))
+value|bhnd_pmu_ind_write((_sc)->io, (_sc)->io_ctx,		\ 	    BHND_PMU_ ## _src ## _ADDR,				\ 	    BHND_PMU_ ## _src ## _DATA, (_reg), (_val), (_mask))
 end_define
 
 begin_comment
@@ -375,10 +321,15 @@ begin_function_decl
 name|uint32_t
 name|bhnd_pmu_ind_read
 parameter_list|(
+specifier|const
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_io
 modifier|*
-name|sc
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|io_ctx
 parameter_list|,
 name|bus_size_t
 name|addr
@@ -396,10 +347,15 @@ begin_function_decl
 name|void
 name|bhnd_pmu_ind_write
 parameter_list|(
+specifier|const
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_io
 modifier|*
-name|sc
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|io_ctx
 parameter_list|,
 name|bus_size_t
 name|addr
@@ -510,66 +466,6 @@ name|sc
 parameter_list|,
 name|bool
 name|force
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|bhnd_pmu_si_clock
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|bhnd_pmu_cpu_clock
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|bhnd_pmu_mem_clock
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|bhnd_pmu_alp_clock
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|bhnd_pmu_ilp_clock
-parameter_list|(
-name|struct
-name|bhnd_pmu_softc
-modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

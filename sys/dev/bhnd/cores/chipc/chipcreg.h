@@ -27,6 +27,20 @@ comment|/**< size of the register block 						     containing the chip 						   
 end_comment
 
 begin_comment
+comment|/** Evaluates to true if the given ChipCommon core revision supports  *  the CHIPC_CORECTRL register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIPC_HWREV_HAS_CORECTRL
+parameter_list|(
+name|hwrev
+parameter_list|)
+value|((hwrev)>= 1)
+end_define
+
+begin_comment
 comment|/** Evaluates to true if the given ChipCommon core revision provides  *  the core count via the chip identification register. */
 end_comment
 
@@ -1563,14 +1577,14 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_NONE
-value|0x00
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE1
-value|0x10
+value|0x2
 end_define
 
 begin_comment
@@ -1581,7 +1595,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE2
-value|0x20
+value|0x4
 end_define
 
 begin_comment
@@ -1592,7 +1606,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE3
-value|0x30
+value|0x6
 end_define
 
 begin_comment
@@ -1603,7 +1617,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE4
-value|0x08
+value|0x8
 end_define
 
 begin_comment
@@ -1614,7 +1628,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE5
-value|0x18
+value|0x3
 end_define
 
 begin_comment
@@ -1625,7 +1639,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE6
-value|0x28
+value|0x5
 end_define
 
 begin_comment
@@ -1636,7 +1650,7 @@ begin_define
 define|#
 directive|define
 name|CHIPC_PLL_TYPE7
-value|0x38
+value|0x7
 end_define
 
 begin_comment

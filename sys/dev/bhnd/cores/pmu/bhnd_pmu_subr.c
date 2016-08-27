@@ -71,6 +71,20 @@ directive|include
 file|"bhnd_pmu_private.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|PMU_LOG
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	if (_sc->dev != NULL)					\ 		device_printf(_sc->dev, _fmt, ##__VA_ARGS__);	\ 	else							\ 		printf(_fmt, ##__VA_ARGS__);			\ } while (0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -80,21 +94,15 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PMU_MSG
+name|PMU_DEBUG
 parameter_list|(
-name|args
+name|_sc
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
 parameter_list|)
-value|printf args
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMU_ERROR
-parameter_list|(
-name|args
-parameter_list|)
-value|do {	\ 	panic args;		\ } while (0)
+value|PMU_LOG(_sc, _fmt, ##__VA_ARGS__)
 end_define
 
 begin_else
@@ -105,20 +113,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|PMU_MSG
+name|PMU_DEBUG
 parameter_list|(
-name|args
+name|_sc
+parameter_list|,
+name|_fmt
+parameter_list|,
+modifier|...
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMU_ERROR
-parameter_list|(
-name|args
-parameter_list|)
-value|printf args
 end_define
 
 begin_endif
@@ -154,7 +156,7 @@ modifier|*
 name|bhnd_pmu1_xtaltab0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -169,7 +171,7 @@ modifier|*
 name|bhnd_pmu1_xtaldef0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -198,7 +200,7 @@ name|uint32_t
 name|bhnd_pmu0_cpuclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -211,7 +213,7 @@ name|uint32_t
 name|bhnd_pmu0_alpclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -240,7 +242,7 @@ name|uint32_t
 name|bhnd_pmu1_pllfvco0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -253,7 +255,7 @@ name|uint32_t
 name|bhnd_pmu1_cpuclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -266,7 +268,7 @@ name|uint32_t
 name|bhnd_pmu1_alpclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -279,7 +281,7 @@ name|uint32_t
 name|bhnd_pmu5_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|,
@@ -482,8 +484,100 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|CHIPC_CST4330_CHIPMODE_SDIOD(BHND_CHIPC_READ_CHIPST((_sc)->chipc_dev))
+value|CHIPC_CST4330_CHIPMODE_SDIOD((_sc)->io->rd_chipst((_sc)->io_ctx))
 end_define
+
+begin_comment
+comment|/**  * Initialize @p query state.  *   * @param[out] query On success, will be populated with a valid query instance  * state.  * @param dev The device owning @p query, or NULL.  * @param id The bhnd chip identification.  * @param io I/O callback functions.  * @param ctx I/O callback context.  *  * @retval 0 success  * @retval non-zero if the query state could not be initialized.  */
+end_comment
+
+begin_function
+name|int
+name|bhnd_pmu_query_init
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|query
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|bhnd_chipid
+name|id
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_pmu_io
+modifier|*
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+name|query
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|query
+operator|->
+name|io
+operator|=
+name|io
+expr_stmt|;
+name|query
+operator|->
+name|io_ctx
+operator|=
+name|ctx
+expr_stmt|;
+name|query
+operator|->
+name|cid
+operator|=
+name|id
+expr_stmt|;
+name|query
+operator|->
+name|caps
+operator|=
+name|BHND_PMU_READ_4
+argument_list|(
+name|query
+argument_list|,
+name|BHND_PMU_CAP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Release any resources held by @p query.  *   * @param query A query instance previously initialized via  * bhnd_pmu_query_init().  */
+end_comment
+
+begin_function
+name|void
+name|bhnd_pmu_query_fini
+parameter_list|(
+name|struct
+name|bhnd_pmu_query
+modifier|*
+name|query
+parameter_list|)
+block|{
+comment|/* nothing to do */
+block|}
+end_function
 
 begin_comment
 comment|/**  * Perform an indirect register read.  *   * @param addr Offset of the address register.  * @param data Offset of the data register.  * @param reg Indirect register to be read.  */
@@ -493,10 +587,15 @@ begin_function
 name|uint32_t
 name|bhnd_pmu_ind_read
 parameter_list|(
+specifier|const
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_io
 modifier|*
-name|sc
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|io_ctx
 parameter_list|,
 name|bus_size_t
 name|addr
@@ -508,22 +607,26 @@ name|uint32_t
 name|reg
 parameter_list|)
 block|{
-name|BHND_PMU_WRITE_4
+name|io
+operator|->
+name|wr4
 argument_list|(
-name|sc
-argument_list|,
 name|addr
 argument_list|,
 name|reg
+argument_list|,
+name|io_ctx
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BHND_PMU_READ_4
+name|io
+operator|->
+name|rd4
 argument_list|(
-name|sc
-argument_list|,
 name|data
+argument_list|,
+name|io_ctx
 argument_list|)
 operator|)
 return|;
@@ -538,10 +641,15 @@ begin_function
 name|void
 name|bhnd_pmu_ind_write
 parameter_list|(
+specifier|const
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_io
 modifier|*
-name|sc
+name|io
+parameter_list|,
+name|void
+modifier|*
+name|io_ctx
 parameter_list|,
 name|bus_size_t
 name|addr
@@ -562,13 +670,15 @@ block|{
 name|uint32_t
 name|rval
 decl_stmt|;
-name|BHND_PMU_WRITE_4
+name|io
+operator|->
+name|wr4
 argument_list|(
-name|sc
-argument_list|,
 name|addr
 argument_list|,
 name|reg
+argument_list|,
+name|io_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -580,11 +690,13 @@ condition|)
 block|{
 name|rval
 operator|=
-name|BHND_PMU_READ_4
+name|io
+operator|->
+name|rd4
 argument_list|(
-name|sc
-argument_list|,
 name|data
+argument_list|,
+name|io_ctx
 argument_list|)
 expr_stmt|;
 name|rval
@@ -606,13 +718,15 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-name|BHND_PMU_WRITE_4
+name|io
+operator|->
+name|wr4
 argument_list|(
-name|sc
-argument_list|,
 name|data
 argument_list|,
 name|rval
+argument_list|,
+name|io_ctx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1468,7 +1582,10 @@ name|ilp
 operator|=
 name|bhnd_pmu_ilp_clock
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 expr_stmt|;
 name|delay
@@ -1530,7 +1647,10 @@ name|ilp
 operator|=
 name|bhnd_pmu_ilp_clock
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 expr_stmt|;
 name|delay
@@ -1600,7 +1720,10 @@ name|ilp
 operator|=
 name|bhnd_pmu_ilp_clock
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 expr_stmt|;
 name|delay
@@ -1662,7 +1785,10 @@ name|ilp
 operator|=
 name|bhnd_pmu_ilp_clock
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 expr_stmt|;
 name|delay
@@ -3504,11 +3630,9 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"NVRAM error reading %s: %d\n"
 argument_list|,
@@ -3530,13 +3654,13 @@ operator|!
 name|error
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Applying rmin=%#x to min_mask\n"
-operator|,
+argument_list|,
 name|nval
-operator|)
 argument_list|)
 expr_stmt|;
 name|min_mask
@@ -3568,11 +3692,9 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"NVRAM error reading %s: %d\n"
 argument_list|,
@@ -3594,13 +3716,13 @@ operator|!
 name|error
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Applying rmax=%#x to max_mask\n"
-operator|,
+argument_list|,
 name|nval
-operator|)
 argument_list|)
 expr_stmt|;
 name|min_mask
@@ -3959,19 +4081,19 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Changing rsrc %d res_updn_timer to %#x\n"
-operator|,
+argument_list|,
 name|updt
 operator|->
 name|resnum
-operator|,
+argument_list|,
 name|updt
 operator|->
 name|updown
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_WRITE_4
@@ -4065,11 +4187,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"NVRAM error reading %s: %d\n"
 argument_list|,
@@ -4084,17 +4204,17 @@ name|error
 operator|)
 return|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Applying %s=%s to rsrc %d res_updn_timer\n"
-operator|,
+argument_list|,
 name|name
-operator|,
+argument_list|,
 name|val
-operator|,
+argument_list|,
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_WRITE_4
@@ -4244,18 +4364,18 @@ block|{
 case|case
 name|RES_DEPEND_SET
 case|:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Changing rsrc %hhu res_dep_mask to "
 literal|"%#x\n"
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|table
 operator|->
 name|depend_mask
-operator|)
 argument_list|)
 expr_stmt|;
 name|depend_mask
@@ -4268,18 +4388,18 @@ break|break;
 case|case
 name|RES_DEPEND_ADD
 case|:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Adding %#x to rsrc %hhu "
 literal|"res_dep_mask\n"
-operator|,
+argument_list|,
 name|table
 operator|->
 name|depend_mask
-operator|,
+argument_list|,
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 name|depend_mask
@@ -4292,18 +4412,18 @@ break|break;
 case|case
 name|RES_DEPEND_REMOVE
 case|:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Removing %#x from rsrc %hhu "
 literal|"res_dep_mask\n"
-operator|,
+argument_list|,
 name|table
 operator|->
 name|depend_mask
-operator|,
+argument_list|,
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 name|depend_mask
@@ -4398,11 +4518,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"NVRAM error reading %s: %d\n"
 argument_list|,
@@ -4417,17 +4535,17 @@ name|error
 operator|)
 return|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Applying %s=%s to rsrc %d res_dep_mask\n"
-operator|,
+argument_list|,
 name|name
-operator|,
+argument_list|,
 name|val
-operator|,
+argument_list|,
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_WRITE_4
@@ -4481,13 +4599,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Changing max_res_mask to 0x%x\n"
-operator|,
+argument_list|,
 name|max_mask
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_WRITE_4
@@ -4508,13 +4626,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Changing min_res_mask to 0x%x\n"
-operator|,
+argument_list|,
 name|min_mask
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_WRITE_4
@@ -6503,7 +6621,7 @@ modifier|*
 name|bhnd_pmu1_xtaltab0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -6579,17 +6697,17 @@ name|pmu1_xtaltab0_1440
 operator|)
 return|;
 default|default:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu1_xtaltab0: Unknown chipid %#hx\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_id
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6613,7 +6731,7 @@ modifier|*
 name|bhnd_pmu1_xtaldef0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -6723,17 +6841,17 @@ index|]
 operator|)
 return|;
 default|default:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu1_xtaldef0: Unknown chipid %#hx\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_id
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6755,7 +6873,7 @@ name|uint32_t
 name|bhnd_pmu1_pllfvco0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -6815,17 +6933,17 @@ name|FVCO_1440
 operator|)
 return|;
 default|default:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu1_pllfvco0: Unknown chipid %#hx\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_id
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6847,7 +6965,7 @@ name|uint32_t
 name|bhnd_pmu1_alpclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -6945,11 +7063,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"no matching ALP/XTAL frequency found\n"
 argument_list|)
@@ -7017,12 +7133,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Unspecified xtal frequency, skipping PLL "
 literal|"configuration\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7068,23 +7184,23 @@ index|[
 name|PMU0_XTAL0_DEFAULT
 index|]
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"XTAL %d.%d MHz (%d)\n"
-operator|,
+argument_list|,
 name|xtal
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xtal
 operator|%
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|xf
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Check current PLL state */
@@ -7141,23 +7257,23 @@ block|}
 endif|#
 directive|endif
 comment|/* BCMUSBDEV */
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"PLL already programmed for %d.%d MHz\n"
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|%
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7169,23 +7285,24 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Reprogramming PLL for %d.%d MHz (was %d.%dMHz)\n"
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|%
 literal|1000
-operator|,
+argument_list|,
 name|pmu0_xtaltab0
 index|[
 name|tmp
@@ -7196,7 +7313,7 @@ operator|.
 name|freq
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|pmu0_xtaltab0
 index|[
 name|tmp
@@ -7207,29 +7324,28 @@ operator|.
 name|freq
 operator|%
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Programming PLL for %d.%d MHz\n"
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|freq
 operator|%
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7308,11 +7424,11 @@ argument_list|,
 name|BHND_CCS_HTAVAIL
 argument_list|)
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Done masking\n"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Write PDIV in pllcontrol[0] */
@@ -7438,11 +7554,11 @@ argument_list|,
 name|pll_mask
 argument_list|)
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Done pll\n"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Write XtalFreq. Set the divisor also. */
@@ -7518,7 +7634,7 @@ name|uint32_t
 name|bhnd_pmu0_alpclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -7614,7 +7730,7 @@ name|uint32_t
 name|bhnd_pmu0_cpuclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -7789,17 +7905,17 @@ name|fvco
 operator|*=
 literal|1000
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu0_cpuclk0: wbint %u wbfrac %u fvco %u\n"
-operator|,
+argument_list|,
 name|wbint
-operator|,
+argument_list|,
 name|wbfrac
-operator|,
+argument_list|,
 name|fvco
-operator|)
 argument_list|)
 expr_stmt|;
 name|FVCO
@@ -7870,7 +7986,10 @@ name|FVCO
 operator|=
 name|bhnd_pmu1_pllfvco0
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 operator|/
 literal|1000
@@ -7891,12 +8010,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Unspecified xtal frequency, skipping PLL "
 literal|"configuration\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7908,7 +8027,10 @@ name|xt
 operator|=
 name|bhnd_pmu1_xtaltab0
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 init|;
 name|xt
@@ -7949,14 +8071,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
-literal|"Unsupported XTAL frequency %d.%dMHz, "
-literal|"skipping PLL configuration\n"
+literal|"Unsupported XTAL frequency %d.%dMHz, skipping PLL "
+literal|"configuration\n"
 argument_list|,
 name|xtal
 operator|/
@@ -8009,63 +8129,63 @@ operator|!=
 name|BHND_CHIPID_BCM4330
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"PLL already programmed for %d.%dMHz\n"
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|fref
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|fref
 operator|%
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"XTAL %d.%dMHz (%d)\n"
-operator|,
+argument_list|,
 name|xtal
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xtal
 operator|%
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|xf
-operator|)
 argument_list|)
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Programming PLL for %d.%dMHz\n"
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|fref
 operator|/
 literal|1000
-operator|,
+argument_list|,
 name|xt
 operator|->
 name|fref
 operator|%
 literal|1000
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8558,11 +8678,11 @@ name|chip_id
 argument_list|)
 expr_stmt|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Done masking\n"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Write p1div and p2div to pllcontrol[0] */
@@ -8877,13 +8997,13 @@ condition|(
 name|buf_strength
 condition|)
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Adjusting PLL buffer drive strength: %x\n"
-operator|,
+argument_list|,
 name|buf_strength
-operator|)
 argument_list|)
 expr_stmt|;
 name|plldata
@@ -8976,11 +9096,11 @@ name|pllmask
 argument_list|)
 expr_stmt|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Done pll\n"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* to operate the 4319 usb in 24MHz/48MHz; chipcontrol[2][84:83] needs 	 * to be updated. 	 */
@@ -9183,7 +9303,7 @@ name|uint32_t
 name|bhnd_pmu1_cpuclk0
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -9374,22 +9494,22 @@ name|fvco
 operator|*=
 literal|1000
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu1_cpuclk0: ndiv_int %u ndiv_frac %u p2div %u "
 literal|"p1div %u fvco %u\n"
-operator|,
+argument_list|,
 name|ndiv_int
-operator|,
+argument_list|,
 name|ndiv_frac
-operator|,
+argument_list|,
 name|p2div
-operator|,
+argument_list|,
 name|p1div
-operator|,
+argument_list|,
 name|fvco
-operator|)
 argument_list|)
 expr_stmt|;
 name|FVCO
@@ -9769,28 +9889,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
 literal|"No PLL init done for chip %#hx rev %d pmurev %d\n"
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_id
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_rev
-operator|,
+argument_list|,
 name|BHND_PMU_REV
 argument_list|(
 name|sc
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9799,7 +9917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* query alp/xtal clock frequency */
+comment|/**  * Return the ALP/XTAL clock frequency, in Hz.  *   * @param sc PMU query instance.  */
 end_comment
 
 begin_function
@@ -9807,7 +9925,7 @@ name|uint32_t
 name|bhnd_pmu_alp_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -9987,12 +10105,11 @@ literal|1000
 expr_stmt|;
 break|break;
 default|default:
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
 literal|"No ALP clock specified "
 literal|"for chip %s rev %d pmurev %d, using default %d Hz\n"
-operator|,
+argument_list|,
 name|bcm_chipname
 argument_list|(
 name|sih
@@ -10003,17 +10120,16 @@ name|chn
 argument_list|,
 literal|8
 argument_list|)
-operator|,
+argument_list|,
 name|sih
 operator|->
 name|chiprev
-operator|,
+argument_list|,
 name|sih
 operator|->
 name|pmurev
-operator|,
+argument_list|,
 name|clock
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10036,7 +10152,7 @@ name|uint32_t
 name|bhnd_pmu5_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|,
@@ -10079,15 +10195,15 @@ name|BHND_PMU4716_MAINPLL_PLL0
 operator|)
 condition|)
 block|{
-name|PMU_ERROR
+name|PMU_LOG
 argument_list|(
-operator|(
-literal|"%s: Bad pll0: %d\n"
-operator|,
+name|sc
+argument_list|,
+literal|"%s: Bad pll0: %d"
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|pll0
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10112,15 +10228,15 @@ literal|4
 operator|)
 condition|)
 block|{
-name|PMU_ERROR
+name|PMU_LOG
 argument_list|(
-operator|(
-literal|"%s: Bad m divider: %d\n"
-operator|,
+name|sc
+argument_list|,
+literal|"%s: Bad m divider: %d"
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|m
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10151,11 +10267,15 @@ block|{
 comment|/* Detect failure in clock setting */
 name|tmp
 operator|=
-name|BHND_CHIPC_READ_CHIPST
+name|sc
+operator|->
+name|io
+operator|->
+name|rd_chipst
 argument_list|(
 name|sc
 operator|->
-name|chipc_dev
+name|io_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -10329,31 +10449,32 @@ operator|)
 operator|/
 name|p2
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
-literal|"%s: p1=%d, p2=%d, ndiv=%d(0x%x), m%d=%d; fc=%d, clock=%d\n"
-operator|,
+name|sc
+argument_list|,
+literal|"%s: p1=%d, p2=%d, ndiv=%d(0x%x), m%d=%d; fc=%d, "
+literal|"clock=%d\n"
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|p1
-operator|,
+argument_list|,
 name|p2
-operator|,
+argument_list|,
 name|ndiv
-operator|,
+argument_list|,
 name|ndiv
-operator|,
+argument_list|,
 name|m
-operator|,
+argument_list|,
 name|div
-operator|,
+argument_list|,
 name|fc
-operator|,
+argument_list|,
 name|fc
 operator|/
 name|div
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Return clock in Hertz */
@@ -10372,11 +10493,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* query backplane clock frequency */
-end_comment
-
-begin_comment
-comment|/* For designs that feed the same clock to both backplane  * and CPU just return the CPU clock speed.  */
+comment|/**  * Return the backplane clock frequency, in Hz.  *   * On designs that feed the same clock to both backplane  * and CPU, this returns the CPU clock speed.  *   * @param sc PMU query instance.  */
 end_comment
 
 begin_function
@@ -10384,7 +10501,7 @@ name|uint32_t
 name|bhnd_pmu_si_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -10577,11 +10694,15 @@ name|BHND_CHIPID_BCM43238
 case|:
 name|chipst
 operator|=
-name|BHND_CHIPC_READ_CHIPST
+name|sc
+operator|->
+name|io
+operator|->
+name|rd_chipst
 argument_list|(
 name|sc
 operator|->
-name|chipc_dev
+name|io_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -10609,11 +10730,15 @@ name|BHND_CHIPID_BCM43237
 case|:
 name|chipst
 operator|=
-name|BHND_CHIPC_READ_CHIPST
+name|sc
+operator|->
+name|io
+operator|->
+name|rd_chipst
 argument_list|(
 name|sc
 operator|->
-name|chipc_dev
+name|io_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -10678,14 +10803,12 @@ literal|75000000
 expr_stmt|;
 break|break;
 default|default:
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
-literal|"No backplane clock specified for chip "
-literal|"%#hx rev %hhd pmurev %hhd, using default %dHz\n"
+literal|"No backplane clock specified for chip %#hx rev "
+literal|"%hhd pmurev %hhd, using default %dHz\n"
 argument_list|,
 name|sc
 operator|->
@@ -10718,7 +10841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* query CPU clock frequency */
+comment|/**  * Return the CPU clock frequency, in Hz.  *   * @param sc PMU query instance.  */
 end_comment
 
 begin_function
@@ -10726,7 +10849,7 @@ name|uint32_t
 name|bhnd_pmu_cpu_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -10734,6 +10857,7 @@ block|{
 name|uint32_t
 name|clock
 decl_stmt|;
+comment|/* 5354 chip uses a non programmable PLL of frequency 240MHz */
 if|if
 condition|(
 name|sc
@@ -10754,22 +10878,6 @@ literal|1000
 operator|)
 return|;
 comment|/* 240MHz */
-comment|/* 5354 chip uses a non programmable PLL of frequency 240MHz */
-if|if
-condition|(
-name|sc
-operator|->
-name|cid
-operator|.
-name|chip_id
-operator|==
-name|BHND_CHIPID_BCM5354
-condition|)
-return|return
-operator|(
-literal|240000000
-operator|)
-return|;
 if|if
 condition|(
 name|sc
@@ -10936,7 +11044,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* query memory clock frequency */
+comment|/**  * Return the memory clock frequency, in Hz.  *   * @param sc PMU query instance.  */
 end_comment
 
 begin_function
@@ -10944,7 +11052,7 @@ name|uint32_t
 name|bhnd_pmu_mem_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -11117,12 +11225,16 @@ begin_comment
 comment|/* ms, make sure 1000 can be divided by it. */
 end_comment
 
+begin_comment
+comment|/**  * Measure and return the ILP clock frequency, in Hz.  *   * @param sc PMU query instance.  */
+end_comment
+
 begin_function
 name|uint32_t
 name|bhnd_pmu_ilp_clock
 parameter_list|(
 name|struct
-name|bhnd_pmu_softc
+name|bhnd_pmu_query
 modifier|*
 name|sc
 parameter_list|)
@@ -11535,14 +11647,12 @@ literal|11
 expr_stmt|;
 break|break;
 default|default:
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
-literal|"No SDIO Drive strength init done for "
-literal|"chip %#x rev %hhd pmurev %hhd\n"
+literal|"No SDIO Drive strength init done for chip %#x "
+literal|"rev %hhd pmurev %hhd\n"
 argument_list|,
 name|sc
 operator|->
@@ -11657,15 +11767,16 @@ operator|~
 literal|0
 argument_list|)
 expr_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
-literal|"SDIO: %dmA drive strength selected, set to 0x%08x\n"
-operator|,
+name|sc
+argument_list|,
+literal|"SDIO: %dmA drive strength selected, set to "
+literal|"0x%08x\n"
+argument_list|,
 name|drivestrength
-operator|,
+argument_list|,
 name|cc_data_temp
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11830,19 +11941,15 @@ name|error
 operator|!=
 name|ENOENT
 condition|)
-block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
 literal|"error fetching xtalfreq: %d\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 name|xtalfreq
 operator|=
 name|bhnd_pmu_measure_alpclk
@@ -12105,20 +12212,20 @@ operator|=
 name|dup
 expr_stmt|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"bhnd_pmu_res_uptime: rsrc %hhu uptime %u(deps 0x%08x "
 literal|"uptime %u)\n"
-operator|,
+argument_list|,
 name|rsrc
-operator|,
+argument_list|,
 name|up
-operator|,
+argument_list|,
 name|deps
-operator|,
+argument_list|,
 name|dmax
-operator|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -12432,15 +12539,15 @@ block|{
 name|uint32_t
 name|state
 decl_stmt|;
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Adding rsrc 0x%x to min_res_mask\n"
-operator|,
+argument_list|,
 name|rsrcs
 operator||
 name|deps
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_OR_4
@@ -12510,14 +12617,12 @@ operator|!=
 name|rsrcs
 condition|)
 block|{
-name|device_printf
+name|PMU_LOG
 argument_list|(
 name|sc
-operator|->
-name|dev
 argument_list|,
-literal|"timeout waiting for OTP "
-literal|"resource enable\n"
+literal|"timeout waiting for OTP resource "
+literal|"enable\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12529,15 +12634,15 @@ block|}
 block|}
 else|else
 block|{
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"Removing rsrc 0x%x from min_res_mask\n"
-operator|,
+argument_list|,
 name|rsrcs
 operator||
 name|deps
-operator|)
 argument_list|)
 expr_stmt|;
 name|BHND_PMU_AND_4
@@ -12755,11 +12860,10 @@ operator|&
 literal|0x0f
 expr_stmt|;
 block|}
-name|PMU_MSG
+name|PMU_DEBUG
 argument_list|(
-operator|(
 literal|"RCal completed, status 0x%x, code 0x%x\n"
-operator|,
+argument_list|,
 name|R_REG
 argument_list|(
 operator|&
@@ -12767,9 +12871,8 @@ name|cc
 operator|->
 name|chipstatus
 argument_list|)
-operator|,
+argument_list|,
 name|rcal_code
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Write RCal code into pmu_vreg_ctrl[32:29] */
@@ -13960,6 +14063,10 @@ break|break;
 case|case
 name|BHND_CHIPID_BCM4319
 case|:
+name|pmuctrl
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|BHND_CHIPID_BCM4322
@@ -14326,24 +14433,34 @@ name|BHND_PMU_CTRL_PLL_PLLCTL_UPD
 expr_stmt|;
 break|break;
 default|default:
-name|PMU_ERROR
+name|PMU_LOG
 argument_list|(
-operator|(
+name|sc
+argument_list|,
 literal|"%s: unknown spuravoidance settings for chip %#hx, "
-literal|"not changing PLL\n"
-operator|,
+literal|"not changing PLL"
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|cid
 operator|.
 name|chip_id
-operator|)
 argument_list|)
+expr_stmt|;
+name|pmuctrl
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|pmuctrl
+operator|!=
+literal|0
+condition|)
 name|BHND_PMU_OR_4
 argument_list|(
 name|sc
@@ -15225,7 +15342,10 @@ name|FVCO
 init|=
 name|bhnd_pmu1_pllfvco0
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|query
 argument_list|)
 operator|/
 literal|1000
