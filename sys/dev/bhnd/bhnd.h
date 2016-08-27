@@ -90,6 +90,17 @@ name|bhnd_nvram_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BHND_CHIPID_MAX_NAMELEN
+value|32
+end_define
+
+begin_comment
+comment|/**< maximum buffer required for a 					     bhnd_format_chip_id() */
+end_comment
+
 begin_comment
 comment|/**  * bhnd child instance variables  */
 end_comment
@@ -776,6 +787,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|bhnd_format_chip_id
+parameter_list|(
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|uint16_t
+name|chip_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|device_t
 name|bhnd_match_child
 parameter_list|(
@@ -1109,6 +1137,22 @@ name|bhnd_set_default_core_desc
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhnd_set_default_bus_desc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|chip_id
 parameter_list|)
 function_decl|;
 end_function_decl
