@@ -12992,33 +12992,7 @@ argument_list|(
 name|gsel_tss
 argument_list|)
 expr_stmt|;
-name|vm86_initialize
-argument_list|()
-expr_stmt|;
-name|getmemsize
-argument_list|(
-name|first
-argument_list|)
-expr_stmt|;
-name|init_param2
-argument_list|(
-name|physmem
-argument_list|)
-expr_stmt|;
-comment|/* now running on new page tables, configured,and u/iom is accessible */
-comment|/* 	 * Initialize the console before we print anything out. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|metadata_missing
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: loader(8) metadata is missing!\n"
-argument_list|)
-expr_stmt|;
+comment|/* Initialize the PIC early for vm86 calls. */
 ifdef|#
 directive|ifdef
 name|DEV_ISA
@@ -13093,6 +13067,33 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|vm86_initialize
+argument_list|()
+expr_stmt|;
+name|getmemsize
+argument_list|(
+name|first
+argument_list|)
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
+argument_list|)
+expr_stmt|;
+comment|/* now running on new page tables, configured,and u/iom is accessible */
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+name|cninit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|metadata_missing
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: loader(8) metadata is missing!\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
