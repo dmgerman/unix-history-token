@@ -11226,6 +11226,24 @@ value|AR_PHY_65NM(overlay_0x16180.Osprey.ch0_bb_dpll4)
 end_define
 
 begin_comment
+comment|/*  * Wasp/Hornet PHY USB PLL control  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_USB_CTRL1
+value|0x16c84
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_USB_CTRL2
+value|0x16c88
+end_define
+
+begin_comment
 comment|/*  * PMU Register Map  */
 end_comment
 
