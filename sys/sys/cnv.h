@@ -560,21 +560,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cnvlist_free_descriptor
-parameter_list|(
-name|nvlist_t
-modifier|*
-name|nvl
-parameter_list|,
-name|void
-modifier|*
-name|cookiep
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|cnvlist_free_bool_array
 parameter_list|(
 name|nvlist_t
