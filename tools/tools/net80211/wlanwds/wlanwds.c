@@ -801,7 +801,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|parentlen
 decl_stmt|;
 comment|/* fetch parent interface name */
@@ -1084,7 +1084,7 @@ name|char
 modifier|*
 name|ifname
 parameter_list|,
-name|char
+name|uint8_t
 name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
@@ -1190,7 +1190,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|char
+name|uint8_t
 name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
