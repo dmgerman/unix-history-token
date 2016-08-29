@@ -42,7 +42,7 @@ end_include
 begin_expr_stmt
 name|DECLARE_CLASS
 argument_list|(
-name|bhnd_chipc
+name|bhnd_chipc_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,58 +59,6 @@ struct_decl|struct
 name|chipc_region
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/**  * Supported ChipCommon flash types.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CHIPC_FLASH_NONE
-init|=
-literal|0
-block|,
-comment|/**< No flash, or a type unrecognized 					     by the ChipCommon driver */
-name|CHIPC_PFLASH_CFI
-init|=
-literal|1
-block|,
-comment|/**< CFI-compatible parallel flash */
-name|CHIPC_SFLASH_ST
-init|=
-literal|2
-block|,
-comment|/**< ST serial flash */
-name|CHIPC_SFLASH_AT
-init|=
-literal|3
-block|,
-comment|/**< Atmel serial flash */
-name|CHIPC_QSFLASH_ST
-init|=
-literal|4
-block|,
-comment|/**< ST quad-SPI flash */
-name|CHIPC_QSFLASH_AT
-init|=
-literal|5
-block|,
-comment|/**< Atmel quad-SPI flash */
-name|CHIPC_NFLASH
-init|=
-literal|6
-block|,
-comment|/**< NAND flash */
-name|CHIPC_NFLASH_4706
-init|=
-literal|7
-comment|/**< BCM4706 NAND flash */
-block|}
-name|chipc_flash
-typedef|;
-end_typedef
 
 begin_function_decl
 specifier|const
@@ -147,102 +95,6 @@ name|type
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/**  * ChipCommon capability flags;  */
-end_comment
-
-begin_struct
-struct|struct
-name|chipc_caps
-block|{
-name|uint8_t
-name|num_uarts
-decl_stmt|;
-comment|/**< Number of attached UARTS (1-3) */
-name|bool
-name|mipseb
-decl_stmt|;
-comment|/**< MIPS is big-endian */
-name|uint8_t
-name|uart_clock
-decl_stmt|;
-comment|/**< UART clock source (see CHIPC_CAP_UCLKSEL_*) */
-name|uint8_t
-name|uart_gpio
-decl_stmt|;
-comment|/**< UARTs own GPIO pins 12-15 */
-name|uint8_t
-name|extbus_type
-decl_stmt|;
-comment|/**< ExtBus type (CHIPC_CAP_EXTBUS_*) */
-name|chipc_flash
-name|flash_type
-decl_stmt|;
-comment|/**< flash type */
-name|uint8_t
-name|cfi_width
-decl_stmt|;
-comment|/**< CFI bus width, 0 if unknown or CFI 					     not present */
-name|bhnd_nvram_src
-name|nvram_src
-decl_stmt|;
-comment|/**< identified NVRAM source */
-name|bus_size_t
-name|sprom_offset
-decl_stmt|;
-comment|/**< Offset to SPROM data within 					     SPROM/OTP, 0 if unknown or not 					     present */
-name|uint8_t
-name|otp_size
-decl_stmt|;
-comment|/**< OTP (row?) size, 0 if not present */
-name|uint8_t
-name|pll_type
-decl_stmt|;
-comment|/**< PLL type */
-name|bool
-name|power_control
-decl_stmt|;
-comment|/**< Power control available */
-name|bool
-name|jtag_master
-decl_stmt|;
-comment|/**< JTAG Master present */
-name|bool
-name|boot_rom
-decl_stmt|;
-comment|/**< Internal boot ROM is active */
-name|uint8_t
-name|backplane_64
-decl_stmt|;
-comment|/**< Backplane supports 64-bit addressing. 					     Note that this does not gaurantee 					     the CPU itself supports 64-bit 					     addressing. */
-name|bool
-name|pmu
-decl_stmt|;
-comment|/**< PMU is present. */
-name|bool
-name|eci
-decl_stmt|;
-comment|/**< ECI (enhanced coexistence inteface) is present. */
-name|bool
-name|seci
-decl_stmt|;
-comment|/**< SECI (serial ECI) is present */
-name|bool
-name|sprom
-decl_stmt|;
-comment|/**< SPROM is present */
-name|bool
-name|gsio
-decl_stmt|;
-comment|/**< GSIO (SPI/I2C) present */
-name|bool
-name|aob
-decl_stmt|;
-comment|/**< AOB (always on bus) present. 					     If set, PMU and GCI registers are 					     not accessible via ChipCommon, 					     and are instead accessible via 					     dedicated cores on the bhnd bus */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*   * ChipCommon device quirks / features  */

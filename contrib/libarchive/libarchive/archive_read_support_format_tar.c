@@ -5904,13 +5904,48 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Tar entry has negative size?"
+literal|"Tar entry has negative size"
 argument_list|)
 expr_stmt|;
-name|err
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|tar
+operator|->
+name|entry_bytes_remaining
+operator|==
+name|INT64_MAX
+condition|)
+block|{
+comment|/* Note: tar_atol returns INT64_MAX on overflow */
+name|tar
+operator|->
+name|entry_bytes_remaining
 operator|=
-name|ARCHIVE_WARN
+literal|0
 expr_stmt|;
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Tar entry size overflow"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
 block|}
 name|tar
 operator|->

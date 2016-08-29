@@ -490,6 +490,104 @@ value|0x368
 end_define
 
 begin_comment
+comment|/* The exact interpretation of these bits is unverified; these  * are our best guesses as to their use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_MASK
+value|0xFF
+end_define
+
+begin_comment
+comment|/**< OOBSEL config mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_0_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_1_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_2_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_3_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_0_SHIFT
+value|0
+end_define
+
+begin_comment
+comment|/**< first OOBSEL config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_1_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/**< second OOBSEL config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_2_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/**< third OOBSEL config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_3_SHIFT
+value|24
+end_define
+
+begin_comment
+comment|/**< fouth OOBSEL config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_EN
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/**< enable bit */
+end_comment
+
+begin_comment
 comment|// This was inherited from Broadcom's aidmp.h header
 end_comment
 

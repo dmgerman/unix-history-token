@@ -369,6 +369,8 @@ condition|(
 name|sc
 operator|->
 name|sc_pps_mode
+operator|&
+name|UART_PPS_SIGNAL_MASK
 condition|)
 block|{
 case|case
@@ -379,6 +381,7 @@ argument_list|(
 literal|"disabled"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|UART_PPS_CTS
 case|:
@@ -387,6 +390,7 @@ argument_list|(
 literal|"CTS"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|UART_PPS_DCD
 case|:
@@ -395,12 +399,14 @@ argument_list|(
 literal|"DCD"
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
 literal|"invalid"
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(

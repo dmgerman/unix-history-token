@@ -199,9 +199,16 @@ name|valuep
 argument_list|)
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Symbol '%s' not found\n"
+argument_list|,
+name|db_tok_string
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Symbol not found\n"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -359,9 +366,16 @@ name|valuep
 argument_list|)
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Expression syntax error after '%c'\n"
+argument_list|,
+literal|'('
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Syntax error\n"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -378,9 +392,16 @@ operator|!=
 name|tRPAREN
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Expression syntax error -- expected '%c'\n"
+argument_list|,
+literal|')'
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Syntax error\n"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -706,7 +727,31 @@ name|db_printf
 argument_list|(
 literal|"Expression syntax error after '%c'\n"
 argument_list|,
-literal|'!'
+name|t
+operator|==
+name|tSTAR
+condition|?
+literal|'*'
+else|:
+name|t
+operator|==
+name|tSLASH
+condition|?
+literal|'/'
+else|:
+name|t
+operator|==
+name|tPCT
+condition|?
+literal|'%'
+else|:
+name|t
+operator|==
+name|tHASH
+condition|?
+literal|'#'
+else|:
+literal|'&'
 argument_list|)
 expr_stmt|;
 name|db_error
@@ -747,7 +792,7 @@ condition|)
 block|{
 name|db_error
 argument_list|(
-literal|"Divide by 0\n"
+literal|"Division by 0\n"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -826,9 +871,6 @@ decl_stmt|;
 name|int
 name|t
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -873,18 +915,23 @@ name|rhs
 argument_list|)
 condition|)
 block|{
-name|c
-operator|=
-name|db_tok_string
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"Expression syntax error after '%c'\n"
 argument_list|,
-name|c
+name|t
+operator|==
+name|tPLUS
+condition|?
+literal|'+'
+else|:
+name|t
+operator|==
+name|tMINUS
+condition|?
+literal|'-'
+else|:
+literal|'|'
 argument_list|)
 expr_stmt|;
 name|db_error
@@ -1010,9 +1057,22 @@ name|rhs
 argument_list|)
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Expression syntax error after '%s'\n"
+argument_list|,
+name|t
+operator|==
+name|tSHIFT_L
+condition|?
+literal|"<<"
+else|:
+literal|">>"
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Syntax error\n"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1024,9 +1084,19 @@ operator|<
 literal|0
 condition|)
 block|{
+name|db_printf
+argument_list|(
+literal|"Negative shift amount %jd\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|rhs
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
-literal|"Negative shift amount\n"
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1096,12 +1166,6 @@ decl_stmt|;
 name|int
 name|t
 decl_stmt|;
-name|char
-name|op
-index|[
-literal|3
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1148,33 +1212,6 @@ operator|==
 name|tLESS_EQ
 condition|)
 block|{
-name|op
-index|[
-literal|0
-index|]
-operator|=
-name|db_tok_string
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|op
-index|[
-literal|1
-index|]
-operator|=
-name|db_tok_string
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|op
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1187,9 +1224,39 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"Expression syntax error after \"%s\"\n"
+literal|"Expression syntax error after '%s'\n"
 argument_list|,
-name|op
+name|t
+operator|==
+name|tLOG_EQ
+condition|?
+literal|"=="
+else|:
+name|t
+operator|==
+name|tLOG_NOT_EQ
+condition|?
+literal|"!="
+else|:
+name|t
+operator|==
+name|tGREATER
+condition|?
+literal|">"
+else|:
+name|t
+operator|==
+name|tGREATER_EQ
+condition|?
+literal|">="
+else|:
+name|t
+operator|==
+name|tLESS
+condition|?
+literal|"<"
+else|:
+literal|"<="
 argument_list|)
 expr_stmt|;
 name|db_error

@@ -2511,8 +2511,6 @@ decl_stmt|;
 name|u_int
 name|chk
 decl_stmt|,
-name|i
-decl_stmt|,
 name|x
 decl_stmt|,
 name|xdn
@@ -3565,8 +3563,6 @@ name|int
 name|err
 decl_stmt|,
 name|ok
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -4705,7 +4701,7 @@ operator|->
 name|d_unit
 condition|)
 block|{
-comment|/* fat cache was changed to another device, dont use it */
+comment|/* fat cache was changed to another device, don't use it */
 name|err
 operator|=
 name|ioread
@@ -4747,7 +4743,9 @@ condition|(
 name|err
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 else|else

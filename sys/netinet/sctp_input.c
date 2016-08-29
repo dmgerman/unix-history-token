@@ -28210,6 +28210,19 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* 				 * For sending a SACK this looks like DATA 				 * chunks. 				 */
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|last_data_chunk_from
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|last_control_chunk_from
+expr_stmt|;
 name|sctp_handle_forward_tsn
 argument_list|(
 name|stcb

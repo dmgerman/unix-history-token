@@ -84,19 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/cores/chipc/chipc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_nvram_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"chipcvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"chipc_private.h"
 end_include
 
 begin_define

@@ -9185,7 +9185,7 @@ value|160
 end_define
 
 begin_comment
-comment|/* 150 mSec */
+comment|/* 150 uSec */
 end_comment
 
 begin_define
@@ -9376,7 +9376,7 @@ value|(1<< 16)
 end_define
 
 begin_comment
-comment|/**  * Smart Fifo configuration command.  * @state: smart fifo state, types listed in iwm_sf_sate.  * @watermark: Minimum allowed available free space in RXF for transient state.  * @long_delay_timeouts: aging and idle timer values for each scenario  * in long delay state.  * @full_on_timeouts: timer values for each scenario in full on state.  */
+comment|/**  * Smart Fifo configuration command.  * @state: smart fifo state, types listed in iwm_sf_state.  * @watermark: Minimum allowed available free space in RXF for transient state.  * @long_delay_timeouts: aging and idle timer values for each scenario  * in long delay state.  * @full_on_timeouts: timer values for each scenario in full on state.  */
 end_comment
 
 begin_struct

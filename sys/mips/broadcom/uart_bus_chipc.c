@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bcm_socinfo.h"
+file|"bcm_machdep.h"
 end_include
 
 begin_function
@@ -127,10 +127,8 @@ name|uart_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|bcm_socinfo
-modifier|*
-name|socinfo
+name|u_int
+name|rclk
 decl_stmt|;
 name|sc
 operator|=
@@ -146,11 +144,13 @@ operator|=
 operator|&
 name|uart_ns8250_class
 expr_stmt|;
-comment|/* TODO: UART rate should be calculated from CPU clock speed 	 * as fetched from bhnd bus */
-name|socinfo
+name|rclk
 operator|=
-name|bcm_get_socinfo
+name|bcm_get_uart_rclk
+argument_list|(
+name|bcm_get_platform
 argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -160,9 +160,7 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
-name|socinfo
-operator|->
-name|uartrate
+name|rclk
 argument_list|,
 literal|0
 argument_list|,
