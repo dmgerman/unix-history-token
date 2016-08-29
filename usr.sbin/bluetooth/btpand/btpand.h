@@ -735,7 +735,7 @@ parameter_list|(
 name|channel_t
 modifier|*
 parameter_list|,
-name|uint8_t
+name|unsigned
 parameter_list|,
 modifier|...
 parameter_list|)

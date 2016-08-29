@@ -2574,7 +2574,7 @@ name|channel_t
 modifier|*
 name|chan
 parameter_list|,
-name|uint8_t
+name|unsigned
 name|type
 parameter_list|,
 modifier|...
@@ -2637,6 +2637,9 @@ operator|*
 name|p
 operator|++
 operator|=
+operator|(
+name|uint8_t
+operator|)
 name|type
 expr_stmt|;
 switch|switch
