@@ -9225,6 +9225,19 @@ operator|->
 name|cleanup_lock
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u quiesced and drained"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|ioat_get_chansts
@@ -9336,6 +9349,19 @@ argument_list|,
 name|chanerr
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u hardware suspended"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * IOAT v3 workaround - CHANERRMSK_INT with 3E07h to masks out errors 	 *  that can cause stability issues for IOAT v3. 	 */
 name|pci_write_config
 argument_list|(
@@ -9403,6 +9429,19 @@ block|}
 name|ioat_reset
 argument_list|(
 name|ioat
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u hardware reset"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
 argument_list|)
 expr_stmt|;
 comment|/* Wait at most 20 ms */
@@ -9632,6 +9671,19 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u configured channel"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 comment|/* Enqueues a null operation and ensures it completes. */
@@ -9641,6 +9693,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|ioat_start_channel
@@ -9648,6 +9701,20 @@ argument_list|(
 name|ioat
 argument_list|)
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u started channel"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Resume completions now that ring state is consistent. 	 */
 name|mtx_lock
 argument_list|(
@@ -9723,6 +9790,19 @@ argument_list|,
 name|ioat_poll_timer_callback
 argument_list|,
 name|ioat
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u reset done"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
