@@ -6072,11 +6072,19 @@ name|nchan
 operator|==
 literal|1
 condition|)
+block|{
+comment|/* 		 * Either RSS is not supported, or multiple RX/TX rings 		 * are not requested. 		 */
+operator|*
+name|nchan0
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Get RSS capabilities, e.g. # of RX rings, and # of indirect 	 * table entries. 	 */
 name|ret
 operator|=
@@ -6093,14 +6101,17 @@ condition|(
 name|ret
 condition|)
 block|{
-comment|/* This is benign. */
-name|ret
+comment|/* No RSS; this is benign. */
+operator|*
+name|nchan0
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
