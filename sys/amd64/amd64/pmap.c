@@ -23238,7 +23238,7 @@ name|m
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|pagezero
+name|sse2_pagezero
 argument_list|(
 operator|(
 name|void
