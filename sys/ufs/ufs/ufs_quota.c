@@ -2376,14 +2376,14 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"chkdquot: missing dquot"
-argument_list|,
 name|ITOV
 argument_list|(
 name|ip
 argument_list|)
+argument_list|,
+literal|"chkdquot: missing dquot "
 argument_list|)
 expr_stmt|;
 name|panic

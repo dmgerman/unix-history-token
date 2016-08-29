@@ -11130,11 +11130,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vputx: usecount not zero"
-argument_list|,
 name|vp
+argument_list|,
+literal|"vputx: usecount not zero for vnode "
 argument_list|)
 expr_stmt|;
 name|panic
@@ -12956,11 +12956,11 @@ if|if
 condition|(
 name|busyprt
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vflush: busy vnode"
-argument_list|,
 name|vp
+argument_list|,
+literal|"vflush: busy vnode "
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14901,11 +14901,11 @@ argument_list|(
 name|vp
 argument_list|)
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|""
-argument_list|,
 name|vp
+argument_list|,
+literal|"vnode "
 argument_list|)
 expr_stmt|;
 block|}

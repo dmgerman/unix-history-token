@@ -3066,11 +3066,11 @@ if|if
 condition|(
 name|snapdebug
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"ffs_snapshot: busy vnode"
-argument_list|,
 name|xvp
+argument_list|,
+literal|"ffs_snapshot: busy vnode "
 argument_list|)
 expr_stmt|;
 if|if

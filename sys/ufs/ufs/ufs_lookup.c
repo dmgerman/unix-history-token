@@ -4578,11 +4578,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"ufs_direnter: failed to truncate"
-argument_list|,
 name|dvp
+argument_list|,
+literal|"ufs_direnter: failed to truncate "
 argument_list|)
 expr_stmt|;
 ifdef|#

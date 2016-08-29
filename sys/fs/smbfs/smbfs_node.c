@@ -628,11 +628,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"smbfs_node_alloc: dead parent vnode"
-argument_list|,
 name|dvp
+argument_list|,
+literal|"smbfs_node_alloc: dead parent vnode "
 argument_list|)
 expr_stmt|;
 return|return

@@ -838,13 +838,13 @@ operator|->
 name|a_bp
 argument_list|)
 expr_stmt|;
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"vnode"
-argument_list|,
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+literal|"vnode "
 argument_list|)
 expr_stmt|;
 name|ap
@@ -2774,11 +2774,11 @@ name|error
 operator|==
 name|EAGAIN
 condition|)
-name|vprint
+name|vn_printf
 argument_list|(
-literal|"fsync: giving up on dirty"
-argument_list|,
 name|vp
+argument_list|,
+literal|"fsync: giving up on dirty "
 argument_list|)
 expr_stmt|;
 return|return
