@@ -537,6 +537,8 @@ name|INTERPOS_ppoll
 block|,
 name|INTERPOS_map_stacks_exec
 block|,
+name|INTERPOS_fdatasync
+block|,
 name|INTERPOS_MAX
 block|}
 enum|;
@@ -929,6 +931,15 @@ parameter_list|,
 name|int
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_fdatasync
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
