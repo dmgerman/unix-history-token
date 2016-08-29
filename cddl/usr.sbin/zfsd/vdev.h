@@ -105,6 +105,12 @@ comment|/** 	 * \brief No-op copy constructor for nonexistent vdevs. 	 */
 name|Vdev
 argument_list|()
 expr_stmt|;
+comment|/** 	 * \brief No-op virtual destructor, since this class has virtual 	 *        functions. 	 */
+name|virtual
+operator|~
+name|Vdev
+argument_list|()
+expr_stmt|;
 name|bool
 name|DoesNotExist
 argument_list|()
@@ -270,6 +276,13 @@ comment|//- Vdev Inline Public Methods -----------------------------------------
 end_comment
 
 begin_expr_stmt
+specifier|inline
+name|Vdev
+operator|::
+operator|~
+name|Vdev
+argument_list|()
+block|{ }
 specifier|inline
 name|DevdCtl
 operator|::
