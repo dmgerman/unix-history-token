@@ -592,6 +592,9 @@ name|ACL_TYPE_NFS4
 name|acl_flagset_t
 name|acl_flagset
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 endif|#
 directive|endif
 name|int
@@ -622,8 +625,6 @@ name|entries
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|r
 decl_stmt|;
 name|ret
 operator|=
