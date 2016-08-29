@@ -693,7 +693,7 @@ argument_list|(
 name|outbuff
 argument_list|)
 operator|-
-literal|128
+literal|20
 operator|)
 condition|)
 block|{
