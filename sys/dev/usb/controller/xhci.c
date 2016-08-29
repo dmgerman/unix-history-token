@@ -10095,6 +10095,9 @@ name|control_act
 condition|)
 block|{
 comment|/* 		 * Send a DATA1 message and invert the current 		 * endpoint direction. 		 */
+ifdef|#
+directive|ifdef
+name|XHCI_STEP_STATUS_STAGE
 name|temp
 operator|.
 name|step_td
@@ -10107,6 +10110,16 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|temp
+operator|.
+name|step_td
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|temp
 operator|.
 name|direction
