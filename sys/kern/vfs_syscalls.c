@@ -16690,7 +16690,6 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|int
 name|kern_fsync
 parameter_list|(
