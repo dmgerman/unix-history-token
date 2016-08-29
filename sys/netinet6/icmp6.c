@@ -1947,6 +1947,10 @@ block|{
 case|case
 name|ICMP6_DST_UNREACH_NOROUTE
 case|:
+case|case
+name|ICMP6_DST_UNREACH_ADDR
+case|:
+comment|/* PRC_HOSTDEAD is a DOS */
 name|code
 operator|=
 name|PRC_UNREACH_NET
@@ -1967,14 +1971,6 @@ operator|=
 name|PRC_UNREACH_PROTOCOL
 expr_stmt|;
 comment|/* is this a good code? */
-break|break;
-case|case
-name|ICMP6_DST_UNREACH_ADDR
-case|:
-name|code
-operator|=
-name|PRC_HOSTDEAD
-expr_stmt|;
 break|break;
 case|case
 name|ICMP6_DST_UNREACH_BEYONDSCOPE
