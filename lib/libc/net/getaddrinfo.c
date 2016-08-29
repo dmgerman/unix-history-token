@@ -11207,6 +11207,10 @@ decl_stmt|;
 name|res_state
 name|res
 decl_stmt|;
+name|ai
+operator|=
+name|NULL
+expr_stmt|;
 name|hostname
 operator|=
 name|va_arg
@@ -11669,6 +11673,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ai
+operator|!=
+name|NULL
 condition|)
 block|{
 name|cur
@@ -11695,8 +11701,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 name|ai
+operator|==
+name|NULL
 operator|||
 name|pai
 operator|->
@@ -11745,6 +11752,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ai
+operator|!=
+name|NULL
 condition|)
 name|cur
 operator|->
