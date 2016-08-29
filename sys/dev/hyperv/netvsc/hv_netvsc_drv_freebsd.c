@@ -324,19 +324,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_net_vsc.h"
+file|<dev/hyperv/netvsc/hv_net_vsc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hv_rndis.h"
+file|<dev/hyperv/netvsc/hv_rndis.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hv_rndis_filter.h"
+file|<dev/hyperv/netvsc/hv_rndis_filter.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/ndis.h>
 end_include
 
 begin_include
@@ -2815,7 +2821,7 @@ name|device_info
 operator|.
 name|link_state
 operator|==
-literal|0
+name|NDIS_MEDIA_STATE_CONNECTED
 condition|)
 block|{
 name|sc

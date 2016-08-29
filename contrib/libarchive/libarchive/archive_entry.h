@@ -2013,10 +2013,6 @@ name|ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS
 value|0x40000000
 define|#
 directive|define
-name|ARCHIVE_ENTRY_ACL_ENTRY_INHERITED
-value|0x80000000
-define|#
-directive|define
 name|ARCHIVE_ENTRY_ACL_INHERITANCE_NFS4
 define|\
 value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS)
@@ -2242,11 +2238,11 @@ comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
-value|16384
+value|1024
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
-value|32768
+value|2048
 name|__LA_DECL
 specifier|const
 name|wchar_t

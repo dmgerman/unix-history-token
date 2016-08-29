@@ -18460,6 +18460,9 @@ condition|(
 name|sc
 operator|->
 name|mfi_kbuff_arr_busaddr
+index|[
+name|i
+index|]
 operator|!=
 literal|0
 condition|)

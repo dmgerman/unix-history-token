@@ -1095,6 +1095,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|bhnd_chipid_fixed_ncores
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|cid
+parameter_list|,
+name|uint16_t
+name|chipc_hwrev
+parameter_list|,
+name|uint8_t
+modifier|*
+name|ncores
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bhnd_read_chipid
 parameter_list|(
 name|device_t
