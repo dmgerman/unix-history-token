@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|MLX5E_PARAMS_MAXIMUM_LOG_SQ_SIZE
-value|0xd
+value|0xe
 end_define
 
 begin_define
@@ -251,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|MLX5E_PARAMS_MAXIMUM_LOG_RQ_SIZE
-value|0xd
+value|0xe
 end_define
 
 begin_comment
