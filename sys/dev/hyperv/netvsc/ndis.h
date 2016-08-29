@@ -32,6 +32,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OID_GEN_RSS_CAPABILITIES
+value|0x00010203
+end_define
+
+begin_define
+define|#
+directive|define
 name|OID_TCP_OFFLOAD_PARAMETERS
 value|0xFC01020C
 end_define
@@ -41,6 +48,13 @@ define|#
 directive|define
 name|NDIS_OBJTYPE_DEFAULT
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_RSS_CAPS
+value|0x88
 end_define
 
 begin_comment
@@ -100,7 +114,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* OID_TCP_OFFLOAD_PARAMETERS */
+comment|/*  * OID_TCP_OFFLOAD_PARAMETERS  * ndis_type: NDIS_OBJTYPE_DEFAULT  */
 end_comment
 
 begin_struct
@@ -405,6 +419,136 @@ define|#
 directive|define
 name|NDIS_OFFLOAD_RSC_ON
 value|2
+end_define
+
+begin_comment
+comment|/*  * OID_GEN_RSS_CAPABILITIES  * ndis_type: NDIS_OBJTYPE_RSS_CAPS  */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_rss_caps
+block|{
+name|struct
+name|ndis_object_hdr
+name|ndis_hdr
+decl_stmt|;
+name|uint32_t
+name|ndis_flags
+decl_stmt|;
+comment|/* NDIS_RSS_CAP_ */
+name|uint32_t
+name|ndis_nmsi
+decl_stmt|;
+comment|/* # of MSIs */
+name|uint32_t
+name|ndis_nrxr
+decl_stmt|;
+comment|/* # of RX rings */
+comment|/* NDIS>= 6.30 */
+name|uint16_t
+name|ndis_nind
+decl_stmt|;
+comment|/* # of indtbl ent. */
+name|uint16_t
+name|ndis_pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_SIZE
+define|\
+value|__offsetof(struct ndis_rss_caps, ndis_pad)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_SIZE_6_0
+define|\
+value|__offsetof(struct ndis_rss_caps, ndis_nind)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_REV_1
+value|1
+end_define
+
+begin_comment
+comment|/* NDIS 6.{0,1,20} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_REV_2
+value|2
+end_define
+
+begin_comment
+comment|/* NDIS 6.30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_MSI
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_CLASSIFY_ISR
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_CLASSIFY_DPC
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_MSIX
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV4
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV6
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV6_EX
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_HASH_TOEPLITZ
+value|0x00000001
 end_define
 
 begin_endif
