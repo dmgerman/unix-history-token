@@ -2695,9 +2695,6 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|boolean_t
-name|destroy_channel
 parameter_list|)
 block|{
 name|hv_nv_disconnect_from_vsp
