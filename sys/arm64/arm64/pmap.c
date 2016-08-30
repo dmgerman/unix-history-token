@@ -13276,14 +13276,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|pmap
 operator|!=
 name|pmap_kernel
 argument_list|()
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|pmap
 operator|==
 operator|&
@@ -13292,7 +13292,6 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_pmap
-operator|)
 condition|)
 name|cpu_icache_sync_range
 argument_list|(
@@ -13361,6 +13360,7 @@ operator|&
 name|lock
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
