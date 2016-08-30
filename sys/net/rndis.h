@@ -282,6 +282,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|OID_GEN_RECEIVE_SCALE_CAPABILITIES
+value|0x00010203
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_GEN_RECEIVE_SCALE_PARAMETERS
+value|0x00010204
+end_define
+
+begin_define
+define|#
+directive|define
 name|OID_GEN_MACHINE_NAME
 value|0x0001021A
 end_define
@@ -403,6 +417,13 @@ define|#
 directive|define
 name|OID_802_3_XMIT_LATE_COLLISIONS
 value|0x01020207
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_TCP_OFFLOAD_PARAMETERS
+value|0xFC01020C
 end_define
 
 begin_define

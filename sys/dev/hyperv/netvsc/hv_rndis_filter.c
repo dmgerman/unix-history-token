@@ -4233,7 +4233,7 @@ name|hn_rndis_query
 argument_list|(
 name|sc
 argument_list|,
-name|OID_GEN_RSS_CAPABILITIES
+name|OID_GEN_RECEIVE_SCALE_CAPABILITIES
 argument_list|,
 operator|&
 name|in
@@ -5023,7 +5023,7 @@ name|hn_rndis_set
 argument_list|(
 name|sc
 argument_list|,
-name|OID_GEN_RSS_PARAMETERS
+name|OID_GEN_RECEIVE_SCALE_PARAMETERS
 argument_list|,
 name|rss
 argument_list|,

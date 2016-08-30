@@ -32,27 +32,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OID_GEN_RSS_CAPABILITIES
-value|0x00010203
-end_define
-
-begin_define
-define|#
-directive|define
-name|OID_GEN_RSS_PARAMETERS
-value|0x00010204
-end_define
-
-begin_define
-define|#
-directive|define
-name|OID_TCP_OFFLOAD_PARAMETERS
-value|0xFC01020C
-end_define
-
-begin_define
-define|#
-directive|define
 name|NDIS_OBJTYPE_DEFAULT
 value|0x80
 end_define
@@ -529,7 +508,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * OID_GEN_RSS_CAPABILITIES  * ndis_type: NDIS_OBJTYPE_RSS_CAPS  */
+comment|/*  * OID_GEN_RECEIVE_SCALE_CAPABILITIES  * ndis_type: NDIS_OBJTYPE_RSS_CAPS  */
 end_comment
 
 begin_struct
@@ -659,7 +638,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/*  * OID_GEN_RSS_PARAMETERS  * ndis_type: NDIS_OBJTYPE_RSS_PARAMS  */
+comment|/*  * OID_GEN_RECEIVE_SCALE_PARAMETERS  * ndis_type: NDIS_OBJTYPE_RSS_PARAMS  */
 end_comment
 
 begin_struct
