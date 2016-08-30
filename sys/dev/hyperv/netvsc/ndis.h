@@ -32,31 +32,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDIS_OBJTYPE_DEFAULT
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDIS_OBJTYPE_RSS_CAPS
-value|0x88
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDIS_OBJTYPE_RSS_PARAMS
-value|0x89
-end_define
-
-begin_comment
-comment|/* common_set */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NDIS_OFFLOAD_SET_NOCHG
 value|0
 end_define
@@ -179,6 +154,27 @@ name|NDIS_HASH_INDCNT
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_DEFAULT
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_RSS_CAPS
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_RSS_PARAMS
+value|0x89
+end_define
+
 begin_struct
 struct|struct
 name|ndis_object_hdr
@@ -214,47 +210,47 @@ decl_stmt|;
 name|uint8_t
 name|ndis_ip4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_tcp4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_udp4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_tcp6csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_udp6csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_lsov1
 decl_stmt|;
-comment|/* lsov1_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_ipsecv1
 decl_stmt|;
-comment|/* ipsecv1_set */
+comment|/* NDIS_OFFLOAD_IPSECV1_ */
 name|uint8_t
 name|ndis_lsov2_ip4
 decl_stmt|;
-comment|/* lsov2_set */
+comment|/* NDIS_OFFLOAD_LSOV2_ */
 name|uint8_t
 name|ndis_lsov2_ip6
 decl_stmt|;
-comment|/* lsov2_set */
+comment|/* NDIS_OFFLOAD_LSOV2_ */
 name|uint8_t
 name|ndis_tcp4conn
 decl_stmt|;
-comment|/* PARAM_NOCHG */
+comment|/* 0 */
 name|uint8_t
 name|ndis_tcp6conn
 decl_stmt|;
-comment|/* PARAM_NOCHG */
+comment|/* 0 */
 name|uint32_t
 name|ndis_flags
 decl_stmt|;
@@ -263,24 +259,24 @@ comment|/* NDIS>= 6.1 */
 name|uint8_t
 name|ndis_ipsecv2
 decl_stmt|;
-comment|/* ipsecv2_set */
+comment|/* NDIS_OFFLOAD_IPSECV2_ */
 name|uint8_t
 name|ndis_ipsecv2_ip4
 decl_stmt|;
-comment|/* ipsecv2_set */
+comment|/* NDIS_OFFLOAD_IPSECV2_ */
 comment|/* NDIS>= 6.30 */
 name|uint8_t
 name|ndis_rsc_ip4
 decl_stmt|;
-comment|/* rsc_set */
+comment|/* NDIS_OFFLOAD_RSC_ */
 name|uint8_t
 name|ndis_rsc_ip6
 decl_stmt|;
-comment|/* rsc_set */
+comment|/* NDIS_OFFLOAD_RSC_ */
 name|uint8_t
 name|ndis_encap
 decl_stmt|;
-comment|/* common_set */
+comment|/* NDIS_OFFLOAD_SET_ */
 name|uint8_t
 name|ndis_encap_types
 decl_stmt|;
@@ -326,10 +322,6 @@ begin_comment
 comment|/* NDIS 6.30 */
 end_comment
 
-begin_comment
-comment|/* param_set */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -338,7 +330,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* common to all sets */
+comment|/* common */
 end_comment
 
 begin_define
@@ -370,10 +362,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* lsov1_set */
-end_comment
-
-begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
 end_comment
 
@@ -390,10 +378,6 @@ directive|define
 name|NDIS_OFFLOAD_LSOV1_ON
 value|2
 end_define
-
-begin_comment
-comment|/* ipsecv1_set */
-end_comment
 
 begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
@@ -428,10 +412,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* lsov2_set */
-end_comment
-
-begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
 end_comment
 
@@ -448,10 +428,6 @@ directive|define
 name|NDIS_OFFLOAD_LSOV2_ON
 value|2
 end_define
-
-begin_comment
-comment|/* ipsecv2_set */
-end_comment
 
 begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
@@ -484,10 +460,6 @@ directive|define
 name|NDIS_OFFLOAD_IPSECV2_AH_ESP
 value|4
 end_define
-
-begin_comment
-comment|/* rsc_set */
-end_comment
 
 begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
