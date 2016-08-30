@@ -302,6 +302,12 @@ directive|include
 file|"monitor_wrap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|ServerOptions
@@ -3889,6 +3895,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"PAM: %s for %s%.100s from %.100s"

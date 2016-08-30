@@ -1576,7 +1576,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* external mbuf reference (M_IOVEC) */
+comment|/* external mbuf reference */
 end_comment
 
 begin_define

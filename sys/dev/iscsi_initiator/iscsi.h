@@ -1271,7 +1271,7 @@ name|char
 name|cmd
 decl_stmt|;
 comment|// 0x06
-name|char
+name|u_char
 name|reason
 decl_stmt|;
 comment|// 0 - close session

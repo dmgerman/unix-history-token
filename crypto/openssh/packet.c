@@ -278,6 +278,12 @@ directive|include
 file|"sshbuf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -10700,6 +10706,11 @@ operator|->
 name|failed_choice
 condition|)
 block|{
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
 name|fatal
 argument_list|(
 literal|"Unable to negotiate with %.200s port %d: %s. "

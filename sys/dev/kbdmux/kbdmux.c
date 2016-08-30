@@ -525,14 +525,13 @@ value|(1<< 0)
 comment|/* compose char flag */
 define|#
 directive|define
-name|POLLING
-value|(1<< 1)
-comment|/* polling */
-define|#
-directive|define
 name|TASK
 value|(1<< 2)
 comment|/* interrupt task queued */
+name|int
+name|ks_polling
+decl_stmt|;
+comment|/* poll nesting count */
 name|int
 name|ks_mode
 decl_stmt|;
@@ -2770,9 +2769,9 @@ if|if
 condition|(
 name|state
 operator|->
-name|ks_flags
-operator|&
-name|POLLING
+name|ks_polling
+operator|!=
+literal|0
 condition|)
 block|{
 name|kbdmux_kbd_t
@@ -5238,11 +5237,13 @@ operator|->
 name|ks_flags
 operator|&=
 operator|~
-operator|(
 name|COMPOSE
-operator||
-name|POLLING
-operator|)
+expr_stmt|;
+name|state
+operator|->
+name|ks_polling
+operator|=
+literal|0
 expr_stmt|;
 name|state
 operator|->
@@ -5488,17 +5489,14 @@ name|on
 condition|)
 name|state
 operator|->
-name|ks_flags
-operator||=
-name|POLLING
+name|ks_polling
+operator|++
 expr_stmt|;
 else|else
 name|state
 operator|->
-name|ks_flags
-operator|&=
-operator|~
-name|POLLING
+name|ks_polling
+operator|--
 expr_stmt|;
 comment|/* set poll on slave keyboards */
 name|SLIST_FOREACH
