@@ -1072,10 +1072,9 @@ argument_list|)
 block|;
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
-operator|||
+operator|(
+name|u_int
+operator|)
 name|fd
 operator|>
 name|fdp
