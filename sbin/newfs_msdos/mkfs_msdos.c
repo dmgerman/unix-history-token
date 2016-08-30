@@ -3755,10 +3755,6 @@ if|if
 condition|(
 name|bpb
 operator|.
-name|bpbHiddenSecs
-operator|+
-name|bpb
-operator|.
 name|bpbHugeSectors
 operator|<=
 name|MAXU16
