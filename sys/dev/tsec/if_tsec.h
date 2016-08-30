@@ -350,6 +350,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|phy_bsh
 decl_stmt|;
+name|int
+name|phy_regoff
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -751,7 +754,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->phy_bst, (sc)->phy_bsh, (reg))
+value|bus_space_read_4((sc)->phy_bst, (sc)->phy_bsh, \ 			(reg) + (sc)->phy_regoff)
 end_define
 
 begin_define
@@ -766,7 +769,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->phy_bst, (sc)->phy_bsh, (reg), (val))
+value|bus_space_write_4((sc)->phy_bst, (sc)->phy_bsh, \ 			(reg) + (sc)->phy_regoff, (val))
 end_define
 
 begin_comment

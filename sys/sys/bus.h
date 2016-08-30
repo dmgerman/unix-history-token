@@ -386,6 +386,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEV_CLEAR_DRIVER
+value|_IOW('D', 8, struct devreq)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEV_RESCAN
 value|_IOW('D', 9, struct devreq)
 end_define
@@ -416,6 +423,21 @@ begin_define
 define|#
 directive|define
 name|DEVF_SET_DRIVER_DETACH
+value|0x0000001
+end_define
+
+begin_comment
+comment|/* Detach existing driver. */
+end_comment
+
+begin_comment
+comment|/* Flags for DEV_CLEAR_DRIVER. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVF_CLEAR_DRIVER_DETACH
 value|0x0000001
 end_define
 
