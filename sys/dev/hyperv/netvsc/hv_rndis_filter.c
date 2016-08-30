@@ -3837,7 +3837,8 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"RNDIS ver %u.%u, pktsz %u, pktcnt %u\n"
+literal|"RNDIS ver %u.%u, pktsz %u, pktcnt %u, "
+literal|"align %u\n"
 argument_list|,
 name|comp
 operator|->
@@ -3854,6 +3855,12 @@ argument_list|,
 name|comp
 operator|->
 name|rm_pktmaxcnt
+argument_list|,
+literal|1U
+operator|<<
+name|comp
+operator|->
+name|rm_align
 argument_list|)
 expr_stmt|;
 block|}
