@@ -3870,12 +3870,6 @@ literal|0
 expr_stmt|;
 name|done
 label|:
-if|if
-condition|(
-name|xact
-operator|!=
-name|NULL
-condition|)
 name|vmbus_xact_put
 argument_list|(
 name|xact
