@@ -1297,7 +1297,7 @@ name|number
 operator|=
 name|pfile
 operator|->
-name|nextcounter
+name|counter
 operator|++
 expr_stmt|;
 break|break;
