@@ -292,6 +292,12 @@ directive|include
 file|"compat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_comment
 comment|/* import */
 end_comment
@@ -1280,6 +1286,7 @@ operator|=
 literal|"Partial"
 expr_stmt|;
 else|else
+block|{
 name|authmsg
 operator|=
 name|authenticated
@@ -1288,6 +1295,16 @@ literal|"Accepted"
 else|:
 literal|"Failed"
 expr_stmt|;
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|authenticated
+condition|?
+name|BLACKLIST_AUTH_OK
+else|:
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|authlog
 argument_list|(
 literal|"%s %s%s%s for %s%.100s from %.200s port %d %s%s%s"
@@ -2931,6 +2948,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
 name|logit
 argument_list|(
 literal|"Invalid user %.100s from %.100s"
