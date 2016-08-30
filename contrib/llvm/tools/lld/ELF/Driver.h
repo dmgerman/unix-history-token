@@ -331,7 +331,7 @@ parameter_list|)
 value|OPT_##ID,
 include|#
 directive|include
-file|"Options.inc"
+file|"ELF/Options.inc"
 undef|#
 directive|undef
 name|OPTION
