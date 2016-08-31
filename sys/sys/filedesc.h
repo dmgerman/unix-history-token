@@ -1072,9 +1072,10 @@ argument_list|)
 block|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
+name|fd
+operator|<
+literal|0
+operator|||
 name|fd
 operator|>
 name|fdp
@@ -1127,9 +1128,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
+name|fd
+operator|<
+literal|0
+operator|||
 name|fd
 operator|>
 name|fdp
