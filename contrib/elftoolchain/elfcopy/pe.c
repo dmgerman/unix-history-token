@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: pe.c 3477 2016-05-25 20:00:42Z kaiwang27 $"
+literal|"$Id: pe.c 3490 2016-08-31 00:12:22Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -128,6 +128,9 @@ name|name
 decl_stmt|;
 name|size_t
 name|indx
+decl_stmt|;
+name|time_t
+name|timestamp
 decl_stmt|;
 name|int
 name|elferr
@@ -311,6 +314,23 @@ name|IMAGE_FILE_MACHINE_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|elftc_timestamp
+argument_list|(
+operator|&
+name|timestamp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"elftc_timestamp"
+argument_list|)
+expr_stmt|;
 name|pch
 operator|.
 name|ch_timestamp
@@ -318,10 +338,7 @@ operator|=
 operator|(
 name|uint32_t
 operator|)
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|timestamp
 expr_stmt|;
 if|if
 condition|(

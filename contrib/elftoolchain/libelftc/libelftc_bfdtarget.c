@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_bfdtarget.c 3309 2016-01-10 09:10:51Z kaiwang27 $"
+literal|"$Id: libelftc_bfdtarget.c 3488 2016-08-24 18:15:57Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
