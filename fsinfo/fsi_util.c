@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/fsinfo/fsi_util.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/fsinfo/fsi_util.c  *  */
 end_comment
 
 begin_ifdef
@@ -689,7 +689,7 @@ operator|(
 name|time_t
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 decl_stmt|;
 name|char
@@ -798,7 +798,7 @@ name|char
 modifier|*
 name|last_area
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -1145,19 +1145,19 @@ name|ap
 operator|->
 name|a_volname
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ap
 operator|->
 name|a_mount
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ap
 operator|->
 name|a_opts
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|show_new
 argument_list|(
@@ -1298,7 +1298,7 @@ operator|&
 name|m
 condition|)
 block|{
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"host field \"%s\" already set"
 argument_list|,
@@ -1329,7 +1329,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|v
 argument_list|)
@@ -1349,7 +1349,7 @@ if|if
 condition|(
 name|de
 condition|)
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"duplicate host %s!"
 argument_list|,
@@ -1637,7 +1637,7 @@ operator|&
 name|m
 condition|)
 block|{
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"netif field \"%s\" already set"
 argument_list|,
@@ -1691,7 +1691,7 @@ name|int
 operator|)
 name|INADDR_NONE
 condition|)
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"malformed IP dotted quad: %s"
 argument_list|,
@@ -1756,7 +1756,7 @@ name|nm
 argument_list|)
 expr_stmt|;
 else|else
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"malformed netmask: %s"
 argument_list|,
@@ -1821,7 +1821,7 @@ operator|&
 name|m
 condition|)
 block|{
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"fs field \"%s\" already set"
 argument_list|,
@@ -2016,7 +2016,7 @@ operator|&
 name|m
 condition|)
 block|{
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"mount tree field \"%s\" already set"
 argument_list|,
@@ -2159,7 +2159,7 @@ operator|&
 name|m
 condition|)
 block|{
-name|yyerror
+name|fsi_error
 argument_list|(
 literal|"mount field \"%s\" already set"
 argument_list|,

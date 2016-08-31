@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/libamu/xutil.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/libamu/xutil.c  *  */
 end_comment
 
 begin_comment
@@ -119,12 +119,16 @@ comment|/* 1 == this is the top-level server */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|debug_flags
 init|=
-literal|0
+name|D_CONTROL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* set regardless if compiled with debugging */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -148,31 +152,17 @@ comment|/* HAVE_SYSLOG */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|static
+name|u_int
 name|xlog_level
 init|=
-name|XLOG_ALL
-operator|&
-operator|~
-name|XLOG_MAP
-operator|&
-operator|~
-name|XLOG_STATS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|xlog_level_init
-init|=
-operator|~
-literal|0
+name|XLOG_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_long
 name|amd_program_number
 init|=
 name|AMQ_PROGRAM
@@ -296,26 +286,40 @@ block|}
 block|,
 comment|/* All non-disruptive options */
 block|{
+literal|"defaults"
+block|,
+name|D_DEFAULT
+block|}
+block|,
+comment|/* Default options */
+block|{
+literal|"test"
+block|,
+name|D_TEST
+block|}
+block|,
+comment|/* Full debug - no daemon, no fork, no amq, local mtab */
+block|{
 literal|"amq"
 block|,
 name|D_AMQ
 block|}
 block|,
-comment|/* Don't register for AMQ program */
+comment|/* Register for AMQ program */
 block|{
 literal|"daemon"
 block|,
 name|D_DAEMON
 block|}
 block|,
-comment|/* Don't enter daemon mode */
+comment|/* Enter daemon mode */
 block|{
 literal|"fork"
 block|,
 name|D_FORK
 block|}
 block|,
-comment|/* Don't fork server */
+comment|/* Fork server (hlfsd only) */
 block|{
 literal|"full"
 block|,
@@ -336,13 +340,13 @@ comment|/* Print high resolution time stamps */
 endif|#
 directive|endif
 comment|/* HAVE_CLOCK_GETTIME */
-comment|/* info service specific debugging (hesiod, nis, etc) */
 block|{
 literal|"info"
 block|,
 name|D_INFO
 block|}
 block|,
+comment|/* info service specific debugging (hesiod, nis, etc) */
 block|{
 literal|"mem"
 block|,
@@ -372,13 +376,6 @@ block|}
 block|,
 comment|/* Debug string munging */
 block|{
-literal|"test"
-block|,
-name|D_TEST
-block|}
-block|,
-comment|/* Full debug - no daemon, no amq, local mtab */
-block|{
 literal|"trace"
 block|,
 name|D_TRACE
@@ -393,7 +390,7 @@ block|}
 block|,
 comment|/* Trace xdr routines */
 block|{
-literal|0
+name|NULL
 block|,
 literal|0
 block|}
@@ -428,6 +425,13 @@ name|XLOG_ALL
 block|}
 block|,
 comment|/* All messages */
+block|{
+literal|"defaults"
+block|,
+name|XLOG_DEFAULT
+block|}
+block|,
+comment|/* Default messages */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -499,7 +503,7 @@ block|}
 block|,
 comment|/* Warnings */
 block|{
-literal|0
+name|NULL
 block|,
 literal|0
 block|}
@@ -553,7 +557,10 @@ name|am_hostname
 argument_list|,
 name|hn
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|am_hostname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1110,11 +1117,18 @@ name|error
 init|=
 name|errno
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 literal|0
+decl_stmt|,
+name|l
 decl_stmt|;
+operator|*
+name|e
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -1125,6 +1139,10 @@ name|q
 operator|=
 name|e
 init|;
+name|len
+operator|<
+name|maxlen
+operator|&&
 operator|(
 operator|*
 name|q
@@ -1132,13 +1150,6 @@ operator|=
 operator|*
 name|p
 operator|)
-operator|&&
-operator|(
-name|size_t
-operator|)
-name|len
-operator|<
-name|maxlen
 condition|;
 name|len
 operator|++
@@ -1167,6 +1178,13 @@ operator|==
 literal|'m'
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|>=
+name|maxlen
+condition|)
+break|break;
 name|xstrlcpy
 argument_list|(
 name|q
@@ -1177,25 +1195,33 @@ name|error
 argument_list|)
 argument_list|,
 name|maxlen
+operator|-
+name|len
 argument_list|)
+expr_stmt|;
+name|l
+operator|=
+name|strlen
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|!=
+literal|0
+condition|)
+name|l
+operator|--
 expr_stmt|;
 name|len
 operator|+=
-name|strlen
-argument_list|(
-name|q
-argument_list|)
-operator|-
-literal|1
+name|l
 expr_stmt|;
 name|q
 operator|+=
-name|strlen
-argument_list|(
-name|q
-argument_list|)
-operator|-
-literal|1
+name|l
 expr_stmt|;
 name|p
 operator|++
@@ -1242,7 +1268,7 @@ name|char
 modifier|*
 name|last_ctime
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|time_t
 name|t
@@ -1493,7 +1519,20 @@ modifier|*
 name|opt
 parameter_list|)
 block|{
-return|return
+name|u_int
+name|dl
+init|=
+name|debug_flags
+decl_stmt|;
+specifier|static
+name|int
+name|initialized_debug_flags
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rc
+init|=
 name|cmdoption
 argument_list|(
 name|opt
@@ -1501,8 +1540,73 @@ argument_list|,
 name|dbg_opt
 argument_list|,
 operator|&
-name|debug_flags
+name|dl
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rc
+condition|)
+comment|/* if got any error, don't update debug flags */
+return|return
+name|EINVAL
+return|;
+comment|/*    * If we already initialized the debugging flags once (via amd.conf), then    * don't allow "immutable" flags to be changed again (via amq -D), because    * they could mess Amd's state and only make sense to be set once when Amd    * starts.    */
+if|if
+condition|(
+name|initialized_debug_flags
+operator|&&
+name|debug_flags
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|dl
+operator|&
+name|D_IMMUTABLE
+operator|)
+operator|!=
+operator|(
+name|debug_flags
+operator|&
+name|D_IMMUTABLE
+operator|)
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"cannot change immutable debug flags"
+argument_list|)
+expr_stmt|;
+comment|/* undo any attempted change to an immutable flag */
+name|dl
+operator|=
+operator|(
+name|dl
+operator|&
+operator|~
+name|D_IMMUTABLE
+operator|)
+operator||
+operator|(
+name|debug_flags
+operator|&
+name|D_IMMUTABLE
+operator|)
+expr_stmt|;
+block|}
+name|initialized_debug_flags
+operator|=
+literal|1
+expr_stmt|;
+name|debug_flags
+operator|=
+name|dl
+expr_stmt|;
+return|return
+name|rc
 return|;
 block|}
 end_function
@@ -1519,9 +1623,70 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigset_t
+name|old
+decl_stmt|,
+name|chld
+decl_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|int
+name|mask
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
 name|va_list
 name|ap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigemptyset
+argument_list|(
+operator|&
+name|chld
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|chld
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|mask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|chld
+argument_list|,
+operator|&
+name|old
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1553,6 +1718,35 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|old
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|mask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
 block|}
 end_function
 
@@ -1580,9 +1774,70 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigset_t
+name|old
+decl_stmt|,
+name|chld
+decl_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|int
+name|mask
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
 name|va_list
 name|ap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigemptyset
+argument_list|(
+operator|&
+name|chld
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|chld
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|chld
+argument_list|,
+operator|&
+name|old
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|mask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
 if|if
 condition|(
 operator|!
@@ -1614,6 +1869,30 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SIGACTION
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|old
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not HAVE_SIGACTION */
+name|sigsetmask
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_SIGACTION */
 block|}
 end_function
 
@@ -1877,10 +2156,16 @@ name|last_msg
 argument_list|,
 name|msg
 argument_list|,
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|last_msg
+argument_list|)
 argument_list|)
 operator|>=
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|last_msg
+argument_list|)
 condition|)
 comment|/* don't use xstrlcpy here (recursive!) */
 name|fprintf
@@ -1904,6 +2189,8 @@ name|lvl
 argument_list|)
 expr_stmt|;
 comment|/* mimic syslog header */
+name|__IGNORE
+argument_list|(
 name|fwrite
 argument_list|(
 name|msg
@@ -1915,6 +2202,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|logfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1953,10 +2241,16 @@ name|last_msg
 argument_list|,
 name|msg
 argument_list|,
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|last_msg
+argument_list|)
 argument_list|)
 operator|>=
-literal|1024
+sizeof|sizeof
+argument_list|(
+name|last_msg
+argument_list|)
 condition|)
 comment|/* don't use xstrlcpy here (recursive!) */
 name|fprintf
@@ -1980,6 +2274,8 @@ name|lvl
 argument_list|)
 expr_stmt|;
 comment|/* mimic syslog header */
+name|__IGNORE
+argument_list|(
 name|fwrite
 argument_list|(
 name|msg
@@ -1991,6 +2287,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|logfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2023,6 +2320,8 @@ argument_list|,
 name|last_count
 argument_list|)
 expr_stmt|;
+name|__IGNORE
+argument_list|(
 name|fwrite
 argument_list|(
 name|last_msg
@@ -2035,6 +2334,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|logfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2086,6 +2386,8 @@ argument_list|,
 name|last_count
 argument_list|)
 expr_stmt|;
+name|__IGNORE
+argument_list|(
 name|fwrite
 argument_list|(
 name|last_msg
@@ -2098,6 +2400,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|logfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2139,6 +2442,8 @@ name|lvl
 argument_list|)
 expr_stmt|;
 comment|/* mimic syslog header */
+name|__IGNORE
+argument_list|(
 name|fwrite
 argument_list|(
 name|msg
@@ -2150,6 +2455,7 @@ argument_list|,
 literal|1
 argument_list|,
 name|logfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2258,7 +2564,7 @@ name|opt_tab
 modifier|*
 name|optb
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 name|flags
 parameter_list|)
@@ -2297,7 +2603,7 @@ decl_stmt|,
 modifier|*
 name|dpn
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|s
 operator|=
@@ -2464,7 +2770,7 @@ block|{
 comment|/*        * This will log to stderr when parsing the command line        * since any -l option will not yet have taken effect.        */
 name|plog
 argument_list|(
-name|XLOG_USER
+name|XLOG_ERROR
 argument_list|,
 literal|"option \"%s\" not recognized"
 argument_list|,
@@ -2506,7 +2812,7 @@ modifier|*
 name|opt
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|xl
 init|=
 name|xlog_level
@@ -2528,36 +2834,45 @@ if|if
 condition|(
 name|rc
 condition|)
-block|{
-name|rc
-operator|=
+comment|/* if got any error, don't update flags */
+return|return
 name|EINVAL
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*      * Keep track of initial log level, and      * don't allow options to be turned off.      */
+return|;
+comment|/*    * Don't allow "mandatory" flags to be turned off, because    * we must always be able to report on flag re/setting errors.    */
 if|if
 condition|(
-name|xlog_level_init
-operator|==
-operator|~
-literal|0
-condition|)
-name|xlog_level_init
-operator|=
+operator|(
 name|xl
+operator|&
+name|XLOG_MANDATORY
+operator|)
+operator|!=
+name|XLOG_MANDATORY
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"cannot turn off mandatory logging options"
+argument_list|)
 expr_stmt|;
-else|else
 name|xl
 operator||=
-name|xlog_level_init
+name|XLOG_MANDATORY
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|xlog_level
+operator|!=
+name|xl
+condition|)
 name|xlog_level
 operator|=
 name|xl
 expr_stmt|;
-block|}
+comment|/* set new flags */
 return|return
 name|rc
 return|;
@@ -3115,11 +3430,14 @@ if|if
 condition|(
 name|truncate_log
 condition|)
+name|__IGNORE
+argument_list|(
 name|truncate
 argument_list|(
 name|logfile
 argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|new_logfp
@@ -3217,7 +3535,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_AMQ
@@ -3336,7 +3653,7 @@ comment|/* return the rpc program number under which amd was used */
 end_comment
 
 begin_function
-name|int
+name|u_long
 name|get_amd_program_number
 parameter_list|(
 name|void
@@ -3356,7 +3673,7 @@ begin_function
 name|void
 name|set_amd_program_number
 parameter_list|(
-name|int
+name|u_long
 name|program
 parameter_list|)
 block|{
@@ -3574,9 +3891,8 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return;
-endif|#
-directive|endif
-comment|/* not TIOCNOTTY */
+else|#
+directive|else
 name|plog
 argument_list|(
 name|XLOG_ERROR
@@ -3584,6 +3900,9 @@ argument_list|,
 literal|"unable to release controlling tty"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not TIOCNOTTY */
 block|}
 end_function
 
@@ -3800,7 +4119,7 @@ name|char
 modifier|*
 name|p2
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|path
 argument_list|)
@@ -3952,7 +4271,7 @@ name|char
 modifier|*
 name|xdp
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|dir
 argument_list|)
@@ -4082,6 +4401,57 @@ argument_list|(
 name|xdp
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Dup a string  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|xstrdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|size_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|sp
+init|=
+name|xmalloc
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+name|memcpy
+argument_list|(
+name|sp
+argument_list|,
+name|s
+argument_list|,
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+name|sp
+return|;
 block|}
 end_function
 

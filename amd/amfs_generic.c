@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amfs_generic.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amfs_generic.c  *  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ name|IN_PROGRESS
 parameter_list|(
 name|cp
 parameter_list|)
-value|((cp)->mp->am_mnt->mf_flags& MFF_MOUNTING)
+value|((cp)->mp->am_al->al_mnt->mf_flags& MFF_MOUNTING)
 end_define
 
 begin_comment
@@ -83,12 +83,12 @@ name|int
 name|callout
 decl_stmt|;
 comment|/* Callout identifier */
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|mf
+name|al
 decl_stmt|;
-comment|/* Current mntfs */
+comment|/* Current location */
 block|}
 struct|;
 end_struct
@@ -120,9 +120,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|mntfs
+name|am_loc
 modifier|*
-name|amfs_lookup_one_mntfs
+name|amfs_lookup_one_location
 parameter_list|(
 name|am_node
 modifier|*
@@ -149,10 +149,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|amfs_lookup_mntfs
+name|amfs_lookup_loc
 parameter_list|(
 name|am_node
 modifier|*
@@ -293,7 +293,7 @@ name|char
 modifier|*
 name|expanded_fname
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|dlog
 argument_list|(
@@ -312,13 +312,23 @@ if|if
 condition|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 operator|==
-literal|0
+name|NULL
 operator|||
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
+operator|==
+name|NULL
+operator|||
+name|mp
+operator|->
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_fsflags
 operator|&
@@ -513,7 +523,9 @@ name|mf
 operator|=
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 expr_stmt|;
 if|if
 condition|(
@@ -737,7 +749,7 @@ if|if
 condition|(
 name|new_mp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ereturn
 argument_list|(
@@ -758,9 +770,9 @@ end_function
 
 begin_function
 specifier|static
-name|mntfs
+name|am_loc
 modifier|*
-name|amfs_lookup_one_mntfs
+name|amfs_lookup_one_location
 parameter_list|(
 name|am_node
 modifier|*
@@ -791,6 +803,10 @@ name|am_opts
 modifier|*
 name|fs_opts
 decl_stmt|;
+name|am_loc
+modifier|*
+name|new_al
+decl_stmt|;
 name|mntfs
 modifier|*
 name|new_mf
@@ -799,7 +815,7 @@ name|char
 modifier|*
 name|mp_dir
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -813,6 +829,7 @@ endif|#
 directive|endif
 comment|/* HAVE_FS_AUTOFS */
 comment|/* match the operators */
+comment|/*    * although we alloc the fs_opts here, the pointer is 'owned' by the am_loc and will    * be free'd on destruction of the am_loc. If we don't allocate a loc, then we need    * to free this.    */
 name|fs_opts
 operator|=
 name|CALLOC
@@ -860,6 +877,13 @@ condition|(
 name|fs_opts
 operator|->
 name|opt_sublink
+operator|&&
+name|fs_opts
+operator|->
+name|opt_sublink
+index|[
+literal|0
+index|]
 condition|)
 block|{
 comment|/*        * For sublinks we need to use a hack with autofs:        * mount the filesystem on the original opt_fs (which is NOT an        * autofs mountpoint) and symlink (or lofs-mount) to it from        * the autofs mountpoint.        */
@@ -917,7 +941,7 @@ name|fs_opts
 operator|->
 name|opt_fs
 expr_stmt|;
-comment|/*    * Find or allocate a filesystem for this node.    */
+comment|/*    * Find or allocate a filesystem for this node.    * we search for a matching backend share, since    * we will construct our own al_loc to handle    * any customisations for this usage.    */
 name|new_mf
 operator|=
 name|find_mntfs
@@ -976,6 +1000,16 @@ argument_list|(
 name|new_mf
 argument_list|)
 expr_stmt|;
+name|free_opts
+argument_list|(
+name|fs_opts
+argument_list|)
+expr_stmt|;
+name|XFREE
+argument_list|(
+name|fs_opts
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -989,6 +1023,31 @@ operator|->
 name|fs_type
 argument_list|)
 expr_stmt|;
+name|new_al
+operator|=
+name|new_loc
+argument_list|()
+expr_stmt|;
+name|free_mntfs
+argument_list|(
+name|new_al
+operator|->
+name|al_mnt
+argument_list|)
+expr_stmt|;
+name|new_al
+operator|->
+name|al_mnt
+operator|=
+name|new_mf
+expr_stmt|;
+name|new_al
+operator|->
+name|al_fo
+operator|=
+name|fs_opts
+expr_stmt|;
+comment|/* now the loc is in charge of free'ing this mem */
 ifdef|#
 directive|ifdef
 name|HAVE_FS_AUTOFS
@@ -1076,17 +1135,17 @@ endif|#
 directive|endif
 comment|/* HAVE_FS_AUTOFS */
 return|return
-name|new_mf
+name|new_al
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|amfs_lookup_mntfs
+name|amfs_lookup_loc
 parameter_list|(
 name|am_node
 modifier|*
@@ -1150,17 +1209,20 @@ comment|/* Path for database lookup */
 name|mntfs
 modifier|*
 name|mf
-decl_stmt|,
-modifier|*
-modifier|*
-name|mf_array
 decl_stmt|;
+comment|/* The mntfs for the map of our parent */
+name|am_loc
+modifier|*
+modifier|*
+name|al_array
+decl_stmt|;
+comment|/* the generated list of locations */
 name|int
 name|count
 decl_stmt|;
 name|dlog
 argument_list|(
-literal|"in amfs_lookup_mntfs"
+literal|"in amfs_lookup_loc"
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1241,7 +1303,9 @@ name|mf
 operator|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 expr_stmt|;
 name|dlog
 argument_list|(
@@ -1353,7 +1417,7 @@ name|mp
 argument_list|,
 name|mf
 argument_list|,
-name|strdup
+name|xstrdup
 argument_list|(
 name|def_opts
 argument_list|)
@@ -1361,7 +1425,7 @@ argument_list|)
 expr_stmt|;
 name|def_opts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|orig_def_opts
 argument_list|)
@@ -1435,7 +1499,7 @@ name|num_ivecs
 operator|++
 expr_stmt|;
 block|}
-name|mf_array
+name|al_array
 operator|=
 name|calloc
 argument_list|(
@@ -1445,12 +1509,12 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|mntfs
+name|am_loc
 operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* construct the array of struct mntfs for this mount point */
+comment|/* construct the array of struct locations for this key */
 for|for
 control|(
 name|count
@@ -1468,9 +1532,9 @@ name|cur_ivec
 operator|++
 control|)
 block|{
-name|mntfs
+name|am_loc
 modifier|*
-name|new_mf
+name|new_al
 decl_stmt|;
 if|if
 condition|(
@@ -1502,7 +1566,7 @@ block|{
 comment|/* 	 * If we have a single dash '-' than we need to reset the 	 * default options. 	 */
 name|def_opts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|orig_def_opts
 argument_list|)
@@ -1524,7 +1588,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|orig_def_opts
 argument_list|,
@@ -1546,7 +1610,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/*      * If a mntfs has already been found, and we find      * a cut then don't try any more locations.      *      * XXX: we do not know when the "/" was added as an equivalent for "||".      * It's undocumented, it might go away at any time. Caveat emptor.      */
+comment|/*      * If a loc has already been found, and we find      * a cut then don't try any more locations.      *      * XXX: we do not know when the "/" was added as an equivalent for "||".      * It's undocumented, it might go away at any time. Caveat emptor.      */
 if|if
 condition|(
 name|STREQ
@@ -1577,18 +1641,16 @@ name|dlog
 argument_list|(
 literal|"Cut: not trying any more locations for %s"
 argument_list|,
-name|mp
-operator|->
-name|am_path
+name|pfname
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 continue|continue;
 block|}
-name|new_mf
+name|new_al
 operator|=
-name|amfs_lookup_one_mntfs
+name|amfs_lookup_one_location
 argument_list|(
 name|new_mp
 argument_list|,
@@ -1604,18 +1666,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|new_mf
+name|new_al
 operator|==
 name|NULL
 condition|)
 continue|continue;
-name|mf_array
+name|al_array
 index|[
 name|count
 operator|++
 index|]
 operator|=
-name|new_mf
+name|new_al
 expr_stmt|;
 block|}
 comment|/* We're done with ivecs */
@@ -1649,7 +1711,7 @@ block|{
 comment|/* no match */
 name|XFREE
 argument_list|(
-name|mf_array
+name|al_array
 argument_list|)
 expr_stmt|;
 name|ereturn
@@ -1659,7 +1721,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|mf_array
+name|al_array
 return|;
 block|}
 end_function
@@ -1709,7 +1771,9 @@ name|mf
 init|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 decl_stmt|;
 name|dlog
 argument_list|(
@@ -1886,7 +1950,9 @@ name|STREQ
 argument_list|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_ops
 operator|->
@@ -1928,7 +1994,7 @@ operator|++
 expr_stmt|;
 name|cp
 operator|->
-name|mf
+name|al
 operator|++
 expr_stmt|;
 block|}
@@ -2079,11 +2145,11 @@ condition|(
 operator|*
 name|cp
 operator|->
-name|mf
+name|al
 condition|)
 name|cp
 operator|->
-name|mf
+name|al
 operator|++
 expr_stmt|;
 comment|/* explicitly forbid further retries after timeout */
@@ -2111,6 +2177,13 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+else|else
+comment|/* Normally it's amfs_bgmount() which frees the continuation. However, if      * the mount is already in progress and we're in amfs_retry() for another      * node we don't try mounting the filesystem once again. Still, we have      * to free the continuation as we won't get called again and thus would      * leak the continuation structure and our am_loc references.      */
+name|free_continuation
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 name|reschedule_timeout_mp
 argument_list|()
 expr_stmt|;
@@ -2132,10 +2205,10 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|mfp
+name|alp
 decl_stmt|;
 name|dlog
 argument_list|(
@@ -2155,28 +2228,28 @@ operator|->
 name|callout
 argument_list|)
 expr_stmt|;
-comment|/*    * we must free the mntfs's in the list.    * so free all of them if there was an error,    * or free all but the used one, if the mount succeeded.    */
+comment|/*    * we must free the mntfs's in the list.    * so free all of them if there was an error,    */
 for|for
 control|(
-name|mfp
+name|alp
 operator|=
 name|cp
 operator|->
 name|mp
 operator|->
-name|am_mfarray
+name|am_alarray
 init|;
 operator|*
-name|mfp
+name|alp
 condition|;
-name|mfp
+name|alp
 operator|++
 control|)
 block|{
-name|free_mntfs
+name|free_loc
 argument_list|(
 operator|*
-name|mfp
+name|alp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2186,14 +2259,14 @@ name|cp
 operator|->
 name|mp
 operator|->
-name|am_mfarray
+name|am_alarray
 argument_list|)
 expr_stmt|;
 name|cp
 operator|->
 name|mp
 operator|->
-name|am_mfarray
+name|am_alarray
 operator|=
 literal|0
 expr_stmt|;
@@ -2228,11 +2301,14 @@ name|cp
 operator|->
 name|mp
 decl_stmt|;
+name|am_loc
+modifier|*
+name|loc
+decl_stmt|;
 name|mntfs
 modifier|*
 name|mf
 decl_stmt|;
-comment|/* Current mntfs */
 name|int
 name|this_error
 init|=
@@ -2251,13 +2327,13 @@ if|if
 condition|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 condition|)
-name|free_mntfs
+name|free_loc
 argument_list|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 argument_list|)
 expr_stmt|;
 comment|/*    * Try to mount each location.    * At the end:    * hard_error == 0 indicates something was mounted.    * hard_error> 0 indicates everything failed with a hard error    * hard_error< 0 indicates nothing could be mounted now    */
@@ -2265,45 +2341,51 @@ for|for
 control|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 operator|=
 operator|*
 name|cp
 operator|->
-name|mf
+name|al
 init|;
 operator|*
 name|cp
 operator|->
-name|mf
+name|al
 condition|;
 name|cp
 operator|->
-name|mf
+name|al
 operator|++
 operator|,
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 operator|=
 operator|*
 name|cp
 operator|->
-name|mf
+name|al
 control|)
 block|{
 name|am_ops
 modifier|*
 name|p
 decl_stmt|;
-name|mf
+name|loc
 operator|=
-name|dup_mntfs
+name|dup_loc
 argument_list|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
 argument_list|)
+expr_stmt|;
+name|mf
+operator|=
+name|loc
+operator|->
+name|al_mnt
 expr_stmt|;
 name|p
 operator|=
@@ -2401,13 +2483,6 @@ goto|goto
 name|failed
 goto|;
 block|}
-if|if
-condition|(
-name|mp
-operator|->
-name|am_link
-condition|)
-block|{
 name|XFREE
 argument_list|(
 name|mp
@@ -2421,28 +2496,36 @@ name|am_link
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|&&
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|->
 name|opt_sublink
+operator|&&
+name|loc
+operator|->
+name|al_fo
+operator|->
+name|opt_sublink
+index|[
+literal|0
+index|]
 condition|)
 name|mp
 operator|->
 name|am_link
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|->
 name|opt_sublink
 argument_list|)
@@ -2590,26 +2673,26 @@ name|retry
 goto|;
 if|if
 condition|(
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|&&
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|->
 name|opt_delay
 condition|)
 block|{
-comment|/*        * If there is a delay timer on the mount        * then don't try to mount if the timer        * has not expired.        */
+comment|/*        * If there is a delay timer on the location        * then don't try to mount if the timer        * has not expired.        */
 name|int
 name|i
 init|=
 name|atoi
 argument_list|(
-name|mf
+name|loc
 operator|->
-name|mf_fo
+name|al_fo
 operator|->
 name|opt_delay
 argument_list|)
@@ -2976,6 +3059,18 @@ literal|1
 return|;
 name|failed
 label|:
+if|if
+condition|(
+operator|!
+name|FSRV_ISDOWN
+argument_list|(
+name|mf
+operator|->
+name|mf_server
+argument_list|)
+condition|)
+block|{
+comment|/* mark the mount as failed unless the server is down */
 name|amd_stats
 operator|.
 name|d_merr
@@ -3034,6 +3129,7 @@ operator|~
 name|MFF_MKMNT
 expr_stmt|;
 block|}
+block|}
 comment|/*      * Wakeup anything waiting for this mount      */
 name|wakeup
 argument_list|(
@@ -3043,9 +3139,9 @@ name|mf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free_mntfs
+name|free_loc
 argument_list|(
-name|mf
+name|loc
 argument_list|)
 expr_stmt|;
 comment|/* continue */
@@ -3056,14 +3152,33 @@ condition|(
 name|this_error
 condition|)
 block|{
+if|if
+condition|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+condition|)
+name|free_loc
+argument_list|(
+name|mp
+operator|->
+name|am_al
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|am_al
 operator|=
+name|loc
+operator|=
+name|new_loc
+argument_list|()
+expr_stmt|;
 name|mf
 operator|=
-name|new_mntfs
-argument_list|()
+name|loc
+operator|->
+name|al_mnt
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3153,9 +3268,9 @@ else|else
 block|{
 name|mf
 operator|=
-name|mp
+name|loc
 operator|->
-name|am_mnt
+name|al_mnt
 expr_stmt|;
 comment|/*      * Wakeup anything waiting for this mount      */
 name|wakeup
@@ -3262,29 +3377,7 @@ argument_list|(
 literal|"determining /defaults entry value"
 argument_list|)
 expr_stmt|;
-comment|/*    * Find out if amd.conf overrode any map-specific /defaults.    *    * HACK ALERT: there's no easy way to find out what the map mount point is    * at this point, so I am forced to initialize the mnt_map->cfm field here    * for the first time, upon the very first search for a /defaults entry in    * this map.  This initialization is much better done in mapc_create(),    * but it's impossible to do that there with the current code structure.    */
-if|if
-condition|(
-name|mm
-operator|->
-name|cfm
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* then initialize it for first time */
-name|mm
-operator|->
-name|cfm
-operator|=
-name|find_cf_map
-argument_list|(
-name|mf
-operator|->
-name|mf_mount
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*    * Find out if amd.conf overrode any map-specific /defaults.    */
 if|if
 condition|(
 name|mm
@@ -3315,7 +3408,7 @@ argument_list|)
 expr_stmt|;
 name|dflts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|mm
 operator|->
@@ -3463,7 +3556,9 @@ name|mp
 operator|->
 name|am_parent
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_info
 argument_list|)
@@ -3715,18 +3810,24 @@ literal|0
 expr_stmt|;
 comment|/* Error so far */
 comment|/* we have an errorfs attached to the am_node, free it */
-name|free_mntfs
+if|if
+condition|(
+name|new_mp
+operator|->
+name|am_al
+condition|)
+name|free_loc
 argument_list|(
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
 argument_list|)
 expr_stmt|;
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/*    * Construct a continuation    */
 name|cp
@@ -3766,11 +3867,11 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|->
-name|mf
+name|al
 operator|=
 name|new_mp
 operator|->
-name|am_mfarray
+name|am_alarray
 expr_stmt|;
 comment|/*    * Try and mount the file system.  If this succeeds immediately (possible    * for a ufs file system) then return the attributes, otherwise just    * return an error.    */
 name|error
@@ -3791,7 +3892,7 @@ condition|)
 return|return
 name|new_mp
 return|;
-comment|/*    * Code for quick reply.  If current_transp is set, then it's the    * transp that's been passed down from nfs_program_2() or from    * autofs_program_[123]().    * If new_mp->am_transp is not already set, set it by copying in    * current_transp.  Once am_transp is set, nfs_quick_reply() and    * autofs_mount_succeeded() can use it to send a reply to the    * client that requested this mount.    */
+comment|/*    * Code for quick reply.  If current_transp is set, then it's the    * transp that's been passed down from nfs_dispatcher() or from    * autofs_program_[123]().    * If new_mp->am_transp is not already set, set it by copying in    * current_transp.  Once am_transp is set, nfs_quick_reply() and    * autofs_mount_succeeded() can use it to send a reply to the    * client that requested this mount.    */
 if|if
 condition|(
 name|current_transp
@@ -3844,12 +3945,20 @@ name|error
 operator|&&
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
+operator|&&
+name|new_mp
+operator|->
+name|am_al
+operator|->
+name|al_mnt
 operator|&&
 operator|(
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_ops
 operator|==
@@ -3913,10 +4022,10 @@ name|am_node
 modifier|*
 name|new_mp
 decl_stmt|;
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|mf_array
+name|al_array
 decl_stmt|;
 name|int
 name|mp_error
@@ -3968,7 +4077,9 @@ name|FSRV_ISUP
 argument_list|(
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_server
 argument_list|)
@@ -4003,9 +4114,9 @@ operator|=
 operator|*
 name|error_return
 expr_stmt|;
-name|mf_array
+name|al_array
 operator|=
-name|amfs_lookup_mntfs
+name|amfs_lookup_loc
 argument_list|(
 name|new_mp
 argument_list|,
@@ -4015,7 +4126,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mf_array
+name|al_array
 condition|)
 block|{
 name|new_mp
@@ -4024,7 +4135,9 @@ name|am_error
 operator|=
 name|new_mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_error
 operator|=
@@ -4040,116 +4153,12 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/*    * Already mounted but known to be down:    * check if we have any alternatives to mount    */
-if|if
-condition|(
-name|mp_error
-operator|==
-literal|0
-condition|)
-block|{
-name|mntfs
-modifier|*
-modifier|*
-name|mfp
-decl_stmt|;
-for|for
-control|(
-name|mfp
-operator|=
-name|mf_array
-init|;
-operator|*
-name|mfp
-condition|;
-name|mfp
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|mfp
-operator|!=
-name|new_mp
-operator|->
-name|am_mnt
-condition|)
-break|break;
-if|if
-condition|(
-operator|*
-name|mfp
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/*        * we found an alternative, so try mounting again.        */
-operator|*
-name|error_return
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-for|for
-control|(
-name|mfp
-operator|=
-name|mf_array
-init|;
-operator|*
-name|mfp
-condition|;
-name|mfp
-operator|++
-control|)
-name|free_mntfs
-argument_list|(
-operator|*
-name|mfp
-argument_list|)
-expr_stmt|;
-name|XFREE
-argument_list|(
-name|mf_array
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|new_mp
-operator|->
-name|am_flags
-operator|&
-name|AMF_SOFTLOOKUP
-condition|)
-block|{
-name|ereturn
-argument_list|(
-name|EIO
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|error_return
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|new_mp
-return|;
-block|}
-block|}
-block|}
 comment|/* store the array inside the am_node */
 name|new_mp
 operator|->
-name|am_mfarray
+name|am_alarray
 operator|=
-name|mf_array
+name|al_array
 expr_stmt|;
 comment|/*    * Note: while it might seem like a good idea to prioritize    * the list of mntfs's we got here, it probably isn't.    * It would ignore the ordering of entries specified by the user,    * which is counterintuitive and confusing.    */
 return|return
@@ -4320,7 +4329,7 @@ name|p
 expr_stmt|;
 comment|/*    * mtab entry turns out to be the name of the mount map    */
 return|return
-name|strdup
+name|xstrdup
 argument_list|(
 name|fo
 operator|->

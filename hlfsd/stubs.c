@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/stubs.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/stubs.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -466,6 +466,7 @@ comment|/*      * XXX: increment mtime of parent directory, causes NFS clients t
 block|if (uid != rootfattr.na_uid) {       clocktime(&rootfattr.na_mtime);       rootfattr.na_uid = uid;     }
 endif|#
 directive|endif
+comment|/* 0 */
 name|res
 operator|.
 name|ns_status
@@ -903,6 +904,7 @@ comment|/*      * XXX: increment mtime of parent directory, causes NFS clients t
 block|if (uid != rootfattr.na_uid) { 	clocktime(&rootfattr.na_mtime); 	rootfattr.na_uid = uid;       }
 endif|#
 directive|endif
+comment|/* 0 */
 name|res
 operator|.
 name|dr_u
@@ -1253,10 +1255,6 @@ name|char
 modifier|*
 name|path_val
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|char
@@ -1380,10 +1378,6 @@ condition|)
 block|{
 comment|/*        * parent process (fork in homedir()) continues        * processing, by getting a NULL returned as a        * "special".  Child returns result.        */
 return|return
-operator|(
-name|nfsreadlinkres
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -1592,7 +1586,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-comment|/*    * If asked for -D fork, then must return the value,    * NOT exit, or else the main hlfsd server exits.    * Bug: where is that status information being collected?    */
+comment|/*    * If asked for -D nofork, then must return the value,    * NOT exit, or else the main hlfsd server exits.    * If -D fork (default), then we do want to exit from the process.    * Bug: where is that status information being collected?    */
 if|if
 condition|(
 name|amuDebug
@@ -1600,15 +1594,16 @@ argument_list|(
 name|D_FORK
 argument_list|)
 condition|)
-return|return
-operator|&
-name|res
-return|;
 name|exit
 argument_list|(
 name|retval
 argument_list|)
 expr_stmt|;
+else|else
+return|return
+operator|&
+name|res
+return|;
 block|}
 end_function
 
@@ -1935,7 +1930,7 @@ init|=
 block|{
 name|SLINKID
 block|,
-literal|0
+name|NULL
 block|,
 block|{
 name|SLINKCOOKIE
@@ -2102,7 +2097,7 @@ operator|(
 name|nfsentry
 operator|*
 operator|)
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 block|}

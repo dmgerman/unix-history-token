@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/include/am_utils.h  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/include/am_utils.h  *  */
 end_comment
 
 begin_comment
@@ -361,15 +361,30 @@ name|XLOG_STATS
 value|0x0080
 end_define
 
+begin_comment
+comment|/* log option compositions */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XLOG_DEFSTR
-value|"all,nomap,nostats"
+name|XLOG_MASK
+value|0x00ff
 end_define
 
 begin_comment
-comment|/* Default log options */
+comment|/* mask for all flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XLOG_MANDATORY
+value|(XLOG_FATAL|XLOG_ERROR)
+end_define
+
+begin_comment
+comment|/* cannot turn these off */
 end_comment
 
 begin_define
@@ -378,6 +393,21 @@ directive|define
 name|XLOG_ALL
 value|(XLOG_FATAL|XLOG_ERROR|XLOG_USER|XLOG_WARNING|XLOG_INFO|XLOG_MAP|XLOG_STATS)
 end_define
+
+begin_comment
+comment|/* default: fatal + error + user + warning + info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XLOG_DEFAULT
+value|(XLOG_MASK& (XLOG_ALL& ~XLOG_MAP& ~XLOG_STATS))
+end_define
+
+begin_comment
+comment|/* default: no logging options */
+end_comment
 
 begin_define
 define|#
@@ -1115,24 +1145,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|xlog_level
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Logging level */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|xlog_level_init
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|serv_state
 name|amd_state
 decl_stmt|;
@@ -1342,6 +1354,21 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|strvcat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|strealloc
 parameter_list|(
 name|char
@@ -1419,7 +1446,7 @@ name|struct
 name|opt_tab
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1449,7 +1476,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
+name|discard_nfs_args
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u_long
 name|get_amd_program_number
 parameter_list|(
 name|void
@@ -1671,6 +1711,34 @@ name|transp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nfs_program_3
+parameter_list|(
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|,
+name|SVCXPRT
+modifier|*
+name|transp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|get_nfs_dispatcher_version
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a) == nfs_program_2 ? NFS_VERSION : NFS_VERSION3)
+end_define
 
 begin_function_decl
 specifier|extern
@@ -1942,7 +2010,7 @@ specifier|extern
 name|void
 name|set_amd_program_number
 parameter_list|(
-name|int
+name|u_long
 name|program
 parameter_list|)
 function_decl|;
@@ -2007,6 +2075,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|char
+modifier|*
+name|xstrdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|check_pmap_up
 parameter_list|(
@@ -2043,6 +2124,20 @@ specifier|const
 name|char
 modifier|*
 name|proto
+parameter_list|,
+name|u_long
+name|def
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|nfs_valid_version
+parameter_list|(
+name|u_long
+name|vers
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2551,7 +2646,7 @@ specifier|extern
 name|void
 name|compute_nfs_args
 parameter_list|(
-name|nfs_args_t
+name|void
 modifier|*
 name|nap
 parameter_list|,
@@ -2590,6 +2685,21 @@ parameter_list|,
 name|char
 modifier|*
 name|fs_name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|destroy_nfs_args
+parameter_list|(
+name|void
+modifier|*
+name|nap
+parameter_list|,
+name|u_long
+name|nfs_version
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2668,6 +2778,9 @@ name|SVCXPRT
 modifier|*
 name|transp
 parameter_list|)
+parameter_list|,
+name|u_long
+name|nfs_version
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2844,7 +2957,33 @@ comment|/* not HAVE_STRUCT_FHSTATUS_FHS_FH */
 end_comment
 
 begin_comment
-comment|/*  * Network File System: the new generation  * NFS V.3  */
+comment|/*  * Network File System: the old faithful generation NFS V.2  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_VERSION2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_VERSION2
+value|((u_int) 2)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not NFS_VERSION2 */
+end_comment
+
+begin_comment
+comment|/*  * Network File System: the not so new anymore generation NFS V.3  */
 end_comment
 
 begin_ifdef
@@ -2885,6 +3024,47 @@ comment|/* HAVE_FS_NFS3 */
 end_comment
 
 begin_comment
+comment|/*  * Network File System: the new generation NFS V.4  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_NFS4
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_VERSION4
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_VERSION4
+value|((u_int) 4)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not NFS_VERSION4 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_NFS4 */
+end_comment
+
+begin_comment
 comment|/**************************************************************************/
 end_comment
 
@@ -2909,19 +3089,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|D_ALL
-value|(~(D_MTAB|D_HRTIME|D_XDRTRACE|D_DAEMON|D_FORK|D_AMQ))
-end_define
-
-begin_define
-define|#
-directive|define
 name|D_DAEMON
 value|0x0001
 end_define
 
 begin_comment
-comment|/* Don't enter daemon mode */
+comment|/* Enter daemon mode */
 end_comment
 
 begin_define
@@ -2965,7 +3138,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Don't register amq program */
+comment|/* Register amq program */
 end_comment
 
 begin_define
@@ -3033,11 +3206,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* Don't fork server */
-end_comment
-
-begin_comment
-comment|/* info service specific debugging (hesiod, nis, etc) */
+comment|/* Fork server (hlfsd only) */
 end_comment
 
 begin_define
@@ -3046,6 +3215,10 @@ directive|define
 name|D_INFO
 value|0x0100
 end_define
+
+begin_comment
+comment|/* info service specific debugging (hesiod, nis, etc) */
+end_comment
 
 begin_define
 define|#
@@ -3081,14 +3254,68 @@ comment|/* Show browsable_dir progress */
 end_comment
 
 begin_comment
-comment|/*  * Test mode is test mode: don't daemonize, don't register amq, don't fork,  * don't touch system mtab, etc.  */
+comment|/* debug option compositions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_MASK
+value|0x0fff
+end_define
+
+begin_comment
+comment|/* mask of known flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_BASIC
+value|(D_TRACE|D_FULL|D_STR|D_MEM|D_INFO|D_XDRTRACE|D_READDIR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_CONTROL
+value|(D_DAEMON|D_AMQ|D_FORK)
+end_define
+
+begin_comment
+comment|/* immutable flags: cannot be changed via "amq -D" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_IMMUTABLE
+value|(D_MTAB  | D_CONTROL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_ALL
+value|(D_BASIC | D_CONTROL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_DEFAULT
+value|(D_MASK& D_ALL& ~D_XDRTRACE)
+end_define
+
+begin_comment
+comment|/* test mode: nodaemon, noamq, nofork, (local) mtab */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|D_TEST
-value|(~(D_MEM|D_STR|D_XDRTRACE))
+value|(D_BASIC | D_MTAB)
 end_define
 
 begin_define
@@ -3209,9 +3436,8 @@ name|void
 name|print_nfs_args
 parameter_list|(
 specifier|const
-name|nfs_args_t
+name|void
 modifier|*
-name|nap
 parameter_list|,
 name|u_long
 name|nfs_version
@@ -3269,6 +3495,159 @@ comment|/* not DEBUG */
 end_comment
 
 begin_comment
+comment|/* set dummy flags to zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_DAEMON
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Enter daemon mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_TRACE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Do protocol trace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_FULL
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Do full trace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_MTAB
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Use local mtab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_AMQ
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Register amq program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_STR
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Debug string munging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_MEM
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Trace memory allocations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_FORK
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Fork server (hlfsd only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_INFO
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: info service debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_HRTIME
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: hi-res time stamps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_XDRTRACE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: Trace xdr routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_READDIR
+value|0x0000
+end_define
+
+begin_comment
+comment|/* dummy: browsable_dir progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_CONTROL
+value|(D_DAEMON|D_AMQ|D_FORK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|amuDebug
+parameter_list|(
+name|x
+parameter_list|)
+value|(debug_flags& (x))
+end_define
+
+begin_comment
 comment|/*  * If not debugging, then also reset the pointer.  * It's safer -- and besides, free() should do that anyway.  */
 end_comment
 
@@ -3282,21 +3661,14 @@ parameter_list|)
 value|do { free((voidp)x); x = NULL;} while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|amuDebug
-parameter_list|(
-name|x
-parameter_list|)
-value|(0)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GCC_VARARGS_MACROS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3308,13 +3680,31 @@ modifier|...
 parameter_list|)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_C99_VARARGS_MACROS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|dlog
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* not __GNUC__ */
+comment|/* no c99 varargs */
 end_comment
 
 begin_comment
@@ -3333,7 +3723,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __GNUC__ */
+comment|/* no c99 varargs */
 end_comment
 
 begin_define
@@ -3368,7 +3758,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|debug_flags
 decl_stmt|;
 end_decl_stmt

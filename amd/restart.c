@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/restart.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/restart.c  *  */
 end_comment
 
 begin_ifdef
@@ -79,13 +79,13 @@ name|mo
 operator|.
 name|opt_rhost
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mo
 operator|.
 name|opt_rfs
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|cp
 operator|=
@@ -112,7 +112,7 @@ name|mo
 operator|.
 name|opt_rhost
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|me
 operator|->
@@ -123,7 +123,7 @@ name|mo
 operator|.
 name|opt_rfs
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|cp
 operator|+
@@ -165,7 +165,7 @@ name|mo
 operator|.
 name|opt_rhost
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|me
 operator|->
@@ -176,7 +176,7 @@ name|mo
 operator|.
 name|opt_rfs
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 literal|"/"
 argument_list|)
@@ -268,12 +268,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Already mounted correctly */
-name|mf
-operator|->
-name|mf_fo
-operator|=
-literal|0
-expr_stmt|;
 comment|/*      * Only timeout non-NFS entries      */
 if|if
 condition|(
@@ -349,12 +343,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*    * Clean up mo    */
-if|if
-condition|(
-name|mo
-operator|.
-name|opt_rhost
-condition|)
 name|XFREE
 argument_list|(
 name|mo
@@ -362,12 +350,6 @@ operator|.
 name|opt_rhost
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mo
-operator|.
-name|opt_rfs
-condition|)
 name|XFREE
 argument_list|(
 name|mo
@@ -431,7 +413,7 @@ name|am_ops
 modifier|*
 name|fs_ops
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -588,7 +570,7 @@ name|am_ops
 modifier|*
 name|fs_ops
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -843,7 +825,12 @@ argument_list|,
 operator|&
 name|nfsxprt
 argument_list|,
-name|nfs_program_2
+name|nfs_dispatcher
+argument_list|,
+name|get_nfs_dispatcher_version
+argument_list|(
+name|nfs_dispatcher
+argument_list|)
 argument_list|)
 operator|!=
 literal|0

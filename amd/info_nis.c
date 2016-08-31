@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/info_nis.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/info_nis.c  *  */
 end_comment
 
 begin_comment
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<amd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sun_map.h>
 end_include
 
 begin_comment
@@ -373,7 +379,7 @@ name|gopt
 operator|.
 name|nis_domain
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|default_domain
 argument_list|)
@@ -622,6 +628,15 @@ operator|(
 name|ypall_callback_fxn_t
 operator|)
 name|callback
+expr_stmt|;
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"NIS map %s reloading using yp_all"
+argument_list|,
+name|map
+argument_list|)
 expr_stmt|;
 comment|/*    * If you are using NIS and your yp_all function is "broken", you have to    * get it fixed.  The bug in yp_all() is that it does not close a TCP    * connection to ypserv, and this ypserv runs out of open file descriptors,    * getting into an infinite loop, thus all YP clients eventually unbind    * and hang too.    */
 name|error
@@ -890,7 +905,7 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|val
+name|pval
 parameter_list|,
 name|time_t
 modifier|*
@@ -1059,12 +1074,69 @@ argument_list|(
 name|key
 argument_list|)
 argument_list|,
-name|val
+name|pval
 argument_list|,
 operator|&
 name|outlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|cfm
+operator|&&
+operator|(
+name|m
+operator|->
+name|cfm
+operator|->
+name|cfm_flags
+operator|&
+name|CFM_SUN_MAP_SYNTAX
+operator|)
+operator|&&
+name|res
+operator|==
+literal|0
+condition|)
+block|{
+name|char
+modifier|*
+name|oldval
+init|=
+operator|*
+name|pval
+decl_stmt|;
+operator|*
+name|pval
+operator|=
+name|sun_entry2amd
+argument_list|(
+name|key
+argument_list|,
+name|oldval
+argument_list|)
+expr_stmt|;
+comment|/* We always need to free the output of the yp_match call. */
+name|XFREE
+argument_list|(
+name|oldval
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pval
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+comment|/* sun2amd parser error */
+block|}
 comment|/*    * Do something interesting with the return code    */
 switch|switch
 condition|(

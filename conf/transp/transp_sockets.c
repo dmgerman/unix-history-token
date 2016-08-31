@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/conf/transp/transp_sockets.c  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/conf/transp/transp_sockets.c  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
 end_comment
 
 begin_ifdef
@@ -548,7 +548,7 @@ operator|(
 name|u_short
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -696,7 +696,7 @@ operator|(
 name|u_short
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -803,7 +803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * register an RPC server  */
+comment|/*  * Register an RPC server:  * return 1 on success, 0 otherwise.  */
 end_comment
 
 begin_function
@@ -845,6 +845,7 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+comment|/* on Sockets: svc_register returns 1 on success, 0 otherwise */
 return|return
 name|svc_register
 argument_list|(
@@ -898,6 +899,9 @@ name|SVCXPRT
 modifier|*
 name|transp
 parameter_list|)
+parameter_list|,
+name|u_long
+name|nfs_version
 parameter_list|)
 block|{
 operator|*
@@ -1037,7 +1041,7 @@ name|nfs_xprtp
 argument_list|,
 name|NFS_PROGRAM
 argument_list|,
-name|NFS_VERSION
+name|nfs_version
 argument_list|,
 name|dispatch_fxn
 argument_list|,
@@ -1049,17 +1053,14 @@ name|plog
 argument_list|(
 name|XLOG_FATAL
 argument_list|,
-literal|"unable to register (%ld, %ld, 0)"
+literal|"unable to register (%lu, %lu, 0)"
 argument_list|,
 operator|(
 name|u_long
 operator|)
 name|NFS_PROGRAM
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|NFS_VERSION
+name|nfs_version
 argument_list|)
 expr_stmt|;
 name|svc_destroy
@@ -1487,7 +1488,9 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"check_pmap_up: cannot create connection to contact portmapper on host \"%s\"%s"
+literal|"%s: cannot create connection to contact portmapper on host \"%s\"%s"
+argument_list|,
+name|__func__
 argument_list|,
 name|host
 argument_list|,
@@ -1560,7 +1563,9 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"check_pmap_up: failed to contact portmapper on host \"%s\": %s"
+literal|"%s: failed to contact portmapper on host \"%s\": %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|host
 argument_list|,
@@ -1604,6 +1609,9 @@ specifier|const
 name|char
 modifier|*
 name|proto
+parameter_list|,
+name|u_long
+name|def
 parameter_list|)
 block|{
 name|CLIENT
@@ -1633,15 +1641,25 @@ decl_stmt|;
 comment|/*    * If not set or set wrong, then try from NFS_VERS_MAX on down. If    * set, then try from nfs_version on down.    */
 if|if
 condition|(
+operator|!
+name|nfs_valid_version
+argument_list|(
 name|nfs_version
-operator|<=
-literal|0
-operator|||
-name|nfs_version
-operator|>
-name|NFS_VERS_MAX
+argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|nfs_valid_version
+argument_list|(
+name|def
+argument_list|)
+condition|)
+name|nfs_version
+operator|=
+name|def
+expr_stmt|;
+else|else
 name|nfs_version
 operator|=
 name|NFS_VERS_MAX
@@ -1664,14 +1682,17 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_FS_NFS3
-name|try_again
-label|:
-endif|#
-directive|endif
-comment|/* HAVE_FS_NFS3 */
+for|for
+control|(
+init|;
+name|nfs_version
+operator|>=
+name|NFS_VERS_MIN
+condition|;
+name|nfs_version
+operator|--
+control|)
+block|{
 name|sock
 operator|=
 name|RPC_ANYSOCK
@@ -1800,6 +1821,13 @@ argument_list|(
 name|clnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|clnt_stat
+operator|==
+name|RPC_SUCCESS
+condition|)
+break|break;
 block|}
 else|else
 block|{
@@ -1833,11 +1861,10 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"get_nfs_version NFS(%d,%s) failed for %s%s"
+literal|"%s: NFS(%lu,%s) failed for %s: %s"
 argument_list|,
-operator|(
-name|int
-operator|)
+name|__func__
+argument_list|,
 name|nfs_version
 argument_list|,
 name|proto
@@ -1847,26 +1874,15 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|again
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_FS_NFS3
+block|}
+block|}
 if|if
 condition|(
 name|nfs_version
-operator|==
-name|NFS_VERSION3
+operator|<
+name|NFS_VERS_MIN
 condition|)
-block|{
 name|nfs_version
-operator|=
-name|NFS_VERSION
-expr_stmt|;
-name|again
 operator|=
 literal|0
 expr_stmt|;
@@ -1874,37 +1890,10 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"get_nfs_version trying a lower version: NFS(%d,%s)"
+literal|"%s: returning NFS(%lu,%s) on host %s"
 argument_list|,
-operator|(
-name|int
-operator|)
-name|nfs_version
+name|__func__
 argument_list|,
-name|proto
-argument_list|)
-expr_stmt|;
-block|}
-goto|goto
-name|try_again
-goto|;
-endif|#
-directive|endif
-comment|/* HAVE_FS_NFS3 */
-block|}
-return|return
-literal|0
-return|;
-block|}
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"get_nfs_version: returning NFS(%d,%s) on host %s"
-argument_list|,
-operator|(
-name|int
-operator|)
 name|nfs_version
 argument_list|,
 name|proto
