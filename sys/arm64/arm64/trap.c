@@ -1252,6 +1252,9 @@ literal|"VFP exception in the kernel"
 argument_list|)
 expr_stmt|;
 case|case
+name|EXCP_INSN_ABORT
+case|:
+case|case
 name|EXCP_DATA_ABORT
 case|:
 name|far
