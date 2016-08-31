@@ -75,7 +75,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: archive.c 3287 2015-12-31 16:58:48Z emaste $"
+literal|"$Id: archive.c 3490 2016-08-31 00:12:22Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2445,6 +2445,9 @@ name|ar_obj
 modifier|*
 name|obj
 decl_stmt|;
+name|time_t
+name|timestamp
+decl_stmt|;
 name|int
 name|nr
 decl_stmt|;
@@ -2494,14 +2497,28 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|elftc_timestamp
+argument_list|(
+operator|&
+name|timestamp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"elftc_timestamp"
+argument_list|)
+expr_stmt|;
 name|archive_entry_set_mtime
 argument_list|(
 name|entry
 argument_list|,
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|timestamp
 argument_list|,
 literal|0
 argument_list|)

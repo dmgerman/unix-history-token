@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu3.c 3447 2016-05-03 13:32:23Z emaste $"
+literal|"$Id: libelftc_dem_gnu3.c 3480 2016-07-24 23:38:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -13179,7 +13179,7 @@ name|ddata
 argument_list|,
 literal|"wchar_t"
 argument_list|,
-literal|6
+literal|7
 argument_list|)
 condition|)
 goto|goto

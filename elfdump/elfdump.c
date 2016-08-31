@@ -125,7 +125,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 3474 2016-05-17 20:44:53Z emaste $"
+literal|"$Id: elfdump.c 3482 2016-08-02 18:47:00Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1615,6 +1615,18 @@ literal|17
 index|]
 operator|=
 literal|"ELFOSABI_CLOUDABI"
+block|,
+index|[
+literal|64
+index|]
+operator|=
+literal|"ELFOSABI_ARM_AEABI"
+block|,
+index|[
+literal|97
+index|]
+operator|=
+literal|"ELFOSABI_ARM"
 block|,
 index|[
 literal|255
