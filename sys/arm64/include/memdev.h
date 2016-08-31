@@ -48,12 +48,11 @@ name|memioctl
 value|(d_ioctl_t *)NULL
 end_define
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|d_mmap_t
 name|memmmap
-value|(d_mmap_t *)NULL
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
