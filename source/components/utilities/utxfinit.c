@@ -537,6 +537,9 @@ directive|endif
 comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      *      * This case executes the module-level code for all tables only after      * all of the tables have been loaded. It is a legacy option and is      * not compatible with other ACPI implementations. See AcpiNsLoadTable.      */
 if|if
 condition|(
+operator|!
+name|AcpiGbl_ParseTableAsTermList
+operator|&&
 name|AcpiGbl_GroupModuleLevelCode
 condition|)
 block|{

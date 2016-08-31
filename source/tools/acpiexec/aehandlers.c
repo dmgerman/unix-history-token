@@ -234,6 +234,10 @@ literal|"LOAD"
 block|,
 literal|"UNLOAD"
 block|,
+literal|"INSTALL"
+block|,
+literal|"UNINSTALL"
+block|,
 literal|"UNKNOWN"
 block|}
 decl_stmt|;

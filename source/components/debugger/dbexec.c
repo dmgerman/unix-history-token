@@ -1043,8 +1043,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
 name|NameString
 operator|=
 name|ACPI_ALLOCATE
@@ -1090,6 +1088,30 @@ argument_list|(
 name|NameString
 argument_list|)
 expr_stmt|;
+comment|/* Subcommand to Execute all predefined names in the namespace */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|NameString
+argument_list|,
+literal|"PREDEF"
+argument_list|,
+literal|6
+argument_list|)
+condition|)
+block|{
+name|AcpiDbEvaluatePredefinedNames
+argument_list|()
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|NameString
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|AcpiGbl_DbMethodInfo
 operator|.
 name|Name
@@ -1191,7 +1213,6 @@ argument_list|(
 name|NameString
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*      * Allow any handlers in separate threads to complete.      * (Such as Notify handlers invoked from AML executed above).      */
 name|AcpiOsSleep
 argument_list|(

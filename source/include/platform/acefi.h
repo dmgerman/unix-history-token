@@ -1144,6 +1144,12 @@ name|_ACPI_EFI_SYSTEM_TABLE
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|_ACPI_EFI_PCI_IO
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1169,19 +1175,21 @@ name|FILE
 value|struct _ACPI_SIMPLE_TEXT_OUTPUT_INTERFACE
 end_define
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
 name|stdout
-value|ST->ConOut
-end_define
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
 name|stderr
-value|ST->ConOut
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

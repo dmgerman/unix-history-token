@@ -1554,6 +1554,10 @@ name|UINT8
 name|RuntimeCount
 decl_stmt|;
 comment|/* References to a run GPE */
+name|BOOLEAN
+name|DisableForDispatch
+decl_stmt|;
+comment|/* Masked during dispatching */
 block|}
 name|ACPI_GPE_EVENT_INFO
 typedef|;
@@ -1588,6 +1592,10 @@ name|UINT8
 name|EnableForRun
 decl_stmt|;
 comment|/* GPEs to keep enabled when running */
+name|UINT8
+name|MaskForRun
+decl_stmt|;
+comment|/* GPEs to keep masked when running */
 name|UINT8
 name|EnableMask
 decl_stmt|;

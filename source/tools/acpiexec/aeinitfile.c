@@ -320,7 +320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeDoOneOverride  *  * PARAMETERS:  Pathname            - AML namepath  *              ValueString         - New integer value to be stored  *              ObjDesc             - Descriptor with integer override value  *              WalkState           - Used for the Store operation  *  * RETURN:      None  *  * DESCRIPTION: Perform an overrided for a single namespace object  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeDoOneOverride  *  * PARAMETERS:  Pathname            - AML namepath  *              ValueString         - New integer value to be stored  *              ObjDesc             - Descriptor with integer override value  *              WalkState           - Used for the Store operation  *  * RETURN:      None  *  * DESCRIPTION: Perform an override for a single namespace object  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -401,9 +401,11 @@ name|AcpiUtStrtoul64
 argument_list|(
 name|ValueString
 argument_list|,
-name|ACPI_ANY_BASE
-argument_list|,
-name|ACPI_MAX64_BYTE_WIDTH
+operator|(
+name|ACPI_STRTOUL_BASE16
+operator||
+name|ACPI_STRTOUL_64BIT
+operator|)
 argument_list|,
 operator|&
 name|Value

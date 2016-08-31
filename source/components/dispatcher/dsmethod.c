@@ -155,6 +155,9 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
 comment|/* Create/Init a root op for the method parse tree */
 name|Op
 operator|=
@@ -175,11 +178,13 @@ operator|!
 name|Op
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Unlock
+goto|;
 block|}
 name|AcpiPsSetName
 argument_list|(
@@ -227,11 +232,13 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Unlock
+goto|;
 block|}
 name|Status
 operator|=
@@ -302,6 +309,11 @@ name|AcpiPsDeleteParseTree
 argument_list|(
 name|Op
 argument_list|)
+expr_stmt|;
+name|Unlock
+label|:
+name|AcpiExExitInterpreter
+argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1846,12 +1858,24 @@ operator|)
 condition|)
 block|{
 comment|/* Delete any direct children of (created by) this method */
+operator|(
+name|void
+operator|)
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
 name|WalkState
 operator|->
 name|MethodNode
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiExEnterInterpreter
+argument_list|()
 expr_stmt|;
 comment|/*              * Delete any objects that were created by this method              * elsewhere in the namespace (if any were created).              * Use of the ACPI_METHOD_MODIFIED_NAMESPACE optimizes the              * deletion such that we don't have to perform an entire              * namespace walk for every control method execution.              */
 if|if
@@ -1865,6 +1889,12 @@ operator|&
 name|ACPI_METHOD_MODIFIED_NAMESPACE
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
 name|MethodDesc
@@ -1873,6 +1903,12 @@ name|Method
 operator|.
 name|OwnerId
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiExEnterInterpreter
+argument_list|()
 expr_stmt|;
 name|MethodDesc
 operator|->

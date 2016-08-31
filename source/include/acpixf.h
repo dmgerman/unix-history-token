@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160729
+value|0x20160831
 end_define
 
 begin_include
@@ -412,6 +412,22 @@ argument_list|(
 name|UINT8
 argument_list|,
 name|AcpiGbl_GroupModuleLevelCode
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Optionally support module level code by parsing the entire table as  * a TermList. Default is FALSE, do not execute entire table until some  * lock order issues are fixed.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_ParseTableAsTermList
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1558,6 +1574,13 @@ begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS
 argument_list|(
 argument|ACPI_STATUS AcpiFinishGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiMaskGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     BOOLEAN                 IsMasked)
 argument_list|)
 end_macro
 

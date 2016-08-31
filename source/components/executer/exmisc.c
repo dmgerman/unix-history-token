@@ -624,7 +624,7 @@ argument_list|,
 operator|&
 name|LocalOperand1
 argument_list|,
-literal|16
+name|ACPI_STRTOUL_BASE16
 argument_list|)
 expr_stmt|;
 break|break;

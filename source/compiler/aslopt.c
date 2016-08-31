@@ -249,7 +249,7 @@ operator|-
 name|ACPI_NAME_SIZE
 index|]
 operator|)
-operator|,
+expr_stmt|;
 name|ScopeInfo
 operator|.
 name|Scope

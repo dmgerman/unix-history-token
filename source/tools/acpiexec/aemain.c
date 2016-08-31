@@ -195,6 +195,26 @@ begin_comment
 comment|/* Batch command buffer */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+name|AeBuildDate
+index|[]
+init|=
+name|__DATE__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|AeBuildTime
+index|[]
+init|=
+name|__TIME__
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -385,6 +405,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-ep"
+argument_list|,
+literal|"Enable TermList parsing for scope objects"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-es"
 argument_list|,
 literal|"Enable Interpreter Slack Mode"
@@ -447,6 +474,13 @@ argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display version information"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vd"
+argument_list|,
+literal|"Display build date and time"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -712,6 +746,14 @@ case|case
 literal|'m'
 case|:
 name|AcpiGbl_GroupModuleLevelCode
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|AcpiGbl_ParseTableAsTermList
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1017,6 +1059,23 @@ literal|1
 operator|)
 return|;
 case|case
+literal|'d'
+case|:
+name|printf
+argument_list|(
+literal|"Build date/time: %s %s\n"
+argument_list|,
+name|AeBuildDate
+argument_list|,
+name|AeBuildTime
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
 literal|'i'
 case|:
 name|AcpiDbgLevel
@@ -1148,7 +1207,7 @@ name|AcpiDbgLayer
 operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
-comment|/* Init ACPICA and start debugger thread */
+comment|/*      * Initialize ACPICA and start debugger thread.      *      * NOTE: After ACPICA initialization, AcpiTerminate MUST be called      * before this procedure exits -- otherwise, the console may be      * left in an incorrect state.      */
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -1221,17 +1280,9 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiOsTerminate
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|NormalExit
+goto|;
 block|}
 comment|/* Get the command line options */
 name|ExitCode
@@ -1423,7 +1474,7 @@ name|ACPI_NO_OBJECT_INIT
 operator|)
 expr_stmt|;
 block|}
-comment|/*      * Main initialization for ACPICA subsystem      * TBD: Need a way to call this after the ACPI table "LOAD" command      */
+comment|/*      * Main initialization for ACPICA subsystem      * TBD: Need a way to call this after the ACPI table "LOAD" command?      *      * NOTE: This initialization does not match the _Lxx and _Exx methods      * to individual GPEs, as there are no real GPEs when the hardware      * is simulated - because there is no namespace until AeLoadTables is      * executed. This may have to change if AcpiExec is ever run natively      * on actual hardware (such as under UEFI).      */
 name|Status
 operator|=
 name|AcpiEnableSubsystem
@@ -1594,21 +1645,23 @@ if|#
 directive|if
 literal|0
 comment|/* Temporarily removed */
-block|AcpiTerminateDebugger ();     Status = AcpiTerminate ();
+block|AcpiTerminateDebugger ();     (void) AcpiTerminate ();
 endif|#
 directive|endif
-name|Status
+name|NormalExit
+label|:
+name|ExitCode
 operator|=
+literal|0
+expr_stmt|;
+name|ErrorExit
+label|:
+operator|(
+name|void
+operator|)
 name|AcpiOsTerminate
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|ErrorExit
-label|:
 return|return
 operator|(
 name|ExitCode

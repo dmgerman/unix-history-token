@@ -1274,7 +1274,7 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
-operator|,
+expr_stmt|;
 name|AcpiUtPrintString
 argument_list|(
 name|DeviceName
@@ -1554,7 +1554,7 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
-operator|,
+expr_stmt|;
 name|AcpiUtPrintString
 argument_list|(
 name|DeviceName
@@ -1845,7 +1845,7 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
-operator|,
+expr_stmt|;
 name|AcpiUtPrintString
 argument_list|(
 name|DeviceName

@@ -1310,6 +1310,7 @@ case|case
 name|AML_TO_INTEGER_OP
 case|:
 comment|/* ToInteger (Data, Result) */
+comment|/* Perform "explicit" conversion */
 name|Status
 operator|=
 name|AcpiExConvertToInteger
@@ -1322,7 +1323,7 @@ argument_list|,
 operator|&
 name|ReturnDesc
 argument_list|,
-name|ACPI_ANY_BASE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2260,7 +2261,7 @@ block|{
 comment|/*                  * This is a DerefOf (String). The string is a reference                  * to a named ACPI object.                  *                  * 1) Find the owning Node                  * 2) Dereference the node to an actual object. Could be a                  *    Field, so we need to resolve the node to a value.                  */
 name|Status
 operator|=
-name|AcpiNsGetNode
+name|AcpiNsGetNodeUnlocked
 argument_list|(
 name|WalkState
 operator|->

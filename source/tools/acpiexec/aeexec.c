@@ -95,7 +95,7 @@ name|char
 modifier|*
 name|OsiString
 parameter_list|,
-name|UINT32
+name|UINT64
 name|ExpectedResult
 parameter_list|)
 function_decl|;
@@ -1058,7 +1058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ExecuteOSI  *  * PARAMETERS:  OsiString           - String passed to _OSI method  *              ExpectedResult      - 0 (FALSE) or 0xFFFFFFFF (TRUE)  *  * RETURN:      Status  *  * DESCRIPTION: Execute the internally implemented (in ACPICA) _OSI method.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ExecuteOSI  *  * PARAMETERS:  OsiString           - String passed to _OSI method  *              ExpectedResult      - 0 (FALSE) or ACPI_UINT64_MAX (TRUE)  *  * RETURN:      Status  *  * DESCRIPTION: Execute the internally implemented (in ACPICA) _OSI method.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1070,7 +1070,7 @@ name|char
 modifier|*
 name|OsiString
 parameter_list|,
-name|UINT32
+name|UINT64
 name|ExpectedResult
 parameter_list|)
 block|{
@@ -1263,18 +1263,21 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Invalid return value from _OSI, expected %.8X found %.8X\n"
+literal|"Invalid return value from _OSI, expected %8.8X%8.8X found %8.8X%8.8X\n"
 argument_list|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
 name|ExpectedResult
+argument_list|)
 argument_list|,
-operator|(
-name|UINT32
-operator|)
+name|ACPI_FORMAT_UINT64
+argument_list|(
 name|Obj
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2216,7 +2219,7 @@ name|ExecuteOSI
 argument_list|(
 literal|"Extended Address Space Descriptor"
 argument_list|,
-literal|0xFFFFFFFF
+name|ACPI_UINT64_MAX
 argument_list|)
 expr_stmt|;
 name|ACPI_CHECK_OK
@@ -2232,7 +2235,7 @@ name|ExecuteOSI
 argument_list|(
 literal|"Windows 2001"
 argument_list|,
-literal|0xFFFFFFFF
+name|ACPI_UINT64_MAX
 argument_list|)
 expr_stmt|;
 name|ACPI_CHECK_OK

@@ -164,6 +164,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiEvMaskGpe
+parameter_list|(
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
+parameter_list|,
+name|BOOLEAN
+name|IsMasked
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiEvAddGpeReference
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO

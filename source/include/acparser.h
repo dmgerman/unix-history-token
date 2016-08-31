@@ -144,6 +144,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiPsExecuteTable
+parameter_list|(
+name|ACPI_EVALUATE_INFO
+modifier|*
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * psargs - Parse AML opcode arguments  */
 end_comment

@@ -2252,7 +2252,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * aslmain - startup  */
+comment|/*  * aslhelp - help screens  */
 end_comment
 
 begin_function_decl
@@ -2267,6 +2267,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|AslFilenameHelp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AslDisassemblyHelp
 parameter_list|(
 name|void
 parameter_list|)

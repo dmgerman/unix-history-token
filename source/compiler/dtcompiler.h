@@ -1107,21 +1107,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|DtStrtoul64
-parameter_list|(
-name|char
-modifier|*
-name|String
-parameter_list|,
-name|UINT64
-modifier|*
-name|ReturnInteger
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|DtGetFieldValue

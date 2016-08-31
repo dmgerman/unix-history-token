@@ -113,7 +113,89 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAsciiCharToHex  *  * PARAMETERS:  HexChar                 - Hex character in Ascii  *  * RETURN:      The binary value of the ascii/hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAsciiToHexByte  *  * PARAMETERS:  TwoAsciiChars               - Pointer to two ASCII characters  *              ReturnByte                  - Where converted byte is returned  *  * RETURN:      Status and converted hex byte  *  * DESCRIPTION: Perform ascii-to-hex translation, exactly two ASCII characters  *              to a single converted byte value.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiUtAsciiToHexByte
+parameter_list|(
+name|char
+modifier|*
+name|TwoAsciiChars
+parameter_list|,
+name|UINT8
+modifier|*
+name|ReturnByte
+parameter_list|)
+block|{
+comment|/* Both ASCII characters must be valid hex digits */
+if|if
+condition|(
+operator|!
+name|isxdigit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|TwoAsciiChars
+index|[
+literal|0
+index|]
+argument_list|)
+operator|||
+operator|!
+name|isxdigit
+argument_list|(
+operator|(
+name|int
+operator|)
+name|TwoAsciiChars
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BAD_HEX_CONSTANT
+operator|)
+return|;
+block|}
+operator|*
+name|ReturnByte
+operator|=
+name|AcpiUtAsciiCharToHex
+argument_list|(
+name|TwoAsciiChars
+index|[
+literal|1
+index|]
+argument_list|)
+operator||
+operator|(
+name|AcpiUtAsciiCharToHex
+argument_list|(
+name|TwoAsciiChars
+index|[
+literal|0
+index|]
+argument_list|)
+operator|<<
+literal|4
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAsciiCharToHex  *  * PARAMETERS:  HexChar                 - Hex character in Ascii. Must be:  *                                        0-9 or A-F or a-f  *  * RETURN:      The binary value of the ascii/hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -124,11 +206,12 @@ name|int
 name|HexChar
 parameter_list|)
 block|{
+comment|/* Values 0-9 */
 if|if
 condition|(
 name|HexChar
 operator|<=
-literal|0x39
+literal|'9'
 condition|)
 block|{
 return|return
@@ -139,16 +222,17 @@ call|)
 argument_list|(
 name|HexChar
 operator|-
-literal|0x30
+literal|'0'
 argument_list|)
 operator|)
 return|;
 block|}
+comment|/* Upper case A-F */
 if|if
 condition|(
 name|HexChar
 operator|<=
-literal|0x46
+literal|'F'
 condition|)
 block|{
 return|return
@@ -164,6 +248,7 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/* Lower case a-f */
 return|return
 operator|(
 call|(

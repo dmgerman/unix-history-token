@@ -848,7 +848,7 @@ comment|/*          * The more complex cases allow multiple resolved object type
 case|case
 name|ARGI_INTEGER
 case|:
-comment|/*              * Need an operand of type ACPI_TYPE_INTEGER,              * But we can implicitly convert from a STRING or BUFFER              * Aka - "Implicit Source Operand Conversion"              */
+comment|/*              * Need an operand of type ACPI_TYPE_INTEGER, but we can              * implicitly convert from a STRING or BUFFER.              *              * Known as "Implicit Source Operand Conversion"              */
 name|Status
 operator|=
 name|AcpiExConvertToInteger
@@ -857,7 +857,7 @@ name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
-literal|16
+name|ACPI_STRTOUL_BASE16
 argument_list|)
 expr_stmt|;
 if|if
