@@ -166,12 +166,46 @@ directive|ifndef
 name|STRICT_ALIGN
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64
+argument_list|)
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|STRICT_ALIGN
-value|!(defined(__i386) || defined (__amd64))
+value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STRICT_ALIGN
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
