@@ -1175,6 +1175,12 @@ operator|->
 name|t_type
 operator|==
 name|UNION
+operator|||
+name|defn
+operator|->
+name|t_type
+operator|==
+name|ENUM
 operator|)
 return|;
 block|}
