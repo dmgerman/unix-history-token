@@ -200,20 +200,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INTRNG
 comment|/* Enable interrupt reception on this CPU */
 name|intr_enable
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|arm_enable_intr
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|cninit_finish
 argument_list|()
 expr_stmt|;
