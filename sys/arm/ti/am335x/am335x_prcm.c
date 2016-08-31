@@ -143,6 +143,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"am335x_scm.h"
+end_include
+
 begin_define
 define|#
 directive|define
