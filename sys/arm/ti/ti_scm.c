@@ -361,11 +361,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bus_enumerate_hinted_children
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|bus_generic_attach
