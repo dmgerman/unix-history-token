@@ -460,6 +460,9 @@ name|char
 modifier|*
 name|aio_h_addr
 decl_stmt|;
+name|int
+name|aio_initial_sequence
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3555,6 +3558,15 @@ operator|&
 name|policyhead
 argument_list|)
 expr_stmt|;
+name|aio
+index|[
+name|i
+index|]
+operator|.
+name|aio_initial_sequence
+operator|=
+name|i
+expr_stmt|;
 block|}
 comment|/* perform sorting. */
 name|qsort
@@ -5327,6 +5339,22 @@ return|;
 block|}
 block|}
 comment|/* Rule 10: Otherwise, leave the order unchanged. */
+comment|/*  	 * Note that qsort is unstable; so, we can't return zero and  	 * expect the order to be unchanged. 	 * That also means we can't depend on the current position of 	 * dst2 being after dst1.  We must enforce the initial order 	 * with an explicit compare on the original position. 	 * The qsort specification requires that "When the same objects  	 * (consisting of width bytes, irrespective of their current  	 * positions in the array) are passed more than once to the  	 * comparison function, the results shall be consistent with one  	 * another."   	 * In other words, If A< B, then we must also return B> A. 	 */
+if|if
+condition|(
+name|dst2
+operator|->
+name|aio_initial_sequence
+operator|<
+name|dst1
+operator|->
+name|aio_initial_sequence
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 operator|-
