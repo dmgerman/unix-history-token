@@ -402,6 +402,9 @@ parameter_list|,
 name|size_t
 modifier|*
 name|resp_len
+parameter_list|,
+name|uint32_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
