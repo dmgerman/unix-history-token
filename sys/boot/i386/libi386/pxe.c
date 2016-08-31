@@ -1336,11 +1336,38 @@ name|bootplayer
 operator|.
 name|sip
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOADER_NFS_SUPPORT
+name|netproto
+operator|=
+name|NET_NFS
+expr_stmt|;
 if|if
 condition|(
+name|tftpip
+operator|.
+name|s_addr
+operator|!=
+literal|0
+condition|)
+block|{
+name|netproto
+operator|=
+name|NET_TFTP
+expr_stmt|;
+name|rootip
+operator|.
+name|s_addr
+operator|=
+name|tftpip
+operator|.
+name|s_addr
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|netproto
+operator|==
+name|NET_NFS
+operator|&&
 operator|!
 name|rootpath
 index|[
@@ -1354,8 +1381,6 @@ argument_list|,
 name|PXENFSROOTPATH
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -1589,9 +1614,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOADER_NFS_SUPPORT
 name|printf
 argument_list|(
 literal|"pxe_open: server addr: %s\n"
@@ -1619,6 +1641,13 @@ name|gateip
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|netproto
+operator|==
+name|NET_NFS
+condition|)
+block|{
 name|setenv
 argument_list|(
 literal|"boot.nfsroot.server"
@@ -1640,8 +1669,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+elseif|else
+if|if
+condition|(
+name|netproto
+operator|==
+name|NET_TFTP
+condition|)
+block|{
 name|setenv
 argument_list|(
 literal|"boot.netif.server"
@@ -1663,8 +1699,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|setenv
 argument_list|(
 literal|"dhcp.host-name"
@@ -1799,17 +1834,20 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|LOADER_NFS_SUPPORT
+if|if
+condition|(
+name|netproto
+operator|==
+name|NET_NFS
+condition|)
+block|{
 comment|/* get an NFS filehandle for our root filesystem */
 name|pxe_setnfshandle
 argument_list|(
 name|rootpath
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 if|if
 condition|(
 name|pxe_sock
@@ -1993,12 +2031,6 @@ block|{
 return|return;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOADER_NFS_SUPPORT
-end_ifdef
 
 begin_comment
 comment|/*  * Reach inside the libstand NFS code and dig out an NFS handle  * for the root filesystem.  */
@@ -2533,15 +2565,6 @@ end_endif
 
 begin_comment
 comment|/* OLD_NFSV2 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOADER_NFS_SUPPORT */
 end_comment
 
 begin_function
