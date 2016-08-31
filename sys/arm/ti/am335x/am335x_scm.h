@@ -29,6 +29,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCM_BGAP_CTRL
+value|0x448
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_TEMP_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_TEMP_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_BGOFF
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_SOC
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_CLRZ
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_CONTCONV
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCM_BGAP_EOCZ
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCM_USB_CTRL0
 value|0x620
 end_define
