@@ -22,6 +22,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCM_CTRL_STATUS
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCM_USB_CTRL0
 value|0x620
 end_define
