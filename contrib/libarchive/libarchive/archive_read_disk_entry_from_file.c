@@ -2883,6 +2883,10 @@ break|break;
 block|}
 block|}
 comment|/* 		 * Libarchive stores "flag" (NFSv4 inheritance bits) 		 * in the ae_perm bitmap. 		 */
+comment|// XXX acl_get_flagset_np on FreeBSD returns EINVAL for
+comment|// non-NFSv4 ACLs
+name|r
+operator|=
 name|acl_get_flagset_np
 argument_list|(
 name|acl_entry
@@ -2891,6 +2895,13 @@ operator|&
 name|acl_flagset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -2944,6 +2955,7 @@ index|]
 operator|.
 name|archive_inherit
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

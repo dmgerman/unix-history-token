@@ -8336,7 +8336,7 @@ name|strlen
 argument_list|(
 name|tail
 argument_list|)
-operator|<=
+operator|<
 name|PATH_MAX
 condition|)
 return|return;
@@ -8379,7 +8379,7 @@ name|strlen
 argument_list|(
 name|tail
 argument_list|)
-operator|>
+operator|>=
 name|PATH_MAX
 condition|)
 block|{
@@ -10950,7 +10950,18 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
+block|{
 break|break;
+block|}
+else|else
+block|{
+comment|/* Note: This effectively disables deep directory 				 * support when security checks are enabled. 				 * Otherwise, very long pathnames that trigger 				 * an error here could evade the sandbox. 				 * TODO: We could do better, but it would probably 				 * require merging the symlink checks with the 				 * deep-directory editing. */
+return|return
+operator|(
+name|ARCHIVE_FAILED
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
