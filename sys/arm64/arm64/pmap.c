@@ -12289,6 +12289,9 @@ argument_list|,
 name|l2
 argument_list|,
 name|va
+operator|&
+operator|~
+name|L2_OFFSET
 argument_list|,
 operator|&
 name|lock
@@ -12298,6 +12301,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|l3
+operator|=
+operator|&
+name|l3
+index|[
+name|pmap_l3_index
+argument_list|(
+name|va
+argument_list|)
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|va
@@ -13335,19 +13349,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|lvl
-operator|==
-literal|2
-argument_list|,
-operator|(
-literal|"Invalid pde level %d"
-operator|,
-name|lvl
-operator|)
-argument_list|)
-expr_stmt|;
 name|pmap_promote_l2
 argument_list|(
 name|pmap
