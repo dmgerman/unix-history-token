@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_ifndef
@@ -725,6 +725,15 @@ parameter_list|,
 name|zpool_iter_f
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zpool_skip_pool
+parameter_list|(
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1625,6 +1634,17 @@ specifier|extern
 name|zpool_handle_t
 modifier|*
 name|zfs_get_pool_handle
+parameter_list|(
+specifier|const
+name|zfs_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|zfs_get_pool_name
 parameter_list|(
 specifier|const
 name|zfs_handle_t
