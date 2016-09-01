@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -134,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
@@ -193,6 +205,58 @@ name|lc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lro
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+literal|0
+argument_list|,
+literal|"TCP LRO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|tcp_lro_entries
+init|=
+name|TCP_LRO_ENTRIES
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_inet_tcp_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|entries
+argument_list|,
+name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+operator|&
+name|tcp_lro_entries
+argument_list|,
+literal|0
+argument_list|,
+literal|"default number of LRO entries"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -266,7 +330,7 @@ name|lc
 argument_list|,
 name|NULL
 argument_list|,
-name|TCP_LRO_ENTRIES
+name|tcp_lro_entries
 argument_list|,
 literal|0
 argument_list|)
