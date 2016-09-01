@@ -92,18 +92,6 @@ begin_comment
 comment|/*  * The xl driver by default strips CRCs and we do not override it.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|ixl_rx_miss
-decl_stmt|,
-name|ixl_rx_miss_bufs
-decl_stmt|,
-name|ixl_crcstrip
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if

@@ -1215,40 +1215,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Fix when building as a standalone module when netmap is enabled */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEV_NETMAP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NETMAP_IXL_MAIN
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|ixl_rx_miss
-decl_stmt|,
-name|ixl_rx_miss_bufs
-decl_stmt|,
-name|ixl_crcstrip
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*********************************************************************  *  Device identification routine  *  *  ixlv_probe determines if the driver should be loaded on  *  the hardware based on PCI vendor/device id of the device.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
