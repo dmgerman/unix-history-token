@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright 2016 Joyent, Inc.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright 2016 Joyent, Inc.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -1762,6 +1762,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|write_inuse_diffs_one
@@ -1772,6 +1773,9 @@ name|di
 argument_list|,
 name|o
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

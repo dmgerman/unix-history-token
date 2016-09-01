@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -1804,6 +1804,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|rc
 operator|=
 name|is_shared
@@ -1816,6 +1817,9 @@ name|mountpoint
 argument_list|,
 name|proto
 argument_list|)
+operator|)
+operator|!=
+name|SHARED_NOT_SHARED
 condition|)
 block|{
 if|if

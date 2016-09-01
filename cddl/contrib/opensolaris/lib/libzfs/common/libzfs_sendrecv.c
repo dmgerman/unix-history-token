@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_include
@@ -6172,6 +6172,7 @@ name|parsable
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|pthread_create
@@ -6186,6 +6187,9 @@ argument_list|,
 operator|&
 name|pa
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|zfs_close
@@ -8627,12 +8631,16 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|pipe
 argument_list|(
 name|pipefd
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|zfs_error_aux
@@ -8687,6 +8695,7 @@ name|zfs_hdl
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|pthread_create
@@ -8701,6 +8710,9 @@ argument_list|,
 operator|&
 name|dda
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(

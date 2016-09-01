@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_include
@@ -848,6 +848,8 @@ literal|"ONLINE"
 argument_list|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -2949,6 +2951,24 @@ name|error
 goto|;
 block|}
 break|break;
+default|default:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"property '%s'(%d) not defined"
+argument_list|)
+argument_list|,
+name|propname
+argument_list|,
+name|prop
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 return|return
@@ -4327,6 +4347,22 @@ name|TEXT_DOMAIN
 argument_list|,
 literal|"multiple '@' delimiters in name"
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"(%d) not defined"
+argument_list|)
+argument_list|,
+name|why
 argument_list|)
 expr_stmt|;
 break|break;
