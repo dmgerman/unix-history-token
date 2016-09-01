@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -22,19 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/dmu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fs/zfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/zfs_ioctl.h>
 end_include
 
 begin_include
@@ -47,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<sys/nvpair.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dmu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_ioctl.h>
 end_include
 
 begin_include
@@ -235,7 +235,7 @@ decl_stmt|;
 name|char
 name|zfs_name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zfs_type_t
@@ -296,7 +296,7 @@ decl_stmt|;
 name|char
 name|zpool_name
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int

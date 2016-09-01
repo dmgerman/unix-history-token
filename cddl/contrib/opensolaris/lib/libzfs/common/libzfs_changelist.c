@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_include
@@ -905,7 +905,7 @@ decl_stmt|;
 name|char
 name|newname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 for|for

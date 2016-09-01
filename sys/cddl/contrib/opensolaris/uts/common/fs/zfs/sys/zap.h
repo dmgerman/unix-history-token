@@ -1012,7 +1012,7 @@ comment|/* no sign extension for<8byte ints */
 name|char
 name|za_name
 index|[
-name|MAXNAMELEN
+name|ZAP_MAXNAMELEN
 index|]
 decl_stmt|;
 block|}

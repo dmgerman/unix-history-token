@@ -94,14 +94,6 @@ directive|endif
 comment|/*  * Miscellaneous ZFS constants  */
 define|#
 directive|define
-name|ZFS_MAXNAMELEN
-value|MAXNAMELEN
-define|#
-directive|define
-name|ZPOOL_MAXNAMELEN
-value|MAXNAMELEN
-define|#
-directive|define
 name|ZFS_MAXPROPLEN
 value|MAXPATHLEN
 define|#
