@@ -3894,13 +3894,6 @@ name|channel_halts
 operator|++
 expr_stmt|;
 comment|/* 	 * Fatal programming error on this DMA channel.  Flush any outstanding 	 * work with error status and restart the engine. 	 */
-name|ioat_log_message
-argument_list|(
-literal|0
-argument_list|,
-literal|"Channel halted due to fatal programming error\n"
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3932,6 +3925,12 @@ argument_list|,
 name|IOAT_CHANERR_OFFSET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|<=
+name|g_ioat_debug_level
+condition|)
 name|ioat_halted_debug
 argument_list|(
 name|ioat
