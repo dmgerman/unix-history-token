@@ -504,6 +504,58 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Minimum value for rm_dataoffset, rm_oobdataoffset, and  * rm_pktinfooffset.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PACKET_MSG_OFFSET_MIN
+define|\
+value|(sizeof(struct rndis_packet_msg) -	\ 	 __offsetof(struct rndis_packet_msg, rm_dataoffset))
+end_define
+
+begin_comment
+comment|/* Per-packet-info for RNDIS data message */
+end_comment
+
+begin_struct
+struct|struct
+name|rndis_pktinfo
+block|{
+name|uint32_t
+name|rm_size
+decl_stmt|;
+name|uint32_t
+name|rm_type
+decl_stmt|;
+name|uint32_t
+name|rm_pktinfooffset
+decl_stmt|;
+name|uint8_t
+name|rm_data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PKTINFO_OFFSET
+define|\
+value|__offsetof(struct rndis_pktinfo, rm_data[0])
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PKTINFO_ALIGN
+value|4
+end_define
+
+begin_comment
 comment|/*  * RNDIS control messages  */
 end_comment
 
