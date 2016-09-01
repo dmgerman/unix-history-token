@@ -5462,6 +5462,17 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"$(%s_OBJPATHS): .NOMETA\n"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
