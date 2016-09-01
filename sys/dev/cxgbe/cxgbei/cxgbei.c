@@ -707,13 +707,6 @@ end_function
 begin_define
 define|#
 directive|define
-name|PPOD_SIZE
-value|sizeof(struct pagepod)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ULPMEM_IDATA_MAX_NPPODS
 value|1
 end_define

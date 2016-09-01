@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -5580,10 +5580,11 @@ case|case
 name|DATA_TYPE_BOOLEAN_VALUE
 case|:
 block|{
+name|int32_t
+name|val_arg
+decl_stmt|;
 name|boolean_t
 name|val
-decl_stmt|,
-name|val_arg
 decl_stmt|;
 comment|/* scanf boolean_t from value and check for match */
 name|sr
@@ -5639,7 +5640,8 @@ block|{
 name|boolean_t
 modifier|*
 name|val_array
-decl_stmt|,
+decl_stmt|;
+name|int32_t
 name|val_arg
 decl_stmt|;
 comment|/* check indexed value of array for match */

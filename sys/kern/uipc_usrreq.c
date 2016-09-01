@@ -1064,8 +1064,9 @@ name|void
 name|unp_dispose
 parameter_list|(
 name|struct
-name|mbuf
+name|socket
 modifier|*
+name|so
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1073,12 +1074,11 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|unp_dispose_so
+name|unp_dispose_mbuf
 parameter_list|(
 name|struct
-name|socket
+name|mbuf
 modifier|*
-name|so
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1453,7 +1453,7 @@ block|,
 operator|.
 name|dom_dispose
 operator|=
-name|unp_dispose_so
+name|unp_dispose
 block|,
 operator|.
 name|dom_protosw
@@ -4676,7 +4676,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|unp_dispose
+name|unp_dispose_mbuf
 argument_list|(
 name|control
 argument_list|)
@@ -10947,7 +10947,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|unp_dispose
+name|unp_dispose_mbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -10976,7 +10976,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|unp_dispose_so
+name|unp_dispose
 parameter_list|(
 name|struct
 name|socket
@@ -11008,7 +11008,7 @@ expr_stmt|;
 name|UNP_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
-name|unp_dispose
+name|unp_dispose_mbuf
 argument_list|(
 name|so
 operator|->

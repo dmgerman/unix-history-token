@@ -1030,7 +1030,7 @@ argument_list|()
 expr_stmt|;
 name|i81342_sdram_bounds
 argument_list|(
-name|obio_bs_tag
+name|arm_base_bs_tag
 argument_list|,
 name|IOP34X_VADDR
 argument_list|,

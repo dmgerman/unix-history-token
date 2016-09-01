@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_ifndef
@@ -415,11 +415,6 @@ define|#
 directive|define
 name|ZFS_SA_ATTRS
 value|"SA_ATTRS"
-comment|/*  * Path component length  *  * The generic fs code uses MAXNAMELEN to represent  * what the largest component length is.  Unfortunately,  * this length includes the terminating NULL.  ZFS needs  * to tell the users via pathconf() and statvfs() what the  * true maximum length of a component is, excluding the NULL.  */
-define|#
-directive|define
-name|ZFS_MAXNAMELEN
-value|(MAXNAMELEN - 1)
 comment|/*  * Convert mode bits (zp_mode) to BSD-style DT_* values for storing in  * the directory entries.  */
 ifndef|#
 directive|ifndef

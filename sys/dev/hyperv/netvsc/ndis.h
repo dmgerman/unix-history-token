@@ -763,6 +763,87 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Per-packet-info  */
+end_comment
+
+begin_comment
+comment|/* VLAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_SIZE
+value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_PRI_MASK
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_CFI_MASK
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_ID_MASK
+value|0xfff0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_MAKE
+parameter_list|(
+name|id
+parameter_list|,
+name|pri
+parameter_list|,
+name|cfi
+parameter_list|)
+define|\
+value|(((pri)& NVIS_VLAN_INFO_PRI_MASK) |	\ 	 (((cfi)& 0x1)<< 3) | (((id)& 0xfff)<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_ID
+parameter_list|(
+name|inf
+parameter_list|)
+value|(((inf)& NDIS_VLAN_INFO_ID_MASK)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_CFI
+parameter_list|(
+name|inf
+parameter_list|)
+value|(((inf)& NDIS_VLAN_INFO_CFI_MASK)>> 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_VLAN_INFO_PRI
+parameter_list|(
+name|inf
+parameter_list|)
+value|((inf)& NDIS_VLAN_INFO_PRI_MASK)
+end_define
+
 begin_endif
 endif|#
 directive|endif

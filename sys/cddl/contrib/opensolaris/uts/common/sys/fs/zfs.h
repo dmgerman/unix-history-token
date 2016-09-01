@@ -128,6 +128,7 @@ directive|define
 name|ZFS_TYPE_DATASET
 define|\
 value|(ZFS_TYPE_FILESYSTEM | ZFS_TYPE_VOLUME | ZFS_TYPE_SNAPSHOT)
+comment|/*  * All of these include the terminating NUL byte.  */
 define|#
 directive|define
 name|ZAP_MAXNAMELEN
@@ -140,6 +141,10 @@ define|#
 directive|define
 name|ZAP_OLDMAXVALUELEN
 value|1024
+define|#
+directive|define
+name|ZFS_MAX_DATASET_NAME_LEN
+value|256
 comment|/*  * Dataset properties are identified by these constants and must be added to  * the end of this list to ensure that external consumers are not affected  * by the change. If you make any changes to this list, be sure to update  * the property table in usr/src/common/zfs/zfs_prop.c.  */
 typedef|typedef
 enum|enum

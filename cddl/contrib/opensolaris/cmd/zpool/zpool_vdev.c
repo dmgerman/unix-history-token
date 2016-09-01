@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
 end_comment
 
 begin_comment
@@ -2188,12 +2188,6 @@ argument_list|)
 operator|==
 literal|0
 argument_list|)
-expr_stmt|;
-name|lastrep
-operator|.
-name|zprl_type
-operator|=
-name|NULL
 expr_stmt|;
 for|for
 control|(

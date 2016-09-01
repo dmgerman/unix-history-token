@@ -530,6 +530,14 @@ name|ESC_ZFS_VDEV_REMOVE
 value|"ESC_ZFS_vdev_remove"
 define|#
 directive|define
+name|ESC_ZFS_VDEV_REMOVE_AUX
+value|"ESC_ZFS_vdev_remove_aux"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_REMOVE_DEV
+value|"ESC_ZFS_vdev_remove_dev"
+define|#
+directive|define
 name|ESC_ZFS_POOL_CREATE
 value|"ESC_ZFS_pool_create"
 define|#

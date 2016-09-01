@@ -133,6 +133,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|netproto
+init|=
+name|NET_NONE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Network prototol */
+end_comment
+
+begin_decl_stmt
 name|char
 name|ifname
 index|[
@@ -198,6 +210,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* gateway ip address */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|in_addr
+name|tftpip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TFTP ip address */
 end_comment
 
 begin_decl_stmt

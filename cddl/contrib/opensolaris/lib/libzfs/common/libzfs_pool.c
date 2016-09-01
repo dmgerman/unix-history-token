@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Nexenta Systems, Inc.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_include
@@ -848,6 +848,8 @@ literal|"ONLINE"
 argument_list|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -1789,7 +1791,7 @@ block|{
 name|char
 name|bootfs
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 return|return
@@ -2948,6 +2950,24 @@ goto|goto
 name|error
 goto|;
 block|}
+break|break;
+default|default:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"property '%s'(%d) not defined"
+argument_list|)
+argument_list|,
+name|propname
+argument_list|,
+name|prop
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4327,6 +4347,22 @@ name|TEXT_DOMAIN
 argument_list|,
 literal|"multiple '@' delimiters in name"
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"(%d) not defined"
+argument_list|)
+argument_list|,
+name|why
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8319,6 +8355,35 @@ argument_list|(
 name|hdl
 argument_list|,
 name|error
+argument_list|,
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENAMETOOLONG
+case|:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"new name of at least one dataset is longer than "
+literal|"the maximum allowable length"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|zfs_error
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_NAMETOOLONG
 argument_list|,
 name|desc
 argument_list|)
@@ -17871,7 +17936,7 @@ decl_stmt|;
 name|char
 name|dsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 if|if
@@ -19080,7 +19145,7 @@ decl_stmt|;
 name|char
 name|poolname
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -19220,7 +19285,7 @@ name|p
 operator|-
 name|volname
 operator|>=
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 name|zfs_error_aux

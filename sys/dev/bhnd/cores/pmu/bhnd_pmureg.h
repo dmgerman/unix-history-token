@@ -51,7 +51,7 @@ parameter_list|,
 name|_field
 parameter_list|)
 define|\
-value|(((_value)& _field ## _MASK)>> _field ## _SHIFT)
+value|(((_value)<< _field ## _SHIFT)& _field ## _MASK)
 end_define
 
 begin_define

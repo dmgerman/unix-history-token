@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -916,9 +916,12 @@ name|TRAVERSE_HARD
 expr_stmt|;
 name|zfs_dbgmsg
 argument_list|(
-literal|"bptree index %d: traversing from min_txg=%lld "
+literal|"bptree index %lld: traversing from min_txg=%lld "
 literal|"bookmark %lld/%lld/%lld/%lld"
 argument_list|,
+operator|(
+name|longlong_t
+operator|)
 name|i
 argument_list|,
 operator|(

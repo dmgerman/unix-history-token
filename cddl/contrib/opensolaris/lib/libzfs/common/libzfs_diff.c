@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright 2016 Joyent, Inc.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2015 by Delphix. All rights reserved.  * Copyright 2016 Joyent, Inc.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -1762,6 +1762,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|write_inuse_diffs_one
@@ -1772,6 +1773,9 @@ name|di
 argument_list|,
 name|o
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3279,7 +3283,7 @@ comment|/* 		 * not the same dataset name, might be okay if 		 * tosnap is a clo
 name|char
 name|origin
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zprop_source_t

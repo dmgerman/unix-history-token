@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2015, Joyent, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2015, Joyent, Inc.  */
 end_comment
 
 begin_include
@@ -150,6 +150,23 @@ operator|==
 name|PROP_TYPE_STRING
 condition|)
 block|{
+if|if
+condition|(
+name|zfs_prop_default_string
+argument_list|(
+name|prop
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENOENT
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|intsz
@@ -4897,7 +4914,7 @@ decl_stmt|;
 name|char
 name|setpoint
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|VERIFY
