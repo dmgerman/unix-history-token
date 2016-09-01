@@ -636,6 +636,9 @@ name|base
 init|=
 name|mp_itom
 argument_list|(
+operator|(
+name|short
+operator|)
 name|BASE
 argument_list|)
 decl_stmt|;

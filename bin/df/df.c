@@ -697,6 +697,12 @@ break|break;
 case|case
 literal|'l'
 case|:
+comment|/* Ignore duplicate -l */
+if|if
+condition|(
+name|lflag
+condition|)
+break|break;
 if|if
 condition|(
 name|vfslist

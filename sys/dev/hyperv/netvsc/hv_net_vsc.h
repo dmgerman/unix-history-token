@@ -814,11 +814,10 @@ block|{
 name|uint8_t
 name|mac_addr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-comment|/* Assumption unsigned long */
-name|uint8_t
+name|uint32_t
 name|link_state
 decl_stmt|;
 block|}
@@ -1207,11 +1206,6 @@ name|int
 name|temp_unusable
 decl_stmt|;
 name|struct
-name|rndis_device_
-modifier|*
-name|rndis_dev
-decl_stmt|;
-name|struct
 name|vmbus_channel
 modifier|*
 name|hn_prichan
@@ -1388,9 +1382,6 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|boolean_t
-name|destroy_channel
 parameter_list|)
 function_decl|;
 end_function_decl

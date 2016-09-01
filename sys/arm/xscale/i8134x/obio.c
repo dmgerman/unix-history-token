@@ -85,12 +85,6 @@ directive|include
 file|<arm/xscale/i8134x/obiovar.h>
 end_include
 
-begin_decl_stmt
-name|bus_space_tag_t
-name|obio_bs_tag
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -127,15 +121,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|obio_bs_tag
-operator|=
-name|arm_base_bs_tag
-expr_stmt|;
 name|sc
 operator|->
 name|oba_st
 operator|=
-name|obio_bs_tag
+name|arm_base_bs_tag
 expr_stmt|;
 name|sc
 operator|->

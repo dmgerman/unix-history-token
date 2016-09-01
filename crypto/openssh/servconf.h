@@ -745,6 +745,9 @@ decl_stmt|;
 name|int
 name|fingerprint_hash
 decl_stmt|;
+name|int
+name|use_blacklist
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;

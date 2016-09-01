@@ -180,6 +180,12 @@ directive|include
 file|"buffer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_comment
 comment|/* import */
 end_comment
@@ -1343,6 +1349,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Access denied for user %s by PAM account "
@@ -1617,6 +1628,11 @@ name|pw
 operator|=
 name|fakepw
 argument_list|()
+expr_stmt|;
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Configuration may have changed as a result of Match */

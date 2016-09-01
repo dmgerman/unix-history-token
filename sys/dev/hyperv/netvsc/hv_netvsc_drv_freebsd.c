@@ -448,12 +448,15 @@ name|HN_TX_DATA_SEGSIZE
 value|PAGE_SIZE
 end_define
 
+begin_comment
+comment|/* -1 for RNDIS packet message */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HN_TX_DATA_SEGCNT_MAX
-define|\
-value|(NETVSC_PACKET_MAXPAGE - HV_RF_NUM_TX_RESERVED_PAGE_BUFS)
+value|(NETVSC_PACKET_MAXPAGE - 1)
 end_define
 
 begin_define
@@ -3077,8 +3080,6 @@ comment|/* 	 * XXXKYS:  Need to stop outgoing traffic and unregister 	 * the net
 name|hv_rf_on_device_remove
 argument_list|(
 name|sc
-argument_list|,
-name|HV_RF_NV_DESTROY_CHANNEL
 argument_list|)
 expr_stmt|;
 name|hn_stop_tx_tasks
@@ -4917,13 +4918,14 @@ name|m_head0
 operator|=
 name|m_head
 expr_stmt|;
+comment|/* +1 RNDIS packet message */
 name|txr
 operator|->
 name|hn_gpa_cnt
 operator|=
 name|nsegs
 operator|+
-name|HV_RF_NUM_TX_RESERVED_PAGE_BUFS
+literal|1
 expr_stmt|;
 comment|/* send packet with page buffer */
 name|txr
@@ -4968,7 +4970,7 @@ name|gpa_len
 operator|=
 name|rndis_msg_size
 expr_stmt|;
-comment|/* 	 * Fill the page buffers with mbuf info starting at index 	 * HV_RF_NUM_TX_RESERVED_PAGE_BUFS. 	 */
+comment|/* 	 * Fill the page buffers with mbuf info after the page 	 * buffer for RNDIS packet message. 	 */
 for|for
 control|(
 name|i
@@ -4995,7 +4997,7 @@ name|hn_gpa
 index|[
 name|i
 operator|+
-name|HV_RF_NUM_TX_RESERVED_PAGE_BUFS
+literal|1
 index|]
 decl_stmt|;
 name|gpa
@@ -7182,8 +7184,6 @@ operator|=
 name|hv_rf_on_device_remove
 argument_list|(
 name|sc
-argument_list|,
-name|HV_RF_NV_RETAIN_CHANNEL
 argument_list|)
 expr_stmt|;
 if|if

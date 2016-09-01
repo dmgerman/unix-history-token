@@ -740,6 +740,9 @@ struct|struct
 name|sc_cnstate
 block|{
 name|u_char
+name|kbd_locked
+decl_stmt|;
+name|u_char
 name|kbd_opened
 decl_stmt|;
 name|u_char

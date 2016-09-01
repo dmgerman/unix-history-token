@@ -277,7 +277,7 @@ name|CRYPTO_SKIPJACK_CBC
 block|}
 block|,
 block|{
-literal|"aes"
+literal|"rij"
 block|,
 literal|0
 block|,
@@ -288,6 +288,20 @@ block|,
 literal|16
 block|,
 name|CRYPTO_RIJNDAEL128_CBC
+block|}
+block|,
+block|{
+literal|"aes"
+block|,
+literal|0
+block|,
+literal|16
+block|,
+literal|16
+block|,
+literal|16
+block|,
+name|CRYPTO_AES_CBC
 block|}
 block|,
 block|{
@@ -301,7 +315,7 @@ literal|24
 block|,
 literal|24
 block|,
-name|CRYPTO_RIJNDAEL128_CBC
+name|CRYPTO_AES_CBC
 block|}
 block|,
 block|{
@@ -315,7 +329,7 @@ literal|32
 block|,
 literal|32
 block|,
-name|CRYPTO_RIJNDAEL128_CBC
+name|CRYPTO_AES_CBC
 block|}
 block|,
 ifdef|#
@@ -411,7 +425,6 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -435,12 +448,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    des 3des (default) blowfish cast skipjack\n"
+literal|"    des 3des (default) blowfish cast skipjack rij\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    aes (aka rijndael) aes192 aes256 arc4\n"
+literal|"    aes aes192 aes256 arc4\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -465,7 +478,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"-d use specific device\n"
+literal|"-d use specific device, specify 'soft' for testing software implementations\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tNOTE: to use software you must set:\n\t sysctl kern.cryptodevallowsoft=1\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -498,7 +516,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alg
 modifier|*
@@ -552,7 +569,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alg
 modifier|*
@@ -611,14 +627,12 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|devcrypto
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
 name|int
 name|fd
 init|=
@@ -687,7 +701,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|crlookup
 parameter_list|(
@@ -701,6 +714,22 @@ name|struct
 name|crypt_find_op
 name|find
 decl_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|devname
+argument_list|,
+literal|"soft"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|CRYPTO_FLAG_SOFTWARE
+return|;
 name|find
 operator|.
 name|crid
@@ -756,7 +785,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*
@@ -766,7 +794,6 @@ name|int
 name|crid
 parameter_list|)
 block|{
-specifier|static
 name|struct
 name|crypt_find_op
 name|find
@@ -822,7 +849,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|crget
 parameter_list|(
@@ -883,7 +909,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 name|rdigit
 parameter_list|(
@@ -963,7 +988,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|runtest
 parameter_list|(
@@ -1916,7 +1940,6 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|resetstats
 parameter_list|()
@@ -2092,7 +2115,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|printt
 parameter_list|(
@@ -2203,7 +2225,6 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|void
 name|runtests
 parameter_list|(

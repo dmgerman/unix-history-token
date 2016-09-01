@@ -258,6 +258,18 @@ directive|include
 file|<dev/netmap/if_ixl_netmap.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|ixl_rx_miss
+decl_stmt|,
+name|ixl_rx_miss_bufs
+decl_stmt|,
+name|ixl_crcstrip
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

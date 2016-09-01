@@ -1264,9 +1264,10 @@ name|cpp_savedstate
 modifier|*
 name|savedstate
 decl_stmt|;
+comment|/* Next value of __COUNTER__ macro. */
 name|unsigned
 name|int
-name|nextcounter
+name|counter
 decl_stmt|;
 block|}
 struct|;

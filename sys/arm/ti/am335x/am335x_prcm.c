@@ -143,6 +143,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"am335x_scm.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2753,20 +2759,21 @@ block|{
 name|uint32_t
 name|ctrl_status
 decl_stmt|;
-comment|/* Read the input clock freq from the control module */
-comment|/* control_status reg (0x40) */
+comment|/* Read the input clock freq from the control module. */
 if|if
 condition|(
 name|ti_scm_reg_read_4
 argument_list|(
-literal|0x40
+name|SCM_CTRL_STATUS
 argument_list|,
 operator|&
 name|ctrl_status
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 switch|switch
 condition|(

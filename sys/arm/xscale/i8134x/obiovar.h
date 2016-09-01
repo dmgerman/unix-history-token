@@ -49,13 +49,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|bus_space_tag_t
-name|obio_bs_tag
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
