@@ -2791,21 +2791,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-modifier|*
-name|hv_get_ppi_data
-parameter_list|(
-name|rndis_packet
-modifier|*
-name|rpkt
-parameter_list|,
-name|uint32_t
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
