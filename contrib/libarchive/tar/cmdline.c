@@ -168,6 +168,14 @@ literal|'b'
 block|}
 block|,
 block|{
+literal|"blocking-factor"
+block|,
+literal|1
+block|,
+literal|'b'
+block|}
+block|,
+block|{
 literal|"bunzip2"
 block|,
 literal|0

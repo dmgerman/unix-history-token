@@ -30560,7 +30560,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*    * Eigth header.    */
+comment|/*    * Eighth header.    */
 name|assertA
 argument_list|(
 literal|0
