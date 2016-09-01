@@ -665,7 +665,7 @@ name|info
 operator|->
 name|vlan_info
 operator|=
-name|NULL
+name|HN_NDIS_VLAN_INFO_INVALID
 expr_stmt|;
 name|info
 operator|->
@@ -886,10 +886,7 @@ name|__predict_false
 argument_list|(
 name|dlen
 operator|<
-sizeof|sizeof
-argument_list|(
-name|ndis_8021q_info
-argument_list|)
+name|NDIS_VLAN_INFO_SIZE
 argument_list|)
 condition|)
 return|return
@@ -901,7 +898,15 @@ name|info
 operator|->
 name|vlan_info
 operator|=
+operator|*
+operator|(
+operator|(
+specifier|const
+name|uint32_t
+operator|*
+operator|)
 name|data
+operator|)
 expr_stmt|;
 name|mask
 operator||=
