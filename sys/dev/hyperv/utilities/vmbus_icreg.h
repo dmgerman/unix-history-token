@@ -249,6 +249,42 @@ define|\
 value|__offsetof(struct vmbus_icmsg_heartbeat, ic_rsvd[0])
 end_define
 
+begin_struct
+struct|struct
+name|vmbus_icmsg_shutdown
+block|{
+name|struct
+name|vmbus_icmsg_hdr
+name|ic_hdr
+decl_stmt|;
+name|uint32_t
+name|ic_code
+decl_stmt|;
+name|uint32_t
+name|ic_timeo
+decl_stmt|;
+name|uint32_t
+name|ic_haltflags
+decl_stmt|;
+name|uint8_t
+name|ic_msg
+index|[
+literal|2048
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VMBUS_ICMSG_SHUTDOWN_SIZE_MIN
+define|\
+value|__offsetof(struct vmbus_icmsg_shutdown, ic_msg[0])
+end_define
+
 begin_endif
 endif|#
 directive|endif
