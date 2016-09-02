@@ -872,7 +872,7 @@ name|rm_type
 condition|)
 block|{
 case|case
-name|ieee_8021q_info
+name|NDIS_PKTINFO_TYPE_VLAN
 case|:
 if|if
 condition|(
@@ -908,7 +908,7 @@ name|HV_RF_RECVINFO_VLAN
 expr_stmt|;
 break|break;
 case|case
-name|tcpip_chksum_info
+name|NDIS_PKTINFO_TYPE_CSUM
 case|:
 if|if
 condition|(
@@ -944,7 +944,7 @@ name|HV_RF_RECVINFO_CSUM
 expr_stmt|;
 break|break;
 case|case
-name|nbl_hash_value
+name|HN_NDIS_PKTINFO_TYPE_HASHVAL
 case|:
 if|if
 condition|(
@@ -980,7 +980,7 @@ name|HV_RF_RECVINFO_HASHVAL
 expr_stmt|;
 break|break;
 case|case
-name|nbl_hash_info
+name|HN_NDIS_PKTINFO_TYPE_HASHINF
 case|:
 if|if
 condition|(
