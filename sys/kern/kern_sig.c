@@ -972,7 +972,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_KILL
+name|SIGPROP_KILL
 value|0x01
 end_define
 
@@ -983,7 +983,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_CORE
+name|SIGPROP_CORE
 value|0x02
 end_define
 
@@ -994,7 +994,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_STOP
+name|SIGPROP_STOP
 value|0x04
 end_define
 
@@ -1005,7 +1005,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 value|0x08
 end_define
 
@@ -1016,7 +1016,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 value|0x10
 end_define
 
@@ -1027,7 +1027,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_CONT
+name|SIGPROP_CONT
 value|0x20
 end_define
 
@@ -1038,7 +1038,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_CANTMASK
+name|SIGPROP_CANTMASK
 value|0x40
 end_define
 
@@ -1055,123 +1055,123 @@ name|NSIG
 index|]
 init|=
 block|{
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGHUP */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGINT */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGQUIT */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGILL */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGTRAP */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGABRT */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGEMT */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGFPE */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGKILL */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGBUS */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGSEGV */
-name|SA_KILL
+name|SIGPROP_KILL
 operator||
-name|SA_CORE
+name|SIGPROP_CORE
 block|,
 comment|/* SIGSYS */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGPIPE */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGALRM */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGTERM */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 block|,
 comment|/* SIGURG */
-name|SA_STOP
+name|SIGPROP_STOP
 block|,
 comment|/* SIGSTOP */
-name|SA_STOP
+name|SIGPROP_STOP
 operator||
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 block|,
 comment|/* SIGTSTP */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 operator||
-name|SA_CONT
+name|SIGPROP_CONT
 block|,
 comment|/* SIGCONT */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 block|,
 comment|/* SIGCHLD */
-name|SA_STOP
+name|SIGPROP_STOP
 operator||
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 block|,
 comment|/* SIGTTIN */
-name|SA_STOP
+name|SIGPROP_STOP
 operator||
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 block|,
 comment|/* SIGTTOU */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 block|,
 comment|/* SIGIO */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGXCPU */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGXFSZ */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGVTALRM */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGPROF */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 block|,
 comment|/* SIGWINCH  */
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 block|,
 comment|/* SIGINFO */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGUSR1 */
-name|SA_KILL
+name|SIGPROP_KILL
 block|,
 comment|/* SIGUSR2 */
 block|}
@@ -3892,7 +3892,7 @@ argument_list|(
 name|sig
 argument_list|)
 operator|&
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 operator|&&
 name|ps
 operator|->
@@ -4898,7 +4898,7 @@ argument_list|(
 name|i
 argument_list|)
 operator|&
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 operator|&&
 name|i
 operator|!=
@@ -4977,7 +4977,7 @@ argument_list|(
 name|sig
 argument_list|)
 operator|&
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 operator|)
 operator|!=
 literal|0
@@ -5113,7 +5113,7 @@ argument_list|(
 name|sig
 argument_list|)
 operator|&
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 operator|)
 operator|!=
 literal|0
@@ -11060,7 +11060,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_CONT
+name|SIGPROP_CONT
 condition|)
 name|sigqueue_delete_stopmask_proc
 argument_list|(
@@ -11072,7 +11072,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_STOP
+name|SIGPROP_STOP
 condition|)
 block|{
 comment|/* 		 * If sending a tty stop signal to a member of an orphaned 		 * process group, discard the signal here if the action 		 * is default; don't stop the process below if sleeping, 		 * and don't clear any pending SIGCONT. 		 */
@@ -11081,7 +11081,7 @@ condition|(
 operator|(
 name|prop
 operator|&
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 operator|)
 operator|&&
 operator|(
@@ -11209,7 +11209,7 @@ operator|(
 operator|(
 name|prop
 operator|&
-name|SA_CONT
+name|SIGPROP_CONT
 operator|)
 operator|&&
 operator|(
@@ -11323,7 +11323,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_CONT
+name|SIGPROP_CONT
 condition|)
 block|{
 comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
@@ -11468,7 +11468,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_STOP
+name|SIGPROP_STOP
 condition|)
 block|{
 comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
@@ -11611,7 +11611,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_STOP
+name|SIGPROP_STOP
 condition|)
 block|{
 if|if
@@ -11846,7 +11846,7 @@ operator|&&
 operator|(
 name|prop
 operator|&
-name|SA_KILL
+name|SIGPROP_KILL
 operator|)
 operator|!=
 literal|0
@@ -11900,7 +11900,7 @@ condition|(
 operator|(
 name|prop
 operator|&
-name|SA_CONT
+name|SIGPROP_CONT
 operator|)
 operator|&&
 name|action
@@ -11947,7 +11947,7 @@ condition|(
 operator|(
 name|prop
 operator|&
-name|SA_STOP
+name|SIGPROP_STOP
 operator|)
 operator|!=
 literal|0
@@ -13791,7 +13791,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_STOP
+name|SIGPROP_STOP
 condition|)
 block|{
 if|if
@@ -13817,7 +13817,7 @@ literal|0
 operator|&&
 name|prop
 operator|&
-name|SA_TTYSTOP
+name|SIGPROP_TTYSTOP
 operator|)
 condition|)
 break|break;
@@ -13953,7 +13953,7 @@ if|if
 condition|(
 name|prop
 operator|&
-name|SA_IGNORE
+name|SIGPROP_IGNORE
 condition|)
 block|{
 comment|/* 				 * Except for SIGCONT, shouldn't get here. 				 * Default action is to ignore; drop it. 				 */
@@ -13979,7 +13979,7 @@ condition|(
 operator|(
 name|prop
 operator|&
-name|SA_CONT
+name|SIGPROP_CONT
 operator|)
 operator|==
 literal|0
@@ -14670,7 +14670,7 @@ argument_list|(
 name|sig
 argument_list|)
 operator|&
-name|SA_CORE
+name|SIGPROP_CORE
 operator|)
 operator|&&
 name|thread_single

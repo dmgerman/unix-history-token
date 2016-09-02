@@ -707,7 +707,7 @@ comment|/* !illumos */
 end_comment
 
 begin_comment
-comment|/*  * Normally, we don't allow the last 3.2% (1/(2^spa_slop_shift)) of space in  * the pool to be consumed.  This ensures that we don't run the pool  * completely out of space, due to unaccounted changes (e.g. to the MOS).  * It also limits the worst-case time to allocate space.  If we have  * less than this amount of free space, most ZPL operations (e.g. write,  * create) will return ENOSPC.  *  * Certain operations (e.g. file removal, most administrative actions) can  * use half the slop space.  They will only return ENOSPC if less than half  * the slop space is free.  Typically, once the pool has less than the slop  * space free, the user will use these operations to free up space in the pool.  * These are the operations that call dsl_pool_adjustedsize() with the netfree  * argument set to TRUE.  *  * A very restricted set of operations are always permitted, regardless of  * the amount of free space.  These are the operations that call  * dsl_sync_task(ZFS_SPACE_CHECK_NONE), e.g. "zfs destroy".  If these  * operations result in a net increase in the amount of space used,  * it is possible to run the pool completely out of space, causing it to  * be permanently read-only.  *  * See also the comments in zfs_space_check_t.  */
+comment|/*  * Normally, we don't allow the last 3.2% (1/(2^spa_slop_shift)) of space in  * the pool to be consumed.  This ensures that we don't run the pool  * completely out of space, due to unaccounted changes (e.g. to the MOS).  * It also limits the worst-case time to allocate space.  If we have  * less than this amount of free space, most ZPL operations (e.g. write,  * create) will return ENOSPC.  *  * Certain operations (e.g. file removal, most administrative actions) can  * use half the slop space.  They will only return ENOSPC if less than half  * the slop space is free.  Typically, once the pool has less than the slop  * space free, the user will use these operations to free up space in the pool.  * These are the operations that call dsl_pool_adjustedsize() with the netfree  * argument set to TRUE.  *  * A very restricted set of operations are always permitted, regardless of  * the amount of free space.  These are the operations that call  * dsl_sync_task(ZFS_SPACE_CHECK_NONE), e.g. "zfs destroy".  If these  * operations result in a net increase in the amount of space used,  * it is possible to run the pool completely out of space, causing it to  * be permanently read-only.  *  * Note that on very small pools, the slop space will be larger than  * 3.2%, in an effort to have it be at least spa_min_slop (128MB),  * but we never allow it to be more than half the pool size.  *  * See also the comments in zfs_space_check_t.  */
 end_comment
 
 begin_decl_stmt
@@ -735,6 +735,39 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Shift value of reserved space (1/(2^spa_slop_shift))."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|uint64_t
+name|spa_min_slop
+init|=
+literal|128
+operator|*
+literal|1024
+operator|*
+literal|1024
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|spa_min_slop
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|spa_min_slop
+argument_list|,
+literal|0
+argument_list|,
+literal|"Minimal value of reserved space"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6235,7 +6268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the amount of slop space in bytes.  It is 1/32 of the pool (3.2%),  * or at least 32MB.  *  * See the comment above spa_slop_shift for details.  */
+comment|/*  * Return the amount of slop space in bytes.  It is 1/32 of the pool (3.2%),  * or at least 128MB, unless that would cause it to be more than half the  * pool size.  *  * See the comment above spa_slop_shift for details.  */
 end_comment
 
 begin_function
@@ -6263,9 +6296,14 @@ name|space
 operator|>>
 name|spa_slop_shift
 argument_list|,
-name|SPA_MINDEVSIZE
+name|MIN
+argument_list|(
+name|space
 operator|>>
 literal|1
+argument_list|,
+name|spa_min_slop
+argument_list|)
 argument_list|)
 operator|)
 return|;

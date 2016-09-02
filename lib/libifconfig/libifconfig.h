@@ -19,7 +19,7 @@ name|IOCTL
 block|,
 name|SOCKET
 block|}
-name|libifc_errtype
+name|ifconfig_errtype
 typedef|;
 end_typedef
 
@@ -29,21 +29,21 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|libifc_handle
+name|ifconfig_handle
 struct_decl|;
 end_struct_decl
 
 begin_typedef
 typedef|typedef
 name|struct
-name|libifc_handle
-name|libifc_handle_t
+name|ifconfig_handle
+name|ifconfig_handle_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|libifc_capabilities
+name|ifconfig_capabilities
 block|{
 comment|/** Current capabilities (ifconfig prints this as 'options')*/
 name|int
@@ -58,13 +58,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/** Retrieves a new state object for use in other API calls.  * Example usage:  *{@code  * // Create state object  * libifc_handle_t *lifh = libifc_open();  *  * // Do stuff with it  *  * // Dispose of the state object  * libifc_close(lifh);  * lifh = NULL;  *}  */
+comment|/** Retrieves a new state object for use in other API calls.  * Example usage:  *{@code  * // Create state object  * ifconfig_handle_t *lifh = ifconfig_open();  *  * // Do stuff with it  *  * // Dispose of the state object  * ifconfig_close(lifh);  * lifh = NULL;  *}  */
 end_comment
 
 begin_function_decl
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
-name|libifc_open
+name|ifconfig_open
 parameter_list|(
 name|void
 parameter_list|)
@@ -72,14 +72,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Frees resources held in the provided state object.  * @param h The state object to close.  * @see #libifc_open(void)  */
+comment|/** Frees resources held in the provided state object.  * @param h The state object to close.  * @see #ifconfig_open(void)  */
 end_comment
 
 begin_function_decl
 name|void
-name|libifc_close
+name|ifconfig_close
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -91,10 +91,10 @@ comment|/** Identifies what kind of error occured. */
 end_comment
 
 begin_function_decl
-name|libifc_errtype
-name|libifc_err_errtype
+name|ifconfig_errtype
+name|ifconfig_err_errtype
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -107,9 +107,9 @@ end_comment
 
 begin_function_decl
 name|int
-name|libifc_err_errno
+name|ifconfig_err_errno
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -123,9 +123,9 @@ end_comment
 begin_function_decl
 name|unsigned
 name|long
-name|libifc_err_ioctlreq
+name|ifconfig_err_ioctlreq
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -134,9 +134,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_get_description
+name|ifconfig_get_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -155,9 +155,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_set_description
+name|ifconfig_set_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -176,9 +176,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_unset_description
+name|ifconfig_unset_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -192,9 +192,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_set_name
+name|ifconfig_set_name
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -213,9 +213,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_set_mtu
+name|ifconfig_set_mtu
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -233,9 +233,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_get_mtu
+name|ifconfig_get_mtu
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -253,9 +253,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_set_metric
+name|ifconfig_set_metric
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -273,9 +273,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_get_metric
+name|ifconfig_get_metric
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -293,9 +293,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_set_capability
+name|ifconfig_set_capability
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -313,9 +313,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libifc_get_capability
+name|ifconfig_get_capability
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -325,7 +325,7 @@ modifier|*
 name|name
 parameter_list|,
 name|struct
-name|libifc_capabilities
+name|ifconfig_capabilities
 modifier|*
 name|capability
 parameter_list|)
@@ -338,9 +338,9 @@ end_comment
 
 begin_function_decl
 name|int
-name|libifc_destroy_interface
+name|ifconfig_destroy_interface
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -358,9 +358,9 @@ end_comment
 
 begin_function_decl
 name|int
-name|libifc_create_interface
+name|ifconfig_create_interface
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,

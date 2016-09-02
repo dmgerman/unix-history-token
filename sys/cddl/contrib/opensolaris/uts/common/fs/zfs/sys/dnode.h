@@ -115,8 +115,8 @@ comment|/* 4k */
 define|#
 directive|define
 name|DN_MAX_INDBLKSHIFT
-value|14
-comment|/* 16k */
+value|17
+comment|/* 128k */
 define|#
 directive|define
 name|DNODE_BLOCK_SHIFT
@@ -187,6 +187,7 @@ define|#
 directive|define
 name|DNODES_PER_BLOCK
 value|(1ULL<< DNODES_PER_BLOCK_SHIFT)
+comment|/*  * This is inaccurate if the indblkshift of the particular object is not the  * max.  But it's only used by userland to calculate the zvol reservation.  */
 define|#
 directive|define
 name|DNODES_PER_LEVEL_SHIFT
