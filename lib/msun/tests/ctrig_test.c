@@ -3067,13 +3067,6 @@ name|DBL_ULP
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 name|z
 operator|=
 name|CMPLXL
@@ -3128,8 +3121,6 @@ name|DBL_ULP
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|z
 operator|=
 name|CMPLXL
@@ -3283,6 +3274,19 @@ argument_list|(
 literal|"ok 5 - ctrig small\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|printf
+argument_list|(
+literal|"ok 6 # SKIP ctrig large # fails on i386 because of bug 205446\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|test_large
 argument_list|()
 expr_stmt|;
@@ -3291,6 +3295,8 @@ argument_list|(
 literal|"ok 6 - ctrig large\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
