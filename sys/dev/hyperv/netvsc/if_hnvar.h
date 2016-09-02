@@ -132,6 +132,13 @@ name|HN_NDIS_VLAN_INFO_INVALID
 value|0xffffffff
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_NDIS_RXCSUM_INFO_INVALID
+value|0
+end_define
+
 begin_struct
 struct|struct
 name|hn_recvinfo
@@ -139,10 +146,7 @@ block|{
 name|uint32_t
 name|vlan_info
 decl_stmt|;
-specifier|const
-name|struct
-name|rndis_tcp_ip_csum_info_
-modifier|*
+name|uint32_t
 name|csum_info
 decl_stmt|;
 specifier|const
