@@ -225,6 +225,12 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -748,6 +754,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
