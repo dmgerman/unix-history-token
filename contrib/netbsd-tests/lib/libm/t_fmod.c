@@ -73,6 +73,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|if
 condition|(
 name|isQEMU
@@ -83,6 +86,8 @@ argument_list|(
 literal|"PR misc/44767"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_CHECK
 argument_list|(
 name|fmodf
