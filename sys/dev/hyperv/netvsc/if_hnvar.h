@@ -139,6 +139,13 @@ name|HN_NDIS_RXCSUM_INFO_INVALID
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_NDIS_HASH_INFO_INVALID
+value|0
+end_define
+
 begin_struct
 struct|struct
 name|hn_recvinfo
@@ -149,16 +156,10 @@ decl_stmt|;
 name|uint32_t
 name|csum_info
 decl_stmt|;
-specifier|const
-name|struct
-name|rndis_hash_info
-modifier|*
+name|uint32_t
 name|hash_info
 decl_stmt|;
-specifier|const
-name|struct
-name|rndis_hash_value
-modifier|*
+name|uint32_t
 name|hash_value
 decl_stmt|;
 block|}
