@@ -261,6 +261,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|UNPGC_IGNORE_RIGHTS
+value|0x8
+end_define
+
+begin_comment
+comment|/* Attached rights are freed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|sotounpcb
 parameter_list|(
 name|so

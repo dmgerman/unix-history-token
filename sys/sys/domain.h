@@ -35,6 +35,12 @@ name|ifnet
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|domain
@@ -216,6 +222,21 @@ name|void
 name|domain_init
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Hack to fix dom_dispose for unix domain sockets. */
+end_comment
+
+begin_function_decl
+name|void
+name|unp_dispose_so
+parameter_list|(
+name|struct
+name|socket
 modifier|*
 parameter_list|)
 function_decl|;
