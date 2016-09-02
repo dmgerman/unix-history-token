@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -332,25 +338,6 @@ block|,
 name|CRYPTO_AES_CBC
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-literal|"arc4"
-block|,
-literal|0
-block|,
-literal|8
-block|,
-literal|1
-block|,
-literal|32
-block|,
-name|CRYPTO_ARC4
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"md5"
 block|,
@@ -448,12 +435,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    des 3des (default) blowfish cast skipjack rij\n"
+literal|"    null des 3des (default) blowfish cast skipjack rij\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    aes aes192 aes256 arc4\n"
+literal|"    aes aes192 aes256 md5 sha1 sha256 sha384 sha512\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -504,6 +491,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"-p profile kernel crypto operation (must be root)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"-t n for n threads and run tests concurrently\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2554,12 +2546,6 @@ literal|2
 operator|*
 name|count
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|t /= threads; 		printf("%6.3lf sec, %7d %6s crypts, %7d bytes, %8.0lf byte/sec, %7.1lf Mb/sec\n", 		    t, nops, alg->name, size, (double)nops*size / t, 		    (double)nops*size / t * 8 / 1024 / 1024);
-else|#
-directive|else
 name|nops
 operator|*=
 name|threads
@@ -2603,8 +2589,6 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 ifdef|#
 directive|ifdef
