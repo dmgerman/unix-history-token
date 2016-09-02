@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libifc.h>
+file|<libifconfig.h>
 end_include
 
 begin_function
@@ -103,16 +103,16 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|lifh
 init|=
-name|libifc_open
+name|ifconfig_open
 argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|libifc_destroy_interface
+name|ifconfig_destroy_interface
 argument_list|(
 name|lifh
 argument_list|,
@@ -129,7 +129,7 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|libifc_close
+name|ifconfig_close
 argument_list|(
 name|lifh
 argument_list|)
@@ -153,7 +153,7 @@ else|else
 block|{
 switch|switch
 condition|(
-name|libifc_err_errtype
+name|ifconfig_err_errtype
 argument_list|(
 name|lifh
 argument_list|)
@@ -173,7 +173,7 @@ name|IOCTL
 case|:
 if|if
 condition|(
-name|libifc_err_ioctlreq
+name|ifconfig_err_ioctlreq
 argument_list|(
 name|lifh
 argument_list|)
@@ -196,7 +196,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|libifc_close
+name|ifconfig_close
 argument_list|(
 name|lifh
 argument_list|)
