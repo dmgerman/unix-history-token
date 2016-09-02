@@ -641,6 +641,10 @@ begin_comment
 comment|/*  * RNDIS control messages  */
 end_comment
 
+begin_comment
+comment|/*  * Common header for RNDIS completion messages.  *  * NOTE: It does not apply to REMOTE_NDIS_RESET_CMPLT.  */
+end_comment
+
 begin_struct
 struct|struct
 name|rndis_comp_hdr
