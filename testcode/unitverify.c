@@ -2823,6 +2823,9 @@ argument_list|,
 literal|"20070818005004"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_DSA
 name|verifytest_file
 argument_list|(
 literal|"testdata/test_signatures.2"
@@ -2865,6 +2868,9 @@ argument_list|,
 literal|"20070829144150"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_DSA */
 name|verifytest_file
 argument_list|(
 literal|"testdata/test_signatures.8"

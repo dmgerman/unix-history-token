@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"util/winsock_event.h"
+file|"util/ub_event.h"
 end_include
 
 begin_comment
@@ -103,8 +103,11 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|event
+name|ub_event
+modifier|*
 name|service_stop_ev
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,18 +2037,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|service_deinit
-argument_list|(
-name|daemon
-argument_list|,
-name|cfg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|service_cfgfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|service_stop_event
@@ -2056,6 +2047,18 @@ operator|)
 name|WSACloseEvent
 argument_list|(
 name|service_stop_event
+argument_list|)
+expr_stmt|;
+name|service_deinit
+argument_list|(
+name|daemon
+argument_list|,
+name|cfg
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|service_cfgfile
 argument_list|)
 expr_stmt|;
 name|verbose
@@ -2862,7 +2865,10 @@ return|return;
 if|if
 condition|(
 operator|!
-name|winsock_register_wsaevent
+operator|(
+name|service_stop_ev
+operator|=
+name|ub_winsock_register_wsaevent
 argument_list|(
 name|comm_base_internal
 argument_list|(
@@ -2871,9 +2877,6 @@ operator|->
 name|base
 argument_list|)
 argument_list|,
-operator|&
-name|service_stop_ev
-argument_list|,
 name|service_stop_event
 argument_list|,
 operator|&
@@ -2881,6 +2884,7 @@ name|worker_win_stop_cb
 argument_list|,
 name|worker
 argument_list|)
+operator|)
 condition|)
 block|{
 name|fatal_exit

@@ -5907,6 +5907,11 @@ name|ssl_upstream
 parameter_list|)
 parameter_list|,
 name|struct
+name|edns_option
+modifier|*
+name|opt_list
+parameter_list|,
+name|struct
 name|sockaddr_storage
 modifier|*
 name|addr
@@ -6206,6 +6211,12 @@ operator|.
 name|bits
 operator|=
 literal|0
+expr_stmt|;
+name|edns
+operator|.
+name|opt_list
+operator|=
+name|opt_list
 expr_stmt|;
 if|if
 condition|(
@@ -7931,7 +7942,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|comm_base_internal
 argument_list|(

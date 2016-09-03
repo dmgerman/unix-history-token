@@ -3510,15 +3510,7 @@ expr_stmt|;
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;
-name|ERR_remove_state
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|ERR_free_strings
-argument_list|()
-expr_stmt|;
-name|RAND_cleanup
 argument_list|()
 expr_stmt|;
 return|return

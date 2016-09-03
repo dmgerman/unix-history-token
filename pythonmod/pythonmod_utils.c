@@ -569,6 +569,12 @@ name|prs
 argument_list|,
 operator|&
 name|edns
+argument_list|,
+name|qstate
+operator|->
+name|env
+operator|->
+name|scratch
 argument_list|)
 operator|!=
 name|LDNS_RCODE_NOERROR
