@@ -20968,7 +20968,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  */
+comment|/*  *	pmap_ts_referenced:  *  *	Return a count of reference bits for a page, clearing those bits.  *	It is not necessary for every reference bit to be cleared, but it  *	is necessary that 0 only be returned when there are truly no  *	reference bits set.  *  *	XXX: The exact number of bits to check and clear is a matter that  *	should be tested and standardized at some point in the future for  *	optimal aging of shared pages.  *  *	As an optimization, update the page's dirty field if a modified bit is  *	found while counting reference bits.  This opportunistic update can be  *	performed at low cost and can eliminate the need for some future calls  *	to pmap_is_modified().  However, since this function stops after  *	finding PMAP_TS_REFERENCED_MAX reference bits, it may not detect some  *	dirty pages.  Those dirty pages will only be detected by a future call  *	to pmap_is_modified().  */
 end_comment
 
 begin_function
@@ -21001,6 +21001,8 @@ decl_stmt|;
 name|pt2_entry_t
 modifier|*
 name|pte2p
+decl_stmt|,
+name|opte2
 decl_stmt|;
 name|vm_paddr_t
 name|pa
@@ -21119,6 +21121,21 @@ argument_list|(
 name|pte1p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pte1_is_dirty
+argument_list|(
+name|opte1
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Although "opte1" is mapping a 1MB page, because 			 * this function is called at a 4KB page granularity, 			 * we only update the 4KB page under test. 			 */
+name|vm_page_dirty
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -21344,13 +21361,29 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|opte2
+operator|=
 name|pte2_load
 argument_list|(
 name|pte2p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pte2_is_dirty
+argument_list|(
+name|opte2
+argument_list|)
+condition|)
+name|vm_page_dirty
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opte2
 operator|&
 name|PTE2_A
 operator|)
