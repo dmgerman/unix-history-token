@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rumpnfsd.c,v 1.8 2014/05/12 15:31:07 christos Exp $	*/
+comment|/*	$NetBSD: rumpnfsd.c,v 1.9 2015/11/08 02:45:16 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
 end_include
 
 begin_function_decl
@@ -306,8 +312,10 @@ block|}
 name|rump_init
 argument_list|()
 expr_stmt|;
-name|init_fdsets
-argument_list|()
+name|svc_fdset_init
+argument_list|(
+name|SVC_FDSET_MT
+argument_list|)
 expr_stmt|;
 name|rv
 operator|=

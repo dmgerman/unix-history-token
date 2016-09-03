@@ -15579,7 +15579,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|char
+name|uint8_t
 operator|*
 argument_list|)
 operator|=

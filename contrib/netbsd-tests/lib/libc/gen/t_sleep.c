@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_sleep.c,v 1.8 2014/07/15 14:56:34 gson Exp $ */
+comment|/* $NetBSD: t_sleep.c,v 1.9 2016/08/11 21:34:11 kre Exp $ */
 end_comment
 
 begin_comment
@@ -721,7 +721,7 @@ literal|"kevent: %s"
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|kerrno
 argument_list|)
 argument_list|)
 expr_stmt|;

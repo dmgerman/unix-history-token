@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_getrusage.c,v 1.3 2014/09/03 19:24:12 matt Exp $ */
+comment|/* $NetBSD: t_getrusage.c,v 1.4 2016/08/05 15:01:39 scole Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_getrusage.c,v 1.3 2014/09/03 19:24:12 matt Exp $"
+literal|"$NetBSD: t_getrusage.c,v 1.4 2016/08/05 15:01:39 scole Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -153,6 +153,16 @@ name|__or1k__
 asm|asm
 specifier|volatile
 asm|("l.nop");
+comment|/* Do something. */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+asm|asm
+specifier|volatile
+asm|("nop 0");
 comment|/* Do something. */
 else|#
 directive|else

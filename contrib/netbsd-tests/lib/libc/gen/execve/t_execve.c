@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_execve.c,v 1.1 2014/04/29 06:29:02 uebayasi Exp $	*/
+comment|/*	$NetBSD: t_execve.c,v 1.2 2015/09/12 15:21:33 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -101,10 +101,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|ATF_REQUIRE_MSG
 argument_list|(
 name|errno
 operator|==
+name|EFAULT
+argument_list|,
+literal|"wrong error returned %d instead of %d"
+argument_list|,
+name|errno
+argument_list|,
 name|EFAULT
 argument_list|)
 expr_stmt|;

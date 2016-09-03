@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_strtod.c,v 1.32 2014/11/04 00:20:19 justin Exp $ */
+comment|/*	$NetBSD: t_strtod.c,v 1.34 2015/12/22 14:19:25 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_strtod.c,v 1.32 2014/11/04 00:20:19 justin Exp $"
+literal|"$NetBSD: t_strtod.c,v 1.34 2015/12/22 14:19:25 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -61,35 +61,11 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<fenv.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1152,22 +1128,9 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|__HAVE_FENV
 comment|/* 	 * Test that strtod(3) honors the current rounding mode. 	 * The used value is somewhere near 1 + DBL_EPSILON + FLT_EPSILON. 	 */
 specifier|const
 name|char
@@ -1243,7 +1206,7 @@ else|#
 directive|else
 name|atf_tc_skip
 argument_list|(
-literal|"Requires one of i386, amd64 or sparc"
+literal|"Requires<fenv.h> support"
 argument_list|)
 expr_stmt|;
 endif|#
