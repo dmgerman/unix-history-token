@@ -1565,26 +1565,5 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm_stats_misc
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|zero_page_count
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|vm_page_zero_count
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of zero-ed free pages"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 end_unit
 

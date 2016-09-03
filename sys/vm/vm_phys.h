@@ -363,15 +363,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
-name|vm_phys_zero_pages_idle
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_phys_mem_affinity
 parameter_list|(
