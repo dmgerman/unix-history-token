@@ -1390,7 +1390,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|err
+literal|0
 operator|)
 return|;
 name|law_enable
