@@ -1826,10 +1826,7 @@ if|if
 condition|(
 name|buf
 condition|)
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,
@@ -3091,10 +3088,7 @@ operator|->
 name|os_zil_header
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,

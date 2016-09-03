@@ -67,6 +67,12 @@ directive|include
 file|<sys/zrlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/multilist.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -322,6 +328,10 @@ decl_stmt|;
 comment|/* 	 * Our link on the owner dnodes's dn_dbufs list. 	 * Protected by its dn_dbufs_mtx. 	 */
 name|avl_node_t
 name|db_link
+decl_stmt|;
+comment|/* 	 * Link in dbuf_cache. 	 */
+name|multilist_node_t
+name|db_cache_link
 decl_stmt|;
 comment|/* Data which is unique to data (leaf) blocks: */
 comment|/* User callback information. */
@@ -761,15 +771,7 @@ name|tx
 parameter_list|)
 function_decl|;
 name|void
-name|dbuf_clear
-parameter_list|(
-name|dmu_buf_impl_t
-modifier|*
-name|db
-parameter_list|)
-function_decl|;
-name|void
-name|dbuf_evict
+name|dbuf_destroy
 parameter_list|(
 name|dmu_buf_impl_t
 modifier|*
@@ -932,14 +934,6 @@ name|_db
 parameter_list|)
 define|\
 value|((_db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(dbuf_is_metadata(_db)&&					\ 	((_db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
-define|#
-directive|define
-name|DBUF_IS_L2COMPRESSIBLE
-parameter_list|(
-name|_db
-parameter_list|)
-define|\
-value|((_db)->db_objset->os_compress != ZIO_COMPRESS_OFF ||		\ 	(dbuf_is_metadata(_db)&& zfs_mdcomp_disable == B_FALSE))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

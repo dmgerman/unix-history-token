@@ -7181,10 +7181,7 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,

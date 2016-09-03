@@ -232,6 +232,19 @@ name|src
 parameter_list|)
 function_decl|;
 name|void
+name|refcount_transfer_ownership
+parameter_list|(
+name|refcount_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
 name|refcount_sysinit
 parameter_list|(
 name|void
@@ -351,6 +364,16 @@ parameter_list|,
 name|src
 parameter_list|)
 value|{ \ 	uint64_t __tmp = (src)->rc_count; \ 	atomic_add_64(&(src)->rc_count, -__tmp); \ 	atomic_add_64(&(dst)->rc_count, __tmp); \ }
+define|#
+directive|define
+name|refcount_transfer_ownership
+parameter_list|(
+name|rc
+parameter_list|,
+name|current_holder
+parameter_list|,
+name|new_holder
+parameter_list|)
 define|#
 directive|define
 name|refcount_sysinit

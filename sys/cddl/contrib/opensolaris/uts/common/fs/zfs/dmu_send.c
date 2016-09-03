@@ -3089,10 +3089,7 @@ literal|0
 condition|)
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,
@@ -3178,10 +3175,7 @@ operator|->
 name|b_data
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,
@@ -3334,7 +3328,7 @@ block|{
 comment|/* Send a block filled with 0x"zfs badd bloc" */
 name|abuf
 operator|=
-name|arc_buf_alloc
+name|arc_alloc_buf
 argument_list|(
 name|spa
 argument_list|,
@@ -3509,10 +3503,7 @@ name|b_data
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,

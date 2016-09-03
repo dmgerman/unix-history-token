@@ -2292,7 +2292,7 @@ argument_list|,
 name|AVL_BEFORE
 argument_list|)
 expr_stmt|;
-name|dbuf_clear
+name|dbuf_destroy
 argument_list|(
 name|db
 argument_list|)
@@ -2419,7 +2419,7 @@ operator|->
 name|db_mtx
 argument_list|)
 expr_stmt|;
-name|dbuf_evict
+name|dbuf_destroy
 argument_list|(
 name|dn
 operator|->
