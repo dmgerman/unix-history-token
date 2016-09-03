@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -140,6 +140,11 @@ typedef|typedef
 name|struct
 name|dsl_dir
 name|dsl_dir_t
+typedef|;
+typedef|typedef
+name|struct
+name|dnode
+name|dnode_t
 typedef|;
 typedef|typedef
 enum|enum
@@ -1258,8 +1263,7 @@ name|objset_t
 modifier|*
 name|os
 parameter_list|,
-name|struct
-name|dnode
+name|dnode_t
 modifier|*
 name|dn
 parameter_list|,
@@ -1365,8 +1369,7 @@ function_decl|;
 name|int
 name|dmu_spill_hold_by_dnode
 parameter_list|(
-name|struct
-name|dnode
+name|dnode_t
 modifier|*
 name|dn
 parameter_list|,
@@ -1421,6 +1424,29 @@ parameter_list|,
 name|dmu_buf_t
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_buf_hold_by_dnode
+parameter_list|(
+name|dnode_t
+modifier|*
+name|dn
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
+name|dmu_buf_t
+modifier|*
+modifier|*
+name|dbp
 parameter_list|,
 name|int
 name|flags
@@ -1710,6 +1736,32 @@ comment|/*  * Returns the user data (dmu_buf_user_t *) associated with this dbuf
 name|void
 modifier|*
 name|dmu_buf_get_user
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|objset_t
+modifier|*
+name|dmu_buf_get_objset
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|dnode_t
+modifier|*
+name|dmu_buf_dnode_enter
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_buf_dnode_exit
 parameter_list|(
 name|dmu_buf_t
 modifier|*
@@ -2515,8 +2567,7 @@ comment|/* Like dmu_object_info, but faster if you have a held dnode in hand. */
 name|void
 name|dmu_object_info_from_dnode
 parameter_list|(
-name|struct
-name|dnode
+name|dnode_t
 modifier|*
 name|dn
 parameter_list|,

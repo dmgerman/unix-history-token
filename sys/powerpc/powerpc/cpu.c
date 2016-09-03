@@ -2995,7 +2995,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|E500
+name|BOOKE_E500
 name|platform_cpu_idle
 argument_list|(
 name|PCPU_GET

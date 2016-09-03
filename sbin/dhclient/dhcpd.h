@@ -1591,6 +1591,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|interface_set_mtu_unpriv
+parameter_list|(
+name|int
+parameter_list|,
+name|u_int16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|interface_set_mtu_priv
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|u_int16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* hash.c */
 end_comment
