@@ -1761,7 +1761,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|CTR4(KTR_CXGBE, 	    "%s: tid %u, cpl->len %u, ddpvld 0x%08x, icp_flags 0x%08x", 	    __func__, tid, pdu_len, val, icp->icp_flags);
+block|CTR5(KTR_CXGBE, 	    "%s: tid %u, cpl->len %u, ddpvld 0x%08x, icp_flags 0x%08x", 	    __func__, tid, pdu_len, val, icp->icp_flags);
 endif|#
 directive|endif
 name|icp
