@@ -1233,6 +1233,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__sys_ptrace
+parameter_list|(
+name|int
+parameter_list|,
+name|__pid_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|__sys_poll
 parameter_list|(
 name|struct
