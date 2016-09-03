@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -66,144 +66,158 @@ operator|<<
 literal|1
 block|,
 comment|/* R---- */
-name|ZIO_STAGE_FREE_BP_INIT
+name|ZIO_STAGE_WRITE_BP_INIT
 init|=
 literal|1
 operator|<<
 literal|2
+block|,
+comment|/* -W--- */
+name|ZIO_STAGE_FREE_BP_INIT
+init|=
+literal|1
+operator|<<
+literal|3
 block|,
 comment|/* --F-- */
 name|ZIO_STAGE_ISSUE_ASYNC
 init|=
 literal|1
 operator|<<
-literal|3
-block|,
-comment|/* RWF-- */
-name|ZIO_STAGE_WRITE_BP_INIT
-init|=
-literal|1
-operator|<<
 literal|4
 block|,
-comment|/* -W--- */
-name|ZIO_STAGE_CHECKSUM_GENERATE
+comment|/* RWF-- */
+name|ZIO_STAGE_WRITE_COMPRESS
 init|=
 literal|1
 operator|<<
 literal|5
 block|,
 comment|/* -W--- */
-name|ZIO_STAGE_NOP_WRITE
+name|ZIO_STAGE_CHECKSUM_GENERATE
 init|=
 literal|1
 operator|<<
 literal|6
 block|,
 comment|/* -W--- */
-name|ZIO_STAGE_DDT_READ_START
+name|ZIO_STAGE_NOP_WRITE
 init|=
 literal|1
 operator|<<
 literal|7
 block|,
-comment|/* R---- */
-name|ZIO_STAGE_DDT_READ_DONE
+comment|/* -W--- */
+name|ZIO_STAGE_DDT_READ_START
 init|=
 literal|1
 operator|<<
 literal|8
 block|,
 comment|/* R---- */
-name|ZIO_STAGE_DDT_WRITE
+name|ZIO_STAGE_DDT_READ_DONE
 init|=
 literal|1
 operator|<<
 literal|9
+block|,
+comment|/* R---- */
+name|ZIO_STAGE_DDT_WRITE
+init|=
+literal|1
+operator|<<
+literal|10
 block|,
 comment|/* -W--- */
 name|ZIO_STAGE_DDT_FREE
 init|=
 literal|1
 operator|<<
-literal|10
+literal|11
 block|,
 comment|/* --F-- */
 name|ZIO_STAGE_GANG_ASSEMBLE
 init|=
 literal|1
 operator|<<
-literal|11
+literal|12
 block|,
 comment|/* RWFC- */
 name|ZIO_STAGE_GANG_ISSUE
 init|=
 literal|1
 operator|<<
-literal|12
+literal|13
 block|,
 comment|/* RWFC- */
+name|ZIO_STAGE_DVA_THROTTLE
+init|=
+literal|1
+operator|<<
+literal|14
+block|,
+comment|/* -W--- */
 name|ZIO_STAGE_DVA_ALLOCATE
 init|=
 literal|1
 operator|<<
-literal|13
+literal|15
 block|,
 comment|/* -W--- */
 name|ZIO_STAGE_DVA_FREE
 init|=
 literal|1
 operator|<<
-literal|14
+literal|16
 block|,
 comment|/* --F-- */
 name|ZIO_STAGE_DVA_CLAIM
 init|=
 literal|1
 operator|<<
-literal|15
+literal|17
 block|,
 comment|/* ---C- */
 name|ZIO_STAGE_READY
 init|=
 literal|1
 operator|<<
-literal|16
+literal|18
 block|,
 comment|/* RWFCI */
 name|ZIO_STAGE_VDEV_IO_START
 init|=
 literal|1
 operator|<<
-literal|17
+literal|19
 block|,
 comment|/* RWF-I */
 name|ZIO_STAGE_VDEV_IO_DONE
 init|=
 literal|1
 operator|<<
-literal|18
+literal|20
 block|,
-comment|/* RWF-- */
+comment|/* RWF-I */
 name|ZIO_STAGE_VDEV_IO_ASSESS
 init|=
 literal|1
 operator|<<
-literal|19
+literal|21
 block|,
 comment|/* RWF-I */
 name|ZIO_STAGE_CHECKSUM_VERIFY
 init|=
 literal|1
 operator|<<
-literal|20
+literal|22
 block|,
 comment|/* R---- */
 name|ZIO_STAGE_DONE
 init|=
 literal|1
 operator|<<
-literal|21
+literal|23
 comment|/* RWFCI */
 block|}
 enum|;
@@ -266,22 +280,22 @@ define|#
 directive|define
 name|ZIO_REWRITE_PIPELINE
 define|\
-value|(ZIO_WRITE_COMMON_STAGES |		\ 	ZIO_STAGE_WRITE_BP_INIT)
+value|(ZIO_WRITE_COMMON_STAGES |		\ 	ZIO_STAGE_WRITE_COMPRESS |		\ 	ZIO_STAGE_WRITE_BP_INIT)
 define|#
 directive|define
 name|ZIO_WRITE_PIPELINE
 define|\
-value|(ZIO_WRITE_COMMON_STAGES |		\ 	ZIO_STAGE_WRITE_BP_INIT |		\ 	ZIO_STAGE_DVA_ALLOCATE)
+value|(ZIO_WRITE_COMMON_STAGES |		\ 	ZIO_STAGE_WRITE_BP_INIT |		\ 	ZIO_STAGE_WRITE_COMPRESS |		\ 	ZIO_STAGE_DVA_THROTTLE |		\ 	ZIO_STAGE_DVA_ALLOCATE)
 define|#
 directive|define
 name|ZIO_DDT_CHILD_WRITE_PIPELINE
 define|\
-value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_VDEV_IO_STAGES |			\ 	ZIO_STAGE_DVA_ALLOCATE)
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_VDEV_IO_STAGES |			\ 	ZIO_STAGE_DVA_THROTTLE |		\ 	ZIO_STAGE_DVA_ALLOCATE)
 define|#
 directive|define
 name|ZIO_DDT_WRITE_PIPELINE
 define|\
-value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_WRITE_BP_INIT |		\ 	ZIO_STAGE_CHECKSUM_GENERATE |		\ 	ZIO_STAGE_DDT_WRITE)
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_WRITE_BP_INIT |		\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_WRITE_COMPRESS |		\ 	ZIO_STAGE_CHECKSUM_GENERATE |		\ 	ZIO_STAGE_DDT_WRITE)
 define|#
 directive|define
 name|ZIO_GANG_STAGES

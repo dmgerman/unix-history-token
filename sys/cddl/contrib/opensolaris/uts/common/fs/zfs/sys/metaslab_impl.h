@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -75,6 +75,9 @@ comment|/*  * A metaslab class encompasses a category of allocatable top-level v
 struct|struct
 name|metaslab_class
 block|{
+name|kmutex_t
+name|mc_lock
+decl_stmt|;
 name|spa_t
 modifier|*
 name|mc_spa
@@ -89,6 +92,21 @@ name|mc_ops
 decl_stmt|;
 name|uint64_t
 name|mc_aliquot
+decl_stmt|;
+comment|/* 	 * Track the number of metaslab groups that have been initialized 	 * and can accept allocations. An initialized metaslab group is 	 * one has been completely added to the config (i.e. we have 	 * updated the MOS config and the space has been added to the pool). 	 */
+name|uint64_t
+name|mc_groups
+decl_stmt|;
+comment|/* 	 * Toggle to enable/disable the allocation throttle. 	 */
+name|boolean_t
+name|mc_alloc_throttle_enabled
+decl_stmt|;
+comment|/* 	 * The allocation throttle works on a reservation system. Whenever 	 * an asynchronous zio wants to perform an allocation it must 	 * first reserve the number of blocks that it wants to allocate. 	 * If there aren't sufficient slots available for the pending zio 	 * then that I/O is throttled until more slots free up. The current 	 * number of reserved allocations is maintained by the mc_alloc_slots 	 * refcount. The mc_alloc_max_slots value determines the maximum 	 * number of allocations that the system allows. Gang blocks are 	 * allowed to reserve slots even if we've reached the maximum 	 * number of allocations allowed. 	 */
+name|uint64_t
+name|mc_alloc_max_slots
+decl_stmt|;
+name|refcount_t
+name|mc_alloc_slots
 decl_stmt|;
 name|uint64_t
 name|mc_alloc_groups
@@ -138,6 +156,10 @@ name|boolean_t
 name|mg_allocatable
 decl_stmt|;
 comment|/* can we allocate? */
+comment|/* 	 * A metaslab group is considered to be initialized only after 	 * we have updated the MOS config and added the space to the pool. 	 * We only allow allocation attempts to a metaslab group if it 	 * has been initialized. 	 */
+name|boolean_t
+name|mg_initialized
+decl_stmt|;
 name|uint64_t
 name|mg_free_capacity
 decl_stmt|;
@@ -167,6 +189,23 @@ decl_stmt|;
 name|metaslab_group_t
 modifier|*
 name|mg_next
+decl_stmt|;
+comment|/* 	 * Each metaslab group can handle mg_max_alloc_queue_depth allocations 	 * which are tracked by mg_alloc_queue_depth. It's possible for a 	 * metaslab group to handle more allocations than its max. This 	 * can occur when gang blocks are required or when other groups 	 * are unable to handle their share of allocations. 	 */
+name|uint64_t
+name|mg_max_alloc_queue_depth
+decl_stmt|;
+name|refcount_t
+name|mg_alloc_queue_depth
+decl_stmt|;
+comment|/* 	 * A metalab group that can no longer allocate the minimum block 	 * size will set mg_no_free_space. Once a metaslab group is out 	 * of space then its share of work must be distributed to other 	 * groups. 	 */
+name|boolean_t
+name|mg_no_free_space
+decl_stmt|;
+name|uint64_t
+name|mg_allocations
+decl_stmt|;
+name|uint64_t
+name|mg_failed_allocations
 decl_stmt|;
 name|uint64_t
 name|mg_fragmentation
