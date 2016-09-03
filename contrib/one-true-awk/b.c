@@ -5184,7 +5184,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
