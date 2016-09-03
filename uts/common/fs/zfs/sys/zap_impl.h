@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_ifndef
@@ -468,6 +468,10 @@ parameter_list|,
 name|boolean_t
 name|adding
 parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 name|zap_t
 modifier|*
 modifier|*
@@ -480,6 +484,10 @@ parameter_list|(
 name|zap_t
 modifier|*
 name|zap
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|)
 function_decl|;
 name|void
@@ -645,6 +653,10 @@ name|void
 modifier|*
 name|val
 parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -667,6 +679,10 @@ specifier|const
 name|void
 modifier|*
 name|val
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -758,6 +774,10 @@ name|val
 parameter_list|,
 name|uint32_t
 name|cd
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|,
 name|dmu_tx_t
 modifier|*
