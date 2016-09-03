@@ -616,6 +616,15 @@ condition|)
 return|return
 name|len
 return|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* 	 * Don't dedupe signal numbers (bug 212173) 	 * 	 * Per kib's comment.. 	 * 	 * " 	 * OTOH, FreeBSD behaviour is to treat all signals as realtime while 	 * there is no mem shortage and siginfo can be allocated.  In 	 * particular, signals< SIGRTMIN are not collapsed when queued more 	 * than once. 	 * " 	 */
+return|return
+name|len
+return|;
+else|#
+directive|else
 name|size_t
 name|i
 decl_stmt|,
@@ -707,6 +716,8 @@ name|i
 operator|+
 literal|1
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
