@@ -425,6 +425,10 @@ name|error_t
 typedef|;
 endif|#
 directive|endif
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
 comment|// WARNING: OFF_T may be different from OS type off_t, depending on the value of
 comment|// _FILE_OFFSET_BITS. This definition of OFF_T matches the ABI of system calls
 comment|// like pread and mmap, as opposed to pread64 and mmap64.
@@ -475,106 +479,73 @@ name|operator_new_size_type
 typedef|;
 else|#
 directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__s390__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__s390x__
+argument_list|)
+comment|// Special case: 31-bit s390 has unsigned long as size_t.
+typedef|typedef
+name|unsigned
+name|long
+name|operator_new_size_type
+typedef|;
+else|#
+directive|else
 typedef|typedef
 name|u32
 name|operator_new_size_type
 typedef|;
 endif|#
 directive|endif
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __sanitizer
-end_comment
-
-begin_decl_stmt
-name|using
-name|namespace
-name|__sanitizer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_comment
+endif|#
+directive|endif
 comment|// ----------- ATTENTION -------------
-end_comment
-
-begin_comment
 comment|// This header should NOT include any other headers to avoid portability issues.
-end_comment
-
-begin_comment
 comment|// Common defs.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|INLINE
 value|inline
-end_define
-
-begin_define
 define|#
 directive|define
 name|INTERFACE_ATTRIBUTE
 value|SANITIZER_INTERFACE_ATTRIBUTE
-end_define
-
-begin_define
 define|#
 directive|define
 name|SANITIZER_WEAK_DEFAULT_IMPL
 define|\
 value|extern "C" SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE NOINLINE
-end_define
-
-begin_define
 define|#
 directive|define
 name|SANITIZER_WEAK_CXX_DEFAULT_IMPL
 define|\
 value|extern "C++" SANITIZER_INTERFACE_ATTRIBUTE SANITIZER_WEAK_ATTRIBUTE NOINLINE
-end_define
-
-begin_comment
 comment|// Platform-specific defs.
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|ALWAYS_INLINE
 value|__forceinline
-end_define
-
-begin_comment
 comment|// FIXME(timurrrr): do we need this on Windows?
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ALIAS
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|ALIGNED
@@ -582,9 +553,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__declspec(align(x))
-end_define
-
-begin_define
 define|#
 directive|define
 name|FORMAT
@@ -593,30 +561,18 @@ name|f
 parameter_list|,
 name|a
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|NOINLINE
 value|__declspec(noinline)
-end_define
-
-begin_define
 define|#
 directive|define
 name|NORETURN
 value|__declspec(noreturn)
-end_define
-
-begin_define
 define|#
 directive|define
 name|THREADLOCAL
 value|__declspec(thread)
-end_define
-
-begin_define
 define|#
 directive|define
 name|LIKELY
@@ -624,9 +580,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|UNLIKELY
@@ -634,38 +587,21 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|PREFETCH
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_comment
 comment|/* _mm_prefetch(x, _MM_HINT_NTA) */
-end_comment
-
-begin_else
+value|(void)0
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|// _MSC_VER
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ALWAYS_INLINE
 value|inline __attribute__((always_inline))
-end_define
-
-begin_define
 define|#
 directive|define
 name|ALIAS
@@ -673,17 +609,8 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__attribute__((alias(x)))
-end_define
-
-begin_comment
 comment|// Please only use the ALIGNED macro before the type.
-end_comment
-
-begin_comment
 comment|// Using ALIGNED after the variable declaration is not portable!
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ALIGNED
@@ -691,9 +618,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__attribute__((aligned(x)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|FORMAT
@@ -703,30 +627,18 @@ parameter_list|,
 name|a
 parameter_list|)
 value|__attribute__((format(printf, f, a)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|NOINLINE
 value|__attribute__((noinline))
-end_define
-
-begin_define
 define|#
 directive|define
 name|NORETURN
 value|__attribute__((noreturn))
-end_define
-
-begin_define
 define|#
 directive|define
 name|THREADLOCAL
 value|__thread
-end_define
-
-begin_define
 define|#
 directive|define
 name|LIKELY
@@ -734,9 +646,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__builtin_expect(!!(x), 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|UNLIKELY
@@ -744,9 +653,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__builtin_expect(!!(x), 0)
-end_define
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -758,13 +664,7 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
-end_if
-
-begin_comment
 comment|// __builtin_prefetch(x) generates prefetchnt0 on x86
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PREFETCH
@@ -772,14 +672,8 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__asm__("prefetchnta (%0)" : : "r" (x))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|PREFETCH
@@ -787,23 +681,11 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__builtin_prefetch(x)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// _MSC_VER
-end_comment
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -816,45 +698,24 @@ name|defined
 argument_list|(
 name|__clang__
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|UNUSED
 value|__attribute__((unused))
-end_define
-
-begin_define
 define|#
 directive|define
 name|USED
 value|__attribute__((used))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|UNUSED
-end_define
-
-begin_define
 define|#
 directive|define
 name|USED
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -872,37 +733,19 @@ name|MSC_PREREQ
 argument_list|(
 literal|1900
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|NOEXCEPT
 value|noexcept
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|NOEXCEPT
 value|throw()
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// Unaligned versions of basic types.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -911,9 +754,6 @@ argument_list|)
 name|u16
 name|uu16
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -922,9 +762,6 @@ argument_list|)
 name|u32
 name|uu32
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -933,9 +770,6 @@ argument_list|)
 name|u64
 name|uu64
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -944,9 +778,6 @@ argument_list|)
 name|s16
 name|us16
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -955,9 +786,6 @@ argument_list|)
 name|s32
 name|us32
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ALIGNED
 argument_list|(
@@ -966,13 +794,15 @@ argument_list|)
 name|s64
 name|us64
 typedef|;
-end_typedef
-
-begin_if
 if|#
 directive|if
 name|SANITIZER_WINDOWS
-end_if
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __sanitizer
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -986,53 +816,32 @@ begin_comment
 comment|// NOLINT
 end_comment
 
-begin_typedef
+begin_decl_stmt
+name|namespace
+name|__sanitizer
+block|{
 typedef|typedef
 name|DWORD
 name|thread_return_t
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|THREAD_CALLING_CONV
 value|__stdcall
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|// _WIN32
-end_comment
-
-begin_typedef
 typedef|typedef
 name|void
 modifier|*
 name|thread_return_t
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|THREAD_CALLING_CONV
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// _WIN32
-end_comment
-
-begin_typedef
 typedef|typedef
 name|thread_return_t
 function_decl|(
@@ -1046,16 +855,7 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_comment
 comment|// NOTE: Functions below must be defined in each run-time.
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|__sanitizer
-block|{
 name|void
 name|NORETURN
 name|Die
@@ -1087,18 +887,7 @@ name|u64
 name|v2
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __sanitizer
-end_comment
-
-begin_comment
 comment|// Check macro
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RAW_CHECK_MSG
@@ -1108,9 +897,6 @@ parameter_list|,
 name|msg
 parameter_list|)
 value|do { \   if (UNLIKELY(!(expr))) { \     RawWrite(msg); \     Die(); \   } \ } while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|RAW_CHECK
@@ -1118,9 +904,6 @@ parameter_list|(
 name|expr
 parameter_list|)
 value|RAW_CHECK_MSG(expr, #expr)
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_IMPL
@@ -1133,14 +916,8 @@ name|c2
 parameter_list|)
 define|\
 value|do { \     __sanitizer::u64 v1 = (u64)(c1); \     __sanitizer::u64 v2 = (u64)(c2); \     if (UNLIKELY(!(v1 op v2))) \       __sanitizer::CheckFailed(__FILE__, __LINE__, \         "(" #c1 ") " #op " (" #c2 ")", v1, v2); \   } while (false)
-end_define
-
-begin_comment
-unit|\
+block|\
 comment|/**/
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CHECK
@@ -1148,9 +925,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|CHECK_IMPL((a), !=, 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_EQ
@@ -1160,9 +934,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a), ==, (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_NE
@@ -1172,9 +943,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a), !=, (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_LT
@@ -1184,9 +952,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a),<,  (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_LE
@@ -1196,9 +961,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a),<=, (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_GT
@@ -1208,9 +970,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a),>,  (b))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CHECK_GE
@@ -1220,15 +979,9 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_IMPL((a),>=, (b))
-end_define
-
-begin_if
 if|#
 directive|if
 name|SANITIZER_DEBUG
-end_if
-
-begin_define
 define|#
 directive|define
 name|DCHECK
@@ -1236,9 +989,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|CHECK(a)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_EQ
@@ -1248,9 +998,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_EQ(a, b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_NE
@@ -1260,9 +1007,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_NE(a, b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_LT
@@ -1272,9 +1016,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_LT(a, b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_LE
@@ -1284,9 +1025,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_LE(a, b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_GT
@@ -1296,9 +1034,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_GT(a, b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_GE
@@ -1308,23 +1043,14 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CHECK_GE(a, b)
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|DCHECK
 parameter_list|(
 name|a
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_EQ
@@ -1333,9 +1059,6 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_NE
@@ -1344,9 +1067,6 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_LT
@@ -1355,9 +1075,6 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_LE
@@ -1366,9 +1083,6 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_GT
@@ -1377,9 +1091,6 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DCHECK_GE
@@ -1388,14 +1099,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|UNREACHABLE
@@ -1403,17 +1108,11 @@ parameter_list|(
 name|msg
 parameter_list|)
 value|do { \   CHECK(0&& msg); \   Die(); \ } while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|UNIMPLEMENTED
 parameter_list|()
 value|UNREACHABLE("unimplemented")
-end_define
-
-begin_define
 define|#
 directive|define
 name|COMPILER_CHECK
@@ -1421,9 +1120,6 @@ parameter_list|(
 name|pred
 parameter_list|)
 value|IMPL_COMPILER_ASSERT(pred, __LINE__)
-end_define
-
-begin_define
 define|#
 directive|define
 name|ARRAY_SIZE
@@ -1431,9 +1127,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(sizeof(a)/sizeof((a)[0]))
-end_define
-
-begin_define
 define|#
 directive|define
 name|IMPL_PASTE
@@ -1443,9 +1136,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|a##b
-end_define
-
-begin_define
 define|#
 directive|define
 name|IMPL_COMPILER_ASSERT
@@ -1456,37 +1146,19 @@ name|line
 parameter_list|)
 define|\
 value|typedef char IMPL_PASTE(assertion_failed_##_, line)[2*(int)(pred)-1]
-end_define
-
-begin_comment
 comment|// Limits for integral types. We have to redefine it in case we don't
-end_comment
-
-begin_comment
 comment|// have stdint.h (like in Visual Studio 9).
-end_comment
-
-begin_undef
 undef|#
 directive|undef
 name|__INT64_C
-end_undef
-
-begin_undef
 undef|#
 directive|undef
 name|__UINT64_C
-end_undef
-
-begin_if
 if|#
 directive|if
 name|SANITIZER_WORDSIZE
 operator|==
 literal|64
-end_if
-
-begin_define
 define|#
 directive|define
 name|__INT64_C
@@ -1494,9 +1166,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|c ## L
-end_define
-
-begin_define
 define|#
 directive|define
 name|__UINT64_C
@@ -1504,14 +1173,8 @@ parameter_list|(
 name|c
 parameter_list|)
 value|c ## UL
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|__INT64_C
@@ -1519,9 +1182,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|c ## LL
-end_define
-
-begin_define
 define|#
 directive|define
 name|__UINT64_C
@@ -1529,96 +1189,51 @@ parameter_list|(
 name|c
 parameter_list|)
 value|c ## ULL
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|// SANITIZER_WORDSIZE == 64
-end_comment
-
-begin_undef
 undef|#
 directive|undef
 name|INT32_MIN
-end_undef
-
-begin_define
 define|#
 directive|define
 name|INT32_MIN
 value|(-2147483647-1)
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|INT32_MAX
-end_undef
-
-begin_define
 define|#
 directive|define
 name|INT32_MAX
 value|(2147483647)
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|UINT32_MAX
-end_undef
-
-begin_define
 define|#
 directive|define
 name|UINT32_MAX
 value|(4294967295U)
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|INT64_MIN
-end_undef
-
-begin_define
 define|#
 directive|define
 name|INT64_MIN
 value|(-__INT64_C(9223372036854775807)-1)
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|INT64_MAX
-end_undef
-
-begin_define
 define|#
 directive|define
 name|INT64_MAX
 value|(__INT64_C(9223372036854775807))
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|UINT64_MAX
-end_undef
-
-begin_define
 define|#
 directive|define
 name|UINT64_MAX
 value|(__UINT64_C(18446744073709551615))
-end_define
-
-begin_enum
 enum|enum
 name|LinkerInitialized
 block|{
@@ -1627,9 +1242,6 @@ init|=
 literal|0
 block|}
 enum|;
-end_enum
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -1642,30 +1254,27 @@ name|defined
 argument_list|(
 name|__clang__
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|GET_CALLER_PC
 parameter_list|()
 value|(uptr)__builtin_return_address(0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|GET_CURRENT_FRAME
 parameter_list|()
 value|(uptr)__builtin_frame_address(0)
-end_define
-
-begin_else
+specifier|inline
+name|void
+name|Trap
+parameter_list|()
+block|{
+name|__builtin_trap
+argument_list|()
+expr_stmt|;
+block|}
 else|#
 directive|else
-end_else
-
-begin_extern
 extern|extern
 literal|"C"
 name|void
@@ -1675,51 +1284,50 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_extern
-
-begin_pragma
 pragma|#
 directive|pragma
 name|intrinsic
 name|(
 name|_ReturnAddress
 name|)
-end_pragma
-
-begin_define
 define|#
 directive|define
 name|GET_CALLER_PC
 parameter_list|()
 value|(uptr)_ReturnAddress()
-end_define
-
-begin_comment
 comment|// CaptureStackBackTrace doesn't need to know BP on Windows.
-end_comment
-
-begin_comment
 comment|// FIXME: This macro is still used when printing error reports though it's not
-end_comment
-
-begin_comment
 comment|// clear if the BP value is needed in the ASan reports on Windows.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|GET_CURRENT_FRAME
 parameter_list|()
 value|(uptr)0xDEADBEEF
-end_define
-
-begin_endif
+extern|extern
+literal|"C"
+name|void
+name|__ud2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+pragma|#
+directive|pragma
+name|intrinsic
+name|(
+name|__ud2
+name|)
+specifier|inline
+name|void
+name|Trap
+parameter_list|()
+block|{
+name|__ud2
+argument_list|()
+expr_stmt|;
+block|}
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|HANDLE_EINTR
@@ -1730,19 +1338,29 @@ name|f
 parameter_list|)
 define|\
 value|{                                                                \     int rverrno;                                                   \     do {                                                           \       res = (f);                                                   \     } while (internal_iserror(res,&rverrno)&& rverrno == EINTR); \   }
-end_define
-
-begin_comment
 comment|// Forces the compiler to generate a frame pointer in the function.
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ENABLE_FRAME_POINTER
 define|\
 value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \     (void)enable_fp;                                               \   } while (0)
-end_define
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __sanitizer
+end_comment
+
+begin_decl_stmt
+name|using
+name|namespace
+name|__sanitizer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// NOLINT
+end_comment
 
 begin_endif
 endif|#

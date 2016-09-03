@@ -71,6 +71,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|__sanitizer
+block|{
+struct_decl|struct
+name|DTLS
+struct_decl|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|__lsan
 block|{
 name|class
@@ -147,6 +157,15 @@ return|return
 name|cache_end_
 return|;
 block|}
+name|DTLS
+operator|*
+name|dtls
+argument_list|()
+block|{
+return|return
+name|dtls_
+return|;
+block|}
 name|private
 operator|:
 name|uptr
@@ -161,6 +180,10 @@ block|,
 name|tls_begin_
 block|,
 name|tls_end_
+block|;
+name|DTLS
+operator|*
+name|dtls_
 block|; }
 decl_stmt|;
 name|void

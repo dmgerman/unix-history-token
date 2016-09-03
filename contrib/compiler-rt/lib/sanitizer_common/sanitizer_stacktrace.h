@@ -518,6 +518,45 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// Check if given pointer points into allocated stack area.
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|IsValidFrame
+parameter_list|(
+name|uptr
+name|frame
+parameter_list|,
+name|uptr
+name|stack_top
+parameter_list|,
+name|uptr
+name|stack_bottom
+parameter_list|)
+block|{
+return|return
+name|frame
+operator|>
+name|stack_bottom
+operator|&&
+name|frame
+operator|<
+name|stack_top
+operator|-
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uhwptr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 unit|}
 comment|// namespace __sanitizer
 end_comment

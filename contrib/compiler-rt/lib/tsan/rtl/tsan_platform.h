@@ -1014,6 +1014,7 @@ init|=
 literal|0x00e000000000ull
 decl_stmt|;
 block|}
+struct|;
 else|#
 directive|else
 error|#
@@ -1024,10 +1025,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|TSAN_RUNTIME_VMA
-decl|extern
+specifier|extern
 name|uptr
 name|vmaSize
-struct|;
+decl_stmt|;
 endif|#
 directive|endif
 enum|enum
@@ -2327,6 +2328,12 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SANITIZER_WINDOWS
+end_ifndef
+
 begin_return
 return|return
 operator|(
@@ -2349,6 +2356,39 @@ operator|::
 name|kShadowBeg
 return|;
 end_return
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_return
+return|return
+operator|(
+operator|(
+name|x
+operator|&
+operator|~
+operator|(
+name|kShadowCell
+operator|-
+literal|1
+operator|)
+operator|)
+operator|*
+name|kShadowCnt
+operator|)
+operator|+
+name|Mapping
+operator|::
+name|kShadowBeg
+return|;
+end_return
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2810,10 +2850,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|// FIXME(dvyukov): this is most likely wrong as the mapping is not bijection.
-end_comment
 
 begin_return
 return|return
@@ -3319,24 +3355,6 @@ name|nthread
 parameter_list|,
 name|uptr
 name|nlive
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|// Says whether the addr relates to a global var.
-end_comment
-
-begin_comment
-comment|// Guesses with high probability, may yield both false positives and negatives.
-end_comment
-
-begin_function_decl
-name|bool
-name|IsGlobalVar
-parameter_list|(
-name|uptr
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

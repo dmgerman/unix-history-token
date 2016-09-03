@@ -129,12 +129,41 @@ directive|ifndef
 name|TSAN_CONTAINS_UBSAN
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|CAN_SANITIZE_UB
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SANITIZER_GO
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|TSAN_CONTAINS_UBSAN
-value|(CAN_SANITIZE_UB&& !defined(SANITIZER_GO))
+value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TSAN_CONTAINS_UBSAN
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -614,6 +643,9 @@ name|uptr
 name|size
 parameter_list|)
 function_decl|;
+struct_decl|struct
+name|Processor
+struct_decl|;
 struct_decl|struct
 name|ThreadState
 struct_decl|;

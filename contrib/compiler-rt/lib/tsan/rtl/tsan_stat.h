@@ -349,6 +349,8 @@ name|StatMtxRacy
 block|,
 name|StatMtxFD
 block|,
+name|StatMtxGlobalProc
+block|,
 comment|// This must be the last.
 name|StatCnt
 block|}

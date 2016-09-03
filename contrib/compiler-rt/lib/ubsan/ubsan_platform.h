@@ -115,6 +115,12 @@ name|defined
 argument_list|(
 name|__powerpc64__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__s390__
+argument_list|)
 operator|)
 end_if
 

@@ -215,6 +215,11 @@ argument_list|()
 expr_stmt|;
 comment|// Checks if AsanChunkView points to a valid allocated
 comment|// or quarantined chunk.
+name|bool
+name|IsAllocated
+parameter_list|()
+function_decl|;
+comment|// Checks if the memory is currently allocated.
 name|uptr
 name|Beg
 parameter_list|()
@@ -256,6 +261,14 @@ operator|.
 name|chunk_
 return|;
 block|}
+name|u32
+name|GetAllocStackId
+parameter_list|()
+function_decl|;
+name|u32
+name|GetFreeStackId
+parameter_list|()
+function_decl|;
 name|StackTrace
 name|GetAllocStack
 parameter_list|()
@@ -869,6 +882,7 @@ function_decl|;
 name|uptr
 name|asan_malloc_usable_size
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|ptr

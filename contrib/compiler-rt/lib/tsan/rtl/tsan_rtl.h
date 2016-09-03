@@ -1767,6 +1767,113 @@ struct|;
 end_struct
 
 begin_comment
+comment|// A Processor represents a physical thread, or a P for Go.
+end_comment
+
+begin_comment
+comment|// It is used to store internal resources like allocate cache, and does not
+end_comment
+
+begin_comment
+comment|// participate in race-detection logic (invisible to end user).
+end_comment
+
+begin_comment
+comment|// In C++ it is tied to an OS thread just like ThreadState, however ideally
+end_comment
+
+begin_comment
+comment|// it should be tied to a CPU (this way we will have fewer allocator caches).
+end_comment
+
+begin_comment
+comment|// In Go it is tied to a P, so there are significantly fewer Processor's than
+end_comment
+
+begin_comment
+comment|// ThreadState's (which are tied to Gs).
+end_comment
+
+begin_comment
+comment|// A ThreadState must be wired with a Processor to handle events.
+end_comment
+
+begin_struct
+struct|struct
+name|Processor
+block|{
+name|ThreadState
+modifier|*
+name|thr
+decl_stmt|;
+comment|// currently wired thread, or nullptr
+ifndef|#
+directive|ifndef
+name|SANITIZER_GO
+name|AllocatorCache
+name|alloc_cache
+decl_stmt|;
+name|InternalAllocatorCache
+name|internal_alloc_cache
+decl_stmt|;
+endif|#
+directive|endif
+name|DenseSlabAllocCache
+name|block_cache
+decl_stmt|;
+name|DenseSlabAllocCache
+name|sync_cache
+decl_stmt|;
+name|DenseSlabAllocCache
+name|clock_cache
+decl_stmt|;
+name|DDPhysicalThread
+modifier|*
+name|dd_pt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SANITIZER_GO
+end_ifndef
+
+begin_comment
+comment|// ScopedGlobalProcessor temporary setups a global processor for the current
+end_comment
+
+begin_comment
+comment|// thread, if it does not have one. Intended for interceptors that can run
+end_comment
+
+begin_comment
+comment|// at the very thread end, when we already destroyed the thread processor.
+end_comment
+
+begin_struct
+struct|struct
+name|ScopedGlobalProcessor
+block|{
+name|ScopedGlobalProcessor
+argument_list|()
+expr_stmt|;
+operator|~
+name|ScopedGlobalProcessor
+argument_list|()
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// This struct is stored in TLS.
 end_comment
 
@@ -1845,12 +1952,6 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SANITIZER_GO
-name|AllocatorCache
-name|alloc_cache
-decl_stmt|;
-name|InternalAllocatorCache
-name|internal_alloc_cache
-decl_stmt|;
 name|Vector
 operator|<
 name|JmpBuf
@@ -1930,29 +2031,42 @@ name|internal_deadlock_detector
 decl_stmt|;
 endif|#
 directive|endif
-name|DDPhysicalThread
-modifier|*
-name|dd_pt
-decl_stmt|;
 name|DDLogicalThread
 modifier|*
 name|dd_lt
 decl_stmt|;
+comment|// Current wired Processor, or nullptr. Required to handle any events.
+name|Processor
+modifier|*
+name|proc1
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SANITIZER_GO
+name|Processor
+modifier|*
+name|proc
+parameter_list|()
+block|{
+return|return
+name|proc1
+return|;
+block|}
+else|#
+directive|else
+name|Processor
+modifier|*
+name|proc
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
 name|atomic_uintptr_t
 name|in_signal_handler
 decl_stmt|;
 name|ThreadSignalContext
 modifier|*
 name|signal_ctx
-decl_stmt|;
-name|DenseSlabAllocCache
-name|block_cache
-decl_stmt|;
-name|DenseSlabAllocCache
-name|sync_cache
-decl_stmt|;
-name|DenseSlabAllocCache
-name|clock_cache
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -1969,6 +2083,11 @@ comment|// Set in regions of runtime that must be signal-safe and fork-safe.
 comment|// If set, malloc must not be called.
 name|int
 name|nomalloc
+decl_stmt|;
+specifier|const
+name|ReportDesc
+modifier|*
+name|current_report
 decl_stmt|;
 name|explicit
 name|ThreadState
@@ -2016,6 +2135,8 @@ begin_if
 if|#
 directive|if
 name|SANITIZER_MAC
+operator|||
+name|SANITIZER_ANDROID
 end_if
 
 begin_function_decl
@@ -2091,7 +2212,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// SANITIZER_MAC
+comment|// SANITIZER_MAC || SANITIZER_ANDROID
 end_comment
 
 begin_endif
@@ -3809,6 +3930,55 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|Processor
+modifier|*
+name|ProcCreate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ProcDestroy
+parameter_list|(
+name|Processor
+modifier|*
+name|proc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ProcWire
+parameter_list|(
+name|Processor
+modifier|*
+name|proc
+parameter_list|,
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ProcUnwire
+parameter_list|(
+name|Processor
+modifier|*
+name|proc
+parameter_list|,
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|MutexCreate
 parameter_list|(
@@ -3976,6 +4146,23 @@ end_function_decl
 begin_comment
 comment|// call on EOWNERDEAD
 end_comment
+
+begin_function_decl
+name|void
+name|MutexInvalidAccess
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|,
+name|uptr
+name|pc
+parameter_list|,
+name|uptr
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

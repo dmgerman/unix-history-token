@@ -172,21 +172,18 @@ name|void
 name|CacheMemoryMappings
 parameter_list|()
 function_decl|;
-comment|// Stores the list of mapped objects into an array.
-name|uptr
+comment|// Adds all mapped objects into a vector.
+name|void
 name|DumpListOfModules
-parameter_list|(
+argument_list|(
+name|InternalMmapVector
+operator|<
 name|LoadedModule
-modifier|*
+operator|>
+operator|*
 name|modules
-parameter_list|,
-name|uptr
-name|max_modules
-parameter_list|,
-name|string_predicate_t
-name|filter
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Memory protection masks.
 specifier|static
 specifier|const

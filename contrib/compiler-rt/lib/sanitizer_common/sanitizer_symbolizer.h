@@ -212,6 +212,13 @@ name|module_offset
 decl_stmt|;
 name|char
 modifier|*
+name|file
+decl_stmt|;
+name|uptr
+name|line
+decl_stmt|;
+name|char
+modifier|*
 name|name
 decl_stmt|;
 name|uptr
@@ -244,6 +251,11 @@ specifier|static
 name|Symbolizer
 modifier|*
 name|GetOrInit
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|LateInitialize
 parameter_list|()
 function_decl|;
 comment|// Returns a list of symbolized frames for a given address (containing
@@ -377,6 +389,15 @@ name|EndSymbolizationHook
 name|end_hook
 parameter_list|)
 function_decl|;
+specifier|const
+name|LoadedModule
+modifier|*
+name|FindModuleForAddress
+parameter_list|(
+name|uptr
+name|address
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|// GetModuleNameAndOffsetForPC has to return a string to the caller.
@@ -476,22 +497,8 @@ modifier|*
 name|module_offset
 parameter_list|)
 function_decl|;
-name|LoadedModule
-modifier|*
-name|FindModuleForAddress
-parameter_list|(
-name|uptr
-name|address
-parameter_list|)
-function_decl|;
-name|LoadedModule
+name|ListOfModules
 name|modules_
-index|[
-name|kMaxNumberOfModules
-index|]
-decl_stmt|;
-name|uptr
-name|n_modules_
 decl_stmt|;
 comment|// If stale, need to reload the modules before looking up addresses.
 name|bool
@@ -528,15 +535,6 @@ comment|// always synchronized.
 name|BlockingMutex
 name|mu_
 decl_stmt|;
-typedef|typedef
-name|IntrusiveList
-operator|<
-name|SymbolizerTool
-operator|>
-operator|::
-name|Iterator
-name|Iterator
-expr_stmt|;
 name|IntrusiveList
 operator|<
 name|SymbolizerTool
@@ -592,6 +590,15 @@ block|}
 empty_stmt|;
 block|}
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|SANITIZER_WINDOWS
+name|void
+name|InitializeDbgHelpIfNeeded
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 

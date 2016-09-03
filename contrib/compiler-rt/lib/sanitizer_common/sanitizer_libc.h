@@ -406,6 +406,15 @@ name|c
 parameter_list|)
 function_decl|;
 comment|// This is O(N^2), but we are not using it in hot places.
+name|uptr
+name|internal_wcslen
+parameter_list|(
+specifier|const
+name|wchar_t
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 name|char
 modifier|*
 name|internal_strstr
@@ -523,6 +532,15 @@ name|internal__exit
 parameter_list|(
 name|int
 name|exitcode
+parameter_list|)
+function_decl|;
+name|unsigned
+name|int
+name|internal_sleep
+parameter_list|(
+name|unsigned
+name|int
+name|seconds
 parameter_list|)
 function_decl|;
 name|uptr

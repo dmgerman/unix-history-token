@@ -165,6 +165,9 @@ block|{
 name|class
 name|FlagParser
 decl_stmt|;
+struct_decl|struct
+name|DTLS
+struct_decl|;
 block|}
 end_decl_stmt
 
@@ -475,6 +478,36 @@ name|bool
 name|DisabledInThisThread
 parameter_list|()
 function_decl|;
+comment|// Used to implement __lsan::ScopedDisabler.
+name|void
+name|DisableInThisThread
+parameter_list|()
+function_decl|;
+name|void
+name|EnableInThisThread
+parameter_list|()
+function_decl|;
+comment|// Can be used to ignore memory allocated by an intercepted
+comment|// function.
+struct|struct
+name|ScopedInterceptorDisabler
+block|{
+name|ScopedInterceptorDisabler
+argument_list|()
+block|{
+name|DisableInThisThread
+argument_list|()
+expr_stmt|;
+block|}
+operator|~
+name|ScopedInterceptorDisabler
+argument_list|()
+block|{
+name|EnableInThisThread
+argument_list|()
+block|; }
+block|}
+struct|;
 comment|// Special case for "new T[0]" where T is a type with DTOR.
 comment|// new T[0] will allocate one word for the array size (0) and store a pointer
 comment|// to the end of allocated chunk.
@@ -599,6 +632,11 @@ parameter_list|,
 name|uptr
 modifier|*
 name|cache_end
+parameter_list|,
+name|DTLS
+modifier|*
+modifier|*
+name|dtls
 parameter_list|)
 function_decl|;
 name|void
