@@ -1696,50 +1696,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**  * Get a list of all cores discoverable on the bhnd bus.  *  * Enumerates all cores discoverable on @p dev, returning the list in  * @p cores and the count in @p num_cores.  *   * The memory allocated for the list should be freed using  * `free(*cores, M_BHND)`. @p cores and @p num_cores are not changed  * when an error is returned.  *   * @param	dev		A bhnd bus child device.  * @param[out]	cores		The table of core descriptors.  * @param[out]	num_cores	The number of core descriptors in @p cores.  *   * @retval 0		success  * @retval non-zero	if an error occurs enumerating @p dev, a regular UNIX  *			error code should be returned.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|bhnd_get_core_table
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|bhnd_core_info
-modifier|*
-modifier|*
-name|cores
-parameter_list|,
-name|u_int
-modifier|*
-name|num_cores
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_BUS_GET_CORE_TABLE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|cores
-argument_list|,
-name|num_cores
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * If supported by the chipset, return the clock source for the given clock.  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock for which a clock source will be returned.  *  * @retval	bhnd_clksrc		The clock source for @p clock.  * @retval	BHND_CLKSRC_UNKNOWN	If @p clock is unsupported, or its  *					clock source is not known to the bus.  */
 end_comment
 

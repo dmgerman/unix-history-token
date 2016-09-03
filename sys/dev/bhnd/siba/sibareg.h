@@ -88,7 +88,21 @@ comment|/**< Maximum number of cores */
 end_comment
 
 begin_comment
-comment|/**< Evaluates to the bus address of the @p idx core register block */
+comment|/** Evaluates to the bus address offset of the @p idx core register block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_CORE_OFFSET
+parameter_list|(
+name|idx
+parameter_list|)
+value|((idx) * SIBA_CORE_SIZE)
+end_define
+
+begin_comment
+comment|/** Evaluates to the bus address of the @p idx core register block */
 end_comment
 
 begin_define
@@ -98,8 +112,7 @@ name|SIBA_CORE_ADDR
 parameter_list|(
 name|idx
 parameter_list|)
-define|\
-value|(SIBA_ENUM_ADDR + ((idx) * SIBA_CORE_SIZE))
+value|(SIBA_ENUM_ADDR + SIBA_CORE_OFFSET(idx))
 end_define
 
 begin_comment

@@ -165,14 +165,6 @@ name|bcma_add_children
 parameter_list|(
 name|device_t
 name|bus
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-name|erom_res
-parameter_list|,
-name|bus_size_t
-name|erom_offset
 parameter_list|)
 function_decl|;
 end_function_decl

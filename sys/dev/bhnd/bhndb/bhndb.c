@@ -4842,6 +4842,25 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Window must be large enough to map the entire resource */
+if|if
+condition|(
+name|dwa
+operator|->
+name|win
+operator|->
+name|win_size
+operator|<
+name|rman_get_size
+argument_list|(
+name|r
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* Set the window target */
 name|error
 operator|=

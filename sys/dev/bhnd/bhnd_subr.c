@@ -3593,12 +3593,7 @@ block|{
 comment|/* siba(4) uses the ChipCommon base address as the enumeration 		 * address */
 name|enum_addr
 operator|=
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
-operator|+
-name|chipc_offset
+name|BHND_DEFAULT_CHIPC_ADDR
 expr_stmt|;
 block|}
 else|else
@@ -5221,7 +5216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Helper function for implementing BHND_BUS_ACTIVATE_RESOURCE().  *   * This implementation of BHND_BUS_ACTIVATE_RESOURCE() simply calls the  * BHND_BUS_ACTIVATE_RESOURCE() method of the parent of @p dev.  */
+comment|/**  * Helper function for implementing BHND_BUS_ACTIVATE_RESOURCE().  *   * This implementation of BHND_BUS_ACTIVATE_RESOURCE() first calls the  * BHND_BUS_ACTIVATE_RESOURCE() method of the parent of @p dev.  *   * If this fails, and if @p dev is the direct parent of @p child, standard  * resource activation is attempted via bus_activate_resource(). This enables  * direct use of the bhnd(4) resource APIs on devices that may not be attached  * to a parent bhnd bus or bridge.  */
 end_comment
 
 begin_function
@@ -5246,6 +5241,23 @@ modifier|*
 name|r
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+name|bool
+name|passthrough
+decl_stmt|;
+name|passthrough
+operator|=
+operator|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+operator|!=
+name|dev
+operator|)
+expr_stmt|;
 comment|/* Try to delegate to the parent */
 if|if
 condition|(
@@ -5256,8 +5268,9 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|BHND_BUS_ACTIVATE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -5273,11 +5286,54 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|ENODEV
+expr_stmt|;
+block|}
+comment|/* If bhnd(4) activation has failed and we're the child's direct 	 * parent, try falling back on standard resource activation. 	 */
+if|if
+condition|(
+name|error
+operator|&&
+operator|!
+name|passthrough
+condition|)
+block|{
+name|error
+operator|=
+name|bus_activate_resource
+argument_list|(
+name|child
+argument_list|,
+name|type
+argument_list|,
+name|rid
+argument_list|,
+name|r
+operator|->
+name|res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|r
+operator|->
+name|direct
+operator|=
+name|true
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 block|}
