@@ -1055,6 +1055,12 @@ name|struct
 name|edd_params
 name|params
 decl_stmt|;
+name|int
+name|ret
+init|=
+literal|1
+decl_stmt|;
+comment|/* assume success */
 name|v86
 operator|.
 name|ctl
@@ -1084,6 +1090,7 @@ expr_stmt|;
 name|v86int
 argument_list|()
 expr_stmt|;
+comment|/* Don't error out if we get bad sector number, try EDD as well */
 if|if
 condition|(
 name|V86_CY
@@ -1094,17 +1101,6 @@ name|efl
 argument_list|)
 operator|||
 comment|/* carry set */
-operator|(
-name|v86
-operator|.
-name|ecx
-operator|&
-literal|0x3f
-operator|)
-operator|==
-literal|0
-operator|||
-comment|/* absurd sector number */
 operator|(
 name|v86
 operator|.
@@ -1131,6 +1127,24 @@ literal|0
 operator|)
 return|;
 comment|/* skip device */
+if|if
+condition|(
+operator|(
+name|v86
+operator|.
+name|ecx
+operator|&
+literal|0x3f
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* absurd sector number */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set error */
 comment|/* Convert max cyl # -> # of cylinders */
 name|bd
 operator|->
@@ -1320,9 +1334,10 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|1
+name|ret
 operator|)
 return|;
+comment|/* return code from int13 AH=08 */
 comment|/* EDD supported */
 name|bd
 operator|->
@@ -1419,6 +1434,17 @@ name|efl
 argument_list|)
 condition|)
 block|{
+name|uint64_t
+name|total
+decl_stmt|;
+if|if
+condition|(
+name|params
+operator|.
+name|sectors
+operator|!=
+literal|0
+condition|)
 name|bd
 operator|->
 name|bd_sectors
@@ -1427,6 +1453,37 @@ name|params
 operator|.
 name|sectors
 expr_stmt|;
+name|total
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|params
+operator|.
+name|cylinders
+operator|*
+name|params
+operator|.
+name|heads
+operator|*
+name|params
+operator|.
+name|sectors_per_track
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_sectors
+operator|<
+name|total
+condition|)
+name|bd
+operator|->
+name|bd_sectors
+operator|=
+name|total
+expr_stmt|;
 name|bd
 operator|->
 name|bd_sectorsize
@@ -1434,6 +1491,10 @@ operator|=
 name|params
 operator|.
 name|sector_size
+expr_stmt|;
+name|ret
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|DEBUG
@@ -1459,7 +1520,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ret
 operator|)
 return|;
 block|}

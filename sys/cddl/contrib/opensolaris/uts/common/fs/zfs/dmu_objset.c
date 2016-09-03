@@ -2746,7 +2746,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|ds
@@ -3462,7 +3462,7 @@ name|levels
 init|=
 literal|1
 decl_stmt|;
-comment|/* 		 * Determine the number of levels necessary for the meta-dnode 		 * to contain DN_MAX_OBJECT dnodes. 		 */
+comment|/* 		 * Determine the number of levels necessary for the meta-dnode 		 * to contain DN_MAX_OBJECT dnodes.  Note that in order to 		 * ensure that we do not overflow 64 bits, there has to be 		 * a nlevels that gives us a number of blocks> DN_MAX_OBJECT 		 * but< 2^64.  Therefore, 		 * (mdn->dn_indblkshift - SPA_BLKPTRSHIFT) (10) must be 		 * less than (64 - log2(DN_MAX_OBJECT)) (16). 		 */
 while|while
 condition|(
 operator|(
@@ -3476,6 +3476,8 @@ operator|(
 name|mdn
 operator|->
 name|dn_datablkshift
+operator|-
+name|DNODE_SHIFT
 operator|+
 operator|(
 name|levels
@@ -3493,11 +3495,6 @@ operator|)
 operator|)
 operator|<
 name|DN_MAX_OBJECT
-operator|*
-sizeof|sizeof
-argument_list|(
-name|dnode_phys_t
-argument_list|)
 condition|)
 name|levels
 operator|++
@@ -3706,6 +3703,25 @@ operator|(
 name|SET_ERROR
 argument_list|(
 name|EINVAL
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|doca
+operator|->
+name|doca_name
+argument_list|)
+operator|>=
+name|ZFS_MAX_DATASET_NAME_LEN
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENAMETOOLONG
 argument_list|)
 operator|)
 return|;
@@ -4187,6 +4203,25 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|doca
+operator|->
+name|doca_clone
+argument_list|)
+operator|>=
+name|ZFS_MAX_DATASET_NAME_LEN
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+operator|)
+return|;
 name|error
 operator|=
 name|dsl_dir_hold
@@ -4405,7 +4440,7 @@ decl_stmt|;
 name|char
 name|namebuf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|VERIFY0
@@ -9322,7 +9357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine name of filesystem, given name of snapshot.  * buf must be at least MAXNAMELEN bytes  */
+comment|/*  * Determine name of filesystem, given name of snapshot.  * buf must be at least ZFS_MAX_DATASET_NAME_LEN bytes  */
 end_comment
 
 begin_function
@@ -9370,7 +9405,7 @@ name|atp
 operator|-
 name|snapname
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(

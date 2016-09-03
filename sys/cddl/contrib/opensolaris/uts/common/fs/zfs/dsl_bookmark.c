@@ -117,7 +117,7 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -131,7 +131,7 @@ argument_list|(
 name|fullname
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 return|return
 operator|(

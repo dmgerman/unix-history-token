@@ -3399,7 +3399,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|/* 4K, 16K, 64K, 256K DDP "page sizes" */
+comment|/* 4K, 16K, 64K, 256K DDP "page sizes" for TDDP */
 name|v
 operator|=
 name|V_HPZ0
@@ -3431,11 +3431,46 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+comment|/* 	 * 4K, 8K, 16K, 64K DDP "page sizes" for iSCSI DDP.  These have been 	 * chosen with MAXPHYS = 128K in mind.  The largest DDP buffer that we 	 * may have to deal with is MAXPHYS + 1 page. 	 */
+name|v
+operator|=
+name|V_HPZ0
+argument_list|(
+literal|0
+argument_list|)
+operator||
+name|V_HPZ1
+argument_list|(
+literal|1
+argument_list|)
+operator||
+name|V_HPZ2
+argument_list|(
+literal|2
+argument_list|)
+operator||
+name|V_HPZ3
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|t4_write_reg
+argument_list|(
+name|sc
+argument_list|,
+name|A_ULP_RX_ISCSI_PSZ
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+comment|/* We use multiple DDP page sizes both in plain-TOE and ISCSI modes. */
 name|m
 operator|=
 name|v
 operator|=
 name|F_TDDPTAGTCB
+operator||
+name|F_ISCSITAGTCB
 expr_stmt|;
 name|t4_set_reg_field
 argument_list|(

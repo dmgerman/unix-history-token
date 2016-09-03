@@ -229,8 +229,8 @@ name|dlen
 operator|<
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|vmbus_icmsg_hdr
+operator|*
+name|hdr
 argument_list|)
 condition|)
 block|{

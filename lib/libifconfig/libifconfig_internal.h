@@ -12,7 +12,7 @@ end_pragma
 begin_include
 include|#
 directive|include
-file|"libifc.h"
+file|"libifconfig.h"
 end_include
 
 begin_struct
@@ -20,7 +20,7 @@ struct|struct
 name|errstate
 block|{
 comment|/** 	 * Type of error. 	 */
-name|libifc_errtype
+name|ifconfig_errtype
 name|errtype
 decl_stmt|;
 comment|/** 	 * The error occured in this ioctl() request. 	 * Populated if errtype = IOCTL 	 */
@@ -38,7 +38,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|libifc_handle
+name|ifconfig_handle
 block|{
 name|struct
 name|errstate
@@ -57,14 +57,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Retrieves socket for address family<paramref name="addressfamily"> from  * cache, or creates it if it doesn't already exist.  * @param addressfamily The address family of the socket to retrieve  * @param s The retrieved socket.  * @return 0 on success, -1 on failure.  * {@example  * This example shows how to retrieve a socket from the cache.  * {@code  * static void myfunc() \{  *    int s;  *    if (libifc_socket(AF_LOCAL,&s) != 0) \{  *        // Handle error state here  *    \}  *    // user code here  * \}  * }  * }  */
+comment|/**  * Retrieves socket for address family<paramref name="addressfamily"> from  * cache, or creates it if it doesn't already exist.  * @param addressfamily The address family of the socket to retrieve  * @param s The retrieved socket.  * @return 0 on success, -1 on failure.  * {@example  * This example shows how to retrieve a socket from the cache.  * {@code  * static void myfunc() \{  *    int s;  *    if (ifconfig_socket(AF_LOCAL,&s) != 0) \{  *        // Handle error state here  *    \}  *    // user code here  * \}  * }  * }  */
 end_comment
 
 begin_function_decl
 name|int
-name|libifc_socket
+name|ifconfig_socket
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -85,9 +85,9 @@ end_comment
 
 begin_function_decl
 name|int
-name|libifc_ioctlwrap_ret
+name|ifconfig_ioctlwrap_ret
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -102,14 +102,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/** Function to wrap ioctl() and automatically populate libifc_errstate when appropriate.*/
+comment|/** Function to wrap ioctl() and automatically populate ifconfig_errstate when appropriate.*/
 end_comment
 
 begin_function_decl
 name|int
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,

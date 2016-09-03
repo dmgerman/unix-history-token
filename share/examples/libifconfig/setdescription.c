@@ -18,18 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -48,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libifc.h>
+file|<libifconfig.h>
 end_include
 
 begin_function
@@ -68,7 +56,7 @@ if|if
 condition|(
 name|argc
 operator|!=
-literal|2
+literal|3
 condition|)
 block|{
 name|errx
@@ -76,8 +64,8 @@ argument_list|(
 name|EINVAL
 argument_list|,
 literal|"Invalid number of arguments."
-literal|" Only one argument is accepted, and it should be the name"
-literal|" of the interface to be created."
+literal|" First argument should be interface name, second argument"
+literal|" should be the description to set."
 argument_list|)
 expr_stmt|;
 block|}
@@ -86,7 +74,10 @@ modifier|*
 name|ifname
 decl_stmt|,
 modifier|*
-name|ifactualname
+name|ifdescr
+decl_stmt|,
+modifier|*
+name|curdescr
 decl_stmt|;
 comment|/* We have a static number of arguments. Therefore we can do it simple. */
 name|ifname
@@ -99,30 +90,44 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|ifdescr
+operator|=
+name|strdup
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|curdescr
+operator|=
+name|NULL
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"Requested interface name: %s\n"
+literal|"Interface name: %s\n"
 argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|lifh
 init|=
-name|libifc_open
+name|ifconfig_open
 argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|libifc_create_interface
+name|ifconfig_get_description
 argument_list|(
 name|lifh
 argument_list|,
 name|ifname
 argument_list|,
 operator|&
-name|ifactualname
+name|curdescr
 argument_list|)
 operator|==
 literal|0
@@ -130,41 +135,44 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Successfully created interface '%s'\n"
+literal|"Old description: %s\n"
 argument_list|,
-name|ifactualname
+name|curdescr
 argument_list|)
 expr_stmt|;
-name|libifc_close
+block|}
+name|printf
 argument_list|(
-name|lifh
+literal|"New description: %s\n\n"
+argument_list|,
+name|ifdescr
 argument_list|)
 expr_stmt|;
-name|lifh
-operator|=
-name|NULL
-expr_stmt|;
-name|free
+if|if
+condition|(
+name|ifconfig_set_description
 argument_list|(
+name|lifh
+argument_list|,
 name|ifname
+argument_list|,
+name|ifdescr
 argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ifactualname
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+operator|==
 literal|0
-operator|)
-return|;
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"New description successfully set.\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 switch|switch
 condition|(
-name|libifc_err_errtype
+name|ifconfig_err_errtype
 argument_list|(
 name|lifh
 argument_list|)
@@ -173,57 +181,52 @@ block|{
 case|case
 name|SOCKET
 case|:
-name|warnx
+name|err
 argument_list|(
-literal|"couldn't create socket. This shouldn't happen.\n"
+name|ifconfig_err_errno
+argument_list|(
+name|lifh
+argument_list|)
+argument_list|,
+literal|"Socket error"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IOCTL
 case|:
-if|if
-condition|(
-name|libifc_err_ioctlreq
+name|err
+argument_list|(
+name|ifconfig_err_errno
 argument_list|(
 name|lifh
 argument_list|)
-operator|==
-name|SIOCIFCREATE2
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"Failed to create interface (SIOCIFCREATE2)\n"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-default|default:
-name|warnx
-argument_list|(
-literal|"This is a thorough example accommodating for temporary"
-literal|" 'not implemented yet' errors. That's likely what happened"
-literal|" now. If not, your guess is as good as mine. ;)"
-literal|" Error code: %d\n"
 argument_list|,
-name|libifc_err_errno
+literal|"IOCTL(%lu) error"
+argument_list|,
+name|ifconfig_err_ioctlreq
 argument_list|(
 name|lifh
 argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
-name|libifc_close
+case|case
+name|OTHER
+case|:
+name|err
+argument_list|(
+name|ifconfig_err_errno
 argument_list|(
 name|lifh
 argument_list|)
+argument_list|,
+literal|"Other error"
+argument_list|)
 expr_stmt|;
-name|lifh
-operator|=
-name|NULL
-expr_stmt|;
+break|break;
+block|}
+block|}
 name|free
 argument_list|(
 name|ifname
@@ -231,16 +234,36 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|ifactualname
+name|ifdescr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|curdescr
+argument_list|)
+expr_stmt|;
+name|ifname
+operator|=
+name|NULL
+expr_stmt|;
+name|ifdescr
+operator|=
+name|NULL
+expr_stmt|;
+name|curdescr
+operator|=
+name|NULL
+expr_stmt|;
+name|ifconfig_close
+argument_list|(
+name|lifh
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 

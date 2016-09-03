@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -1745,6 +1745,26 @@ name|dsl_pool_t
 modifier|*
 name|dp
 decl_stmt|;
+comment|/* 	 * First do a quick check for root in the global zone, which 	 * is allowed to do all write_perms.  This ensures that zfs_ioc_* 	 * will get to handle nonexistent datasets. 	 */
+if|if
+condition|(
+name|INGLOBALZONE
+argument_list|(
+name|curthread
+argument_list|)
+operator|&&
+name|secpolicy_zfs
+argument_list|(
+name|cr
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|error
 operator|=
 name|dsl_pool_hold
@@ -2326,7 +2346,7 @@ decl_stmt|;
 name|char
 name|setpoint
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* 			 * Unprivileged users are allowed to modify the 			 * limit on things *under* (ie. contained by) 			 * the thing they own. 			 */
@@ -3395,7 +3415,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -3737,7 +3757,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_t
@@ -4507,7 +4527,7 @@ block|{
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -5216,7 +5236,7 @@ block|{
 name|char
 name|fsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|error
@@ -5330,7 +5350,7 @@ block|{
 name|char
 name|fsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|error
@@ -9963,7 +9983,7 @@ name|zc_name
 argument_list|)
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 name|dmu_objset_rele
@@ -13446,7 +13466,7 @@ decl_stmt|;
 name|char
 name|parentname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -15127,7 +15147,7 @@ block|{
 name|char
 name|originname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|dsl_dataset_name
@@ -16009,7 +16029,7 @@ decl_stmt|;
 name|char
 name|fullname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -18298,7 +18318,7 @@ decl_stmt|;
 name|char
 name|tofs
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|cap_rights_t
@@ -26832,6 +26852,41 @@ goto|;
 block|}
 break|break;
 case|case
+name|ZFS_IOCVER_INLANES
+case|:
+if|if
+condition|(
+name|zc_iocparm
+operator|->
+name|zfs_cmd_size
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|zfs_cmd_inlanes_t
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|SET_ERROR
+argument_list|(
+name|EFAULT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|compat
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_INLANES
+expr_stmt|;
+break|break;
+case|case
 name|ZFS_IOCVER_RESUME
 case|:
 if|if
@@ -27362,13 +27417,6 @@ condition|(
 name|error
 operator|==
 literal|0
-operator|&&
-operator|!
-operator|(
-name|flag
-operator|&
-name|FKIOCTL
-operator|)
 condition|)
 name|error
 operator|=

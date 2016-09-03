@@ -64,25 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libifc.h"
+file|"libifconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"libifc_internal.h"
+file|"libifconfig_internal.h"
 end_include
 
 begin_function
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
-name|libifc_open
+name|ifconfig_open
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|struct
-name|libifc_handle
+name|ifconfig_handle
 modifier|*
 name|h
 decl_stmt|;
@@ -95,7 +95,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|libifc_handle
+name|ifconfig_handle
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -135,9 +135,9 @@ end_function
 
 begin_function
 name|void
-name|libifc_close
+name|ifconfig_close
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -194,10 +194,10 @@ block|}
 end_function
 
 begin_function
-name|libifc_errtype
-name|libifc_err_errtype
+name|ifconfig_errtype
+name|ifconfig_err_errtype
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -216,9 +216,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_err_errno
+name|ifconfig_err_errno
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -238,9 +238,9 @@ end_function
 begin_function
 name|unsigned
 name|long
-name|libifc_err_ioctlreq
+name|ifconfig_err_ioctlreq
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|)
@@ -259,9 +259,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_get_description
+name|ifconfig_get_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -387,7 +387,7 @@ name|descrlen
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -506,9 +506,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_set_description
+name|ifconfig_set_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -561,7 +561,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|libifc_unset_description
+name|ifconfig_unset_description
 argument_list|(
 name|h
 argument_list|,
@@ -646,7 +646,7 @@ return|;
 block|}
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -696,9 +696,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_unset_description
+name|ifconfig_unset_description
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -763,7 +763,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -795,9 +795,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_set_name
+name|ifconfig_set_name
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -898,7 +898,7 @@ name|tmpname
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -940,9 +940,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_set_mtu
+name|ifconfig_set_mtu
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1001,7 +1001,7 @@ name|mtu
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1033,9 +1033,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_get_mtu
+name|ifconfig_get_mtu
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1088,7 +1088,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1128,9 +1128,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_set_metric
+name|ifconfig_set_metric
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1189,7 +1189,7 @@ name|mtu
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1221,9 +1221,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_get_metric
+name|ifconfig_get_metric
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1276,7 +1276,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1316,9 +1316,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_set_capability
+name|ifconfig_set_capability
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1337,7 +1337,7 @@ name|ifreq
 name|ifr
 decl_stmt|;
 name|struct
-name|libifc_capabilities
+name|ifconfig_capabilities
 name|ifcap
 decl_stmt|;
 name|int
@@ -1362,7 +1362,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|libifc_get_capability
+name|ifconfig_get_capability
 argument_list|(
 name|h
 argument_list|,
@@ -1451,7 +1451,7 @@ name|flags
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1483,9 +1483,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_get_capability
+name|ifconfig_get_capability
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1495,7 +1495,7 @@ modifier|*
 name|name
 parameter_list|,
 name|struct
-name|libifc_capabilities
+name|ifconfig_capabilities
 modifier|*
 name|capability
 parameter_list|)
@@ -1539,7 +1539,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1587,9 +1587,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_destroy_interface
+name|ifconfig_destroy_interface
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1638,7 +1638,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,
@@ -1670,9 +1670,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_create_interface
+name|ifconfig_create_interface
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -1802,7 +1802,7 @@ block|}
 comment|/* No special handling for this interface type. */
 if|if
 condition|(
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 argument_list|(
 name|h
 argument_list|,

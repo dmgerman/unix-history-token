@@ -743,6 +743,12 @@ name|u_char
 name|kbd_locked
 decl_stmt|;
 name|u_char
+name|kdb_locked
+decl_stmt|;
+name|u_char
+name|mtx_locked
+decl_stmt|;
+name|u_char
 name|kbd_opened
 decl_stmt|;
 name|u_char

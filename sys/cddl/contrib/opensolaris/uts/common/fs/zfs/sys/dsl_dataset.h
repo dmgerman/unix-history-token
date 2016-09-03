@@ -404,7 +404,7 @@ comment|/* Protected by ds_lock; keep at end of struct for better locality */
 name|char
 name|ds_snapname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 block|}
@@ -601,6 +601,14 @@ parameter_list|,
 name|void
 modifier|*
 name|tag
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_namelen
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|ds
 parameter_list|)
 function_decl|;
 name|boolean_t
@@ -1349,7 +1357,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { \ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { \ 	char *__ds_name = kmem_alloc(MAXNAMELEN, KM_SLEEP); \ 	dsl_dataset_name(ds, __ds_name); \ 	dprintf("ds=%s " fmt, __ds_name, __VA_ARGS__); \ 	kmem_free(__ds_name, MAXNAMELEN); \ 	} \ _NOTE(CONSTCOND) } while (0)
+value|do { \ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { \ 	char *__ds_name = kmem_alloc(ZFS_MAX_DATASET_NAME_LEN, KM_SLEEP); \ 	dsl_dataset_name(ds, __ds_name); \ 	dprintf("ds=%s " fmt, __ds_name, __VA_ARGS__); \ 	kmem_free(__ds_name, ZFS_MAX_DATASET_NAME_LEN); \ 	} \ _NOTE(CONSTCOND) } while (0)
 else|#
 directive|else
 define|#

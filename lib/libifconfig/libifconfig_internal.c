@@ -42,24 +42,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libifc.h"
+file|"libifconfig.h"
 end_include
 
 begin_comment
-comment|// Needed for libifc_errstate
+comment|// Needed for ifconfig_errstate
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"libifc_internal.h"
+file|"libifconfig_internal.h"
 end_include
 
 begin_function
 name|int
-name|libifc_ioctlwrap_ret
+name|ifconfig_ioctlwrap_ret
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -113,9 +113,9 @@ end_function
 
 begin_function
 name|int
-name|libifc_ioctlwrap
+name|ifconfig_ioctlwrap
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,
@@ -138,7 +138,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|libifc_socket
+name|ifconfig_socket
 argument_list|(
 name|h
 argument_list|,
@@ -172,7 +172,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|libifc_ioctlwrap_ret
+name|ifconfig_ioctlwrap_ret
 argument_list|(
 name|h
 argument_list|,
@@ -191,9 +191,9 @@ end_comment
 
 begin_function
 name|int
-name|libifc_socket
+name|ifconfig_socket
 parameter_list|(
-name|libifc_handle_t
+name|ifconfig_handle_t
 modifier|*
 name|h
 parameter_list|,

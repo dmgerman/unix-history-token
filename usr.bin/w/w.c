@@ -840,7 +840,7 @@ case|case
 literal|'n'
 case|:
 name|nflag
-operator|=
+operator|+=
 literal|1
 expr_stmt|;
 break|break;
@@ -1993,8 +1993,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|nflag
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Attempt to change an IP address into a name */
@@ -2030,6 +2031,10 @@ if|if
 condition|(
 operator|!
 name|isaddr
+operator|&&
+name|nflag
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 			 * If a host has only one A/AAAA RR, change a 			 * name into an IP address 			 */

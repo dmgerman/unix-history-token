@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_freebsd.h>
 end_include
 
@@ -512,6 +518,17 @@ parameter_list|,
 name|n
 parameter_list|)
 value|(x += ROUNDUP((n)->sa_len))
+end_define
+
+begin_comment
+comment|/* Minimum MTU is 68 as per RFC791, p. 24 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_MTU
+value|68
 end_define
 
 begin_decl_stmt
@@ -3546,6 +3563,11 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
+name|struct
+name|option_data
+modifier|*
+name|opt
+decl_stmt|;
 comment|/* Remember the medium. */
 name|ip
 operator|->
@@ -3561,6 +3583,69 @@ name|client
 operator|->
 name|medium
 expr_stmt|;
+name|opt
+operator|=
+operator|&
+name|ip
+operator|->
+name|client
+operator|->
+name|new
+operator|->
+name|options
+index|[
+name|DHO_INTERFACE_MTU
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|opt
+operator|->
+name|len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
+condition|)
+block|{
+name|u_int16_t
+name|mtu
+init|=
+name|be16dec
+argument_list|(
+name|opt
+operator|->
+name|data
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|mtu
+operator|<
+name|MIN_MTU
+condition|)
+name|warning
+argument_list|(
+literal|"mtu size %u< %d: ignored"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|mtu
+argument_list|,
+name|MIN_MTU
+argument_list|)
+expr_stmt|;
+else|else
+name|interface_set_mtu_unpriv
+argument_list|(
+name|privfd
+argument_list|,
+name|mtu
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Write out the new lease. */
 name|write_client_lease
 argument_list|(

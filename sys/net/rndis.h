@@ -452,6 +452,24 @@ value|0x00000002
 end_define
 
 begin_comment
+comment|/*  * Common RNDIS message header.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rndis_msghdr
+block|{
+name|uint32_t
+name|rm_type
+decl_stmt|;
+name|uint32_t
+name|rm_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * RNDIS data message  */
 end_comment
 
@@ -504,7 +522,145 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Minimum value for rm_dataoffset, rm_oobdataoffset, and  * rm_pktinfooffset.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PACKET_MSG_OFFSET_MIN
+define|\
+value|(sizeof(struct rndis_packet_msg) -	\ 	 __offsetof(struct rndis_packet_msg, rm_dataoffset))
+end_define
+
+begin_comment
+comment|/* Per-packet-info for RNDIS data message */
+end_comment
+
+begin_struct
+struct|struct
+name|rndis_pktinfo
+block|{
+name|uint32_t
+name|rm_size
+decl_stmt|;
+name|uint32_t
+name|rm_type
+decl_stmt|;
+comment|/* NDIS_PKTINFO_TYPE_ */
+name|uint32_t
+name|rm_pktinfooffset
+decl_stmt|;
+name|uint8_t
+name|rm_data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PKTINFO_OFFSET
+define|\
+value|__offsetof(struct rndis_pktinfo, rm_data[0])
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PKTINFO_ALIGN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_CSUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_IPSEC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_LSO
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_CLASSIFY
+value|3
+end_define
+
+begin_comment
+comment|/* reserved 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_SGLIST
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_VLAN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_ORIG
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_PKT_CANCELID
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_ORIG_NBLIST
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_CACHE_NBLIST
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PKTINFO_TYPE_PKT_PAD
+value|11
+end_define
+
+begin_comment
 comment|/*  * RNDIS control messages  */
+end_comment
+
+begin_comment
+comment|/*  * Common header for RNDIS completion messages.  *  * NOTE: It does not apply to REMOTE_NDIS_RESET_CMPLT.  */
 end_comment
 
 begin_struct
@@ -821,6 +977,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Parameter used by OID_GEN_RNDIS_CONFIG_PARAMETER.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1075,12 +1235,8 @@ begin_define
 define|#
 directive|define
 name|RNDIS_HEADER_OFFSET
-value|8
+value|((uint32_t)sizeof(struct rndis_msghdr))
 end_define
-
-begin_comment
-comment|/* bytes */
-end_comment
 
 begin_define
 define|#

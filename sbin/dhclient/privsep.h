@@ -61,7 +61,9 @@ block|,
 name|IMSG_SCRIPT_GO_RET
 block|,
 name|IMSG_SEND_PACKET
-block|}
+block|,
+name|IMSG_SET_INTERFACE_MTU
+block|, }
 enum|;
 end_enum
 

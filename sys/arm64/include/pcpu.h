@@ -43,7 +43,7 @@ value|u_int	pc_acpi_id;
 comment|/* ACPI CPU id */
 value|\ 	u_int	pc_midr;
 comment|/* stored MIDR value */
-value|\ 	char __pad[121]
+value|\ 	uint64_t pc_clock;						\ 	char __pad[113]
 end_define
 
 begin_ifdef

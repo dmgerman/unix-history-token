@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -839,7 +839,7 @@ block|{
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -1648,7 +1648,7 @@ block|{
 name|char
 name|snapname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -1760,7 +1760,7 @@ block|{
 name|char
 name|snapname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zfs_handle_t

@@ -68,101 +68,198 @@ name|NSIG
 index|]
 init|=
 block|{
+index|[
+literal|0
+index|]
+operator|=
 literal|"Signal 0"
 block|,
+index|[
+name|SIGHUP
+index|]
+operator|=
 literal|"HUP"
 block|,
-comment|/* SIGHUP */
+index|[
+name|SIGINT
+index|]
+operator|=
 literal|"INT"
 block|,
-comment|/* SIGINT */
+index|[
+name|SIGQUIT
+index|]
+operator|=
 literal|"QUIT"
 block|,
-comment|/* SIGQUIT */
+index|[
+name|SIGILL
+index|]
+operator|=
 literal|"ILL"
 block|,
-comment|/* SIGILL */
+index|[
+name|SIGTRAP
+index|]
+operator|=
 literal|"TRAP"
 block|,
-comment|/* SIGTRAP */
+index|[
+name|SIGABRT
+index|]
+operator|=
 literal|"ABRT"
 block|,
-comment|/* SIGABRT */
+index|[
+name|SIGEMT
+index|]
+operator|=
 literal|"EMT"
 block|,
-comment|/* SIGEMT */
+index|[
+name|SIGFPE
+index|]
+operator|=
 literal|"FPE"
 block|,
-comment|/* SIGFPE */
+index|[
+name|SIGKILL
+index|]
+operator|=
 literal|"KILL"
 block|,
-comment|/* SIGKILL */
+index|[
+name|SIGBUS
+index|]
+operator|=
 literal|"BUS"
 block|,
-comment|/* SIGBUS */
+index|[
+name|SIGSEGV
+index|]
+operator|=
 literal|"SEGV"
 block|,
-comment|/* SIGSEGV */
+index|[
+name|SIGSYS
+index|]
+operator|=
 literal|"SYS"
 block|,
-comment|/* SIGSYS */
+index|[
+name|SIGPIPE
+index|]
+operator|=
 literal|"PIPE"
 block|,
-comment|/* SIGPIPE */
+index|[
+name|SIGALRM
+index|]
+operator|=
 literal|"ALRM"
 block|,
-comment|/* SIGALRM */
+index|[
+name|SIGTERM
+index|]
+operator|=
 literal|"TERM"
 block|,
-comment|/* SIGTERM */
+index|[
+name|SIGURG
+index|]
+operator|=
 literal|"URG"
 block|,
-comment|/* SIGURG */
+index|[
+name|SIGSTOP
+index|]
+operator|=
 literal|"STOP"
 block|,
-comment|/* SIGSTOP */
+index|[
+name|SIGTSTP
+index|]
+operator|=
 literal|"TSTP"
 block|,
-comment|/* SIGTSTP */
+index|[
+name|SIGCONT
+index|]
+operator|=
 literal|"CONT"
 block|,
-comment|/* SIGCONT */
+index|[
+name|SIGCHLD
+index|]
+operator|=
 literal|"CHLD"
 block|,
-comment|/* SIGCHLD */
+index|[
+name|SIGTTIN
+index|]
+operator|=
 literal|"TTIN"
 block|,
-comment|/* SIGTTIN */
+index|[
+name|SIGTTOU
+index|]
+operator|=
 literal|"TTOU"
 block|,
-comment|/* SIGTTOU */
+index|[
+name|SIGIO
+index|]
+operator|=
 literal|"IO"
 block|,
-comment|/* SIGIO */
+index|[
+name|SIGXCPU
+index|]
+operator|=
 literal|"XCPU"
 block|,
-comment|/* SIGXCPU */
+index|[
+name|SIGXFSZ
+index|]
+operator|=
 literal|"XFSZ"
 block|,
-comment|/* SIGXFSZ */
+index|[
+name|SIGVTALRM
+index|]
+operator|=
 literal|"VTALRM"
 block|,
-comment|/* SIGVTALRM */
+index|[
+name|SIGPROF
+index|]
+operator|=
 literal|"PROF"
 block|,
-comment|/* SIGPROF */
+index|[
+name|SIGWINCH
+index|]
+operator|=
 literal|"WINCH"
 block|,
-comment|/* SIGWINCH */
+index|[
+name|SIGINFO
+index|]
+operator|=
 literal|"INFO"
 block|,
-comment|/* SIGINFO */
+index|[
+name|SIGUSR1
+index|]
+operator|=
 literal|"USR1"
 block|,
-comment|/* SIGUSR1 */
+index|[
+name|SIGUSR2
+index|]
+operator|=
 literal|"USR2"
-comment|/* SIGUSR2 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -177,101 +274,198 @@ name|NSIG
 index|]
 init|=
 block|{
+index|[
+literal|0
+index|]
+operator|=
 literal|"Signal 0"
 block|,
+index|[
+name|SIGHUP
+index|]
+operator|=
 literal|"Hangup"
 block|,
-comment|/* SIGHUP */
+index|[
+name|SIGINT
+index|]
+operator|=
 literal|"Interrupt"
 block|,
-comment|/* SIGINT */
+index|[
+name|SIGQUIT
+index|]
+operator|=
 literal|"Quit"
 block|,
-comment|/* SIGQUIT */
+index|[
+name|SIGILL
+index|]
+operator|=
 literal|"Illegal instruction"
 block|,
-comment|/* SIGILL */
+index|[
+name|SIGTRAP
+index|]
+operator|=
 literal|"Trace/BPT trap"
 block|,
-comment|/* SIGTRAP */
+index|[
+name|SIGABRT
+index|]
+operator|=
 literal|"Abort trap"
 block|,
-comment|/* SIGABRT */
+index|[
+name|SIGEMT
+index|]
+operator|=
 literal|"EMT trap"
 block|,
-comment|/* SIGEMT */
+index|[
+name|SIGFPE
+index|]
+operator|=
 literal|"Floating point exception"
 block|,
-comment|/* SIGFPE */
+index|[
+name|SIGKILL
+index|]
+operator|=
 literal|"Killed"
 block|,
-comment|/* SIGKILL */
+index|[
+name|SIGBUS
+index|]
+operator|=
 literal|"Bus error"
 block|,
-comment|/* SIGBUS */
+index|[
+name|SIGSEGV
+index|]
+operator|=
 literal|"Segmentation fault"
 block|,
-comment|/* SIGSEGV */
+index|[
+name|SIGSYS
+index|]
+operator|=
 literal|"Bad system call"
 block|,
-comment|/* SIGSYS */
+index|[
+name|SIGPIPE
+index|]
+operator|=
 literal|"Broken pipe"
 block|,
-comment|/* SIGPIPE */
+index|[
+name|SIGALRM
+index|]
+operator|=
 literal|"Alarm clock"
 block|,
-comment|/* SIGALRM */
+index|[
+name|SIGTERM
+index|]
+operator|=
 literal|"Terminated"
 block|,
-comment|/* SIGTERM */
+index|[
+name|SIGURG
+index|]
+operator|=
 literal|"Urgent I/O condition"
 block|,
-comment|/* SIGURG */
+index|[
+name|SIGSTOP
+index|]
+operator|=
 literal|"Suspended (signal)"
 block|,
-comment|/* SIGSTOP */
+index|[
+name|SIGTSTP
+index|]
+operator|=
 literal|"Suspended"
 block|,
-comment|/* SIGTSTP */
+index|[
+name|SIGCONT
+index|]
+operator|=
 literal|"Continued"
 block|,
-comment|/* SIGCONT */
+index|[
+name|SIGCHLD
+index|]
+operator|=
 literal|"Child exited"
 block|,
-comment|/* SIGCHLD */
+index|[
+name|SIGTTIN
+index|]
+operator|=
 literal|"Stopped (tty input)"
 block|,
-comment|/* SIGTTIN */
+index|[
+name|SIGTTOU
+index|]
+operator|=
 literal|"Stopped (tty output)"
 block|,
-comment|/* SIGTTOU */
+index|[
+name|SIGIO
+index|]
+operator|=
 literal|"I/O possible"
 block|,
-comment|/* SIGIO */
+index|[
+name|SIGXCPU
+index|]
+operator|=
 literal|"Cputime limit exceeded"
 block|,
-comment|/* SIGXCPU */
+index|[
+name|SIGXFSZ
+index|]
+operator|=
 literal|"Filesize limit exceeded"
 block|,
-comment|/* SIGXFSZ */
+index|[
+name|SIGVTALRM
+index|]
+operator|=
 literal|"Virtual timer expired"
 block|,
-comment|/* SIGVTALRM */
+index|[
+name|SIGPROF
+index|]
+operator|=
 literal|"Profiling timer expired"
 block|,
-comment|/* SIGPROF */
+index|[
+name|SIGWINCH
+index|]
+operator|=
 literal|"Window size changes"
 block|,
-comment|/* SIGWINCH */
+index|[
+name|SIGINFO
+index|]
+operator|=
 literal|"Information request"
 block|,
-comment|/* SIGINFO */
+index|[
+name|SIGUSR1
+index|]
+operator|=
 literal|"User defined signal 1"
 block|,
-comment|/* SIGUSR1 */
+index|[
+name|SIGUSR2
+index|]
+operator|=
 literal|"User defined signal 2"
-comment|/* SIGUSR2 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
