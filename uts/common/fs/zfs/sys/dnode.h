@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -345,7 +345,6 @@ decl_stmt|;
 block|}
 name|dnode_phys_t
 typedef|;
-typedef|typedef
 struct|struct
 name|dnode
 block|{
@@ -595,8 +594,7 @@ name|zfetch
 name|dn_zfetch
 decl_stmt|;
 block|}
-name|dnode_t
-typedef|;
+struct|;
 comment|/*  * Adds a level of indirection between the dbuf and the dnode to avoid  * iterating descendent dbufs in dnode_move(). Handles are not allocated  * individually, but as an array of child dnodes in dnode_hold_impl().  */
 typedef|typedef
 struct|struct

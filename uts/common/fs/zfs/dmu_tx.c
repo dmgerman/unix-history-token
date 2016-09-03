@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -3931,15 +3931,9 @@ block|{
 comment|/* 		 * access the name in this fat-zap so that we'll check 		 * for i/o errors to the leaf blocks, etc. 		 */
 name|err
 operator|=
-name|zap_lookup
+name|zap_lookup_by_dnode
 argument_list|(
 name|dn
-operator|->
-name|dn_objset
-argument_list|,
-name|dn
-operator|->
-name|dn_object
 argument_list|,
 name|name
 argument_list|,
@@ -3968,15 +3962,9 @@ block|}
 block|}
 name|err
 operator|=
-name|zap_count_write
+name|zap_count_write_by_dnode
 argument_list|(
 name|dn
-operator|->
-name|dn_objset
-argument_list|,
-name|dn
-operator|->
-name|dn_object
 argument_list|,
 name|name
 argument_list|,
