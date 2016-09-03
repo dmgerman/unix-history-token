@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_ioctl.c,v 1.1 2009/02/20 21:39:57 jmmv Exp $ */
+comment|/* $NetBSD: t_ioctl.c,v 1.2 2015/01/14 22:22:32 christos Exp $ */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ioctl.c,v 1.1 2009/02/20 21:39:57 jmmv Exp $"
+literal|"$NetBSD: t_ioctl.c,v 1.2 2015/01/14 22:22:32 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -118,9 +118,10 @@ name|kfilter_mapping
 name|km
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|kq
+decl_stmt|;
+name|uint32_t
+name|i
 decl_stmt|;
 name|RL
 argument_list|(

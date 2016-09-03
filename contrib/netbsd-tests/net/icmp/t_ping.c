@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_ping.c,v 1.15 2012/09/04 22:31:58 alnsn Exp $	*/
+comment|/*	$NetBSD: t_ping.c,v 1.16 2015/02/26 13:06:10 martin Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_ping.c,v 1.15 2012/09/04 22:31:58 alnsn Exp $"
+literal|"$NetBSD: t_ping.c,v 1.16 2015/02/26 13:06:10 martin Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,7 +178,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"2"
+literal|"20"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1467,7 +1467,7 @@ name|tc
 argument_list|,
 literal|"timeout"
 argument_list|,
-literal|"2"
+literal|"20"
 argument_list|)
 expr_stmt|;
 block|}

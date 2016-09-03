@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fstest_lfs.c,v 1.4 2010/07/30 16:15:05 pooka Exp $	*/
+comment|/*	$NetBSD: fstest_lfs.c,v 1.5 2015/08/30 18:27:26 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -90,12 +90,6 @@ include|#
 directive|include
 file|"mount_lfs.h"
 end_include
-
-begin_decl_stmt
-name|sem_t
-name|lfs_clearnerloop
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
