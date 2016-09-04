@@ -260,6 +260,11 @@ name|bool
 name|bhndb_hw_matches
 parameter_list|(
 name|struct
+name|bhndb_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
 name|bhnd_core_info
 modifier|*
 name|cores
@@ -799,7 +804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return true if @p cores matches the @p hw specification.  *   * @param cores A device table to match against.  * @param ncores The number of cores in @p cores.  * @param hw The hardware description to be matched against.  */
+comment|/**  * Return true if @p cores matches the @p hw specification.  *  * @param sc BHNDB device state.  * @param cores A device table to match against.  * @param ncores The number of cores in @p cores.  * @param hw The hardware description to be matched against.  */
 end_comment
 
 begin_function
@@ -807,6 +812,11 @@ specifier|static
 name|bool
 name|bhndb_hw_matches
 parameter_list|(
+name|struct
+name|bhndb_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|bhnd_core_info
 modifier|*
@@ -877,16 +887,39 @@ name|d
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|bhnd_core_matches
-argument_list|(
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
+init|=
 operator|&
 name|cores
 index|[
 name|d
 index|]
+decl_stmt|;
+if|if
+condition|(
+name|BHNDB_IS_CORE_DISABLED
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|bus_dev
+argument_list|,
+name|core
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|bhnd_core_matches
+argument_list|(
+name|core
 argument_list|,
 name|match
 argument_list|)
@@ -1223,15 +1256,15 @@ comment|/*  		 * Skip priority accounting for cores that ... 		 */
 comment|/* ... do not require bridge resources */
 if|if
 condition|(
-name|BHNDB_BUS_IS_CORE_DISABLED
+name|BHNDB_IS_CORE_DISABLED
 argument_list|(
 name|sc
 operator|->
-name|parent_dev
+name|dev
 argument_list|,
 name|sc
 operator|->
-name|dev
+name|bus_dev
 argument_list|,
 name|core
 argument_list|)
@@ -1691,6 +1724,8 @@ condition|(
 operator|!
 name|bhndb_hw_matches
 argument_list|(
+name|sc
+argument_list|,
 name|cores
 argument_list|,
 name|ncores
@@ -4145,19 +4180,24 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Default implementation of BHND_BUS_IS_HW_DISABLED().  */
+comment|/**  * Default implementation of BHNDB_IS_CORE_DISABLED().  */
 end_comment
 
 begin_function
 specifier|static
 name|bool
-name|bhndb_is_hw_disabled
+name|bhndb_is_core_disabled
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|,
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
 parameter_list|)
 block|{
 name|struct
@@ -4170,22 +4210,11 @@ name|bhnd_core_info
 modifier|*
 name|bridge_core
 decl_stmt|;
-name|struct
-name|bhnd_core_info
-name|core
-decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|core
-operator|=
-name|bhnd_get_core_info
-argument_list|(
-name|child
 argument_list|)
 expr_stmt|;
 comment|/* Try to defer to the bhndb bus parent */
@@ -4199,7 +4228,6 @@ name|parent_dev
 argument_list|,
 name|dev
 argument_list|,
-operator|&
 name|core
 argument_list|)
 condition|)
@@ -4222,7 +4250,6 @@ name|BHND_DEVCLASS_SUPPORTS_HOSTB
 argument_list|(
 name|bhnd_core_class
 argument_list|(
-operator|&
 name|core
 argument_list|)
 argument_list|)
@@ -4232,7 +4259,6 @@ operator|(
 operator|!
 name|bhnd_cores_equal
 argument_list|(
-operator|&
 name|core
 argument_list|,
 name|bridge_core
@@ -7711,6 +7737,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bhndb_is_core_disabled
+argument_list|,
+name|bhndb_is_core_disabled
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bhndb_get_hostb_core
 argument_list|,
 name|bhndb_get_hostb_core
@@ -7731,13 +7764,6 @@ name|bhndb_resume_resource
 argument_list|)
 block|,
 comment|/* BHND interface */
-name|DEVMETHOD
-argument_list|(
-name|bhnd_bus_is_hw_disabled
-argument_list|,
-name|bhndb_is_hw_disabled
-argument_list|)
-block|,
 name|DEVMETHOD
 argument_list|(
 name|bhnd_bus_get_chipid
