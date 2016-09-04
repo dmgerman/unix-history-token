@@ -122,13 +122,11 @@ parameter_list|)
 block|{
 name|device_t
 name|bridge
-decl_stmt|,
-name|bus
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Our parent must be a PCI-BHND bridge with an attached bhnd bus */
+comment|/* Our parent must be a PCI-BHND bridge */
 name|bridge
 operator|=
 name|device_get_parent
@@ -145,31 +143,6 @@ argument_list|)
 operator|!=
 operator|&
 name|bhndb_pci_driver
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-name|bus
-operator|=
-name|device_find_child
-argument_list|(
-name|bridge
-argument_list|,
-name|devclass_get_name
-argument_list|(
-name|bhnd_devclass
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bus
-operator|==
-name|NULL
 condition|)
 return|return
 operator|(
