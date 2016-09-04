@@ -251,6 +251,15 @@ name|bhnd_devclass_t
 name|bridge_class
 decl_stmt|;
 comment|/**< bridge core type */
+name|struct
+name|bhnd_core_info
+name|bridge_core
+decl_stmt|;
+comment|/**< bridge core. not populated until 							  *  full bridge config is initialized */
+name|bool
+name|have_br_core
+decl_stmt|;
+comment|/**< false if not yet available */
 name|device_t
 name|parent_dev
 decl_stmt|;
@@ -259,10 +268,6 @@ name|device_t
 name|bus_dev
 decl_stmt|;
 comment|/**< child bhnd(4) bus */
-name|device_t
-name|hostb_dev
-decl_stmt|;
-comment|/**< child host bridge device, or NULL 							     if the @p bus_dev has not yet 							     called BHNDB_INIT_FULL_CONFIG() */
 name|struct
 name|mtx
 name|sc_mtx

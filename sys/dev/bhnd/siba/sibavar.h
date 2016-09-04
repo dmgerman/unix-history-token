@@ -159,12 +159,6 @@ name|siba_add_children
 parameter_list|(
 name|device_t
 name|bus
-parameter_list|,
-specifier|const
-name|struct
-name|bhnd_chipid
-modifier|*
-name|chipid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -411,6 +405,30 @@ begin_comment
 comment|/**< maximum number of supported config 							     register blocks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIBA_CFG_RID_BASE
+value|100
+end_define
+
+begin_comment
+comment|/**< base resource ID for SIBA_CFG* register allocations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_CFG_RID
+parameter_list|(
+name|_dinfo
+parameter_list|,
+name|_cfg
+parameter_list|)
+define|\
+value|(SIBA_CFG_RID_BASE + (_cfg) +	\ 	    (_dinfo->core_id.core_info.core_idx * SIBA_MAX_CFG))
+end_define
+
 begin_comment
 comment|/* Sonics/OCP address space mappings */
 end_comment
@@ -581,10 +599,6 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/**< siba device */
-name|device_t
-name|hostb_dev
-decl_stmt|;
-comment|/**< host bridge core, or NULL */
 block|}
 struct|;
 end_struct

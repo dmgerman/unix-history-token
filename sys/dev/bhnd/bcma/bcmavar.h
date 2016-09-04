@@ -56,6 +56,32 @@ comment|/*  * Internal definitions shared by bcma(4) driver implementations.  */
 end_comment
 
 begin_comment
+comment|/** Base resource ID for per-core agent register allocations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_AGENT_RID_BASE
+value|100
+end_define
+
+begin_comment
+comment|/**  * Return the device's core index.  *   * @param _dinfo The bcma_devinfo instance to query.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DINFO_COREIDX
+parameter_list|(
+name|_dinfo
+parameter_list|)
+define|\
+value|((_dinfo)->corecfg->core_info.core_idx)
+end_define
+
+begin_comment
 comment|/** BCMA port identifier. */
 end_comment
 
@@ -214,6 +240,24 @@ name|struct
 name|bcma_corecfg
 modifier|*
 name|corecfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bcma_dinfo_alloc_agent
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|struct
+name|bcma_devinfo
+modifier|*
+name|dinfo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -517,10 +561,6 @@ name|bhnd_softc
 name|bhnd_sc
 decl_stmt|;
 comment|/**< bhnd state */
-name|device_t
-name|hostb_dev
-decl_stmt|;
-comment|/**< host bridge core, or NULL */
 block|}
 struct|;
 end_struct

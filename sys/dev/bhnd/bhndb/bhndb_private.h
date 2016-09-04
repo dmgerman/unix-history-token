@@ -147,6 +147,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|bhndb_alloc_host_resources
+parameter_list|(
+name|struct
+name|bhndb_resources
+modifier|*
+name|br
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|bhndb_free_resources
 parameter_list|(
@@ -444,7 +456,7 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|bhndb_regwin_matches_device
+name|bhndb_regwin_match_core
 parameter_list|(
 specifier|const
 name|struct
@@ -452,8 +464,10 @@ name|bhndb_regwin
 modifier|*
 name|regw
 parameter_list|,
-name|device_t
-name|dev
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -463,7 +477,7 @@ specifier|const
 name|struct
 name|bhndb_hw_priority
 modifier|*
-name|bhndb_hw_priority_find_device
+name|bhndb_hw_priority_find_core
 parameter_list|(
 specifier|const
 name|struct
@@ -471,8 +485,10 @@ name|bhndb_hw_priority
 modifier|*
 name|table
 parameter_list|,
-name|device_t
-name|device
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -607,14 +623,18 @@ name|resource_spec
 modifier|*
 name|res_spec
 decl_stmt|;
-comment|/**< parent bus resource specs */
+comment|/**< parent bus resource specs, or NULL if not allocated */
 name|struct
 name|resource
 modifier|*
 modifier|*
 name|res
 decl_stmt|;
-comment|/**< parent bus resources */
+comment|/**< parent bus resources, or NULL if not allocated */
+name|bool
+name|res_avail
+decl_stmt|;
+comment|/**< if parent bus resources have been allocated */
 name|struct
 name|rman
 name|ht_mem_rman

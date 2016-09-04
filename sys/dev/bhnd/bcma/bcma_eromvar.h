@@ -58,52 +58,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * BCMA EROM per-instance state.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bcma_erom
-block|{
-name|struct
-name|bhnd_erom
-name|obj
-decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
-comment|/**< EROM parent device, or NULL 						     if none. */
-name|struct
-name|bhnd_resource
-modifier|*
-name|res
-decl_stmt|;
-comment|/**< EROM table resource, or 						     NULL if initialized with 						     bus space tag and handle */
-name|int
-name|rid
-decl_stmt|;
-comment|/**< EROM table rid, or -1 */
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-comment|/**< EROM table bus space */
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-comment|/**< EROM table bus handle */
-name|bus_size_t
-name|start
-decl_stmt|;
-comment|/**< EROM table offset */
-name|bus_size_t
-name|offset
-decl_stmt|;
-comment|/**< current read offset */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/** EROM core descriptor. */
 end_comment
 

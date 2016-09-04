@@ -809,6 +809,8 @@ name|bsh
 argument_list|,
 name|bus_addr
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|pcid
 argument_list|)
@@ -921,6 +923,8 @@ argument_list|,
 name|erom
 argument_list|,
 name|esize
+argument_list|,
+name|cid
 argument_list|,
 name|mips_bus_space_generic
 argument_list|,

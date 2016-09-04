@@ -42,7 +42,7 @@ file|<dev/bhnd/bhnd_erom.h>
 end_include
 
 begin_comment
-comment|/**  * Allocate and return a new device enumeration table parser.  *   * @param cls		The parser class for which an instance will be  *			allocated.  * @param parent	The parent device from which EROM resources should  *			be allocated.  * @param rid		The resource ID to be used when allocating EROM  *			resources.  * @param enum_addr	The base address of the device enumeration table.  *  * @retval non-NULL	success  * @retval NULL		if an error occured allocating or initializing the  *			EROM parser.  */
+comment|/**  * Allocate and return a new device enumeration table parser.  *   * @param cls		The parser class for which an instance will be  *			allocated.  * @param parent	The parent device from which EROM resources should  *			be allocated.  * @param rid		The resource ID to be used when allocating EROM  *			resources.  * @param cid		The device's chip identifier.  *  * @retval non-NULL	success  * @retval NULL		if an error occured allocating or initializing the  *			EROM parser.  */
 end_comment
 
 begin_function
@@ -54,14 +54,17 @@ name|bhnd_erom_class_t
 modifier|*
 name|cls
 parameter_list|,
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|cid
+parameter_list|,
 name|device_t
 name|parent
 parameter_list|,
 name|int
 name|rid
-parameter_list|,
-name|bus_addr_t
-name|enum_addr
 parameter_list|)
 block|{
 name|bhnd_erom_t
@@ -100,11 +103,11 @@ name|BHND_EROM_INIT
 argument_list|(
 name|erom
 argument_list|,
+name|cid
+argument_list|,
 name|parent
 argument_list|,
 name|rid
-argument_list|,
-name|enum_addr
 argument_list|)
 operator|)
 condition|)
@@ -121,6 +124,8 @@ argument_list|,
 operator|(
 name|uintmax_t
 operator|)
+name|cid
+operator|->
 name|enum_addr
 argument_list|,
 name|rid
@@ -153,7 +158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Perform static initialization of aa device enumeration table parser using  * the provided bus space tag and handle.  *   * This may be used to initialize a caller-allocated erom instance state  * during early boot, prior to malloc availability.  *   * @param cls		The parser class for which an instance will be  *			allocated.  * @param erom		The erom parser instance to initialize.  * @param esize		The total available number of bytes allocated for  *			@p erom. If this is less than is required by @p cls,  *			ENOMEM will be returned.  * @param bst		Bus space tag.  * @param bsh		Bus space handle mapping the device enumeration  *			space.  *  * @retval 0		success  * @retval ENOMEM	if @p esize is smaller than required by @p cls.  * @retval non-zero	if an error occurs initializing the EROM parser,  *			a regular unix error code will be returned.  */
+comment|/**  * Perform static initialization of aa device enumeration table parser using  * the provided bus space tag and handle.  *   * This may be used to initialize a caller-allocated erom instance state  * during early boot, prior to malloc availability.  *   * @param cls		The parser class for which an instance will be  *			allocated.  * @param erom		The erom parser instance to initialize.  * @param esize		The total available number of bytes allocated for  *			@p erom. If this is less than is required by @p cls,  *			ENOMEM will be returned.  * @param cid		The device's chip identifier.  * @param bst		Bus space tag.  * @param bsh		Bus space handle mapping the device enumeration  *			space.  *  * @retval 0		success  * @retval ENOMEM	if @p esize is smaller than required by @p cls.  * @retval non-zero	if an error occurs initializing the EROM parser,  *			a regular unix error code will be returned.  */
 end_comment
 
 begin_function
@@ -170,6 +175,12 @@ name|erom
 parameter_list|,
 name|size_t
 name|esize
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_chipid
+modifier|*
+name|cid
 parameter_list|,
 name|bus_space_tag_t
 name|bst
@@ -218,6 +229,8 @@ operator|(
 name|BHND_EROM_INIT_STATIC
 argument_list|(
 name|erom
+argument_list|,
+name|cid
 argument_list|,
 name|bst
 argument_list|,

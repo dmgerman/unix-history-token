@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bhnd_erom_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_debug.h"
 end_include
 
@@ -467,6 +473,20 @@ comment|/**< false if the resource requires 					 *   bus window remapping befor
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/** Wrap the active resource @p _r in a bhnd_resource structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_DIRECT_RESOURCE
+parameter_list|(
+name|_r
+parameter_list|)
+value|((struct bhnd_resource) {	\ 	.res = (_r),							\ 	.direct = true,							\ })
+end_define
 
 begin_comment
 comment|/**  * Device quirk table descriptor.  */
@@ -891,6 +911,39 @@ name|num_cores
 parameter_list|,
 name|bhnd_devclass_t
 name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bhnd_core_match
+name|bhnd_core_get_match_desc
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_cores_equal
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|lhs
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|rhs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1602,6 +1655,33 @@ name|child
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * Return the bhnd(4) bus driver's device enumeration parser class  *  * @param driver A bhnd bus driver instance.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bhnd_erom_class_t
+modifier|*
+name|bhnd_driver_get_erom_class
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_EROM_CLASS
+argument_list|(
+name|driver
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/**  * Return the active host bridge core for the bhnd bus, if any, or NULL if  * not found.  *  * @param dev A bhnd bus device.  */
