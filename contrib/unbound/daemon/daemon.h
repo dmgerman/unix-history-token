@@ -37,23 +37,6 @@ directive|include
 file|"services/modstack.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UB_ON_WINDOWS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"util/winsock_event.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct_decl
 struct_decl|struct
 name|config_file

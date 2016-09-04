@@ -4933,8 +4933,12 @@ else|:
 name|NULL
 argument_list|,
 name|parse_state
+condition|?
+name|parse_state
 operator|->
 name|origin_len
+else|:
+literal|0
 argument_list|,
 operator|(
 name|parse_state
@@ -4951,8 +4955,12 @@ else|:
 name|NULL
 argument_list|,
 name|parse_state
+condition|?
+name|parse_state
 operator|->
 name|prev_rr_len
+else|:
+literal|0
 argument_list|)
 return|;
 block|}

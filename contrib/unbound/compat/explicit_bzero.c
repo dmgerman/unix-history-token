@@ -19,6 +19,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ATTR_WEAK
+end_ifdef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -28,6 +34,11 @@ end_macro
 
 begin_function
 name|void
+else|#
+directive|else
+name|void
+endif|#
+directive|endif
 name|__explicit_bzero_hook
 parameter_list|(
 name|void

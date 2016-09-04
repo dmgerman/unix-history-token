@@ -39,7 +39,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|event_base
+name|ub_event_base
 struct_decl|;
 end_struct_decl
 
@@ -64,6 +64,10 @@ struct_decl|struct
 name|internal_timer
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* A sub struct of the comm_timer super struct */
+end_comment
 
 begin_comment
 comment|/** callback from communication point function type */
@@ -428,7 +432,7 @@ begin_struct
 struct|struct
 name|comm_timer
 block|{
-comment|/** the internal event stuff */
+comment|/** the internal event stuff (derived) */
 name|struct
 name|internal_timer
 modifier|*
@@ -513,7 +517,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create comm base that uses the given event_base (underlying event  * mechanism pointer).  * @param base: underlying lib event base.  * @return: the new comm base. NULL on error.  */
+comment|/**  * Create comm base that uses the given ub_event_base (underlying pluggable   * event mechanism pointer).  * @param base: underlying pluggable event base.  * @return: the new comm base. NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -523,7 +527,7 @@ modifier|*
 name|comm_base_create_event
 parameter_list|(
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|base
 parameter_list|)
@@ -662,12 +666,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Access internal data structure (for util/tube.c on windows)  * @param b: comm base  * @return event_base. Could be libevent, or internal event handler.  */
+comment|/**  * Access internal data structure (for util/tube.c on windows)  * @param b: comm base  * @return ub_event_base.  */
 end_comment
 
 begin_function_decl
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|comm_base_internal
 parameter_list|(

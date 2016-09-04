@@ -177,6 +177,15 @@ name|enum
 name|localzone_type
 name|type
 decl_stmt|;
+comment|/** tag bitlist */
+name|uint8_t
+modifier|*
+name|taglist
+decl_stmt|;
+comment|/** length of the taglist (in bytes) */
+name|size_t
+name|taglen
+decl_stmt|;
 comment|/** in this region the zone's data is allocated. 	 * the struct local_zone itself is malloced. */
 name|struct
 name|regional

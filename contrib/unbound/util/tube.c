@@ -43,6 +43,12 @@ directive|include
 file|"util/fptr_wlist.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"util/ub_event.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1549,6 +1555,14 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
+comment|/* temporarily unavail: try again*/
 name|log_err
 argument_list|(
 literal|"tube msg write failed: %s"
@@ -1613,6 +1627,14 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
+comment|/* temporarily unavail: try again*/
 name|log_err
 argument_list|(
 literal|"tube msg write failed: %s"
@@ -2856,9 +2878,8 @@ argument_list|,
 literal|"tube remove_bg_listen"
 argument_list|)
 expr_stmt|;
-name|winsock_unregister_wsaevent
+name|ub_winsock_unregister_wsaevent
 argument_list|(
-operator|&
 name|tube
 operator|->
 name|ev_listen
@@ -3519,18 +3540,16 @@ return|return
 literal|1
 return|;
 comment|/* ignore when no comm base - testing */
-return|return
-name|winsock_register_wsaevent
+name|tube
+operator|->
+name|ev_listen
+operator|=
+name|ub_winsock_register_wsaevent
 argument_list|(
 name|comm_base_internal
 argument_list|(
 name|base
 argument_list|)
-argument_list|,
-operator|&
-name|tube
-operator|->
-name|ev_listen
 argument_list|,
 name|tube
 operator|->
@@ -3541,6 +3560,15 @@ name|tube_handle_signal
 argument_list|,
 name|tube
 argument_list|)
+expr_stmt|;
+return|return
+name|tube
+operator|->
+name|ev_listen
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 end_function

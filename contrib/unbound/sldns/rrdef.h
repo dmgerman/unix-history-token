@@ -956,7 +956,12 @@ comment|/* RFC6975 */
 name|LDNS_EDNS_CLIENT_SUBNET
 init|=
 literal|8
+block|,
 comment|/* draft-vandergaast-edns-client-subnet */
+name|LDNS_EDNS_PADDING
+init|=
+literal|12
+comment|/* RFC7830 */
 block|}
 enum|;
 typedef|typedef

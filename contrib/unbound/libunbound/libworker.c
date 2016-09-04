@@ -448,7 +448,7 @@ name|int
 name|is_bg
 parameter_list|,
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|eb
 parameter_list|)
@@ -1460,7 +1460,7 @@ modifier|*
 name|ctx
 parameter_list|,
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|eb
 parameter_list|)
@@ -3360,6 +3360,12 @@ name|bits
 operator|=
 name|EDNS_DO
 expr_stmt|;
+name|edns
+operator|->
+name|opt_list
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|sldns_buffer_capacity
@@ -4931,6 +4937,11 @@ name|int
 name|nocaps
 parameter_list|,
 name|struct
+name|edns_option
+modifier|*
+name|opt_list
+parameter_list|,
+name|struct
 name|sockaddr_storage
 modifier|*
 name|addr
@@ -5045,6 +5056,8 @@ operator|->
 name|cfg
 operator|->
 name|ssl_upstream
+argument_list|,
+name|opt_list
 argument_list|,
 name|addr
 argument_list|,
@@ -5771,6 +5784,14 @@ name|int
 name|ATTR_UNUSED
 argument_list|(
 name|nocaps
+argument_list|)
+argument_list|,
+expr|struct
+name|edns_option
+operator|*
+name|ATTR_UNUSED
+argument_list|(
+name|opt_list
 argument_list|)
 argument_list|,
 expr|struct

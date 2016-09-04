@@ -12949,6 +12949,12 @@ name|bits
 operator|=
 name|EDNS_DO
 expr_stmt|;
+name|edns
+operator|.
+name|opt_list
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|sldns_buffer_capacity
