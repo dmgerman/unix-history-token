@@ -15,17 +15,6 @@ directive|define
 name|_BHND_CORES_CHIPC_CHIPCREG_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|CHIPC_CHIPID_SIZE
-value|0x100
-end_define
-
-begin_comment
-comment|/**< size of the register block 						     containing the chip 						     identification registers 						     required during bus 						     enumeration */
-end_comment
-
 begin_comment
 comment|/** Evaluates to true if the given ChipCommon core revision supports  *  the CHIPC_CORECTRL register */
 end_comment

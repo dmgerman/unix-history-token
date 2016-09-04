@@ -890,10 +890,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|offset
-operator|+=
-name|length
-expr_stmt|;
 comment|/* create the key and set its properties */
 if|if
 condition|(

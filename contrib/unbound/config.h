@@ -133,6 +133,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Whether the C compiler accepts the "weak" attribute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ATTR_WEAK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `chown' function. */
 end_comment
 
@@ -364,6 +375,14 @@ comment|/* #undef HAVE_EVENT_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_new' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EVP_MD_CTX_NEW */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `EVP_sha1' function. */
 end_comment
 
@@ -583,13 +602,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* If you have HMAC_CTX_init */
+comment|/* If you have HMAC_Update */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_HMAC_CTX_INIT
+name|HAVE_HMAC_UPDATE
 value|1
 end_define
 
@@ -1246,6 +1265,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strsep' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRSEP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if `ipi_spec_dst' is a member of `struct in_pktinfo'. */
 end_comment
 
@@ -1682,7 +1712,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.8"
+value|"unbound 1.5.9"
 end_define
 
 begin_comment
@@ -1715,7 +1745,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.8"
+value|"1.5.9"
 end_define
 
 begin_comment
@@ -1778,7 +1808,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,8,0
+value|1,5,9,0
 end_define
 
 begin_comment
@@ -1896,12 +1926,31 @@ comment|/* #undef UNBOUND_DEBUG */
 end_comment
 
 begin_comment
+comment|/* Define to 1 to use cachedb support */
+end_comment
+
+begin_comment
+comment|/* #undef USE_CACHEDB */
+end_comment
+
+begin_comment
 comment|/* Define to 1 to enable dnstap support */
 end_comment
 
 begin_comment
 comment|/* #undef USE_DNSTAP */
 end_comment
+
+begin_comment
+comment|/* Define this to enable DSA support. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_DSA
+value|1
+end_define
 
 begin_comment
 comment|/* Define this to enable ECDSA support. */
@@ -3768,6 +3817,42 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRSEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|strsep
+value|unbound_strsep
+end_define
+
+begin_function_decl
+name|char
+modifier|*
+name|strsep
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|stringp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|delim
 parameter_list|)
 function_decl|;
 end_function_decl

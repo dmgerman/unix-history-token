@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2015 Landon Fuller<landon@landonf.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*-  * Copyright (c) 2015-2016 Landon Fuller<landonf@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    similar to the "NO WARRANTY" disclaimer below ("Disclaimer") and any  *    redistribution must be conditioned upon including a substantially  *    similar Disclaimer requirement for further binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT, MERCHANTIBILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL  * THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<dev/bhnd/bhndb/bhndb_pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/bhnd/bhndb/bhndb_hwdata.h>
 end_include
 
 begin_include
@@ -442,6 +448,11 @@ operator|=
 name|bhndb_pci_generic_hw_table
 block|,
 operator|.
+name|bridge_hwprio
+operator|=
+name|bhndb_siba_priority_table
+block|,
+operator|.
 name|devices
 operator|=
 name|siba_devices
@@ -459,6 +470,11 @@ operator|.
 name|bridge_hwtable
 operator|=
 name|bhndb_pci_generic_hw_table
+block|,
+operator|.
+name|bridge_hwprio
+operator|=
+name|bhndb_bcma_priority_table
 block|,
 operator|.
 name|devices
@@ -931,6 +947,43 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
+name|struct
+name|bhndb_hw_priority
+modifier|*
+name|bwn_pci_get_bhndb_hwprio
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+name|struct
+name|bwn_pci_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|sc
+operator|->
+name|devcfg
+operator|->
+name|bridge_hwprio
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|bool
 name|bwn_pci_is_core_disabled
 parameter_list|(
@@ -1099,6 +1152,13 @@ argument_list|(
 name|bhndb_bus_get_hardware_table
 argument_list|,
 name|bwn_pci_get_bhndb_hwtable
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhndb_bus_get_hardware_prio
+argument_list|,
+name|bwn_pci_get_bhndb_hwprio
 argument_list|)
 block|,
 name|DEVMETHOD

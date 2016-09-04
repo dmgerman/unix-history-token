@@ -15753,26 +15753,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_zero_page_idle
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|pmap_zero_page
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_if
 if|#
 directive|if

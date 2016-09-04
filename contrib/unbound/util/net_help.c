@@ -4832,6 +4832,11 @@ name|defined
 argument_list|(
 name|THREADS_DISABLED
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
+argument_list|)
 end_if
 
 begin_comment
@@ -4965,6 +4970,11 @@ name|defined
 argument_list|(
 name|THREADS_DISABLED
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
+argument_list|)
 name|int
 name|i
 decl_stmt|;
@@ -5067,6 +5077,11 @@ operator|!
 name|defined
 argument_list|(
 name|THREADS_DISABLED
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
 argument_list|)
 name|int
 name|i

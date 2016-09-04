@@ -206,7 +206,9 @@ name|child
 parameter_list|)
 block|{
 return|return
+operator|(
 name|false
+operator|)
 return|;
 block|}
 end_function

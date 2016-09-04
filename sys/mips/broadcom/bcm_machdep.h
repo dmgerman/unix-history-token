@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/bhnd_erom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/bhnd/cores/pmu/bhnd_pmuvar.h>
 end_include
 
@@ -48,43 +54,13 @@ name|bcm_pmu_soc_io
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|bcm_bus_find_core
-function_decl|)
-parameter_list|(
-name|struct
-name|bhnd_chipid
-modifier|*
-name|chipid
-parameter_list|,
-name|bhnd_devclass_t
-name|devclass
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
-name|struct
-name|bhnd_core_info
-modifier|*
-name|info
-parameter_list|,
-name|uintptr_t
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|bcm_platform
 block|{
 name|struct
 name|bhnd_chipid
-name|id
+name|cid
 decl_stmt|;
 comment|/**< chip id */
 name|struct
@@ -119,6 +95,27 @@ name|bhnd_pmu_query
 name|pmu
 decl_stmt|;
 comment|/**< PMU query instance */
+name|bhnd_erom_class_t
+modifier|*
+name|erom_impl
+decl_stmt|;
+comment|/**< erom parser class */
+name|struct
+name|kobj_ops
+name|erom_ops
+decl_stmt|;
+comment|/**< compiled kobj opcache */
+union|union
+block|{
+name|bhnd_erom_static_t
+name|data
+decl_stmt|;
+name|bhnd_erom_t
+name|obj
+decl_stmt|;
+block|}
+name|erom
+union|;
 ifdef|#
 directive|ifdef
 name|CFE
@@ -203,23 +200,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|bcm_bus_find_core
-name|bcm_find_core_default
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|BCM_ERR
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|printf("%s: " fmt, __FUNCTION__, ##__VA_ARGS__)
+end_define
 
-begin_decl_stmt
-name|bcm_bus_find_core
-name|bcm_find_core_bcma
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bcm_bus_find_core
-name|bcm_find_core_siba
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|BCM_SOC_BSH
+parameter_list|(
+name|_addr
+parameter_list|,
+name|_offset
+parameter_list|)
+define|\
+value|((bus_space_handle_t)BCM_SOC_ADDR((_addr), (_offset)))
+end_define
 
 begin_define
 define|#

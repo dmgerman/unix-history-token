@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bhnd_erom_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_debug.h"
 end_include
 
@@ -467,6 +473,20 @@ comment|/**< false if the resource requires 					 *   bus window remapping befor
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/** Wrap the active resource @p _r in a bhnd_resource structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_DIRECT_RESOURCE
+parameter_list|(
+name|_r
+parameter_list|)
+value|((struct bhnd_resource) {	\ 	.res = (_r),							\ 	.direct = true,							\ })
+end_define
 
 begin_comment
 comment|/**  * Device quirk table descriptor.  */
@@ -891,6 +911,39 @@ name|num_cores
 parameter_list|,
 name|bhnd_devclass_t
 name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|bhnd_core_match
+name|bhnd_core_get_match_desc
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|core
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_cores_equal
+parameter_list|(
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|lhs
+parameter_list|,
+specifier|const
+name|struct
+name|bhnd_core_info
+modifier|*
+name|rhs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1604,6 +1657,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Return the bhnd(4) bus driver's device enumeration parser class  *  * @param driver A bhnd bus driver instance.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bhnd_erom_class_t
+modifier|*
+name|bhnd_driver_get_erom_class
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_GET_EROM_CLASS
+argument_list|(
+name|driver
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Return the active host bridge core for the bhnd bus, if any, or NULL if  * not found.  *  * @param dev A bhnd bus device.  */
 end_comment
 
@@ -1694,50 +1774,6 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/**  * Get a list of all cores discoverable on the bhnd bus.  *  * Enumerates all cores discoverable on @p dev, returning the list in  * @p cores and the count in @p num_cores.  *   * The memory allocated for the list should be freed using  * `free(*cores, M_BHND)`. @p cores and @p num_cores are not changed  * when an error is returned.  *   * @param	dev		A bhnd bus child device.  * @param[out]	cores		The table of core descriptors.  * @param[out]	num_cores	The number of core descriptors in @p cores.  *   * @retval 0		success  * @retval non-zero	if an error occurs enumerating @p dev, a regular UNIX  *			error code should be returned.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|bhnd_get_core_table
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|bhnd_core_info
-modifier|*
-modifier|*
-name|cores
-parameter_list|,
-name|u_int
-modifier|*
-name|num_cores
-parameter_list|)
-block|{
-return|return
-operator|(
-name|BHND_BUS_GET_CORE_TABLE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|cores
-argument_list|,
-name|num_cores
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/**  * If supported by the chipset, return the clock source for the given clock.  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock for which a clock source will be returned.  *  * @retval	bhnd_clksrc		The clock source for @p clock.  * @retval	BHND_CLKSRC_UNKNOWN	If @p clock is unsupported, or its  *					clock source is not known to the bus.  */

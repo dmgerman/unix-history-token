@@ -72,6 +72,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_CACHEDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"cachedb/cachedb.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** count number of modules (words) in the string */
 end_comment
@@ -410,6 +427,13 @@ literal|"python"
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_CACHEDB
+literal|"cachedb"
+block|,
+endif|#
+directive|endif
 literal|"validator"
 block|,
 literal|"iterator"
@@ -476,6 +500,13 @@ ifdef|#
 directive|ifdef
 name|WITH_PYTHONMODULE
 function_decl|&pythonmod_get_funcblock
+operator|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_CACHEDB
+function_decl|&cachedb_get_funcblock
 operator|,
 endif|#
 directive|endif

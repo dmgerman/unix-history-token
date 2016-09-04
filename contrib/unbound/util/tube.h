@@ -61,12 +61,6 @@ directive|include
 file|"util/locks.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"util/winsock_event.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -187,7 +181,8 @@ name|event
 decl_stmt|;
 comment|/** winsock event storage when registered with event base */
 name|struct
-name|event
+name|ub_event
+modifier|*
 name|ev_listen
 decl_stmt|;
 comment|/** lock on the list of outstanding items */

@@ -311,7 +311,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  dump_requestlist		show what is worked on\n"
+literal|"  dump_requestlist		show what is worked on by first thread\n"
 argument_list|)
 expr_stmt|;
 name|printf

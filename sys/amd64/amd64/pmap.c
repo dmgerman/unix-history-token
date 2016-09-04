@@ -23216,41 +23216,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Zero the specified hardware page in a way that minimizes cache thrashing.  * This is intended to be called from the vm_pagezero process only and  * outside of Giant.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_zero_page_idle
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|vm_offset_t
-name|va
-init|=
-name|PHYS_TO_DMAP
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|sse2_pagezero
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|va
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Copy 1 specified hardware page to another.  */
 end_comment
 

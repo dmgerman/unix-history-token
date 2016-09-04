@@ -188,13 +188,17 @@ name|core_class
 range|:
 literal|1
 decl_stmt|,
+name|core_idx
+range|:
+literal|1
+decl_stmt|,
 name|core_unit
 range|:
 literal|1
 decl_stmt|,
 name|flags_unused
 range|:
-literal|3
+literal|2
 decl_stmt|;
 block|}
 name|match
@@ -219,6 +223,10 @@ name|bhnd_devclass_t
 name|core_class
 decl_stmt|;
 comment|/**< required bhnd class */
+name|u_int
+name|core_idx
+decl_stmt|;
+comment|/**< required core index */
 name|int
 name|core_unit
 decl_stmt|;
@@ -235,7 +243,7 @@ parameter_list|(
 name|_src
 parameter_list|)
 define|\
-value|_BHND_COPY_MATCH_FIELD(_src, core_vendor),	\ 	_BHND_COPY_MATCH_FIELD(_src, core_id),		\ 	_BHND_COPY_MATCH_FIELD(_src, core_rev),		\ 	_BHND_COPY_MATCH_FIELD(_src, core_class),	\ 	_BHND_COPY_MATCH_FIELD(_src, core_unit)		\  #define	BHND_MATCH_CORE_VENDOR(_v)	_BHND_SET_MATCH_FIELD(core_vendor, _v)
+value|_BHND_COPY_MATCH_FIELD(_src, core_vendor),	\ 	_BHND_COPY_MATCH_FIELD(_src, core_id),		\ 	_BHND_COPY_MATCH_FIELD(_src, core_rev),		\ 	_BHND_COPY_MATCH_FIELD(_src, core_class),	\ 	_BHND_COPY_MATCH_FIELD(_src, core_idx),		\ 	_BHND_COPY_MATCH_FIELD(_src, core_unit)		\  #define	BHND_MATCH_CORE_VENDOR(_v)	_BHND_SET_MATCH_FIELD(core_vendor, _v)
 end_define
 
 begin_define
@@ -266,6 +274,16 @@ parameter_list|(
 name|_cls
 parameter_list|)
 value|_BHND_SET_MATCH_FIELD(core_class, _cls)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_MATCH_CORE_IDX
+parameter_list|(
+name|_idx
+parameter_list|)
+value|_BHND_SET_MATCH_FIELD(core_idx, _idx)
 end_define
 
 begin_define
@@ -640,6 +658,10 @@ name|core_class
 range|:
 literal|1
 decl_stmt|,
+name|core_idx
+range|:
+literal|1
+decl_stmt|,
 name|core_unit
 range|:
 literal|1
@@ -674,7 +696,7 @@ literal|1
 decl_stmt|,
 name|flags_unused
 range|:
-literal|2
+literal|1
 decl_stmt|;
 block|}
 name|match
@@ -699,6 +721,10 @@ name|bhnd_devclass_t
 name|core_class
 decl_stmt|;
 comment|/**< required bhnd class */
+name|u_int
+name|core_idx
+decl_stmt|;
+comment|/**< required core index */
 name|int
 name|core_unit
 decl_stmt|;
