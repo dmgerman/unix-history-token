@@ -184,7 +184,9 @@ argument_list|)
 argument_list|,
 name|SIBA_QUIRK_PCIE_D11_SB_TIMEOUT
 argument_list|)
-block|, }
+block|,
+name|BHND_DEVICE_QUIRK_END
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -206,7 +208,9 @@ name|NULL
 argument_list|,
 name|bridge_quirks
 argument_list|)
-block|, }
+block|,
+name|BHND_DEVICE_END
+block|}
 decl_stmt|;
 end_decl_stmt
 
