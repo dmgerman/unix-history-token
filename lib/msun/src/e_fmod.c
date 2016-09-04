@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -889,6 +895,31 @@ return|;
 comment|/* exact output */
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|fmod
+argument_list|,
+name|fmodl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
