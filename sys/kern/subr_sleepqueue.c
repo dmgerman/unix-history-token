@@ -3610,7 +3610,16 @@ expr_stmt|;
 comment|/* 	 * Find the highest priority thread on the queue.  If there is a 	 * tie, use the thread that first appears in the queue as it has 	 * been sleeping the longest since threads are always added to 	 * the tail of sleep queues. 	 */
 name|besttd
 operator|=
-name|NULL
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|sq
+operator|->
+name|sq_blocked
+index|[
+name|queue
+index|]
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -3623,10 +3632,6 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|besttd
-operator|==
-name|NULL
-operator|||
 name|td
 operator|->
 name|td_priority
