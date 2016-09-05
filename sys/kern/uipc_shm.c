@@ -760,6 +760,8 @@ argument_list|,
 name|idx
 argument_list|,
 name|VM_ALLOC_NORMAL
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -771,6 +773,11 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
+name|vm_page_xbusy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_pager_has_page
@@ -858,12 +865,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_lock
 argument_list|(
 name|m
