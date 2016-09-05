@@ -221,9 +221,12 @@ modifier|*
 name|sc
 parameter_list|,
 specifier|const
-name|rndis_msg
+name|void
 modifier|*
-name|response
+name|data
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -566,28 +569,51 @@ modifier|*
 name|sc
 parameter_list|,
 specifier|const
-name|rndis_msg
+name|void
 modifier|*
-name|response
+name|data
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 block|{
 specifier|const
-name|rndis_indicate_status
+name|struct
+name|rndis_status_msg
 modifier|*
-name|indicate
-init|=
-operator|&
-name|response
-operator|->
 name|msg
-operator|.
-name|indicate_status
 decl_stmt|;
+if|if
+condition|(
+name|dlen
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|msg
+argument_list|)
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"invalid RNDIS status\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|msg
+operator|=
+name|data
+expr_stmt|;
 switch|switch
 condition|(
-name|indicate
+name|msg
 operator|->
-name|status
+name|rm_status
 condition|)
 block|{
 case|case
@@ -620,11 +646,11 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"unknown status %d received\n"
+literal|"unknown RNDIS status 0x%08x\n"
 argument_list|,
-name|indicate
+name|msg
 operator|->
-name|status
+name|rm_status
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1229,7 +1255,7 @@ comment|/*  * RNDIS filter on receive  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|hv_rf_on_receive
 parameter_list|(
 name|struct
@@ -1252,28 +1278,53 @@ name|dlen
 parameter_list|)
 block|{
 specifier|const
-name|rndis_msg
-modifier|*
-name|rndis_hdr
-decl_stmt|;
-specifier|const
 name|struct
 name|rndis_comp_hdr
 modifier|*
 name|comp
 decl_stmt|;
-name|rndis_hdr
+specifier|const
+name|struct
+name|rndis_msghdr
+modifier|*
+name|hdr
+decl_stmt|;
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+name|dlen
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|hdr
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|rxr
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"invalid RNDIS msg\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|hdr
 operator|=
 name|data
 expr_stmt|;
 switch|switch
 condition|(
-name|rndis_hdr
+name|hdr
 operator|->
-name|ndis_msg_type
+name|rm_type
 condition|)
 block|{
-comment|/* data message */
 case|case
 name|REMOTE_NDIS_PACKET_MSG
 case|:
@@ -1287,7 +1338,6 @@ name|dlen
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* completion messages */
 case|case
 name|REMOTE_NDIS_INITIALIZE_CMPLT
 case|:
@@ -1300,6 +1350,29 @@ case|:
 case|case
 name|REMOTE_NDIS_KEEPALIVE_CMPLT
 case|:
+comment|/* unused */
+if|if
+condition|(
+name|dlen
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|comp
+argument_list|)
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|rxr
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"invalid RNDIS cmplt\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|comp
 operator|=
 name|data
@@ -1313,7 +1386,7 @@ operator|>
 name|HN_RNDIS_RID_COMPAT_MAX
 argument_list|,
 operator|(
-literal|"invalid rid 0x%08x\n"
+literal|"invalid RNDIS rid 0x%08x\n"
 operator|,
 name|comp
 operator|->
@@ -1333,7 +1406,6 @@ name|dlen
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* notification message */
 case|case
 name|REMOTE_NDIS_INDICATE_STATUS_MSG
 case|:
@@ -1341,7 +1413,9 @@ name|hv_rf_receive_indicate_status
 argument_list|(
 name|sc
 argument_list|,
-name|rndis_hdr
+name|data
+argument_list|,
+name|dlen
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1351,35 +1425,30 @@ case|:
 comment|/* 		 * Reset completed, no rid. 		 * 		 * NOTE: 		 * RESET is not issued by hn(4), so this message should 		 * _not_ be observed. 		 */
 name|if_printf
 argument_list|(
-name|sc
+name|rxr
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"RESET CMPLT received\n"
+literal|"RESET cmplt received\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|if_printf
 argument_list|(
-name|sc
+name|rxr
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"unknown RNDIS message 0x%x\n"
+literal|"unknown RNDIS msg 0x%x\n"
 argument_list|,
-name|rndis_hdr
+name|hdr
 operator|->
-name|ndis_msg_type
+name|rm_type
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

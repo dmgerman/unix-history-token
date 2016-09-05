@@ -44,7 +44,7 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|int
+name|void
 name|hv_rf_on_receive
 parameter_list|(
 name|struct
