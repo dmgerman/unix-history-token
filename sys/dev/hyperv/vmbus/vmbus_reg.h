@@ -423,6 +423,14 @@ define|\
 value|roundup2((tlen), VMBUS_CHANPKT_SIZE_ALIGN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_HLEN_MIN
+define|\
+value|(sizeof(struct vmbus_chanpkt_hdr)>> VMBUS_CHANPKT_SIZE_SHIFT)
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_chanpkt
