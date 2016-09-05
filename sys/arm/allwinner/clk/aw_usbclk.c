@@ -155,6 +155,8 @@ name|AW_A10_USBCLK
 init|=
 literal|1
 block|,
+name|AW_A13_USBCLK
+block|,
 name|AW_A31_USBCLK
 block|,
 name|AW_A83T_USBCLK
@@ -176,6 +178,12 @@ block|{
 literal|"allwinner,sun4i-a10-usb-clk"
 block|,
 name|AW_A10_USBCLK
+block|}
+block|,
+block|{
+literal|"allwinner,sun5i-a13-usb-clk"
+block|,
+name|AW_A13_USBCLK
 block|}
 block|,
 block|{
