@@ -15106,6 +15106,12 @@ block|{
 case|case
 name|IEEE80211_IOC_POWERSAVE
 case|:
+case|case
+name|IEEE80211_IOC_PROTMODE
+case|:
+case|case
+name|IEEE80211_IOC_RTSTHRESHOLD
+case|:
 name|error
 operator|=
 literal|0
