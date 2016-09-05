@@ -337,6 +337,11 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
+name|wsp
+operator|==
+name|ws
+operator|||
 name|wsp
 index|[
 operator|-
@@ -345,6 +350,7 @@ index|]
 operator|!=
 literal|L'
 expr|\n'
+operator|)
 operator|&&
 name|n
 operator|>
@@ -415,7 +421,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|sret
+name|wsp
+operator|==
+name|ws
 condition|)
 comment|/* EOF */
 goto|goto
