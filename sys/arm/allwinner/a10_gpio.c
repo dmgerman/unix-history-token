@@ -2922,6 +2922,16 @@ name|pin_num
 argument_list|)
 operator|!=
 name|pin_pull
+operator|&&
+operator|(
+name|pin_pull
+operator|==
+name|A10_GPIO_PULLUP
+operator|||
+name|pin_pull
+operator|==
+name|A10_GPIO_PULLDOWN
+operator|)
 condition|)
 name|a10_gpio_set_pud
 argument_list|(
