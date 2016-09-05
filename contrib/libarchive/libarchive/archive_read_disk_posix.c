@@ -7110,20 +7110,21 @@ name|defined
 argument_list|(
 name|VFCF_SYNTHETIC
 argument_list|)
+comment|/* TODO: configure should set GETVFSBYNAME_ARG_TYPE to make  * this accurate; some platforms have both and we need the one that's  * used by getvfsbyname()  *  * Then the following would become:  *  #if defined(GETVFSBYNAME_ARG_TYPE)  *   GETVFSBYNAME_ARG_TYPE vfc;  *  #endif  */
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_STRUCT_VFSCONF
+name|HAVE_STRUCT_XVFSCONF
 argument_list|)
 name|struct
-name|vfsconf
+name|xvfsconf
 name|vfc
 decl_stmt|;
 else|#
 directive|else
 name|struct
-name|xvfsconf
+name|vfsconf
 name|vfc
 decl_stmt|;
 endif|#
