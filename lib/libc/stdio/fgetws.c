@@ -93,6 +93,9 @@ name|locale_t
 name|locale
 parameter_list|)
 block|{
+name|int
+name|sret
+decl_stmt|;
 name|wchar_t
 modifier|*
 name|wsp
@@ -144,6 +147,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL
@@ -165,13 +174,17 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
-comment|/* EOF */
+comment|/* EOF or ferror */
 goto|goto
 name|error
 goto|;
 name|wsp
 operator|=
 name|ws
+expr_stmt|;
+name|sret
+operator|=
+literal|0
 expr_stmt|;
 do|do
 block|{
@@ -245,10 +258,18 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
 comment|/* Conversion error */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 if|if
 condition|(
 name|src
@@ -336,10 +357,14 @@ name|_r
 operator|>
 literal|0
 operator|||
+operator|(
+name|sret
+operator|=
 name|__srefill
 argument_list|(
 name|fp
 argument_list|)
+operator|)
 operator|==
 literal|0
 operator|)
@@ -347,11 +372,15 @@ condition|)
 do|;
 if|if
 condition|(
-name|wsp
-operator|==
-name|ws
+name|sret
+operator|&&
+operator|!
+name|__sfeof
+argument_list|(
+name|fp
+argument_list|)
 condition|)
-comment|/* EOF */
+comment|/* ferror */
 goto|goto
 name|error
 goto|;
@@ -368,7 +397,27 @@ operator|->
 name|_mbstate
 argument_list|)
 condition|)
+block|{
 comment|/* Incomplete character */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
+name|errno
+operator|=
+name|EILSEQ
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+name|sret
+condition|)
+comment|/* EOF */
 goto|goto
 name|error
 goto|;
