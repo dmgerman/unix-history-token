@@ -48,6 +48,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cron.h"
 end_include
 
@@ -216,12 +222,12 @@ specifier|static
 name|char
 name|User
 index|[
-name|MAX_UNAME
+name|MAXLOGNAME
 index|]
 decl_stmt|,
 name|RealUser
 index|[
-name|MAX_UNAME
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 end_decl_stmt

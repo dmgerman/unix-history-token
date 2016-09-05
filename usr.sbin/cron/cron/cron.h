@@ -293,17 +293,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_UNAME
-value|20
-end_define
-
-begin_comment
-comment|/* max length of username, should be overkill */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ROOT_UID
 value|0
 end_define
