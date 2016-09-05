@@ -4809,11 +4809,13 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
 name|r
-operator|<
-name|addrlen
-operator|*
-literal|8
+operator|&
+literal|0x80
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|match
