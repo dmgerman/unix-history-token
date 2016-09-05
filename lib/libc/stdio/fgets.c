@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -125,18 +131,6 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-if|if
-condition|(
-name|n
-operator|<=
-literal|0
-condition|)
-comment|/* sanity check */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -150,6 +144,35 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* sanity check */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|s
 operator|=
 name|buf
@@ -190,6 +213,12 @@ block|{
 comment|/* EOF/error: stop with partial or no line */
 if|if
 condition|(
+operator|!
+name|__sfeof
+argument_list|(
+name|fp
+argument_list|)
+operator|||
 name|s
 operator|==
 name|buf
