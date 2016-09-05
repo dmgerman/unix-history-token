@@ -238,7 +238,7 @@ name|BCM
 argument_list|,
 name|USB
 argument_list|,
-name|OTHER
+name|USB_DUAL
 argument_list|,
 literal|"USB 1.1 Device/Host Controller"
 argument_list|)
@@ -403,7 +403,7 @@ name|BCM
 argument_list|,
 name|USB11H
 argument_list|,
-name|OTHER
+name|USB_HOST
 argument_list|,
 literal|"USB 1.1 Host Controller"
 argument_list|)
@@ -414,9 +414,9 @@ name|BCM
 argument_list|,
 name|USB11D
 argument_list|,
-name|OTHER
+name|USB_DEV
 argument_list|,
-literal|"USB 1.1 Device Core"
+literal|"USB 1.1 Device Controller"
 argument_list|)
 block|,
 name|BHND_CDESC
@@ -425,7 +425,7 @@ name|BCM
 argument_list|,
 name|USB20H
 argument_list|,
-name|OTHER
+name|USB_HOST
 argument_list|,
 literal|"USB 2.0 Host Controller"
 argument_list|)
@@ -436,9 +436,9 @@ name|BCM
 argument_list|,
 name|USB20D
 argument_list|,
-name|OTHER
+name|USB_DEV
 argument_list|,
-literal|"USB 2.0 Device Core"
+literal|"USB 2.0 Device Controller"
 argument_list|)
 block|,
 name|BHND_CDESC
@@ -865,7 +865,7 @@ name|BCM
 argument_list|,
 name|NS_USB20H
 argument_list|,
-name|OTHER
+name|USB_HOST
 argument_list|,
 literal|"USB 2.0 Host Controller"
 argument_list|)
@@ -876,7 +876,7 @@ name|BCM
 argument_list|,
 name|NS_USB30H
 argument_list|,
-name|OTHER
+name|USB_HOST
 argument_list|,
 literal|"USB 3.0 Host Controller"
 argument_list|)
