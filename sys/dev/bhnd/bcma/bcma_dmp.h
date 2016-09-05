@@ -16,8 +16,47 @@ name|_BCMA_BCMA_DMP_H_
 end_define
 
 begin_comment
-comment|/*  * PL-368 Device Management Plugin (DMP) Registers& Constants  *   * The "DMP" core used in Broadcom HND devices has been described  * by Broadcom engineers (and in published header files) as being  * ARM's PL-368 "Device Management Plugin" system IP, included with  * the CoreLink AMBA Designer tooling.  *   * Documentation for the PL-368 is not publicly available, however,  * and the only public reference by ARM to its existence appears to be  * in the proprietary "NIC-301 Interconnect Device Management (PL368)"  * errata publication, available to licensees as part of ARM's  * CoreLink Controllers and Peripherals Engineering Errata.  */
+comment|/*  * PL-368 Device Management Plugin (DMP) Registers& Constants  *   * The "DMP" core used in Broadcom HND devices has been described  * by Broadcom engineers (and in published header files) as being  * ARM's PL-368 "Device Management Plugin" system IP, included with  * the CoreLink AMBA Designer tooling.  *   * Documentation for the PL-368 is not publicly available, however,  * and the only public reference by ARM to its existence appears to be  * in the proprietary "NIC-301 Interconnect Device Management (PL368)"  * errata publication, available to licensees as part of ARM's  * CoreLink Controllers and Peripherals Engineering Errata.  *   * As such, the exact interpretation of these register definitions is  * unconfirmed, and may be incorrect.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_GET_FLAG
+parameter_list|(
+name|_value
+parameter_list|,
+name|_flag
+parameter_list|)
+define|\
+value|(((_value)& _flag) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_GET_BITS
+parameter_list|(
+name|_value
+parameter_list|,
+name|_field
+parameter_list|)
+define|\
+value|((_value& _field ## _MASK)>> _field ## _SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BHND_DMP_SET_BITS
+parameter_list|(
+name|_value
+parameter_list|,
+name|_field
+parameter_list|)
+define|\
+value|(((_value)<< _field ## _SHIFT)& _field ## _MASK)
+end_define
 
 begin_comment
 comment|/* Out-of-band Router registers */
@@ -234,7 +273,99 @@ value|0xf3c
 end_define
 
 begin_comment
-comment|/* DMP wrapper registers */
+comment|/* Common definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_NUM_BANKS
+value|4
+end_define
+
+begin_comment
+comment|/**< number of OOB banks (A, B, C, D) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_NUM_SEL
+value|8
+end_define
+
+begin_comment
+comment|/**< number of OOB selectors per bank */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_NUM_BUSLINES
+value|32
+end_define
+
+begin_comment
+comment|/**< number of bus lines managed by OOB core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_BANKA
+value|0
+end_define
+
+begin_comment
+comment|/**< bank A index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_BANKB
+value|1
+end_define
+
+begin_comment
+comment|/**< bank B index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_BANKC
+value|2
+end_define
+
+begin_comment
+comment|/**< bank C index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_BANKD
+value|3
+end_define
+
+begin_comment
+comment|/**< bank D index */
+end_comment
+
+begin_comment
+comment|/** OOB bank used for interrupt lines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_OOB_BANK_INTR
+value|BCMA_OOB_BANKA
+end_define
+
+begin_comment
+comment|/* DMP agent registers */
 end_comment
 
 begin_define
@@ -244,12 +375,20 @@ name|BCMA_DMP_OOBSELINA30
 value|0x000
 end_define
 
+begin_comment
+comment|/**< A0-A3 input selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELINA74
 value|0x004
 end_define
+
+begin_comment
+comment|/**< A4-A7 input selectors */
+end_comment
 
 begin_define
 define|#
@@ -258,12 +397,20 @@ name|BCMA_DMP_OOBSELINB30
 value|0x020
 end_define
 
+begin_comment
+comment|/**< B0-B3 input selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELINB74
 value|0x024
 end_define
+
+begin_comment
+comment|/**< B4-B7 input selectors */
+end_comment
 
 begin_define
 define|#
@@ -272,12 +419,20 @@ name|BCMA_DMP_OOBSELINC30
 value|0x040
 end_define
 
+begin_comment
+comment|/**< C0-C3 input selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELINC74
 value|0x044
 end_define
+
+begin_comment
+comment|/**< C4-C7 input selectors */
+end_comment
 
 begin_define
 define|#
@@ -286,12 +441,20 @@ name|BCMA_DMP_OOBSELIND30
 value|0x060
 end_define
 
+begin_comment
+comment|/**< D0-D3 input selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELIND74
 value|0x064
 end_define
+
+begin_comment
+comment|/**< D4-D7 input selectors */
+end_comment
 
 begin_define
 define|#
@@ -300,12 +463,20 @@ name|BCMA_DMP_OOBSELOUTA30
 value|0x100
 end_define
 
+begin_comment
+comment|/**< A0-A3 output selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELOUTA74
 value|0x104
 end_define
+
+begin_comment
+comment|/**< A4-A7 output selectors */
+end_comment
 
 begin_define
 define|#
@@ -314,12 +485,20 @@ name|BCMA_DMP_OOBSELOUTB30
 value|0x120
 end_define
 
+begin_comment
+comment|/**< B0-B3 output selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELOUTB74
 value|0x124
 end_define
+
+begin_comment
+comment|/**< B4-B7 output selectors */
+end_comment
 
 begin_define
 define|#
@@ -328,12 +507,20 @@ name|BCMA_DMP_OOBSELOUTC30
 value|0x140
 end_define
 
+begin_comment
+comment|/**< C0-C3 output selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELOUTC74
 value|0x144
 end_define
+
+begin_comment
+comment|/**< C4-C7 output selectors */
+end_comment
 
 begin_define
 define|#
@@ -342,12 +529,20 @@ name|BCMA_DMP_OOBSELOUTD30
 value|0x160
 end_define
 
+begin_comment
+comment|/**< D0-D3 output selectors */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BCMA_DMP_OOBSELOUTD74
 value|0x164
 end_define
+
+begin_comment
+comment|/**< D4-D7 output selectors */
+end_comment
 
 begin_define
 define|#
@@ -489,103 +684,96 @@ name|BCMA_DMP_OOBDOUTWIDTH
 value|0x368
 end_define
 
-begin_comment
-comment|/* The exact interpretation of these bits is unverified; these  * are our best guesses as to their use */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_MASK
-value|0xFF
-end_define
-
-begin_comment
-comment|/**< OOBSEL config mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCMA_DMP_OOBSEL_0_MASK
-value|BCMA_DMP_OOBSEL_MASK
+name|BCMA_DMP_OOBSEL
+parameter_list|(
+name|_base
+parameter_list|,
+name|_bank
+parameter_list|,
+name|_sel
+parameter_list|)
+define|\
+value|(_base + (_bank * 8) + (_sel>= 4 ? 4 : 0))
 end_define
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_1_MASK
-value|BCMA_DMP_OOBSEL_MASK
+name|BCMA_DMP_OOBSELIN
+parameter_list|(
+name|_bank
+parameter_list|,
+name|_sel
+parameter_list|)
+define|\
+value|BCMA_DMP_OOBSEL(BCMA_DMP_OOBSELINA30, _bank, _sel)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_2_MASK
-value|BCMA_DMP_OOBSEL_MASK
+name|BCMA_DMP_OOBSELOUT
+parameter_list|(
+name|_bank
+parameter_list|,
+name|_sel
+parameter_list|)
+define|\
+value|BCMA_DMP_OOBSEL(BCMA_DMP_OOBSELOUTA30, _bank, _sel)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_3_MASK
-value|BCMA_DMP_OOBSEL_MASK
+name|BCMA_DMP_OOBSYNC
+parameter_list|(
+name|_bank
+parameter_list|)
+value|(BCMA_DMP_OOBSYNCA + (_bank * 8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_0_SHIFT
-value|0
+name|BCMA_DMP_OOBSELOUT_EN
+parameter_list|(
+name|_bank
+parameter_list|)
+value|(BCMA_DMP_OOBSELOUTAEN + (_bank * 8))
 end_define
-
-begin_comment
-comment|/**< first OOBSEL config */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_1_SHIFT
-value|8
+name|BCMA_DMP_OOB_EXTWIDTH
+parameter_list|(
+name|_bank
+parameter_list|)
+value|(BCMA_DMP_OOBAEXTWIDTH + (_bank * 12))
 end_define
-
-begin_comment
-comment|/**< second OOBSEL config */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_2_SHIFT
-value|16
+name|BCMA_DMP_OOB_INWIDTH
+parameter_list|(
+name|_bank
+parameter_list|)
+value|(BCMA_DMP_OOBAINWIDTH + (_bank * 12))
 end_define
-
-begin_comment
-comment|/**< third OOBSEL config */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BCMA_DMP_OOBSEL_3_SHIFT
-value|24
+name|BCMA_DMP_OOB_OUTWIDTH
+parameter_list|(
+name|_bank
+parameter_list|)
+value|(BCMA_DMP_OOBAOUTWIDTH + (_bank * 12))
 end_define
-
-begin_comment
-comment|/**< fouth OOBSEL config */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCMA_DMP_OOBSEL_EN
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/**< enable bit */
-end_comment
 
 begin_comment
 comment|// This was inherited from Broadcom's aidmp.h header
@@ -1017,6 +1205,172 @@ define|#
 directive|define
 name|BCMA_DMP_COMPONENTID3
 value|0xffc
+end_define
+
+begin_comment
+comment|/* OOBSEL(IN|OUT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_MASK
+value|0xFF
+end_define
+
+begin_comment
+comment|/**< OOB selector mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_EN
+value|(1<<7)
+end_define
+
+begin_comment
+comment|/**< OOB selector enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_SHIFT
+parameter_list|(
+name|_sel
+parameter_list|)
+value|((_sel % BCMA_OOB_NUM_SEL) * 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_BUSLINE_MASK
+value|0x7F
+end_define
+
+begin_comment
+comment|/**< OOB selector bus line mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_BUSLINE_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_0_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_1_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_2_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_3_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_4_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_5_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_6_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_7_MASK
+value|BCMA_DMP_OOBSEL_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_0_SHIFT
+value|BCMA_DMP_OOBSEL_SHIFT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_1_SHIFT
+value|BCMA_DMP_OOBSEL_SHIFT(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_2_SHIFT
+value|BCMA_DMP_OOBSEL_SHIFT(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_3_SHIFT
+value|BCMA_DMP_OOBSEL_SHIFT(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_4_SHIFT
+value|BCMA_DMP_OOBSEL_0_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_5_SHIFT
+value|BCMA_DMP_OOBSEL_1_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_6_SHIFT
+value|BCMA_DMP_OOBSEL_2_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_OOBSEL_7_SHIFT
+value|BCMA_DMP_OOBSEL_3_SHIFT
 end_define
 
 begin_comment

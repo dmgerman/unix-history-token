@@ -374,6 +374,27 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|bhnd_nexus_get_intr_count
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{
+comment|// TODO: arch-specific interrupt handling.
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -408,6 +429,13 @@ argument_list|(
 name|bhnd_bus_get_attach_type
 argument_list|,
 name|bhnd_nexus_get_attach_type
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bhnd_bus_get_intr_count
+argument_list|,
+name|bhnd_nexus_get_intr_count
 argument_list|)
 block|,
 name|DEVMETHOD_END

@@ -15037,7 +15037,7 @@ name|BHND_PMU_SET_BITS
 argument_list|(
 name|BCMA_DMP_OOBSEL_EN
 argument_list|,
-name|BCMA_DMP_OOBSEL_1
+name|BCMA_DMP_OOBSEL_5
 argument_list|)
 expr_stmt|;
 name|oobsel
@@ -15046,7 +15046,7 @@ name|BHND_PMU_SET_BITS
 argument_list|(
 name|BCMA_DMP_OOBSEL_EN
 argument_list|,
-name|BCMA_DMP_OOBSEL_2
+name|BCMA_DMP_OOBSEL_6
 argument_list|)
 expr_stmt|;
 block|}
@@ -15059,7 +15059,7 @@ name|BHND_PMU_SET_BITS
 argument_list|(
 name|BCMA_DMP_OOBSEL_EN
 argument_list|,
-name|BCMA_DMP_OOBSEL_1
+name|BCMA_DMP_OOBSEL_5
 argument_list|)
 expr_stmt|;
 name|oobsel
@@ -15069,7 +15069,7 @@ name|BHND_PMU_SET_BITS
 argument_list|(
 name|BCMA_DMP_OOBSEL_EN
 argument_list|,
-name|BCMA_DMP_OOBSEL_2
+name|BCMA_DMP_OOBSEL_6
 argument_list|)
 expr_stmt|;
 block|}

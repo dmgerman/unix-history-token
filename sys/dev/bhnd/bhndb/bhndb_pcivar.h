@@ -68,6 +68,26 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* bhndb_pci interrupt state */
+end_comment
+
+begin_struct
+struct|struct
+name|bhndb_pci_intr
+block|{
+name|int
+name|msi_count
+decl_stmt|;
+comment|/**< MSI count, or 0 */
+name|int
+name|intr_rid
+decl_stmt|;
+comment|/**< interrupt resource ID.*/
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|bhndb_pci_softc
@@ -89,6 +109,11 @@ name|bhnd_devclass_t
 name|pci_devclass
 decl_stmt|;
 comment|/**< PCI core's devclass */
+name|struct
+name|bhndb_pci_intr
+name|intr
+decl_stmt|;
+comment|/**< PCI interrupt config */
 name|bhndb_pci_set_regwin_t
 name|set_regwin
 decl_stmt|;
