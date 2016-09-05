@@ -902,7 +902,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|a10_gpio_set_function
 parameter_list|(
 name|struct
@@ -924,6 +924,30 @@ name|data
 decl_stmt|,
 name|offset
 decl_stmt|;
+comment|/* Check if the function exists in the padconf data */
+if|if
+condition|(
+name|sc
+operator|->
+name|padconf
+operator|->
+name|pins
+index|[
+name|pin
+index|]
+operator|.
+name|functions
+index|[
+name|f
+index|]
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* Must be called with lock held. */
 name|A10_GPIO_LOCK_ASSERT
 argument_list|(
@@ -1017,6 +1041,11 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1379,7 +1408,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|a10_gpio_pin_configure
 parameter_list|(
 name|struct
@@ -1394,6 +1423,11 @@ name|uint32_t
 name|flags
 parameter_list|)
 block|{
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
 comment|/* Must be called with lock held. */
 name|A10_GPIO_LOCK_ASSERT
 argument_list|(
@@ -1418,6 +1452,8 @@ name|flags
 operator|&
 name|GPIO_PIN_OUTPUT
 condition|)
+name|err
+operator|=
 name|a10_gpio_set_function
 argument_list|(
 name|sc
@@ -1428,6 +1464,8 @@ name|A10_GPIO_OUTPUT
 argument_list|)
 expr_stmt|;
 else|else
+name|err
+operator|=
 name|a10_gpio_set_function
 argument_list|(
 name|sc
@@ -1438,6 +1476,15 @@ name|A10_GPIO_INPUT
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 comment|/* Manage Pull-up/pull-down. */
 if|if
 condition|(
@@ -1486,6 +1533,11 @@ argument_list|,
 name|A10_GPIO_NONE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1803,6 +1855,9 @@ name|a10_gpio_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1830,6 +1885,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
 name|a10_gpio_pin_configure
 argument_list|(
 name|sc
@@ -1846,7 +1903,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|err
 operator|)
 return|;
 block|}
