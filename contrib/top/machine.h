@@ -209,6 +209,10 @@ name|jail
 decl_stmt|;
 comment|/* show jail ID */
 name|int
+name|swap
+decl_stmt|;
+comment|/* show swap usage */
+name|int
 name|kidle
 decl_stmt|;
 comment|/* show per-CPU idle threads */

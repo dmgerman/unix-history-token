@@ -325,7 +325,7 @@ block|}
 comment|/* Protect scratch area */
 name|do_unlock
 operator|=
-name|usbd_enum_lock
+name|usbd_ctrl_lock
 argument_list|(
 name|udev
 argument_list|)
@@ -406,7 +406,7 @@ if|if
 condition|(
 name|do_unlock
 condition|)
-name|usbd_enum_unlock
+name|usbd_ctrl_unlock
 argument_list|(
 name|udev
 argument_list|)

@@ -276,10 +276,24 @@ name|TOP_JID_LEN
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|TOP_SWAP_LEN
+value|6
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
 name|jidlength
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|swaplength
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +443,7 @@ name|char
 name|smp_header_thr
 index|[]
 init|=
-literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES STATE   C   TIME %7s COMMAND"
+literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES%*s STATE   C   TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,7 +454,7 @@ name|smp_header
 index|[]
 init|=
 literal|"  PID%*s %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE   C   TIME %7s COMMAND"
+literal|"PRI NICE   SIZE    RES%*s STATE   C   TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,7 +463,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d%*s %-*.*s %s%3d %4s%7s %6s %-6.6s %2d%7s %6.2f%% %.*s"
+value|"%5d%*s %-*.*s %s%3d %4s%7s %6s%*.*s %-6.6s %2d%7s %6.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -458,7 +472,7 @@ name|char
 name|up_header_thr
 index|[]
 init|=
-literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES STATE    TIME %7s COMMAND"
+literal|"  PID%*s %-*.*s  THR PRI NICE   SIZE    RES%*s STATE    TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,7 +483,7 @@ name|up_header
 index|[]
 init|=
 literal|"  PID%*s %-*.*s "
-literal|"PRI NICE   SIZE    RES STATE    TIME %7s COMMAND"
+literal|"PRI NICE   SIZE    RES%*s STATE    TIME %7s COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,7 +492,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d%*s %-*.*s %s%3d %4s%7s %6s %-6.6s%.0d%7s %6.2f%% %.*s"
+value|"%5d%*s %-*.*s %s%3d %4s%7s %6s%*.*s %-6.6s%.0d%7s %6.2f%% %.*s"
 end_define
 
 begin_comment
@@ -967,6 +981,21 @@ value|((size)<< pageshift)
 end_define
 
 begin_comment
+comment|/* swap usage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ki_swap
+parameter_list|(
+name|kip
+parameter_list|)
+define|\
+value|((kip)->ki_swrss> (kip)->ki_rssize ? (kip)->ki_swrss - (kip)->ki_rssize : 0)
+end_define
+
+begin_comment
 comment|/* useful externals */
 end_comment
 
@@ -1019,6 +1048,8 @@ block|,
 literal|"ivcsw"
 block|,
 literal|"jid"
+block|,
+literal|"swap"
 block|,
 literal|"pid"
 block|,
@@ -1103,6 +1134,24 @@ modifier|*
 name|pcpu_cpu_states
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|compare_swap
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1953,6 +2002,24 @@ name|jidlength
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|swap
+condition|)
+name|swaplength
+operator|=
+name|TOP_SWAP_LEN
+operator|+
+literal|1
+expr_stmt|;
+comment|/* +1 for extra left space */
+else|else
+name|swaplength
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|displaymode
@@ -2012,6 +2079,16 @@ argument_list|,
 name|namelength
 argument_list|,
 name|uname_field
+argument_list|,
+name|swaplength
+argument_list|,
+name|ps
+operator|.
+name|swap
+condition|?
+literal|" SWAP"
+else|:
+literal|""
 argument_list|,
 name|ps
 operator|.
@@ -4534,10 +4611,18 @@ name|thr_buf
 index|[
 literal|6
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|jid_buf
 index|[
 name|TOP_JID_LEN
+operator|+
+literal|1
+index|]
+decl_stmt|,
+name|swap_buf
+index|[
+name|TOP_SWAP_LEN
 operator|+
 literal|1
 index|]
@@ -5408,6 +5493,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ps
+operator|.
+name|swap
+operator|==
+literal|0
+condition|)
+name|swap_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|swap_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|swap_buf
+argument_list|)
+argument_list|,
+literal|"%*s"
+argument_list|,
+name|swaplength
+operator|-
+literal|1
+argument_list|,
+name|format_k2
+argument_list|(
+name|pagetok
+argument_list|(
+name|ki_swap
+argument_list|(
+name|pp
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
 name|displaymode
 operator|==
 name|DISP_IO
@@ -5805,6 +5934,12 @@ operator|->
 name|ki_rssize
 argument_list|)
 argument_list|)
+argument_list|,
+name|swaplength
+argument_list|,
+name|swaplength
+argument_list|,
+name|swap_buf
 argument_list|,
 name|status
 argument_list|,
@@ -6486,6 +6621,18 @@ parameter_list|)
 value|do { \ 	int diff = (int)(b)->ki_jid - (int)(a)->ki_jid; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ORDERKEY_SWAP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|do { \ 	int diff = (int)ki_swap(b) - (int)ki_swap(a); \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+end_define
+
 begin_comment
 comment|/* compare_cpu - the comparison function for sorting by cpu percentage */
 end_comment
@@ -6688,6 +6835,8 @@ operator|,
 function_decl|compare_ivcsw
 operator|,
 function_decl|compare_jid
+operator|,
+function_decl|compare_swap
 operator|,
 function_decl|NULL
 end_function_decl
@@ -7224,6 +7373,111 @@ operator|)
 name|arg2
 decl_stmt|;
 name|ORDERKEY_JID
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PCTCPU
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_CPTICKS
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_STATE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_PRIO
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_RSSIZE
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+name|ORDERKEY_MEM
+argument_list|(
+name|p1
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* compare_swap - the comparison function for sorting by swap */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|compare_swap
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
+name|struct
+name|kinfo_proc
+modifier|*
+name|p1
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+name|struct
+name|kinfo_proc
+modifier|*
+name|p2
+init|=
+operator|*
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+name|arg2
+decl_stmt|;
+name|ORDERKEY_SWAP
 argument_list|(
 name|p1
 argument_list|,

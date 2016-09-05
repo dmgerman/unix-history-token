@@ -157,6 +157,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"allwinner,sun8i-h3-ths-clk"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"allwinner,sun50i-a64-ths-clk"
 block|,
 literal|1

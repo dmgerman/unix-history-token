@@ -3509,10 +3509,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * This function is called having the enumeration SX locked which  * protects the scratch area used.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3539,6 +3535,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|uint8_t
+name|do_unlock
+decl_stmt|;
+comment|/* Protect scratch area */
+name|do_unlock
+operator|=
+name|usbd_ctrl_lock
+argument_list|(
+name|f
+operator|->
+name|udev
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 name|f
@@ -3665,6 +3674,17 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|do_unlock
+condition|)
+name|usbd_ctrl_unlock
+argument_list|(
+name|f
+operator|->
+name|udev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
