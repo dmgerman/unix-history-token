@@ -433,6 +433,10 @@ struct|struct
 block|{
 specifier|volatile
 name|uint32_t
+name|qla_interface_up
+range|:
+literal|1
+decl_stmt|,
 name|qla_callout_init
 range|:
 literal|1
@@ -446,10 +450,6 @@ range|:
 literal|1
 decl_stmt|,
 name|qla_watchdog_pause
-range|:
-literal|1
-decl_stmt|,
-name|lro_init
 range|:
 literal|1
 decl_stmt|,

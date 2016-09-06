@@ -1462,6 +1462,13 @@ operator|->
 name|ipv4_lro
 operator|++
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
+name|mpf
+argument_list|,
+name|M_HASHTYPE_RSS_TCP_IPV4
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1513,6 +1520,13 @@ name|ha
 operator|->
 name|ipv6_lro
 operator|++
+expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
+name|mpf
+argument_list|,
+name|M_HASHTYPE_RSS_TCP_IPV6
+argument_list|)
 expr_stmt|;
 block|}
 else|else
