@@ -3910,7 +3910,6 @@ name|NULL
 operator|)
 return|;
 block|}
-empty_stmt|;
 case|case
 name|BHNDB_ADDRSPACE_BRIDGED
 case|:
@@ -3947,7 +3946,6 @@ name|NULL
 operator|)
 return|;
 block|}
-empty_stmt|;
 block|}
 comment|/* Quieten gcc */
 return|return
@@ -6824,10 +6822,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/**  * Default bhndb(4) implementation of BHND_BUS_DEACTIVATE_RESOURCE().  */
 end_comment
@@ -6923,10 +6917,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/**  * Slow path for bhndb_io_resource().  *  * Iterates over the existing allocated dynamic windows looking for a viable  * in-use region; the first matching region is returned.  */

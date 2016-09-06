@@ -3306,10 +3306,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/**  * Release bhnd(4) resources defined in @p rs from a parent bus.  *   * @param dev The device that owns the resources.  * @param rs A standard bus resource specification previously initialized  * by @p bhnd_alloc_resources.  * @param res The bhnd resources to be released.  */
 end_comment
@@ -5481,10 +5477,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/**  * Helper function for implementing BHND_BUS_DEACTIVATE_RESOURCE().  *   * This implementation of BHND_BUS_ACTIVATE_RESOURCE() simply calls the  * BHND_BUS_ACTIVATE_RESOURCE() method of the parent of @p dev.  */
 end_comment
@@ -5546,10 +5538,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 end_unit
 
