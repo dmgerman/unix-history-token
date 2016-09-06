@@ -539,6 +539,12 @@ directive|include
 file|"ssherr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1507,6 +1513,11 @@ name|SIGTERM
 argument_list|)
 expr_stmt|;
 block|}
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
+expr_stmt|;
 comment|/* Log error and exit. */
 name|sigdie
 argument_list|(
@@ -10084,6 +10095,9 @@ name|loginmsg
 argument_list|)
 expr_stmt|;
 name|auth_debug_reset
+argument_list|()
+expr_stmt|;
+name|BLACKLIST_INIT
 argument_list|()
 expr_stmt|;
 if|if

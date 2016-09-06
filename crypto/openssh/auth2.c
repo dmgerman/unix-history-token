@@ -165,6 +165,12 @@ directive|include
 file|"canohost.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"blacklist_client.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1150,6 +1156,11 @@ name|pw
 operator|=
 name|fakepw
 argument_list|()
+expr_stmt|;
+name|BLACKLIST_NOTIFY
+argument_list|(
+name|BLACKLIST_AUTH_FAIL
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
