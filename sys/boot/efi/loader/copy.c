@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|EFI_STAGING_SIZE
-value|48
+value|64
 end_define
 
 begin_endif
