@@ -617,11 +617,6 @@ decl_stmt|;
 name|vm_paddr_t
 name|maxaddr
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -783,31 +778,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* skip passthrough devices */
-name|name
-operator|=
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-operator|&&
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-literal|"ppt"
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-comment|/* everything else belongs to the host domain */
+comment|/* Everything belongs to the host domain. */
 name|iommu_add_device
 argument_list|(
 name|host_domain
