@@ -3701,6 +3701,14 @@ operator|->
 name|spa_load_state
 operator|==
 name|SPA_LOAD_NONE
+operator|||
+name|vd
+operator|->
+name|vdev_spa
+operator|->
+name|spa_load_state
+operator|==
+name|SPA_LOAD_CREATE
 operator|)
 condition|)
 block|{
