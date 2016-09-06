@@ -81,25 +81,139 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_comment
 comment|/* Prototypes for all the bus_space structure functions */
 end_comment
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+name|uint8_t
+name|generic_bs_r_1
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|generic_armv4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+name|uint16_t
+name|generic_bs_r_2
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|generic_bs_r_4
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generic_bs_w_1
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|uint8_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generic_bs_w_2
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|uint16_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generic_bs_w_4
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generic_bs_w_8
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -125,6 +239,96 @@ block|{
 endif|#
 directive|endif
 comment|/* *INDENT-ON* */
+comment|/**   * Make sure data will be visible by other masters (other CPUS and DMA).   * usually this is achieved by the ARM DMB instruction.   */
+specifier|static
+name|void
+name|al_data_memory_barrier
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|al_smp_data_memory_barrier
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**   * Make sure data will be visible by DMA masters, no restriction for other cpus   */
+specifier|static
+specifier|inline
+name|void
+name|al_data_memory_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__aarch64__
+name|dsb
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|dsb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/**   * Make sure data will be visible in order by other cpus masters.   */
+specifier|static
+specifier|inline
+name|void
+name|al_smp_data_memory_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__aarch64__
+name|dmb
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|dmb
+argument_list|(
+name|ish
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/**   * Make sure write data will be visible in order by other cpus masters.   */
+specifier|static
+specifier|inline
+name|void
+name|al_local_data_memory_barrier
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__aarch64__
+name|dsb
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|dsb
+argument_list|(
+name|sy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 comment|/*  * WMA: This is a hack which allows not modifying the __iomem accessing HAL code.  * On ARMv7, bus_handle holds the information about VA of accessed memory. It  * is possible to use direct load/store instruction instead of bus_dma machinery.  * WARNING: This is not guaranteed to stay that way forever, nor that  * on other architectures these variables behave similarly. Keep that  * in mind during porting to other systems.  */
 comment|/**  * Read MMIO 8 bits register  * @param  offset	register offset  *  * @return register value  */
 specifier|static
@@ -202,7 +406,7 @@ name|l
 parameter_list|,
 name|v
 parameter_list|)
-value|do { dsb(); generic_bs_w_1(NULL, (bus_space_handle_t)l, 0, v); dmb(); } while (0)
+value|do {				\ 	al_data_memory_barrier();				\ 	generic_bs_w_1(NULL, (bus_space_handle_t)l, 0, v);	\ 	al_smp_data_memory_barrier();				\ } while (0)
 comment|/**  * Write to MMIO 16 bits register  * @param  offset	register offset  * @param  val		value to write to the register  */
 define|#
 directive|define
@@ -212,7 +416,7 @@ name|l
 parameter_list|,
 name|v
 parameter_list|)
-value|do { dsb(); generic_bs_w_2(NULL, (bus_space_handle_t)l, 0, v); dmb(); } while (0)
+value|do {				\ 	al_data_memory_barrier();				\ 	generic_bs_w_2(NULL, (bus_space_handle_t)l, 0, v);	\ 	al_smp_data_memory_barrier();				\ } while (0)
 comment|/**  * Write to MMIO 32 bits register  * @param  offset	register offset  * @param  val		value to write to the register  */
 define|#
 directive|define
@@ -222,7 +426,7 @@ name|l
 parameter_list|,
 name|v
 parameter_list|)
-value|do { dsb(); generic_bs_w_4(NULL, (bus_space_handle_t)l, 0, v); dmb(); } while (0)
+value|do {				\ 	al_data_memory_barrier();				\ 	generic_bs_w_4(NULL, (bus_space_handle_t)l, 0, v);	\ 	al_smp_data_memory_barrier();				\ } while (0)
 comment|/**  * Write to MMIO 64 bits register  * @param  offset	register offset  * @param  val		value to write to the register  */
 define|#
 directive|define
@@ -232,7 +436,7 @@ name|l
 parameter_list|,
 name|v
 parameter_list|)
-value|do { dsb(); generic_bs_w_8(NULL, (bus_space_handle_t)l, 0, v); dmb(); } while (0)
+value|do {				\ 	al_data_memory_barrier();				\ 	generic_bs_w_8(NULL, (bus_space_handle_t)l, 0, v);	\ 	al_smp_data_memory_barrier();				\ } while (0)
 specifier|static
 specifier|inline
 name|uint8_t
@@ -243,7 +447,7 @@ modifier|*
 name|l
 parameter_list|)
 block|{
-name|dsb
+name|al_data_memory_barrier
 argument_list|()
 expr_stmt|;
 return|return
@@ -272,7 +476,7 @@ modifier|*
 name|l
 parameter_list|)
 block|{
-name|dsb
+name|al_data_memory_barrier
 argument_list|()
 expr_stmt|;
 return|return
@@ -301,7 +505,7 @@ modifier|*
 name|l
 parameter_list|)
 block|{
-name|dsb
+name|al_data_memory_barrier
 argument_list|()
 expr_stmt|;
 return|return
@@ -344,21 +548,14 @@ define|#
 directive|define
 name|AL_DBG_LEVEL
 value|AL_DBG_LEVEL_ERR
-specifier|extern
-name|struct
-name|mtx
-name|al_dbg_lock
-decl_stmt|;
 define|#
 directive|define
 name|AL_DBG_LOCK
 parameter_list|()
-value|mtx_lock_spin(&al_dbg_lock)
 define|#
 directive|define
 name|AL_DBG_UNLOCK
 parameter_list|()
-value|mtx_unlock_spin(&al_dbg_lock)
 comment|/**  * print message  *  * @param format The format string  * @param ... Additional arguments  */
 define|#
 directive|define
@@ -412,53 +609,6 @@ name|COND
 parameter_list|)
 define|\
 value|do {			\ 		if (!(COND))	\ 			al_err(	\ 			"%s:%d:%s: Assertion failed! (%s)\n",	\ 			__FILE__, __LINE__, __func__, #COND);	\ 	} while(AL_FALSE)
-comment|/**   * Make sure data will be visible by other masters (other CPUS and DMA).   * usually this is achieved by the ARM DMB instruction.   */
-specifier|static
-name|void
-name|al_data_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/**   * Make sure data will be visible by DMA masters, no restriction for other cpus   */
-specifier|static
-specifier|inline
-name|void
-name|al_data_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dsb
-argument_list|()
-expr_stmt|;
-block|}
-comment|/**   * Make sure data will be visible in order by other cpus masters.   */
-specifier|static
-specifier|inline
-name|void
-name|al_smp_data_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dsb
-argument_list|()
-expr_stmt|;
-block|}
-comment|/**   * Make sure write data will be visible in order by other cpus masters.   */
-specifier|static
-specifier|inline
-name|void
-name|al_local_data_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dsb
-argument_list|()
-expr_stmt|;
-block|}
 comment|/**  * al_udelay - micro sec delay  */
 define|#
 directive|define

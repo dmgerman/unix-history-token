@@ -768,7 +768,7 @@ name|al_nb_sriov
 block|{
 comment|/* [0x0]  */
 name|uint32_t
-name|cpu_vmid
+name|cpu_tgtid
 index|[
 literal|4
 index|]
@@ -890,7 +890,7 @@ index|]
 decl_stmt|;
 comment|/* [0x10]  */
 name|uint32_t
-name|pp_ext_awuser
+name|pp_ext_attr
 decl_stmt|;
 name|uint32_t
 name|rsrvd_1
@@ -914,7 +914,7 @@ index|]
 decl_stmt|;
 comment|/* [0x30]  */
 name|uint32_t
-name|pp_sel_awuser
+name|pp_sel_attr
 decl_stmt|;
 name|uint32_t
 name|rsrvd
@@ -1865,11 +1865,11 @@ name|NB_GLOBAL_LGIC_BASE_HIGH_BASE_39_32_SHIFT
 value|0
 define|#
 directive|define
-name|NB_GLOBAL_LGIC_BASE_HIGH_BASE_43_32_MASK_PKR
+name|NB_GLOBAL_LGIC_BASE_HIGH_BASE_43_32_MASK_ALPINE_V2
 value|0x00000FFF
 define|#
 directive|define
-name|NB_GLOBAL_LGIC_BASE_HIGH_BASE_43_32_SHIFT_PKR
+name|NB_GLOBAL_LGIC_BASE_HIGH_BASE_43_32_SHIFT_ALPINE_V2
 value|0
 comment|/* GIC registers base [31:15]. This value is sampled into the CP15 Configuration Base Address Register (CBAR) at reset */
 define|#
@@ -2294,12 +2294,12 @@ value|(1<< 14)
 comment|/* Disable wr spliter A0 bug fixes */
 define|#
 directive|define
-name|NB_GLOBAL_ACF_MISC_WRSPLT_ALPINE_M0_MODE
+name|NB_GLOBAL_ACF_MISC_WRSPLT_ALPINE_V1_M0_MODE
 value|(1<< 16)
-comment|/* Disable wr spliter PKR bug fixes */
+comment|/* Disable wr spliter ALPINE_V2 bug fixes */
 define|#
 directive|define
-name|NB_GLOBAL_ACF_MISC_WRSPLT_ALPINE_A0_MODE
+name|NB_GLOBAL_ACF_MISC_WRSPLT_ALPINE_V1_A0_MODE
 value|(1<< 17)
 comment|/* Override the address parity calucation for write transactions going to IO-fabric */
 define|#
@@ -2341,7 +2341,7 @@ define|#
 directive|define
 name|NB_GLOBAL_ACF_MISC_CPU_DMB_FLUSH_DIS
 value|(1<< 27)
-comment|/* Peakrock only: remap CPU address above 40 bits to Slave Error INTERNAL  */
+comment|/* Alpine V2 only: remap CPU address above 40 bits to Slave Error INTERNAL  */
 define|#
 directive|define
 name|NB_GLOBAL_ACF_MISC_ADDR43_40_REMAP_DIS
@@ -3283,7 +3283,7 @@ name|NB_MC_PMU_PMU_CONTROL_NUM_OF_EVENTS_SHIFT
 value|18
 define|#
 directive|define
-name|NB_MC_PMU_PMU_CONTROL_NUM_OF_EVENTS_SHIFT_ALPINE
+name|NB_MC_PMU_PMU_CONTROL_NUM_OF_EVENTS_SHIFT_ALPINE_V1
 value|19
 comment|/* Number of counters implemented by PMU. */
 define|#
@@ -3399,6 +3399,18 @@ define|#
 directive|define
 name|NB_NB_VERSION_VERSION_RELEASE_NUM_MAJOR_SHIFT
 value|8
+define|#
+directive|define
+name|NB_NB_VERSION_VERSION_RELEASE_NUM_MAJOR_VAL_ALPINE_V1
+value|2
+define|#
+directive|define
+name|NB_NB_VERSION_VERSION_RELEASE_NUM_MAJOR_VAL_ALPINE_V2
+value|3
+define|#
+directive|define
+name|NB_NB_VERSION_VERSION_RELEASE_NUM_MAJOR_VAL_ALPINE_V3
+value|4
 comment|/*  Date of release */
 define|#
 directive|define
@@ -3435,15 +3447,15 @@ define|#
 directive|define
 name|NB_NB_VERSION_VERSION_RESERVED_SHIFT
 value|30
-comment|/**** cpu_vmid register ****/
-comment|/* Target VMID */
+comment|/**** cpu_tgtid register ****/
+comment|/* Target-ID */
 define|#
 directive|define
-name|NB_SRIOV_CPU_VMID_VAL_MASK
+name|NB_SRIOV_CPU_TGTID_VAL_MASK
 value|0x000000FF
 define|#
 directive|define
-name|NB_SRIOV_CPU_VMID_VAL_SHIFT
+name|NB_SRIOV_CPU_TGTID_VAL_SHIFT
 value|0
 comment|/**** DRAM_0_Control register ****/
 comment|/* Controller Idle Indicates to the DDR PHY, if set, that the memory controller is idle */
@@ -3700,7 +3712,7 @@ directive|define
 name|NB_PUSH_PACKET_PP_EXT_AWUSER_AWUSER_SHIFT
 value|0
 comment|/**** pp_sel_awuser register ****/
-comment|/* Select whether to use addr[63:48] or PP awmisc as vmid. Each bit if set to 1 selects the corresponding address bit. Otherwise, selects the corersponding awmis bit. */
+comment|/* Select whether to use addr[63:48] or PP awmisc as tgtid. Each bit if set to 1 selects the corresponding address bit. Otherwise, selects the corersponding awmis bit. */
 define|#
 directive|define
 name|NB_PUSH_PACKET_PP_SEL_AWUSER_SEL_MASK

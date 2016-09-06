@@ -3391,10 +3391,10 @@ argument_list|)
 expr_stmt|;
 name|al_dbg
 argument_list|(
-literal|" desc_phy_base = 0x%016llx\n"
+literal|" desc_phy_base = 0x%016jx\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|queue
 operator|->
@@ -3403,10 +3403,10 @@ argument_list|)
 expr_stmt|;
 name|al_dbg
 argument_list|(
-literal|" cdesc_phy_base = 0x%016llx\n"
+literal|" cdesc_phy_base = 0x%016jx\n"
 argument_list|,
 operator|(
-name|uint64_t
+name|uintmax_t
 operator|)
 name|queue
 operator|->
@@ -3635,7 +3635,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|base_ptr
 operator|+

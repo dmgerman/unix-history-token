@@ -82,7 +82,7 @@ name|dbi_ctl
 decl_stmt|;
 comment|/* [0x2c]  */
 name|uint32_t
-name|vmid_mask
+name|tgtid_mask
 decl_stmt|;
 name|uint32_t
 name|rsrvd
@@ -140,7 +140,7 @@ name|dbi_ctl
 decl_stmt|;
 comment|/* [0x2c]  */
 name|uint32_t
-name|vmid_mask
+name|tgtid_mask
 decl_stmt|;
 block|}
 struct|;
@@ -238,9 +238,9 @@ comment|/* [0x24]  */
 name|uint32_t
 name|msg_limit_h
 decl_stmt|;
-comment|/* 	 * [0x28] this register override the VMID field in the AXUSER [19:4], 	 * for the AXI master port. 	 */
+comment|/* 	 * [0x28] this register override the Target-ID field in the AXUSER [19:4], 	 * for the AXI master port. 	 */
 name|uint32_t
-name|vmid_reg_ovrd
+name|tgtid_reg_ovrd
 decl_stmt|;
 comment|/* [0x2c] this register override the ADDR[63:32] AXI master port. */
 name|uint32_t
@@ -333,9 +333,9 @@ comment|/* [0x40]  */
 name|uint32_t
 name|aw_msg_addr_mask_h
 decl_stmt|;
-comment|/* 	 * [0x44] this register override the VMID field in the AXUSER [19:4], 	 * for the AXI master port. 	 */
+comment|/* 	 * [0x44] this register override the Target-ID field in the AXUSER [19:4], 	 * for the AXI master port. 	 */
 name|uint32_t
-name|vmid_reg_ovrd
+name|tgtid_reg_ovrd
 decl_stmt|;
 comment|/* [0x48] this register override the ADDR[63:32] AXI master port. */
 name|uint32_t
@@ -1583,14 +1583,14 @@ define|#
 directive|define
 name|PCIE_AXI_CTRL_MASTER_ARCTL_ARPROT_VALUE_SHIFT
 value|6
-comment|/* vmid val */
+comment|/* tgtid val */
 define|#
 directive|define
-name|PCIE_AXI_CTRL_MASTER_ARCTL_VMID_VAL_MASK
+name|PCIE_AXI_CTRL_MASTER_ARCTL_TGTID_VAL_MASK
 value|0x01FFFE00
 define|#
 directive|define
-name|PCIE_AXI_CTRL_MASTER_ARCTL_VMID_VAL_SHIFT
+name|PCIE_AXI_CTRL_MASTER_ARCTL_TGTID_VAL_SHIFT
 value|9
 comment|/* IPA value */
 define|#
@@ -1616,6 +1616,10 @@ define|#
 directive|define
 name|PCIE_AXI_CTRL_MASTER_ARCTL_ARQOS_SHIFT
 value|28
+define|#
+directive|define
+name|PCIE_AXI_CTRL_MASTER_ARCTL_ARQOS_VAL_MAX
+value|15
 comment|/**** Master_Awctl register ****/
 comment|/* override arcache */
 define|#
@@ -1645,14 +1649,14 @@ define|#
 directive|define
 name|PCIE_AXI_CTRL_MASTER_AWCTL_AWPROT_VALUE_SHIFT
 value|6
-comment|/* vmid val */
+comment|/* tgtid val */
 define|#
 directive|define
-name|PCIE_AXI_CTRL_MASTER_AWCTL_VMID_VAL_MASK
+name|PCIE_AXI_CTRL_MASTER_AWCTL_TGTID_VAL_MASK
 value|0x01FFFE00
 define|#
 directive|define
-name|PCIE_AXI_CTRL_MASTER_AWCTL_VMID_VAL_SHIFT
+name|PCIE_AXI_CTRL_MASTER_AWCTL_TGTID_VAL_SHIFT
 value|9
 comment|/* IPA value */
 define|#
@@ -1678,6 +1682,10 @@ define|#
 directive|define
 name|PCIE_AXI_CTRL_MASTER_AWCTL_AWQOS_SHIFT
 value|28
+define|#
+directive|define
+name|PCIE_AXI_CTRL_MASTER_AWCTL_AWQOS_VAL_MAX
+value|15
 comment|/**** slv_ctl register ****/
 define|#
 directive|define
@@ -1775,24 +1783,24 @@ define|#
 directive|define
 name|PCIE_AXI_MISC_OB_CTRL_MSG_LIMIT_H_ADDR_SHIFT
 value|0
-comment|/**** vmid_reg_ovrd register ****/
+comment|/**** tgtid_reg_ovrd register ****/
 comment|/*  * select if to take the value from register or from address[63:48]:  * 1'b1: register value.  * 1'b0: from address[63:48]  */
 define|#
 directive|define
-name|PCIE_AXI_MISC_OB_CTRL_VMID_REG_OVRD_SEL_MASK
+name|PCIE_AXI_MISC_OB_CTRL_TGTID_REG_OVRD_SEL_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|PCIE_AXI_MISC_OB_CTRL_VMID_REG_OVRD_SEL_SHIFT
+name|PCIE_AXI_MISC_OB_CTRL_TGTID_REG_OVRD_SEL_SHIFT
 value|0
-comment|/* vmid override value. */
+comment|/* tgtid override value. */
 define|#
 directive|define
-name|PCIE_AXI_MISC_OB_CTRL_VMID_REG_OVRD_VALUE_MASK
+name|PCIE_AXI_MISC_OB_CTRL_TGTID_REG_OVRD_VALUE_MASK
 value|0xFFFF0000
 define|#
 directive|define
-name|PCIE_AXI_MISC_OB_CTRL_VMID_REG_OVRD_VALUE_SHIFT
+name|PCIE_AXI_MISC_OB_CTRL_TGTID_REG_OVRD_VALUE_SHIFT
 value|16
 comment|/**** addr_size_replace register ****/
 comment|/*  * Size in bits to replace from bit [63:64-N], when equal zero no replace is  * done.  */
@@ -2556,38 +2564,38 @@ value|14
 comment|/* choose the field  from the axuser */
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_OVRD_FROM_AXUSER_MASK
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_OVRD_FROM_AXUSER_MASK
 value|0x00030000
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_OVRD_FROM_AXUSER_SHIFT
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_OVRD_FROM_AXUSER_SHIFT
 value|16
 comment|/* choose the field  from register */
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_OVRD_FROM_REG_MASK
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_OVRD_FROM_REG_MASK
 value|0x000C0000
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_OVRD_FROM_REG_SHIFT
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_OVRD_FROM_REG_SHIFT
 value|18
 comment|/* in case the field take from the address, offset field for each bit. */
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_ADDR_OFFSET_MASK
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_ADDR_OFFSET_MASK
 value|0x0FF00000
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_VMID89_VEC_ADDR_OFFSET_SHIFT
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_PF_VEC_TGTID89_VEC_ADDR_OFFSET_SHIFT
 value|20
 comment|/* register value override */
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_CFG_VMID89_VEC_OVRD_MASK
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_CFG_TGTID89_VEC_OVRD_MASK
 value|0x30000000
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_CFG_VMID89_VEC_OVRD_SHIFT
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_2_CFG_TGTID89_VEC_OVRD_SHIFT
 value|28
 comment|/* Rsrvd */
 define|#
@@ -2636,14 +2644,14 @@ directive|define
 name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_3_RSRVD_SHIFT
 value|30
 comment|/**** func_ctrl_4 register ****/
-comment|/* When set take the corresponding bit address from vmid value. */
+comment|/* When set take the corresponding bit address from tgtid value. */
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_4_PF_VEC_MEM_ADDR54_63_SEL_VMID_MASK
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_4_PF_VEC_MEM_ADDR54_63_SEL_TGTID_MASK
 value|0x000003FF
 define|#
 directive|define
-name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_4_PF_VEC_MEM_ADDR54_63_SEL_VMID_SHIFT
+name|PCIE_AXI_PF_AXI_ATTR_OVRD_FUNC_CTRL_4_PF_VEC_MEM_ADDR54_63_SEL_TGTID_SHIFT
 value|0
 comment|/* override value. */
 define|#

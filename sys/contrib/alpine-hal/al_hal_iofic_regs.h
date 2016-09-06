@@ -97,7 +97,7 @@ name|grp_int_mod_reg
 decl_stmt|;
 comment|/* Interrupt moderation registerDedicated moderation in ... */
 name|uint32_t
-name|grp_int_vmid_reg
+name|grp_int_tgtid_reg
 decl_stmt|;
 block|}
 struct|;
@@ -200,20 +200,20 @@ define|#
 directive|define
 name|INT_MOD_INTV_SHIFT
 value|0
-comment|/**** grp_int_vmid_reg register ****/
-comment|/* Interrupt vmid value registerDedicated reg ... */
+comment|/**** grp_int_tgtid_reg register ****/
+comment|/* Interrupt tgtid value registerDedicated reg ... */
 define|#
 directive|define
-name|INT_MSIX_VMID_MASK
+name|INT_MSIX_TGTID_MASK
 value|0x0000FFFF
 define|#
 directive|define
-name|INT_MSIX_VMID_SHIFT
+name|INT_MSIX_TGTID_SHIFT
 value|0
-comment|/* Interrupt vmid_en value registerDedicated reg ... */
+comment|/* Interrupt tgtid_en value registerDedicated reg ... */
 define|#
 directive|define
-name|INT_MSIX_VMID_EN_SHIFT
+name|INT_MSIX_TGTID_EN_SHIFT
 value|31
 ifdef|#
 directive|ifdef

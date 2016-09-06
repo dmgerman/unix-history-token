@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*- ******************************************************************************* Copyright (C) 2015 Annapurna Labs Ltd.  This file may be licensed under the terms of the Annapurna Labs Commercial License Agreement.  Alternatively, this file can be distributed under the terms of the GNU General Public License V2 as published by the Free Software Foundation and can be found at http://www.gnu.org/licenses/gpl-2.0.html  Alternatively, redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:      *     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.      *     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/******************************************************************************* Copyright (C) 2015 Annapurna Labs Ltd.  This file may be licensed under the terms of the Annapurna Labs Commercial License Agreement.  Alternatively, this file can be distributed under the terms of the GNU General Public License V2 as published by the Free Software Foundation and can be found at http://www.gnu.org/licenses/gpl-2.0.html  Alternatively, redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:      *     Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.      *     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -587,35 +587,35 @@ decl_stmt|;
 comment|/* queue QoS */
 block|}
 struct|;
-comment|/** UDMA per queue VMID control configuration */
+comment|/** UDMA per queue Target-ID control configuration */
 struct|struct
-name|al_udma_gen_vmid_q_conf
+name|al_udma_gen_tgtid_q_conf
 block|{
-comment|/* Enable usage of the VMID per queue according to 'vmid' */
+comment|/* Enable usage of the Target-ID per queue according to 'tgtid' */
 name|al_bool
 name|queue_en
 decl_stmt|;
-comment|/* Enable usage of the VMID from the descriptor buffer address 63:48 */
+comment|/* Enable usage of the Target-ID from the descriptor buffer address 63:48 */
 name|al_bool
 name|desc_en
 decl_stmt|;
-comment|/* VMID to be applied when 'queue_en' is asserted */
+comment|/* Target-ID to be applied when 'queue_en' is asserted */
 name|uint16_t
-name|vmid
+name|tgtid
 decl_stmt|;
-comment|/* VMADDR to be applied to msbs when 'desc_en' is asserted. 	 * Relevant for revisions>= AL_UDMA_REV_ID_REV2 */
+comment|/* TGTADDR to be applied to msbs when 'desc_en' is asserted. 	 * Relevant for revisions>= AL_UDMA_REV_ID_REV2 */
 name|uint16_t
-name|vmaddr
+name|tgtaddr
 decl_stmt|;
 block|}
 struct|;
-comment|/** UDMA VMID control configuration */
+comment|/** UDMA Target-ID control configuration */
 struct|struct
-name|al_udma_gen_vmid_conf
+name|al_udma_gen_tgtid_conf
 block|{
 comment|/* TX queue configuration */
 name|struct
-name|al_udma_gen_vmid_q_conf
+name|al_udma_gen_tgtid_q_conf
 name|tx_q_conf
 index|[
 name|DMA_MAX_Q
@@ -623,7 +623,7 @@ index|]
 decl_stmt|;
 comment|/* RX queue configuration */
 name|struct
-name|al_udma_gen_vmid_q_conf
+name|al_udma_gen_tgtid_q_conf
 name|rx_q_conf
 index|[
 name|DMA_MAX_Q
@@ -631,185 +631,17 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-comment|/** UDMA VMID MSIX control configuration */
+comment|/** UDMA Target-ID MSIX control configuration */
 struct|struct
-name|al_udma_gen_vmid_msix_conf
+name|al_udma_gen_tgtid_msix_conf
 block|{
-comment|/* Enable write to all VMID_n registers in the MSI-X Controller */
+comment|/* Enable write to all TGTID_n registers in the MSI-X Controller */
 name|al_bool
 name|access_en
 decl_stmt|;
-comment|/* use VMID_n [7:0] from MSI-X Controller for MSI-X message */
+comment|/* use TGTID_n [7:0] from MSI-X Controller for MSI-X message */
 name|al_bool
 name|sel
-decl_stmt|;
-block|}
-struct|;
-comment|/** UDMA per Tx queue advanced VMID control configuration */
-struct|struct
-name|al_udma_gen_vmid_advanced_tx_q_conf
-block|{
-comment|/********************************************************************** 	 * Tx Data VMID 	 **********************************************************************/
-comment|/* Tx data VMID enable */
-name|al_bool
-name|tx_q_data_vmid_en
-decl_stmt|;
-comment|/* 	 * For Tx data reads, replacement bits for the original address. 	 * The number of bits replaced is determined according to 	 * 'tx_q_addr_hi_sel' 	 */
-name|unsigned
-name|int
-name|tx_q_addr_hi
-decl_stmt|;
-comment|/* 	 * For Tx data reads, 6 bits serving the number of bits taken from the 	 * extra register on account of bits coming from the original address 	 * field. 	 * When 'tx_q_addr_hi_sel'=32 all of 'tx_q_addr_hi' will be taken. 	 * When 'tx_q_addr_hi_sel'=0 none of it will be taken, and when any 	 * value in between, it will start from the MSB bit and sweep down as 	 * many bits as needed. For example if 'tx_q_addr_hi_sel'=8, the final 	 * address [63:56] will carry 'tx_q_addr_hi'[31:24] while [55:32] will 	 * carry the original buffer address[55:32]. 	 */
-name|unsigned
-name|int
-name|tx_q_addr_hi_sel
-decl_stmt|;
-comment|/* 	 * Tx data read VMID 	 * Masked per bit with 'tx_q_data_vmid_mask' 	 */
-name|unsigned
-name|int
-name|tx_q_data_vmid
-decl_stmt|;
-comment|/* 	 * Tx data read VMID mask 	 * Each '1' selects from the buffer address, each '0' selects from 	 * 'tx_q_data_vmid' 	 */
-name|unsigned
-name|int
-name|tx_q_data_vmid_mask
-decl_stmt|;
-comment|/********************************************************************** 	 * Tx prefetch VMID 	 **********************************************************************/
-comment|/* Tx prefetch VMID enable */
-name|al_bool
-name|tx_q_prefetch_vmid_en
-decl_stmt|;
-comment|/* Tx prefetch VMID */
-name|unsigned
-name|int
-name|tx_q_prefetch_vmid
-decl_stmt|;
-comment|/********************************************************************** 	 * Tx completion VMID 	 **********************************************************************/
-comment|/* Tx completion VMID enable */
-name|al_bool
-name|tx_q_compl_vmid_en
-decl_stmt|;
-comment|/* Tx completion VMID */
-name|unsigned
-name|int
-name|tx_q_compl_vmid
-decl_stmt|;
-block|}
-struct|;
-comment|/** UDMA per Rx queue advanced VMID control configuration */
-struct|struct
-name|al_udma_gen_vmid_advanced_rx_q_conf
-block|{
-comment|/********************************************************************** 	 * Rx Data VMID 	 **********************************************************************/
-comment|/* Rx data VMID enable */
-name|al_bool
-name|rx_q_data_vmid_en
-decl_stmt|;
-comment|/* 	 * For Rx data writes, replacement bits for the original address. 	 * The number of bits replaced is determined according to 	 * 'rx_q_addr_hi_sel' 	 */
-name|unsigned
-name|int
-name|rx_q_addr_hi
-decl_stmt|;
-comment|/* 	 * For Rx data writes, 6 bits serving the number of bits taken from the 	 * extra register on account of bits coming from the original address 	 * field. 	 */
-name|unsigned
-name|int
-name|rx_q_addr_hi_sel
-decl_stmt|;
-comment|/* 	 * Rx data write VMID 	 * Masked per bit with 'rx_q_data_vmid_mask' 	 */
-name|unsigned
-name|int
-name|rx_q_data_vmid
-decl_stmt|;
-comment|/* Rx data write VMID mask */
-name|unsigned
-name|int
-name|rx_q_data_vmid_mask
-decl_stmt|;
-comment|/********************************************************************** 	 * Rx Data Buffer 2 VMID 	 **********************************************************************/
-comment|/* Rx data buff2 VMID enable */
-name|al_bool
-name|rx_q_data_buff2_vmid_en
-decl_stmt|;
-comment|/* 	 * For Rx data buff2 writes, replacement bits for the original address. 	 * The number of bits replaced is determined according to 	 * 'rx_q_data_buff2_addr_hi_sel' 	 */
-name|unsigned
-name|int
-name|rx_q_data_buff2_addr_hi
-decl_stmt|;
-comment|/* 	 * For Rx data buff2 writes, 6 bits serving the number of bits taken 	 * from the extra register on account of bits coming from the original 	 * address field. 	 */
-name|unsigned
-name|int
-name|rx_q_data_buff2_addr_hi_sel
-decl_stmt|;
-comment|/* 	 * Rx data buff2 write VMID 	 * Masked per bit with 'rx_q_data_buff2_mask' 	 */
-name|unsigned
-name|int
-name|rx_q_data_buff2_vmid
-decl_stmt|;
-comment|/* Rx data buff2 write VMID mask */
-name|unsigned
-name|int
-name|rx_q_data_buff2_mask
-decl_stmt|;
-comment|/********************************************************************** 	 * Rx DDP VMID 	 **********************************************************************/
-comment|/* Rx DDP write VMID enable */
-name|al_bool
-name|rx_q_ddp_vmid_en
-decl_stmt|;
-comment|/* 	 * For Rx DDP writes, replacement bits for the original address. 	 * The number of bits replaced is determined according to 	 * 'rx_q_ddp_addr_hi_sel' 	 */
-name|unsigned
-name|int
-name|rx_q_ddp_addr_hi
-decl_stmt|;
-comment|/* 	 * For Rx DDP writes, 6 bits serving the number of bits taken from the 	 * extra register on account of bits coming from the original address 	 * field. 	 */
-name|unsigned
-name|int
-name|rx_q_ddp_addr_hi_sel
-decl_stmt|;
-comment|/* 	 * Rx DDP write VMID 	 * Masked per bit with 'rx_q_ddp_mask' 	 */
-name|unsigned
-name|int
-name|rx_q_ddp_vmid
-decl_stmt|;
-comment|/* Rx DDP write VMID mask */
-name|unsigned
-name|int
-name|rx_q_ddp_mask
-decl_stmt|;
-comment|/********************************************************************** 	 * Rx prefetch VMID 	 **********************************************************************/
-comment|/* Rx prefetch VMID enable */
-name|al_bool
-name|rx_q_prefetch_vmid_en
-decl_stmt|;
-comment|/* Rx prefetch VMID */
-name|unsigned
-name|int
-name|rx_q_prefetch_vmid
-decl_stmt|;
-comment|/********************************************************************** 	 * Rx completion VMID 	 **********************************************************************/
-comment|/* Rx completion VMID enable */
-name|al_bool
-name|rx_q_compl_vmid_en
-decl_stmt|;
-comment|/* Rx completion VMID */
-name|unsigned
-name|int
-name|rx_q_compl_vmid
-decl_stmt|;
-block|}
-struct|;
-comment|/**  * Header split, buffer 2 per queue configuration  * When header split is enabled, Buffer_2 is used as an address for the header  * data. Buffer_2 is defined as 32-bits in the RX descriptor and it is defined  * that the MSB ([63:32]) of Buffer_1 is used as address [63:32] for the header  * address.  */
-struct|struct
-name|al_udma_gen_hdr_split_buff2_q_conf
-block|{
-comment|/* 	 * MSB of the 64-bit address (bits [63:32]) that can be used for header 	 * split for this queue 	 */
-name|unsigned
-name|int
-name|addr_msb
-decl_stmt|;
-comment|/* 	 * Determine how to select the MSB (bits [63:32]) of the address when 	 * header split is enabled (4 bits, one per byte) 	 * - Bits [3:0]: 	 *	[0] â selector for bits [39:32] 	 *	[1] â selector for bits [47:40] 	 *	[2] â selector for bits [55:48] 	 *	[3] â selector for bits [63:55] 	 * - Bit value: 	 *	0 â Use Buffer_1 (legacy operation) 	 *	1 â Use the queue configuration 'addr_msb' 	 */
-name|unsigned
-name|int
-name|add_msb_sel
 decl_stmt|;
 block|}
 struct|;
@@ -1318,9 +1150,27 @@ modifier|*
 name|conf
 parameter_list|)
 function_decl|;
-comment|/** UDMA VMID control configuration */
+comment|/** UDMA Target-ID control configuration per queue */
 name|void
-name|al_udma_gen_vmid_conf_set
+name|al_udma_gen_tgtid_conf_queue_set
+parameter_list|(
+name|struct
+name|unit_regs
+modifier|*
+name|unit_regs
+parameter_list|,
+name|struct
+name|al_udma_gen_tgtid_conf
+modifier|*
+name|conf
+parameter_list|,
+name|uint32_t
+name|qid
+parameter_list|)
+function_decl|;
+comment|/** UDMA Target-ID control configuration */
+name|void
+name|al_udma_gen_tgtid_conf_set
 parameter_list|(
 name|struct
 name|unit_regs
@@ -1329,14 +1179,14 @@ modifier|*
 name|unit_regs
 parameter_list|,
 name|struct
-name|al_udma_gen_vmid_conf
+name|al_udma_gen_tgtid_conf
 modifier|*
 name|conf
 parameter_list|)
 function_decl|;
-comment|/** UDMA VMID MSIX control configuration */
+comment|/** UDMA Target-ID MSIX control configuration */
 name|void
-name|al_udma_gen_vmid_msix_conf_set
+name|al_udma_gen_tgtid_msix_conf_set
 parameter_list|(
 name|struct
 name|unit_regs
@@ -1345,52 +1195,7 @@ modifier|*
 name|unit_regs
 parameter_list|,
 name|struct
-name|al_udma_gen_vmid_msix_conf
-modifier|*
-name|conf
-parameter_list|)
-function_decl|;
-comment|/** UDMA VMID control advanced Tx queue configuration */
-name|void
-name|al_udma_gen_vmid_advanced_tx_q_conf
-parameter_list|(
-name|struct
-name|al_udma_q
-modifier|*
-name|q
-parameter_list|,
-name|struct
-name|al_udma_gen_vmid_advanced_tx_q_conf
-modifier|*
-name|conf
-parameter_list|)
-function_decl|;
-comment|/** UDMA VMID control advanced Rx queue configuration */
-name|void
-name|al_udma_gen_vmid_advanced_rx_q_conf
-parameter_list|(
-name|struct
-name|al_udma_q
-modifier|*
-name|q
-parameter_list|,
-name|struct
-name|al_udma_gen_vmid_advanced_rx_q_conf
-modifier|*
-name|conf
-parameter_list|)
-function_decl|;
-comment|/** UDMA header split buffer 2 Rx queue configuration */
-name|void
-name|al_udma_gen_hdr_split_buff2_rx_q_conf
-parameter_list|(
-name|struct
-name|al_udma_q
-modifier|*
-name|q
-parameter_list|,
-name|struct
-name|al_udma_gen_hdr_split_buff2_q_conf
+name|al_udma_gen_tgtid_msix_conf
 modifier|*
 name|conf
 parameter_list|)

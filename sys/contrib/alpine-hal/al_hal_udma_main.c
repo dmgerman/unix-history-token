@@ -123,9 +123,6 @@ modifier|*
 name|udma
 parameter_list|)
 block|{
-name|uint32_t
-name|tmp
-decl_stmt|;
 name|uint8_t
 name|rev_id
 init|=
@@ -183,28 +180,6 @@ name|UDMA_M2S_RD_DATA_CFG_DATA_FIFO_DEPTH_SHIFT
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|rev_id
-operator|==
-name|AL_UDMA_REV_ID_0
-condition|)
-comment|/* disable AXI timeout for M0*/
-name|al_reg_write32
-argument_list|(
-operator|&
-name|tmp_unit_regs
-operator|->
-name|gen
-operator|.
-name|axi
-operator|.
-name|cfg_1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
 comment|/* set AXI timeout to 1M (~2.6 ms) */
 name|al_reg_write32
 argument_list|(
@@ -235,57 +210,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Ack time out */
-if|if
-condition|(
-name|rev_id
-operator|==
-name|AL_UDMA_REV_ID_0
-condition|)
-block|{
-name|tmp
-operator|=
-name|al_reg_read32
-argument_list|(
-operator|&
-name|udma
-operator|->
-name|udma_regs
-operator|->
-name|m2s
-operator|.
-name|axi_m2s
-operator|.
-name|desc_wr_cfg_1
-argument_list|)
-expr_stmt|;
-name|tmp
-operator|&=
-operator|~
-name|UDMA_AXI_M2S_DESC_WR_CFG_1_MAX_AXI_BEATS_MASK
-expr_stmt|;
-name|tmp
-operator||=
-literal|4
-operator|<<
-name|UDMA_AXI_M2S_DESC_WR_CFG_1_MAX_AXI_BEATS_SHIFT
-expr_stmt|;
-name|al_reg_write32
-argument_list|(
-operator|&
-name|udma
-operator|->
-name|udma_regs
-operator|->
-name|m2s
-operator|.
-name|axi_m2s
-operator|.
-name|desc_wr_cfg_1
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1461,9 +1385,7 @@ expr_stmt|;
 name|al_dbg
 argument_list|(
 literal|"udma [%s %d]: %s q init. size 0x%x\n"
-literal|"  desc ring info: phys base 0x%llx virt base %p\n"
-literal|"  cdesc ring info: phys base 0x%llx virt base %p "
-literal|"entry size 0x%x"
+literal|"  desc ring info: phys base 0x%llx virt base %p)"
 argument_list|,
 name|udma_q
 operator|->
@@ -1501,6 +1423,11 @@ argument_list|,
 name|q_params
 operator|->
 name|desc_base
+argument_list|)
+expr_stmt|;
+name|al_dbg
+argument_list|(
+literal|"  cdesc ring info: phys base 0x%llx virt base %p entry size 0x%x"
 argument_list|,
 operator|(
 name|unsigned

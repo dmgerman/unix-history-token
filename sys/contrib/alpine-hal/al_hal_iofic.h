@@ -114,9 +114,9 @@ name|uint8_t
 name|interval
 parameter_list|)
 function_decl|;
-comment|/** * configure the vmid attributes for a given msix vector. * * @param group the interrupt group * @param vector index * @param vmid the vmid value * @param vmid_en take vmid from the intc * * @return 0 on success. -EINVAL otherwise. */
+comment|/** * configure the tgtid attributes for a given msix vector. * * @param group the interrupt group * @param vector index * @param tgtid the target-id value * @param tgtid_en take target-id from the intc * * @return 0 on success. -EINVAL otherwise. */
 name|int
-name|al_iofic_msix_vmid_attributes_config
+name|al_iofic_msix_tgtid_attributes_config
 parameter_list|(
 name|void
 name|__iomem
@@ -130,10 +130,10 @@ name|uint8_t
 name|vector
 parameter_list|,
 name|uint32_t
-name|vmid
+name|tgtid
 parameter_list|,
 name|uint8_t
-name|vmid_en
+name|tgtid_en
 parameter_list|)
 function_decl|;
 comment|/**  * return the offset of the unmask register for a given group.  * this function can be used when the upper layer wants to directly  * access the unmask regiter and bypass the al_iofic_unmask() API.  *  * @param regs_base regs pointer to unit registers  * @param group the interrupt group  * @return the offset of the unmask register.  */

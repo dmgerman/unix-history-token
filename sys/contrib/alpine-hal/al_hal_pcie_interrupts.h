@@ -92,7 +92,7 @@ argument_list|(
 literal|2
 argument_list|)
 block|,
-comment|/** 	 * [RC only] Deassert_INTA received - there's a didcated GIC interrupt 	 * line that reflects the status of ASSERT/DEASSERT of INTA 	 */
+comment|/** 	 * [RC only] Deassert_INTA received - there's a dedicated GIC interrupt 	 * line that reflects the status of ASSERT/DEASSERT of INTA 	 */
 name|AL_PCIE_APP_INT_DEASSERT_INTA
 init|=
 name|AL_BIT
@@ -124,7 +124,7 @@ argument_list|(
 literal|6
 argument_list|)
 block|,
-comment|/** 	 * [RC only] Assert_INTA received - there's a didcated GIC interrupt 	 * line that reflects the status of ASSERT/DEASSERT of INTA 	 */
+comment|/** 	 * [RC only] Assert_INTA received - there's a dedicated GIC interrupt 	 * line that reflects the status of ASSERT/DEASSERT of INTA 	 */
 name|AL_PCIE_APP_INT_ASSERT_INTA
 init|=
 name|AL_BIT
@@ -311,7 +311,7 @@ argument_list|(
 literal|5
 argument_list|)
 block|,
-comment|/** 	 * [RC/EP] Vendor Defined Message received 	 * Asserted when a vevdor message is received (with no data), buffers 2 	 * messages only, and latch the headers in registers 	 */
+comment|/** 	 * [RC/EP] Vendor Defined Message received 	 * Asserted when a vendor message is received (with no data), buffers 2 	 * messages only, and latch the headers in registers 	 */
 name|AL_PCIE_APP_INT_GRP_B_VNDR_MSG_A_RCVD
 init|=
 name|AL_BIT
@@ -319,7 +319,7 @@ argument_list|(
 literal|6
 argument_list|)
 block|,
-comment|/** 	 * [RC/EP] Vendor Defined Message received 	 * Asserted when a vevdor message is received (with no data), buffers 2 	 * messages only, and latch the headers in registers 	 */
+comment|/** 	 * [RC/EP] Vendor Defined Message received 	 * Asserted when a vendor message is received (with no data), buffers 2 	 * messages only, and latch the headers in registers 	 */
 name|AL_PCIE_APP_INT_GRP_B_VNDR_MSG_B_RCVD
 init|=
 name|AL_BIT
@@ -351,7 +351,7 @@ argument_list|(
 literal|14
 argument_list|)
 block|,
-comment|/** [RC only] CPL timeout from the PCIe core indiication */
+comment|/** [RC only] CPL timeout from the PCIe core indication */
 name|AL_PCIE_APP_INT_GRP_B_CPL_TO
 init|=
 name|AL_BIT

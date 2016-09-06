@@ -2619,7 +2619,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __AL_HAL_PCIE_W_REG_H */
+comment|/* __AL_HAL_pcie_w_REG_H */
 end_comment
 
 begin_comment

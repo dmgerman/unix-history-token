@@ -57,6 +57,13 @@ parameter_list|)
 value|(1UL<< (b))
 define|#
 directive|define
+name|AL_BIT_64
+parameter_list|(
+name|b
+parameter_list|)
+value|(1ULL<< (b))
+define|#
+directive|define
 name|AL_ADDR_LOW
 parameter_list|(
 name|x
