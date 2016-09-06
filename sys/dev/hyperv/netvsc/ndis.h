@@ -811,7 +811,7 @@ parameter_list|,
 name|cfi
 parameter_list|)
 define|\
-value|(((pri)& NVIS_VLAN_INFO_PRI_MASK) |	\ 	 (((cfi)& 0x1)<< 3) | (((id)& 0xfff)<< 4))
+value|(((pri)& NDIS_VLAN_INFO_PRI_MASK) |	\ 	 (((cfi)& 0x1)<< 3) | (((id)& 0xfff)<< 4))
 end_define
 
 begin_define
