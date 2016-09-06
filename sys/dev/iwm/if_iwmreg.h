@@ -12714,6 +12714,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWM_SCAN_CHANNEL_NSSIDS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((1<< (x)) - 1)<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWM_SCAN_CHANNEL_NARROW_BAND
 value|(1<< 22)
 end_define
@@ -14799,6 +14809,13 @@ block|{
 name|uint32_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|IWM_SCAN_CHANNEL_UMAC_NSSIDS
+parameter_list|(
+name|x
+parameter_list|)
+value|((1<< (x)) - 1)
 name|uint8_t
 name|channel_num
 decl_stmt|;
