@@ -495,6 +495,29 @@ block|, }
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|gic_v3_irqsrc
+block|{
+name|struct
+name|intr_irqsrc
+name|gi_isrc
+decl_stmt|;
+name|uint32_t
+name|gi_irq
+decl_stmt|;
+name|enum
+name|intr_polarity
+name|gi_pol
+decl_stmt|;
+name|enum
+name|intr_trigger
+name|gi_trig
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Helper routines starting with gic_v3_ */
 end_comment
