@@ -2778,9 +2778,10 @@ name|void
 modifier|*
 name|hv_set_rppi_data
 parameter_list|(
-name|rndis_msg
+name|struct
+name|rndis_packet_msg
 modifier|*
-name|rndis_mesg
+name|pkt
 parameter_list|,
 name|uint32_t
 name|rppi_size
