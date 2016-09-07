@@ -475,6 +475,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+modifier|*
+name|hn_rndis_pktinfo_append
+parameter_list|(
+name|struct
+name|rndis_packet_msg
+modifier|*
+parameter_list|,
+name|size_t
+name|pktsize
+parameter_list|,
+name|size_t
+name|pi_dlen
+parameter_list|,
+name|uint32_t
+name|pi_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct

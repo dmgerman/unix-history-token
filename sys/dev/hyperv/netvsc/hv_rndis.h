@@ -1953,34 +1953,6 @@ name|rndis_tcp_tso_info
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|RNDIS_HASHVAL_PPI_SIZE
-value|(sizeof(rndis_per_packet_info) + \ 				sizeof(struct rndis_hash_value))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RNDIS_VLAN_PPI_SIZE
-value|(sizeof(rndis_per_packet_info) + \ 				sizeof(ndis_8021q_info))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RNDIS_CSUM_PPI_SIZE
-value|(sizeof(rndis_per_packet_info) + \ 				sizeof(rndis_tcp_ip_csum_info))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RNDIS_TSO_PPI_SIZE
-value|(sizeof(rndis_per_packet_info) + \ 				sizeof(rndis_tcp_tso_info))
-end_define
-
 begin_comment
 comment|/*  * Format of Information buffer passed in a SetRequest for the OID  * OID_GEN_RNDIS_CONFIG_PARAMETER.  */
 end_comment
@@ -2769,25 +2741,6 @@ name|struct
 name|hn_tx_ring
 modifier|*
 name|txr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|hv_set_rppi_data
-parameter_list|(
-name|struct
-name|rndis_packet_msg
-modifier|*
-name|pkt
-parameter_list|,
-name|uint32_t
-name|rppi_size
-parameter_list|,
-name|int
-name|pkt_type
 parameter_list|)
 function_decl|;
 end_function_decl

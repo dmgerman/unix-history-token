@@ -835,6 +835,21 @@ name|HN_NDIS_PKTINFO_TYPE_HASHVAL
 value|NDIS_PKTINFO_TYPE_PKT_CANCELID
 end_define
 
+begin_comment
+comment|/* Per-packet-info size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_RNDIS_PKTINFO_SIZE
+parameter_list|(
+name|dlen
+parameter_list|)
+define|\
+value|__offsetof(struct rndis_pktinfo, rm_data[dlen])
+end_define
+
 begin_endif
 endif|#
 directive|endif
