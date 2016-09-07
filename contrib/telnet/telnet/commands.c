@@ -531,6 +531,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -11346,6 +11347,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|srp
@@ -14970,6 +14972,7 @@ name|char
 modifier|*
 name|arg
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 modifier|*
@@ -14998,6 +15001,7 @@ name|ALIGNBYTES
 index|]
 decl_stmt|;
 comment|/*XXX*/
+name|unsigned
 name|char
 modifier|*
 name|cp
