@@ -968,11 +968,12 @@ argument_list|,
 name|ccsrsize
 argument_list|)
 expr_stmt|;
-name|mpc85xx_fix_errata
-argument_list|(
-name|ccsrbar_va
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|mpc85xx_fix_errata(ccsrbar_va);
+endif|#
+directive|endif
 name|mpc85xx_enable_l3_cache
 argument_list|()
 expr_stmt|;
