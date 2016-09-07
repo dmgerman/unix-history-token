@@ -4374,8 +4374,9 @@ comment|/***************************************************  * Low level mappin
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|pmap_kenter_device
+name|pmap_kenter
 parameter_list|(
 name|vm_offset_t
 name|sva
@@ -4385,6 +4386,9 @@ name|size
 parameter_list|,
 name|vm_paddr_t
 name|pa
+parameter_list|,
+name|int
+name|mode
 parameter_list|)
 block|{
 name|pd_entry_t
@@ -4412,7 +4416,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_kenter_device: Invalid physical address"
+literal|"pmap_kenter: Invalid physical address"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4427,7 +4431,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_kenter_device: Invalid virtual address"
+literal|"pmap_kenter: Invalid virtual address"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4442,7 +4446,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"pmap_kenter_device: Mapping is not page-sized"
+literal|"pmap_kenter: Mapping is not page-sized"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4476,7 +4480,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pmap_kenter_device: Invalid page entry, va: 0x%lx"
+literal|"pmap_kenter: Invalid page entry, va: 0x%lx"
 operator|,
 name|va
 operator|)
@@ -4489,7 +4493,7 @@ operator|==
 literal|2
 argument_list|,
 operator|(
-literal|"pmap_kenter_device: Invalid level %d"
+literal|"pmap_kenter: Invalid level %d"
 operator|,
 name|lvl
 operator|)
@@ -4519,7 +4523,7 @@ name|ATTR_DEFAULT
 operator||
 name|ATTR_IDX
 argument_list|(
-name|DEVICE_MEMORY
+name|mode
 argument_list|)
 operator||
 name|L3_PAGE
@@ -4550,6 +4554,34 @@ argument_list|,
 name|sva
 argument_list|,
 name|va
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pmap_kenter_device
+parameter_list|(
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|,
+name|vm_paddr_t
+name|pa
+parameter_list|)
+block|{
+name|pmap_kenter
+argument_list|(
+name|sva
+argument_list|,
+name|size
+argument_list|,
+name|pa
+argument_list|,
+name|DEVICE_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
