@@ -14406,6 +14406,8 @@ name|nfds
 argument_list|,
 name|CTLFLAG_RD
 operator||
+name|CTLFLAG_CAPRD
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_nfds
