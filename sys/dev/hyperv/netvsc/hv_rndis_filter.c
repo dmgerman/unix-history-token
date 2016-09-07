@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rndis.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -123,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/netvsc/hv_net_vsc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/netvsc/hv_rndis.h>
 end_include
 
 begin_include
@@ -1794,7 +1794,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|netvsc_recv
+name|hn_rxpkt
 argument_list|(
 name|rxr
 argument_list|,
@@ -3253,7 +3253,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|>=
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 argument_list|,
 operator|(
 literal|"NDIS 6.30+ is required, NDIS version 0x%08x"
@@ -3751,7 +3751,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|<
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 condition|)
 block|{
 name|params
@@ -3814,7 +3814,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|>=
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 condition|)
 block|{
 name|params
@@ -3938,7 +3938,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|>=
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 argument_list|,
 operator|(
 literal|"NDIS 6.30+ is required, NDIS version 0x%08x"
@@ -4828,7 +4828,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|<
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 operator|||
 name|nchan
 operator|==
@@ -5305,7 +5305,7 @@ modifier|*
 name|txr
 parameter_list|)
 block|{
-name|netvsc_channel_rollup
+name|hn_chan_rollup
 argument_list|(
 name|rxr
 argument_list|,

@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rndis.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -325,12 +331,6 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/netvsc/hv_net_vsc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/netvsc/hv_rndis.h>
 end_include
 
 begin_include
@@ -3973,7 +3973,7 @@ end_function
 
 begin_function
 name|void
-name|netvsc_channel_rollup
+name|hn_chan_rollup
 parameter_list|(
 name|struct
 name|hn_rx_ring
@@ -5869,7 +5869,7 @@ end_comment
 
 begin_function
 name|int
-name|netvsc_recv
+name|hn_rxpkt
 parameter_list|(
 name|struct
 name|hn_rx_ring
@@ -9551,14 +9551,14 @@ argument_list|)
 argument_list|,
 literal|"%u.%u"
 argument_list|,
-name|NDIS_VERSION_MAJOR
+name|HN_NDIS_VERSION_MAJOR
 argument_list|(
 name|sc
 operator|->
 name|hn_ndis_ver
 argument_list|)
 argument_list|,
-name|NDIS_VERSION_MINOR
+name|HN_NDIS_VERSION_MINOR
 argument_list|(
 name|sc
 operator|->

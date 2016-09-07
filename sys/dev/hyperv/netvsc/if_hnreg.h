@@ -27,6 +27,44 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_comment
+comment|/*  * NDIS protocol version numbers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_6_1
+value|0x00060001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_6_30
+value|0x0006001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((ver)& 0xffff0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|((ver)& 0xffff)
+end_define
+
 begin_define
 define|#
 directive|define
