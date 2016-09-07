@@ -5546,7 +5546,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Put page on a list so that it is released after 	 * *ALL* TLB shootdown is done 	 */
+comment|/* 	 * Put page on a list so that it is released after 	 * *ALL* TLB shootdown is done 	 */
 name|pmap_add_delayed_free_list
 argument_list|(
 name|m
@@ -6637,7 +6637,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int kvm_size(SYSCTL_HANDLER_ARGS) { 	unsigned long ksize = VM_MAX_KERNEL_ADDRESS - VM_MIN_KERNEL_ADDRESS;  	return sysctl_handle_long(oidp,&ksize, 0, req); } SYSCTL_PROC(_vm, OID_AUTO, kvm_size, CTLTYPE_LONG|CTLFLAG_RD,      0, 0, kvm_size, "LU", "Size of KVM");  static int kvm_free(SYSCTL_HANDLER_ARGS) { 	unsigned long kfree = VM_MAX_KERNEL_ADDRESS - kernel_vm_end;  	return sysctl_handle_long(oidp,&kfree, 0, req); } SYSCTL_PROC(_vm, OID_AUTO, kvm_free, CTLTYPE_LONG|CTLFLAG_RD,      0, 0, kvm_free, "LU", "Amount of KVM free");
+unit|static int kvm_size(SYSCTL_HANDLER_ARGS) { 	unsigned long ksize = VM_MAX_KERNEL_ADDRESS - VM_MIN_KERNEL_ADDRESS;  	return sysctl_handle_long(oidp,&ksize, 0, req); } SYSCTL_PROC(_vm, OID_AUTO, kvm_size, CTLTYPE_LONG|CTLFLAG_RD,     0, 0, kvm_size, "LU", "Size of KVM");  static int kvm_free(SYSCTL_HANDLER_ARGS) { 	unsigned long kfree = VM_MAX_KERNEL_ADDRESS - kernel_vm_end;  	return sysctl_handle_long(oidp,&kfree, 0, req); } SYSCTL_PROC(_vm, OID_AUTO, kvm_free, CTLTYPE_LONG|CTLFLAG_RD,     0, 0, kvm_free, "LU", "Amount of KVM free");
 endif|#
 directive|endif
 end_endif
@@ -11741,7 +11741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
+comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
 end_comment
 
 begin_function
@@ -11806,7 +11806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
+comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
 end_comment
 
 begin_function
@@ -12481,7 +12481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *                                                                                  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
+comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
 end_comment
 
 begin_function
