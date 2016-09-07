@@ -11145,10 +11145,11 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|len
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
