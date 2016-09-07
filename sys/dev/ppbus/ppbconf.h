@@ -1068,9 +1068,9 @@ name|device_t
 parameter_list|,
 name|int
 parameter_list|,
-name|char
+name|uint8_t
 parameter_list|,
-name|char
+name|uint8_t
 parameter_list|,
 name|int
 parameter_list|)
