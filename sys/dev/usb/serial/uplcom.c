@@ -476,7 +476,7 @@ name|struct
 name|usb_device
 modifier|*
 parameter_list|,
-name|int8_t
+name|uint8_t
 parameter_list|,
 name|uint8_t
 parameter_list|,
@@ -2483,7 +2483,7 @@ name|usb_device
 modifier|*
 name|udev
 parameter_list|,
-name|int8_t
+name|uint8_t
 name|req_type
 parameter_list|,
 name|uint8_t
