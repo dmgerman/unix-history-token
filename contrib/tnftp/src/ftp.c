@@ -10707,6 +10707,7 @@ modifier|*
 name|din
 parameter_list|)
 block|{
+name|unsigned
 name|char
 name|buf
 index|[
