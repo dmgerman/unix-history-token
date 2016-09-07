@@ -2182,6 +2182,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|IPOPT_RA
 expr_stmt|;
 comment|/* Router Alert Option */
