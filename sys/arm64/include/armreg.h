@@ -770,6 +770,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AA64DFR0_DEBUG_VER_8_VHE
+value|(0x7<< ID_AA64DFR0_DEBUG_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AA64DFR0_TRACE_VER_SHIFT
 value|4
 end_define
@@ -841,6 +848,13 @@ define|#
 directive|define
 name|ID_AA64DFR0_PMU_VER_3
 value|(0x1<< ID_AA64DFR0_PMU_VER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64DFR0_PMU_VER_3_1
+value|(0x4<< ID_AA64DFR0_PMU_VER_SHIFT)
 end_define
 
 begin_define
@@ -933,7 +947,7 @@ begin_define
 define|#
 directive|define
 name|ID_AA64ISAR0_MASK
-value|0x000ffff0
+value|0xf0fffff0
 end_define
 
 begin_define
@@ -1093,6 +1107,82 @@ define|#
 directive|define
 name|ID_AA64ISAR0_CRC32_BASE
 value|(0x1<< ID_AA64ISAR0_CRC32_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_MASK
+value|(0xf<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64ISAR0_ATOMIC_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_NONE
+value|(0x0<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_ATOMIC_IMPL
+value|(0x2<< ID_AA64ISAR0_ATOMIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_SHIFT
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_MASK
+value|(0xf<< ID_AA64ISAR0_RDM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64ISAR0_RDM_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_NONE
+value|(0x0<< ID_AA64ISAR0_RDM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64ISAR0_RDM_IMPL
+value|(0x1<< ID_AA64ISAR0_RDM_SHIFT)
 end_define
 
 begin_comment
@@ -1436,6 +1526,252 @@ define|#
 directive|define
 name|ID_AA64MMFR0_TGRAN4_NONE
 value|(0xf<< ID_AA64MMFR0_TGRAN4_SHIFT)
+end_define
+
+begin_comment
+comment|/* ID_AA64MMFR1_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_MASK
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_MASK
+value|(0xf<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_HAFDBS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_NONE
+value|(0x0<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_AF
+value|(0x1<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HAFDBS_AF_DBS
+value|(0x2<< ID_AA64MMFR1_HAFDBS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_MASK
+value|(0xf<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_VMIDBITS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_8
+value|(0x0<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VMIDBITS_16
+value|(0x2<< ID_AA64MMFR1_VMIDBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_MASK
+value|(0xf<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_VH_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_NONE
+value|(0x0<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_VH_IMPL
+value|(0x1<< ID_AA64MMFR1_VH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_MASK
+value|(0xf<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_HPDS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_NONE
+value|(0x0<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_HPDS_IMPL
+value|(0x1<< ID_AA64MMFR1_HPDS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_MASK
+value|(0xf<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_LO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_NONE
+value|(0x0<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_LO_IMPL
+value|(0x1<< ID_AA64MMFR1_LO_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_SHIFT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_MASK
+value|(0xf<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ID_AA64MMFR1_PAN_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_NONE
+value|(0x0<< ID_AA64MMFR1_PAN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64MMFR1_PAN_IMPL
+value|(0x1<< ID_AA64MMFR1_PAN_SHIFT)
 end_define
 
 begin_comment
