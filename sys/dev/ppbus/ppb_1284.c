@@ -103,10 +103,10 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|char
+name|uint8_t
 name|mask
 parameter_list|,
-name|char
+name|uint8_t
 name|status
 parameter_list|)
 block|{
@@ -139,10 +139,10 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|char
+name|uint8_t
 name|mask
 parameter_list|,
-name|char
+name|uint8_t
 name|status
 parameter_list|)
 block|{

@@ -111,10 +111,10 @@ parameter_list|,
 name|int
 name|max
 parameter_list|,
-name|char
+name|uint8_t
 name|mask
 parameter_list|,
-name|char
+name|uint8_t
 name|status
 parameter_list|,
 name|int
@@ -138,7 +138,7 @@ name|j
 decl_stmt|,
 name|error
 decl_stmt|;
-name|char
+name|uint8_t
 name|r
 decl_stmt|;
 name|ppb_assert_locked
@@ -598,8 +598,7 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-specifier|register
-name|char
+name|uint8_t
 name|r
 decl_stmt|;
 name|ppb_assert_locked
