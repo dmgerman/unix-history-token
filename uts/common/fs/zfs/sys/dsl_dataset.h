@@ -141,11 +141,6 @@ define|#
 directive|define
 name|DS_FIELD_BOOKMARK_NAMES
 value|"com.delphix:bookmarks"
-comment|/*  * This field is present (with value=0) if this dataset may contain large  * blocks (>128KB).  If it is present, then this dataset  * is counted in the refcount of the SPA_FEATURE_LARGE_BLOCKS feature.  */
-define|#
-directive|define
-name|DS_FIELD_LARGE_BLOCKS
-value|"org.open-zfs:large_blocks"
 comment|/*  * These fields are set on datasets that are in the middle of a resumable  * receive, and allow the sender to resume the send if it is interrupted.  */
 define|#
 directive|define
