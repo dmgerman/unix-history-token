@@ -286,7 +286,7 @@ name|DATA
 parameter_list|(
 name|number
 parameter_list|)
-value|{ B##number, number }
+value|{ (NCURSES_OSPEED)B##number, number }
 end_define
 
 begin_decl_stmt
