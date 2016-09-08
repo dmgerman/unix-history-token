@@ -65,6 +65,38 @@ parameter_list|)
 value|((ver)& 0xffff)
 end_define
 
+begin_comment
+comment|/*  * NVS versions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_VERSION_1
+value|0x00002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_VERSION_2
+value|0x30002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_VERSION_4
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_VERSION_5
+value|0x50000
+end_define
+
 begin_define
 define|#
 directive|define
