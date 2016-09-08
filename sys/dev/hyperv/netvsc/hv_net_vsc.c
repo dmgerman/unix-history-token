@@ -140,8 +140,6 @@ parameter_list|(
 name|struct
 name|hn_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -604,9 +602,6 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|int
-name|rxbuf_size
 parameter_list|)
 block|{
 name|struct
@@ -635,19 +630,26 @@ name|status
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|rxbuf_size
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|rxbuf_size
+comment|/* 	 * Limit RXBUF size for old NVS. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_nvs_ver
 operator|<=
-name|NETVSC_RECEIVE_BUFFER_SIZE
-argument_list|,
-operator|(
-literal|"invalid rxbuf size %d"
-operator|,
+name|NVSP_PROTOCOL_VERSION_2
+condition|)
 name|rxbuf_size
-operator|)
-argument_list|)
+operator|=
+name|NETVSC_RECEIVE_BUFFER_SIZE_LEGACY
+expr_stmt|;
+else|else
+name|rxbuf_size
+operator|=
+name|NETVSC_RECEIVE_BUFFER_SIZE
 expr_stmt|;
 comment|/* 	 * Connect the RXBUF GPADL to the primary channel. 	 * 	 * NOTE: 	 * Only primary channel has RXBUF connected to it.  Sub-channels 	 * just share this RXBUF. 	 */
 name|error
@@ -2045,9 +2047,6 @@ name|struct
 name|hn_nvs_ndis_init
 name|ndis
 decl_stmt|;
-name|int
-name|rxbuf_size
-decl_stmt|;
 comment|/* 	 * Negotiate the NVSP version.  Try the latest NVSP first. 	 */
 for|for
 control|(
@@ -2271,31 +2270,11 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* Post the big receive buffer to NetVSP */
-if|if
-condition|(
-name|sc
-operator|->
-name|hn_nvs_ver
-operator|<=
-name|NVSP_PROTOCOL_VERSION_2
-condition|)
-name|rxbuf_size
-operator|=
-name|NETVSC_RECEIVE_BUFFER_SIZE_LEGACY
-expr_stmt|;
-else|else
-name|rxbuf_size
-operator|=
-name|NETVSC_RECEIVE_BUFFER_SIZE
-expr_stmt|;
 name|ret
 operator|=
 name|hv_nv_init_rx_buffer_with_net_vsp
 argument_list|(
 name|sc
-argument_list|,
-name|rxbuf_size
 argument_list|)
 expr_stmt|;
 if|if
