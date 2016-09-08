@@ -30,23 +30,6 @@ end_typedef
 
 begin_struct
 struct|struct
-name|ioc_toc_header32
-block|{
-name|u_short
-name|len
-decl_stmt|;
-name|u_char
-name|starting_track
-decl_stmt|;
-name|u_char
-name|ending_track
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ioc_read_toc_entry32
 block|{
 name|u_char
@@ -313,13 +296,6 @@ define|#
 directive|define
 name|CDIOREADTOCENTRYS_32
 value|_IOWR('c', 5, struct ioc_read_toc_entry32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDIOREADTOCHEADER_32
-value|_IOR('c', 4, struct ioc_toc_header32)
 end_define
 
 begin_define
