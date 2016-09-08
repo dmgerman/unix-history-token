@@ -3079,7 +3079,7 @@ name|stats
 operator|->
 name|an_rx_refresh_pkts
 argument_list|)
-operator|,
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Refresh frames transmitted:\t\t\t[ %u ]\n"
@@ -3088,7 +3088,7 @@ name|stats
 operator|->
 name|an_tx_refresh_pkts
 argument_list|)
-operator|,
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Poll frames received:\t\t\t\t[ %u ]\n"
