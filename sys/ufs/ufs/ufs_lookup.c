@@ -5021,12 +5021,6 @@ name|DOINGASYNC
 argument_list|(
 name|dvp
 argument_list|)
-operator|&&
-name|dp
-operator|->
-name|i_count
-operator|!=
-literal|0
 condition|)
 name|bdwrite
 argument_list|(
