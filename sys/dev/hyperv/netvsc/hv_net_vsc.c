@@ -1910,20 +1910,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send NDIS version 2 config packet containing MTU.  *  * Not valid for NDIS version 1.  */
+comment|/*  * Configure MTU and enable VLAN.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|hv_nv_send_ndis_config
+name|hn_nvs_conf_ndis
 parameter_list|(
 name|struct
 name|hn_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|int
 name|mtu
 parameter_list|)
 block|{
@@ -2144,10 +2144,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC connect to VSP  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2171,6 +2167,7 @@ name|struct
 name|hn_nvs_ndis_init
 name|ndis
 decl_stmt|;
+comment|/* 	 * Initialize NVS. 	 */
 name|ret
 operator|=
 name|hn_nvs_init
@@ -2189,7 +2186,6 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 	 * Set the MTU if supported by this NVSP protocol version 	 * This needs to be right after the NVSP init message per Haiyang 	 */
 if|if
 condition|(
 name|sc
@@ -2198,15 +2194,29 @@ name|hn_nvs_ver
 operator|>=
 name|HN_NVS_VERSION_2
 condition|)
+block|{
+comment|/* 		 * Configure NDIS before initializing it. 		 */
 name|ret
 operator|=
-name|hv_nv_send_ndis_config
+name|hn_nvs_conf_ndis
 argument_list|(
 name|sc
 argument_list|,
 name|mtu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
 comment|/* 	 * Initialize NDIS. 	 */
 name|memset
 argument_list|(
