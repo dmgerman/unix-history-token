@@ -31,6 +31,33 @@ directive|ifdef
 name|QUEUE_MACRO_DEBUG
 end_ifdef
 
+begin_empty
+empty|#warn Use QUEUE_MACRO_DEBUG_TRACE and/or QUEUE_MACRO_DEBUG_TRASH
+end_empty
+
+begin_define
+define|#
+directive|define
+name|QUEUE_MACRO_DEBUG_TRACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUEUE_MACRO_DEBUG_TRASH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE_MACRO_DEBUG_TRACE
+end_ifdef
+
 begin_comment
 comment|/* Store the last 2 places the queue element or head was altered */
 end_comment
@@ -78,28 +105,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRASHIT
-parameter_list|(
-name|x
-parameter_list|)
-value|do {(x) = (void *)-1;} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QMD_SAVELINK
-parameter_list|(
-name|name
-parameter_list|,
-name|link
-parameter_list|)
-value|void **name = (void *)&(link)
-end_define
-
-begin_define
-define|#
-directive|define
 name|QMD_TRACE_HEAD
 parameter_list|(
 name|head
@@ -122,6 +127,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !QUEUE_MACRO_DEBUG_TRACE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -143,17 +152,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|QMD_SAVELINK
-parameter_list|(
-name|name
-parameter_list|,
-name|link
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TRACEBUF
 end_define
 
@@ -162,6 +160,50 @@ define|#
 directive|define
 name|TRACEBUF_INITIALIZER
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* QUEUE_MACRO_DEBUG_TRACE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE_MACRO_DEBUG_TRASH
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TRASHIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {(x) = (void *)-1;} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_IS_TRASHED
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == (void *)(intptr_t)-1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !QUEUE_MACRO_DEBUG_TRASH */
+end_comment
 
 begin_define
 define|#
@@ -172,13 +214,78 @@ name|x
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|QMD_IS_TRASHED
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* QUEUE_MACRO_DEBUG */
+comment|/* QUEUE_MACRO_DEBUG_TRASH */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QUEUE_MACRO_DEBUG_TRACE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|QUEUE_MACRO_DEBUG_TRASH
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|QMD_SAVELINK
+parameter_list|(
+name|name
+parameter_list|,
+name|link
+parameter_list|)
+value|void **name = (void *)&(link)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !QUEUE_MACRO_DEBUG_TRACE&& !QUEUE_MACRO_DEBUG_TRASH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QMD_SAVELINK
+parameter_list|(
+name|name
+parameter_list|,
+name|link
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* QUEUE_MACRO_DEBUG_TRACE || QUEUE_MACRO_DEBUG_TRASH */
 end_comment
 
 begin_ifdef
@@ -295,6 +402,55 @@ end_define
 begin_comment
 comment|/*  * Singly-linked List functions.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|QMD_SLIST_CHECK_PREVPTR
+parameter_list|(
+name|prevp
+parameter_list|,
+name|elm
+parameter_list|)
+value|do {			\ 	if (*(prevp) != (elm))						\ 		panic("Bad prevptr *(%p) == %p != %p",			\ 		    (prevp), *(prevp), (elm));				\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|QMD_SLIST_CHECK_PREVPTR
+parameter_list|(
+name|prevp
+parameter_list|,
+name|elm
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -501,6 +657,20 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {				\ 	SLIST_FIRST((head)) = SLIST_NEXT(SLIST_FIRST((head)), field);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLIST_REMOVE_PREVPTR
+parameter_list|(
+name|prevp
+parameter_list|,
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	QMD_SLIST_CHECK_PREVPTR(prevp, elm);				\ 	*(prevp) = SLIST_NEXT(elm, field);				\ 	TRASHIT((elm)->field.sle_next);					\ } while (0)
 end_define
 
 begin_define
