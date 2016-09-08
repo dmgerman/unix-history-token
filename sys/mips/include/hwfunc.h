@@ -141,7 +141,16 @@ end_comment
 
 begin_function_decl
 name|int
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|platform_ipi_softintr_num
 parameter_list|(
 name|void
 parameter_list|)
