@@ -453,7 +453,7 @@ condition|)
 block|{
 name|intrnum
 operator|=
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 argument_list|()
 expr_stmt|;
 name|sb_write_intmap
@@ -1046,7 +1046,7 @@ end_function
 
 begin_function
 name|int
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 parameter_list|(
 name|void
 parameter_list|)
@@ -1054,6 +1054,22 @@ block|{
 return|return
 operator|(
 literal|4
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|platform_ipi_softintr_num
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1124,7 +1140,7 @@ name|ipi_int_mask
 operator|=
 name|hard_int_mask
 argument_list|(
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 argument_list|()
 argument_list|)
 expr_stmt|;

@@ -15,6 +15,12 @@ directive|define
 name|__PCI_HOST_GENERIC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"pci_if.h"
+end_include
+
 begin_define
 define|#
 directive|define

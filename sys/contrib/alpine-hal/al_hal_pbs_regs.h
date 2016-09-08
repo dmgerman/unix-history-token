@@ -843,7 +843,17 @@ comment|/* [0x250] */
 name|uint32_t
 name|rsrvd_0
 index|[
-literal|88
+literal|24
+index|]
+decl_stmt|;
+name|uint32_t
+name|iofic_base
+decl_stmt|;
+comment|/* [0x300] */
+name|uint32_t
+name|rsrvd_1
+index|[
+literal|63
 index|]
 decl_stmt|;
 name|struct
@@ -1821,74 +1831,74 @@ value|27
 comment|/*  * 2'b01 - select pcie_b[0]  * 2'b10 - select pcie_a[2]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_2_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_2_MASK
 value|0x00000003
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_2_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_2_SHIFT
 value|0
 comment|/*  * 2'b01 - select pcie_b[1]  * 2'b10 - select pcie_a[3]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_3_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_3_MASK
 value|0x00000030
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_3_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_3_SHIFT
 value|4
 comment|/*  * 2'b01 - select pcie_b[0]  * 2'b10 - select pcie_a[4]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_4_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_4_MASK
 value|0x00000300
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_4_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_4_SHIFT
 value|8
 comment|/*  * 2'b01 - select pcie_b[1]  * 2'b10 - select pcie_a[5]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_5_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_5_MASK
 value|0x00003000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_5_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_5_SHIFT
 value|12
 comment|/*  * 2'b01 - select pcie_b[2]  * 2'b10 - select pcie_a[6]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_6_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_6_MASK
 value|0x00030000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_6_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_6_SHIFT
 value|16
 comment|/*  * 2'b01 - select pcie_b[3]  * 2'b10 - select pcie_a[7]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_7_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_7_MASK
 value|0x00300000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_7_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_7_SHIFT
 value|20
 comment|/*  * 2'b01 - select pcie_d[0]  * 2'b10 - select pcie_c[2]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_10_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_10_MASK
 value|0x03000000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_10_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_10_SHIFT
 value|24
 comment|/*  * 2'b01 - select pcie_d[1]  * 2'b10 - select pcie_c[3]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_11_MASK
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_11_MASK
 value|0x30000000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PIPE_PKR_SELECT_OH_SERDES_11_SHIFT
+name|PBS_UNIT_SERDES_MUX_PIPE_ALPINE_V2_SELECT_OH_SERDES_11_SHIFT
 value|28
 comment|/**** dma_io_master_map register ****/
 comment|/*  * [0]: When set, maps all the io_dma transactions to the NB/DRAM, regardless of  * the window hit.  * [1]: When set, maps all the eth_0 transactions to the NB/DRAM, regardless of  * the window hit.  * [2]: When set, maps all the eth_2 transaction to the NB/DRAM, regardless of  * the window hit.  * [3]: When set, maps all the sata_0 transactions to the NB/DRAM, regardless of  * the window hit.  * [4]: When set, maps all the sata_1 transactions to the NB/DRAM, regardless of  * the window hit.  * [5]: When set, maps all the pcie_0 master transactions to the NB/DRAM,  * regardless of the window hit.  * [6]: When set, maps all the SPI debug port transactions to the NB/DRAM,  * regardless of the window hit.  * [7]: When set, maps all the CPU debug port transactions to the NB/DRAM,  * regardless of the window hit.  * [8] When set, maps all the Crypto transactions to the NB/DRAM, regardless of  * the window hit.  * [15:9] - Reserved  */
@@ -2042,6 +2052,31 @@ define|#
 directive|define
 name|PBS_UNIT_CFG_AXI_CONF_2_DBG_AWQOS_SHIFT
 value|26
+comment|/**** cfg_axi_conf_3 register ****/
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_LOW_MASK
+value|0xFFFF
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_LOW_SHIFT
+value|0
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_HI_MASK
+value|0xFF0000
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_HI_SHIFT
+value|16
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_SPI_HI_MASK
+value|0xFF000000
+define|#
+directive|define
+name|PBS_UNIT_CFG_AXI_CONF_3_TIMEOUT_SPI_HI_SHIFT
+value|24
 comment|/**** spi_mst_conf_0 register ****/
 comment|/*  * Sets the SPI master Configuration. For details see the SPI section in the  * documentation.  */
 define|#
@@ -2295,15 +2330,15 @@ name|PBS_UNIT_CHIP_ID_DEV_ID_SHIFT
 value|16
 define|#
 directive|define
-name|PBS_UNIT_CHIP_ID_DEV_ID_ALPINE
+name|PBS_UNIT_CHIP_ID_DEV_ID_ALPINE_V1
 value|0
 define|#
 directive|define
-name|PBS_UNIT_CHIP_ID_DEV_ID_PEAKROCK
+name|PBS_UNIT_CHIP_ID_DEV_ID_ALPINE_V2
 value|1
 define|#
 directive|define
-name|PBS_UNIT_CHIP_ID_DEV_ID_COYOTE
+name|PBS_UNIT_CHIP_ID_DEV_ID_ALPINE_V3
 value|2
 comment|/**** uart0_conf_status register ****/
 comment|/*  * Conf:  * // [0] -- DSR_N RW bit  * // [1] -- DCD_N RW bit  * // [2] -- RI_N bit  * // [3] -- dma_tx_ack_n  * // [4] -- dma_rx_ack_n  */
@@ -2744,74 +2779,74 @@ value|24
 comment|/*  * 2'b01 - select sata_b[0]  * 2'b10 - select eth_a[0]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_8_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_8_MASK
 value|0x00000003
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_8_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_8_SHIFT
 value|0
 comment|/*  * 3'b001 - select sata_b[1]  * 3'b010 - select eth_b[0]  * 3'b100 - select eth_a[1]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_9_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_9_MASK
 value|0x00000070
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_9_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_9_SHIFT
 value|4
 comment|/*  * 3'b001 - select sata_b[2]  * 3'b010 - select eth_c[0]  * 3'b100 - select eth_a[2]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_10_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_10_MASK
 value|0x00000700
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_10_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_10_SHIFT
 value|8
 comment|/*  * 3'b001 - select sata_b[3]  * 3'b010 - select eth_d[0]  * 3'b100 - select eth_a[3]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_11_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_11_MASK
 value|0x00007000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_11_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_11_SHIFT
 value|12
 comment|/*  * 2'b01 - select eth_a[0]  * 2'b10 - select sata_a[0]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_12_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_12_MASK
 value|0x00030000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_12_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_12_SHIFT
 value|16
 comment|/*  * 3'b001 - select eth_b[0]  * 3'b010 - select eth_c[1]  * 3'b100 - select sata_a[1]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_13_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_13_MASK
 value|0x00700000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_13_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_13_SHIFT
 value|20
 comment|/*  * 3'b001 - select eth_a[0]  * 3'b010 - select eth_c[2]  * 3'b100 - select sata_a[2]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_14_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_14_MASK
 value|0x07000000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_14_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_14_SHIFT
 value|24
 comment|/*  * 3'b001 - select eth_d[0]  * 3'b010 - select eth_c[3]  * 3'b100 - select sata_a[3]  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_15_MASK
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_15_MASK
 value|0x70000000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_MULTI_0_PKR_SELECT_OH_SERDES_15_SHIFT
+name|PBS_UNIT_SERDES_MUX_MULTI_0_ALPINE_V2_SELECT_OH_SERDES_15_SHIFT
 value|28
 comment|/**** serdes_mux_multi_1 register ****/
 comment|/* SerDes one hot mux control.  For details see datasheet.  */
@@ -3173,103 +3208,103 @@ comment|/**** serdes_mux_eth register ****/
 comment|/*  * 2'b01 - eth_a[0] from serdes_8  * 2'b10 - eth_a[0] from serdes_14  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_A_0_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_A_0_MASK
 value|0x00000003
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_A_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_A_0_SHIFT
 value|0
 comment|/*  * 2'b01 - eth_b[0] from serdes_9  * 2'b10 - eth_b[0] from serdes_13  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_B_0_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_B_0_MASK
 value|0x00000030
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_B_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_B_0_SHIFT
 value|4
 comment|/*  * 2'b01 - eth_c[0] from serdes_10  * 2'b10 - eth_c[0] from serdes_12  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_C_0_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_C_0_MASK
 value|0x00000300
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_C_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_C_0_SHIFT
 value|8
 comment|/*  * 2'b01 - eth_d[0] from serdes_11  * 2'b10 - eth_d[0] from serdes_15  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_D_0_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_D_0_MASK
 value|0x00003000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_D_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_D_0_SHIFT
 value|12
 comment|/* which lane's is master clk */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_A_ICK_MASTER_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_A_ICK_MASTER_MASK
 value|0x00030000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_A_ICK_MASTER_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_A_ICK_MASTER_SHIFT
 value|16
 comment|/* which lane's is master clk */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_C_ICK_MASTER_MASK
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_C_ICK_MASTER_MASK
 value|0x00300000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_C_ICK_MASTER_SHIFT
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_C_ICK_MASTER_SHIFT
 value|20
 comment|/* enable xlaui on eth a */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_A_XLAUI_ENABLE
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_A_XLAUI_ENABLE
 value|(1<< 24)
 comment|/* enable xlaui on eth c */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_ETH_PKR_SELECT_OH_ETH_C_XLAUI_ENABLE
+name|PBS_UNIT_SERDES_MUX_ETH_ALPINE_V2_SELECT_OH_ETH_C_XLAUI_ENABLE
 value|(1<< 28)
 comment|/**** serdes_mux_pcie register ****/
 comment|/*  * 2'b01 - select pcie_b[0] from serdes 2  * 2'b10 - select pcie_b[0] from serdes 4  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_B_0_MASK
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_B_0_MASK
 value|0x00000003
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_B_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_B_0_SHIFT
 value|0
 comment|/*  * 2'b01 - select pcie_b[1] from serdes 3  * 2'b10 - select pcie_b[1] from serdes 5  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_B_1_MASK
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_B_1_MASK
 value|0x00000030
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_B_1_SHIFT
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_B_1_SHIFT
 value|4
 comment|/*  * 2'b01 - select pcie_d[0] from serdes 10  * 2'b10 - select pcie_d[0] from serdes 12  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_D_0_MASK
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_D_0_MASK
 value|0x00000300
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_D_0_SHIFT
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_D_0_SHIFT
 value|8
 comment|/*  * 2'b01 - select pcie_d[1] from serdes 11  * 2'b10 - select pcie_d[1] from serdes 13  */
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_D_1_MASK
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_D_1_MASK
 value|0x00003000
 define|#
 directive|define
-name|PBS_UNIT_SERDES_MUX_PCIE_PKR_SELECT_OH_PCIE_D_1_SHIFT
+name|PBS_UNIT_SERDES_MUX_PCIE_ALPINE_V2_SELECT_OH_PCIE_D_1_SHIFT
 value|12
 comment|/**** serdes_mux_sata register ****/
 comment|/*  * 2'b01 - select sata_a from serdes group 1  * 2'b10 - select sata_a from serdes group 3  */

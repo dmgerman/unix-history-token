@@ -392,12 +392,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * configure the vmid attributes for a given msix vector.  */
+comment|/*  * configure the target-id attributes for a given msix vector.  */
 end_comment
 
 begin_function
 name|int
-name|al_iofic_msix_vmid_attributes_config
+name|al_iofic_msix_tgtid_attributes_config
 parameter_list|(
 name|void
 name|__iomem
@@ -411,10 +411,10 @@ name|uint8_t
 name|vector
 parameter_list|,
 name|uint32_t
-name|vmid
+name|tgtid
 parameter_list|,
 name|uint8_t
-name|vmid_en
+name|tgtid_en
 parameter_list|)
 block|{
 name|struct
@@ -454,20 +454,20 @@ name|AL_REG_FIELD_SET
 argument_list|(
 name|reg
 argument_list|,
-name|INT_MSIX_VMID_MASK
+name|INT_MSIX_TGTID_MASK
 argument_list|,
-name|INT_MSIX_VMID_SHIFT
+name|INT_MSIX_TGTID_SHIFT
 argument_list|,
-name|vmid
+name|tgtid
 argument_list|)
 expr_stmt|;
 name|AL_REG_BIT_VAL_SET
 argument_list|(
 name|reg
 argument_list|,
-name|INT_MSIX_VMID_EN_SHIFT
+name|INT_MSIX_TGTID_EN_SHIFT
 argument_list|,
-name|vmid_en
+name|tgtid_en
 argument_list|)
 expr_stmt|;
 name|al_reg_write32
@@ -483,7 +483,7 @@ index|[
 name|vector
 index|]
 operator|.
-name|grp_int_vmid_reg
+name|grp_int_tgtid_reg
 argument_list|,
 name|reg
 argument_list|)

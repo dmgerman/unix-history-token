@@ -15759,7 +15759,7 @@ literal|"softdep_prealloc called on non-softdep filesystem"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Nothing to do if we are not running journaled soft updates. 	 * If we currently hold the snapshot lock, we must avoid handling 	 * other resources that could cause deadlock. 	 */
+comment|/* 	 * Nothing to do if we are not running journaled soft updates. 	 * If we currently hold the snapshot lock, we must avoid 	 * handling other resources that could cause deadlock.  Do not 	 * touch quotas vnode since it is typically recursed with 	 * other vnode locks held. 	 */
 if|if
 condition|(
 name|DOINGSUJ
@@ -15776,6 +15776,16 @@ argument_list|(
 name|vp
 argument_list|)
 argument_list|)
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_vflag
+operator|&
+name|VV_SYSTEM
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -60743,6 +60753,10 @@ name|ACQUIRE_LOCK
 argument_list|(
 name|ump
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 continue|continue;
 comment|/* Slept, retry */

@@ -82,38 +82,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/**  * Revision IDs:  * ID_0: SlickRock M0  * ID_1: SlickRock A0  * ID_2: PeakRock  x4  * ID_3: PeakRock  x8  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AL_PCIE_REV_ID_0
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AL_PCIE_REV_ID_1
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AL_PCIE_REV_ID_2
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AL_PCIE_REV_ID_3
-value|3
-end_define
-
 begin_define
 define|#
 directive|define
@@ -177,6 +145,28 @@ end_define
 begin_comment
 comment|/* the maximum between all Revisions */
 end_comment
+
+begin_comment
+comment|/** Number of outbound atu regions - rev 1/2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_PCIE_REV_1_2_ATU_NUM_OUTBOUND_REGIONS
+value|12
+end_define
+
+begin_comment
+comment|/** Number of outbound atu regions - rev 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_PCIE_REV_3_ATU_NUM_OUTBOUND_REGIONS
+value|16
+end_define
 
 begin_struct
 struct|struct
@@ -1011,11 +1001,19 @@ name|global
 decl_stmt|;
 name|uint32_t
 modifier|*
+name|master_rctl
+decl_stmt|;
+name|uint32_t
+modifier|*
 name|master_arctl
 decl_stmt|;
 name|uint32_t
 modifier|*
 name|master_awctl
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|master_ctl
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1053,6 +1051,41 @@ name|uint32_t
 modifier|*
 name|io_limit_h
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|io_addr_mask_h
+decl_stmt|;
+comment|/* Rev 3 only */
+name|uint32_t
+modifier|*
+name|ar_msg_addr_mask_h
+decl_stmt|;
+comment|/* Rev 3 only */
+name|uint32_t
+modifier|*
+name|aw_msg_addr_mask_h
+decl_stmt|;
+comment|/* Rev 3 only */
+name|uint32_t
+modifier|*
+name|tgtid_reg_ovrd
+decl_stmt|;
+comment|/* Rev 2/3 only */
+name|uint32_t
+modifier|*
+name|addr_high_reg_ovrd_value
+decl_stmt|;
+comment|/* Rev 2/3 only */
+name|uint32_t
+modifier|*
+name|addr_high_reg_ovrd_sel
+decl_stmt|;
+comment|/* Rev 2/3 only */
+name|uint32_t
+modifier|*
+name|addr_size_replace
+decl_stmt|;
+comment|/* Rev 2/3 only */
 block|}
 struct|;
 end_struct
@@ -1358,7 +1391,32 @@ name|al_pcie_w_soc_int
 block|{
 name|uint32_t
 modifier|*
+name|status_0
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|status_1
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|status_2
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|status_3
+decl_stmt|;
+comment|/* Rev 2/3 only */
+name|uint32_t
+modifier|*
 name|mask_inta_leg_0
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|mask_inta_leg_1
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|mask_inta_leg_2
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1368,6 +1426,14 @@ comment|/* Rev 2/3 only */
 name|uint32_t
 modifier|*
 name|mask_msi_leg_0
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|mask_msi_leg_1
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|mask_msi_leg_2
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -1390,6 +1456,11 @@ name|uint32_t
 modifier|*
 name|out_mask_pair
 decl_stmt|;
+name|uint32_t
+modifier|*
+name|reg_out_mask
+decl_stmt|;
+comment|/* Rev 3 only */
 block|}
 struct|;
 end_struct
@@ -1461,6 +1532,12 @@ name|al_pcie_revx_w_int_grp
 modifier|*
 name|int_grp_d
 decl_stmt|;
+name|struct
+name|al_pcie_rev3_w_cfg_func_ext
+modifier|*
+name|cfg_func_ext
+decl_stmt|;
+comment|/* Rev 3 only */
 block|}
 struct|;
 end_struct

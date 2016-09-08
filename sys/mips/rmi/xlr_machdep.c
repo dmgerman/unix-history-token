@@ -2421,7 +2421,7 @@ end_function
 
 begin_function
 name|int
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 parameter_list|(
 name|void
 parameter_list|)
@@ -2429,6 +2429,22 @@ block|{
 return|return
 operator|(
 name|IRQ_IPI
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|platform_ipi_softintr_num
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -2449,7 +2465,7 @@ index|[
 name|cpuid
 index|]
 argument_list|,
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 argument_list|()
 argument_list|)
 expr_stmt|;

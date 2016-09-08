@@ -12429,7 +12429,7 @@ if|if
 condition|(
 name|ntries
 operator|==
-literal|1000
+literal|2000
 condition|)
 block|{
 name|device_printf

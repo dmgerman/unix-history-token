@@ -289,7 +289,7 @@ name|BCM4321_D11N
 argument_list|,
 literal|"BCM4321 802.11n Dual-Band"
 argument_list|,
-literal|0
+name|BWN_QUIRK_USBH_UNPOPULATED
 argument_list|)
 block|,
 name|BWN_BCM_DEV
@@ -298,7 +298,7 @@ name|BCM4321_D11N2G
 argument_list|,
 literal|"BCM4321 802.11n 2GHz"
 argument_list|,
-literal|0
+name|BWN_QUIRK_USBH_UNPOPULATED
 argument_list|)
 block|,
 name|BWN_BCM_DEV
@@ -308,6 +308,8 @@ argument_list|,
 literal|"BCM4321 802.11n 5GHz"
 argument_list|,
 name|BWN_QUIRK_UNTESTED
+operator||
+name|BWN_QUIRK_USBH_UNPOPULATED
 argument_list|)
 block|,
 name|BWN_BCM_DEV
@@ -1066,6 +1068,22 @@ operator|->
 name|quirks
 operator|&
 name|BWN_QUIRK_ENET_HW_UNPOPULATED
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+case|case
+name|BHND_DEVCLASS_USB_HOST
+case|:
+return|return
+operator|(
+operator|(
+name|sc
+operator|->
+name|quirks
+operator|&
+name|BWN_QUIRK_USBH_UNPOPULATED
 operator|)
 operator|!=
 literal|0

@@ -1403,7 +1403,7 @@ expr_stmt|;
 if|if
 condition|(
 name|parent_addr_cells
-operator|!=
+operator|>
 literal|2
 operator|||
 name|pci_addr_cells
@@ -1411,7 +1411,7 @@ operator|!=
 literal|3
 operator|||
 name|size_cells
-operator|!=
+operator|>
 literal|2
 condition|)
 block|{

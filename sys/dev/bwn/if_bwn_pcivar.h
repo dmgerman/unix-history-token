@@ -84,6 +84,13 @@ init|=
 literal|1
 operator|<<
 literal|2
+block|,
+comment|/** 	 * Some PCI/PCIe "Intensi-fi" chipsets shipped with floating USB 	 * host controller cores; set this quirk to treat these cores as 	 * unpopulated. 	 */
+name|BWN_QUIRK_USBH_UNPOPULATED
+init|=
+literal|1
+operator|<<
+literal|3
 block|, }
 enum|;
 end_enum

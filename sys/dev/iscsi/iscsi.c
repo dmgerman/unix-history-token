@@ -6050,7 +6050,7 @@ name|isl_max_send_data_segment_length
 operator|=
 name|idl
 operator|.
-name|idl_max_recv_data_segment_length
+name|idl_max_send_data_segment_length
 expr_stmt|;
 name|request
 operator|->

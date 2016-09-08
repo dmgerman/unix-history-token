@@ -33418,12 +33418,11 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|struct
 name|chip_params
 modifier|*
-name|get_chip_params
+name|t4_get_chip_params
 parameter_list|(
 name|int
 name|chipid
@@ -33733,7 +33732,7 @@ name|adapter
 operator|->
 name|chip_params
 operator|=
-name|get_chip_params
+name|t4_get_chip_params
 argument_list|(
 name|chip_id
 argument_list|(

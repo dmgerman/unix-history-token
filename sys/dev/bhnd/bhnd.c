@@ -3505,6 +3505,19 @@ argument_list|,
 literal|"%#jx"
 argument_list|)
 expr_stmt|;
+name|retval
+operator|+=
+name|resource_list_print_type
+argument_list|(
+name|rl
+argument_list|,
+literal|"irq"
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|"%#jd"
+argument_list|)
+expr_stmt|;
 block|}
 name|retval
 operator|+=
@@ -3675,6 +3688,7 @@ name|rl
 operator|!=
 name|NULL
 condition|)
+block|{
 name|resource_list_print_type
 argument_list|(
 name|rl
@@ -3686,6 +3700,18 @@ argument_list|,
 literal|"%#jx"
 argument_list|)
 expr_stmt|;
+name|resource_list_print_type
+argument_list|(
+name|rl
+argument_list|,
+literal|"irq"
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|"%#jd"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|" at core %u (no driver attached)\n"

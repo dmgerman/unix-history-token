@@ -74,62 +74,6 @@ define|#
 directive|define
 name|AL_FALSE
 value|0
-comment|/* define types */
-ifndef|#
-directive|ifndef
-name|AL_HAVE_TYPES
-typedef|typedef
-name|unsigned
-name|char
-name|uint8_t
-typedef|;
-comment|/** unsigned 8 bits */
-typedef|typedef
-name|unsigned
-name|short
-name|uint16_t
-typedef|;
-comment|/** unsigned 16 bits */
-typedef|typedef
-name|unsigned
-name|int
-name|uint32_t
-typedef|;
-comment|/** unsigned 32 bits */
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|uint64_t
-typedef|;
-comment|/** unsigned 64 bits */
-typedef|typedef
-name|signed
-name|char
-name|int8_t
-typedef|;
-comment|/** signed 8 bits */
-typedef|typedef
-name|short
-name|int
-name|int16_t
-typedef|;
-comment|/** signed 16 bits */
-typedef|typedef
-name|signed
-name|int
-name|int32_t
-typedef|;
-comment|/** signed 32 bits */
-comment|/** An unsigned int that is guaranteed to be the same size as a pointer */
-comment|/** C99 standard */
-typedef|typedef
-name|unsigned
-name|long
-name|uintptr_t
-typedef|;
-endif|#
-directive|endif
 comment|/** in LPAE mode, the address address is 40 bit, we extend it to 64 bit */
 typedef|typedef
 name|uint64_t

@@ -68,10 +68,6 @@ name|AL_UDMA_DEFAULT_MAX_ACTN_DESCS
 value|16
 define|#
 directive|define
-name|AL_UDMA_REV_ID_0
-value|0
-define|#
-directive|define
 name|AL_UDMA_REV_ID_1
 value|1
 define|#
@@ -241,10 +237,10 @@ define|#
 directive|define
 name|AL_S2M_DESC_LEN2_GRANULARITY_SHIFT
 value|6
-comment|/* TX/RX descriptor VMID field (in the buffer address 64 bit field) */
+comment|/* TX/RX descriptor Target-ID field (in the buffer address 64 bit field) */
 define|#
 directive|define
-name|AL_UDMA_DESC_VMID_SHIFT
+name|AL_UDMA_DESC_TGTID_SHIFT
 value|48
 comment|/** UDMA completion descriptor */
 union|union
@@ -334,9 +330,9 @@ name|uint32_t
 name|num
 decl_stmt|;
 comment|/**< Number of buffers of the block */
-comment|/**< 	 * VMID to be assigned to the block descriptors 	 * Requires VMID in descriptor to be enabled for the specific UDMA 	 * queue. 	 */
+comment|/**< 	 * Target-ID to be assigned to the block descriptors 	 * Requires Target-ID in descriptor to be enabled for the specific UDMA 	 * queue. 	 */
 name|uint16_t
-name|vmid
+name|tgtid
 decl_stmt|;
 block|}
 struct|;

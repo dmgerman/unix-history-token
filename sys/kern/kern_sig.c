@@ -1055,126 +1055,218 @@ name|NSIG
 index|]
 init|=
 block|{
+index|[
+name|SIGHUP
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGHUP */
+index|[
+name|SIGINT
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGINT */
-name|SIGPROP_KILL
-operator||
-name|SIGPROP_CORE
-block|,
-comment|/* SIGQUIT */
-name|SIGPROP_KILL
-operator||
-name|SIGPROP_CORE
-block|,
-comment|/* SIGILL */
-name|SIGPROP_KILL
-operator||
-name|SIGPROP_CORE
-block|,
-comment|/* SIGTRAP */
+index|[
+name|SIGQUIT
+index|]
+operator|=
 name|SIGPROP_KILL
 operator||
 name|SIGPROP_CORE
 block|,
-comment|/* SIGABRT */
+index|[
+name|SIGILL
+index|]
+operator|=
 name|SIGPROP_KILL
 operator||
 name|SIGPROP_CORE
 block|,
-comment|/* SIGEMT */
+index|[
+name|SIGTRAP
+index|]
+operator|=
 name|SIGPROP_KILL
 operator||
 name|SIGPROP_CORE
 block|,
-comment|/* SIGFPE */
-name|SIGPROP_KILL
-block|,
-comment|/* SIGKILL */
-name|SIGPROP_KILL
-operator||
-name|SIGPROP_CORE
-block|,
-comment|/* SIGBUS */
+index|[
+name|SIGABRT
+index|]
+operator|=
 name|SIGPROP_KILL
 operator||
 name|SIGPROP_CORE
 block|,
-comment|/* SIGSEGV */
+index|[
+name|SIGEMT
+index|]
+operator|=
 name|SIGPROP_KILL
 operator||
 name|SIGPROP_CORE
 block|,
-comment|/* SIGSYS */
+index|[
+name|SIGFPE
+index|]
+operator|=
+name|SIGPROP_KILL
+operator||
+name|SIGPROP_CORE
+block|,
+index|[
+name|SIGKILL
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGPIPE */
+index|[
+name|SIGBUS
+index|]
+operator|=
+name|SIGPROP_KILL
+operator||
+name|SIGPROP_CORE
+block|,
+index|[
+name|SIGSEGV
+index|]
+operator|=
+name|SIGPROP_KILL
+operator||
+name|SIGPROP_CORE
+block|,
+index|[
+name|SIGSYS
+index|]
+operator|=
+name|SIGPROP_KILL
+operator||
+name|SIGPROP_CORE
+block|,
+index|[
+name|SIGPIPE
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGALRM */
+index|[
+name|SIGALRM
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGTERM */
+index|[
+name|SIGTERM
+index|]
+operator|=
+name|SIGPROP_KILL
+block|,
+index|[
+name|SIGURG
+index|]
+operator|=
 name|SIGPROP_IGNORE
 block|,
-comment|/* SIGURG */
+index|[
+name|SIGSTOP
+index|]
+operator|=
 name|SIGPROP_STOP
 block|,
-comment|/* SIGSTOP */
+index|[
+name|SIGTSTP
+index|]
+operator|=
 name|SIGPROP_STOP
 operator||
 name|SIGPROP_TTYSTOP
 block|,
-comment|/* SIGTSTP */
+index|[
+name|SIGCONT
+index|]
+operator|=
 name|SIGPROP_IGNORE
 operator||
 name|SIGPROP_CONT
 block|,
-comment|/* SIGCONT */
+index|[
+name|SIGCHLD
+index|]
+operator|=
 name|SIGPROP_IGNORE
 block|,
-comment|/* SIGCHLD */
+index|[
+name|SIGTTIN
+index|]
+operator|=
 name|SIGPROP_STOP
 operator||
 name|SIGPROP_TTYSTOP
 block|,
-comment|/* SIGTTIN */
+index|[
+name|SIGTTOU
+index|]
+operator|=
 name|SIGPROP_STOP
 operator||
 name|SIGPROP_TTYSTOP
 block|,
-comment|/* SIGTTOU */
+index|[
+name|SIGIO
+index|]
+operator|=
 name|SIGPROP_IGNORE
 block|,
-comment|/* SIGIO */
+index|[
+name|SIGXCPU
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGXCPU */
+index|[
+name|SIGXFSZ
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGXFSZ */
+index|[
+name|SIGVTALRM
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGVTALRM */
+index|[
+name|SIGPROF
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGPROF */
+index|[
+name|SIGWINCH
+index|]
+operator|=
 name|SIGPROP_IGNORE
 block|,
-comment|/* SIGWINCH  */
+index|[
+name|SIGINFO
+index|]
+operator|=
 name|SIGPROP_IGNORE
 block|,
-comment|/* SIGINFO */
+index|[
+name|SIGUSR1
+index|]
+operator|=
 name|SIGPROP_KILL
 block|,
-comment|/* SIGUSR1 */
+index|[
+name|SIGUSR2
+index|]
+operator|=
 name|SIGPROP_KILL
-block|,
-comment|/* SIGUSR2 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3074,16 +3166,16 @@ literal|0
 operator|&&
 name|sig
 operator|<
-name|NSIG
+name|nitems
+argument_list|(
+name|sigproptbl
+argument_list|)
 condition|)
 return|return
 operator|(
 name|sigproptbl
 index|[
-name|_SIG_IDX
-argument_list|(
 name|sig
-argument_list|)
 index|]
 operator|)
 return|;

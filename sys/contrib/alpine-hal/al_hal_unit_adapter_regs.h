@@ -784,17 +784,17 @@ define|#
 directive|define
 name|AL_ADPTR_GEN_CTL_13_SATA_ARUSER_SEL_SHIFT
 value|16
-comment|/* Central VMID enabler. If set, then each entry will be used as programmed */
+comment|/* Central Target-ID enabler. If set, then each entry will be used as programmed */
 define|#
 directive|define
-name|AL_ADPTR_GEN_CTL_14_SATA_MSIX_VMID_SEL
+name|AL_ADPTR_GEN_CTL_14_SATA_MSIX_TGTID_SEL
 value|AL_BIT(0)
-comment|/* Allow access to store VMID values per entry */
+comment|/* Allow access to store Target-ID values per entry */
 define|#
 directive|define
-name|AL_ADPTR_GEN_CTL_14_SATA_MSIX_VMID_ACCESS_EN
+name|AL_ADPTR_GEN_CTL_14_SATA_MSIX_TGTID_ACCESS_EN
 value|AL_BIT(1)
-comment|/* VMID Address select */
+comment|/* Target-ID Address select */
 comment|/* Tx */
 define|#
 directive|define
@@ -825,7 +825,7 @@ directive|define
 name|AL_ADPTR_GEN_CTL_16_SATA_VM_ARDDR_HI
 value|AL_FIELD_MASK(31, 0)
 comment|/*  * ROB registers  */
-comment|/* Read ROB_Enable, when disabled the read ROB is bypassed */
+comment|/* Read ROBÂ Enable, when disabled the read ROB is bypassed */
 define|#
 directive|define
 name|AL_ADPTR_GEN_CTL_19_READ_ROB_EN
@@ -840,7 +840,7 @@ define|#
 directive|define
 name|AL_ADPTR_GEN_CTL_19_READ_ROB_SW_RESET
 value|AL_BIT(15)
-comment|/* Write ROB_Enable, when disabled_the_Write ROB is bypassed */
+comment|/* Write ROBÂ Enable, when disabledÂ theÂ Write ROB is bypassed */
 define|#
 directive|define
 name|AL_ADPTR_GEN_CTL_19_WRITE_ROB_EN

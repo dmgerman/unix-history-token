@@ -29,6 +29,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -154,10 +171,15 @@ name|struct
 name|timespec
 name|timeout
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|struct
 name|kfilter_mapping
 name|km
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|kevent
 name|event
@@ -165,12 +187,17 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|char
 name|namebuf
 index|[
 literal|32
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|pid_t
 name|pid
 decl_stmt|,
@@ -275,6 +302,9 @@ name|kqueue
 argument_list|()
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 operator|(
 name|void
 operator|)
@@ -325,6 +355,8 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* ignore the signal to avoid taking it for real */
 name|REQUIRE_LIBC
 argument_list|(
@@ -347,6 +379,9 @@ name|ident
 operator|=
 name|SIGUSR1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|event
 index|[
 literal|0
@@ -358,6 +393,19 @@ name|km
 operator|.
 name|filter
 expr_stmt|;
+else|#
+directive|else
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|filter
+operator|=
+name|EVFILT_SIGNAL
+expr_stmt|;
+endif|#
+directive|endif
 name|event
 index|[
 literal|0
@@ -517,77 +565,35 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
 literal|"sig: kevent flags: 0x%x, data: %"
-name|PRId64
+argument|PRIdPTR
 literal|" (# "
+else|#
+directive|else
+argument|(void)printf(
+literal|"sig: kevent flags: 0x%x, data: %"
+argument|PRId64
+literal|" (# "
+endif|#
+directive|endif
 literal|"times signal posted)\n"
-argument_list|,
-name|event
-index|[
+argument|, event[
 literal|0
-index|]
-operator|.
-name|flags
-argument_list|,
-name|event
-index|[
+argument|].flags, event[
 literal|0
-index|]
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|waitpid
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|status
-argument_list|,
+argument|].data); 	}  	(void)waitpid(child,&status,
 literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
+argument|); 	(void)printf(
 literal|"sig: finished successfully\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|ATF_TP_ADD_TCS
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|ATF_TP_ADD_TC
-argument_list|(
-name|tp
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-return|return
-name|atf_no_error
-argument_list|()
-return|;
-block|}
+argument|); }  ATF_TP_ADD_TCS(tp) { 	ATF_TP_ADD_TC(tp, sig);  	return atf_no_error(); }
 end_block
 
 end_unit

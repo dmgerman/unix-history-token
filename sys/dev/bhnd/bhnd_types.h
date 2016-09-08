@@ -92,7 +92,18 @@ comment|/**< bus device enumeration ROM */
 name|BHND_DEVCLASS_NVRAM
 block|,
 comment|/**< nvram/flash controller */
+name|BHND_DEVCLASS_USB_HOST
+block|,
+comment|/**< USB host controller */
+name|BHND_DEVCLASS_USB_DEV
+block|,
+comment|/**< USB device controller */
+name|BHND_DEVCLASS_USB_DUAL
+block|,
+comment|/**< USB host/device controller */
 name|BHND_DEVCLASS_OTHER
+init|=
+literal|1000
 block|,
 comment|/**< other / unknown */
 name|BHND_DEVCLASS_INVALID

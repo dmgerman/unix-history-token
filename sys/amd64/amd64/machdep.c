@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_perfmon.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_platform.h"
 end_include
 
@@ -487,23 +481,6 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PERFMON
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/perfmon.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1180,14 +1157,6 @@ expr_stmt|;
 name|panicifcpuunsupported
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PERFMON
-name|perfmon_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Display physical memory if SMBIOS reports reasonable amount. 	 */
 name|memsize
 operator|=

@@ -643,7 +643,7 @@ directive|ifdef
 name|SMP
 name|KASSERT
 argument_list|(
-name|platform_ipi_intrnum
+name|platform_ipi_hardintr_num
 argument_list|()
 operator|==
 literal|4
