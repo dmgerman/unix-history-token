@@ -101,6 +101,9 @@ parameter_list|,
 name|int
 modifier|*
 name|nchan
+parameter_list|,
+name|int
+name|mtu
 parameter_list|)
 function_decl|;
 end_function_decl

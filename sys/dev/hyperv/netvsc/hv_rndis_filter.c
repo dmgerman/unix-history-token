@@ -4684,6 +4684,9 @@ parameter_list|,
 name|int
 modifier|*
 name|nchan0
+parameter_list|,
+name|int
+name|mtu
 parameter_list|)
 block|{
 name|int
@@ -4747,6 +4750,8 @@ operator|=
 name|hv_nv_on_device_add
 argument_list|(
 name|sc
+argument_list|,
+name|mtu
 argument_list|)
 expr_stmt|;
 if|if

@@ -2576,7 +2576,6 @@ name|if_init
 operator|=
 name|hn_ifinit
 expr_stmt|;
-comment|/* needed by hv_rf_on_device_add() code */
 name|ifp
 operator|->
 name|if_mtu
@@ -2803,6 +2802,8 @@ name|device_info
 argument_list|,
 operator|&
 name|ring_cnt
+argument_list|,
+name|ETHERMTU
 argument_list|)
 expr_stmt|;
 if|if
@@ -7290,6 +7291,10 @@ name|device_info
 argument_list|,
 operator|&
 name|ring_cnt
+argument_list|,
+name|ifr
+operator|->
+name|ifr_mtu
 argument_list|)
 expr_stmt|;
 if|if

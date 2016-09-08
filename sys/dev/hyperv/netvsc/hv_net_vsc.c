@@ -179,6 +179,9 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mtu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2154,21 +2157,15 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mtu
 parameter_list|)
 block|{
 name|int
 name|ret
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|hn_ifp
 decl_stmt|;
 name|struct
 name|hn_nvs_ndis_init
@@ -2207,9 +2204,7 @@ name|hv_nv_send_ndis_config
 argument_list|(
 name|sc
 argument_list|,
-name|ifp
-operator|->
-name|if_mtu
+name|mtu
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize NDIS. 	 */
@@ -2362,6 +2357,9 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mtu
 parameter_list|)
 block|{
 comment|/* 	 * Connect with the NetVsp 	 */
@@ -2370,6 +2368,8 @@ operator|(
 name|hv_nv_connect_to_vsp
 argument_list|(
 name|sc
+argument_list|,
+name|mtu
 argument_list|)
 operator|)
 return|;
