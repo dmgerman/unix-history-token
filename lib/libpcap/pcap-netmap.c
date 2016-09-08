@@ -1134,7 +1134,7 @@ operator|->
 name|inject_op
 operator|=
 name|pcap_netmap_inject
-operator|,
+expr_stmt|;
 name|p
 operator|->
 name|setfilter_op
