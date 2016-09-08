@@ -22938,7 +22938,7 @@ name|zone_flags
 operator|<<
 literal|8
 operator|)
-operator|,
+expr_stmt|;
 name|ata_flags
 operator|=
 name|AP_FLAG_BYT_BLOK_BLOCKS
@@ -23322,14 +23322,14 @@ name|zone_flags
 operator|<<
 literal|8
 operator|)
-operator|,
+expr_stmt|;
 name|sectors_out
 operator|=
 name|dxfer_len
 operator|>>
 literal|9
-operator|,
-comment|/* XXX KDM macro*/
+expr_stmt|;
+comment|/* XXX KDM macro */
 name|protocol
 operator|=
 name|AP_PROTO_DMA

@@ -1361,13 +1361,13 @@ operator|->
 name|ah_txTrigLev
 operator|=
 name|INIT_TX_FIFO_THRESHOLD
-operator|,
+expr_stmt|;
 name|ahp
 operator|->
 name|ah_maxTxTrigLev
 operator|=
 name|MAX_TX_FIFO_THRESHOLD
-operator|,
+expr_stmt|;
 name|OS_MEMCPY
 argument_list|(
 operator|&

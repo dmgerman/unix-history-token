@@ -39150,7 +39150,7 @@ operator|->
 name|service_action
 operator|=
 name|service_action
-operator|,
+expr_stmt|;
 name|scsi_ulto2b
 argument_list|(
 name|element

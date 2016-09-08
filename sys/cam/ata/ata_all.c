@@ -6285,7 +6285,7 @@ name|zone_flags
 operator|<<
 literal|8
 operator|)
-operator|,
+expr_stmt|;
 name|ata_flags
 operator|=
 name|CAM_ATAIO_FPDMA
