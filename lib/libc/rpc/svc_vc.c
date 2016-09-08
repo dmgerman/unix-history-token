@@ -3751,7 +3751,7 @@ operator|*
 argument_list|)
 operator|)
 name|abort
-operator|,
+expr_stmt|;
 name|ops
 operator|.
 name|xp_destroy
