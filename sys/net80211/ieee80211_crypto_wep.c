@@ -2333,7 +2333,7 @@ name|wep
 operator|.
 name|ic_trailer
 operator|)
-operator|,
+expr_stmt|;
 comment|/* Compute CRC32 over unencrypted data and apply RC4 to data */
 name|crc
 operator|=

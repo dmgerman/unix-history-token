@@ -503,13 +503,13 @@ operator|->
 name|ah_perCalibrationN
 operator|=
 name|ar5416PerCalibrationN
-operator|,
+expr_stmt|;
 name|ah
 operator|->
 name|ah_resetCalValid
 operator|=
 name|ar5416ResetCalValid
-operator|,
+expr_stmt|;
 name|ah
 operator|->
 name|ah_setTxPowerLimit

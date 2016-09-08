@@ -816,7 +816,7 @@ operator|.
 name|bs_r_1
 operator|=
 name|ata_bs_r_1
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|sc_expbus_tag
@@ -824,7 +824,7 @@ operator|.
 name|bs_r_2
 operator|=
 name|ata_bs_r_2
-operator|,
+expr_stmt|;
 comment|/* read multiple */
 name|sc
 operator|->
@@ -833,7 +833,7 @@ operator|.
 name|bs_rm_2
 operator|=
 name|ata_bs_rm_2
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|sc_expbus_tag
@@ -841,7 +841,7 @@ operator|.
 name|bs_rm_2_s
 operator|=
 name|ata_bs_rm_2_s
-operator|,
+expr_stmt|;
 comment|/* write (single) */
 name|sc
 operator|->
@@ -850,7 +850,7 @@ operator|.
 name|bs_w_1
 operator|=
 name|ata_bs_w_1
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|sc_expbus_tag
@@ -858,7 +858,7 @@ operator|.
 name|bs_w_2
 operator|=
 name|ata_bs_w_2
-operator|,
+expr_stmt|;
 comment|/* write multiple */
 name|sc
 operator|->
@@ -867,7 +867,7 @@ operator|.
 name|bs_wm_2
 operator|=
 name|ata_bs_wm_2
-operator|,
+expr_stmt|;
 name|sc
 operator|->
 name|sc_expbus_tag
@@ -875,7 +875,7 @@ operator|.
 name|bs_wm_2_s
 operator|=
 name|ata_bs_wm_2_s
-operator|,
+expr_stmt|;
 name|rman_set_bustag
 argument_list|(
 operator|&
