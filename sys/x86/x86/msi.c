@@ -619,6 +619,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_comment
 comment|/**  * Xen hypervisors prior to 4.6.0 do not properly handle updates to  * enabled MSI-X table entries.  Allow migration of MSI-X interrupts  * to be disabled via a tunable. Values have the following meaning:  *  * -1: automatic detection by FreeBSD  *  0: enable migration  *  1: disable migration  */
 end_comment
@@ -652,6 +658,11 @@ literal|"Disable migration of MSI-X interrupts between CPUs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -938,6 +949,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|SMP
 if|if
 condition|(
 name|msix_disable_migration
@@ -951,6 +965,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+endif|#
+directive|endif
 comment|/* Store information to free existing irq. */
 name|old_vector
 operator|=
@@ -1361,6 +1377,9 @@ comment|/* FALLTHROUGH */
 default|default:
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|SMP
 if|if
 condition|(
 name|msix_disable_migration
@@ -1375,6 +1394,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|msi_enabled
 operator|=
 literal|1
