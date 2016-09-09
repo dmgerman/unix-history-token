@@ -13003,6 +13003,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* XXX does this need save/restoring for the 11n chips? */
+comment|/* 	 * XXX TODO: should mask out the txlat/rxlat/usec values? 	 */
 name|refClock
 operator|=
 name|OS_REG_READ

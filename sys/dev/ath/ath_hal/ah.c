@@ -1041,7 +1041,7 @@ name|HT_RC_2_MCS
 parameter_list|(
 name|_rc
 parameter_list|)
-value|((_rc)& 0xf)
+value|((_rc)& 0x1f)
 end_define
 
 begin_define
@@ -1409,9 +1409,10 @@ name|bitsPerSymbol
 operator|=
 name|ht40_bps
 index|[
+name|HT_RC_2_MCS
+argument_list|(
 name|rate
-operator|&
-literal|0x1f
+argument_list|)
 index|]
 expr_stmt|;
 else|else
@@ -1419,9 +1420,10 @@ name|bitsPerSymbol
 operator|=
 name|ht20_bps
 index|[
+name|HT_RC_2_MCS
+argument_list|(
 name|rate
-operator|&
-literal|0x1f
+argument_list|)
 index|]
 expr_stmt|;
 name|numBits
@@ -2125,6 +2127,10 @@ name|WIRELESS_MODE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * XXX TODO: for some (?) chips, an 11b mode still runs at 11bg.  * Maybe AR5211 has separate 11b and 11g only modes, so 11b is 22MHz  * and 11g is 44MHz, but AR5416 and later run 11b in 11bg mode, right?  */
+end_comment
+
 begin_function
 specifier|static
 name|WIRELESS_MODE
@@ -2386,6 +2392,45 @@ name|u_int
 name|clks
 parameter_list|)
 block|{
+name|uint64_t
+name|psec
+decl_stmt|;
+name|psec
+operator|=
+name|ath_hal_mac_psec
+argument_list|(
+name|ah
+argument_list|,
+name|clks
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|psec
+operator|/
+literal|1000000
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * XXX TODO: half, quarter rates.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ath_hal_mac_psec
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int
+name|clks
+parameter_list|)
+block|{
 specifier|const
 name|struct
 name|ieee80211_channel
@@ -2399,8 +2444,8 @@ argument_list|)
 operator|->
 name|ah_curchan
 decl_stmt|;
-name|u_int
-name|usec
+name|uint64_t
+name|psec
 decl_stmt|;
 comment|/* NB: ah_curchan may be null when called attach time */
 comment|/* XXX merlin and later specific workaround - 5ghz fast clock is 44 */
@@ -2418,9 +2463,13 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|usec
+name|psec
 operator|=
+operator|(
 name|clks
+operator|*
+literal|1000000ULL
+operator|)
 operator|/
 name|CLOCK_FAST_RATE_5GHZ_OFDM
 expr_stmt|;
@@ -2431,7 +2480,7 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-name|usec
+name|psec
 operator|>>=
 literal|1
 expr_stmt|;
@@ -2444,9 +2493,13 @@ operator|!=
 name|AH_NULL
 condition|)
 block|{
-name|usec
+name|psec
 operator|=
+operator|(
 name|clks
+operator|*
+literal|1000000ULL
+operator|)
 operator|/
 name|CLOCK_RATE
 index|[
@@ -2465,15 +2518,19 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-name|usec
+name|psec
 operator|>>=
 literal|1
 expr_stmt|;
 block|}
 else|else
-name|usec
+name|psec
 operator|=
+operator|(
 name|clks
+operator|*
+literal|1000000ULL
+operator|)
 operator|/
 name|CLOCK_RATE
 index|[
@@ -2481,7 +2538,7 @@ name|WIRELESS_MODE_11b
 index|]
 expr_stmt|;
 return|return
-name|usec
+name|psec
 return|;
 block|}
 end_function
