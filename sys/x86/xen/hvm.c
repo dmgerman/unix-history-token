@@ -1610,6 +1610,9 @@ argument_list|,
 name|minor
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 if|if
 condition|(
 operator|(
@@ -1652,6 +1655,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Find the hypercall pages. 	 */
 name|do_cpuid
