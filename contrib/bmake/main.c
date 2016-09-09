@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.250 2016/08/11 19:53:17 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $"
+literal|"$NetBSD: main.c,v 1.250 2016/08/11 19:53:17 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.247 2016/06/05 01:39:17 christos Exp $"
+literal|"$NetBSD: main.c,v 1.250 2016/08/11 19:53:17 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7729,6 +7729,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+operator|(
 name|rp
 operator|=
 name|Var_Value
@@ -7740,10 +7743,9 @@ argument_list|,
 operator|&
 name|cp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rp
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* a hit */
@@ -7770,6 +7772,8 @@ argument_list|,
 name|resolved
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|Var_Set
@@ -7828,6 +7832,45 @@ name|b
 condition|?
 literal|0
 else|:
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|addErrorCMD
+parameter_list|(
+name|void
+modifier|*
+name|cmdp
+parameter_list|,
+name|void
+modifier|*
+name|gnp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|cmdp
+operator|==
+name|NULL
+condition|)
+return|return
+literal|1
+return|;
+comment|/* stop */
+name|Var_Append
+argument_list|(
+literal|".ERROR_CMD"
+argument_list|,
+name|cmdp
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+return|return
 literal|0
 return|;
 block|}
@@ -7907,6 +7950,24 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|Var_Delete
+argument_list|(
+literal|".ERROR_CMD"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Lst_ForEach
+argument_list|(
+name|gn
+operator|->
+name|commands
+argument_list|,
+name|addErrorCMD
+argument_list|,
+name|gn
 argument_list|)
 expr_stmt|;
 block|}
