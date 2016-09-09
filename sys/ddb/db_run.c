@@ -408,6 +408,12 @@ operator|)
 return|;
 comment|/* stop here */
 block|}
+return|return
+operator|(
+name|false
+operator|)
+return|;
+comment|/* continue the countdown */
 block|}
 elseif|else
 if|if
