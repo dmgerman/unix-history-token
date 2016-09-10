@@ -379,6 +379,9 @@ block|;
 name|bool
 name|IsISA3_0
 block|;
+name|bool
+name|UseLongCalls
+block|;
 name|POPCNTDKind
 name|HasPOPCNTD
 block|;
@@ -1066,6 +1069,15 @@ specifier|const
 block|{
 return|return
 name|IsISA3_0
+return|;
+block|}
+name|bool
+name|useLongCalls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseLongCalls
 return|;
 block|}
 name|POPCNTDKind
