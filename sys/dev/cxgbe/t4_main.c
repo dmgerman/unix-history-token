@@ -50766,6 +50766,17 @@ index|[
 name|port_id
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|pi
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 comment|/* MAC stats */
 name|t4_clr_port_stats
 argument_list|(

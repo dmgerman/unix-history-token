@@ -3031,42 +3031,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert between microseconds and core system clocks.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|ath_hal_mac_clks
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|u_int
-name|usecs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|ath_hal_mac_usec
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|u_int
-name|clks
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Generic get/set capability support.  Each chip overrides  * this routine to support chip-specific capabilities.  */
 end_comment
 

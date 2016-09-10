@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
+literal|"$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.81 2016/03/15 18:30:14 matthias Exp $"
+literal|"$NetBSD: suff.c,v 1.84 2016/06/30 05:34:04 dholland Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2196,6 +2196,11 @@ operator|*
 operator|)
 name|gnp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dummy
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2363,13 +2368,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -3674,7 +3673,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"1 add %x %x to %x:"
+literal|"1 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -3813,7 +3812,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"2 add %x %x to %x:"
+literal|"2 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -4035,7 +4034,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_SRC
 name|LstNode
-name|ln
+name|ln2
 init|=
 name|Lst_Member
 argument_list|(
@@ -4050,7 +4049,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|ln
+name|ln2
 operator|!=
 name|NULL
 condition|)
@@ -4062,7 +4061,7 @@ name|parent
 operator|->
 name|cp
 argument_list|,
-name|ln
+name|ln2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4082,7 +4081,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"free: [l=%x] p=%x %d\n"
+literal|"free: [l=%p] p=%p %d\n"
 argument_list|,
 name|l
 argument_list|,
@@ -4138,7 +4137,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"keep: [l=%x] p=%x %d: "
+literal|"keep: [l=%p] p=%p %d: "
 argument_list|,
 name|l
 argument_list|,
@@ -4279,7 +4278,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -4327,7 +4326,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -4717,7 +4716,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"3 add %x %x\n"
+literal|"3 add %p %p\n"
 argument_list|,
 name|targ
 argument_list|,
@@ -5126,8 +5125,10 @@ name|cp
 operator|==
 literal|'\\'
 operator|&&
-operator|*
 name|cp
+index|[
+literal|1
+index|]
 operator|!=
 literal|'\0'
 condition|)
@@ -8186,6 +8187,11 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|dummy
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file
@@ -8204,13 +8210,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -8245,6 +8245,11 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dummy
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file
@@ -8432,13 +8437,7 @@ name|debug_file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -8467,6 +8466,11 @@ operator|*
 operator|)
 name|tp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|dummy
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|debug_file
@@ -8511,13 +8515,7 @@ name|debug_file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|dummy
-condition|?
 literal|0
-else|:
-literal|0
-operator|)
 return|;
 block|}
 end_function

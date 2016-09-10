@@ -1134,6 +1134,7 @@ name|au_qctrl64
 argument_list|)
 condition|)
 block|{
+comment|/* NB: aq64_minfree is unsigned unlike aq_minfree. */
 if|if
 condition|(
 operator|(
@@ -1178,16 +1179,6 @@ operator|.
 name|aq64_minfree
 operator|>
 literal|100
-operator|)
-operator|||
-operator|(
-name|udata
-operator|.
-name|au_qctrl64
-operator|.
-name|aq64_minfree
-operator|<
-literal|0
 operator|)
 condition|)
 return|return

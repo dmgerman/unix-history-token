@@ -144,7 +144,7 @@ comment|/*  * Exported global variables  */
 end_comment
 
 begin_decl_stmt
-name|bool
+name|int
 name|db_cmd_loop_done
 decl_stmt|;
 end_decl_stmt
