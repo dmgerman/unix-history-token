@@ -40,7 +40,7 @@ name|p
 parameter_list|,
 name|s
 parameter_list|)
-value|read_random((p), (int)(s))
+value|arc4rand((p), (int)(s), 0)
 end_define
 
 begin_endif
