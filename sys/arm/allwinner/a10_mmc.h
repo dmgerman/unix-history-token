@@ -18,18 +18,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|A10_MMC_GCTRL
+name|A10_MMC_GCTL
 value|0x00
 end_define
 
 begin_comment
-comment|/* Global Control Register */
+comment|/* Control Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CLKCR
+name|A10_MMC_CKCR
 value|0x04
 end_define
 
@@ -40,7 +40,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_TIMEOUT
+name|A10_MMC_TMOR
 value|0x08
 end_define
 
@@ -51,7 +51,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_WIDTH
+name|A10_MMC_BWDR
 value|0x0C
 end_define
 
@@ -62,7 +62,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_BLKSZ
+name|A10_MMC_BKSR
 value|0x10
 end_define
 
@@ -73,7 +73,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_BCNTR
+name|A10_MMC_BYCR
 value|0x14
 end_define
 
@@ -95,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARG
+name|A10_MMC_CAGR
 value|0x1C
 end_define
 
@@ -150,7 +150,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_IMASK
+name|A10_MMC_IMKR
 value|0x30
 end_define
 
@@ -161,7 +161,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_MISTA
+name|A10_MMC_MISR
 value|0x34
 end_define
 
@@ -172,7 +172,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_RINTR
+name|A10_MMC_RISR
 value|0x38
 end_define
 
@@ -183,7 +183,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_STAS
+name|A10_MMC_STAR
 value|0x3C
 end_define
 
@@ -194,7 +194,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_FTRGL
+name|A10_MMC_FWLR
 value|0x40
 end_define
 
@@ -216,34 +216,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_CBCR
-value|0x48
+name|A10_MMC_HWRST
+value|0x78
 end_define
 
 begin_comment
-comment|/* CIU Byte Count Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|A10_MMC_BBCR
-value|0x4C
-end_define
-
-begin_comment
-comment|/* BIU Byte Count Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|A10_MMC_DBGC
-value|0x50
-end_define
-
-begin_comment
-comment|/* Debug Enable Register */
+comment|/* Hardware reset (not documented) */
 end_comment
 
 begin_define
@@ -293,20 +271,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_CHDA
-value|0x90
-end_define
-
-begin_define
-define|#
-directive|define
-name|A10_MMC_CBDA
-value|0x94
-end_define
-
-begin_define
-define|#
-directive|define
 name|A10_MMC_FIFO
 value|0x100
 end_define
@@ -327,62 +291,62 @@ comment|/* FIFO Access Address (A31) */
 end_comment
 
 begin_comment
-comment|/* A10_MMC_GCTRL */
+comment|/* A10_MMC_GCTL */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_SOFT_RESET
+name|A10_MMC_CTRL_SOFT_RST
 value|(1U<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_FIFO_RESET
+name|A10_MMC_CTRL_FIFO_RST
 value|(1U<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DMA_RESET
+name|A10_MMC_CTRL_DMA_RST
 value|(1U<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_INT_ENABLE
+name|A10_MMC_CTRL_INT_ENB
 value|(1U<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DMA_ENABLE
+name|A10_MMC_CTRL_DMA_ENB
 value|(1U<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DEBOUNCE_ENABLE
+name|A10_MMC_CTRL_CD_DBC_ENB
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DDR_MODE
+name|A10_MMC_CTRL_DDR_MOD_SEL
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_ACCESS_BY_AHB
+name|A10_MMC_CTRL_FIFO_AC_MOD
 value|(1U<< 31)
 end_define
 
@@ -391,56 +355,102 @@ define|#
 directive|define
 name|A10_MMC_RESET
 define|\
-value|(A10_MMC_SOFT_RESET | A10_MMC_FIFO_RESET | A10_MMC_DMA_RESET)
+value|(A10_MMC_CTRL_SOFT_RST | A10_MMC_CTRL_FIFO_RST | A10_MMC_CTRL_DMA_RST)
 end_define
 
 begin_comment
-comment|/* A10_MMC_CLKCR */
+comment|/* A10_MMC_CKCR */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARD_CLK_ON
+name|A10_MMC_CKCR_CCLK_ENB
 value|(1U<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_LOW_POWER_ON
+name|A10_MMC_CKCR_CCLK_CTRL
 value|(1U<< 17)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CLKCR_DIV
+name|A10_MMC_CKCR_CCLK_DIV
 value|0xff
 end_define
 
 begin_comment
-comment|/* A10_MMC_WIDTH */
+comment|/* A10_MMC_TMOR */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_WIDTH1
+name|A10_MMC_TMOR_RTO_LMT_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_comment
+comment|/* Response timeout limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_TMOR_RTO_LMT_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_TMOR_DTO_LMT_SHIFT
+parameter_list|(
+name|x
+parameter_list|)
+value|(x<< 8)
+end_define
+
+begin_comment
+comment|/* Data timeout limit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_TMOR_DTO_LMT_MASK
+value|0xffffff
+end_define
+
+begin_comment
+comment|/* A10_MMC_BWDR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_BWDR1
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_WIDTH4
+name|A10_MMC_BWDR4
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_WIDTH8
+name|A10_MMC_BWDR8
 value|2
 end_define
 
@@ -451,284 +461,298 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_RESP_EXP
+name|A10_MMC_CMDR_RESP_RCV
 value|(1U<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_LONG_RESP
+name|A10_MMC_CMDR_LONG_RESP
 value|(1U<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CHECK_RESP_CRC
+name|A10_MMC_CMDR_CHK_RESP_CRC
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_EXP
+name|A10_MMC_CMDR_DATA_TRANS
 value|(1U<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_WRITE
+name|A10_MMC_CMDR_DIR_WRITE
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_SEQ_MODE
+name|A10_MMC_CMDR_TRANS_MODE_STREAM
 value|(1U<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_SEND_AUTOSTOP
+name|A10_MMC_CMDR_STOP_CMD_FLAG
 value|(1U<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_WAIT_PREOVER
+name|A10_MMC_CMDR_WAIT_PRE_OVER
 value|(1U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_STOP_ABORT_CMD
+name|A10_MMC_CMDR_STOP_ABT_CMD
 value|(1U<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_SEND_INIT_SEQ
+name|A10_MMC_CMDR_SEND_INIT_SEQ
 value|(1U<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_UPCLK_ONLY
+name|A10_MMC_CMDR_PRG_CLK
 value|(1U<< 21)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RDCEATADEV
+name|A10_MMC_CMDR_RD_CEDATA_DEV
 value|(1U<< 22)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CCS_EXP
+name|A10_MMC_CMDR_CCS_EXP
 value|(1U<< 23)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_ENB_BOOT
-value|(1U<< 24)
+name|A10_MMC_CMDR_BOOT_MOD_SHIFT
+value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_ALT_BOOT_OPT
-value|(1U<< 25)
+name|A10_MMC_CMDR_BOOT_MOD_NORMAL
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_BOOT_ACK_EXP
+name|A10_MMC_CMDR_BOOT_MOD_MANDATORY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_CMDR_BOOT_MOD_ALT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_CMDR_EXP_BOOT_ACK
 value|(1U<< 26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DISABLE_BOOT
+name|A10_MMC_CMDR_BOOT_ABT
 value|(1U<< 27)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_VOL_SWITCH
+name|A10_MMC_CMDR_VOL_SW
 value|(1U<< 28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_START
+name|A10_MMC_CMDR_LOAD
 value|(1U<< 31)
 end_define
 
 begin_comment
-comment|/* A10_MMC_IMASK and A10_MMC_RINTR */
+comment|/* A10_MMC_IMKR and A10_MMC_RISR */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RESP_ERR
+name|A10_MMC_INT_RESP_ERR
 value|(1U<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CMD_DONE
+name|A10_MMC_INT_CMD_DONE
 value|(1U<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_OVER
+name|A10_MMC_INT_DATA_OVER
 value|(1U<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_TX_DATA_REQ
+name|A10_MMC_INT_TX_DATA_REQ
 value|(1U<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RX_DATA_REQ
+name|A10_MMC_INT_RX_DATA_REQ
 value|(1U<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RESP_CRC_ERR
+name|A10_MMC_INT_RESP_CRC_ERR
 value|(1U<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_CRC_ERR
+name|A10_MMC_INT_DATA_CRC_ERR
 value|(1U<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RESP_TIMEOUT
+name|A10_MMC_INT_RESP_TIMEOUT
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_ACK_RECV
+name|A10_MMC_INT_BOOT_ACK_RECV
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_TIMEOUT
+name|A10_MMC_INT_DATA_TIMEOUT
 value|(1U<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_BOOT_START
+name|A10_MMC_INT_BOOT_START
 value|(1U<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_STARVE
+name|A10_MMC_INT_DATA_STARVE
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_VOL_CHG_DONE
+name|A10_MMC_INT_VOL_CHG_DONE
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_FIFO_RUN_ERR
+name|A10_MMC_INT_FIFO_RUN_ERR
 value|(1U<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_HARDW_LOCKED
+name|A10_MMC_INT_CMD_BUSY
 value|(1U<< 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_START_BIT_ERR
+name|A10_MMC_INT_DATA_START_ERR
 value|(1U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_AUTOCMD_DONE
+name|A10_MMC_INT_AUTO_STOP_DONE
 value|(1U<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_END_BIT_ERR
+name|A10_MMC_INT_DATA_END_BIT_ERR
 value|(1U<< 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_SDIO_INT
+name|A10_MMC_INT_SDIO
 value|(1U<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARD_INSERT
+name|A10_MMC_INT_CARD_INSERT
 value|(1U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARD_REMOVE
+name|A10_MMC_INT_CARD_REMOVE
 value|(1U<< 31)
 end_define
 
@@ -737,74 +761,67 @@ define|#
 directive|define
 name|A10_MMC_INT_ERR_BIT
 define|\
-value|(A10_MMC_RESP_ERR | A10_MMC_RESP_CRC_ERR |	\ 	 A10_MMC_DATA_CRC_ERR | A10_MMC_RESP_TIMEOUT |	\ 	 A10_MMC_FIFO_RUN_ERR |	A10_MMC_HARDW_LOCKED |	\ 	 A10_MMC_START_BIT_ERR | A10_MMC_END_BIT_ERR)
+value|(A10_MMC_INT_RESP_ERR | A10_MMC_INT_RESP_CRC_ERR |	\ 	 A10_MMC_INT_DATA_CRC_ERR | A10_MMC_INT_RESP_TIMEOUT |	\ 	 A10_MMC_INT_FIFO_RUN_ERR |	A10_MMC_INT_CMD_BUSY |	\ 	 A10_MMC_INT_DATA_START_ERR | A10_MMC_INT_DATA_END_BIT_ERR)
 end_define
 
 begin_comment
-comment|/* A10_MMC_STAS */
+comment|/* A10_MMC_STAR */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_RX_WLFLAG
+name|A10_MMC_STAR_FIFO_RX_LEVEL
 value|(1U<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_TX_WLFLAG
+name|A10_MMC_STAR_FIFO_TX_LEVEL
 value|(1U<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_FIFO_EMPTY
+name|A10_MMC_STAR_FIFO_EMPTY
 value|(1U<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_FIFO_FULL
+name|A10_MMC_STAR_FIFO_FULL
 value|(1U<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARD_PRESENT
+name|A10_MMC_STAR_CARD_PRESENT
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_CARD_DATA_BUSY
+name|A10_MMC_STAR_CARD_BUSY
 value|(1U<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DATA_FSM_BUSY
+name|A10_MMC_STAR_FSM_BUSY
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_DMA_REQ
+name|A10_MMC_STAR_DMA_REQ
 value|(1U<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|A10_MMC_FIFO_SIZE
-value|16
 end_define
 
 begin_comment
@@ -867,28 +884,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_SOFT_RST
+name|A10_MMC_DMAC_IDMAC_SOFT_RST
 value|(1U<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_FIX_BURST
+name|A10_MMC_DMAC_IDMAC_FIX_BURST
 value|(1U<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_IDMA_ON
+name|A10_MMC_DMAC_IDMAC_IDMA_ON
 value|(1U<< 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_REFETCH_DES
+name|A10_MMC_DMAC_IDMAC_REFETCH_DES
 value|(1U<< 31)
 end_define
 
@@ -899,143 +916,143 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_TRANSMIT_INT
+name|A10_MMC_IDST_TX_INT
 value|(1U<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_RECEIVE_INT
+name|A10_MMC_IDST_RX_INT
 value|(1U<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_FATAL_BUS_ERR
+name|A10_MMC_IDST_FATAL_BERR_INT
 value|(1U<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_DES_INVALID
+name|A10_MMC_IDST_DES_UNAVL_INT
 value|(1U<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_CARD_ERR_SUM
+name|A10_MMC_IDST_ERR_FLAG_SUM
 value|(1U<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_NORMAL_INT_SUM
+name|A10_MMC_IDST_NOR_INT_SUM
 value|(1U<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_ABNORMAL_INT_SUM
+name|A10_MMC_IDST_ABN_INT_SUM
 value|(1U<< 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_HOST_ABT_INTX
+name|A10_MMC_IDST_HOST_ABT_INTX
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_HOST_ABT_INRX
+name|A10_MMC_IDST_HOST_ABT_INRX
 value|(1U<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_IDLE
+name|A10_MMC_IDST_IDLE
 value|(0U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_SUSPEND
+name|A10_MMC_IDST_SUSPEND
 value|(1U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_DESC_RD
+name|A10_MMC_IDST_DESC_RD
 value|(2U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_DESC_CHECK
+name|A10_MMC_IDST_DESC_CHECK
 value|(3U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_RD_REQ_WAIT
+name|A10_MMC_IDST_RD_REQ_WAIT
 value|(4U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_WR_REQ_WAIT
+name|A10_MMC_IDST_WR_REQ_WAIT
 value|(5U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_RD
+name|A10_MMC_IDST_RD
 value|(6U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_WR
+name|A10_MMC_IDST_WR
 value|(7U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_DESC_CLOSE
+name|A10_MMC_IDST_DESC_CLOSE
 value|(8U<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_ERROR
+name|A10_MMC_IDST_ERROR
 define|\
-value|(A10_MMC_IDMAC_FATAL_BUS_ERR | A10_MMC_IDMAC_CARD_ERR_SUM |	\ 	 A10_MMC_IDMAC_DES_INVALID | A10_MMC_IDMAC_ABNORMAL_INT_SUM)
+value|(A10_MMC_IDST_FATAL_BERR_INT | A10_MMC_IDST_ERR_FLAG_SUM |	\ 	 A10_MMC_IDST_DES_UNAVL_INT | A10_MMC_IDST_ABN_INT_SUM)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A10_MMC_IDMAC_COMPLETE
+name|A10_MMC_IDST_COMPLETE
 define|\
-value|(A10_MMC_IDMAC_TRANSMIT_INT | A10_MMC_IDMAC_RECEIVE_INT)
+value|(A10_MMC_IDST_TX_INT | A10_MMC_IDST_RX_INT)
 end_define
 
 begin_comment
@@ -1053,30 +1070,37 @@ define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_DIC
 value|(1U<< 1)
+comment|/* Disable Interrupt Completion */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_LD
 value|(1U<< 2)
+comment|/* Last DES */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_FD
 value|(1U<< 3)
+comment|/* First DES */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_CH
 value|(1U<< 4)
+comment|/* CHAIN MOD */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_ER
 value|(1U<< 5)
+comment|/* End of Ring (undocumented register) */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_CES
 value|(1U<< 30)
+comment|/* Card Error Summary */
 define|#
 directive|define
 name|A10_MMC_DMA_CONFIG_OWN
 value|(1U<< 31)
+comment|/* DES Own Flag */
 name|uint32_t
 name|buf_size
 decl_stmt|;
@@ -1089,10 +1113,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* DMA descriptors and data buffers must be aligned to 32-bits */
-end_comment
 
 begin_define
 define|#
