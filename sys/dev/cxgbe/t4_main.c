@@ -4044,7 +4044,7 @@ name|dev
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
-literal|"hw.cxgbe.debug_flags"
+literal|"hw.cxgbe.dflags"
 argument_list|,
 operator|&
 name|sc
@@ -25141,7 +25141,7 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"debug_flags"
+literal|"dflags"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
