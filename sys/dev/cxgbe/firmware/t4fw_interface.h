@@ -29825,7 +29825,7 @@ name|FW_PORT_CAP_SPEED_1G
 init|=
 literal|0x0002
 block|,
-name|FW_PORT_CAP_SPEED_2_5G
+name|FW_PORT_CAP_SPEED_25G
 init|=
 literal|0x0004
 block|,
@@ -32025,6 +32025,31 @@ init|=
 literal|15
 block|,
 comment|/* No, 4, No, No, Yes, Yes, 40G/10G/1G, BP ANGE */
+name|FW_PORT_TYPE_KR4_100G
+init|=
+literal|16
+block|,
+comment|/* No, 4, 100G */
+name|FW_PORT_TYPE_CR4_QSFP
+init|=
+literal|17
+block|,
+comment|/* No, 4, 100G */
+name|FW_PORT_TYPE_CR_QSFP
+init|=
+literal|18
+block|,
+comment|/* No, 1, 25G */
+name|FW_PORT_TYPE_CR2_QSFP
+init|=
+literal|19
+block|,
+comment|/* No, 2, 50G */
+name|FW_PORT_TYPE_SFP28
+init|=
+literal|20
+block|,
+comment|/* No, 1, 25G */
 name|FW_PORT_TYPE_NONE
 init|=
 name|M_FW_PORT_CMD_PTYPE

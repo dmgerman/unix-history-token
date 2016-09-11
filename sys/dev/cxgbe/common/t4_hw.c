@@ -14646,7 +14646,7 @@ begin_define
 define|#
 directive|define
 name|ADVERT_MASK
-value|(FW_PORT_CAP_SPEED_100M | FW_PORT_CAP_SPEED_1G |\ 		     FW_PORT_CAP_SPEED_10G | FW_PORT_CAP_SPEED_40G | \ 		     FW_PORT_CAP_SPEED_100G | FW_PORT_CAP_ANEG)
+value|(FW_PORT_CAP_SPEED_100M | FW_PORT_CAP_SPEED_1G |\ 		     FW_PORT_CAP_SPEED_10G | FW_PORT_CAP_SPEED_25G | \ 		     FW_PORT_CAP_SPEED_40G | FW_PORT_CAP_SPEED_100G | \ 		     FW_PORT_CAP_ANEG)
 end_define
 
 begin_comment
@@ -25376,6 +25376,16 @@ block|,
 literal|"QSFP"
 block|,
 literal|"BP40_BA"
+block|,
+literal|"KR4_100G"
+block|,
+literal|"CR4_QSFP"
+block|,
+literal|"CR_QSFP"
+block|,
+literal|"CR2_QSFP"
+block|,
+literal|"SFP28"
 block|, 	}
 decl_stmt|;
 if|if
@@ -32724,12 +32734,40 @@ name|stat
 operator|&
 name|V_FW_PORT_CMD_LSPEED
 argument_list|(
+name|FW_PORT_CAP_SPEED_25G
+argument_list|)
+condition|)
+name|speed
+operator|=
+literal|25000
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|stat
+operator|&
+name|V_FW_PORT_CMD_LSPEED
+argument_list|(
 name|FW_PORT_CAP_SPEED_40G
 argument_list|)
 condition|)
 name|speed
 operator|=
 literal|40000
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|stat
+operator|&
+name|V_FW_PORT_CMD_LSPEED
+argument_list|(
+name|FW_PORT_CAP_SPEED_100G
+argument_list|)
+condition|)
+name|speed
+operator|=
+literal|100000
 expr_stmt|;
 name|for_each_port
 argument_list|(
