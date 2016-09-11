@@ -2572,7 +2572,22 @@ name|int
 name|pad
 decl_stmt|,
 name|pack
+decl_stmt|,
+name|pad_shift
 decl_stmt|;
+name|pad_shift
+operator|=
+name|chip_id
+argument_list|(
+name|sc
+argument_list|)
+operator|>
+name|CHELSIO_T5
+condition|?
+name|X_T6_INGPADBOUNDARY_SHIFT
+else|:
+name|X_INGPADBOUNDARY_SHIFT
+expr_stmt|;
 name|pad
 operator|=
 name|fl_pad
@@ -2581,11 +2596,23 @@ if|if
 condition|(
 name|fl_pad
 operator|<
-literal|32
+operator|(
+literal|1
+operator|<<
+name|pad_shift
+operator|)
 operator|||
 name|fl_pad
 operator|>
-literal|4096
+operator|(
+literal|1
+operator|<<
+operator|(
+name|pad_shift
+operator|+
+name|M_INGPADBOUNDARY
+operator|)
+operator|)
 operator|||
 operator|!
 name|powerof2
@@ -2594,7 +2621,7 @@ name|fl_pad
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If there is any chance that we might use buffer packing and 		 * the chip is a T4, then pick 64 as the pad/pack boundary.  Set 		 * it to 32 in all other cases. 		 */
+comment|/* 		 * If there is any chance that we might use buffer packing and 		 * the chip is a T4, then pick 64 as the pad/pack boundary.  Set 		 * it to the minimum allowed in all other cases. 		 */
 name|pad
 operator|=
 name|is_t4
@@ -2606,7 +2633,9 @@ name|buffer_packing
 condition|?
 literal|64
 else|:
-literal|32
+literal|1
+operator|<<
+name|pad_shift
 expr_stmt|;
 comment|/* 		 * For fl_pad = 0 we'll still write a reasonable value to the 		 * register but all the freelists will opt out of padding. 		 * We'll complain here only if the user tried to set it to a 		 * value greater than 0 that was invalid. 		 */
 if|if
@@ -2648,7 +2677,7 @@ argument_list|(
 name|pad
 argument_list|)
 operator|-
-literal|5
+name|pad_shift
 argument_list|)
 expr_stmt|;
 name|t4_set_reg_field
