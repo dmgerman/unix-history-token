@@ -678,6 +678,13 @@ name|ADC_FIFO_DATA_MSK
 value|0x00000fff
 end_define
 
+begin_define
+define|#
+directive|define
+name|ADC_MAX_VALUE
+value|0xfff
+end_define
+
 begin_endif
 endif|#
 directive|endif
