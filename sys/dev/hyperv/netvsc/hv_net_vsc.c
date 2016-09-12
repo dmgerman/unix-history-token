@@ -172,22 +172,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|hv_nv_connect_to_vsp
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|mtu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|hn_nvs_sent_none
 parameter_list|(
@@ -2218,9 +2202,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|hv_nv_connect_to_vsp
+name|hn_nvs_attach
 parameter_list|(
 name|struct
 name|hn_softc
@@ -2232,10 +2215,10 @@ name|mtu
 parameter_list|)
 block|{
 name|int
-name|ret
+name|error
 decl_stmt|;
 comment|/* 	 * Initialize NVS. 	 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_init
 argument_list|(
@@ -2244,13 +2227,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 if|if
@@ -2263,7 +2244,7 @@ name|HN_NVS_VERSION_2
 condition|)
 block|{
 comment|/* 		 * Configure NDIS before initializing it. 		 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_conf_ndis
 argument_list|(
@@ -2274,18 +2255,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
 comment|/* 	 * Initialize NDIS. 	 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_init_ndis
 argument_list|(
@@ -2294,17 +2273,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 comment|/* 	 * Connect RXBUF. 	 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_conn_rxbuf
 argument_list|(
@@ -2313,21 +2290,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 comment|/* 	 * Connect chimney sending buffer. 	 */
-return|return
+name|error
+operator|=
 name|hn_nvs_conn_chim
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2357,37 +2347,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Net VSC on device add  *   * Callback when the device belonging to this driver is added  */
-end_comment
-
-begin_function
-name|int
-name|hv_nv_on_device_add
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|mtu
-parameter_list|)
-block|{
-comment|/* 	 * Connect with the NetVsp 	 */
-return|return
-operator|(
-name|hv_nv_connect_to_vsp
-argument_list|(
-name|sc
-argument_list|,
-name|mtu
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 

@@ -4744,10 +4744,9 @@ decl_stmt|;
 name|int
 name|rxr_cnt
 decl_stmt|;
-comment|/* 	 * Let the inner driver handle this first to create the netvsc channel 	 * NOTE! Once the channel is created, we may get a receive callback  	 * (hv_rf_on_receive()) before this call is completed. 	 * Note:  Earlier code used a function pointer here. 	 */
 name|ret
 operator|=
-name|hv_nv_on_device_add
+name|hn_nvs_attach
 argument_list|(
 name|sc
 argument_list|,

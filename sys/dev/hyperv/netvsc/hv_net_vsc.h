@@ -788,7 +788,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hv_nv_on_device_add
+name|hn_nvs_attach
 parameter_list|(
 name|struct
 name|hn_softc
