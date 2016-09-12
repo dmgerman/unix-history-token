@@ -6986,7 +6986,7 @@ name|cmdcnf
 operator|->
 name|default_password
 operator|=
-name|boolean_val
+name|passwd_val
 argument_list|(
 name|default_passwd
 argument_list|,
@@ -9323,7 +9323,7 @@ name|cnf
 operator|->
 name|default_password
 operator|=
-name|boolean_val
+name|passwd_val
 argument_list|(
 name|passwd
 argument_list|,
