@@ -1566,7 +1566,25 @@ case|case
 literal|0xffe2
 case|:
 comment|/* Right shift */
-comment|/* XXX */
+if|if
+condition|(
+operator|!
+name|down
+condition|)
+name|fifo_put
+argument_list|(
+name|sc
+argument_list|,
+literal|0xf0
+argument_list|)
+expr_stmt|;
+name|fifo_put
+argument_list|(
+name|sc
+argument_list|,
+literal|0x59
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|0xffe3
@@ -1596,7 +1614,32 @@ case|case
 literal|0xffe4
 case|:
 comment|/* Right control */
-comment|/* XXX */
+name|fifo_put
+argument_list|(
+name|sc
+argument_list|,
+literal|0xe0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|down
+condition|)
+name|fifo_put
+argument_list|(
+name|sc
+argument_list|,
+literal|0xf0
+argument_list|)
+expr_stmt|;
+name|fifo_put
+argument_list|(
+name|sc
+argument_list|,
+literal|0x14
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|0xffe7
@@ -1634,6 +1677,10 @@ literal|0x11
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0xfe03
+case|:
+comment|/* AltGr */
 case|case
 literal|0xffea
 case|:
