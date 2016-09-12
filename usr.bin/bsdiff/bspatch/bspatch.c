@@ -959,7 +959,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 name|err
@@ -993,7 +993,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Read lengths from header */
@@ -1060,7 +1060,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Close patch file and re-open it via libbzip2 at the right places */
@@ -1450,7 +1450,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 name|ctrl
@@ -1499,7 +1499,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Sanity-check */
@@ -1518,7 +1518,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Read diff string */
@@ -1570,7 +1570,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Add old data to diff string */
@@ -1653,7 +1653,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Read extra string */
@@ -1705,7 +1705,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Corrupt patch\n"
+literal|"Corrupt patch"
 argument_list|)
 expr_stmt|;
 comment|/* Adjust pointers */
