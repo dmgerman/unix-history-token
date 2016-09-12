@@ -481,7 +481,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * The scratch area for USB devices. Access to this structure is  * protected by the enumeration SX lock.  */
+comment|/*   * The scratch area for USB devices. Access to this structure is  * protected by the control SX lock.  */
 end_comment
 
 begin_union
@@ -551,6 +551,10 @@ decl_stmt|;
 name|struct
 name|sx
 name|sr_sx
+decl_stmt|;
+name|struct
+name|sx
+name|ctrl_sx
 decl_stmt|;
 name|struct
 name|mtx
@@ -1313,6 +1317,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|usbd_sr_unlock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|usbd_ctrl_lock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_ctrl_unlock
 parameter_list|(
 name|struct
 name|usb_device
