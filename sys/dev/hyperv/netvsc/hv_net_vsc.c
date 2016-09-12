@@ -135,7 +135,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -160,7 +160,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -611,14 +611,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC initialize receive buffer with net VSP  *   * Net VSP:  Network virtual services client, also known as the  *     Hyper-V extensible switch and the synthetic data path.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -707,7 +703,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf gpadl connect failed: %d\n"
+literal|"rxbuf gpadl conn failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -826,7 +822,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"exec rxbuf conn failed\n"
+literal|"exec nvs rxbuf conn failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -865,7 +861,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf conn failed: %x\n"
+literal|"nvs rxbuf conn failed: %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -902,7 +898,7 @@ argument_list|(
 name|xact
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
@@ -1348,14 +1344,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC destroy receive buffer  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -1364,9 +1356,7 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1408,7 +1398,7 @@ operator|=
 name|HN_NVS_RXBUF_SIG
 expr_stmt|;
 comment|/* NOTE: No response. */
-name|ret
+name|error
 operator|=
 name|hn_nvs_req_send
 argument_list|(
@@ -1425,9 +1415,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1436,14 +1424,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"send rxbuf disconn failed: %d\n"
+literal|"send nvs rxbuf disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1465,7 +1453,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Disconnect RXBUF from primary channel. 		 */
-name|ret
+name|error
 operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
@@ -1480,9 +1468,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1491,14 +1477,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf disconn failed: %d\n"
+literal|"rxbuf gpadl disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1511,7 +1497,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
@@ -2328,9 +2314,10 @@ operator|(
 name|ret
 operator|)
 return|;
+comment|/* 	 * Connect RXBUF. 	 */
 name|ret
 operator|=
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
@@ -2338,20 +2325,20 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
+operator|!=
 literal|0
 condition|)
-name|ret
-operator|=
-name|hv_nv_init_send_buffer_with_net_vsp
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
+return|;
+comment|/* 	 * Connect chimney sending buffer. 	 */
+return|return
+name|hv_nv_init_send_buffer_with_net_vsp
+argument_list|(
+name|sc
+argument_list|)
 return|;
 block|}
 end_function
@@ -2371,7 +2358,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
