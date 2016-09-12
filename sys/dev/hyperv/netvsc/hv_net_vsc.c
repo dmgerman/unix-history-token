@@ -122,7 +122,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -147,7 +147,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -911,14 +911,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC initialize send buffer with net VSP  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -989,8 +985,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chimney sending buffer gpadl "
-literal|"connect failed: %d\n"
+literal|"chim gpadl conn failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1109,7 +1104,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"exec chim conn failed\n"
+literal|"exec nvs chim conn failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1154,7 +1149,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chim conn failed: %x\n"
+literal|"nvs chim conn failed: %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1185,7 +1180,9 @@ literal|"section size\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|sc
@@ -1316,7 +1313,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|cleanup
 label|:
@@ -1331,7 +1330,7 @@ argument_list|(
 name|xact
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 argument_list|(
 name|sc
 argument_list|)
@@ -1503,14 +1502,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC destroy send buffer  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -1519,9 +1514,7 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1563,7 +1556,7 @@ operator|=
 name|HN_NVS_CHIM_SIG
 expr_stmt|;
 comment|/* NOTE: No response. */
-name|ret
+name|error
 operator|=
 name|hn_nvs_req_send
 argument_list|(
@@ -1580,9 +1573,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1591,14 +1582,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"send chim disconn failed: %d\n"
+literal|"send nvs chim disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1620,7 +1611,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Disconnect chimney sending buffer from primary channel. 		 */
-name|ret
+name|error
 operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
@@ -1635,9 +1626,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1646,14 +1635,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chim disconn failed: %d\n"
+literal|"chim gpadl disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1691,7 +1680,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
@@ -2335,7 +2324,7 @@ operator|)
 return|;
 comment|/* 	 * Connect chimney sending buffer. 	 */
 return|return
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 argument_list|(
 name|sc
 argument_list|)
@@ -2363,7 +2352,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 argument_list|(
 name|sc
 argument_list|)
