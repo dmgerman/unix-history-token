@@ -135,7 +135,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("uinput: " fmt "\n", ##args);
+value|printf("uinput: " fmt "\n", ##args)
 end_define
 
 begin_else

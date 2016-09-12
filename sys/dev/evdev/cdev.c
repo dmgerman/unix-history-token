@@ -129,7 +129,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("evdev cdev: "fmt"\n", ##args);
+value|printf("evdev cdev: "fmt"\n", ##args)
 end_define
 
 begin_else
