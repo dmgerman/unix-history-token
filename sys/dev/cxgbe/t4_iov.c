@@ -882,11 +882,6 @@ name|error
 operator|)
 return|;
 block|}
-name|device_verbose
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
