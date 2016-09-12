@@ -829,6 +829,36 @@ name|ostate
 condition|)
 block|{
 case|case
+name|IEEE80211_S_INIT
+case|:
+comment|/* 			 * Already have a channel; bypass the 			 * scan and startup immediately. 			 * Note that ieee80211_create_ibss will call 			 * back to do a RUN->RUN state change. 			 */
+name|ieee80211_create_ibss
+argument_list|(
+name|vap
+argument_list|,
+name|ieee80211_ht_adjust_channel
+argument_list|(
+name|ic
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|,
+name|vap
+operator|->
+name|iv_flags_ht
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* NB: iv_bss is changed on return */
+name|ni
+operator|=
+name|vap
+operator|->
+name|iv_bss
+expr_stmt|;
+break|break;
+case|case
 name|IEEE80211_S_SCAN
 case|:
 ifdef|#
