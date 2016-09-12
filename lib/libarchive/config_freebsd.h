@@ -25,6 +25,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_GET_FD_NP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ACL_GET_LINK_NP
 value|1
 end_define
@@ -124,6 +131,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_EXTATTR_SET_FILE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_XVFSCONF
 value|1
 end_define
 
