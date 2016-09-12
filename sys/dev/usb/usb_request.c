@@ -1665,16 +1665,10 @@ name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Grab the USB device enumeration SX-lock serialization is 	 * achieved when multiple threads are involved: 	 */
+comment|/* 	 * Serialize access to this function: 	 */
 name|do_unlock
 operator|=
-name|usbd_enum_lock
-argument_list|(
-name|udev
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We need to allow suspend and resume at this point, else the 	 * control transfer will timeout if the device is suspended! 	 */
-name|usbd_sr_unlock
+name|usbd_ctrl_lock
 argument_list|(
 name|udev
 argument_list|)
@@ -2603,16 +2597,11 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|usbd_sr_lock
-argument_list|(
-name|udev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|do_unlock
 condition|)
-name|usbd_enum_unlock
+name|usbd_ctrl_unlock
 argument_list|(
 name|udev
 argument_list|)
