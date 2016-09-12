@@ -289,19 +289,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_rf_init_device
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|hn_rndis_query
 parameter_list|(
 name|struct
@@ -4239,14 +4226,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter init device  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_rf_init_device
+name|hn_rndis_init
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4664,9 +4647,50 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter on device add  */
-end_comment
+begin_function
+specifier|static
+name|int
+name|hn_rndis_attach
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* 	 * Initialize RNDIS. 	 */
+name|error
+operator|=
+name|hn_rndis_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Configure NDIS offload settings. 	 * XXX no offloading, if error happened? 	 */
+name|hn_rndis_conf_offload
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -4739,11 +4763,9 @@ operator|(
 name|ret
 operator|)
 return|;
-comment|/* 	 * Initialize the rndis device 	 */
-comment|/* Send the rndis initialization message */
 name|ret
 operator|=
-name|hv_rf_init_device
+name|hn_rndis_attach
 argument_list|(
 name|sc
 argument_list|)
@@ -4754,9 +4776,11 @@ name|ret
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* 		 * TODO: If rndis init failed, we will need to shut down 		 * the channel 		 */
-block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 comment|/* Get the mac address */
 name|ret
 operator|=
@@ -4778,12 +4802,6 @@ condition|)
 block|{
 comment|/* TODO: shut down rndis device and the channel */
 block|}
-comment|/* Configure NDIS offload settings */
-name|hn_rndis_conf_offload
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|hv_rf_query_device_link_status
 argument_list|(
 name|sc
