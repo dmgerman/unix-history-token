@@ -6622,7 +6622,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Opteron Rev E shows a bug as in very rare occasions a read memory 	 * barrier is not performed as expected if it is followed by a 	 * non-atomic read-modify-write instruction. 	 * As long as that bug pops up very rarely (intensive machine usage 	 * on other operating systems generally generates one unexplainable 	 * crash any 2 months) and as long as a model specific fix would be 	 * impratical at this stage, print out a warning string if the broken 	 * model and family are identified. 	 */
+comment|/* 	 * Opteron Rev E shows a bug as in very rare occasions a read memory 	 * barrier is not performed as expected if it is followed by a 	 * non-atomic read-modify-write instruction. 	 * As long as that bug pops up very rarely (intensive machine usage 	 * on other operating systems generally generates one unexplainable 	 * crash any 2 months) and as long as a model specific fix would be 	 * impractical at this stage, print out a warning string if the broken 	 * model and family are identified. 	 */
 if|if
 condition|(
 name|CPUID_TO_FAMILY
