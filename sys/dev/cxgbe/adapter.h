@@ -3058,7 +3058,7 @@ name|uint16_t
 name|rdmacaps
 decl_stmt|;
 name|uint16_t
-name|tlscaps
+name|cryptocaps
 decl_stmt|;
 name|uint16_t
 name|iscsicaps

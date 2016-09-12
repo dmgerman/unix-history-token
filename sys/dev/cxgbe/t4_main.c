@@ -1785,7 +1785,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|t4_tlscaps_allowed
+name|t4_cryptocaps_allowed
 init|=
 literal|0
 decl_stmt|;
@@ -1794,10 +1794,10 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.cxgbe.tlscaps_allowed"
+literal|"hw.cxgbe.cryptocaps_allowed"
 argument_list|,
 operator|&
-name|t4_tlscaps_allowed
+name|t4_cryptocaps_allowed
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16752,7 +16752,7 @@ argument_list|)
 expr_stmt|;
 name|LIMIT_CAPS
 argument_list|(
-name|tlscaps
+name|cryptocaps
 argument_list|)
 expr_stmt|;
 name|LIMIT_CAPS
@@ -17659,7 +17659,7 @@ argument_list|)
 expr_stmt|;
 name|READ_CAPS
 argument_list|(
-name|tlscaps
+name|cryptocaps
 argument_list|)
 expr_stmt|;
 name|READ_CAPS
@@ -25270,9 +25270,9 @@ literal|"\005INITIATOR_SSNOFLD\006TARGET_SSNOFLD"
 literal|"\007T10DIF"
 literal|"\010INITIATOR_CMDOFLD\011TARGET_CMDOFLD"
 block|,
-literal|"\20\00KEYS"
+literal|"\20\001LOOKASIDE\002TLSKEYS"
 block|,
-comment|/* 7: TLS */
+comment|/* 7: Crypto */
 literal|"\20\001INITIATOR\002TARGET\003CTRL_OFLD"
 comment|/* 8: FCoE */
 literal|"\004PO_INITIATOR\005PO_TARGET"
@@ -25967,11 +25967,11 @@ argument_list|)
 expr_stmt|;
 name|SYSCTL_CAP
 argument_list|(
-name|tlscaps
+name|cryptocaps
 argument_list|,
 literal|7
 argument_list|,
-literal|"TLS"
+literal|"crypto"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_CAP
