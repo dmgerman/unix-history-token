@@ -2370,14 +2370,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Now, we can close the channel safely */
-name|vmbus_chan_close
-argument_list|(
-name|sc
-operator|->
-name|hn_prichan
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
