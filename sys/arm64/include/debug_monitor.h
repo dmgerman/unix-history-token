@@ -18,7 +18,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KDB
+name|DDB
 end_ifdef
 
 begin_include
