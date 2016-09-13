@@ -620,5 +620,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! _STAND_NET_H */
+end_comment
+
 end_unit
 
