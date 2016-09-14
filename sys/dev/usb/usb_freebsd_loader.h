@@ -422,6 +422,22 @@ begin_comment
 comment|/* maximum number of dynamic quirks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_IN_POLLING_MODE_FUNC
+parameter_list|()
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_IN_POLLING_MODE_VALUE
+parameter_list|()
+value|0
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint32_t

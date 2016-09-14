@@ -1181,7 +1181,7 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|sc
@@ -1201,7 +1201,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Change lock */
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|sc
@@ -5951,7 +5951,7 @@ literal|"bus"
 argument_list|)
 expr_stmt|;
 comment|/* Start the interrupt endpoint, if any */
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|sc
@@ -5969,7 +5969,7 @@ name|UHUB_INTR_TRANSFER
 index|]
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|sc

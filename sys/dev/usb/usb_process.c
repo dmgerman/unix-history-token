@@ -508,7 +508,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|up
 operator|->
@@ -669,7 +669,7 @@ operator|->
 name|up_cv
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|up
 operator|->
@@ -944,19 +944,26 @@ decl_stmt|;
 name|uint8_t
 name|t
 decl_stmt|;
-comment|/* check if gone, return dummy value */
+comment|/* check if gone or in polling mode, return dummy value */
 if|if
 condition|(
 name|up
 operator|->
 name|up_gone
+operator|!=
+literal|0
+operator|||
+name|USB_IN_POLLING_MODE_FUNC
+argument_list|()
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 name|_pm0
 operator|)
 return|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|up
 operator|->
@@ -1232,7 +1239,7 @@ name|up_mtx
 operator|!=
 name|NULL
 condition|)
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|up
 operator|->
@@ -1293,7 +1300,7 @@ operator|->
 name|up_gone
 condition|)
 return|return;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|up
 operator|->
@@ -1453,7 +1460,7 @@ operator|!=
 operator|&
 name|Giant
 condition|)
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|up
 operator|->
@@ -1462,7 +1469,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|up
 operator|->
@@ -1579,7 +1586,7 @@ literal|"for USB process drain!\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|up
 operator|->
@@ -1621,7 +1628,7 @@ operator|->
 name|up_gone
 condition|)
 return|return;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|up
 operator|->

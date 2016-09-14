@@ -4948,7 +4948,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5108,7 +5108,7 @@ operator|==
 name|quirk
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5132,7 +5132,7 @@ return|;
 block|}
 block|}
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5175,7 +5175,7 @@ block|{
 name|uint16_t
 name|x
 decl_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5491,7 +5491,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5569,7 +5569,7 @@ name|quirkname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5729,7 +5729,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5765,7 +5765,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5815,7 +5815,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5933,7 +5933,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -5969,7 +5969,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -6026,7 +6026,7 @@ operator|==
 name|USB_SUB_QUIRKS_MAX
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -6089,7 +6089,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -6500,7 +6500,7 @@ name|USB_SUB_QUIRKS_MAX
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx
@@ -6561,7 +6561,7 @@ name|quirks
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|usb_quirk_mtx

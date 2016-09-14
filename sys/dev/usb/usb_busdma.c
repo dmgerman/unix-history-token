@@ -2014,7 +2014,7 @@ condition|(
 operator|!
 name|owned
 condition|)
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|uptag
 operator|->
@@ -2063,7 +2063,7 @@ condition|(
 operator|!
 name|owned
 condition|)
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|uptag
 operator|->
@@ -2277,7 +2277,7 @@ operator|==
 literal|1
 operator|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|uptag
 operator|->
@@ -2334,7 +2334,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|uptag
 operator|->
@@ -2529,7 +2529,7 @@ name|ismultiseg
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|pc
 operator|->
@@ -3442,7 +3442,7 @@ name|xfer
 operator|->
 name|xroot
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|info
 operator|->
@@ -3884,7 +3884,7 @@ argument_list|(
 name|udpt
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|info
 operator|->

@@ -466,6 +466,22 @@ begin_comment
 comment|/* maximum number of dynamic quirks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_IN_POLLING_MODE_FUNC
+parameter_list|()
+value|usbd_in_polling_mode()
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_IN_POLLING_MODE_VALUE
+parameter_list|()
+value|(SCHEDULER_STOPPED() || kdb_active)
+end_define
+
 begin_typedef
 typedef|typedef
 name|uint32_t
