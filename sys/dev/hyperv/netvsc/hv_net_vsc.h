@@ -596,9 +596,6 @@ decl_stmt|;
 name|device_t
 name|hn_dev
 decl_stmt|;
-name|uint8_t
-name|hn_unit
-decl_stmt|;
 name|int
 name|hn_carrier
 decl_stmt|;

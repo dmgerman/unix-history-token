@@ -2357,14 +2357,6 @@ name|hn_softc_t
 modifier|*
 name|sc
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -2395,12 +2387,6 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|hn_unit
-operator|=
-name|unit
 expr_stmt|;
 name|sc
 operator|->
@@ -8410,31 +8396,21 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|hn_softc_t
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|ifp
-operator|->
-name|if_softc
-expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"hn%d: watchdog timeout -- resetting\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|hn_unit
+literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
 name|hn_ifinit
 argument_list|(
-name|sc
+name|ifp
+operator|->
+name|if_softc
 argument_list|)
 expr_stmt|;
-comment|/*???*/
+comment|/* XXX */
 name|if_inc_counter
 argument_list|(
 name|ifp
