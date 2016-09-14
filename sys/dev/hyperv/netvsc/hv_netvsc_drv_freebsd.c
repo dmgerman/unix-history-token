@@ -1284,7 +1284,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|hn_ifinit_locked
+name|hn_init_locked
 parameter_list|(
 name|struct
 name|hn_softc
@@ -1297,7 +1297,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|hn_ifinit
+name|hn_init
 parameter_list|(
 name|void
 modifier|*
@@ -2744,7 +2744,7 @@ name|ifp
 operator|->
 name|if_init
 operator|=
-name|hn_ifinit
+name|hn_init
 expr_stmt|;
 name|ifp
 operator|->
@@ -7081,7 +7081,7 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-name|hn_ifinit
+name|hn_init
 argument_list|(
 name|sc
 argument_list|)
@@ -7336,7 +7336,7 @@ operator|->
 name|hn_chim_szmax
 argument_list|)
 expr_stmt|;
-name|hn_ifinit_locked
+name|hn_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -7502,7 +7502,7 @@ block|}
 else|else
 endif|#
 directive|endif
-name|hn_ifinit_locked
+name|hn_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -8177,7 +8177,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|hn_ifinit_locked
+name|hn_init_locked
 parameter_list|(
 name|struct
 name|hn_softc
@@ -8304,7 +8304,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|hn_ifinit
+name|hn_init
 parameter_list|(
 name|void
 modifier|*
@@ -8348,7 +8348,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hn_ifinit_locked
+name|hn_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -8400,7 +8400,7 @@ argument_list|,
 literal|"watchdog timeout -- resetting\n"
 argument_list|)
 expr_stmt|;
-name|hn_ifinit
+name|hn_init
 argument_list|(
 name|ifp
 operator|->
