@@ -3677,7 +3677,9 @@ condition|(
 operator|!
 name|TRAPF_USERMODE
 argument_list|(
-name|frame
+name|td
+operator|->
+name|td_frame
 argument_list|)
 condition|)
 block|{
