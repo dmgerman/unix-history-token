@@ -6083,6 +6083,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|subchan_cnt
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"invalid sub-channel count %d"
+operator|,
+name|subchan_cnt
+operator|)
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|malloc
