@@ -1273,7 +1273,8 @@ specifier|static
 name|void
 name|hn_stop
 parameter_list|(
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -1285,7 +1286,8 @@ specifier|static
 name|void
 name|hn_ifinit_locked
 parameter_list|(
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2335,6 +2337,16 @@ name|dev
 parameter_list|)
 block|{
 name|struct
+name|hn_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|struct
 name|sysctl_oid_list
 modifier|*
 name|child
@@ -2352,10 +2364,6 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|link_status
-decl_stmt|;
-name|hn_softc_t
-modifier|*
-name|sc
 decl_stmt|;
 name|struct
 name|ifnet
@@ -2381,13 +2389,6 @@ name|tso_maxlen
 decl_stmt|;
 endif|#
 directive|endif
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hn_dev
@@ -6991,7 +6992,8 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 init|=
@@ -7822,16 +7824,13 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|hn_stop
 parameter_list|(
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -8175,16 +8174,13 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  *  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|hn_ifinit_locked
 parameter_list|(
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -8315,7 +8311,8 @@ modifier|*
 name|xsc
 parameter_list|)
 block|{
-name|hn_softc_t
+name|struct
+name|hn_softc
 modifier|*
 name|sc
 init|=
@@ -16281,7 +16278,8 @@ name|netvsc_methods
 block|,
 expr|sizeof
 operator|(
-name|hn_softc_t
+expr|struct
+name|hn_softc
 operator|)
 block|}
 decl_stmt|;

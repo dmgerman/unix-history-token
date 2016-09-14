@@ -579,8 +579,7 @@ begin_comment
 comment|/*  * Device-specific softc structure  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|hn_softc
 block|{
@@ -715,9 +714,8 @@ name|ndis_rssprm_toeplitz
 name|hn_rss
 decl_stmt|;
 block|}
-name|hn_softc_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
