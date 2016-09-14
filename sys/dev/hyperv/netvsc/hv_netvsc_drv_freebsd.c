@@ -2746,12 +2746,6 @@ name|if_init
 operator|=
 name|hn_init
 expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
 if|if
 condition|(
 name|hn_use_if_start
@@ -2879,16 +2873,6 @@ operator|->
 name|ifm_media
 expr_stmt|;
 comment|/* 	 * Tell upper layers that we support full VLAN capability. 	 */
-name|ifp
-operator|->
-name|if_hdrlen
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_vlan_header
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
@@ -3068,6 +3052,17 @@ argument_list|,
 name|ifp
 operator|->
 name|if_hw_tsomaxsegsize
+argument_list|)
+expr_stmt|;
+comment|/* Inform the upper layer about the long frame support. */
+name|ifp
+operator|->
+name|if_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
 argument_list|)
 expr_stmt|;
 name|hn_set_chim_size
