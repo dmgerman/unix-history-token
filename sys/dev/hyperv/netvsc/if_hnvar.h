@@ -438,9 +438,6 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|int
-name|nchan
 parameter_list|)
 function_decl|;
 end_function_decl
