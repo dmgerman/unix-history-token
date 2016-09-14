@@ -801,13 +801,13 @@ name|d
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|d
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
