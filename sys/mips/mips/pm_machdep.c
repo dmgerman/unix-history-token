@@ -164,6 +164,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -2205,6 +2211,16 @@ operator|.
 name|md_ss_addr
 operator|=
 literal|0
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_tls_tcb_offset
+operator|=
+name|TLS_TP_OFFSET
+operator|+
+name|TLS_TCB_SIZE
 expr_stmt|;
 block|}
 end_function
