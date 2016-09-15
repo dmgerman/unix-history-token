@@ -2463,7 +2463,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not execute diff process.\n"
+literal|"could not execute diff process"
 argument_list|)
 expr_stmt|;
 block|}
