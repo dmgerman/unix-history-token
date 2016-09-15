@@ -302,6 +302,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|cpu
@@ -317,6 +323,11 @@ name|int
 name|cpu_class
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|u_int
@@ -935,11 +946,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 specifier|static
 struct|struct
@@ -956,9 +962,6 @@ name|cpus
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|"Intel 80286"
 block|,
@@ -1078,27 +1081,14 @@ name|CPUCLASS_686
 block|}
 block|,
 comment|/* CPU_P4 */
-else|#
-directive|else
-block|{
-literal|"Clawhammer"
-block|,
-name|CPUCLASS_K8
-block|}
-block|,
-comment|/* CPU_CLAWHAMMER */
-block|{
-literal|"Sledgehammer"
-block|,
-name|CPUCLASS_K8
-block|}
-block|,
-comment|/* CPU_SLEDGEHAMMER */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 specifier|static
@@ -1221,6 +1211,14 @@ name|char
 modifier|*
 name|brand
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"CPU: "
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|cpu_class
 operator|=
 name|cpus
@@ -1229,11 +1227,6 @@ name|cpu
 index|]
 operator|.
 name|cpu_class
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"CPU: "
-argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -1252,6 +1245,22 @@ name|cpu_model
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|strncpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Hammer"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpu_model
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check for extended CPUID information and a processor name. */
 if|if
 condition|(
@@ -2851,14 +2860,14 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__i386__
 switch|switch
 condition|(
 name|cpu_class
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 case|case
 name|CPUCLASS_286
 case|:
@@ -2928,19 +2937,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-else|#
-directive|else
-case|case
-name|CPUCLASS_K8
-case|:
-name|printf
-argument_list|(
-literal|"K8"
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -2949,6 +2945,15 @@ argument_list|)
 expr_stmt|;
 comment|/* will panic below... */
 block|}
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"K8"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"-class CPU)\n"
@@ -3726,6 +3731,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_function
 name|void
 name|panicifcpuunsupported
@@ -3733,9 +3744,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 if|#
 directive|if
 operator|!
@@ -3773,28 +3781,12 @@ comment|/* lint */
 endif|#
 directive|endif
 comment|/* lint */
-else|#
-directive|else
-comment|/* __amd64__ */
-ifndef|#
-directive|ifndef
-name|HAMMER
-error|#
-directive|error
-literal|"You need to specify a cpu type"
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
 switch|switch
 condition|(
 name|cpu_class
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
 case|case
 name|CPUCLASS_286
 case|:
@@ -3838,22 +3830,6 @@ name|CPUCLASS_686
 case|:
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* __amd64__ */
-case|case
-name|CPUCLASS_X86
-case|:
-ifndef|#
-directive|ifndef
-name|HAMMER
-case|case
-name|CPUCLASS_K8
-case|:
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"CPU class not configured"
@@ -3864,12 +3840,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -5675,13 +5645,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-else|#
-directive|else
-comment|/* XXX */
-name|cpu
-operator|=
-name|CPU_CLAWHAMMER
-expr_stmt|;
 endif|#
 directive|endif
 block|}
