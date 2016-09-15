@@ -1477,7 +1477,7 @@ name|sz
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Silence GCC 5.3 unintialized variable warning */
+comment|/* Silence GCC 5.3 uninitialized variable warning */
 if|if
 condition|(
 name|line
