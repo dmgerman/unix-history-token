@@ -1419,7 +1419,7 @@ name|buttons
 operator||=
 literal|1UL
 operator|<<
-literal|3
+literal|5
 expr_stmt|;
 elseif|else
 if|if
@@ -1432,7 +1432,7 @@ name|buttons
 operator||=
 literal|1UL
 operator|<<
-literal|4
+literal|6
 expr_stmt|;
 name|sc
 operator|->
