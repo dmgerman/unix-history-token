@@ -66,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ascii.c 3446 2016-05-03 01:31:17Z emaste $"
+literal|"$Id: ascii.c 3487 2016-08-24 18:12:08Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1477,7 +1477,6 @@ name|sz
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Silence GCC 5.3 uninitialized variable warning */
 if|if
 condition|(
 name|line
