@@ -7254,7 +7254,7 @@ block|{
 operator|*
 name|controlp
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
@@ -7263,6 +7263,8 @@ argument_list|,
 name|m
 operator|->
 name|m_len
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|controlp

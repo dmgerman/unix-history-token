@@ -5829,13 +5829,15 @@ goto|;
 comment|/* Make a copy of the header to send to the user level process */
 name|mm
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|mb0
 argument_list|,
 literal|0
 argument_list|,
 name|hlen
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6692,13 +6694,15 @@ name|mbuf
 modifier|*
 name|mm
 init|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
 literal|0
 argument_list|,
 name|hlen
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -11648,7 +11652,7 @@ block|}
 comment|/* 	 * Decapsulate the inner IP packet and loopback to forward it 	 * as a normal multicast packet. Also, make a copy of the 	 *     outer_iphdr + pimhdr + reghdr + encap_iphdr 	 * to pass to the daemon later, so it can take the appropriate 	 * actions (e.g., send back PIM_REGISTER_STOP). 	 * XXX: here m->m_data points to the outer IP header. 	 */
 name|mcp
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
@@ -11657,6 +11661,8 @@ argument_list|,
 name|iphlen
 operator|+
 name|PIM_REG_MINLEN
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11670,7 +11676,7 @@ name|CTR1
 argument_list|(
 name|KTR_IPMF
 argument_list|,
-literal|"%s: m_copy() failed"
+literal|"%s: m_copym() failed"
 argument_list|,
 name|__func__
 argument_list|)
