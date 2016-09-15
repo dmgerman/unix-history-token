@@ -176,6 +176,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_calli
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)&0xff) == I_CALLI&& ((ins)&0x3800) == 0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I_RET
 value|0xc3
 end_define
@@ -185,6 +195,16 @@ define|#
 directive|define
 name|I_IRET
 value|0xcf
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_rex
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)& 0xff) == 0x41 || ((ins)& 0xff) == 0x43)
 end_define
 
 begin_define
@@ -214,7 +234,7 @@ name|inst_call
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)&0xff) == I_CALL || \ 				 (((ins)&0xff) == I_CALLI&& \ 				  ((ins)&0x3800) == 0x1000))
+value|(((ins)&0xff) == I_CALL || i_calli(ins) || \ 				 (i_calli((ins)>> 8)&& i_rex(ins)))
 end_define
 
 begin_define
