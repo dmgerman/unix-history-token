@@ -3755,6 +3755,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_ARM_ARCHEXT
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* ARM arch compat information. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ARM_EXIDX
+value|0x70000001
+end_define
+
+begin_comment
+comment|/* ARM exception unwind tables. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_HIPROC
 value|0x7fffffff
 end_define
