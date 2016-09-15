@@ -1473,6 +1473,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sz
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Silence GCC 5.3 unintialized variable warning */
 if|if
 condition|(
 name|line
