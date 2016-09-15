@@ -121,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -159,6 +165,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|HEADER_SIZE
+value|32
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -442,7 +455,7 @@ decl_stmt|;
 name|u_char
 name|header
 index|[
-literal|32
+name|HEADER_SIZE
 index|]
 decl_stmt|,
 name|buf
@@ -469,10 +482,11 @@ literal|3
 index|]
 decl_stmt|;
 name|off_t
-name|lenread
-decl_stmt|;
-name|off_t
 name|i
+decl_stmt|,
+name|lenread
+decl_stmt|,
+name|offset
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -940,12 +954,12 @@ name|header
 argument_list|,
 literal|1
 argument_list|,
-literal|32
+name|HEADER_SIZE
 argument_list|,
 name|f
 argument_list|)
 operator|<
-literal|32
+name|HEADER_SIZE
 condition|)
 block|{
 if|if
@@ -1034,7 +1048,7 @@ name|bzctrllen
 operator|>
 name|OFF_MAX
 operator|-
-literal|32
+name|HEADER_SIZE
 operator|||
 name|bzdatalen
 operator|<
@@ -1042,7 +1056,7 @@ literal|0
 operator|||
 name|bzctrllen
 operator|+
-literal|32
+name|HEADER_SIZE
 operator|>
 name|OFF_MAX
 operator|-
@@ -1083,13 +1097,17 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+name|offset
+operator|=
+name|HEADER_SIZE
+expr_stmt|;
 if|if
 condition|(
 name|fseeko
 argument_list|(
 name|cpf
 argument_list|,
-literal|32
+name|offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -1098,7 +1116,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fseeko(%s, %lld)"
+literal|"fseeko(%s, %jd)"
 argument_list|,
 name|argv
 index|[
@@ -1106,10 +1124,9 @@ literal|3
 index|]
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
-literal|32
+name|offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -1145,15 +1162,17 @@ argument_list|,
 name|cbz2err
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+name|bzctrllen
+expr_stmt|;
 if|if
 condition|(
 name|fseeko
 argument_list|(
 name|dpf
 argument_list|,
-literal|32
-operator|+
-name|bzctrllen
+name|offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -1162,22 +1181,17 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fseeko(%s, %lld)"
+literal|"fseeko(%s, %jd)"
 argument_list|,
 name|argv
 index|[
 literal|3
 index|]
 argument_list|,
-call|(
-name|long
-name|long
-call|)
-argument_list|(
-literal|32
-operator|+
-name|bzctrllen
-argument_list|)
+operator|(
+name|intmax_t
+operator|)
+name|offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -1213,17 +1227,17 @@ argument_list|,
 name|dbz2err
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+name|bzdatalen
+expr_stmt|;
 if|if
 condition|(
 name|fseeko
 argument_list|(
 name|epf
 argument_list|,
-literal|32
-operator|+
-name|bzctrllen
-operator|+
-name|bzdatalen
+name|offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -1232,24 +1246,17 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fseeko(%s, %lld)"
+literal|"fseeko(%s, %jd)"
 argument_list|,
 name|argv
 index|[
 literal|3
 index|]
 argument_list|,
-call|(
-name|long
-name|long
-call|)
-argument_list|(
-literal|32
-operator|+
-name|bzctrllen
-operator|+
-name|bzdatalen
-argument_list|)
+operator|(
+name|intmax_t
+operator|)
+name|offset
 argument_list|)
 expr_stmt|;
 if|if
