@@ -694,6 +694,9 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+name|register_t
+name|dr6
+decl_stmt|;
 name|int
 name|i
 init|=
@@ -1869,13 +1872,13 @@ argument_list|()
 condition|)
 block|{
 comment|/* 				 * Reset breakpoint bits because the 				 * processor doesn't 				 */
-comment|/* XXX check upper bits here */
 name|load_dr6
 argument_list|(
 name|rdr6
 argument_list|()
 operator|&
-literal|0xfffffff0
+operator|~
+literal|0xf
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1890,13 +1893,27 @@ comment|/* 			 * If KDB is enabled, let it handle the debugger trap. 			 * Other
 ifdef|#
 directive|ifdef
 name|KDB
+comment|/* XXX %dr6 is not quite reentrant. */
+name|dr6
+operator|=
+name|rdr6
+argument_list|()
+expr_stmt|;
+name|load_dr6
+argument_list|(
+name|dr6
+operator|&
+operator|~
+literal|0x4000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kdb_trap
 argument_list|(
 name|type
 argument_list|,
-literal|0
+name|dr6
 argument_list|,
 name|frame
 argument_list|)
