@@ -45,6 +45,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/_vm_radix.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -173,6 +179,11 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
+name|struct
+name|vm_radix
+name|pm_root
+decl_stmt|;
+comment|/* spare page table pages */
 block|}
 struct|;
 end_struct
@@ -604,6 +615,19 @@ parameter_list|,
 name|pt_entry_t
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmap_fault
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
