@@ -13306,6 +13306,14 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_pmap
+operator|&&
+operator|(
+name|prot
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+operator|!=
+literal|0
 condition|)
 name|cpu_icache_sync_range
 argument_list|(
