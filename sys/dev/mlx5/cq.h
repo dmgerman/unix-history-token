@@ -107,6 +107,13 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+name|int
+name|reset_notify_added
+decl_stmt|;
+name|struct
+name|list_head
+name|reset_notify
+decl_stmt|;
 block|}
 struct|;
 end_struct
