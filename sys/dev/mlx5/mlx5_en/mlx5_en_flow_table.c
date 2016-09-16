@@ -2219,7 +2219,7 @@ name|match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2260,7 +2260,7 @@ name|match_value
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -2288,7 +2288,7 @@ name|match_value
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -4758,7 +4758,7 @@ name|match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|)
 expr_stmt|;
 name|MLX5_SET_TO_ONES
@@ -4809,7 +4809,7 @@ name|match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|)
 expr_stmt|;
 name|priv

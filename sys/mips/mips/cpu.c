@@ -234,44 +234,21 @@ define|\
 value|_ENCODE_INSN(OP_LD, A1, T0, 0, offsetof(struct thread, td_md.md_tls))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_FREEBSD32
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|_LOAD_T0_MDTLS_TCV_OFFSET_A1
+define|\
+value|_ENCODE_INSN(OP_LD, A1, T1, 0, \     offsetof(struct thread, td_md.md_tls_tcb_offset))
+end_define
 
 begin_define
 define|#
 directive|define
-name|_ADDIU_V0_T0_TLS_OFFSET
+name|_ADDU_V0_T0_T1
 define|\
-value|_ENCODE_INSN(OP_DADDIU, T0, V0, 0, (TLS_TP_OFFSET + TLS_TCB_SIZE32))
+value|_ENCODE_INSN(0, T0, T1, V0, OP_DADDU)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_ADDIU_V0_T0_TLS_OFFSET
-define|\
-value|_ENCODE_INSN(OP_DADDIU, T0, V0, 0, (TLS_TP_OFFSET + TLS_TCB_SIZE))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! COMPAT_FREEBSD32 */
-end_comment
 
 begin_define
 define|#
@@ -301,9 +278,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|_ADDIU_V0_T0_TLS_OFFSET
+name|_LOAD_T0_MDTLS_TCV_OFFSET_A1
 define|\
-value|_ENCODE_INSN(OP_ADDIU, T0, V0, 0, (TLS_TP_OFFSET + TLS_TCB_SIZE))
+value|_ENCODE_INSN(OP_LW, A1, T1, 0, \     offsetof(struct thread, td_md.md_tls_tcb_offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ADDU_V0_T0_T1
+define|\
+value|_ENCODE_INSN(0, T0, T1, V0, OP_ADDU)
 end_define
 
 begin_define
@@ -396,11 +381,18 @@ index|[
 literal|1
 index|]
 operator|==
-name|_ADDIU_V0_T0_TLS_OFFSET
+name|_LOAD_T0_MDTLS_TCV_OFFSET_A1
 operator|&&
 name|instructp
 index|[
 literal|2
+index|]
+operator|==
+name|_ADDU_V0_T0_T1
+operator|&&
+name|instructp
+index|[
+literal|3
 index|]
 operator|==
 name|_MTC0_V0_USERLOCAL

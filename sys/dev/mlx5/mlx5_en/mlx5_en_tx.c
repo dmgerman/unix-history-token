@@ -1082,18 +1082,11 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|mb
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 block|}
 comment|/* Setup local variables */
 name|pi
@@ -1123,8 +1116,6 @@ expr_stmt|;
 name|ifp
 operator|=
 name|sq
-operator|->
-name|channel
 operator|->
 name|ifp
 expr_stmt|;
@@ -1764,16 +1755,9 @@ name|err
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|tx_drop
 goto|;
-block|}
-operator|*
-name|mbp
-operator|=
-name|mb
-expr_stmt|;
 for|for
 control|(
 name|x
@@ -2025,6 +2009,12 @@ operator|.
 name|packets
 operator|++
 expr_stmt|;
+operator|*
+name|mbp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* safety clear */
 return|return
 operator|(
 literal|0
@@ -2793,8 +2783,6 @@ modifier|*
 name|ifp
 init|=
 name|sq
-operator|->
-name|channel
 operator|->
 name|ifp
 decl_stmt|;

@@ -1201,7 +1201,7 @@ name|ep
 operator|->
 name|edesc
 decl_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|f
 operator|->
@@ -1637,7 +1637,7 @@ name|ep
 operator|->
 name|edesc
 decl_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|f
 operator|->

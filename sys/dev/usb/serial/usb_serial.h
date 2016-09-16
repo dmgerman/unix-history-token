@@ -764,7 +764,7 @@ name|sc
 parameter_list|,
 name|what
 parameter_list|)
-value|mtx_assert((sc)->sc_mtx, what)
+value|USB_MTX_ASSERT((sc)->sc_mtx, what)
 end_define
 
 begin_define
@@ -774,7 +774,7 @@ name|UCOM_MTX_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock((sc)->sc_mtx)
+value|USB_MTX_LOCK((sc)->sc_mtx)
 end_define
 
 begin_define
@@ -784,7 +784,7 @@ name|UCOM_MTX_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock((sc)->sc_mtx)
+value|USB_MTX_UNLOCK((sc)->sc_mtx)
 end_define
 
 begin_define

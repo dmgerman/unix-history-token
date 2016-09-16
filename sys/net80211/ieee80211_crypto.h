@@ -251,15 +251,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_KEY_DEVICE
-comment|/* flags owned by device driver */
-define|\
-value|(IEEE80211_KEY_DEVKEY|IEEE80211_KEY_CIPHER0|IEEE80211_KEY_CIPHER1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_KEY_SWCRYPT
 define|\
 value|(IEEE80211_KEY_SWENCRYPT | IEEE80211_KEY_SWDECRYPT)
@@ -270,6 +261,15 @@ define|#
 directive|define
 name|IEEE80211_KEY_SWMIC
 value|(IEEE80211_KEY_SWENMIC | IEEE80211_KEY_SWDEMIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_KEY_DEVICE
+comment|/* flags owned by device driver */
+define|\
+value|(IEEE80211_KEY_DEVKEY|IEEE80211_KEY_CIPHER0|IEEE80211_KEY_CIPHER1| \ 	 IEEE80211_KEY_SWCRYPT|IEEE80211_KEY_SWMIC)
 end_define
 
 begin_define

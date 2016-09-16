@@ -526,7 +526,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad ordering at character %u\n"
+literal|"Bad ordering at character %u"
 argument_list|,
 name|c
 argument_list|)
@@ -651,7 +651,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Character %u not in normal font!\n"
+literal|"Character %u not in normal font!"
 argument_list|,
 name|mp_bold
 operator|->
@@ -1063,7 +1063,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bitmap with unsupported width %u!\n"
+literal|"Bitmap with unsupported width %u!"
 argument_list|,
 name|dwidth
 argument_list|)
@@ -1182,7 +1182,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unsupported wbytes %u!\n"
+literal|"Unsupported wbytes %u!"
 argument_list|,
 name|wbytes
 argument_list|)
@@ -1389,7 +1389,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unexpected EOF!\n"
+literal|"Unexpected EOF!"
 argument_list|)
 expr_stmt|;
 name|ln

@@ -542,7 +542,7 @@ directive|endif
 comment|/* 	 * Save at most ICMPV6_PLD_MAXLEN (= the min IPv6 MTU - 	 * size of IPv6 + ICMPv6 headers) bytes of the packet in case 	 * we need to generate an ICMP6 message to the src. 	 * Thanks to M_EXT, in most cases copy will not occur. 	 * 	 * It is important to save it before IPsec processing as IPsec 	 * processing may modify the mbuf. 	 */
 name|mcopy
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
@@ -558,6 +558,8 @@ name|len
 argument_list|,
 name|ICMPV6_PLD_MAXLEN
 argument_list|)
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 ifdef|#

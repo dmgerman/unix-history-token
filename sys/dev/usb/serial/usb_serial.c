@@ -142,12 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/uart/uart_ppstypes.h>
 end_include
 
@@ -6658,7 +6652,8 @@ expr_stmt|;
 comment|/* poll if necessary */
 if|if
 condition|(
-name|kdb_active
+name|USB_IN_POLLING_MODE_FUNC
+argument_list|()
 operator|&&
 name|sc
 operator|->
@@ -6777,7 +6772,8 @@ expr_stmt|;
 comment|/* poll if necessary */
 if|if
 condition|(
-name|kdb_active
+name|USB_IN_POLLING_MODE_FUNC
+argument_list|()
 operator|&&
 name|sc
 operator|->

@@ -173,6 +173,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/freebsd32/freebsd32_signal.h>
 end_include
 
@@ -569,6 +575,16 @@ name|sr
 operator|&=
 operator|~
 name|MIPS_SR_UX
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_tls_tcb_offset
+operator|=
+name|TLS_TP_OFFSET
+operator|+
+name|TLS_TCB_SIZE32
 expr_stmt|;
 block|}
 end_function

@@ -1250,11 +1250,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_COPY
+name|M_COPYM
 parameter_list|(
 name|x
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_copym((x), 0, M_COPYALL, M_NOWAIT)
 end_define
 
 begin_define
@@ -2032,7 +2032,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_COPY
+name|M_COPYM
 parameter_list|(
 name|m
 parameter_list|)

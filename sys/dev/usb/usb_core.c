@@ -139,6 +139,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -204,6 +216,35 @@ literal|"USB device"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|int
+name|usbd_in_polling_mode
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|USB_IN_POLLING_MODE_VALUE
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usbd_dummy_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* NOP */
+block|}
+end_function
 
 begin_expr_stmt
 name|MODULE_VERSION

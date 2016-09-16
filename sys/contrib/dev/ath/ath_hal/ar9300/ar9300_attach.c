@@ -9653,15 +9653,12 @@ name|ah
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: calling ar9300_hw_attach\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah, "%s: calling ar9300_hw_attach\n", __func__);
+endif|#
+directive|endif
 name|ecode
 operator|=
 name|ar9300_hw_attach
@@ -13120,15 +13117,12 @@ return|return
 name|HAL_ESELFTEST
 return|;
 block|}
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: calling ar9300_eeprom_attach\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah, "%s: calling ar9300_eeprom_attach\n", __func__);
+endif|#
+directive|endif
 name|ecode
 operator|=
 name|ar9300_eeprom_attach

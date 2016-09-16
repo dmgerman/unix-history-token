@@ -4065,7 +4065,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * XXX this can be optimized a lot by saving the data in a local 	 * buffer on the stack (72 bytes at most), and only allocating the 	 * mbuf if really necessary. The vast majority of the packets 	 * are forwarded without having to send an ICMP back (either 	 * because unnecessary, or because rate limited), so we are 	 * really we are wasting a lot of work here. 	 * 	 * We don't use m_copy() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
+comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * XXX this can be optimized a lot by saving the data in a local 	 * buffer on the stack (72 bytes at most), and only allocating the 	 * mbuf if really necessary. The vast majority of the packets 	 * are forwarded without having to send an ICMP back (either 	 * because unnecessary, or because rate limited), so we are 	 * really we are wasting a lot of work here. 	 * 	 * We don't use m_copym() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
 name|mcopy
 operator|=
 name|m_gethdr

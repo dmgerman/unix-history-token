@@ -1702,12 +1702,12 @@ name|Giant
 operator|)
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|mtx
 argument_list|,
@@ -2671,7 +2671,7 @@ operator|&
 name|Giant
 operator|)
 condition|)
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|mtx
 argument_list|)

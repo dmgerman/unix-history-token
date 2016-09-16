@@ -4568,24 +4568,6 @@ name|M_COPYALL
 value|1000000000
 end_define
 
-begin_comment
-comment|/* Compatibility with 4.3. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|m_copy
-parameter_list|(
-name|m
-parameter_list|,
-name|o
-parameter_list|,
-name|l
-parameter_list|)
-value|m_copym((m), (o), (l), M_NOWAIT)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|int

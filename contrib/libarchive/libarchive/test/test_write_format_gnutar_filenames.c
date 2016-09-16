@@ -457,6 +457,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|S_IFLNK
+name|assertEqualInt
+argument_list|(
+name|S_IFLNK
+argument_list|,
+name|AE_IFLNK
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|buff
 operator|=
 name|malloc
@@ -525,7 +537,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|template
 argument_list|,
-name|S_IFLNK
+name|AE_IFLNK
 operator||
 literal|0755
 argument_list|)

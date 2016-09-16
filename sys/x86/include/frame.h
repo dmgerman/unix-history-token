@@ -83,7 +83,7 @@ decl_stmt|;
 name|int
 name|tf_eflags
 decl_stmt|;
-comment|/* below only when crossing rings (e.g. user to kernel) */
+comment|/* below only when crossing rings (user to kernel) */
 name|int
 name|tf_esp
 decl_stmt|;
@@ -151,14 +151,14 @@ decl_stmt|;
 name|int
 name|tf_eflags
 decl_stmt|;
-comment|/* below only when crossing rings (e.g. user to kernel) */
+comment|/* below only when crossing rings (user (including vm86) to kernel) */
 name|int
 name|tf_esp
 decl_stmt|;
 name|int
 name|tf_ss
 decl_stmt|;
-comment|/* below only when switching out of VM86 mode */
+comment|/* below only when crossing from vm86 mode to kernel */
 name|int
 name|tf_vm86_es
 decl_stmt|;
@@ -174,6 +174,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * This alias for the MI TRAPF_USERMODE() should be used when we don't  * care about user mode itself, but need to know if a frame has stack  * registers.  The difference is only logical, but on i386 the logic  * for using TRAPF_USERMODE() is complicated by sometimes treating vm86  * bioscall mode (which is a special ring 3 user mode) as kernel mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_HAS_STACKREGS
+parameter_list|(
+name|tf
+parameter_list|)
+value|TRAPF_USERMODE(tf)
+end_define
 
 begin_endif
 endif|#
@@ -277,6 +291,7 @@ decl_stmt|;
 name|register_t
 name|tf_rflags
 decl_stmt|;
+comment|/* the amd64 frame always has the stack registers */
 name|register_t
 name|tf_rsp
 decl_stmt|;

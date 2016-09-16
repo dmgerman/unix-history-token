@@ -1654,11 +1654,11 @@ name|entry
 expr_stmt|;
 name|callout_fn_t
 modifier|*
-name|func
+name|c_func
 decl_stmt|;
 name|void
 modifier|*
-name|arg
+name|c_arg
 decl_stmt|;
 name|struct
 name|mtx

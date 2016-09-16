@@ -38,7 +38,7 @@ value|((xfer)->flags_int.usb_mode == \ 	USB_MODE_DEVICE ? (((xfer)->endpointno& 
 end_define
 
 begin_comment
-comment|/* macros */
+comment|/* locking wrappers for BUS lock */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ name|USB_BUS_LOCK
 parameter_list|(
 name|_b
 parameter_list|)
-value|mtx_lock(&(_b)->bus_mtx)
+value|USB_MTX_LOCK(&(_b)->bus_mtx)
 end_define
 
 begin_define
@@ -58,7 +58,7 @@ name|USB_BUS_UNLOCK
 parameter_list|(
 name|_b
 parameter_list|)
-value|mtx_unlock(&(_b)->bus_mtx)
+value|USB_MTX_UNLOCK(&(_b)->bus_mtx)
 end_define
 
 begin_define
@@ -70,8 +70,12 @@ name|_b
 parameter_list|,
 name|_t
 parameter_list|)
-value|mtx_assert(&(_b)->bus_mtx, _t)
+value|USB_MTX_ASSERT(&(_b)->bus_mtx, _t)
 end_define
+
+begin_comment
+comment|/* locking wrappers for BUS spin lock */
+end_comment
 
 begin_define
 define|#
@@ -80,7 +84,7 @@ name|USB_BUS_SPIN_LOCK
 parameter_list|(
 name|_b
 parameter_list|)
-value|mtx_lock_spin(&(_b)->bus_spin_lock)
+value|USB_MTX_LOCK_SPIN(&(_b)->bus_spin_lock)
 end_define
 
 begin_define
@@ -90,7 +94,7 @@ name|USB_BUS_SPIN_UNLOCK
 parameter_list|(
 name|_b
 parameter_list|)
-value|mtx_unlock_spin(&(_b)->bus_spin_lock)
+value|USB_MTX_UNLOCK_SPIN(&(_b)->bus_spin_lock)
 end_define
 
 begin_define
@@ -102,8 +106,12 @@ name|_b
 parameter_list|,
 name|_t
 parameter_list|)
-value|mtx_assert(&(_b)->bus_spin_lock, _t)
+value|USB_MTX_ASSERT(&(_b)->bus_spin_lock, _t)
 end_define
+
+begin_comment
+comment|/* locking wrappers for XFER lock */
+end_comment
 
 begin_define
 define|#
@@ -112,7 +120,7 @@ name|USB_XFER_LOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_lock((_x)->xroot->xfer_mtx)
+value|USB_MTX_LOCK((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -122,7 +130,7 @@ name|USB_XFER_UNLOCK
 parameter_list|(
 name|_x
 parameter_list|)
-value|mtx_unlock((_x)->xroot->xfer_mtx)
+value|USB_MTX_UNLOCK((_x)->xroot->xfer_mtx)
 end_define
 
 begin_define
@@ -134,7 +142,7 @@ name|_x
 parameter_list|,
 name|_t
 parameter_list|)
-value|mtx_assert((_x)->xroot->xfer_mtx, _t)
+value|USB_MTX_ASSERT((_x)->xroot->xfer_mtx, _t)
 end_define
 
 begin_comment

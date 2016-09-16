@@ -78,6 +78,27 @@ name|MALTA_MAXCPU
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|VPECONF0_VPA
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MVPCONTROL_VPC
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCSTATUS_A
+value|(1<< 13)
+end_define
+
 begin_decl_stmt
 name|unsigned
 name|malta_ap_boot
@@ -145,6 +166,27 @@ end_define
 
 begin_function
 specifier|static
+specifier|inline
+name|void
+name|evpe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	.set push			\n"
+literal|"	.set noreorder			\n"
+literal|"	.set noat			\n"
+literal|"	.set mips32r2			\n"
+literal|"	.word	0x41600021	# evpe	\n"
+literal|"	ehb				\n"
+literal|"	.set pop			\n"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
 specifier|inline
 name|void
 name|ehb
@@ -217,20 +259,18 @@ define|\
 value|({									\ 	uint32_t __retval;						\ 	__asm __volatile(						\ 	"	.set push					\n"	\ 	"	.set mips32					\n"	\ 	"	mfc0	%0, $%1, %2				\n"	\ 	"	.set pop					\n"	\ 	: "=r" (__retval) : "i" (reg), "i" (sel));			\ 	__retval;							\ })
 end_define
 
-begin_macro
-unit|void
-name|platform_ipi_send
-argument_list|(
-argument|int cpuid
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+unit|static
+name|void
+name|set_thread_context
+parameter_list|(
+name|int
+name|cpuid
+parameter_list|)
 block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* 	 * Set thread context. 	 * Note this is not global, so we don't need lock. 	 */
 name|reg
 operator|=
 name|read_c0_register32
@@ -263,6 +303,25 @@ expr_stmt|;
 name|ehb
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|platform_ipi_send
+parameter_list|(
+name|int
+name|cpuid
+parameter_list|)
+block|{
+name|uint32_t
+name|reg
+decl_stmt|;
+name|set_thread_context
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
 comment|/* Set cause */
 name|reg
 operator|=
@@ -273,21 +332,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|C_SW1
+operator|)
+expr_stmt|;
 name|mttc0
 argument_list|(
 literal|13
 argument_list|,
 literal|0
 argument_list|,
-operator|(
 name|reg
-operator||
-name|C_SW1
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -473,9 +534,132 @@ name|int
 name|cpuid
 parameter_list|)
 block|{
+name|uint32_t
+name|reg
+decl_stmt|;
 name|int
 name|timeout
 decl_stmt|;
+comment|/* Enter into configuration */
+name|reg
+operator|=
+name|read_c0_register32
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|MVPCONTROL_VPC
+operator|)
+expr_stmt|;
+name|write_c0_register32
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|set_thread_context
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Hint: how to set entry point. 	 * reg = 0x80000000; 	 * mttc0(2, 3, reg); 	 */
+comment|/* Enable thread */
+name|reg
+operator|=
+name|mftc0
+argument_list|(
+literal|2
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|TCSTATUS_A
+operator|)
+expr_stmt|;
+name|mttc0
+argument_list|(
+literal|2
+argument_list|,
+literal|1
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+comment|/* Unhalt CPU core */
+name|mttc0
+argument_list|(
+literal|2
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Activate VPE */
+name|reg
+operator|=
+name|mftc0
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|VPECONF0_VPA
+operator|)
+expr_stmt|;
+name|mttc0
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+comment|/* Out of configuration */
+name|reg
+operator|=
+name|read_c0_register32
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|reg
+operator|&=
+operator|~
+operator|(
+name|MVPCONTROL_VPC
+operator|)
+expr_stmt|;
+name|write_c0_register32
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|evpe
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|atomic_cmpset_32

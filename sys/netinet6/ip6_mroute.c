@@ -4788,13 +4788,15 @@ return|;
 block|}
 name|mb0
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
 literal|0
 argument_list|,
 name|M_COPYALL
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pullup packet header if needed before storing it, 	 * as other references may modify it in the meantime. 	 */
@@ -5004,7 +5006,7 @@ block|}
 comment|/* 		 * Make a copy of the header to send to the user 		 * level process 		 */
 name|mm
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|mb0
 argument_list|,
@@ -5015,6 +5017,8 @@ argument_list|(
 expr|struct
 name|ip6_hdr
 argument_list|)
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5994,7 +5998,7 @@ endif|#
 directive|endif
 name|mm
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
@@ -6005,6 +6009,8 @@ argument_list|(
 expr|struct
 name|ip6_hdr
 argument_list|)
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6596,13 +6602,15 @@ decl_stmt|;
 comment|/* 	 * Make a new reference to the packet; make sure that 	 * the IPv6 header is actually copied, not just referenced, 	 * so that ip6_output() only scribbles on the copy. 	 */
 name|mb_copy
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
 literal|0
 argument_list|,
 name|M_COPYALL
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7092,13 +7100,15 @@ name|mm
 operator|->
 name|m_next
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
 literal|0
 argument_list|,
 name|M_COPYALL
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -7953,7 +7963,7 @@ block|}
 comment|/* 		 * make a copy of the whole header to pass to the daemon later. 		 */
 name|mcp
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
@@ -7962,6 +7972,8 @@ argument_list|,
 name|off
 operator|+
 name|PIM6_REG_MINLEN
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

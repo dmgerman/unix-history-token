@@ -1524,6 +1524,90 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * General purpose locking wrappers to ease supporting  * USB polled mode:  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_ASSERT
+parameter_list|(
+name|_m
+parameter_list|,
+name|_t
+parameter_list|)
+value|do {		\ 	if (!USB_IN_POLLING_MODE_FUNC())	\ 		mtx_assert(_m, _t);		\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_ASSERT
+parameter_list|(
+name|_m
+parameter_list|,
+name|_t
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_LOCK
+parameter_list|(
+name|_m
+parameter_list|)
+value|do {			\ 	if (!USB_IN_POLLING_MODE_FUNC())	\ 		mtx_lock(_m);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_UNLOCK
+parameter_list|(
+name|_m
+parameter_list|)
+value|do {			\ 	if (!USB_IN_POLLING_MODE_FUNC())	\ 		mtx_unlock(_m);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_LOCK_SPIN
+parameter_list|(
+name|_m
+parameter_list|)
+value|do {		\ 	if (!USB_IN_POLLING_MODE_FUNC())	\ 		mtx_lock_spin(_m);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MTX_UNLOCK_SPIN
+parameter_list|(
+name|_m
+parameter_list|)
+value|do {		\ 	if (!USB_IN_POLLING_MODE_FUNC())	\ 		mtx_unlock_spin(_m);		\ } while (0)
+end_define
+
+begin_comment
 comment|/*  * The following is a wrapper for the callout structure to ease  * porting the code to other platforms.  */
 end_comment
 
@@ -1560,13 +1644,21 @@ name|usb_callout_reset
 parameter_list|(
 name|c
 parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|d
+modifier|...
 parameter_list|)
-value|callout_reset(&(c)->co,t,f,d)
+value|do {			\ 	if (!USB_IN_POLLING_MODE_FUNC())		\ 		callout_reset(&(c)->co, __VA_ARGS__);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_callout_reset_sbt
+parameter_list|(
+name|c
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	if (!USB_IN_POLLING_MODE_FUNC())			\ 		callout_reset_sbt(&(c)->co, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -1576,7 +1668,9 @@ name|usb_callout_stop
 parameter_list|(
 name|c
 parameter_list|)
-value|callout_stop(&(c)->co)
+value|do {			\ 	if (!USB_IN_POLLING_MODE_FUNC()) {		\ 		callout_stop(&(c)->co);			\ 	} else {					\
+comment|/*					\ 		 * Cannot stop callout when		\ 		 * polling. Set dummy callback		\ 		 * function instead:			\ 		 */
+value|\ 		(c)->co.c_func =&usbd_dummy_timeout;	\ 	}						\ } while (0)
 end_define
 
 begin_define
@@ -3028,6 +3122,25 @@ name|usb_device
 modifier|*
 parameter_list|,
 name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|usbd_in_polling_mode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_dummy_timeout
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

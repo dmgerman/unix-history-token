@@ -1154,9 +1154,6 @@ expr_stmt|;
 name|printcpuinfo
 argument_list|()
 expr_stmt|;
-name|panicifcpuunsupported
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Display physical memory if SMBIOS reports reasonable amount. 	 */
 name|memsize
 operator|=

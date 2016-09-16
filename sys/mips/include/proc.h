@@ -108,6 +108,10 @@ name|void
 modifier|*
 name|md_tls
 decl_stmt|;
+name|size_t
+name|md_tls_tcb_offset
+decl_stmt|;
+comment|/* TCB offset */
 ifdef|#
 directive|ifdef
 name|CPU_CNMIPS

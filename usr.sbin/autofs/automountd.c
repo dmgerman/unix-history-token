@@ -339,14 +339,14 @@ name|newoptions
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|strlen
 argument_list|(
 operator|*
 name|optionsp
 argument_list|)
 operator|+
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;

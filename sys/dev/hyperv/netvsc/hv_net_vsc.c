@@ -122,7 +122,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -135,7 +135,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -147,7 +147,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -160,28 +160,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|hv_nv_connect_to_vsp
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|mtu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -372,6 +356,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|void
 modifier|*
@@ -611,14 +596,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC initialize receive buffer with net VSP  *   * Net VSP:  Network virtual services client, also known as the  *     Hyper-V extensible switch and the synthetic data path.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -707,7 +688,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf gpadl connect failed: %d\n"
+literal|"rxbuf gpadl conn failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -826,7 +807,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"exec rxbuf conn failed\n"
+literal|"exec nvs rxbuf conn failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -865,7 +846,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf conn failed: %x\n"
+literal|"nvs rxbuf conn failed: %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -902,7 +883,7 @@ argument_list|(
 name|xact
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
@@ -915,14 +896,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC initialize send buffer with net VSP  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -993,8 +970,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chimney sending buffer gpadl "
-literal|"connect failed: %d\n"
+literal|"chim gpadl conn failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1113,7 +1089,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"exec chim conn failed\n"
+literal|"exec nvs chim conn failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1158,7 +1134,7 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chim conn failed: %x\n"
+literal|"nvs chim conn failed: %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1189,7 +1165,9 @@ literal|"section size\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|sc
@@ -1320,7 +1298,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|cleanup
 label|:
@@ -1335,7 +1315,7 @@ argument_list|(
 name|xact
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 argument_list|(
 name|sc
 argument_list|)
@@ -1348,14 +1328,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC destroy receive buffer  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
 name|hn_softc
@@ -1364,9 +1340,7 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1408,7 +1382,7 @@ operator|=
 name|HN_NVS_RXBUF_SIG
 expr_stmt|;
 comment|/* NOTE: No response. */
-name|ret
+name|error
 operator|=
 name|hn_nvs_req_send
 argument_list|(
@@ -1425,9 +1399,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1436,14 +1408,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"send rxbuf disconn failed: %d\n"
+literal|"send nvs rxbuf disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1465,7 +1437,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Disconnect RXBUF from primary channel. 		 */
-name|ret
+name|error
 operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
@@ -1480,9 +1452,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1491,14 +1461,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"rxbuf disconn failed: %d\n"
+literal|"rxbuf gpadl disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1511,20 +1481,16 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC destroy send buffer  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
 name|hn_softc
@@ -1533,9 +1499,7 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1577,7 +1541,7 @@ operator|=
 name|HN_NVS_CHIM_SIG
 expr_stmt|;
 comment|/* NOTE: No response. */
-name|ret
+name|error
 operator|=
 name|hn_nvs_req_send
 argument_list|(
@@ -1594,9 +1558,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1605,14 +1567,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"send chim disconn failed: %d\n"
+literal|"send nvs chim disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1634,7 +1596,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Disconnect chimney sending buffer from primary channel. 		 */
-name|ret
+name|error
 operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
@@ -1649,9 +1611,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|if_printf
@@ -1660,14 +1620,14 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chim disconn failed: %d\n"
+literal|"chim gpadl disconn failed: %d\n"
 argument_list|,
-name|ret
+name|error
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
@@ -1705,7 +1665,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
@@ -2243,9 +2203,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|hv_nv_connect_to_vsp
+name|hn_nvs_attach
 parameter_list|(
 name|struct
 name|hn_softc
@@ -2257,10 +2216,10 @@ name|mtu
 parameter_list|)
 block|{
 name|int
-name|ret
+name|error
 decl_stmt|;
 comment|/* 	 * Initialize NVS. 	 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_init
 argument_list|(
@@ -2269,13 +2228,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 if|if
@@ -2288,7 +2245,7 @@ name|HN_NVS_VERSION_2
 condition|)
 block|{
 comment|/* 		 * Configure NDIS before initializing it. 		 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_conf_ndis
 argument_list|(
@@ -2299,18 +2256,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
 comment|/* 	 * Initialize NDIS. 	 */
-name|ret
+name|error
 operator|=
 name|hn_nvs_init_ndis
 argument_list|(
@@ -2319,38 +2274,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|0
+name|error
 condition|)
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
-name|ret
+comment|/* 	 * Connect RXBUF. 	 */
+name|error
 operator|=
-name|hv_nv_init_rx_buffer_with_net_vsp
+name|hn_nvs_conn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|==
-literal|0
+name|error
 condition|)
-name|ret
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Connect chimney sending buffer. 	 */
+name|error
 operator|=
-name|hv_nv_init_send_buffer_with_net_vsp
+name|hn_nvs_conn_chim
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 return|return
 operator|(
-name|ret
+name|error
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -2371,47 +2338,16 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|hv_nv_destroy_rx_buffer
+name|hn_nvs_disconn_rxbuf
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hv_nv_destroy_send_buffer
+name|hn_nvs_disconn_chim
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Net VSC on device add  *   * Callback when the device belonging to this driver is added  */
-end_comment
-
-begin_function
-name|int
-name|hv_nv_on_device_add
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|mtu
-parameter_list|)
-block|{
-comment|/* 	 * Connect with the NetVsp 	 */
-return|return
-operator|(
-name|hv_nv_connect_to_vsp
-argument_list|(
-name|sc
-argument_list|,
-name|mtu
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 
@@ -2432,14 +2368,6 @@ block|{
 name|hv_nv_disconnect_from_vsp
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Now, we can close the channel safely */
-name|vmbus_chan_close
-argument_list|(
-name|sc
-operator|->
-name|hn_prichan
 argument_list|)
 expr_stmt|;
 return|return
@@ -2745,6 +2673,267 @@ block|}
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|hn_nvs_alloc_subchans
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+modifier|*
+name|nsubch0
+parameter_list|)
+block|{
+name|struct
+name|vmbus_xact
+modifier|*
+name|xact
+decl_stmt|;
+name|struct
+name|hn_nvs_subch_req
+modifier|*
+name|req
+decl_stmt|;
+specifier|const
+name|struct
+name|hn_nvs_subch_resp
+modifier|*
+name|resp
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|nsubch_req
+decl_stmt|;
+name|uint32_t
+name|nsubch
+decl_stmt|;
+name|size_t
+name|resp_len
+decl_stmt|;
+name|nsubch_req
+operator|=
+operator|*
+name|nsubch0
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|nsubch_req
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"invalid # of sub-channels %d"
+operator|,
+name|nsubch_req
+operator|)
+argument_list|)
+expr_stmt|;
+name|xact
+operator|=
+name|vmbus_xact_get
+argument_list|(
+name|sc
+operator|->
+name|hn_xact
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xact
+operator|==
+name|NULL
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"no xact for nvs subch alloc\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|req
+operator|=
+name|vmbus_xact_req_data
+argument_list|(
+name|xact
+argument_list|)
+expr_stmt|;
+name|req
+operator|->
+name|nvs_type
+operator|=
+name|HN_NVS_TYPE_SUBCH_REQ
+expr_stmt|;
+name|req
+operator|->
+name|nvs_op
+operator|=
+name|HN_NVS_SUBCH_OP_ALLOC
+expr_stmt|;
+name|req
+operator|->
+name|nvs_nsubch
+operator|=
+name|nsubch_req
+expr_stmt|;
+name|resp_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|resp
+argument_list|)
+expr_stmt|;
+name|resp
+operator|=
+name|hn_nvs_xact_execute
+argument_list|(
+name|sc
+argument_list|,
+name|xact
+argument_list|,
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|req
+argument_list|)
+argument_list|,
+operator|&
+name|resp_len
+argument_list|,
+name|HN_NVS_TYPE_SUBCH_RESP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|resp
+operator|==
+name|NULL
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"exec nvs subch alloc failed\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|resp
+operator|->
+name|nvs_status
+operator|!=
+name|HN_NVS_STATUS_OK
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"nvs subch alloc failed: %x\n"
+argument_list|,
+name|resp
+operator|->
+name|nvs_status
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+name|nsubch
+operator|=
+name|resp
+operator|->
+name|nvs_nsubch
+expr_stmt|;
+if|if
+condition|(
+name|nsubch
+operator|>
+name|nsubch_req
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"%u subchans are allocated, "
+literal|"requested %d\n"
+argument_list|,
+name|nsubch
+argument_list|,
+name|nsubch_req
+argument_list|)
+expr_stmt|;
+name|nsubch
+operator|=
+name|nsubch_req
+expr_stmt|;
+block|}
+operator|*
+name|nsubch0
+operator|=
+name|nsubch
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|done
+label|:
+name|vmbus_xact_put
+argument_list|(
+name|xact
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

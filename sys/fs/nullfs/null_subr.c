@@ -790,7 +790,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"null"
+literal|"nullfs"
 argument_list|,
 name|mp
 argument_list|,

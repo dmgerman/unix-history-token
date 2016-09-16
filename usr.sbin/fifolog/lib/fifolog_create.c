@@ -405,9 +405,9 @@ name|buf
 operator|=
 name|calloc
 argument_list|(
-name|recsize
-argument_list|,
 literal|1
+argument_list|,
+name|recsize
 argument_list|)
 expr_stmt|;
 if|if

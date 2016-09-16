@@ -531,11 +531,6 @@ decl_stmt|;
 comment|/* free memory in bytes */
 name|unsigned
 name|long
-name|memshared
-decl_stmt|;
-comment|/* shared memory ??? */
-name|unsigned
-name|long
 name|buffers
 decl_stmt|,
 name|cached
@@ -559,9 +554,6 @@ name|long
 name|swapfree
 decl_stmt|;
 comment|/* free swap space in bytes */
-name|vm_object_t
-name|object
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -625,48 +617,6 @@ name|swaptotal
 operator|-
 name|swapused
 expr_stmt|;
-name|memshared
-operator|=
-literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_object_list_mtx
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|object
-argument_list|,
-argument|&vm_object_list
-argument_list|,
-argument|object_list
-argument_list|)
-if|if
-condition|(
-name|object
-operator|->
-name|shadow_count
-operator|>
-literal|1
-condition|)
-name|memshared
-operator|+=
-name|object
-operator|->
-name|resident_page_count
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_object_list_mtx
-argument_list|)
-expr_stmt|;
-name|memshared
-operator|*=
-name|PAGE_SIZE
-expr_stmt|;
 comment|/* 	 * We'd love to be able to write: 	 * 	buffers = bufspace; 	 * 	 * but bufspace is internal to vfs_bio.c and we don't feel 	 * like unstaticizing it just for linprocfs's sake. 	 */
 name|buffers
 operator|=
@@ -684,35 +634,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"	     total:    used:	free:  shared: buffers:	 cached:\n"
-literal|"Mem:  %lu %lu %lu %lu %lu %lu\n"
-literal|"Swap: %llu %llu %llu\n"
 literal|"MemTotal: %9lu kB\n"
 literal|"MemFree:  %9lu kB\n"
-literal|"MemShared:%9lu kB\n"
 literal|"Buffers:  %9lu kB\n"
 literal|"Cached:   %9lu kB\n"
 literal|"SwapTotal:%9llu kB\n"
 literal|"SwapFree: %9llu kB\n"
 argument_list|,
-name|memtotal
-argument_list|,
-name|memused
-argument_list|,
-name|memfree
-argument_list|,
-name|memshared
-argument_list|,
-name|buffers
-argument_list|,
-name|cached
-argument_list|,
-name|swaptotal
-argument_list|,
-name|swapused
-argument_list|,
-name|swapfree
-argument_list|,
 name|B2K
 argument_list|(
 name|memtotal
@@ -721,11 +649,6 @@ argument_list|,
 name|B2K
 argument_list|(
 name|memfree
-argument_list|)
-argument_list|,
-name|B2K
-argument_list|(
-name|memshared
 argument_list|)
 argument_list|,
 name|B2K
@@ -802,8 +725,6 @@ name|size_t
 name|size
 decl_stmt|;
 name|int
-name|class
-decl_stmt|,
 name|fqmhz
 decl_stmt|,
 name|fqkhz
@@ -884,72 +805,6 @@ block|,
 literal|"3dnow"
 block|}
 decl_stmt|;
-switch|switch
-condition|(
-name|cpu_class
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|__i386__
-case|case
-name|CPUCLASS_286
-case|:
-name|class
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-case|case
-name|CPUCLASS_386
-case|:
-name|class
-operator|=
-literal|3
-expr_stmt|;
-break|break;
-case|case
-name|CPUCLASS_486
-case|:
-name|class
-operator|=
-literal|4
-expr_stmt|;
-break|break;
-case|case
-name|CPUCLASS_586
-case|:
-name|class
-operator|=
-literal|5
-expr_stmt|;
-break|break;
-case|case
-name|CPUCLASS_686
-case|:
-name|class
-operator|=
-literal|6
-expr_stmt|;
-break|break;
-default|default:
-name|class
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-else|#
-directive|else
-comment|/* __amd64__ */
-default|default:
-name|class
-operator|=
-literal|15
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-block|}
 name|hw_model
 index|[
 literal|0
@@ -1080,9 +935,9 @@ name|CPU_VENDOR_AMD
 case|:
 if|if
 condition|(
-name|class
+name|cpu_class
 operator|<
-literal|6
+name|CPUCLASS_686
 condition|)
 name|flags
 index|[

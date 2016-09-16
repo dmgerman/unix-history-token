@@ -2749,13 +2749,15 @@ condition|(
 operator|(
 name|n
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m
 argument_list|,
 literal|0
 argument_list|,
 name|M_COPYALL
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 operator|)
 operator|!=

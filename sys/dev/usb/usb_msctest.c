@@ -2813,7 +2813,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|sc
@@ -2862,7 +2862,7 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|sc
@@ -2973,7 +2973,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 operator|&
 name|sc
@@ -3016,7 +3016,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 operator|&
 name|sc

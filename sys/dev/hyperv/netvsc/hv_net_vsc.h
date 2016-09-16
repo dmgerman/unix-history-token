@@ -236,24 +236,6 @@ name|NETVSC_PACKET_MAXPAGE
 value|32
 end_define
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint8_t
-name|mac_addr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint32_t
-name|link_state
-decl_stmt|;
-block|}
-name|netvsc_device_info
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -597,8 +579,7 @@ begin_comment
 comment|/*  * Device-specific softc structure  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|hn_softc
 block|{
@@ -614,9 +595,6 @@ decl_stmt|;
 name|device_t
 name|hn_dev
 decl_stmt|;
-name|uint8_t
-name|hn_unit
-decl_stmt|;
 name|int
 name|hn_carrier
 decl_stmt|;
@@ -624,15 +602,8 @@ name|int
 name|hn_if_flags
 decl_stmt|;
 name|struct
-name|mtx
+name|sx
 name|hn_lock
-decl_stmt|;
-name|int
-name|hn_initdone
-decl_stmt|;
-comment|/* See hv_netvsc_drv_freebsd.c for rules on how to use */
-name|int
-name|temp_unusable
 decl_stmt|;
 name|struct
 name|vmbus_channel
@@ -736,9 +707,8 @@ name|ndis_rssprm_toeplitz
 name|hn_rss
 decl_stmt|;
 block|}
-name|hn_softc_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -788,7 +758,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hv_nv_on_device_add
+name|hn_nvs_attach
 parameter_list|(
 name|struct
 name|hn_softc

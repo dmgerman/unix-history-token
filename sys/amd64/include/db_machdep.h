@@ -119,6 +119,10 @@ name|db_set_single_step
 value|kdb_cpu_set_singlestep
 end_define
 
+begin_comment
+comment|/*  * The debug exception type is copied from %dr6 to 'code' and used to  * disambiguate single step traps.  Watchpoints have no special support.  * Our hardware breakpoints are not well integrated with ddb and are too  * different from watchpoints.  ddb treats them as unknown traps with  * unknown addresses and doesn't turn them off while it is running.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -131,9 +135,17 @@ parameter_list|)
 value|((type) == T_BPTFLT)
 end_define
 
-begin_comment
-comment|/*  * Watchpoints are not supported.  The debug exception type is in %dr6  * and not yet in the args to this macro.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|IS_SSTEP_TRAP
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
+value|((type) == T_TRCTRAP&& (code)& 0x4000)
+end_define
 
 begin_define
 define|#
@@ -164,6 +176,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_calli
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)&0xff) == I_CALLI&& ((ins)&0x3800) == 0x1000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I_RET
 value|0xc3
 end_define
@@ -173,6 +195,16 @@ define|#
 directive|define
 name|I_IRET
 value|0xcf
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_rex
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)& 0xff) == 0x41 || ((ins)& 0xff) == 0x43)
 end_define
 
 begin_define
@@ -202,7 +234,7 @@ name|inst_call
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)&0xff) == I_CALL || \ 				 (((ins)&0xff) == I_CALLI&& \ 				  ((ins)&0x3800) == 0x1000))
+value|(((ins)&0xff) == I_CALL || i_calli(ins) || \ 				 (i_calli((ins)>> 8)&& i_rex(ins)))
 end_define
 
 begin_define

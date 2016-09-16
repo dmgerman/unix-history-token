@@ -156,18 +156,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -994,7 +982,7 @@ define|#
 directive|define
 name|UKBD_LOCK
 parameter_list|()
-value|mtx_lock(&Giant)
+value|USB_MTX_LOCK(&Giant)
 end_define
 
 begin_define
@@ -1002,65 +990,16 @@ define|#
 directive|define
 name|UKBD_UNLOCK
 parameter_list|()
-value|mtx_unlock(&Giant)
+value|USB_MTX_UNLOCK(&Giant)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_comment
-comment|/*  * Assert that the lock is held in all contexts  * where the code can be executed.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|UKBD_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&Giant, MA_OWNED)
+value|USB_MTX_ASSERT(&Giant, MA_OWNED)
 end_define
-
-begin_comment
-comment|/*  * Assert that the lock is held in the contexts  * where it really has to be so.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UKBD_CTX_LOCK_ASSERT
-parameter_list|()
-define|\
-value|do {						\ 		if (!kdb_active&& panicstr == NULL)	\ 			mtx_assert(&Giant, MA_OWNED);	\ 	} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|UKBD_LOCK_ASSERT
-parameter_list|()
-value|(void)0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UKBD_CTX_LOCK_ASSERT
-parameter_list|()
-value|(void)0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -2150,14 +2089,12 @@ operator|*
 literal|10
 argument_list|)
 expr_stmt|;
-name|callout_reset_sbt
+name|usb_callout_reset_sbt
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_callout
-operator|.
-name|co
 argument_list|,
 name|sc
 operator|->
@@ -2189,7 +2126,7 @@ name|uint32_t
 name|key
 parameter_list|)
 block|{
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|DPRINTF
@@ -2287,7 +2224,7 @@ name|uint8_t
 name|wait
 parameter_list|)
 block|{
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|KASSERT
@@ -2316,12 +2253,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|kdb_active
-operator|&&
-operator|!
-name|SCHEDULER_STOPPED
+name|USB_IN_POLLING_MODE_FUNC
 argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * In this context the kernel is polling for input, 		 * but the USB subsystem works in normal interrupt-driven 		 * mode, so we just wait on the USB threads to do the job. 		 * Note that we currently hold the Giant, but it's also used 		 * as the transfer mtx, so we must release it while waiting. 		 */
@@ -2422,18 +2357,16 @@ block|{
 name|int32_t
 name|c
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
-operator|!
-name|kdb_active
-operator|&&
-operator|!
-name|SCHEDULER_STOPPED
+name|USB_IN_POLLING_MODE_FUNC
 argument_list|()
+operator|==
+literal|0
 operator|)
 operator|||
 operator|(
@@ -2614,7 +2547,7 @@ decl_stmt|;
 name|uint8_t
 name|j
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -3120,7 +3053,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -4352,6 +4285,8 @@ name|ukbd_any_key_pressed
 argument_list|(
 name|sc
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ukbd_start_timer
@@ -7410,7 +7345,7 @@ name|kbd
 operator|->
 name|kb_data
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -7508,7 +7443,7 @@ name|kbd
 operator|->
 name|kb_data
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -7641,7 +7576,7 @@ name|scancode
 decl_stmt|;
 endif|#
 directive|endif
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -7896,7 +7831,7 @@ name|scancode
 decl_stmt|;
 endif|#
 directive|endif
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -9379,7 +9314,7 @@ name|Giant
 argument_list|)
 operator|&&
 operator|!
-name|SCHEDULER_STOPPED
+name|USB_IN_POLLING_MODE_FUNC
 argument_list|()
 condition|)
 return|return
@@ -9439,7 +9374,7 @@ name|kbd
 operator|->
 name|kb_data
 decl_stmt|;
-name|UKBD_CTX_LOCK_ASSERT
+name|UKBD_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|sc

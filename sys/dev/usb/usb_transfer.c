@@ -135,12 +135,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -1247,7 +1241,7 @@ name|page_start
 operator|=
 name|pg
 expr_stmt|;
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|pc
 operator|->
@@ -1269,7 +1263,7 @@ comment|/* synchronous */
 argument_list|)
 condition|)
 block|{
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|pc
 operator|->
@@ -1285,7 +1279,7 @@ operator|)
 return|;
 comment|/* failure */
 block|}
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|pc
 operator|->
@@ -8179,7 +8173,7 @@ name|bus
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We exploit the fact that the mutex is the same for all 	 * callbacks that will be called from this thread: 	 */
-name|mtx_lock
+name|USB_MTX_LOCK
 argument_list|(
 name|info
 operator|->
@@ -8208,7 +8202,7 @@ operator|.
 name|curr
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|USB_MTX_UNLOCK
 argument_list|(
 name|info
 operator|->
@@ -8391,7 +8385,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-name|SCHEDULER_STOPPED
+name|USB_IN_POLLING_MODE_FUNC
 argument_list|()
 operator|==
 literal|0
@@ -11490,8 +11484,16 @@ name|usb_proc_msg
 modifier|*
 name|pm
 decl_stmt|;
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+decl_stmt|;
 name|uint16_t
 name|n
+decl_stmt|;
+name|uint16_t
+name|drop_bus_spin
 decl_stmt|;
 name|uint16_t
 name|drop_bus
@@ -11557,10 +11559,14 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* no USB device */
-if|if
-condition|(
+name|bus
+operator|=
 name|udev
 operator|->
+name|bus
+expr_stmt|;
+if|if
+condition|(
 name|bus
 operator|==
 name|NULL
@@ -11569,8 +11575,6 @@ continue|continue;
 comment|/* no BUS structure */
 if|if
 condition|(
-name|udev
-operator|->
 name|bus
 operator|->
 name|methods
@@ -11581,8 +11585,6 @@ continue|continue;
 comment|/* no BUS methods */
 if|if
 condition|(
-name|udev
-operator|->
 name|bus
 operator|->
 name|methods
@@ -11593,37 +11595,65 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* no poll method */
-comment|/* make sure that the BUS mutex is not locked */
+name|drop_bus_spin
+operator|=
+literal|0
+expr_stmt|;
 name|drop_bus
 operator|=
 literal|0
 expr_stmt|;
+name|drop_xfer
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|USB_IN_POLLING_MODE_FUNC
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* make sure that the BUS spin mutex is not locked */
 while|while
 condition|(
 name|mtx_owned
 argument_list|(
 operator|&
-name|xroot
+name|bus
 operator|->
-name|udev
+name|bus_spin_lock
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|bus
 operator|->
+name|bus_spin_lock
+argument_list|)
+expr_stmt|;
+name|drop_bus_spin
+operator|++
+expr_stmt|;
+block|}
+comment|/* make sure that the BUS mutex is not locked */
+while|while
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
 name|bus
 operator|->
 name|bus_mtx
 argument_list|)
-operator|&&
-operator|!
-name|SCHEDULER_STOPPED
-argument_list|()
 condition|)
 block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|xroot
-operator|->
-name|udev
-operator|->
 name|bus
 operator|->
 name|bus_mtx
@@ -11634,10 +11664,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* make sure that the transfer mutex is not locked */
-name|drop_xfer
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|mtx_owned
@@ -11646,10 +11672,6 @@ name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
-operator|&&
-operator|!
-name|SCHEDULER_STOPPED
-argument_list|()
 condition|)
 block|{
 name|mtx_unlock
@@ -11663,11 +11685,10 @@ name|drop_xfer
 operator|++
 expr_stmt|;
 block|}
+block|}
 comment|/* Make sure cv_signal() and cv_broadcast() is not called */
 name|USB_BUS_CONTROL_XFER_PROC
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 operator|->
@@ -11677,8 +11698,6 @@ literal|0
 expr_stmt|;
 name|USB_BUS_EXPLORE_PROC
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 operator|->
@@ -11688,8 +11707,6 @@ literal|0
 expr_stmt|;
 name|USB_BUS_GIANT_PROC
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 operator|->
@@ -11699,8 +11716,6 @@ literal|0
 expr_stmt|;
 name|USB_BUS_NON_GIANT_ISOC_PROC
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 operator|->
@@ -11710,8 +11725,6 @@ literal|0
 expr_stmt|;
 name|USB_BUS_NON_GIANT_BULK_PROC
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 operator|->
@@ -11721,8 +11734,6 @@ literal|0
 expr_stmt|;
 comment|/* poll USB hardware */
 call|(
-name|udev
-operator|->
 name|bus
 operator|->
 name|methods
@@ -11730,8 +11741,6 @@ operator|->
 name|xfer_poll
 call|)
 argument_list|(
-name|udev
-operator|->
 name|bus
 argument_list|)
 expr_stmt|;
@@ -11858,13 +11867,23 @@ condition|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|xroot
-operator|->
-name|udev
-operator|->
 name|bus
 operator|->
 name|bus_mtx
+argument_list|)
+expr_stmt|;
+comment|/* restore BUS spin mutex */
+while|while
+condition|(
+name|drop_bus_spin
+operator|--
+condition|)
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|bus
+operator|->
+name|bus_spin_lock
 argument_list|)
 expr_stmt|;
 block|}

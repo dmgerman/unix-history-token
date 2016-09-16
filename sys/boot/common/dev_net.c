@@ -1256,8 +1256,6 @@ parameter_list|()
 block|{
 name|int
 name|i
-decl_stmt|,
-name|ipstart
 decl_stmt|;
 name|n_long
 name|addr
@@ -1349,7 +1347,7 @@ argument_list|(
 operator|&
 name|rootpath
 index|[
-name|ipstart
+literal|0
 index|]
 argument_list|)
 expr_stmt|;

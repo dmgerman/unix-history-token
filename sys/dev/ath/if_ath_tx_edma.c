@@ -933,6 +933,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_XMIT
+operator||
+name|ATH_DEBUG_TX_PROC
 argument_list|,
 literal|"%s: queued %d packets; depth=%d, fifo depth=%d\n"
 argument_list|,
@@ -1047,16 +1049,34 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_TX_PROC
 argument_list|,
-literal|"%s: Q%d: called\n"
+literal|"%s: Q%d: called; fifo.depth=%d, fifo depth=%d, depth=%d, aggr_depth=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|txq
 operator|->
 name|axq_qnum
+argument_list|,
+name|txq
+operator|->
+name|fifo
+operator|.
+name|axq_depth
+argument_list|,
+name|txq
+operator|->
+name|axq_fifo_depth
+argument_list|,
+name|txq
+operator|->
+name|axq_depth
+argument_list|,
+name|txq
+operator|->
+name|axq_aggr_depth
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For now, push up to 4 frames per TX FIFO slot. 	 * If more are in the hardware queue then they'll 	 * get populated when we try to send another frame 	 * or complete a frame - so at most there'll be 	 * 32 non-AMPDU frames per TXQ. 	 * 	 * Note that the hardware staging queue will limit 	 * how many frames in total we will have pushed into 	 * here. 	 * 	 * Later on, we'll want to push less frames into 	 * the TX FIFO since we don't want to necessarily 	 * fill tens or hundreds of milliseconds of potential 	 * frames. 	 * 	 * However, we need more frames right now because of 	 * how the MAC implements the frame scheduling policy. 	 * It only ungates a single FIFO entry at a time, 	 * and will run that until CHNTIME expires or the 	 * end of that FIFO entry descriptor list is reached. 	 * So for TDMA we suffer a big performance penalty - 	 * single TX FIFO entries mean the MAC only sends out 	 * one frame per DBA event, which turned out on average 	 * 6ms per TX frame. 	 * 	 * So, for aggregates it's okay - it'll push two at a 	 * time and this will just do them more efficiently. 	 * For non-aggregates it'll do 4 at a time, up to the 	 * non-aggr limit (non_aggr, which is 32.)  They should 	 * be time based rather than a hard count, but I also 	 * do need sleep. 	 */
+comment|/* 	 * For now, push up to 32 frames per TX FIFO slot. 	 * If more are in the hardware queue then they'll 	 * get populated when we try to send another frame 	 * or complete a frame - so at most there'll be 	 * 32 non-AMPDU frames per node/TID anyway. 	 * 	 * Note that the hardware staging queue will limit 	 * how many frames in total we will have pushed into 	 * here. 	 * 	 * Later on, we'll want to push less frames into 	 * the TX FIFO since we don't want to necessarily 	 * fill tens or hundreds of milliseconds of potential 	 * frames. 	 * 	 * However, we need more frames right now because of 	 * how the MAC implements the frame scheduling policy. 	 * It only ungates a single FIFO entry at a time, 	 * and will run that until CHNTIME expires or the 	 * end of that FIFO entry descriptor list is reached. 	 * So for TDMA we suffer a big performance penalty - 	 * single TX FIFO entries mean the MAC only sends out 	 * one frame per DBA event, which turned out on average 	 * 6ms per TX frame. 	 * 	 * So, for aggregates it's okay - it'll push two at a 	 * time and this will just do them more efficiently. 	 * For non-aggregates it'll do 4 at a time, up to the 	 * non-aggr limit (non_aggr, which is 32.)  They should 	 * be time based rather than a hard count, but I also 	 * do need sleep. 	 */
 comment|/* 	 * Do some basic, basic batching to the hardware 	 * queue. 	 * 	 * If we have TX_BATCH_SIZE entries in the staging 	 * queue, then let's try to send them all in one hit. 	 * 	 * Ensure we don't push more than TX_BATCH_SIZE worth 	 * in, otherwise we end up draining 8 slots worth of 	 * 32 frames into the hardware queue and then we don't 	 * attempt to push more frames in until we empty the 	 * FIFO. 	 */
 if|if
 condition|(
@@ -2561,6 +2581,7 @@ argument_list|,
 name|ATH_ALQ_EDMA_TXSTATUS
 argument_list|)
 condition|)
+block|{
 name|if_ath_alq_post
 argument_list|(
 operator|&
@@ -2581,6 +2602,7 @@ operator|)
 name|txstatus
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* ATH_DEBUG_ALQ */

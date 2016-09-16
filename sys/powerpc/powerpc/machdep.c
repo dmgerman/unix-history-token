@@ -954,7 +954,11 @@ asm|__asm __volatile("or 6,6,6");
 comment|/* Set normal thread priority */
 argument|} }
 comment|/*  * Simple ddb(4) command/hack to view any SPR on the running CPU.  * Uses a trivial asm function to perform the mfspr, and rewrites the mfspr  * instruction each time.  * XXX: Since it uses code modification, it won't work if the kernel code pages  * are marked RO.  */
-argument|extern register_t get_spr(int);  DB_SHOW_COMMAND(spr, db_show_spr) { 	register_t spr; 	volatile uint32_t *p; 	int sprno
+argument|extern register_t get_spr(int);
+ifdef|#
+directive|ifdef
+name|DDB
+argument|DB_SHOW_COMMAND(spr, db_show_spr) { 	register_t spr; 	volatile uint32_t *p; 	int sprno
 argument_list|,
 argument|saved_sprno;  	if (!have_addr) 		return;  	saved_sprno = sprno = (intptr_t) addr; 	sprno = ((sprno&
 literal|0x3e0
@@ -972,6 +976,11 @@ argument|); 	__syncicache(get_spr, cacheline_size); 	spr = get_spr(sprno);  	db_
 literal|"SPR %d(%x): %lx\n"
 argument|, saved_sprno, saved_sprno, 	    (unsigned long)spr); }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

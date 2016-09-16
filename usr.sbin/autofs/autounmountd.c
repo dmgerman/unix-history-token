@@ -246,13 +246,13 @@ name|af
 operator|=
 name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|af
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

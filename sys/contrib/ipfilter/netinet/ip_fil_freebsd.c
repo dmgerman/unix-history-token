@@ -4843,13 +4843,15 @@ name|m
 operator|->
 name|m_next
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m0
 argument_list|,
 name|off
 argument_list|,
 name|len
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

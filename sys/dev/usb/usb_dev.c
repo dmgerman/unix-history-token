@@ -5106,7 +5106,7 @@ name|kn
 operator|->
 name|kn_hook
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|f
 operator|->
@@ -5281,7 +5281,7 @@ name|kn
 operator|->
 name|kn_hook
 expr_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|f
 operator|->
@@ -7375,7 +7375,7 @@ block|{
 name|int
 name|err
 decl_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 name|f
 operator|->

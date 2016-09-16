@@ -5068,7 +5068,7 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|mtx_assert
+name|USB_MTX_ASSERT
 argument_list|(
 operator|&
 name|sc
