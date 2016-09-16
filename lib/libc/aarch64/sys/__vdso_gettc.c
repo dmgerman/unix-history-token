@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libc_private.h"
 end_include
 
@@ -103,7 +109,7 @@ name|__vdso_gettc
 end_pragma
 
 begin_function
-name|u_int
+name|int
 name|__vdso_gettc
 parameter_list|(
 specifier|const
@@ -111,13 +117,28 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|th
+parameter_list|,
+name|u_int
+modifier|*
+name|tc
 parameter_list|)
 block|{
-name|uint64_t
-name|val
-decl_stmt|;
+if|if
+condition|(
+name|th
+operator|->
+name|th_algo
+operator|!=
+name|VDSO_TH_ALGO_ARM_GENTIM
+condition|)
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 asm|__asm __volatile("isb" : : : "memory");
-name|val
+operator|*
+name|tc
 operator|=
 name|th
 operator|->
@@ -133,7 +154,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|val
+literal|0
 operator|)
 return|;
 block|}

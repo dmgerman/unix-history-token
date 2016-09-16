@@ -109,6 +109,13 @@ name|VDSO_TH_ALGO_1
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|VDSO_TH_ALGO_2
+value|0x2
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -166,7 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|__vdso_gettc
 parameter_list|(
 specifier|const
@@ -174,6 +181,10 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|vdso_th
+parameter_list|,
+name|u_int
+modifier|*
+name|tc
 parameter_list|)
 function_decl|;
 end_function_decl
