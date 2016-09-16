@@ -13173,6 +13173,23 @@ parameter_list|)
 block|{
 comment|/* 	 * TODO: uncoment once FW really sets all these bits if 	 * (!mdev->caps.eth.rss_ind_tbl_cap || !mdev->caps.eth.csum_cap || 	 * !mdev->caps.eth.max_lso_cap || !mdev->caps.eth.vlan_cap || 	 * !(mdev->caps.gen.flags& MLX5_DEV_CAP_FLAG_SCQE_BRK_MOD)) return 	 * -ENOTSUPP; 	 */
 comment|/* TODO: add more must-to-have features */
+if|if
+condition|(
+name|MLX5_CAP_GEN
+argument_list|(
+name|mdev
+argument_list|,
+name|port_type
+argument_list|)
+operator|!=
+name|MLX5_CAP_PORT_TYPE_ETH
+condition|)
+return|return
+operator|(
+operator|-
+name|ENODEV
+operator|)
+return|;
 return|return
 operator|(
 literal|0
