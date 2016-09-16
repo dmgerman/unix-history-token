@@ -42816,6 +42816,22 @@ block|,
 name|T5FW_VERSION_BUILD
 init|=
 literal|0x00
+block|,
+name|T6FW_VERSION_MAJOR
+init|=
+literal|0x00
+block|,
+name|T6FW_VERSION_MINOR
+init|=
+literal|0x00
+block|,
+name|T6FW_VERSION_MICRO
+init|=
+literal|0x00
+block|,
+name|T6FW_VERSION_BUILD
+init|=
+literal|0x00
 block|, }
 enum|;
 end_enum
