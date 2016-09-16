@@ -1260,11 +1260,6 @@ modifier|*
 name|mbuf
 decl_stmt|;
 name|struct
-name|device
-modifier|*
-name|pdev
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -1465,11 +1460,6 @@ decl_stmt|;
 name|u32
 name|bf_buf_size
 decl_stmt|;
-name|struct
-name|device
-modifier|*
-name|pdev
-decl_stmt|;
 name|u32
 name|mkey_be
 decl_stmt|;
@@ -1562,11 +1552,6 @@ name|sq
 index|[
 name|MLX5E_MAX_TX_NUM_TC
 index|]
-decl_stmt|;
-name|struct
-name|device
-modifier|*
-name|pdev
 decl_stmt|;
 name|struct
 name|ifnet
