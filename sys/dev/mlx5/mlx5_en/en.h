@@ -1135,12 +1135,12 @@ name|struct
 name|mlx5_core_cq
 name|mcq
 decl_stmt|;
-name|struct
-name|mlx5e_channel
-modifier|*
-name|channel
-decl_stmt|;
 comment|/* control */
+name|struct
+name|mlx5e_priv
+modifier|*
+name|priv
+decl_stmt|;
 name|struct
 name|mlx5_wq_ctrl
 name|wq_ctrl
@@ -1397,6 +1397,11 @@ name|__iomem
 modifier|*
 name|uar_bf_map
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|u32
 name|sqn
 decl_stmt|;
@@ -1421,9 +1426,9 @@ name|mlx5_uar
 name|uar
 decl_stmt|;
 name|struct
-name|mlx5e_channel
+name|mlx5e_priv
 modifier|*
-name|channel
+name|priv
 decl_stmt|;
 name|int
 name|tc
