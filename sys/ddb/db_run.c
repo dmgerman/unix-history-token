@@ -79,20 +79,6 @@ directive|include
 file|<ddb/db_access.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|db_run_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|STEP_NONE
-value|0
-end_define
-
 begin_define
 define|#
 directive|define
@@ -134,6 +120,15 @@ directive|define
 name|STEP_COUNT
 value|6
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|db_run_mode
+init|=
+name|STEP_CONTINUE
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -508,10 +503,6 @@ argument_list|(
 literal|"Stepping aborted\n"
 argument_list|)
 expr_stmt|;
-name|db_run_mode
-operator|=
-name|STEP_NONE
-expr_stmt|;
 return|return
 operator|(
 name|true
@@ -760,10 +751,6 @@ return|;
 comment|/* continue */
 block|}
 block|}
-name|db_run_mode
-operator|=
-name|STEP_NONE
-expr_stmt|;
 return|return
 operator|(
 name|true
