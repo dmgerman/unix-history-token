@@ -183,9 +183,9 @@ name|pcb_ext
 decl_stmt|;
 comment|/* optional pcb extension */
 name|int
-name|pcb_psl
+name|pcb_waspsl
 decl_stmt|;
-comment|/* process status long */
+comment|/* unused padding for ABI and API compat */
 name|u_long
 name|pcb_vm86
 index|[
