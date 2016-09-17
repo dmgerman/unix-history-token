@@ -402,7 +402,7 @@ end_define
 begin_function
 specifier|static
 specifier|inline
-name|bool
+name|_Bool
 name|I_IS_UFS1
 parameter_list|(
 specifier|const
@@ -431,7 +431,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|bool
+name|_Bool
 name|I_IS_UFS2
 parameter_list|(
 specifier|const
