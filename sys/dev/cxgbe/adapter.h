@@ -952,6 +952,10 @@ decl_stmt|,
 modifier|*
 name|nm_rss
 decl_stmt|;
+name|int
+name|smt_idx
+decl_stmt|;
+comment|/* for convenience */
 name|uint16_t
 name|viid
 decl_stmt|;
