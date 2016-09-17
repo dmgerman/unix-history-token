@@ -1153,9 +1153,10 @@ name|dq_btime
 operator|=
 name|time_second
 operator|+
+name|ITOUMP
+argument_list|(
 name|ip
-operator|->
-name|i_ump
+argument_list|)
 operator|->
 name|um_btime
 index|[
@@ -1187,12 +1188,10 @@ name|uprintf
 argument_list|(
 literal|"\n%s: warning, %s disk quota exceeded\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -1314,12 +1313,10 @@ name|uprintf
 argument_list|(
 literal|"\n%s: write failed, %s disk limit reached\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -1379,9 +1376,10 @@ name|dq_btime
 operator|=
 name|time_second
 operator|+
+name|ITOUMP
+argument_list|(
 name|ip
-operator|->
-name|i_ump
+argument_list|)
 operator|->
 name|um_btime
 index|[
@@ -1455,12 +1453,10 @@ argument_list|(
 literal|"\n%s: write failed, %s "
 literal|"disk quota exceeded for too long\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -1889,9 +1885,10 @@ name|dq_itime
 operator|=
 name|time_second
 operator|+
+name|ITOUMP
+argument_list|(
 name|ip
-operator|->
-name|i_ump
+argument_list|)
 operator|->
 name|um_itime
 index|[
@@ -1923,12 +1920,10 @@ name|uprintf
 argument_list|(
 literal|"\n%s: warning, %s inode quota exceeded\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -2050,12 +2045,10 @@ name|uprintf
 argument_list|(
 literal|"\n%s: write failed, %s inode limit reached\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -2115,9 +2108,10 @@ name|dq_itime
 operator|=
 name|time_second
 operator|+
+name|ITOUMP
+argument_list|(
 name|ip
-operator|->
-name|i_ump
+argument_list|)
 operator|->
 name|um_itime
 index|[
@@ -2191,12 +2185,10 @@ argument_list|(
 literal|"\n%s: write failed, %s "
 literal|"inode quota exceeded for too long\n"
 argument_list|,
-name|ITOV
+name|ITOVFS
 argument_list|(
 name|ip
 argument_list|)
-operator|->
-name|v_mount
 operator|->
 name|mnt_stat
 operator|.
@@ -2259,24 +2251,29 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
-init|=
-name|ip
-operator|->
-name|i_ump
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|vp
-init|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ump
+operator|=
+name|ITOUMP
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+name|vp
+operator|=
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Disk quotas must be turned off for system files.  Currently 	 * these are snapshots and quota files. 	 */
 if|if
 condition|(
