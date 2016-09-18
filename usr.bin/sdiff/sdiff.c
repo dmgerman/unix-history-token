@@ -2411,7 +2411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When sdiff/zsdiff detects a binary file as input, executes them with  * diff/zdiff to maintain the same behavior as GNU sdiff with binary input.  */
+comment|/*  * When sdiff detects a binary file as input, executes them with  * diff to maintain the same behavior as GNU sdiff with binary input.  */
 end_comment
 
 begin_function
