@@ -3134,6 +3134,11 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|ifp
@@ -3153,6 +3158,7 @@ operator|->
 name|if_hw_tsomaxsegsize
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Inform the upper layer about the long frame support. */
 name|ifp
 operator|->
