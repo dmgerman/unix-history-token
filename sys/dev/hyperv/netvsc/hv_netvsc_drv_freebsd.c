@@ -14898,6 +14898,34 @@ name|back
 goto|;
 block|}
 comment|/* 	 * Configure RSS key and indirect table _after_ all sub-channels 	 * are allocated. 	 */
+if|if
+condition|(
+operator|!
+name|device_is_attached
+argument_list|(
+name|sc
+operator|->
+name|hn_dev
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Setup default RSS key and indirect table for the 		 * attach DEVMETHOD.  They can be altered later on, 		 * so don't mess them up once this interface is attached. 		 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"setup default RSS key and "
+literal|"indirect table\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Setup default RSS key. */
 name|memcpy
 argument_list|(
@@ -14941,6 +14969,7 @@ name|i
 operator|%
 name|nchan
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|hn_rndis_conf_rss
