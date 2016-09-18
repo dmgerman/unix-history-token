@@ -297,5 +297,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _LOADER_EFILIB_H */
+end_comment
+
 end_unit
 
