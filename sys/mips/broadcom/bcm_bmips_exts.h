@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MIPS_BROADCOM_BCM_MIPS_EXTS_H_
+name|_MIPS_BROADCOM_BCM_BMIPS_EXTS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MIPS_BROADCOM_BCM_MIPS_EXTS_H_
+name|_MIPS_BROADCOM_BCM_BMIPS_EXTS_H_
 end_define
 
 begin_include
@@ -32,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_COP_0_BCMCFG
+name|BMIPS_COP_0_BCMCFG
 value|22
 end_define
 
@@ -43,7 +43,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 parameter_list|(
 name|n
 parameter_list|,
@@ -52,11 +52,11 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|static __inline uint32_t					\ bcm_mips_rd_ ## n(void)						\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ bcm_mips_wr_ ## n(uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
+value|static __inline uint32_t					\ bcm_bmips_rd_ ## n(void)					\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ bcm_bmips_wr_ ## n(uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
 end_define
 
 begin_expr_stmt
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 argument_list|(
 name|pllcfg1
 argument_list|,
@@ -68,7 +68,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 argument_list|(
 name|pllcfg2
 argument_list|,
@@ -80,7 +80,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 argument_list|(
 name|clksync
 argument_list|,
@@ -92,7 +92,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 argument_list|(
 name|pllcfg3
 argument_list|,
@@ -104,7 +104,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|BCM_MIPS_RW32_COP0_SEL
+name|BCM_BMIPS_RW32_COP0_SEL
 argument_list|(
 name|rstcfg
 argument_list|,
@@ -126,14 +126,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_MC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG1_MC_SHIFT
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_MC_MASK
+name|BMIPS_BCMCFG_PLLCFG1_MC_MASK
 value|0xFFFFFC00
 end_define
 
@@ -144,14 +144,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_BC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG1_BC_SHIFT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_BC_MASK
+name|BMIPS_BCMCFG_PLLCFG1_BC_MASK
 value|0x000003E0
 end_define
 
@@ -162,14 +162,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_PC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG1_PC_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG1_PC_MASK
+name|BMIPS_BCMCFG_PLLCFG1_PC_MASK
 value|0x0000001F
 end_define
 
@@ -184,7 +184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_CR
+name|BMIPS_BCMCFG_PLLCFG2_CR
 value|(1<<23)
 end_define
 
@@ -195,14 +195,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_UC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG2_UC_SHIFT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_UC_MASK
+name|BMIPS_BCMCFG_PLLCFG2_UC_MASK
 value|0x007F8000
 end_define
 
@@ -213,21 +213,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_IC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG2_IC_SHIFT
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_IC_MASK
+name|BMIPS_BCMCFG_PLLCFG2_IC_MASK
 value|0x00007F80
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_BE
+name|BMIPS_BCMCFG_PLLCFG2_BE
 value|(1<<6)
 end_define
 
@@ -238,7 +238,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_UE
+name|BMIPS_BCMCFG_PLLCFG2_UE
 value|(1<<5)
 end_define
 
@@ -249,7 +249,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_IE
+name|BMIPS_BCMCFG_PLLCFG2_IE
 value|(1<<4)
 end_define
 
@@ -260,7 +260,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_CA
+name|BMIPS_BCMCFG_PLLCFG2_CA
 value|(1<<3)
 end_define
 
@@ -271,7 +271,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_CF
+name|BMIPS_BCMCFG_PLLCFG2_CF
 value|(1<<2)
 end_define
 
@@ -282,7 +282,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_CI
+name|BMIPS_BCMCFG_PLLCFG2_CI
 value|(1<<1)
 end_define
 
@@ -293,7 +293,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG2_CC
+name|BMIPS_BCMCFG_PLLCFG2_CC
 value|(1<<0)
 end_define
 
@@ -312,14 +312,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_CLKSYNC_CH_SHIFT
+name|BMIPS_BCMCFG_CLKSYNC_CH_SHIFT
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_CLKSYNC_CH_MASK
+name|BMIPS_BCMCFG_CLKSYNC_CH_MASK
 value|0xFFFF0000
 end_define
 
@@ -330,14 +330,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_CLKSYNC_CL_SHIFT
+name|BMIPS_BCMCFG_CLKSYNC_CL_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_CLKSYNC_CL_MASK
+name|BMIPS_BCMCFG_CLKSYNC_CL_MASK
 value|0x0000FFFF
 end_define
 
@@ -352,21 +352,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG3_AR_SHIFT
+name|BMIPS_BCMCFG_PLLCFG3_AR_SHIFT
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG3_AR_MASK
+name|BMIPS_BCMCFG_PLLCFG3_AR_MASK
 value|0x01800000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG3_SM
+name|BMIPS_BCMCFG_PLLCFG3_SM
 value|(1<<22)
 end_define
 
@@ -381,14 +381,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG3_IC_SHIFT
+name|BMIPS_BCMCFG_PLLCFG3_IC_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_PLLCFG3_IC_MASK
+name|BMIPS_BCMCFG_PLLCFG3_IC_MASK
 value|0x003FFFFF
 end_define
 
@@ -399,7 +399,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_SR
+name|BMIPS_BCMCFG_RSTCFG_SR
 value|(1<<18)
 end_define
 
@@ -410,7 +410,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_DT
+name|BMIPS_BCMCFG_RSTCFG_DT
 value|(1<<16)
 end_define
 
@@ -425,63 +425,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_RS_SHIFT
+name|BMIPS_BCMCFG_RSTCFG_RS_SHIFT
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_RS_MASK
+name|BMIPS_BCMCFG_RSTCFG_RS_MASK
 value|0x00001F00
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_OTHER
+name|BMIPS_BCMCFG_RST_OTHER
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_SH
+name|BMIPS_BCMCFG_RST_SH
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_SS
+name|BMIPS_BCMCFG_RST_SS
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_EJTAG
+name|BMIPS_BCMCFG_RST_EJTAG
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_WDOG
+name|BMIPS_BCMCFG_RST_WDOG
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RST_CRC
+name|BMIPS_BCMCFG_RST_CRC
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_CR
+name|BMIPS_BCMCFG_RSTCFG_CR
 value|(1<<7)
 end_define
 
@@ -496,21 +496,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_WD_SHIFT
+name|BMIPS_BCMCFG_RSTCFG_WD_SHIFT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_WD_MASK
+name|BMIPS_BCMCFG_RSTCFG_WD_MASK
 value|0x00000078
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_SS
+name|BMIPS_BCMCFG_RSTCFG_SS
 value|(1<<2)
 end_define
 
@@ -521,7 +521,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_SH
+name|BMIPS_BCMCFG_RSTCFG_SH
 value|(1<<1)
 end_define
 
@@ -532,7 +532,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_BCMCFG_RSTCFG_BR
+name|BMIPS_BCMCFG_RSTCFG_BR
 value|(1<<0)
 end_define
 
@@ -546,7 +546,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MIPS_BROADCOM_BCM_MIPS_EXTS_H_ */
+comment|/* _MIPS_BROADCOM_BCM_BMIPS_EXTS_H_ */
 end_comment
 
 end_unit
