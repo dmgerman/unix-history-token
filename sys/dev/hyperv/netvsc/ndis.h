@@ -701,6 +701,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NDIS_RSS_FLAG_NONE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDIS_RSS_FLAG_BCPU_UNCHG
 value|0x0001
 end_define
