@@ -1756,6 +1756,11 @@ specifier|static
 name|int
 name|iwm_get_noise
 parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|,
 specifier|const
 name|struct
 name|iwm_mvm_statistics_rx_non_phy
@@ -13855,6 +13860,11 @@ specifier|static
 name|int
 name|iwm_get_noise
 parameter_list|(
+name|struct
+name|iwm_softc
+modifier|*
+name|sc
+parameter_list|,
 specifier|const
 name|struct
 name|iwm_mvm_statistics_rx_non_phy
@@ -13907,6 +13917,21 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_RECV
+argument_list|,
+literal|"%s: i=%d, noise=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|,
+name|noise
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|noise
@@ -13921,25 +13946,37 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_RECV
+argument_list|,
+literal|"%s: nbant=%d, total=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|nbant
+argument_list|,
+name|total
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* There should be at least one antenna but check anyway. */
+block|return (nbant == 0) ? -127 : (total / nbant) - 107;
+else|#
+directive|else
+comment|/* For now, just hard-code it to -96 to be safe */
 return|return
 operator|(
-name|nbant
-operator|==
-literal|0
-operator|)
-condition|?
 operator|-
-literal|127
-else|:
-operator|(
-name|total
-operator|/
-name|nbant
+literal|96
 operator|)
-operator|-
-literal|107
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -14235,29 +14272,37 @@ name|phy_info
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Note: RSSI is absolute (ie a -ve value) */
+if|if
+condition|(
 name|rssi
-operator|=
-operator|(
-literal|0
-operator|-
+operator|<
 name|IWM_MIN_DBM
-operator|)
-operator|+
-name|rssi
-expr_stmt|;
-comment|/* normalize */
+condition|)
 name|rssi
 operator|=
-name|MIN
-argument_list|(
+name|IWM_MIN_DBM
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|rssi
-argument_list|,
+operator|>
+name|IWM_MAX_DBM
+condition|)
+name|rssi
+operator|=
+name|IWM_MAX_DBM
+expr_stmt|;
+comment|/* Map it to relative value */
+name|rssi
+operator|=
+name|rssi
+operator|-
 name|sc
 operator|->
-name|sc_max_rssi
-argument_list|)
+name|sc_noise
 expr_stmt|;
-comment|/* clip to max. 100% */
 comment|/* replenish ring for the buffer we're going to feed to the sharks */
 if|if
 condition|(
@@ -14290,6 +14335,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_RECV
+argument_list|,
+literal|"%s: rssi=%d, noise=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rssi
+argument_list|,
+name|sc
+operator|->
+name|sc_noise
+argument_list|)
+expr_stmt|;
 name|ni
 operator|=
 name|ieee80211_find_rxnode
@@ -14410,15 +14472,14 @@ name|IEEE80211_CHAN_5GHZ
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* rssi is in 1/2db units */
 name|rxs
 operator|.
 name|rssi
 operator|=
 name|rssi
-operator|-
-name|sc
-operator|->
-name|sc_noise
+operator|*
+literal|2
 expr_stmt|;
 name|rxs
 operator|.
@@ -24497,6 +24558,8 @@ name|sc_noise
 operator|=
 name|iwm_get_noise
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|stats
 operator|->
@@ -27412,6 +27475,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Default noise floor */
+name|sc
+operator|->
+name|sc_noise
+operator|=
+operator|-
+literal|96
+expr_stmt|;
 comment|/* Max RSSI */
 name|sc
 operator|->
