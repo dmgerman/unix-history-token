@@ -37,6 +37,17 @@ directive|include
 file|<sys/capsicum.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/capabilities.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -677,11 +688,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|1001510
 name|unsigned
 name|long
 name|cmd
@@ -689,8 +695,6 @@ decl_stmt|;
 name|cap_rights_t
 name|rights
 decl_stmt|;
-endif|#
-directive|endif
 name|includes
 operator|=
 name|sl_init
@@ -830,11 +834,6 @@ argument_list|,
 literal|"unable to open '/'"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|1001510
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -1067,8 +1066,6 @@ argument_list|,
 literal|"unable to enter capability mode"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
