@@ -63,6 +63,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<efi.h>
 end_include
 
@@ -185,10 +197,16 @@ name|file_format
 name|amd64_elf
 init|=
 block|{
+operator|.
+name|l_load
+operator|=
 name|elf64_loadfile
 block|,
+operator|.
+name|l_exec
+operator|=
 name|elf64_exec
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -199,10 +217,16 @@ name|file_format
 name|amd64_elf_obj
 init|=
 block|{
+operator|.
+name|l_load
+operator|=
 name|elf64_obj_loadfile
 block|,
+operator|.
+name|l_exec
+operator|=
 name|elf64_obj_exec
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -225,58 +249,9 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PG_V
-value|0x001
-end_define
-
-begin_define
-define|#
-directive|define
-name|PG_RW
-value|0x002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PG_U
-value|0x004
-end_define
-
-begin_define
-define|#
-directive|define
-name|PG_PS
-value|0x080
-end_define
-
-begin_typedef
-typedef|typedef
-name|u_int64_t
-name|p4_entry_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int64_t
-name|p3_entry_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int64_t
-name|p2_entry_t
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|static
-name|p4_entry_t
+name|pml4_entry_t
 modifier|*
 name|PT4
 decl_stmt|;
@@ -284,7 +259,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|p3_entry_t
+name|pdp_entry_t
 modifier|*
 name|PT3
 decl_stmt|;
@@ -292,7 +267,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|p2_entry_t
+name|pd_entry_t
 modifier|*
 name|PT2
 decl_stmt|;
@@ -319,7 +294,7 @@ parameter_list|,
 name|uint64_t
 name|modulep
 parameter_list|,
-name|p4_entry_t
+name|pml4_entry_t
 modifier|*
 name|pagetable
 parameter_list|,
@@ -757,7 +732,7 @@ expr_stmt|;
 name|PT4
 operator|=
 operator|(
-name|p4_entry_t
+name|pml4_entry_t
 operator|*
 operator|)
 literal|0x0000000040000000
@@ -829,7 +804,7 @@ name|i
 index|]
 operator|=
 operator|(
-name|p4_entry_t
+name|pml4_entry_t
 operator|)
 name|PT3
 expr_stmt|;
@@ -851,7 +826,7 @@ name|i
 index|]
 operator|=
 operator|(
-name|p3_entry_t
+name|pdp_entry_t
 operator|)
 name|PT2
 expr_stmt|;
