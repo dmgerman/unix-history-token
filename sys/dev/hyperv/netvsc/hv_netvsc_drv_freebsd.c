@@ -9962,6 +9962,12 @@ condition|)
 goto|goto
 name|back
 goto|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_HAS_RSSKEY
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -10107,6 +10113,12 @@ condition|)
 goto|goto
 name|back
 goto|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_HAS_RSSIND
+expr_stmt|;
 name|hn_rss_ind_fixup
 argument_list|(
 name|sc
@@ -15659,33 +15671,31 @@ block|}
 comment|/* 	 * Configure RSS key and indirect table _after_ all sub-channels 	 * are allocated. 	 */
 if|if
 condition|(
-operator|!
-name|device_is_attached
-argument_list|(
+operator|(
 name|sc
 operator|->
-name|hn_dev
-argument_list|)
+name|hn_flags
+operator|&
+name|HN_FLAG_HAS_RSSKEY
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 		 * Setup default RSS key and indirect table for the 		 * attach DEVMETHOD.  They can be altered later on, 		 * so don't mess them up once this interface is attached. 		 */
+comment|/* 		 * RSS key is not set yet; set it to the default RSS key. 		 */
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|if_printf
 argument_list|(
 name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"setup default RSS key and "
-literal|"indirect table\n"
+literal|"setup default RSS key\n"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Setup default RSS key. */
 name|memcpy
 argument_list|(
 name|rss
@@ -15702,7 +15712,43 @@ name|rss_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Setup default RSS indirect table. */
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_HAS_RSSKEY
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|hn_flags
+operator|&
+name|HN_FLAG_HAS_RSSIND
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * RSS indirect table is not set yet; set it up in round- 		 * robin fashion. 		 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"setup default RSS indirect "
+literal|"table\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* TODO: Take ndis_rss_caps.ndis_nind into account. */
 for|for
 control|(
@@ -15727,6 +15773,12 @@ operator|=
 name|i
 operator|%
 name|nchan
+expr_stmt|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_HAS_RSSIND
 expr_stmt|;
 block|}
 else|else
