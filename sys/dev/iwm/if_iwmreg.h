@@ -12831,17 +12831,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* Maximal number of channels to scan */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWM_MAX_NUM_SCAN_CHANNELS
-value|0x24
-end_define
-
-begin_comment
 comment|/**  * iwm_scan_schedule_lmac - schedule of scan offload  * @delay:		delay between iterations, in seconds.  * @iterations:		num of scan iterations  * @full_scan_mul:	number of partial scans before each full scan  */
 end_comment
 

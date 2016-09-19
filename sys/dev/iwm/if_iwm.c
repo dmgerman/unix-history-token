@@ -2774,6 +2774,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IWM_DEFAULT_SCAN_CHANNELS
+value|40
+end_define
+
 begin_comment
 comment|/* iwlwifi: iwl-drv.c */
 end_comment
@@ -3115,7 +3122,7 @@ name|sc
 operator|->
 name|sc_capa_n_scan_channels
 operator|=
-name|IWM_MAX_NUM_SCAN_CHANNELS
+name|IWM_DEFAULT_SCAN_CHANNELS
 expr_stmt|;
 name|memset
 argument_list|(
