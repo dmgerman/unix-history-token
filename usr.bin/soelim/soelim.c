@@ -45,7 +45,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/capabilities.h>
+file|<sys/capability.h>
 end_include
 
 begin_endif
