@@ -4124,7 +4124,7 @@ expr_stmt|;
 if|if
 condition|(
 name|idx
-operator|>
+operator|>=
 name|howmany
 argument_list|(
 name|IWM_NUM_UCODE_TLV_CAPA
