@@ -27045,9 +27045,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ret
-operator|<
-literal|0
 condition|)
 block|{
 name|device_printf
