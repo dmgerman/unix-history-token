@@ -9383,8 +9383,7 @@ begin_struct
 struct|struct
 name|iwm_sf_cfg_cmd
 block|{
-name|enum
-name|iwm_sf_state
+name|uint32_t
 name|state
 decl_stmt|;
 name|uint32_t

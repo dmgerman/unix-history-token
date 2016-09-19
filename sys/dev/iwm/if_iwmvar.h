@@ -562,9 +562,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-name|int
-name|wantresp
-decl_stmt|;
 block|}
 struct|;
 end_struct
