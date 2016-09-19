@@ -535,6 +535,22 @@ end_function
 
 begin_function
 specifier|static
+name|bool
+name|xen_pv_lapic_is_x2apic
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|xen_pv_lapic_eoi
 parameter_list|(
@@ -1174,6 +1190,11 @@ operator|.
 name|xapic_mode
 operator|=
 name|xen_pv_lapic_disable
+block|,
+operator|.
+name|is_x2apic
+operator|=
+name|xen_pv_lapic_is_x2apic
 block|,
 operator|.
 name|setup
