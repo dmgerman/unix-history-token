@@ -2760,14 +2760,6 @@ operator|->
 name|fw_count
 operator|++
 expr_stmt|;
-name|fws
-operator|->
-name|fw_totlen
-operator|+=
-name|fwone
-operator|->
-name|fws_len
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -10479,13 +10471,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|data
-operator|->
-name|calib_version
-operator|=
-literal|255
-expr_stmt|;
-comment|/* TODO: 					this value will prevent some checks from 					failing, we need to check if this 					field is still needed, and if it does, 					where is it in the NVM */
 return|return
 literal|0
 return|;
