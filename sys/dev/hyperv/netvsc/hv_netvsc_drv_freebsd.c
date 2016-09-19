@@ -2314,6 +2314,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|nchan
+operator|>
+literal|1
+argument_list|,
+operator|(
+literal|"invalid # of channels %d"
+operator|,
+name|nchan
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check indirect table to make sure that all channels in it 	 * can be used. 	 */
 for|for
 control|(
@@ -9949,6 +9962,15 @@ condition|)
 goto|goto
 name|back
 goto|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_rx_ring_inuse
+operator|>
+literal|1
+condition|)
+block|{
 name|error
 operator|=
 name|hn_rss_reconfig
@@ -9956,6 +9978,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Not RSS capable, at least for now; just save the RSS key. */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|back
 label|:
 name|HN_UNLOCK
@@ -10029,6 +10060,24 @@ condition|)
 goto|goto
 name|back
 goto|;
+comment|/* 	 * Don't allow RSS indirect table change, if this interface is not 	 * RSS capable currently. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_rx_ring_inuse
+operator|==
+literal|1
+condition|)
+block|{
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|back
+goto|;
+block|}
 name|error
 operator|=
 name|SYSCTL_IN
