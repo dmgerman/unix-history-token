@@ -24596,9 +24596,6 @@ case|case
 name|IWM_TIME_EVENT_CMD
 case|:
 case|case
-name|IWM_SCAN_REQUEST_CMD
-case|:
-case|case
 name|IWM_WIDE_ID
 argument_list|(
 name|IWM_ALWAYS_LONG_GROUP
