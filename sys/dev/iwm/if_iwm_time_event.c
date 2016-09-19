@@ -842,7 +842,7 @@ name|time_cmd
 operator|.
 name|policy
 operator|=
-name|htole32
+name|htole16
 argument_list|(
 name|IWM_TE_V2_NOTIF_HOST_EVENT_START
 operator||
