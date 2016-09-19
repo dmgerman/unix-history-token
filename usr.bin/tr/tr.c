@@ -64,13 +64,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/capsicum.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include

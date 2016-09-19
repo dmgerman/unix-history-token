@@ -73,13 +73,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capsicum.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
