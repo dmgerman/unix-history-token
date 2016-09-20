@@ -37,33 +37,13 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|1100014
+literal|1001511
 end_if
 
 begin_include
 include|#
 directive|include
 file|<sys/capsicum.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|HAVE_CAPSICUM
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__FreeBSD_version
-operator|>=
-literal|1000000
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<sys/capability.h>
 end_include
 
 begin_define
