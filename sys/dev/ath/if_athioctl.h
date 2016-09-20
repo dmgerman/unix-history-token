@@ -1044,7 +1044,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TX_RADIOTAP_PRESENT
-value|(		\ 	(1<< IEEE80211_RADIOTAP_TSFT)		| \ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_XCHANNEL)	| \ 	0)
+value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_DBM_TX_POWER)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	(1<< IEEE80211_RADIOTAP_XCHANNEL)	| \ 	0)
 end_define
 
 begin_struct
@@ -1054,9 +1054,6 @@ block|{
 name|struct
 name|ieee80211_radiotap_header
 name|wt_ihdr
-decl_stmt|;
-name|u_int64_t
-name|wt_tsf
 decl_stmt|;
 name|u_int8_t
 name|wt_flags
