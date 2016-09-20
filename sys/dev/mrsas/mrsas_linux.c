@@ -34,15 +34,31 @@ if|#
 directive|if
 operator|(
 name|__FreeBSD_version
-operator|>
-literal|900000
+operator|>=
+literal|1001511
 operator|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|900000
+operator|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/capabilty.h>
 end_include
 
 begin_endif
