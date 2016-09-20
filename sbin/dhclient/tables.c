@@ -3025,6 +3025,8 @@ name|DHO_STREETTALK_SERVER
 block|,
 name|DHO_STREETTALK_DA_SERVER
 block|,
+name|DHO_DHCP_USER_CLASS_ID
+block|,
 name|DHO_DOMAIN_SEARCH
 block|,
 comment|/* Presently-undefined options... */
