@@ -3232,9 +3232,15 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|close
+name|cap_rights_limit
 argument_list|(
 name|STDIN_FILENO
+argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cap_rights_init
