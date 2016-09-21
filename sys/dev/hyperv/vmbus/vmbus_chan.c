@@ -1163,6 +1163,23 @@ literal|"recv bufring size is not multiple page"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|cbr
+operator|->
+name|cbr_paddr
+operator|&
+name|PAGE_MASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"bufring is not page aligned"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Zero out the TX/RX bufrings, in case that they were used before. 	 */
 name|memset
 argument_list|(
