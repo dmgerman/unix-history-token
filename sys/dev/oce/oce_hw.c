@@ -1492,6 +1492,22 @@ name|capab_flags
 operator||=
 name|MBX_RX_IFACE_FLAGS_MULTICAST
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|enable_hwlro
+condition|)
+block|{
+name|capab_flags
+operator||=
+name|MBX_RX_IFACE_FLAGS_LRO
+expr_stmt|;
+name|capab_en_flags
+operator||=
+name|MBX_RX_IFACE_FLAGS_LRO
+expr_stmt|;
+block|}
 comment|/* enable capabilities controlled via driver startup parameters */
 if|if
 condition|(
