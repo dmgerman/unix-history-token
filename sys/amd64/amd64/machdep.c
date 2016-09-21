@@ -810,7 +810,7 @@ end_comment
 
 begin_decl_stmt
 name|vm_paddr_t
-name|efi_systbl
+name|efi_systbl_phys
 decl_stmt|;
 end_decl_stmt
 
@@ -7076,7 +7076,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|efi_systbl
+name|efi_systbl_phys
 operator|=
 name|MD_FETCH
 argument_list|(
