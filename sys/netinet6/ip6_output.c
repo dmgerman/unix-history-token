@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_llatbl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -2360,6 +2366,26 @@ else|else
 block|{
 if|if
 condition|(
+name|ro
+operator|->
+name|ro_lle
+condition|)
+name|LLE_FREE
+argument_list|(
+name|ro
+operator|->
+name|ro_lle
+argument_list|)
+expr_stmt|;
+comment|/* zeros ro_lle */
+name|ro
+operator|->
+name|ro_lle
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|fwd_tag
 operator|==
 name|NULL
@@ -3456,6 +3482,26 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Redo the routing table lookup. */
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_lle
+condition|)
+name|LLE_FREE
+argument_list|(
+name|ro
+operator|->
+name|ro_lle
+argument_list|)
+expr_stmt|;
+comment|/* zeros ro_lle */
+name|ro
+operator|->
+name|ro_lle
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 comment|/* See if fib was changed by packet filter. */
@@ -3490,6 +3536,26 @@ expr_stmt|;
 name|needfiblookup
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_lle
+condition|)
+name|LLE_FREE
+argument_list|(
+name|ro
+operator|->
+name|ro_lle
+argument_list|)
+expr_stmt|;
+comment|/* zeros ro_lle */
+name|ro
+operator|->
+name|ro_lle
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
