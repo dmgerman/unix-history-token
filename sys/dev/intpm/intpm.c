@@ -4600,7 +4600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|DRIVER_MODULE_ORDERED
 argument_list|(
 name|intsmb
 argument_list|,
@@ -4613,6 +4613,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
