@@ -9070,7 +9070,7 @@ argument_list|)
 block|,
 name|FIELD1
 argument_list|(
-literal|"Inflifght:"
+literal|"Inflight:"
 argument_list|,
 literal|47
 argument_list|)
