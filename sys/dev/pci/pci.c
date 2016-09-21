@@ -19852,7 +19852,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator|==
-literal|0xfff
+literal|0xffff
 condition|)
 continue|continue;
 comment|/* 			 * Found a valid function.  Check if a 			 * device_t for this device already exists. 			 */
