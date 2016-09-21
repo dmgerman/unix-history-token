@@ -603,18 +603,39 @@ break|break;
 case|case
 literal|0x43851002
 case|:
-case|case
-literal|0x780b1022
-case|:
-comment|/* AMD Hudson */
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AMD SB600/7xx/8xx SMBus Controller"
+literal|"AMD SB600/7xx/8xx/9xx SMBus Controller"
 argument_list|)
 expr_stmt|;
-comment|/* XXX Maybe force polling right here? */
+break|break;
+case|case
+literal|0x780b1022
+case|:
+comment|/* AMD FCH */
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|0x40
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD FCH SMBus Controller"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 return|return
