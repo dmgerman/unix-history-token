@@ -126,6 +126,28 @@ begin_comment
 comment|/* query tracing status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PROC_TRAPCAP_CTL
+value|9
+end_define
+
+begin_comment
+comment|/* trap capability errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_TRAPCAP_STATUS
+value|10
+end_define
+
+begin_comment
+comment|/* query trap capability status */
+end_comment
+
 begin_comment
 comment|/* Operations for PROC_SPROTECT (passed in integer arg). */
 end_comment
@@ -359,6 +381,20 @@ define|#
 directive|define
 name|PROC_TRACE_CTL_DISABLE_EXEC
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_TRAPCAP_CTL_ENABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_TRAPCAP_CTL_DISABLE
+value|2
 end_define
 
 begin_ifndef

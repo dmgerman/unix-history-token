@@ -3605,6 +3605,17 @@ begin_comment
 comment|/* SIGSTOP from PT_ATTACH not yet handled. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P2_TRAPCAP
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* SIGTRAP on ENOTCAPABLE */
+end_comment
+
 begin_comment
 comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
 end_comment

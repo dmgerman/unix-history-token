@@ -17284,6 +17284,9 @@ case|:
 case|case
 name|PROC_TRACE_CTL
 case|:
+case|case
+name|PROC_TRAPCAP_CTL
+case|:
 name|error
 operator|=
 name|copyin
@@ -17471,6 +17474,9 @@ break|break;
 case|case
 name|PROC_TRACE_STATUS
 case|:
+case|case
+name|PROC_TRAPCAP_STATUS
+case|:
 name|data
 operator|=
 operator|&
@@ -17585,6 +17591,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PROC_TRACE_STATUS
+case|:
+case|case
+name|PROC_TRAPCAP_STATUS
 case|:
 if|if
 condition|(

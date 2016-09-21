@@ -147,6 +147,33 @@ directive|include
 file|<vm/vm.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|trap_enotcap
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trap_enotcap
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|trap_enotcap
+argument_list|,
+literal|0
+argument_list|,
+literal|"Deliver SIGTRAP on ENOTCAPABLE"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
