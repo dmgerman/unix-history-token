@@ -4613,7 +4613,21 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"Physical address reg: 0x%016lx\n"
+literal|"Physical address reg (read):  0x%016lx\n"
+argument_list|,
+name|phys
+argument_list|)
+expr_stmt|;
+name|phys
+operator|=
+name|arm64_address_translate_s1e1w
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"Physical address reg (write): 0x%016lx\n"
 argument_list|,
 name|phys
 argument_list|)
