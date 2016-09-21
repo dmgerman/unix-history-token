@@ -1292,9 +1292,6 @@ directive|endif
 case|case
 literal|0x43851002
 case|:
-case|case
-literal|0x780b1022
-case|:
 if|if
 condition|(
 name|pci_get_revid
@@ -1304,6 +1301,16 @@ argument_list|)
 operator|>=
 literal|0x40
 condition|)
+name|sc
+operator|->
+name|sb8xx
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|0x780b1022
+case|:
 name|sc
 operator|->
 name|sb8xx
