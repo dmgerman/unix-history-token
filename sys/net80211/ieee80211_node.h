@@ -173,6 +173,12 @@ name|ieee80211vap
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ieee80211_scanparams
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Information element ``blob''.  We use this structure  * to capture management frame payloads that need to be  * retained.  Information elements within the payload that  * we need to consult have references recorded.  */
 end_comment
@@ -1273,6 +1279,23 @@ name|ieee80211_ibss_merge_check
 parameter_list|(
 name|struct
 name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ieee80211_ibss_node_check_new
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_scanparams
 modifier|*
 parameter_list|)
 function_decl|;

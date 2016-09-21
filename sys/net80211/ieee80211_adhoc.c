@@ -3182,7 +3182,17 @@ name|ni_macaddr
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Create a new entry in the neighbor table. 				 */
+comment|/* 				 * Create a new entry in the neighbor table. 				 * 				 * XXX TODO: 				 * 				 * Here we're not scanning; so if we have an 				 * SSID then make sure it matches our SSID. 				 * Otherwise this code will match on all IBSS 				 * beacons/probe requests for all SSIDs, 				 * filling the node table with nodes that 				 * aren't ours. 				 */
+if|if
+condition|(
+name|ieee80211_ibss_node_check_new
+argument_list|(
+name|ni
+argument_list|,
+operator|&
+name|scan
+argument_list|)
+condition|)
 name|ni
 operator|=
 name|ieee80211_add_neighbor
@@ -3194,6 +3204,11 @@ argument_list|,
 operator|&
 name|scan
 argument_list|)
+expr_stmt|;
+else|else
+name|ni
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 elseif|else
