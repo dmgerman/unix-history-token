@@ -24,224 +24,224 @@ end_include
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_A
+name|TEGRA_GPIO_PORT_A
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_B
+name|TEGRA_GPIO_PORT_B
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_C
+name|TEGRA_GPIO_PORT_C
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_D
+name|TEGRA_GPIO_PORT_D
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_E
+name|TEGRA_GPIO_PORT_E
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_F
+name|TEGRA_GPIO_PORT_F
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_G
+name|TEGRA_GPIO_PORT_G
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_H
+name|TEGRA_GPIO_PORT_H
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_I
+name|TEGRA_GPIO_PORT_I
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_J
+name|TEGRA_GPIO_PORT_J
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_K
+name|TEGRA_GPIO_PORT_K
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_L
+name|TEGRA_GPIO_PORT_L
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_M
+name|TEGRA_GPIO_PORT_M
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_N
+name|TEGRA_GPIO_PORT_N
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_O
+name|TEGRA_GPIO_PORT_O
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_P
+name|TEGRA_GPIO_PORT_P
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_Q
+name|TEGRA_GPIO_PORT_Q
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_R
+name|TEGRA_GPIO_PORT_R
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_S
+name|TEGRA_GPIO_PORT_S
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_T
+name|TEGRA_GPIO_PORT_T
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_U
+name|TEGRA_GPIO_PORT_U
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_V
+name|TEGRA_GPIO_PORT_V
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_W
+name|TEGRA_GPIO_PORT_W
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_X
+name|TEGRA_GPIO_PORT_X
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_Y
+name|TEGRA_GPIO_PORT_Y
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_Z
+name|TEGRA_GPIO_PORT_Z
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_AA
+name|TEGRA_GPIO_PORT_AA
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_BB
+name|TEGRA_GPIO_PORT_BB
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_CC
+name|TEGRA_GPIO_PORT_CC
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_DD
+name|TEGRA_GPIO_PORT_DD
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_EE
+name|TEGRA_GPIO_PORT_EE
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|TEGRA_GPIO_BANK_ID_FF
+name|TEGRA_GPIO_PORT_FF
 value|31
 end_define
 
@@ -250,12 +250,12 @@ define|#
 directive|define
 name|TEGRA_GPIO
 parameter_list|(
-name|bank
+name|port
 parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|((TEGRA_GPIO_BANK_ID_##bank * 8) + offset)
+value|((TEGRA_GPIO_PORT_##port * 8) + offset)
 end_define
 
 begin_endif
