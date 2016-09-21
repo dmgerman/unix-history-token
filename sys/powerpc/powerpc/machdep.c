@@ -410,6 +410,12 @@ directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_subr.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|cold
@@ -807,7 +813,7 @@ argument|init_static_kenv(NULL,
 literal|0
 argument|); 	}
 comment|/* Store boot environment state */
-argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
+argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);  	ofw_parse_bootargs();
 comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */
 argument|init_param1();
 comment|/* 	 * Start initializing proc0 and thread0. 	 */

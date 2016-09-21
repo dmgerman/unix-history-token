@@ -341,6 +341,12 @@ begin_comment
 comment|/*  * Saved SPRG0-3 from OpenFirmware. Will be restored prior to the callback.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
+
 begin_decl_stmt
 name|register_t
 name|ofw_sprg0_save
@@ -426,6 +432,11 @@ comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * r
 asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1589,12 +1600,14 @@ operator|&=
 operator|~
 name|PSL_SF
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 asm|__asm __volatile("mfsprg0 %0" : "=&r"(ofmsr[1]));
 asm|__asm __volatile("mfsprg1 %0" : "=&r"(ofmsr[2]));
 asm|__asm __volatile("mfsprg2 %0" : "=&r"(ofmsr[3]));
 asm|__asm __volatile("mfsprg3 %0" : "=&r"(ofmsr[4]));
+endif|#
+directive|endif
 name|openfirmware_entry
 operator|=
 name|openfirm
@@ -1885,9 +1898,14 @@ operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 name|ofw_sprg_prepare
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Save trap vectors */
 name|ofw_save_trap_vec
 argument_list|(
@@ -1967,11 +1985,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
+
 begin_expr_stmt
 name|ofw_sprg_restore
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|intr_restore
