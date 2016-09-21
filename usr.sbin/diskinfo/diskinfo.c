@@ -1819,7 +1819,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transfer rates:\n"
+literal|"\nTransfer rates:\n"
 argument_list|)
 expr_stmt|;
 name|printf
