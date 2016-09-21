@@ -69,7 +69,7 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * In FreeBSD 12, the prototype of dirname() was modified to comply to  * POSIX. This function may now modify its input. Unfortunately, our  * copy of xinstall(8) shipped with previous versions of FreeBSD is  * built using the host headers and libc during the bootstrapping phase  * and depends on the old behavior.  *  * Apply a workaround where we explicitly link against dirname@FBSD_1.0  * in case this function is called on constant strings, instead of  * making the build fail.  */
+comment|/*  * In FreeBSD 12, the prototype of dirname() was modified to comply to  * POSIX. This function may now modify its input. Unfortunately, our  * copy of xinstall(8) shipped with previous versions of FreeBSD is  * built using the host headers and libc during the bootstrapping phase  * and depends on the old behavior.  *  * Apply a workaround where we explicitly link against dirname@FBSD_1.0  * in case this function is called on constant strings, instead of  * making the program crash at runtime.  */
 if|#
 directive|if
 name|defined
@@ -87,7 +87,6 @@ name|char
 modifier|*
 name|__old_dirname
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|)
