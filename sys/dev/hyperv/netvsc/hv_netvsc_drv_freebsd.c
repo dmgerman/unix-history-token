@@ -10947,6 +10947,10 @@ name|lroent_cnt
 operator|=
 name|TCP_LRO_ENTRIES
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -15835,6 +15839,11 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|sc
@@ -15848,6 +15857,7 @@ argument_list|,
 name|nchan
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nchan
