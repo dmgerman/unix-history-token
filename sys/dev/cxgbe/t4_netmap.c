@@ -1012,10 +1012,12 @@ name|sge_fl_db
 expr_stmt|;
 if|if
 condition|(
-name|is_t5
+name|chip_id
 argument_list|(
 name|sc
 argument_list|)
+operator|>=
+name|CHELSIO_T5
 operator|&&
 name|cong
 operator|>=
