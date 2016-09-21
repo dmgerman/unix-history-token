@@ -484,6 +484,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+name|init_kenv
+index|[
+literal|2048
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|trapframe
 name|frame0
@@ -809,11 +819,9 @@ comment|/* 		 * On BOOKE the BSS is already cleared and some variables 		 * init
 argument|bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start);
 endif|#
 directive|endif
-argument|init_static_kenv(NULL,
-literal|0
-argument|); 	}
+argument|init_static_kenv(init_kenv, sizeof(init_kenv)); 	}
 comment|/* Store boot environment state */
-argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);  	ofw_parse_bootargs();
+argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
 comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */
 argument|init_param1();
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
@@ -838,7 +846,7 @@ asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* 	 * Init mutexes, which we use heavily in PMAP 	 */
 argument|mutex_init();
 comment|/* 	 * Install the OF client interface 	 */
-argument|OF_bootstrap();
+argument|OF_bootstrap();  	ofw_parse_bootargs();
 comment|/* 	 * Initialize the console before printing anything. 	 */
 argument|cninit();
 comment|/* 	 * Complain if there is no metadata. 	 */
