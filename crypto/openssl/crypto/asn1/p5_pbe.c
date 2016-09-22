@@ -244,13 +244,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|sstr
 argument_list|,
 name|saltlen
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto

@@ -1311,10 +1311,12 @@ name|PKCS12
 modifier|*
 name|p12
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|oldpass
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpass

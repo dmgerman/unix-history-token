@@ -15140,14 +15140,14 @@ do|do
 block|{
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|id
 argument_list|,
 operator|*
 name|id_len
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return

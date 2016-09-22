@@ -524,6 +524,30 @@ operator|(
 literal|"CRL path validation error"
 operator|)
 return|;
+case|case
+name|X509_V_ERR_INVALID_CALL
+case|:
+return|return
+operator|(
+literal|"Invalid certificate verification context"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_STORE_LOOKUP
+case|:
+return|return
+operator|(
+literal|"Issuer certificate lookup error"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_PROXY_SUBJECT_NAME_VIOLATION
+case|:
+return|return
+operator|(
+literal|"proxy subject name violation"
+operator|)
+return|;
 default|default:
 name|BIO_snprintf
 argument_list|(

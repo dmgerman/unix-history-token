@@ -378,7 +378,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -1219,7 +1219,7 @@ name|inlen
 operator|+
 literal|4
 operator|&&
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|out
 operator|+
@@ -1233,7 +1233,7 @@ literal|4
 operator|-
 name|inlen
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return

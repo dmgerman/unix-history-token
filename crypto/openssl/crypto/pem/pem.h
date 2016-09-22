@@ -2483,6 +2483,10 @@ name|PEM_R_EXPECTING_PUBLIC_KEY_BLOB
 value|120
 define|#
 directive|define
+name|PEM_R_HEADER_TOO_LONG
+value|128
+define|#
+directive|define
 name|PEM_R_INCONSISTENT_HEADER
 value|121
 define|#

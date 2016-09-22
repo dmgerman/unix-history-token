@@ -479,6 +479,10 @@ parameter_list|(
 name|SSL
 modifier|*
 name|s
+parameter_list|,
+name|DTLS1_BITMAP
+modifier|*
+name|bitmap
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1145,6 +1149,27 @@ name|pitem
 modifier|*
 name|item
 decl_stmt|;
+name|SSL3_BUFFER
+modifier|*
+name|rb
+decl_stmt|;
+name|SSL3_RECORD
+modifier|*
+name|rr
+decl_stmt|;
+name|DTLS1_BITMAP
+modifier|*
+name|bitmap
+decl_stmt|;
+name|unsigned
+name|int
+name|is_next_epoch
+decl_stmt|;
+name|int
+name|replayok
+init|=
+literal|1
+decl_stmt|;
 name|item
 operator|=
 name|pqueue_peek
@@ -1181,11 +1206,41 @@ operator|->
 name|r_epoch
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 comment|/* Nothing to do. */
+name|rr
+operator|=
+operator|&
+name|s
+operator|->
+name|s3
+operator|->
+name|rrec
+expr_stmt|;
+name|rb
+operator|=
+operator|&
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf
+expr_stmt|;
+if|if
+condition|(
+name|rb
+operator|->
+name|left
+operator|>
+literal|0
+condition|)
+block|{
+comment|/*              * We've still got data from the current packet to read. There could              * be a record from the new epoch in it - so don't overwrite it              * with the unprocessed records yet (we'll do it when we've              * finished reading the current packet).              */
+return|return
+literal|1
+return|;
+block|}
 comment|/* Process all the records. */
 while|while
 condition|(
@@ -1206,19 +1261,95 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|bitmap
+operator|=
+name|dtls1_get_bitmap
+argument_list|(
+name|s
+argument_list|,
+name|rr
+argument_list|,
+operator|&
+name|is_next_epoch
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|bitmap
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/*                  * Should not happen. This will only ever be NULL when the                  * current record is from a different epoch. But that cannot                  * be the case because we already checked the epoch above                  */
+name|SSLerr
+argument_list|(
+name|SSL_F_DTLS1_PROCESS_BUFFERED_RECORDS
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SCTP
+comment|/* Only do replay check if no SCTP bio */
+if|if
+condition|(
+operator|!
+name|BIO_dgram_is_sctp
+argument_list|(
+name|SSL_get_rbio
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+condition|)
+endif|#
+directive|endif
+block|{
+comment|/*                  * Check whether this is a repeat, or aged record. We did this                  * check once already when we first received the record - but                  * we might have updated the window since then due to                  * records we subsequently processed.                  */
+name|replayok
+operator|=
+name|dtls1_record_replay_check
+argument_list|(
+name|s
+argument_list|,
+name|bitmap
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|replayok
+operator|||
 operator|!
 name|dtls1_process_record
 argument_list|(
 name|s
+argument_list|,
+name|bitmap
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+comment|/* dump this record */
+name|rr
+operator|->
+name|length
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+name|s
+operator|->
+name|packet_length
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|dtls1_buffer_record
@@ -1246,8 +1377,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 block|}
@@ -1283,9 +1413,7 @@ operator|+
 literal|1
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -1325,6 +1453,10 @@ parameter_list|(
 name|SSL
 modifier|*
 name|s
+parameter_list|,
+name|DTLS1_BITMAP
+modifier|*
+name|bitmap
 parameter_list|)
 block|{
 name|int
@@ -1891,6 +2023,14 @@ name|packet_length
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Mark receipt of record. */
+name|dtls1_record_bitmap_update
+argument_list|(
+name|s
+argument_list|,
+name|bitmap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1978,15 +2118,16 @@ operator|->
 name|rrec
 operator|)
 expr_stmt|;
+name|again
+label|:
 comment|/*      * The epoch may have changed.  If so, process all the pending records.      * This is a non-blocking operation.      */
 if|if
 condition|(
+operator|!
 name|dtls1_process_buffered_records
 argument_list|(
 name|s
 argument_list|)
-operator|<
-literal|0
 condition|)
 return|return
 operator|-
@@ -2004,8 +2145,6 @@ return|return
 literal|1
 return|;
 comment|/* get something from the wire */
-name|again
-label|:
 comment|/* check if we have the header */
 if|if
 condition|(
@@ -2521,14 +2660,6 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Mark receipt of record. */
-name|dtls1_record_bitmap_update
-argument_list|(
-name|s
-argument_list|,
-name|bitmap
-argument_list|)
-expr_stmt|;
 block|}
 name|rr
 operator|->
@@ -2552,6 +2683,8 @@ operator|!
 name|dtls1_process_record
 argument_list|(
 name|s
+argument_list|,
+name|bitmap
 argument_list|)
 condition|)
 block|{
@@ -2573,14 +2706,6 @@ name|again
 goto|;
 comment|/* get another record */
 block|}
-name|dtls1_record_bitmap_update
-argument_list|(
-name|s
-argument_list|,
-name|bitmap
-argument_list|)
-expr_stmt|;
-comment|/* Mark receipt of record. */
 return|return
 operator|(
 literal|1
@@ -5993,13 +6118,20 @@ name|bs
 condition|)
 block|{
 comment|/* bs != 0 in case of CBC */
-name|RAND_pseudo_bytes
+if|if
+condition|(
+name|RAND_bytes
 argument_list|(
 name|p
 argument_list|,
 name|bs
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/*          * master IV and last CBC residue stand for the rest of randomness          */
 name|wr
 operator|->
@@ -6858,7 +6990,7 @@ name|d1
 operator|->
 name|bitmap
 return|;
-comment|/* Only HM and ALERT messages can be from the next epoch */
+comment|/*      * Only HM and ALERT messages can be from the next epoch and only if we      * have already processed all of the unprocessed records from the last      * epoch      */
 elseif|else
 if|if
 condition|(
@@ -6879,6 +7011,20 @@ name|r_epoch
 operator|+
 literal|1
 argument_list|)
+operator|&&
+name|s
+operator|->
+name|d1
+operator|->
+name|unprocessed_rcds
+operator|.
+name|epoch
+operator|!=
+name|s
+operator|->
+name|d1
+operator|->
+name|r_epoch
 operator|&&
 operator|(
 name|rr
@@ -7047,6 +7193,12 @@ sizeof|sizeof
 argument_list|(
 name|DTLS1_BITMAP
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*          * We must not use any buffered messages received from the previous          * epoch          */
+name|dtls1_clear_received_buffer
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}

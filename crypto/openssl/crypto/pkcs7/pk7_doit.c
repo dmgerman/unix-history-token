@@ -1362,7 +1362,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,

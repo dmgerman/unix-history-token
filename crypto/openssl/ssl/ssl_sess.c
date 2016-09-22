@@ -1131,7 +1131,7 @@ decl_stmt|;
 do|do
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|id
 argument_list|,
@@ -2040,11 +2040,11 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|session_id
-operator|+
-name|len
-operator|>
 name|limit
+operator|-
+name|session_id
+operator|<
+name|len
 condition|)
 block|{
 name|fatal

@@ -1864,7 +1864,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -1872,7 +1872,7 @@ name|enc
 operator|->
 name|iv_len
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 comment|/* Generate a salt */

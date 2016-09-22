@@ -87,6 +87,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|X509_F_CHECK_NAME_CONSTRAINTS
+argument_list|)
+block|,
+literal|"CHECK_NAME_CONSTRAINTS"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|X509_F_CHECK_POLICY
 argument_list|)
 block|,

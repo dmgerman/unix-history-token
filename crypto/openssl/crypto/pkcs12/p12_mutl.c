@@ -788,7 +788,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|p12
 operator|->
@@ -800,7 +800,7 @@ name|data
 argument_list|,
 name|saltlen
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return

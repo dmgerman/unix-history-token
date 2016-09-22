@@ -11,6 +11,12 @@ begin_comment
 comment|/*-  * This is a generic 32 bit "collector" for message digest algorithms.  * Whenever needed it collects input character stream into chunks of  * 32 bit values and invokes a block function that performs actual hash  * calculations.  *  * Porting guide.  *  * Obligatory macros:  *  * DATA_ORDER_IS_BIG_ENDIAN or DATA_ORDER_IS_LITTLE_ENDIAN  *      this macro defines byte order of input stream.  * HASH_CBLOCK  *      size of a unit chunk HASH_BLOCK operates on.  * HASH_LONG  *      has to be at lest 32 bit wide, if it's wider, then  *      HASH_LONG_LOG2 *has to* be defined along  * HASH_CTX  *      context structure that at least contains following  *      members:  *              typedef struct {  *                      ...  *                      HASH_LONG       Nl,Nh;  *                      either {  *                      HASH_LONG       data[HASH_LBLOCK];  *                      unsigned char   data[HASH_CBLOCK];  *                      };  *                      unsigned int    num;  *                      ...  *                      } HASH_CTX;  *      data[] vector is expected to be zeroed upon first call to  *      HASH_UPDATE.  * HASH_UPDATE  *      name of "Update" function, implemented here.  * HASH_TRANSFORM  *      name of "Transform" function, implemented here.  * HASH_FINAL  *      name of "Final" function, implemented here.  * HASH_BLOCK_DATA_ORDER  *      name of "block" function capable of treating *unaligned* input  *      message in original (data) byte order, implemented externally.  * HASH_MAKE_STRING  *      macro convering context variables to an ASCII hash string.  *  * MD5 example:  *  *      #define DATA_ORDER_IS_LITTLE_ENDIAN  *  *      #define HASH_LONG               MD5_LONG  *      #define HASH_LONG_LOG2          MD5_LONG_LOG2  *      #define HASH_CTX                MD5_CTX  *      #define HASH_CBLOCK             MD5_CBLOCK  *      #define HASH_UPDATE             MD5_Update  *      #define HASH_TRANSFORM          MD5_Transform  *      #define HASH_FINAL              MD5_Final  *      #define HASH_BLOCK_DATA_ORDER   md5_block_data_order  *  *<appro@fy.chalmers.se>  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1077,6 +1083,7 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+comment|/*              * We use memset rather than OPENSSL_cleanse() here deliberately.              * Using OPENSSL_cleanse() here could be a performance issue. It              * will get properly cleansed on finalisation so this isn't a              * security problem.              */
 name|memset
 argument_list|(
 name|p
@@ -1408,11 +1415,9 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|p
-argument_list|,
-literal|0
 argument_list|,
 name|HASH_CBLOCK
 argument_list|)

@@ -2422,7 +2422,7 @@ comment|/* challenge length */
 comment|/*          * challenge id data          */
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|s
 operator|->
@@ -2691,7 +2691,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|sess
 operator|->

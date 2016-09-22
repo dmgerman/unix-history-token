@@ -348,6 +348,17 @@ value|0x2
 end_define
 
 begin_comment
+comment|/* Maximum length of a blob after header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOB_MAX_LENGTH
+value|102400
+end_define
+
+begin_comment
 comment|/* The PVK file magic number: seems to spell out "bobsfile", who is Bob? */
 end_comment
 
@@ -1066,6 +1077,24 @@ argument_list|,
 name|ispub
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|length
+operator|>
+name|BLOB_MAX_LENGTH
+condition|)
+block|{
+name|PEMerr
+argument_list|(
+name|PEM_F_DO_B2I_BIO
+argument_list|,
+name|PEM_R_HEADER_TOO_LONG
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|buf
 operator|=
 name|OPENSSL_malloc

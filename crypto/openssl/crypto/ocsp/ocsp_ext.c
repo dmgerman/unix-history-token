@@ -1430,13 +1430,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|tmpval
 argument_list|,
 name|len
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto

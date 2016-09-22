@@ -7433,6 +7433,12 @@ operator|->
 name|version
 operator|<
 name|TLS1_VERSION
+operator|&&
+name|s
+operator|->
+name|version
+operator|!=
+name|DTLS1_BAD_VER
 condition|)
 return|return
 operator|-
@@ -8440,7 +8446,7 @@ begin_if
 if|if
 condition|(
 operator|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|ret
 operator|->

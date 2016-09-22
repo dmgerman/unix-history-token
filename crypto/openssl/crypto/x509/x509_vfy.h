@@ -1281,6 +1281,10 @@ name|X509_V_ERR_SUBTREE_MINMAX
 value|49
 define|#
 directive|define
+name|X509_V_ERR_APPLICATION_VERIFICATION
+value|50
+define|#
+directive|define
 name|X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE
 value|51
 define|#
@@ -1295,11 +1299,64 @@ define|#
 directive|define
 name|X509_V_ERR_CRL_PATH_VALIDATION_ERROR
 value|54
-comment|/* The application is not happy */
+if|#
+directive|if
+literal|0
+comment|/* Reserved for compatibility 1.0.2 */
+comment|/* Suite B mode algorithm violation */
 define|#
 directive|define
-name|X509_V_ERR_APPLICATION_VERIFICATION
-value|50
+name|X509_V_ERR_SUITE_B_INVALID_VERSION
+value|56
+define|#
+directive|define
+name|X509_V_ERR_SUITE_B_INVALID_ALGORITHM
+value|57
+define|#
+directive|define
+name|X509_V_ERR_SUITE_B_INVALID_CURVE
+value|58
+define|#
+directive|define
+name|X509_V_ERR_SUITE_B_INVALID_SIGNATURE_ALGORITHM
+value|59
+define|#
+directive|define
+name|X509_V_ERR_SUITE_B_LOS_NOT_ALLOWED
+value|60
+define|#
+directive|define
+name|X509_V_ERR_SUITE_B_CANNOT_SIGN_P_384_WITH_P_256
+value|61
+comment|/* Host, email and IP check errors */
+define|#
+directive|define
+name|X509_V_ERR_HOSTNAME_MISMATCH
+value|62
+define|#
+directive|define
+name|X509_V_ERR_EMAIL_MISMATCH
+value|63
+define|#
+directive|define
+name|X509_V_ERR_IP_ADDRESS_MISMATCH
+value|64
+endif|#
+directive|endif
+comment|/* Caller error */
+define|#
+directive|define
+name|X509_V_ERR_INVALID_CALL
+value|65
+comment|/* Issuer lookup error */
+define|#
+directive|define
+name|X509_V_ERR_STORE_LOOKUP
+value|66
+define|#
+directive|define
+name|X509_V_ERR_PROXY_SUBJECT_NAME_VIOLATION
+value|67
 comment|/* Certificate verify flags */
 comment|/* Send issuer+subject checks to verify_cb */
 define|#
