@@ -4505,6 +4505,9 @@ argument_list|(
 name|dvp
 argument_list|,
 literal|"ufs_direnter: failed to truncate "
+literal|"err %d"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 ifdef|#
