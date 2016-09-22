@@ -1135,6 +1135,13 @@ name|GCC_CODEC_DIGCODEC_CLK
 value|159
 end_define
 
+begin_define
+define|#
+directive|define
+name|GCC_MSS_Q6_BIMC_AXI_CLK
+value|160
+end_define
+
 begin_comment
 comment|/* Indexes for GDSCs */
 end_comment

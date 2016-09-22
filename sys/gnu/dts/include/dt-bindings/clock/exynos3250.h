@@ -391,6 +391,20 @@ name|CLK_MOUT_ACLK_266_SUB
 value|60
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_UART2
+value|61
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_MMC2
+value|62
+end_define
+
 begin_comment
 comment|/* Dividers */
 end_comment
@@ -715,6 +729,27 @@ define|#
 directive|define
 name|CLK_DIV_COPY
 value|109
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_UART2
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_MMC2_PRE
+value|111
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_MMC2
+value|112
 end_define
 
 begin_comment
@@ -1379,6 +1414,20 @@ name|CLK_SMIES
 value|221
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_UART2
+value|222
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_SDMMC2
+value|223
+end_define
+
 begin_comment
 comment|/* Special clocks */
 end_comment
@@ -1551,6 +1600,20 @@ name|CLK_SCLK_UART0
 value|247
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLK_SCLK_UART2
+value|248
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_SCLK_MMC2
+value|249
+end_define
+
 begin_comment
 comment|/*  * Total number of clocks of main CMU.  * NOTE: Must be equal to last clock ID increased by one.  */
 end_comment
@@ -1559,7 +1622,7 @@ begin_define
 define|#
 directive|define
 name|CLK_NR_CLKS
-value|248
+value|250
 end_define
 
 begin_comment

@@ -5055,8 +5055,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|DISP_NR_CLK
+name|CLK_PHYCLK_HDMIPHY_PIXEL_CLKO_PHY
 value|111
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PHYCLK_HDMIPHY_TMDS_CLKO_PHY
+value|112
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_PCLK_DECON
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISP_NR_CLK
+value|114
 end_define
 
 begin_comment
@@ -8419,7 +8440,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_DIV_SCLK_ISP_WPWM
+name|CLK_DIV_SCLK_ISP_MPWM
 value|15
 end_define
 

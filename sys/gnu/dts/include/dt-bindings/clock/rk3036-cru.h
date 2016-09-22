@@ -271,6 +271,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_MACPLL
+value|153
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCLK_SFC
 value|160
 end_define
@@ -502,6 +509,13 @@ define|#
 directive|define
 name|HCLK_EMMC
 value|459
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCLK_MAC
+value|460
 end_define
 
 begin_define
