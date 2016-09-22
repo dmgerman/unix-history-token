@@ -58818,6 +58818,10 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 comment|/* Slept, retry */
 block|}
