@@ -55,6 +55,7 @@ name|uuid
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|ptr
 parameter_list|)
 function_decl|;

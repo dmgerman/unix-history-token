@@ -1762,6 +1762,7 @@ name|uuid
 parameter_list|,
 name|void
 modifier|*
+modifier|*
 name|ptr
 parameter_list|)
 block|{
@@ -1820,6 +1821,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+operator|*
 name|ptr
 operator|=
 operator|(
