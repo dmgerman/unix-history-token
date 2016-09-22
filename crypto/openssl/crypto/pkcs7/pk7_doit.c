@@ -1362,7 +1362,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -2767,7 +2767,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|bio = BIO_new(BIO_s_mem());
+block|bio = BIO_new(BIO_s_mem());         if (bio == NULL)             goto err;
 comment|/*          * We need to set this so that when we have read all the data, the          * encrypt BIO, if present, will read EOF and encode the last few          * bytes          */
 block|BIO_set_mem_eof_return(bio, 0);          if (data_body->length> 0)             BIO_write(bio, (char *)data_body->data, data_body->length);
 else|#

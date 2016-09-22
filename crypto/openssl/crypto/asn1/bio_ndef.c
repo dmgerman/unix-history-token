@@ -400,6 +400,12 @@ name|out
 operator|=
 name|out
 expr_stmt|;
+name|ndef_aux
+operator|->
+name|derbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|BIO_ctrl
 argument_list|(
 name|asn_bio

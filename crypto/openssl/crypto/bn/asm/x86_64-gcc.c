@@ -786,7 +786,7 @@ name|ret
 decl_stmt|,
 name|waste
 decl_stmt|;
-asm|asm("divq      %4":"=a"(ret), "=d"(waste)  :     "a"(l), "d"(h), "g"(d)  :     "cc");
+asm|asm("divq      %4":"=a"(ret), "=d"(waste)  :     "a"(l), "d"(h), "r"(d)  :     "cc");
 return|return
 name|ret
 return|;

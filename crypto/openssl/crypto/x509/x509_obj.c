@@ -414,10 +414,6 @@ name|V_ASN1_TELETEXSTRING
 operator|||
 name|type
 operator|==
-name|V_ASN1_VISIBLESTRING
-operator|||
-name|type
-operator|==
 name|V_ASN1_IA5STRING
 condition|)
 block|{

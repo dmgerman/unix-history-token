@@ -334,6 +334,16 @@ operator|!
 name|b64_str
 condition|)
 block|{
+name|OPENSSL_free
+argument_list|(
+name|der_spki
+argument_list|)
+expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|b64_str
+argument_list|)
+expr_stmt|;
 name|X509err
 argument_list|(
 name|X509_F_NETSCAPE_SPKI_B64_ENCODE

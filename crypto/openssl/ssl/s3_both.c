@@ -1192,7 +1192,7 @@ name|init_buf
 operator|->
 name|data
 operator|+
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 expr_stmt|;
 name|s
 operator|->
@@ -1237,7 +1237,7 @@ operator|==
 name|st1
 condition|)
 block|{
-comment|/* s->init_num< 4 */
+comment|/* s->init_num< SSL3_HM_HEADER_LENGTH */
 name|int
 name|skip_message
 decl_stmt|;
@@ -1249,7 +1249,7 @@ name|s
 operator|->
 name|init_num
 operator|<
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 condition|)
 block|{
 name|i
@@ -1272,7 +1272,7 @@ operator|->
 name|init_num
 index|]
 argument_list|,
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 operator|-
 name|s
 operator|->
@@ -1385,7 +1385,7 @@ name|SSL3_RT_HANDSHAKE
 argument_list|,
 name|p
 argument_list|,
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 argument_list|,
 name|s
 argument_list|,
@@ -1401,7 +1401,7 @@ condition|(
 name|skip_message
 condition|)
 do|;
-comment|/* s->init_num == 4 */
+comment|/* s->init_num == SSL3_HM_HEADER_LENGTH */
 if|if
 condition|(
 operator|(
@@ -1480,33 +1480,7 @@ goto|goto
 name|f_err
 goto|;
 block|}
-if|if
-condition|(
-name|l
-operator|>
-operator|(
-name|INT_MAX
-operator|-
-literal|4
-operator|)
-condition|)
-block|{
-comment|/* BUF_MEM_grow takes an 'int' parameter */
-name|al
-operator|=
-name|SSL_AD_ILLEGAL_PARAMETER
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_MESSAGE
-argument_list|,
-name|SSL_R_EXCESSIVE_MESSAGE_SIZE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|f_err
-goto|;
-block|}
+comment|/*          * Make buffer slightly larger than message length as a precaution          * against small OOB reads e.g. CVE-2016-6306          */
 if|if
 condition|(
 name|l
@@ -1523,7 +1497,9 @@ name|int
 operator|)
 name|l
 operator|+
-literal|4
+name|SSL3_HM_HEADER_LENGTH
+operator|+
+literal|16
 argument_list|)
 condition|)
 block|{
@@ -1564,7 +1540,7 @@ name|init_buf
 operator|->
 name|data
 operator|+
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 expr_stmt|;
 name|s
 operator|->
@@ -1701,7 +1677,7 @@ name|s
 operator|->
 name|init_num
 operator|+
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 argument_list|)
 expr_stmt|;
 if|if
@@ -1735,7 +1711,7 @@ name|s
 operator|->
 name|init_num
 operator|+
-literal|4
+name|SSL3_HM_HEADER_LENGTH
 argument_list|,
 name|s
 argument_list|,
@@ -2047,6 +2023,15 @@ case|:
 case|case
 name|X509_V_ERR_CERT_REJECTED
 case|:
+case|case
+name|X509_V_ERR_HOSTNAME_MISMATCH
+case|:
+case|case
+name|X509_V_ERR_EMAIL_MISMATCH
+case|:
+case|case
+name|X509_V_ERR_IP_ADDRESS_MISMATCH
+case|:
 name|al
 operator|=
 name|SSL_AD_BAD_CERTIFICATE
@@ -2083,7 +2068,16 @@ name|SSL_AD_CERTIFICATE_REVOKED
 expr_stmt|;
 break|break;
 case|case
+name|X509_V_ERR_UNSPECIFIED
+case|:
+case|case
 name|X509_V_ERR_OUT_OF_MEM
+case|:
+case|case
+name|X509_V_ERR_INVALID_CALL
+case|:
+case|case
+name|X509_V_ERR_STORE_LOOKUP
 case|:
 name|al
 operator|=

@@ -508,6 +508,8 @@ specifier|const
 name|EVP_CIPHER
 modifier|*
 name|fcipher
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
