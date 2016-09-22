@@ -3423,6 +3423,14 @@ argument_list|)
 expr_stmt|;
 name|dp
 operator|->
+name|i_endoff
+operator|=
+name|dp
+operator|->
+name|i_size
+expr_stmt|;
+name|dp
+operator|->
 name|i_flag
 operator||=
 name|IN_CHANGE
