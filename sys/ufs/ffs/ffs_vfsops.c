@@ -2682,7 +2682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reload all incore data for a filesystem (used after running fsck on  * the root filesystem and finding things to fix). If the 'force' flag  * is 0, the filesystem must be mounted read-only.  *  * Things to do to update the mount:  *	1) invalidate all cached meta-data.  *	2) re-read superblock from disk.  *	3) re-read summary information from disk.  *	4) invalidate all inactive vnodes.  *	5) invalidate all cached file data.  *	6) re-read inode data for all active vnodes.  */
+comment|/*  * Reload all incore data for a filesystem (used after running fsck on  * the root filesystem and finding things to fix). If the 'force' flag  * is 0, the filesystem must be mounted read-only.  *  * Things to do to update the mount:  *	1) invalidate all cached meta-data.  *	2) re-read superblock from disk.  *	3) re-read summary information from disk.  *	4) invalidate all inactive vnodes.  *	5) clear MNTK_SUSPEND2 and MNTK_SUSPENDED flags, allowing secondary  *	   writers, if requested.  *	6) invalidate all cached file data.  *	7) re-read inode data for all active vnodes.  */
 end_comment
 
 begin_function
@@ -2700,7 +2700,7 @@ modifier|*
 name|td
 parameter_list|,
 name|int
-name|force
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2781,7 +2781,11 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|force
+operator|(
+name|flags
+operator|&
+name|FFSR_FORCE
+operator|)
 operator|==
 literal|0
 condition|)
@@ -3355,6 +3359,47 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|FFSR_UNSUSPEND
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&=
+operator|~
+operator|(
+name|MNTK_SUSPENDED
+operator||
+name|MNTK_SUSPEND2
+operator|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_flag
+argument_list|)
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+block|}
 name|loop
 label|:
 name|MNT_VNODE_FOREACH_ALL

@@ -888,6 +888,20 @@ name|FFSV_FORCEINSMQ
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|FFSR_FORCE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|FFSR_UNSUSPEND
+value|0x0002
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|struct

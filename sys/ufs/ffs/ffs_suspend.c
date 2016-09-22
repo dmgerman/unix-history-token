@@ -1007,7 +1007,9 @@ name|mp
 argument_list|,
 name|curthread
 argument_list|,
-literal|1
+name|FFSR_FORCE
+operator||
+name|FFSR_UNSUSPEND
 argument_list|)
 expr_stmt|;
 if|if
