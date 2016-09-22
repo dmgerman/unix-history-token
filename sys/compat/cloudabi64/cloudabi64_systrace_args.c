@@ -3003,7 +3003,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cloudabi_condvar_t *"
+literal|"userland cloudabi_condvar_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3159,7 +3159,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_iovec_t *"
+literal|"userland const cloudabi64_iovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3205,7 +3205,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_ciovec_t *"
+literal|"userland const cloudabi64_ciovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3251,7 +3251,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_iovec_t *"
+literal|"userland const cloudabi64_iovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3357,7 +3357,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_fdstat_t *"
+literal|"userland cloudabi_fdstat_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -3387,7 +3387,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi_fdstat_t *"
+literal|"userland const cloudabi_fdstat_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3447,7 +3447,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_ciovec_t *"
+literal|"userland const cloudabi64_ciovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3569,7 +3569,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3615,7 +3615,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3639,7 +3639,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3677,7 +3677,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3701,7 +3701,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const cloudabi_fdstat_t *"
+literal|"userland const cloudabi_fdstat_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -3731,7 +3731,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -3777,7 +3777,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3793,7 +3793,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3831,7 +3831,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3855,7 +3855,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3893,7 +3893,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_filestat_t *"
+literal|"userland cloudabi_filestat_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -3923,7 +3923,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi_filestat_t *"
+literal|"userland const cloudabi_filestat_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3961,7 +3961,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -3977,7 +3977,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"cloudabi_filestat_t *"
+literal|"userland cloudabi_filestat_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4007,7 +4007,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4023,7 +4023,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"const cloudabi_filestat_t *"
+literal|"userland const cloudabi_filestat_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4053,7 +4053,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4077,7 +4077,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4115,7 +4115,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4153,7 +4153,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cloudabi_lock_t *"
+literal|"userland cloudabi_lock_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4183,7 +4183,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4221,7 +4221,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4251,7 +4251,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4313,7 +4313,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4351,7 +4351,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4389,7 +4389,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4419,7 +4419,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4449,7 +4449,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"userland const cloudabi64_subscription_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4457,7 +4457,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi64_event_t *"
+literal|"userland cloudabi64_event_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4495,7 +4495,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"userland const cloudabi64_subscription_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4511,7 +4511,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"cloudabi64_event_t *"
+literal|"userland cloudabi64_event_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4527,7 +4527,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"userland const cloudabi64_subscription_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4557,7 +4557,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4573,7 +4573,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"const cloudabi_fd_t *"
+literal|"userland const cloudabi_fd_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4652,7 +4652,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -4690,7 +4690,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_sockstat_t *"
+literal|"userland cloudabi_sockstat_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4728,7 +4728,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4774,7 +4774,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -4842,7 +4842,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_recv_in_t *"
+literal|"userland const cloudabi64_recv_in_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4850,7 +4850,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_recv_out_t *"
+literal|"userland cloudabi64_recv_out_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4880,7 +4880,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_send_in_t *"
+literal|"userland const cloudabi64_send_in_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4888,7 +4888,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_send_out_t *"
+literal|"userland cloudabi64_send_out_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4948,7 +4948,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi_sockstat_t *"
+literal|"userland cloudabi_sockstat_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4978,7 +4978,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cloudabi64_threadattr_t *"
+literal|"userland cloudabi64_threadattr_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -5000,7 +5000,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cloudabi_lock_t *"
+literal|"userland cloudabi_lock_t *"
 expr_stmt|;
 break|break;
 case|case

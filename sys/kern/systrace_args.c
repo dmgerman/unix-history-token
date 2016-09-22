@@ -18269,7 +18269,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -18307,7 +18307,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -18337,7 +18337,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18405,7 +18405,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 case|case
@@ -18421,7 +18421,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct rusage *"
+literal|"userland struct rusage *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18443,7 +18443,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18451,7 +18451,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18473,7 +18473,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18495,7 +18495,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18539,7 +18539,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18577,7 +18577,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18607,7 +18607,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18645,7 +18645,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18672,7 +18672,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18680,7 +18680,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18718,7 +18718,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -18834,7 +18834,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct msghdr *"
+literal|"userland struct msghdr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18872,7 +18872,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct msghdr *"
+literal|"userland struct msghdr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18934,7 +18934,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18942,7 +18942,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18972,7 +18972,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -18980,7 +18980,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19010,7 +19010,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19018,7 +19018,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19048,7 +19048,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19056,7 +19056,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19078,7 +19078,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19108,7 +19108,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19281,7 +19281,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19332,7 +19332,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19362,7 +19362,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19384,7 +19384,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19406,7 +19406,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"stack_t *"
+literal|"userland stack_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -19414,7 +19414,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"stack_t *"
+literal|"userland stack_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19496,7 +19496,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19518,7 +19518,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19526,7 +19526,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19548,7 +19548,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19556,7 +19556,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19586,7 +19586,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -19594,7 +19594,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 case|case
@@ -19602,7 +19602,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 default|default:
@@ -19646,7 +19646,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19668,7 +19668,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -19777,7 +19777,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -19807,7 +19807,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -19845,7 +19845,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -19883,7 +19883,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -19899,7 +19899,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19929,7 +19929,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"gid_t *"
+literal|"userland gid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19959,7 +19959,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"gid_t *"
+literal|"userland gid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20024,7 +20024,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct itimerval *"
+literal|"userland struct itimerval *"
 expr_stmt|;
 break|break;
 case|case
@@ -20032,7 +20032,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct itimerval *"
+literal|"userland struct itimerval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20054,7 +20054,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20084,7 +20084,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct itimerval *"
+literal|"userland struct itimerval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20187,7 +20187,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -20195,7 +20195,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -20203,7 +20203,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -20211,7 +20211,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20521,7 +20521,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 case|case
@@ -20529,7 +20529,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timezone *"
+literal|"userland struct timezone *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20559,7 +20559,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct rusage *"
+literal|"userland struct rusage *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20613,7 +20613,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20643,7 +20643,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -20681,7 +20681,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -20711,7 +20711,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 case|case
@@ -20719,7 +20719,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timezone *"
+literal|"userland struct timezone *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20869,7 +20869,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -20877,7 +20877,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -20929,7 +20929,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21075,7 +21075,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21097,7 +21097,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21127,7 +21127,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21149,7 +21149,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21157,7 +21157,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21179,7 +21179,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 case|case
@@ -21187,7 +21187,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21214,7 +21214,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21284,7 +21284,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 default|default:
@@ -21336,7 +21336,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21344,7 +21344,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct fhandle *"
+literal|"userland struct fhandle *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21366,7 +21366,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21374,7 +21374,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct fhandle *"
+literal|"userland struct fhandle *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21404,7 +21404,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21442,7 +21442,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct rtprio *"
+literal|"userland struct rtprio *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21648,7 +21648,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct timex *"
+literal|"userland struct timex *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21736,7 +21736,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21744,7 +21744,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct stat *"
+literal|"userland struct stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21774,7 +21774,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct stat *"
+literal|"userland struct stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21796,7 +21796,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21804,7 +21804,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct stat *"
+literal|"userland struct stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21826,7 +21826,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21894,7 +21894,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct rlimit *"
+literal|"userland struct rlimit *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21924,7 +21924,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct rlimit *"
+literal|"userland struct rlimit *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21954,7 +21954,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -21970,7 +21970,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"long *"
+literal|"userland long *"
 expr_stmt|;
 break|break;
 default|default:
@@ -21997,7 +21997,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 case|case
@@ -22013,7 +22013,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22021,7 +22021,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"size_t *"
+literal|"userland size_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -22029,7 +22029,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22059,7 +22059,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22089,7 +22089,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22119,7 +22119,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22149,7 +22149,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22193,7 +22193,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct pollfd *"
+literal|"userland struct pollfd *"
 expr_stmt|;
 break|break;
 case|case
@@ -22327,7 +22327,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sembuf *"
+literal|"userland struct sembuf *"
 expr_stmt|;
 break|break;
 case|case
@@ -22395,7 +22395,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22441,7 +22441,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22495,7 +22495,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -22525,7 +22525,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22593,7 +22593,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22623,7 +22623,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22653,7 +22653,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22683,7 +22683,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sigevent *"
+literal|"userland struct sigevent *"
 expr_stmt|;
 break|break;
 case|case
@@ -22691,7 +22691,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22751,7 +22751,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct itimerspec *"
+literal|"userland const struct itimerspec *"
 expr_stmt|;
 break|break;
 case|case
@@ -22759,7 +22759,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct itimerspec *"
+literal|"userland struct itimerspec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22789,7 +22789,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct itimerspec *"
+literal|"userland struct itimerspec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22833,7 +22833,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 case|case
@@ -22841,7 +22841,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22863,7 +22863,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"ffcounter *"
+literal|"userland ffcounter *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22885,7 +22885,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct ffclock_estimate *"
+literal|"userland struct ffclock_estimate *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22907,7 +22907,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct ffclock_estimate *"
+literal|"userland struct ffclock_estimate *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22945,7 +22945,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"clockid_t *"
+literal|"userland clockid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22967,7 +22967,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct ntptimeval *"
+literal|"userland struct ntptimeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -22989,7 +22989,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -23054,7 +23054,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23092,7 +23092,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23114,7 +23114,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23144,7 +23144,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct aiocb *const *"
+literal|"userland struct aiocb *const *"
 expr_stmt|;
 break|break;
 case|case
@@ -23160,7 +23160,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct sigevent *"
+literal|"userland struct sigevent *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23190,7 +23190,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23220,7 +23220,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23250,7 +23250,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23288,7 +23288,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23296,7 +23296,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23318,7 +23318,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -23356,7 +23356,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23364,7 +23364,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct nstat *"
+literal|"userland struct nstat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23394,7 +23394,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct nstat *"
+literal|"userland struct nstat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23416,7 +23416,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -23424,7 +23424,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct nstat *"
+literal|"userland struct nstat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23454,7 +23454,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -23500,7 +23500,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -23538,7 +23538,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct fhandle *"
+literal|"userland const struct fhandle *"
 expr_stmt|;
 break|break;
 case|case
@@ -23568,7 +23568,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct fhandle *"
+literal|"userland const struct fhandle *"
 expr_stmt|;
 break|break;
 case|case
@@ -23576,7 +23576,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct stat *"
+literal|"userland struct stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23628,7 +23628,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct module_stat *"
+literal|"userland struct module_stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23672,7 +23672,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23694,7 +23694,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23738,7 +23738,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23790,7 +23790,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct kld_file_stat *"
+literal|"userland struct kld_file_stat *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23932,7 +23932,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -23954,7 +23954,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *const *"
+literal|"userland struct aiocb *const *"
 expr_stmt|;
 break|break;
 case|case
@@ -23970,7 +23970,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24000,7 +24000,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24022,7 +24022,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24076,7 +24076,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24114,7 +24114,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sched_param *"
+literal|"userland const struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24144,7 +24144,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sched_param *"
+literal|"userland struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24182,7 +24182,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct sched_param *"
+literal|"userland const struct sched_param *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24283,7 +24283,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24305,7 +24305,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -24351,7 +24351,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24373,7 +24373,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct jail *"
+literal|"userland struct jail *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24403,7 +24403,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24419,7 +24419,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -24457,7 +24457,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -24465,7 +24465,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"sigset_t *"
+literal|"userland sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24487,7 +24487,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24509,7 +24509,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"sigset_t *"
+literal|"userland sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24531,7 +24531,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -24539,7 +24539,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"siginfo_t *"
+literal|"userland siginfo_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -24547,7 +24547,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24569,7 +24569,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -24577,7 +24577,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"siginfo_t *"
+literal|"userland siginfo_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24599,7 +24599,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24615,7 +24615,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24637,7 +24637,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24653,7 +24653,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24691,7 +24691,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24729,7 +24729,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24751,7 +24751,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24811,7 +24811,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24827,7 +24827,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24865,7 +24865,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24887,7 +24887,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24903,7 +24903,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24919,7 +24919,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -24941,7 +24941,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24957,7 +24957,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -24965,7 +24965,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -24995,7 +24995,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25011,7 +25011,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25019,7 +25019,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -25049,7 +25049,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25065,7 +25065,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25087,7 +25087,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb **"
+literal|"userland struct aiocb **"
 expr_stmt|;
 break|break;
 case|case
@@ -25095,7 +25095,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25117,7 +25117,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"uid_t *"
+literal|"userland uid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -25125,7 +25125,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uid_t *"
+literal|"userland uid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -25133,7 +25133,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"uid_t *"
+literal|"userland uid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25155,7 +25155,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"gid_t *"
+literal|"userland gid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -25163,7 +25163,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"gid_t *"
+literal|"userland gid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -25171,7 +25171,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"gid_t *"
+literal|"userland gid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25206,7 +25206,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct kevent *"
+literal|"userland struct kevent *"
 expr_stmt|;
 break|break;
 case|case
@@ -25222,7 +25222,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct kevent *"
+literal|"userland struct kevent *"
 expr_stmt|;
 break|break;
 case|case
@@ -25238,7 +25238,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25276,7 +25276,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25284,7 +25284,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -25330,7 +25330,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25338,7 +25338,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -25384,7 +25384,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25428,7 +25428,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25528,7 +25528,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -25566,7 +25566,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25588,7 +25588,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25618,7 +25618,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25640,7 +25640,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25648,7 +25648,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25678,7 +25678,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25700,7 +25700,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25708,7 +25708,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25738,7 +25738,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25746,7 +25746,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25776,7 +25776,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25806,7 +25806,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct uuid *"
+literal|"userland struct uuid *"
 expr_stmt|;
 break|break;
 case|case
@@ -25868,7 +25868,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct sf_hdtr *"
+literal|"userland struct sf_hdtr *"
 expr_stmt|;
 break|break;
 case|case
@@ -25876,7 +25876,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"off_t *"
+literal|"userland off_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -25906,7 +25906,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25922,7 +25922,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -25944,7 +25944,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct statfs *"
+literal|"userland struct statfs *"
 expr_stmt|;
 break|break;
 case|case
@@ -25982,7 +25982,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -25990,7 +25990,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct statfs *"
+literal|"userland struct statfs *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26020,7 +26020,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct statfs *"
+literal|"userland struct statfs *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26042,7 +26042,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct fhandle *"
+literal|"userland const struct fhandle *"
 expr_stmt|;
 break|break;
 case|case
@@ -26050,7 +26050,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct statfs *"
+literal|"userland struct statfs *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26160,7 +26160,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"semid_t *"
+literal|"userland semid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -26190,7 +26190,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"semid_t *"
+literal|"userland semid_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -26198,7 +26198,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26244,7 +26244,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26274,7 +26274,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26326,7 +26326,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26348,7 +26348,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26356,7 +26356,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26378,7 +26378,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26386,7 +26386,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26408,7 +26408,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26424,7 +26424,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26432,7 +26432,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -26462,7 +26462,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26478,7 +26478,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26486,7 +26486,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -26516,7 +26516,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26532,7 +26532,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26554,7 +26554,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26562,7 +26562,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 case|case
@@ -26570,7 +26570,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 case|case
@@ -26578,7 +26578,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct mac *"
+literal|"userland struct mac *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26608,7 +26608,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sigaction *"
+literal|"userland const struct sigaction *"
 expr_stmt|;
 break|break;
 case|case
@@ -26616,7 +26616,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct sigaction *"
+literal|"userland struct sigaction *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26638,7 +26638,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct __ucontext *"
+literal|"userland const struct __ucontext *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26660,7 +26660,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct __ucontext *"
+literal|"userland struct __ucontext *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26682,7 +26682,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct __ucontext *"
+literal|"userland const struct __ucontext *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26704,7 +26704,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct __ucontext *"
+literal|"userland struct __ucontext *"
 expr_stmt|;
 break|break;
 case|case
@@ -26712,7 +26712,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct __ucontext *"
+literal|"userland const struct __ucontext *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26734,7 +26734,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26756,7 +26756,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26772,7 +26772,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26794,7 +26794,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26810,7 +26810,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26832,7 +26832,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26862,7 +26862,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -26878,7 +26878,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct acl *"
+literal|"userland struct acl *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26900,7 +26900,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -26908,7 +26908,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26930,7 +26930,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"ucontext_t *"
+literal|"userland ucontext_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -26938,7 +26938,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"long *"
+literal|"userland long *"
 expr_stmt|;
 break|break;
 case|case
@@ -26968,7 +26968,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"long *"
+literal|"userland long *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26990,7 +26990,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"long *"
+literal|"userland long *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27080,7 +27080,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27110,7 +27110,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27126,7 +27126,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27156,7 +27156,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27172,7 +27172,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27210,7 +27210,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27232,7 +27232,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27306,7 +27306,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27344,7 +27344,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27374,7 +27374,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"uid_t *"
+literal|"userland uid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27396,7 +27396,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"uid_t *"
+literal|"userland uid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27418,7 +27418,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct auditinfo *"
+literal|"userland struct auditinfo *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27440,7 +27440,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct auditinfo *"
+literal|"userland struct auditinfo *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27462,7 +27462,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct auditinfo_addr *"
+literal|"userland struct auditinfo_addr *"
 expr_stmt|;
 break|break;
 case|case
@@ -27492,7 +27492,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct auditinfo_addr *"
+literal|"userland struct auditinfo_addr *"
 expr_stmt|;
 break|break;
 case|case
@@ -27522,7 +27522,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27544,7 +27544,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27568,7 +27568,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -27576,7 +27576,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27598,7 +27598,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct thr_param *"
+literal|"userland struct thr_param *"
 expr_stmt|;
 break|break;
 case|case
@@ -27644,7 +27644,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27666,7 +27666,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27690,7 +27690,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"const struct mq_attr *"
+literal|"userland const struct mq_attr *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27720,7 +27720,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct mq_attr *"
+literal|"userland const struct mq_attr *"
 expr_stmt|;
 break|break;
 case|case
@@ -27728,7 +27728,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct mq_attr *"
+literal|"userland struct mq_attr *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27758,7 +27758,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27774,7 +27774,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"unsigned *"
+literal|"userland unsigned *"
 expr_stmt|;
 break|break;
 case|case
@@ -27782,7 +27782,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27812,7 +27812,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27836,7 +27836,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27866,7 +27866,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sigevent *"
+literal|"userland const struct sigevent *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27888,7 +27888,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27910,7 +27910,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -27926,7 +27926,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void **"
+literal|"userland void **"
 expr_stmt|;
 break|break;
 default|default:
@@ -27956,7 +27956,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -27986,7 +27986,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28024,7 +28024,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct rtprio *"
+literal|"userland struct rtprio *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28116,7 +28116,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"struct sctp_sndrcvinfo *"
+literal|"userland struct sctp_sndrcvinfo *"
 expr_stmt|;
 break|break;
 case|case
@@ -28154,7 +28154,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -28186,7 +28186,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"struct sctp_sndrcvinfo *"
+literal|"userland struct sctp_sndrcvinfo *"
 expr_stmt|;
 break|break;
 case|case
@@ -28224,7 +28224,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -28240,7 +28240,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -28248,7 +28248,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -28256,7 +28256,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"struct sctp_sndrcvinfo *"
+literal|"userland struct sctp_sndrcvinfo *"
 expr_stmt|;
 break|break;
 case|case
@@ -28264,7 +28264,7 @@ literal|6
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28294,7 +28294,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -28340,7 +28340,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -28478,7 +28478,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -28576,7 +28576,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -28614,7 +28614,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28636,7 +28636,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cpusetid_t *"
+literal|"userland cpusetid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28720,7 +28720,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"cpusetid_t *"
+literal|"userland cpusetid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28774,7 +28774,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"cpuset_t *"
+literal|"userland cpuset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28828,7 +28828,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const cpuset_t *"
+literal|"userland const cpuset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28858,7 +28858,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -28904,7 +28904,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -28950,7 +28950,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29004,7 +29004,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 case|case
@@ -29012,7 +29012,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char **"
+literal|"userland char **"
 expr_stmt|;
 break|break;
 default|default:
@@ -29042,7 +29042,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29050,7 +29050,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct stat *"
+literal|"userland struct stat *"
 expr_stmt|;
 break|break;
 case|case
@@ -29088,7 +29088,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29096,7 +29096,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct timeval *"
+literal|"userland struct timeval *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29126,7 +29126,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29142,7 +29142,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29180,7 +29180,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29218,7 +29218,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29256,7 +29256,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29302,7 +29302,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29348,7 +29348,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29356,7 +29356,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29394,7 +29394,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29410,7 +29410,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29432,7 +29432,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29448,7 +29448,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29478,7 +29478,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29530,7 +29530,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29552,7 +29552,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -29590,7 +29590,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct iovec *"
+literal|"userland struct iovec *"
 expr_stmt|;
 break|break;
 case|case
@@ -29696,7 +29696,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"union semun *"
+literal|"userland union semun *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29734,7 +29734,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct msqid_ds *"
+literal|"userland struct msqid_ds *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29772,7 +29772,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct shmid_ds *"
+literal|"userland struct shmid_ds *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29794,7 +29794,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -29840,7 +29840,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cap_rights_t *"
+literal|"userland cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29867,7 +29867,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"u_int *"
+literal|"userland u_int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29889,7 +29889,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 case|case
@@ -29957,7 +29957,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"pid_t *"
+literal|"userland pid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29987,7 +29987,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -29995,7 +29995,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -30003,7 +30003,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"fd_set *"
+literal|"userland fd_set *"
 expr_stmt|;
 break|break;
 case|case
@@ -30011,7 +30011,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 case|case
@@ -30019,7 +30019,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30041,7 +30041,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -30071,7 +30071,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30093,7 +30093,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30109,7 +30109,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30139,7 +30139,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30155,7 +30155,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30185,7 +30185,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30201,7 +30201,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30231,7 +30231,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30247,7 +30247,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30277,7 +30277,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const void *"
+literal|"userland const void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30293,7 +30293,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 case|case
@@ -30423,7 +30423,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 case|case
@@ -30439,7 +30439,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct __wrusage *"
+literal|"userland struct __wrusage *"
 expr_stmt|;
 break|break;
 case|case
@@ -30447,7 +30447,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"siginfo_t *"
+literal|"userland siginfo_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30477,7 +30477,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cap_rights_t *"
+literal|"userland cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30507,7 +30507,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const u_long *"
+literal|"userland const u_long *"
 expr_stmt|;
 break|break;
 case|case
@@ -30545,7 +30545,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_long *"
+literal|"userland u_long *"
 expr_stmt|;
 break|break;
 case|case
@@ -30613,7 +30613,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint32_t *"
+literal|"userland uint32_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30735,7 +30735,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const char *"
+literal|"userland const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -30781,7 +30781,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *"
+literal|"userland struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -30789,7 +30789,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *"
+literal|"userland __socklen_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -30819,7 +30819,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"userland int *"
 expr_stmt|;
 break|break;
 case|case
@@ -30849,7 +30849,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct aiocb *"
+literal|"userland struct aiocb *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30895,7 +30895,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"void *"
+literal|"userland void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30917,7 +30917,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"struct pollfd *"
+literal|"userland struct pollfd *"
 expr_stmt|;
 break|break;
 case|case
@@ -30933,7 +30933,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct timespec *"
+literal|"userland const struct timespec *"
 expr_stmt|;
 break|break;
 case|case
@@ -30941,7 +30941,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"const sigset_t *"
+literal|"userland const sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30971,7 +30971,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 default|default:
@@ -31001,7 +31001,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"userland char *"
 expr_stmt|;
 break|break;
 case|case
@@ -31009,7 +31009,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct timespec *"
+literal|"userland struct timespec *"
 expr_stmt|;
 break|break;
 case|case
@@ -31055,7 +31055,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"struct vm_domain_policy_entry *"
+literal|"userland struct vm_domain_policy_entry *"
 expr_stmt|;
 break|break;
 default|default:
@@ -31093,7 +31093,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"const struct vm_domain_policy_entry *"
+literal|"userland const struct vm_domain_policy_entry *"
 expr_stmt|;
 break|break;
 default|default:
