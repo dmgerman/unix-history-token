@@ -5357,9 +5357,8 @@ literal|0x00
 argument_list|,
 literal|0x1D
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP
 argument_list|,
-comment|/* XXX TBD */
 literal|"ATA pass through information available"
 argument_list|)
 block|}
