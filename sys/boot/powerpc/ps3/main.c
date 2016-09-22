@@ -790,12 +790,18 @@ block|}
 end_function
 
 begin_function
-name|int
+name|time_t
 name|getsecs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
+call|(
+name|time_t
+call|)
+argument_list|(
 operator|(
 name|mftb
 argument_list|()
@@ -806,6 +812,7 @@ operator|*
 name|ns_per_tick
 operator|/
 literal|1000000000
+argument_list|)
 operator|)
 return|;
 block|}

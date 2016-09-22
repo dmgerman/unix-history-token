@@ -64,9 +64,11 @@ block|}
 end_function
 
 begin_function
-name|int
+name|time_t
 name|getsecs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|time_t
 name|n
