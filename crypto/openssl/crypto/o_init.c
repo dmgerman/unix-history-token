@@ -82,6 +82,16 @@ argument_list|,
 name|CRYPTO_add_lock
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DEPRECATED
+name|FIPS_crypto_set_id_callback
+argument_list|(
+name|CRYPTO_thread_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|FIPS_set_error_callbacks
 argument_list|(
 name|ERR_put_error

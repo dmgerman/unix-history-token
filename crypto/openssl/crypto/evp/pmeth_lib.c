@@ -187,9 +187,14 @@ directive|endif
 operator|&
 name|hmac_pkey_meth
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMAC
 operator|&
 name|cmac_pkey_meth
 block|,
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH

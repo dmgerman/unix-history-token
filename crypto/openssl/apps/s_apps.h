@@ -845,6 +845,10 @@ argument_list|)
 operator|*
 operator|*
 name|pstr
+argument_list|,
+name|int
+operator|*
+name|no_prot_opt
 argument_list|)
 decl_stmt|;
 end_decl_stmt

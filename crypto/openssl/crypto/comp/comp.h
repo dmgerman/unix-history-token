@@ -51,7 +51,6 @@ name|struct
 name|comp_ctx_st
 name|COMP_CTX
 typedef|;
-typedef|typedef
 struct|struct
 name|comp_method_st
 block|{
@@ -165,8 +164,7 @@ name|void
 parameter_list|)
 function_decl|;
 block|}
-name|COMP_METHOD
-typedef|;
+struct|;
 struct|struct
 name|comp_ctx_st
 block|{

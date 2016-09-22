@@ -210,6 +210,16 @@ name|char
 modifier|*
 name|asctmp
 decl_stmt|;
+comment|/* string must contain an even number of bytes */
+if|if
+condition|(
+name|unilen
+operator|&
+literal|1
+condition|)
+return|return
+name|NULL
+return|;
 name|asclen
 operator|=
 name|unilen

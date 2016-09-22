@@ -653,6 +653,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
 return|return
 name|FIPS_digestupdate
 argument_list|(
@@ -663,8 +668,8 @@ argument_list|,
 name|count
 argument_list|)
 return|;
-else|#
-directive|else
+endif|#
+directive|endif
 return|return
 name|ctx
 operator|->
@@ -677,8 +682,6 @@ argument_list|,
 name|count
 argument_list|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -753,9 +756,17 @@ modifier|*
 name|size
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
 return|return
 name|FIPS_digestfinal
 argument_list|(
@@ -766,11 +777,8 @@ argument_list|,
 name|size
 argument_list|)
 return|;
-else|#
-directive|else
-name|int
-name|ret
-decl_stmt|;
+endif|#
+directive|endif
 name|OPENSSL_assert
 argument_list|(
 name|ctx
@@ -836,13 +844,11 @@ name|EVP_MD_CTX_FLAG_CLEANED
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|ctx
 operator|->
 name|md_data
-argument_list|,
-literal|0
 argument_list|,
 name|ctx
 operator|->
@@ -854,8 +860,6 @@ expr_stmt|;
 return|return
 name|ret
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

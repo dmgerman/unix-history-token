@@ -16950,6 +16950,26 @@ expr|*
 name|fds
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fds
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Out of memory in speed (do_multi)\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|n

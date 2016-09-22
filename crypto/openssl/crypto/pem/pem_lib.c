@@ -289,13 +289,23 @@ init|;
 condition|;
 control|)
 block|{
+comment|/*          * We assume that w == 0 means decryption,          * while w == 1 means encryption          */
+name|int
+name|min_len
+init|=
+name|w
+condition|?
+name|MIN_LENGTH
+else|:
+literal|0
+decl_stmt|;
 name|i
 operator|=
 name|EVP_read_pw_string_min
 argument_list|(
 name|buf
 argument_list|,
-name|MIN_LENGTH
+name|min_len
 argument_list|,
 name|num
 argument_list|,
@@ -347,9 +357,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|min_len
+operator|&&
 name|j
 operator|<
-name|MIN_LENGTH
+name|min_len
 condition|)
 block|{
 name|fprintf
@@ -358,7 +370,7 @@ name|stderr
 argument_list|,
 literal|"phrase is too short, needs to be at least %d chars\n"
 argument_list|,
-name|MIN_LENGTH
+name|min_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -1886,7 +1898,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -1894,7 +1906,7 @@ name|enc
 operator|->
 name|iv_len
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 comment|/* Generate a salt */

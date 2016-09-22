@@ -2903,13 +2903,11 @@ name|d
 operator|!=
 name|NULL
 condition|)
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
 name|d
-argument_list|,
-literal|0
 argument_list|,
 name|a
 operator|->

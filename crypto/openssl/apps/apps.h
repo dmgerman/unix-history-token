@@ -2044,6 +2044,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|fileno_stdin
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fileno_stdout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|raw_read_stdin
 parameter_list|(
 name|void

@@ -461,6 +461,11 @@ name|SSL_CTX
 typedef|;
 typedef|typedef
 name|struct
+name|comp_method_st
+name|COMP_METHOD
+typedef|;
+typedef|typedef
+name|struct
 name|X509_POLICY_NODE_st
 name|X509_POLICY_NODE
 typedef|;

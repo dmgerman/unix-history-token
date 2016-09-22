@@ -1360,11 +1360,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*                      fputs("realloc error in lhash",stderr); */
 name|lh
 operator|->
 name|error
 operator|++
+expr_stmt|;
+name|lh
+operator|->
+name|num_nodes
+operator|--
 expr_stmt|;
 name|lh
 operator|->

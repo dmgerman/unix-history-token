@@ -196,9 +196,14 @@ directive|endif
 operator|&
 name|hmac_asn1_meth
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMAC
 operator|&
 name|cmac_asn1_meth
 block|,
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH

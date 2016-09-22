@@ -1340,7 +1340,6 @@ operator|-
 literal|1
 block|,
 comment|/* 15-17 */
-operator|-
 literal|1
 block|,
 literal|1

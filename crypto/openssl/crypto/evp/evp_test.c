@@ -173,6 +173,11 @@ name|char
 modifier|*
 name|d
 decl_stmt|;
+name|int
+name|digits
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|d
@@ -239,11 +244,12 @@ name|char
 operator|)
 name|n
 expr_stmt|;
+name|digits
+operator|++
+expr_stmt|;
 block|}
 return|return
-name|s
-operator|-
-name|d
+name|digits
 return|;
 block|}
 end_function

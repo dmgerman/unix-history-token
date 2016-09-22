@@ -2498,7 +2498,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 operator|(
 name|unsigned
@@ -2510,7 +2510,7 @@ name|salt_p
 argument_list|,
 literal|2
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto
@@ -2636,7 +2636,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 operator|(
 name|unsigned
@@ -2648,7 +2648,7 @@ name|salt_p
 argument_list|,
 literal|8
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto

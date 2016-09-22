@@ -4800,6 +4800,8 @@ operator|)
 name|ArbBigNum
 expr_stmt|;
 comment|/*      * Expand the result bn so that it can hold our big num. Size is in bits      */
+if|if
+condition|(
 name|bn_expand
 argument_list|(
 name|bn
@@ -4813,7 +4815,12 @@ operator|<<
 literal|3
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+name|AEP_R_HOST_MEMORY
+return|;
 ifdef|#
 directive|ifdef
 name|SIXTY_FOUR_BIT_LONG

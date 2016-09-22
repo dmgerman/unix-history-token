@@ -1065,6 +1065,17 @@ name|nid
 operator|=
 name|nid
 expr_stmt|;
+name|tmp
+operator|->
+name|minsize
+operator|=
+name|tmp
+operator|->
+name|maxsize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|new_nid
 operator|=
 literal|1

@@ -7076,6 +7076,10 @@ name|X509_F_BY_FILE_CTRL
 value|101
 define|#
 directive|define
+name|X509_F_CHECK_NAME_CONSTRAINTS
+value|106
+define|#
+directive|define
 name|X509_F_CHECK_POLICY
 value|145
 define|#

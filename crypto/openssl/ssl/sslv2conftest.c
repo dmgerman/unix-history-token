@@ -164,6 +164,8 @@ literal|0
 decl_stmt|;
 name|int
 name|currtest
+init|=
+literal|0
 decl_stmt|;
 name|SSL_library_init
 argument_list|()
