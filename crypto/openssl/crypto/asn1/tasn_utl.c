@@ -863,8 +863,10 @@ expr_stmt|;
 comment|/* Check if NULL */
 if|if
 condition|(
-operator|!
+operator|*
 name|sfld
+operator|==
+name|NULL
 condition|)
 block|{
 if|if

@@ -145,9 +145,18 @@ argument_list|,
 name|one
 argument_list|)
 condition|)
+block|{
+name|one
+operator|->
+name|reqCert
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* do not free on error */
 goto|goto
 name|err
 goto|;
+block|}
 return|return
 name|one
 return|;

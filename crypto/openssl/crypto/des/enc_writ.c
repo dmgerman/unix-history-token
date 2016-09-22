@@ -325,7 +325,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|shortbuf
 operator|+
@@ -335,7 +335,7 @@ literal|8
 operator|-
 name|len
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{

@@ -5904,7 +5904,7 @@ value|do {                                  \     if (ctx != NULL) {            
 end_define
 
 begin_comment
-comment|/*  * Core code for RFC 3779 2.3 path validation.  */
+comment|/*  * Core code for RFC 3779 2.3 path validation.  *  * Returns 1 for success, 0 on error.  *  * When returning 0, ctx->error MUST be set to an appropriate value other than  * X509_V_OK.  */
 end_comment
 
 begin_decl_stmt
@@ -6084,6 +6084,12 @@ name|X509V3_F_V3_ADDR_VALIDATE_PATH_INTERNAL
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
+expr_stmt|;
+name|ctx
+operator|->
+name|error
+operator|=
+name|X509_V_ERR_OUT_OF_MEM
 expr_stmt|;
 name|ret
 operator|=

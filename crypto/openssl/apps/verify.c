@@ -382,7 +382,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|CApath
 operator|=
@@ -415,7 +415,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|CAfile
 operator|=
@@ -452,7 +452,7 @@ condition|(
 name|badarg
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 continue|continue;
 block|}
@@ -478,7 +478,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|untfile
 operator|=
@@ -511,7 +511,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|trustfile
 operator|=
@@ -544,7 +544,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|crlfile
 operator|=
@@ -597,7 +597,7 @@ operator|<
 literal|1
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 name|engine
 operator|=
@@ -624,7 +624,7 @@ operator|==
 literal|0
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 elseif|else
 if|if
@@ -657,7 +657,7 @@ operator|==
 literal|'-'
 condition|)
 goto|goto
-name|end
+name|usage
 goto|;
 else|else
 break|break;
@@ -1022,7 +1022,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|end
+name|usage
 label|:
 if|if
 condition|(
@@ -1116,6 +1116,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|end
+label|:
 if|if
 condition|(
 name|vpm

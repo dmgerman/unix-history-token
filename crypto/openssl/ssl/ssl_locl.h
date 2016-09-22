@@ -1323,6 +1323,21 @@ value|((SSL_IS_DTLS(s)&& s->client_version<= DTLS1_2_VERSION) || \              
 end_define
 
 begin_comment
+comment|/*  * Determine if a client should send signature algorithms extension:  * as with TLS1.2 cipher we can't rely on method flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_CLIENT_USE_SIGALGS
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|SSL_CLIENT_USE_TLS1_2_CIPHERS(s)
+end_define
+
+begin_comment
 comment|/* Mostly for SSLv3 */
 end_comment
 
@@ -1572,6 +1587,13 @@ define|#
 directive|define
 name|SSL_EXT_FLAG_SENT
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_WARN_ALERT_COUNT
+value|5
 end_define
 
 begin_typedef
@@ -1834,6 +1856,11 @@ name|int
 name|alpn_sent
 decl_stmt|;
 comment|/* client */
+comment|/* Count of the number of consecutive warning alerts received */
+name|unsigned
+name|int
+name|alert_count
+decl_stmt|;
 block|}
 name|CERT
 typedef|;
@@ -5191,7 +5218,18 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dtls1_clear_record_buffer
+name|dtls1_clear_received_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dtls1_clear_sent_buffer
 parameter_list|(
 name|SSL
 modifier|*

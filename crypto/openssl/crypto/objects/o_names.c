@@ -963,9 +963,7 @@ condition|)
 block|{
 comment|/* ERROR */
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|onp
@@ -1072,17 +1070,18 @@ argument_list|)
 condition|)
 block|{
 comment|/* ERROR */
+name|OPENSSL_free
+argument_list|(
+name|onp
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function

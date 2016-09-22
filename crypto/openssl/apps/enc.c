@@ -2682,14 +2682,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|salt
 argument_list|,
 sizeof|sizeof
 name|salt
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto

@@ -1781,6 +1781,14 @@ default|default:
 break|break;
 block|}
 block|}
+comment|/*      * We have to truncate if there is no dynamic buffer and we have filled the      * static buffer.      */
+if|if
+condition|(
+name|buffer
+operator|==
+name|NULL
+condition|)
+block|{
 operator|*
 name|truncated
 operator|=
@@ -1805,6 +1813,7 @@ name|maxlen
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

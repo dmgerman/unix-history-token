@@ -309,7 +309,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -318,7 +318,7 @@ argument_list|(
 name|cipher
 argument_list|)
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto
@@ -859,7 +859,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|osalt
 operator|->
@@ -867,7 +867,7 @@ name|data
 argument_list|,
 name|saltlen
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto
