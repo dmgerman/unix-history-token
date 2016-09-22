@@ -2468,7 +2468,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
+name|a
+operator|->
+name|pkey
+operator|.
+name|dh
+operator|==
+name|NULL
+operator|||
 name|a
 operator|->
 name|pkey
@@ -2476,8 +2483,9 @@ operator|.
 name|dh
 operator|->
 name|p
+operator|==
+name|NULL
 operator|||
-operator|!
 name|a
 operator|->
 name|pkey
@@ -2485,6 +2493,8 @@ operator|.
 name|dh
 operator|->
 name|g
+operator|==
+name|NULL
 condition|)
 return|return
 literal|1

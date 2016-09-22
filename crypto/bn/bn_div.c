@@ -135,7 +135,7 @@ parameter_list|,
 name|d0
 parameter_list|)
 define|\
-value|({  asm volatile (                      \                 "divl   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "g"(d0)     \                 : "cc");                        \             q;                                  \         })
+value|({  asm volatile (                      \                 "divl   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "r"(d0)     \                 : "cc");                        \             q;                                  \         })
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ parameter_list|,
 name|d0
 parameter_list|)
 define|\
-value|({  asm volatile (                      \                 "divq   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "g"(d0)     \                 : "cc");                        \             q;                                  \         })
+value|({  asm volatile (                      \                 "divq   %4"                     \                 : "=a"(q), "=d"(rem)            \                 : "a"(n1), "d"(n0), "r"(d0)     \                 : "cc");                        \             q;                                  \         })
 end_define
 
 begin_define

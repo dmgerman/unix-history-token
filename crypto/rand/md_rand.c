@@ -123,7 +123,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|state_num
 init|=
 literal|0
@@ -1030,13 +1030,13 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|k
-decl_stmt|,
-name|st_num
+decl_stmt|;
+name|size_t
+name|num_ceil
 decl_stmt|,
 name|st_idx
-decl_stmt|;
-name|int
-name|num_ceil
+decl_stmt|,
+name|st_num
 decl_stmt|;
 name|int
 name|ok

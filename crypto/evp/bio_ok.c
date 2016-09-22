@@ -1967,7 +1967,7 @@ goto|;
 comment|/*      * FIXME: there's absolutely no guarantee this makes any sense at all,      * particularly now EVP_MD_CTX has been restructured.      */
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|md
 operator|->
@@ -1979,7 +1979,7 @@ name|digest
 operator|->
 name|md_size
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 goto|goto

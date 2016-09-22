@@ -3361,11 +3361,6 @@ argument_list|,
 name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
-name|OPENSSL_free
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 goto|goto
 name|err
 goto|;

@@ -2785,6 +2785,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|objtmp
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|strncpy
 argument_list|(
 name|objtmp

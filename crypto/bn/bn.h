@@ -3735,7 +3735,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|{ \         BN_ULONG *ftl; \         int tmp_top = (a)->top; \         if (tmp_top> 0) \                 { \                 for (ftl=&((a)->d[tmp_top-1]); tmp_top> 0; tmp_top--) \                         if (*(ftl--)) break; \                 (a)->top = tmp_top; \                 } \         bn_pollute(a); \         }
+value|{ \         BN_ULONG *ftl; \         int tmp_top = (a)->top; \         if (tmp_top> 0) \                 { \                 for (ftl=&((a)->d[tmp_top-1]); tmp_top> 0; tmp_top--) \                         if (*(ftl--)) break; \                 (a)->top = tmp_top; \                 } \         if ((a)->top == 0) \             (a)->neg = 0; \         bn_pollute(a); \         }
 name|BN_ULONG
 name|bn_mul_add_words
 parameter_list|(

@@ -749,6 +749,15 @@ operator|=
 name|EVP_PKEY_new
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|sec_key
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|EVP_PKEY_assign
 argument_list|(
 name|sec_key

@@ -70,6 +70,12 @@ directive|include
 file|"asn1_locl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -117,6 +123,11 @@ name|ri
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3295,6 +3306,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -3403,6 +3420,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Customised RSA item verification routine. This is called when a signature  * is encountered requiring special handling. We currently only handle PSS.  */
 end_comment
@@ -3490,6 +3512,12 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
+end_ifndef
 
 begin_function
 specifier|static
@@ -3629,6 +3657,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3905,6 +3938,12 @@ name|pss
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_CMS
+end_ifndef
 
 begin_function
 specifier|static
@@ -4650,6 +4689,11 @@ name|rv
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|const

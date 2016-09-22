@@ -1291,6 +1291,10 @@ name|X509_V_ERR_SUBTREE_MINMAX
 value|49
 define|#
 directive|define
+name|X509_V_ERR_APPLICATION_VERIFICATION
+value|50
+define|#
+directive|define
 name|X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE
 value|51
 define|#
@@ -1343,11 +1347,20 @@ define|#
 directive|define
 name|X509_V_ERR_IP_ADDRESS_MISMATCH
 value|64
-comment|/* The application is not happy */
+comment|/* Caller error */
 define|#
 directive|define
-name|X509_V_ERR_APPLICATION_VERIFICATION
-value|50
+name|X509_V_ERR_INVALID_CALL
+value|65
+comment|/* Issuer lookup error */
+define|#
+directive|define
+name|X509_V_ERR_STORE_LOOKUP
+value|66
+define|#
+directive|define
+name|X509_V_ERR_PROXY_SUBJECT_NAME_VIOLATION
+value|67
 comment|/* Certificate verify flags */
 comment|/* Send issuer+subject checks to verify_cb */
 define|#

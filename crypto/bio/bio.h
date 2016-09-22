@@ -1886,7 +1886,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|BIO_ctrl(b,BIO_C_SET_SSL_RENEGOTIATE_BYTES,num,NULL);
+value|BIO_ctrl(b,BIO_C_SET_SSL_RENEGOTIATE_BYTES,num,NULL)
 define|#
 directive|define
 name|BIO_get_num_renegotiates
@@ -1894,7 +1894,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|BIO_ctrl(b,BIO_C_GET_SSL_NUM_RENEGOTIATES,0,NULL);
+value|BIO_ctrl(b,BIO_C_GET_SSL_NUM_RENEGOTIATES,0,NULL)
 define|#
 directive|define
 name|BIO_set_ssl_renegotiate_timeout
@@ -1904,7 +1904,7 @@ parameter_list|,
 name|seconds
 parameter_list|)
 define|\
-value|BIO_ctrl(b,BIO_C_SET_SSL_RENEGOTIATE_TIMEOUT,seconds,NULL);
+value|BIO_ctrl(b,BIO_C_SET_SSL_RENEGOTIATE_TIMEOUT,seconds,NULL)
 comment|/* defined in evp.h */
 comment|/* #define BIO_set_md(b,md)     BIO_ctrl(b,BIO_C_SET_MD,1,(char *)md) */
 define|#

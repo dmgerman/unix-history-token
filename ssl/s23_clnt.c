@@ -883,7 +883,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|p
 argument_list|,
@@ -895,7 +895,7 @@ return|;
 block|}
 else|else
 return|return
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|result
 argument_list|,
@@ -1634,7 +1634,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 operator|&
 operator|(

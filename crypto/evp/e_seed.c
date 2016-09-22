@@ -115,7 +115,7 @@ literal|16
 argument_list|,
 literal|128
 argument_list|,
-literal|0
+argument|EVP_CIPH_FLAG_DEFAULT_ASN1
 argument_list|,
 argument|seed_init_key
 argument_list|,

@@ -8198,6 +8198,12 @@ operator|->
 name|version
 operator|<
 name|TLS1_VERSION
+operator|&&
+name|s
+operator|->
+name|version
+operator|!=
+name|DTLS1_BAD_VER
 condition|)
 return|return
 operator|-
@@ -9214,7 +9220,7 @@ begin_if
 if|if
 condition|(
 operator|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|ret
 operator|->
@@ -14465,7 +14471,7 @@ end_ifdef
 
 begin_function
 specifier|const
-name|void
+name|COMP_METHOD
 modifier|*
 name|SSL_get_current_compression
 parameter_list|(
@@ -14482,7 +14488,7 @@ end_function
 
 begin_function
 specifier|const
-name|void
+name|COMP_METHOD
 modifier|*
 name|SSL_get_current_expansion
 parameter_list|(
