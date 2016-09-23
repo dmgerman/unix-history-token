@@ -4402,7 +4402,18 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dtls1_clear_record_buffer
+name|dtls1_clear_received_buffer
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dtls1_clear_sent_buffer
 parameter_list|(
 name|SSL
 modifier|*
