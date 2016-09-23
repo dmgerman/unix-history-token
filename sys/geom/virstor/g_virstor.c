@@ -4665,16 +4665,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Whither, GEOM? */
+name|LOG_MSG
+argument_list|(
+name|LVL_INFO
+argument_list|,
+literal|"Removing provider %s"
+argument_list|,
 name|sc
 operator|->
 name|provider
 operator|->
-name|flags
-operator||=
-name|G_PF_WITHER
+name|name
+argument_list|)
 expr_stmt|;
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|sc
 operator|->
@@ -4688,19 +4692,6 @@ operator|->
 name|provider
 operator|=
 name|NULL
-expr_stmt|;
-name|LOG_MSG
-argument_list|(
-name|LVL_INFO
-argument_list|,
-literal|"Removing provider %s"
-argument_list|,
-name|sc
-operator|->
-name|geom
-operator|->
-name|name
-argument_list|)
 expr_stmt|;
 block|}
 if|if
