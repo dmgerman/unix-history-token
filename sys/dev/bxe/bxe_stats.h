@@ -658,6 +658,19 @@ comment|/* num. of times tx queue full occurred */
 name|uint32_t
 name|tx_queue_full_return
 decl_stmt|;
+comment|/* debug stats */
+name|uint32_t
+name|bxe_tx_mq_start_lock_failures
+decl_stmt|;
+name|uint32_t
+name|tx_request_link_down_failures
+decl_stmt|;
+name|uint32_t
+name|bd_avail_too_less_failures
+decl_stmt|;
+name|uint32_t
+name|tx_mq_not_empty
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -933,6 +946,19 @@ decl_stmt|;
 comment|/* num. of times tx queue full occurred */
 name|uint32_t
 name|tx_queue_full_return
+decl_stmt|;
+comment|/* debug stats */
+name|uint32_t
+name|bxe_tx_mq_start_lock_failures
+decl_stmt|;
+name|uint32_t
+name|tx_request_link_down_failures
+decl_stmt|;
+name|uint32_t
+name|bd_avail_too_less_failures
+decl_stmt|;
+name|uint32_t
+name|tx_mq_not_empty
 decl_stmt|;
 block|}
 struct|;
