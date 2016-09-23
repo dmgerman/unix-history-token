@@ -625,10 +625,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|cpu_reset
+name|imx6_cpu_reset
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 specifier|const
@@ -898,6 +900,13 @@ argument_list|(
 name|platform_late_init
 argument_list|,
 name|imx6_late_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|imx6_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END

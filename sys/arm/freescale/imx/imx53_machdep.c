@@ -178,10 +178,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|cpu_reset
+name|imx53_cpu_reset
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|imx_wdog_cpu_reset
@@ -231,6 +233,13 @@ argument_list|(
 name|platform_lastaddr
 argument_list|,
 name|imx53_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|imx53_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END

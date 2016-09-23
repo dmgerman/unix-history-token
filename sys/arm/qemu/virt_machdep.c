@@ -78,21 +78,6 @@ file|"platform_if.h"
 end_include
 
 begin_function
-name|void
-name|cpu_reset
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|vm_offset_t
 name|virt_lastaddr

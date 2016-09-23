@@ -315,18 +315,17 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
-name|cpu_reset
-parameter_list|()
+name|bcm2835_cpu_reset
+parameter_list|(
+name|platform_t
+name|plat
+parameter_list|)
 block|{
 name|bcmwd_watchdog_reset
 argument_list|()
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
 block|}
 end_function
 
@@ -362,6 +361,13 @@ argument_list|(
 name|platform_late_init
 argument_list|,
 name|bcm2835_late_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|bcm2835_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END

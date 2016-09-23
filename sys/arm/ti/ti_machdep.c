@@ -260,9 +260,13 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
-name|cpu_reset
-parameter_list|()
+name|ti_plat_cpu_reset
+parameter_list|(
+name|platform_t
+name|plat
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -280,16 +284,6 @@ argument_list|(
 literal|"no cpu_reset implementation\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Reset failed!\n"
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
 block|}
 end_function
 
@@ -321,6 +315,13 @@ argument_list|(
 name|platform_lastaddr
 argument_list|,
 name|ti_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|ti_plat_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END
@@ -377,6 +378,13 @@ argument_list|(
 name|platform_lastaddr
 argument_list|,
 name|ti_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|ti_plat_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END
