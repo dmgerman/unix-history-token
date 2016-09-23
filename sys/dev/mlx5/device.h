@@ -238,6 +238,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MLX5_ST_SZ_QW
+parameter_list|(
+name|typ
+parameter_list|)
+value|(sizeof(struct mlx5_ifc_##typ##_bits) / 64)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MLX5_UN_SZ_BYTES
 parameter_list|(
 name|typ
@@ -412,6 +422,16 @@ end_enum
 begin_enum
 enum|enum
 block|{
+name|MLX5_CQ_FLAGS_OI
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 name|MLX5_STAT_RATE_OFFSET
 init|=
 literal|5
@@ -450,6 +470,18 @@ name|MLX5_MAX_LOG_PKEY_TABLE
 init|=
 literal|5
 block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|MLX5_MKEY_INBOX_PG_ACCESS
+init|=
+literal|1
+operator|<<
+literal|31
+block|}
 enum|;
 end_enum
 
@@ -712,6 +744,83 @@ end_enum
 begin_enum
 enum|enum
 block|{
+name|MLX5_UMR_TRANSLATION_OFFSET_EN
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+name|MLX5_UMR_CHECK_NOT_FREE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
+name|MLX5_UMR_CHECK_FREE
+init|=
+operator|(
+literal|2
+operator|<<
+literal|5
+operator|)
+block|,
+name|MLX5_UMR_INLINE
+init|=
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|MLX5_UMR_MTT_ALIGNMENT
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_UMR_MTT_MASK
+value|(MLX5_UMR_MTT_ALIGNMENT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_UMR_MTT_MIN_CHUNK_SIZE
+value|MLX5_UMR_MTT_ALIGNMENT
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|MLX5_EVENT_QUEUE_TYPE_QP
+init|=
+literal|0
+block|,
+name|MLX5_EVENT_QUEUE_TYPE_RQ
+init|=
+literal|1
+block|,
+name|MLX5_EVENT_QUEUE_TYPE_SQ
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 name|MLX5_PORT_CHANGE_SUBTYPE_DOWN
 init|=
 literal|1
@@ -746,6 +855,26 @@ end_enum
 begin_enum
 enum|enum
 block|{
+name|MLX5_DCBX_EVENT_SUBTYPE_ERROR_STATE_DCBX
+init|=
+literal|1
+block|,
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_CHANGE
+block|,
+name|MLX5_DCBX_EVENT_SUBTYPE_LOCAL_OPER_CHANGE
+block|,
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_APP_PRIORITY_CHANGE
+block|,
+name|MLX5_MAX_INLINE_RECEIVE_SIZE
+init|=
+literal|64
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 name|MLX5_DEV_CAP_FLAG_XRC
 init|=
 literal|1LL
@@ -769,12 +898,6 @@ init|=
 literal|1LL
 operator|<<
 literal|17
-block|,
-name|MLX5_DEV_CAP_FLAG_ATOMIC
-init|=
-literal|1LL
-operator|<<
-literal|18
 block|,
 name|MLX5_DEV_CAP_FLAG_SCQE_BRK_MOD
 init|=
@@ -800,6 +923,12 @@ literal|1LL
 operator|<<
 literal|30
 block|,
+name|MLX5_DEV_CAP_FLAG_ATOMIC
+init|=
+literal|1LL
+operator|<<
+literal|33
+block|,
 name|MLX5_DEV_CAP_FLAG_ROCE
 init|=
 literal|1LL
@@ -823,6 +952,12 @@ init|=
 literal|3LL
 operator|<<
 literal|46
+block|,
+name|MLX5_DEV_CAP_FLAG_DRAIN_SIGERR
+init|=
+literal|1LL
+operator|<<
+literal|48
 block|, }
 enum|;
 end_enum
@@ -1007,7 +1142,15 @@ block|,
 name|MLX5_OPCODE_UMR
 init|=
 literal|0x25
-block|,  }
+block|,
+name|MLX5_OPCODE_SIGNATURE_CANCELED
+init|=
+operator|(
+literal|1
+operator|<<
+literal|15
+operator|)
+block|, }
 enum|;
 end_enum
 
@@ -1112,6 +1255,48 @@ index|]
 decl_stmt|;
 name|__be32
 name|syndrome
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mlx5_cmd_set_dc_cnak_mbox_in
+block|{
+name|struct
+name|mlx5_inbox_hdr
+name|hdr
+decl_stmt|;
+name|u8
+name|enable
+decl_stmt|;
+name|u8
+name|reserved
+index|[
+literal|47
+index|]
+decl_stmt|;
+name|__be64
+name|pa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mlx5_cmd_set_dc_cnak_mbox_out
+block|{
+name|struct
+name|mlx5_outbox_hdr
+name|hdr
+decl_stmt|;
+name|u8
+name|rsvd
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1261,14 +1446,26 @@ decl_stmt|;
 name|__be32
 name|rsvd2
 index|[
-literal|884
+literal|880
+index|]
+decl_stmt|;
+name|__be32
+name|internal_timer_h
+decl_stmt|;
+name|__be32
+name|internal_timer_l
+decl_stmt|;
+name|__be32
+name|rsvd3
+index|[
+literal|2
 index|]
 decl_stmt|;
 name|__be32
 name|health_counter
 decl_stmt|;
 name|__be32
-name|rsvd3
+name|rsvd4
 index|[
 literal|1019
 index|]
@@ -1536,6 +1733,10 @@ block|,
 name|MLX5_MODULE_EVENT_ERROR_HIGH_TEMPERATURE
 init|=
 literal|0x6
+block|,
+name|MLX5_MODULE_EVENT_ERROR_CABLE_IS_SHORTED
+init|=
+literal|0x7
 block|, }
 enum|;
 end_enum
@@ -3089,6 +3290,18 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+name|MLX5_MKEY_STATUS_FREE
+init|=
+literal|1
+operator|<<
+literal|6
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|mlx5_mkey_seg
@@ -3202,11 +3415,8 @@ decl_stmt|;
 name|__be32
 name|input_mkey_index
 decl_stmt|;
-name|u8
-name|rsvd0
-index|[
-literal|4
-index|]
+name|__be32
+name|flags
 decl_stmt|;
 name|struct
 name|mlx5_mkey_seg
@@ -3571,6 +3781,43 @@ block|}
 struct|;
 end_struct
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|mlx5_host_is_le
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__LITTLE_ENDIAN
+argument_list|)
+return|return
+literal|1
+return|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__BIG_ENDIAN
+argument_list|)
+return|return
+literal|0
+return|;
+else|#
+directive|else
+error|#
+directive|error
+error|Host endianness not defined
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -3698,6 +3945,14 @@ block|,
 name|MLX5_FLOW_TABLE_TYPE_ESWITCH
 init|=
 literal|4
+block|,
+name|MLX5_FLOW_TABLE_TYPE_SNIFFER_RX
+init|=
+literal|5
+block|,
+name|MLX5_FLOW_TABLE_TYPE_SNIFFER_TX
+init|=
+literal|6
 block|, }
 enum|;
 end_enum
@@ -3882,6 +4137,14 @@ name|MLX5_CAP_ESWITCH_FLOW_TABLE
 block|,
 name|MLX5_CAP_ESWITCH
 block|,
+name|MLX5_CAP_SNAPSHOT
+block|,
+name|MLX5_CAP_VECTOR_CALC
+block|,
+name|MLX5_CAP_QOS
+block|,
+name|MLX5_CAP_DEBUG
+block|,
 comment|/* NUM OF CAP Types */
 name|MLX5_CAP_NUM
 block|}
@@ -4051,53 +4314,79 @@ end_define
 begin_define
 define|#
 directive|define
-name|MLX5_CAP_ESW_FLOWTABLE_EGRESS_ACL
+name|MLX5_CAP_ESW_FLOWTABLE_FDB
 parameter_list|(
 name|mdev
 parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|MLX5_CAP_ESW_FLOWTABLE(dev, \ 			       flow_table_properties_esw_acl_egress.cap)
+value|MLX5_CAP_ESW_FLOWTABLE(mdev, flow_table_properties_nic_esw_fdb.cap)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLX5_CAP_ESW_FLOWTABLE_EGRESS_ACL_MAX
+name|MLX5_CAP_ESW_FLOWTABLE_FDB_MAX
 parameter_list|(
 name|mdev
 parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|MLX5_CAP_ESW_FLOWTABLE_MAX(dev, \ 				   flow_table_properties_esw_acl_egress.cap)
+value|MLX5_CAP_ESW_FLOWTABLE_MAX(mdev, flow_table_properties_nic_esw_fdb.cap)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLX5_CAP_ESW_FLOWTABLE_INGRESS_ACL
+name|MLX5_CAP_ESW_EGRESS_ACL
 parameter_list|(
 name|mdev
 parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|MLX5_CAP_ESW_FLOWTABLE(dev, \ 			       flow_table_properties_esw_acl_ingress.cap)
+value|MLX5_CAP_ESW_FLOWTABLE(mdev, flow_table_properties_esw_acl_egress.cap)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLX5_CAP_ESW_FLOWTABLE_INGRESS_ACL_MAX
+name|MLX5_CAP_ESW_EGRESS_ACL_MAX
 parameter_list|(
 name|mdev
 parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|MLX5_CAP_ESW_FLOWTABLE_MAX(dev, \ 				   flow_table_properties_esw_acl_ingress.cap)
+value|MLX5_CAP_ESW_FLOWTABLE_MAX(mdev, flow_table_properties_esw_acl_egress.cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_ESW_INGRESS_ACL
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_CAP_ESW_FLOWTABLE(mdev, flow_table_properties_esw_acl_ingress.cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_ESW_INGRESS_ACL_MAX
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_CAP_ESW_FLOWTABLE_MAX(mdev, flow_table_properties_esw_acl_ingress.cap)
 end_define
 
 begin_define
@@ -4150,6 +4439,110 @@ name|cap
 parameter_list|)
 define|\
 value|MLX5_GET(odp_cap, mdev->hca_caps_max[MLX5_CAP_ODP], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_SNAPSHOT
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(snapshot_cap, \ 		 mdev->hca_caps_cur[MLX5_CAP_SNAPSHOT], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_SNAPSHOT_MAX
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(snapshot_cap, \ 		 mdev->hca_caps_max[MLX5_CAP_SNAPSHOT], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_EOIB_OFFLOADS
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(per_protocol_networking_offload_caps,\ 		 mdev->hca_caps_cur[MLX5_CAP_EOIB_OFFLOADS], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_EOIB_OFFLOADS_MAX
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(per_protocol_networking_offload_caps,\ 		 mdev->hca_caps_max[MLX5_CAP_EOIB_OFFLOADS], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_DEBUG
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(debug_cap, \ 		 mdev->hca_caps_cur[MLX5_CAP_DEBUG], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_DEBUG_MAX
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(debug_cap, \ 		 mdev->hca_caps_max[MLX5_CAP_DEBUG], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_QOS
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(qos_cap,\ 		 mdev->hca_caps_cur[MLX5_CAP_QOS], cap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX5_CAP_QOS_MAX
+parameter_list|(
+name|mdev
+parameter_list|,
+name|cap
+parameter_list|)
+define|\
+value|MLX5_GET(qos_cap,\ 		 mdev->hca_caps_max[MLX5_CAP_QOS], cap)
 end_define
 
 begin_enum
@@ -4256,6 +4649,54 @@ block|,
 name|MLX5_PHYSICAL_LAYER_COUNTERS_GROUP
 init|=
 literal|0x12
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|MLX5_PCIE_PERFORMANCE_COUNTERS_GROUP
+init|=
+literal|0x0
+block|,
+name|MLX5_PCIE_LANE_COUNTERS_GROUP
+init|=
+literal|0x1
+block|,
+name|MLX5_PCIE_TIMERS_AND_STATES_COUNTERS_GROUP
+init|=
+literal|0x2
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|MLX5_NUM_UUARS_PER_PAGE
+init|=
+name|MLX5_NON_FP_BF_REGS_PER_PAGE
+block|,
+name|MLX5_DEF_TOT_UUARS
+init|=
+literal|8
+operator|*
+name|MLX5_NUM_UUARS_PER_PAGE
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|NUM_DRIVER_UARS
+init|=
+literal|4
+block|,
+name|NUM_LOW_LAT_UUARS
+init|=
+literal|4
 block|, }
 enum|;
 end_enum
@@ -4575,6 +5016,17 @@ literal|2
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* 8 regular priorities + 1 for multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLX5_NUM_BYPASS_FTS
+value|9
+end_define
 
 begin_endif
 endif|#

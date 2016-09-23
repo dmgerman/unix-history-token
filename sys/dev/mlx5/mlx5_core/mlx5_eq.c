@@ -532,6 +532,12 @@ case|:
 return|return
 literal|"MLX5_EVENT_TYPE_NIC_VPORT_CHANGE"
 return|;
+case|case
+name|MLX5_EVENT_TYPE_CODING_DCBX_CHANGE_EVENT
+case|:
+return|return
+literal|"MLX5_EVENT_TYPE_CODING_DCBX_CHANGE_EVENT"
+return|;
 default|default:
 return|return
 literal|"Unrecognized event"
@@ -596,6 +602,53 @@ name|MLX5_PORT_CHANGE_SUBTYPE_CLIENT_REREG
 case|:
 return|return
 name|MLX5_DEV_EVENT_CLIENT_REREG
+return|;
+block|}
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|enum
+name|mlx5_dev_event
+name|dcbx_subevent
+parameter_list|(
+name|u8
+name|subtype
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|subtype
+condition|)
+block|{
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_ERROR_STATE_DCBX
+case|:
+return|return
+name|MLX5_DEV_EVENT_ERROR_STATE_DCBX
+return|;
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_CHANGE
+case|:
+return|return
+name|MLX5_DEV_EVENT_REMOTE_CONFIG_CHANGE
+return|;
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_LOCAL_OPER_CHANGE
+case|:
+return|return
+name|MLX5_DEV_EVENT_LOCAL_OPER_CHANGE
+return|;
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_APP_PRIORITY_CHANGE
+case|:
+return|return
+name|MLX5_DEV_EVENT_REMOTE_CONFIG_APPLICATION_PRIORITY_CHANGE
 return|;
 block|}
 return|return
@@ -1009,6 +1062,83 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Port event with unrecognized subtype: port %d, sub_type %d\n"
+argument_list|,
+name|port
+argument_list|,
+name|eqe
+operator|->
+name|sub_type
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|MLX5_EVENT_TYPE_CODING_DCBX_CHANGE_EVENT
+case|:
+name|port
+operator|=
+operator|(
+name|eqe
+operator|->
+name|data
+operator|.
+name|port
+operator|.
+name|port
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xf
+expr_stmt|;
+switch|switch
+condition|(
+name|eqe
+operator|->
+name|sub_type
+condition|)
+block|{
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_ERROR_STATE_DCBX
+case|:
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_CHANGE
+case|:
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_LOCAL_OPER_CHANGE
+case|:
+case|case
+name|MLX5_DCBX_EVENT_SUBTYPE_REMOTE_CONFIG_APP_PRIORITY_CHANGE
+case|:
+if|if
+condition|(
+name|dev
+operator|->
+name|event
+condition|)
+name|dev
+operator|->
+name|event
+argument_list|(
+name|dev
+argument_list|,
+name|dcbx_subevent
+argument_list|(
+name|eqe
+operator|->
+name|sub_type
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|mlx5_core_warn
+argument_list|(
+name|dev
+argument_list|,
+literal|"dcbx event with unrecognized subtype: port %d, sub_type %d\n"
 argument_list|,
 name|port
 argument_list|,
@@ -2054,6 +2184,23 @@ operator|<<
 name|MLX5_EVENT_TYPE_NIC_VPORT_CHANGE
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|MLX5_CAP_GEN
+argument_list|(
+name|dev
+argument_list|,
+name|dcbx
+argument_list|)
+condition|)
+name|async_event_mask
+operator||=
+operator|(
+literal|1ull
+operator|<<
+name|MLX5_EVENT_TYPE_CODING_DCBX_CHANGE_EVENT
+operator|)
+expr_stmt|;
 name|err
 operator|=
 name|mlx5_create_map_eq
@@ -2525,6 +2672,12 @@ case|:
 return|return
 literal|"High Temperature"
 return|;
+case|case
+name|MLX5_MODULE_EVENT_ERROR_CABLE_IS_SHORTED
+case|:
+return|return
+literal|"Cable is shorted"
+return|;
 default|default:
 return|return
 literal|"Unknown error type"
@@ -2677,7 +2830,7 @@ operator|->
 name|bsddev
 argument_list|,
 literal|"INFO: "
-literal|"Module %u, status: plugged"
+literal|"Module %u, status: plugged\n"
 argument_list|,
 name|module_num
 argument_list|)
@@ -2698,7 +2851,7 @@ operator|->
 name|bsddev
 argument_list|,
 literal|"INFO: "
-literal|"Module %u, status: unplugged"
+literal|"Module %u, status: unplugged\n"
 argument_list|,
 name|module_num
 argument_list|)
@@ -2719,7 +2872,7 @@ operator|->
 name|bsddev
 argument_list|,
 literal|"INFO: "
-literal|"Module %u, status: error, %s"
+literal|"Module %u, status: error, %s\n"
 argument_list|,
 name|module_num
 argument_list|,
@@ -2743,7 +2896,7 @@ operator|->
 name|bsddev
 argument_list|,
 literal|"INFO: "
-literal|"Module %u, unknown status"
+literal|"Module %u, unknown status\n"
 argument_list|,
 name|module_num
 argument_list|)

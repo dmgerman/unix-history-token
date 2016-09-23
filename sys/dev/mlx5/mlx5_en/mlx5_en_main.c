@@ -705,6 +705,8 @@ argument_list|(
 name|mdev
 argument_list|,
 name|MLX5_QUERY_VPORT_STATE_IN_OP_MOD_VNIC_VPORT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11378,6 +11380,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|u16
+name|set_id
+decl_stmt|;
 comment|/* check if already opened */
 if|if
 condition|(
@@ -11470,10 +11475,10 @@ name|priv
 operator|->
 name|mdev
 argument_list|,
+name|MLX5_INTERFACE_PROTOCOL_ETH
+argument_list|,
 operator|&
-name|priv
-operator|->
-name|counter_set_id
+name|set_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -11498,6 +11503,13 @@ goto|goto
 name|err_close_tises
 goto|;
 block|}
+comment|/* store counter set ID */
+name|priv
+operator|->
+name|counter_set_id
+operator|=
+name|set_id
+expr_stmt|;
 name|err
 operator|=
 name|mlx5e_open_channels
@@ -11694,6 +11706,8 @@ name|priv
 operator|->
 name|mdev
 argument_list|,
+name|MLX5_INTERFACE_PROTOCOL_ETH
+argument_list|,
 name|priv
 operator|->
 name|counter_set_id
@@ -11874,6 +11888,8 @@ argument_list|(
 name|priv
 operator|->
 name|mdev
+argument_list|,
+name|MLX5_INTERFACE_PROTOCOL_ETH
 argument_list|,
 name|priv
 operator|->

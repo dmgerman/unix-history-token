@@ -612,24 +612,6 @@ name|limit
 operator|=
 literal|8
 block|}
-block|,
-operator|.
-name|mr_cache
-index|[
-literal|15
-index|]
-operator|=
-block|{
-operator|.
-name|size
-operator|=
-literal|8
-block|,
-operator|.
-name|limit
-operator|=
-literal|4
-block|}
 block|, 	}
 block|,
 index|[
@@ -1204,6 +1186,8 @@ literal|2
 argument_list|)
 operator||
 name|MLX5_DEV_CAP_FLAG_DCT
+operator||
+name|MLX5_DEV_CAP_FLAG_DRAIN_SIGERR
 block|, }
 enum|;
 end_enum
@@ -1796,6 +1780,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* enable drain sigerr */
+name|MLX5_SET
+argument_list|(
+name|cmd_hca_cap
+argument_list|,
+name|set_hca_cap
+argument_list|,
+name|drain_sigerr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|MLX5_SET
 argument_list|(
 name|cmd_hca_cap
@@ -1855,6 +1851,28 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+name|MLX5_CAP_GEN
+argument_list|(
+name|dev
+argument_list|,
+name|port_type
+argument_list|)
+operator|==
+name|MLX5_CAP_PORT_TYPE_ETH
+operator|&&
+operator|!
+name|MLX5_CAP_GEN
+argument_list|(
+name|dev
+argument_list|,
+name|roce
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|memset
 argument_list|(
 operator|&
@@ -3399,6 +3417,13 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * On load removing any previous indication of internal error, 	 * device is up 	 */
+name|dev
+operator|->
+name|state
+operator|=
+name|MLX5_DEVICE_STATE_UP
+expr_stmt|;
 name|err
 operator|=
 name|mlx5_cmd_init
@@ -3600,37 +3625,6 @@ goto|;
 block|}
 name|err
 operator|=
-name|set_hca_ctrl
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|device_printf
-argument_list|(
-operator|(
-operator|&
-name|pdev
-operator|->
-name|dev
-operator|)
-operator|->
-name|bsddev
-argument_list|,
-literal|"ERR: "
-literal|"set_hca_ctrl failed\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|reclaim_boot_pages
-goto|;
-block|}
-name|err
-operator|=
 name|handle_hca_cap
 argument_list|(
 name|dev
@@ -3654,6 +3648,37 @@ name|bsddev
 argument_list|,
 literal|"ERR: "
 literal|"handle_hca_cap failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|reclaim_boot_pages
+goto|;
+block|}
+name|err
+operator|=
+name|set_hca_ctrl
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|device_printf
+argument_list|(
+operator|(
+operator|&
+name|pdev
+operator|->
+name|dev
+operator|)
+operator|->
+name|bsddev
+argument_list|,
+literal|"ERR: "
+literal|"set_hca_ctrl failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4144,6 +4169,12 @@ argument_list|)
 expr_stmt|;
 name|err_dbg
 label|:
+name|dev
+operator|->
+name|state
+operator|=
+name|MLX5_DEVICE_STATE_INTERNAL_ERROR
+expr_stmt|;
 return|return
 name|err
 return|;
@@ -5093,6 +5124,18 @@ name|priv
 expr_stmt|;
 if|if
 condition|(
+name|id
+condition|)
+name|priv
+operator|->
+name|pci_dev_data
+operator|=
+name|id
+operator|->
+name|driver_data
+expr_stmt|;
+if|if
+condition|(
 name|prof_sel
 operator|<
 literal|0
@@ -5358,6 +5401,7 @@ literal|4119
 argument_list|)
 block|}
 block|,
+comment|/* ConnectX-5 */
 block|{
 name|PCI_VDEVICE
 argument_list|(
@@ -5367,6 +5411,7 @@ literal|4120
 argument_list|)
 block|}
 block|,
+comment|/* ConnectX-5 VF */
 block|{
 name|PCI_VDEVICE
 argument_list|(
