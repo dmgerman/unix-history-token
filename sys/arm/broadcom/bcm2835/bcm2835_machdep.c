@@ -430,6 +430,13 @@ argument_list|,
 name|bcm2835_late_init
 argument_list|)
 block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|bcm2835_cpu_reset
+argument_list|)
+block|,
 name|PLATFORMMETHOD_END
 block|, }
 decl_stmt|;
