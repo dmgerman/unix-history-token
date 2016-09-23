@@ -1124,8 +1124,6 @@ name|ifp
 operator|=
 name|sq
 operator|->
-name|channel
-operator|->
 name|ifp
 expr_stmt|;
 name|memset
@@ -2793,8 +2791,6 @@ modifier|*
 name|ifp
 init|=
 name|sq
-operator|->
-name|channel
 operator|->
 name|ifp
 decl_stmt|;
