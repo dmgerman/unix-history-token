@@ -2724,7 +2724,13 @@ name|vm_srb
 operator|.
 name|length
 operator|=
-name|VSTOR_PKT_SIZE
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmscsi_req
+argument_list|)
+operator|-
+name|vmscsi_size_delta
 expr_stmt|;
 name|vstor_packet
 operator|->
