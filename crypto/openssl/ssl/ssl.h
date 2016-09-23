@@ -9036,6 +9036,10 @@ name|SSL_F_DTLS1_PREPROCESS_FRAGMENT
 value|288
 define|#
 directive|define
+name|SSL_F_DTLS1_PROCESS_BUFFERED_RECORDS
+value|424
+define|#
+directive|define
 name|SSL_F_DTLS1_PROCESS_OUT_OF_SEQ_MESSAGE
 value|256
 define|#
