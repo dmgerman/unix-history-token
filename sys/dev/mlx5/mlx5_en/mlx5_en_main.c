@@ -4520,7 +4520,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mlx5e_free_sq_db
 parameter_list|(
@@ -4586,7 +4585,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mlx5e_alloc_sq_db
 parameter_list|(
@@ -5422,7 +5420,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mlx5e_enable_sq
 parameter_list|(
@@ -5435,6 +5432,9 @@ name|struct
 name|mlx5e_sq_param
 modifier|*
 name|param
+parameter_list|,
+name|int
+name|tis_num
 parameter_list|)
 block|{
 name|void
@@ -5540,16 +5540,7 @@ name|sqc
 argument_list|,
 name|tis_num_0
 argument_list|,
-name|sq
-operator|->
-name|priv
-operator|->
-name|tisn
-index|[
-name|sq
-operator|->
-name|tc
-index|]
+name|tis_num
 argument_list|)
 expr_stmt|;
 name|MLX5_SET
@@ -5721,7 +5712,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mlx5e_modify_sq
 parameter_list|(
@@ -5852,7 +5842,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mlx5e_disable_sq
 parameter_list|(
@@ -5934,6 +5923,15 @@ argument_list|(
 name|sq
 argument_list|,
 name|param
+argument_list|,
+name|c
+operator|->
+name|priv
+operator|->
+name|tisn
+index|[
+name|tc
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -6217,9 +6215,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|mlx5e_close_sq_wait
+name|mlx5e_drain_sq
 parameter_list|(
 name|struct
 name|mlx5e_sq
@@ -6349,6 +6346,25 @@ operator|&
 name|sq
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mlx5e_close_sq_wait
+parameter_list|(
+name|struct
+name|mlx5e_sq
+modifier|*
+name|sq
+parameter_list|)
+block|{
+name|mlx5e_drain_sq
+argument_list|(
+name|sq
 argument_list|)
 expr_stmt|;
 name|mlx5e_disable_sq
