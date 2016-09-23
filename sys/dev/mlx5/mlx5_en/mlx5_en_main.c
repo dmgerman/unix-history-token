@@ -13706,6 +13706,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|MLX5_INIT_DOORBELL_LOCK
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|doorbell_lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

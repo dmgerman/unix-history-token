@@ -1969,6 +1969,10 @@ name|struct
 name|work_struct
 name|set_rx_mode_work
 decl_stmt|;
+name|MLX5_DECLARE_DOORBELL_LOCK
+argument_list|(
+argument|doorbell_lock
+argument_list|)
 name|struct
 name|mlx5_core_dev
 modifier|*
@@ -2556,7 +2560,15 @@ name|map
 operator|+
 name|ofst
 argument_list|,
-name|NULL
+name|MLX5_GET_DOORBELL_LOCK
+argument_list|(
+operator|&
+name|sq
+operator|->
+name|priv
+operator|->
+name|doorbell_lock
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
