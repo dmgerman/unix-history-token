@@ -2845,10 +2845,10 @@ block|}
 block|,
 comment|/* 	 * VFS namecache 	 */
 block|{
-literal|"ncglobal"
+literal|"ncvn"
 block|,
 operator|&
-name|lock_class_rw
+name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
