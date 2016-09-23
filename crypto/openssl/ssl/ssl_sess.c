@@ -1521,11 +1521,11 @@ name|err
 goto|;
 if|if
 condition|(
-name|session_id
-operator|+
-name|len
-operator|>
 name|limit
+operator|-
+name|session_id
+operator|<
+name|len
 condition|)
 block|{
 name|fatal
