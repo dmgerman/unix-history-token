@@ -49,7 +49,7 @@ name|priv
 operator|.
 name|mr_table
 decl_stmt|;
-name|rwlock_init
+name|spin_lock_init
 argument_list|(
 operator|&
 name|table
@@ -133,15 +133,15 @@ name|struct
 name|mlx5_create_mkey_mbox_out
 name|lout
 decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
 name|u8
 name|key
-decl_stmt|;
-name|unsigned
-name|long
-name|irql
 decl_stmt|;
 name|memset
 argument_list|(
@@ -391,14 +391,14 @@ name|key
 argument_list|)
 expr_stmt|;
 comment|/* connect to MR tree */
-name|write_lock_irqsave
+name|spin_lock_irqsave
 argument_list|(
 operator|&
 name|table
 operator|->
 name|lock
 argument_list|,
-name|irql
+name|flags
 argument_list|)
 expr_stmt|;
 name|err
@@ -410,7 +410,7 @@ name|table
 operator|->
 name|tree
 argument_list|,
-name|mlx5_base_mkey
+name|mlx5_mkey_to_idx
 argument_list|(
 name|mr
 operator|->
@@ -420,14 +420,14 @@ argument_list|,
 name|mr
 argument_list|)
 expr_stmt|;
-name|write_unlock_irqrestore
+name|spin_unlock_irqrestore
 argument_list|(
 operator|&
 name|table
 operator|->
 name|lock
 argument_list|,
-name|irql
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -441,12 +441,9 @@ name|dev
 argument_list|,
 literal|"failed radix tree insert of mr 0x%x, %d\n"
 argument_list|,
-name|mlx5_base_mkey
-argument_list|(
 name|mr
 operator|->
 name|key
-argument_list|)
 argument_list|,
 name|err
 argument_list|)
@@ -539,7 +536,7 @@ name|in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write_lock_irqsave
+name|spin_lock_irqsave
 argument_list|(
 operator|&
 name|table
@@ -558,7 +555,7 @@ name|table
 operator|->
 name|tree
 argument_list|,
-name|mlx5_base_mkey
+name|mlx5_mkey_to_idx
 argument_list|(
 name|mr
 operator|->
@@ -566,7 +563,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write_unlock_irqrestore
+name|spin_unlock_irqrestore
 argument_list|(
 operator|&
 name|table
@@ -588,12 +585,9 @@ name|dev
 argument_list|,
 literal|"failed radix tree delete of mr 0x%x\n"
 argument_list|,
-name|mlx5_base_mkey
-argument_list|(
 name|mr
 operator|->
 name|key
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

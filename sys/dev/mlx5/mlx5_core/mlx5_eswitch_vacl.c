@@ -300,7 +300,7 @@ name|in_match_value
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -326,7 +326,7 @@ name|in_match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -1110,7 +1110,7 @@ name|in_match_value
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|0
 argument_list|)
@@ -1123,7 +1123,7 @@ name|in_match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -2464,7 +2464,7 @@ name|match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -2544,7 +2544,7 @@ name|match_criteria
 argument_list|,
 name|outer_headers
 operator|.
-name|vlan_tag
+name|cvlan_tag
 argument_list|,
 literal|1
 argument_list|)
@@ -2810,7 +2810,7 @@ condition|(
 name|is_egress
 operator|&&
 operator|!
-name|MLX5_CAP_ESW_FLOWTABLE_EGRESS_ACL
+name|MLX5_CAP_ESW_EGRESS_ACL
 argument_list|(
 name|dev
 argument_list|,
@@ -2826,7 +2826,7 @@ operator|!
 name|is_egress
 operator|&&
 operator|!
-name|MLX5_CAP_ESW_FLOWTABLE_INGRESS_ACL
+name|MLX5_CAP_ESW_INGRESS_ACL
 argument_list|(
 name|dev
 argument_list|,
@@ -2874,14 +2874,14 @@ operator|=
 operator|(
 name|is_egress
 condition|?
-name|MLX5_CAP_ESW_FLOWTABLE_EGRESS_ACL
+name|MLX5_CAP_ESW_EGRESS_ACL
 argument_list|(
 name|dev
 argument_list|,
 name|log_max_ft_size
 argument_list|)
 else|:
-name|MLX5_CAP_ESW_FLOWTABLE_INGRESS_ACL
+name|MLX5_CAP_ESW_INGRESS_ACL
 argument_list|(
 name|dev
 argument_list|,

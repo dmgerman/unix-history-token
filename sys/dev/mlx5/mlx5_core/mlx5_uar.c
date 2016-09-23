@@ -33,20 +33,6 @@ directive|include
 file|"mlx5_core.h"
 end_include
 
-begin_enum
-enum|enum
-block|{
-name|NUM_DRIVER_UARS
-init|=
-literal|4
-block|,
-name|NUM_LOW_LAT_UUARS
-init|=
-literal|4
-block|, }
-enum|;
-end_enum
-
 begin_function
 name|int
 name|mlx5_cmd_alloc_uar

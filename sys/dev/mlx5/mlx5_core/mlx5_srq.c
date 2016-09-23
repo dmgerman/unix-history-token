@@ -1360,18 +1360,6 @@ argument_list|,
 name|pas_size
 argument_list|)
 expr_stmt|;
-comment|/* 0xffffff means we ask to work with cqe version 0 */
-name|MLX5_SET
-argument_list|(
-name|xrc_srqc
-argument_list|,
-name|xrc_srqc
-argument_list|,
-name|user_index
-argument_list|,
-literal|0xffffff
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|mlx5_core_create_xsrq
