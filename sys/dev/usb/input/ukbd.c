@@ -7314,14 +7314,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|EVDEV
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_evdev
-operator|!=
-name|NULL
-condition|)
 name|evdev_free
 argument_list|(
 name|sc
