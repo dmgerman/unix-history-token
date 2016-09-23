@@ -935,6 +935,14 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|BN_set_flags
+argument_list|(
+operator|&
+name|kq
+argument_list|,
+name|BN_FLG_CONSTTIME
+argument_list|)
+expr_stmt|;
 comment|/*          * We do not want timing information to leak the length of k, so we          * compute g^k using an equivalent exponent of fixed length. (This          * is a kludge that we need because the BN_mod_exp_mont() does not          * let us specify the desired timing behaviour.)          */
 if|if
 condition|(

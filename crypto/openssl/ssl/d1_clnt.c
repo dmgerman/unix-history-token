@@ -1919,6 +1919,11 @@ name|next_handshake_write_seq
 operator|=
 literal|0
 expr_stmt|;
+name|dtls1_clear_received_buffer
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;

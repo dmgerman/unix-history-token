@@ -216,11 +216,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|i
-operator|+
 name|len
 operator|<
 name|MDC2_BLOCK
+operator|-
+name|i
 condition|)
 block|{
 comment|/* partial block */
