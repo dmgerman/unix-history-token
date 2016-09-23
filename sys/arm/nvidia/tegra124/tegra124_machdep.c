@@ -169,22 +169,6 @@ name|PMC_SCRATCH0_MODE_MASK
 value|(PMC_SCRATCH0_MODE_RECOVERY | \ 					PMC_SCRATCH0_MODE_BOOTLOADER | \ 					PMC_SCRATCH0_MODE_RCM)
 end_define
 
-begin_decl_stmt
-name|struct
-name|fdt_fixup_entry
-name|fdt_fixup_table
-index|[]
-init|=
-block|{
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|vm_offset_t
