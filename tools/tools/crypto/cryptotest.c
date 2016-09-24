@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -277,7 +289,7 @@ name|CRYPTO_SKIPJACK_CBC
 block|}
 block|,
 block|{
-literal|"aes"
+literal|"rij"
 block|,
 literal|0
 block|,
@@ -288,6 +300,20 @@ block|,
 literal|16
 block|,
 name|CRYPTO_RIJNDAEL128_CBC
+block|}
+block|,
+block|{
+literal|"aes"
+block|,
+literal|0
+block|,
+literal|16
+block|,
+literal|16
+block|,
+literal|16
+block|,
+name|CRYPTO_AES_CBC
 block|}
 block|,
 block|{
@@ -301,7 +327,7 @@ literal|24
 block|,
 literal|24
 block|,
-name|CRYPTO_RIJNDAEL128_CBC
+name|CRYPTO_AES_CBC
 block|}
 block|,
 block|{
@@ -315,28 +341,9 @@ literal|32
 block|,
 literal|32
 block|,
-name|CRYPTO_RIJNDAEL128_CBC
+name|CRYPTO_AES_CBC
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-literal|"arc4"
-block|,
-literal|0
-block|,
-literal|8
-block|,
-literal|1
-block|,
-literal|32
-block|,
-name|CRYPTO_ARC4
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"md5"
 block|,
@@ -411,7 +418,6 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -435,12 +441,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    des 3des (default) blowfish cast skipjack\n"
+literal|"    null des 3des (default) blowfish cast skipjack rij\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    aes (aka rijndael) aes192 aes256 arc4\n"
+literal|"    aes aes192 aes256 md5 sha1 sha256 sha384 sha512\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -465,7 +471,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"-d use specific device\n"
+literal|"-d use specific device, specify 'soft' for testing software implementations\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tNOTE: to use software you must set:\n\t sysctl kern.cryptodevallowsoft=1\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -488,6 +499,11 @@ argument_list|(
 literal|"-p profile kernel crypto operation (must be root)\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"-t n for n threads and run tests concurrently\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 operator|-
@@ -498,7 +514,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alg
 modifier|*
@@ -552,7 +567,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alg
 modifier|*
@@ -611,14 +625,12 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|devcrypto
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
 name|int
 name|fd
 init|=
@@ -687,7 +699,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|crlookup
 parameter_list|(
@@ -701,6 +712,22 @@ name|struct
 name|crypt_find_op
 name|find
 decl_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|devname
+argument_list|,
+literal|"soft"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|CRYPTO_FLAG_SOFTWARE
+return|;
 name|find
 operator|.
 name|crid
@@ -756,7 +783,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*
@@ -766,7 +792,6 @@ name|int
 name|crid
 parameter_list|)
 block|{
-specifier|static
 name|struct
 name|crypt_find_op
 name|find
@@ -822,7 +847,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|crget
 parameter_list|(
@@ -883,7 +907,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 name|rdigit
 parameter_list|(
@@ -963,7 +986,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|runtest
 parameter_list|(
@@ -1916,7 +1938,6 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|resetstats
 parameter_list|()
@@ -2092,7 +2113,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|printt
 parameter_list|(
@@ -2203,7 +2223,6 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|void
 name|runtests
 parameter_list|(
@@ -2417,6 +2436,41 @@ operator|==
 literal|0
 condition|)
 block|{
+name|cpuset_t
+name|mask
+decl_stmt|;
+name|CPU_ZERO
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+name|CPU_SET
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+name|cpuset_setaffinity
+argument_list|(
+name|CPU_LEVEL_WHICH
+argument_list|,
+name|CPU_WHICH_PID
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mask
+argument_list|)
+argument_list|,
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
 name|runtest
 argument_list|(
 name|alg
@@ -2533,12 +2587,6 @@ literal|2
 operator|*
 name|count
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|t /= threads; 		printf("%6.3lf sec, %7d %6s crypts, %7d bytes, %8.0lf byte/sec, %7.1lf Mb/sec\n", 		    t, nops, alg->name, size, (double)nops*size / t, 		    (double)nops*size / t * 8 / 1024 / 1024);
-else|#
-directive|else
 name|nops
 operator|*=
 name|threads
@@ -2582,8 +2630,6 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -3007,6 +3053,21 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|maxthreads
+operator|>
+name|CPU_SETSIZE
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Too many threads, %d, choose fewer."
+argument_list|,
+name|maxthreads
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nsizes
