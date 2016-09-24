@@ -2319,6 +2319,9 @@ case|:
 case|case
 name|SIOCGIFMEDIA
 case|:
+case|case
+name|SIOCGIFXMEDIA
+case|:
 name|sx_xlock
 argument_list|(
 operator|&

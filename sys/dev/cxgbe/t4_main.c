@@ -9722,6 +9722,9 @@ case|:
 case|case
 name|SIOCGIFMEDIA
 case|:
+case|case
+name|SIOCGIFXMEDIA
+case|:
 name|ifmedia_ioctl
 argument_list|(
 name|ifp
