@@ -75,6 +75,12 @@ directive|include
 file|"nvram/bhnd_nvram.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|bhnd_core_pmu_info
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -139,6 +145,9 @@ comment|/**< Bus-assigned core number */
 name|BHND_IVAR_CORE_UNIT
 block|,
 comment|/**< Bus-assigned core unit number, 				     assigned sequentially (starting at 0) for 				     each vendor/device pair. */
+name|BHND_IVAR_PMU_INFO
+block|,
+comment|/**< Internal bus-managed PMU state */
 block|}
 enum|;
 end_enum
@@ -215,6 +224,78 @@ block|,
 name|BHND_PROBE_ORDER_LAST
 init|=
 literal|100
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * Per-core IOCTL flags common to all bhnd(4) cores.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|BHND_IOCTL_BIST
+init|=
+literal|0x8000
+block|,
+comment|/**< Initiate a built-in self-test (BIST). Must be cleared 						     after BIST results are read via BHND_IOST_BIST_* */
+name|BHND_IOCTL_PME
+init|=
+literal|0x4000
+block|,
+comment|/**< Enable posting of power management events by the core. */
+name|BHND_IOCTL_CFLAGS
+init|=
+literal|0x3FFC
+block|,
+comment|/**< Reserved for core-specific ioctl flags. */
+name|BHND_IOCTL_CLK_FORCE
+init|=
+literal|0x0002
+block|,
+comment|/**< Force disable of clock gating, resulting in all clocks 						     being distributed within the core. Should be set when 						     asserting/deasserting reset to ensure the reset signal 						     fully propagates to the entire core. */
+name|BHND_IOCTL_CLK_EN
+init|=
+literal|0x0001
+block|,
+comment|/**< If cleared, the core clock will be disabled. Should be 						     set during normal operation, and cleared when the core is 						     held in reset. */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * Per-core IOST flags common to all bhnd(4) cores.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|BHND_IOST_BIST_DONE
+init|=
+literal|0x8000
+block|,
+comment|/**< Set upon BIST completion (see BHND_IOCTL_BIST), and cleared 						     if 0 is written to BHND_IOCTL_BIST. */
+name|BHND_IOST_BIST_FAIL
+init|=
+literal|0x4000
+block|,
+comment|/**< Set upon detection of a BIST error; the value is unspecified 						     if BIST has not completed and BHND_IOST_BIST_DONE is not set. */
+name|BHND_IOST_CLK
+init|=
+literal|0x2000
+block|,
+comment|/**< Set if the core has requested that gated clocks be enabled, or 						     cleared otherwise. The value is undefined if a core does not 						     support clock gating. */
+name|BHND_IOST_DMA64
+init|=
+literal|0x1000
+block|,
+comment|/**< Set if this core supports 64-bit DMA */
+name|BHND_IOST_CFLAGS
+init|=
+literal|0x0FFC
+block|,
+comment|/**< Reserved for core-specific status flags. */
 block|}
 enum|;
 end_enum
@@ -334,6 +415,20 @@ argument_list|,
 name|CORE_UNIT
 argument_list|,
 name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|BHND_ACCESSOR
+argument_list|(
+name|pmu_info
+argument_list|,
+name|PMU_INFO
+argument_list|,
+expr|struct
+name|bhnd_core_pmu_info
+operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1776,6 +1871,213 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/**  * Read the current value of a bhnd(4) device's per-core I/O control register.  *  * @param dev The bhnd bus child device to be queried.  * @param[out] ioctl On success, the I/O control register value.  *  * @retval 0 success  * @retval EINVAL If @p child is not a direct child of @p dev.  * @retval ENODEV If agent/config space for @p child is unavailable.  * @retval non-zero If reading the IOCTL register otherwise fails, a regular  * unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_read_ioctl
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint16_t
+modifier|*
+name|ioctl
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_READ_IOCTL
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ioctl
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Write @p value and @p mask to a bhnd(4) device's per-core I/O control  * register.  *   * @param dev The bhnd bus child device for which the IOCTL register will be  * written.  * @param value The value to be written (see BHND_IOCTL_*).  * @param mask Only the bits defined by @p mask will be updated from @p value.  *  * @retval 0 success  * @retval EINVAL If @p child is not a direct child of @p dev.  * @retval ENODEV If agent/config space for @p child is unavailable.  * @retval non-zero If writing the IOCTL register otherwise fails, a regular  * unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_write_ioctl
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint16_t
+name|value
+parameter_list|,
+name|uint16_t
+name|mask
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_WRITE_IOCTL
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|value
+argument_list|,
+name|mask
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Read the current value of a bhnd(4) device's per-core I/O status register.  *  * @param dev The bhnd bus child device to be queried.  * @param[out] iost On success, the I/O status register value.  *  * @retval 0 success  * @retval EINVAL If @p child is not a direct child of @p dev.  * @retval ENODEV If agent/config space for @p child is unavailable.  * @retval non-zero If reading the IOST register otherwise fails, a regular  * unix error code will be returned.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_read_iost
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint16_t
+modifier|*
+name|iost
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_READ_IOST
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|iost
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return true if the given bhnd device's hardware is currently held  * in a RESET state or otherwise not clocked (BHND_IOCTL_CLK_EN).  *   * @param dev The device to query.  *  * @retval true If @p dev is held in RESET or not clocked (BHND_IOCTL_CLK_EN),  * or an error occured determining @p dev's hardware state.  * @retval false If @p dev is clocked and is not held in RESET.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|bhnd_is_hw_suspended
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_IS_HW_SUSPENDED
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Place the bhnd(4) device's hardware into a reset state, and then bring the  * hardware out of reset with BHND_IOCTL_CLK_EN and @p ioctl flags set.  *   * Any clock or resource PMU requests previously made by @p dev will be  * invalidated.  *  * @param dev The device to be reset.  * @param ioctl Device-specific core ioctl flags to be supplied on reset  * (see BHND_IOCTL_*).  *  * @retval 0 success  * @retval non-zero error  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_reset_hw
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|uint16_t
+name|ioctl
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_RESET_HW
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ioctl
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Suspend @p child's hardware in a low-power reset state.  *  * Any clock or resource PMU requests previously made by @p dev will be  * invalidated.  *  * The hardware may be brought out of reset via bhnd_reset_hw().  *  * @param dev The device to be suspended.  *  * @retval 0 success  * @retval non-zero error  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|bhnd_suspend_hw
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|BHND_BUS_SUSPEND_HW
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * If supported by the chipset, return the clock source for the given clock.  *  * This function is only supported on early PWRCTL-equipped chipsets  * that expose clock management via their host bridge interface. Currently,  * this includes PCI (not PCIe) devices, with ChipCommon core revisions 0-9.  *  * @param dev A bhnd bus child device.  * @param clock The clock for which a clock source will be returned.  *  * @retval	bhnd_clksrc		The clock source for @p clock.  * @retval	BHND_CLKSRC_UNKNOWN	If @p clock is unsupported, or its  *					clock source is not known to the bus.  */
 end_comment
 
@@ -2079,7 +2381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Request that @p clock (or faster) be routed to @p dev.  *   * A driver must ask the bhnd bus to allocate clock request state  * via bhnd_alloc_pmu() before it can request clock resources.  *   * Request multiplexing is managed by the bus.  *  * @param dev The bhnd(4) device to which @p clock should be routed.  * @param clock The requested clock source.   *  * @retval 0 success  * @retval ENODEV If an unsupported clock was requested.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable.  */
+comment|/**   * Request that @p clock (or faster) be routed to @p dev.  *   * @note A driver must ask the bhnd bus to allocate clock request state  * via bhnd_alloc_pmu() before it can request clock resources.  *   * @note Any outstanding PMU clock requests will be discarded upon calling  * BHND_BUS_RESET_HW() or BHND_BUS_SUSPEND_HW().  *  * @param dev The bhnd(4) device to which @p clock should be routed.  * @param clock The requested clock source.   *  * @retval 0 success  * @retval ENODEV If an unsupported clock was requested.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable,  */
 end_comment
 
 begin_function
@@ -2114,7 +2416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Request that @p clocks be powered on behalf of @p dev.  *  * This will power any clock sources (e.g. XTAL, PLL, etc) required for  * @p clocks and wait until they are ready, discarding any previous  * requests by @p dev.  *  * Request multiplexing is managed by the bus.  *   * A driver must ask the bhnd bus to allocate clock request state  * via bhnd_alloc_pmu() before it can request clock resources.  *  * @param dev The requesting bhnd(4) device.  * @param clocks The clock(s) to be enabled.  *  * @retval 0 success  * @retval ENODEV If an unsupported clock was requested.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable.  */
+comment|/**  * Request that @p clocks be powered on behalf of @p dev.  *  * This will power any clock sources (e.g. XTAL, PLL, etc) required for  * @p clocks and wait until they are ready, discarding any previous  * requests by @p dev.  *   * @note A driver must ask the bhnd bus to allocate clock request state  * via bhnd_alloc_pmu() before it can request clock resources.  *   * @note Any outstanding PMU clock requests will be discarded upon calling  * BHND_BUS_RESET_HW() or BHND_BUS_SUSPEND_HW().  *   * @param dev The requesting bhnd(4) device.  * @param clocks The clock(s) to be enabled.  *  * @retval 0 success  * @retval ENODEV If an unsupported clock was requested.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable.  */
 end_comment
 
 begin_function
@@ -2149,7 +2451,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Power up an external PMU-managed resource assigned to @p dev.  *   * A driver must ask the bhnd bus to allocate PMU request state  * via bhnd_alloc_pmu() before it can request PMU resources.  *  * @param dev The requesting bhnd(4) device.  * @param rsrc The core-specific external resource identifier.  *  * @retval 0 success  * @retval ENODEV If the PMU does not support @p rsrc.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable.  */
+comment|/**  * Power up an external PMU-managed resource assigned to @p dev.  *   * @note A driver must ask the bhnd bus to allocate PMU request state  * via bhnd_alloc_pmu() before it can request PMU resources.  *  * @note Any outstanding PMU resource requests will be released upon calling  * bhnd_reset_hw() or bhnd_suspend_hw().  *  * @param dev The requesting bhnd(4) device.  * @param rsrc The core-specific external resource identifier.  *  * @retval 0 success  * @retval ENODEV If the PMU does not support @p rsrc.  * @retval ENXIO If the PMU has not been initialized or is otherwise unvailable.  */
 end_comment
 
 begin_function
@@ -2219,7 +2521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Read @p width bytes at @p offset from the bus-specific agent/config  * space of @p dev.  *  * @param dev The bhnd device for which @p offset should be read.  * @param offset The offset to be read.  * @param width The size of the access. Must be 1, 2 or 4 bytes.  *  * The exact behavior of this method is bus-specific. In the case of  * bcma(4), this method provides access to the first agent port of @p child.  *  * @note Device drivers should only use this API for functionality  * that is not available via another bhnd(4) function.  */
+comment|/**  * Read @p width bytes at @p offset from the bus-specific agent/config  * space of @p dev.  *  * @param dev The bhnd device for which @p offset should be read.  * @param offset The offset to be read.  * @param[out] value On success, the will be set to the @p width value read  * at @p offset.  * @param width The size of the access. Must be 1, 2 or 4 bytes.  *  * The exact behavior of this method is bus-specific. In the case of  * bcma(4), this method provides access to the first agent port of @p child.  *  * @note Device drivers should only use this API for functionality  * that is not available via another bhnd(4) function.  *   * @retval 0 success  * @retval EINVAL If @p child is not a direct child of @p dev.  * @retval EINVAL If @p width is not one of 1, 2, or 4 bytes.  * @retval ENODEV If accessing agent/config space for @p child is unsupported.  * @retval EFAULT If reading @p width at @p offset exceeds the bounds of  * the mapped agent/config space  for @p child.  */
 end_comment
 
 begin_function
@@ -2233,6 +2535,10 @@ name|dev
 parameter_list|,
 name|bus_size_t
 name|offset
+parameter_list|,
+name|void
+modifier|*
+name|value
 parameter_list|,
 name|u_int
 name|width
@@ -2251,6 +2557,8 @@ name|dev
 argument_list|,
 name|offset
 argument_list|,
+name|value
+argument_list|,
 name|width
 argument_list|)
 operator|)
@@ -2259,13 +2567,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Read @p width bytes at @p offset from the bus-specific agent/config  * space of @p dev.  *  * @param dev The bhnd device for which @p offset should be read.  * @param offset The offset to be written.  * @param width The size of the access. Must be 1, 2 or 4 bytes.  *  * The exact behavior of this method is bus-specific. In the case of  * bcma(4), this method provides access to the first agent port of @p child.  *  * @note Device drivers should only use this API for functionality  * that is not available via another bhnd(4) function.  */
+comment|/**  * Write @p width bytes at @p offset to the bus-specific agent/config  * space of @p dev.  *  * @param dev The bhnd device for which @p offset should be read.  * @param offset The offset to be written.  * @param value A pointer to the value to be written.  * @param width The size of @p value. Must be 1, 2 or 4 bytes.  *  * The exact behavior of this method is bus-specific. In the case of  * bcma(4), this method provides access to the first agent port of @p child.  *  * @note Device drivers should only use this API for functionality  * that is not available via another bhnd(4) function.  *   * @retval 0 success  * @retval EINVAL If @p child is not a direct child of @p dev.  * @retval EINVAL If @p width is not one of 1, 2, or 4 bytes.  * @retval ENODEV If accessing agent/config space for @p child is unsupported.  * @retval EFAULT If reading @p width at @p offset exceeds the bounds of  * the mapped agent/config space  for @p child.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
-name|void
+name|int
 name|bhnd_write_config
 parameter_list|(
 name|device_t
@@ -2274,13 +2582,17 @@ parameter_list|,
 name|bus_size_t
 name|offset
 parameter_list|,
-name|uint32_t
-name|val
+specifier|const
+name|void
+modifier|*
+name|value
 parameter_list|,
 name|u_int
 name|width
 parameter_list|)
 block|{
+return|return
+operator|(
 name|BHND_BUS_WRITE_CONFIG
 argument_list|(
 name|device_get_parent
@@ -2292,11 +2604,12 @@ name|dev
 argument_list|,
 name|offset
 argument_list|,
-name|val
+name|value
 argument_list|,
 name|width
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

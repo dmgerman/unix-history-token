@@ -23,12 +23,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -266,41 +260,13 @@ directive|endif
 end_endif
 
 begin_function
-name|struct
-name|arm32_dma_range
-modifier|*
-name|bus_dma_get_range
+specifier|static
+name|void
+name|ti_plat_cpu_reset
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|bus_dma_get_range_nb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cpu_reset
-parameter_list|()
 block|{
 if|if
 condition|(
@@ -318,16 +284,6 @@ argument_list|(
 literal|"no cpu_reset implementation\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Reset failed!\n"
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-empty_stmt|;
 block|}
 end_function
 
@@ -359,6 +315,13 @@ argument_list|(
 name|platform_lastaddr
 argument_list|,
 name|ti_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|ti_plat_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END
@@ -415,6 +378,13 @@ argument_list|(
 name|platform_lastaddr
 argument_list|,
 name|ti_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_cpu_reset
+argument_list|,
+name|ti_plat_cpu_reset
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END

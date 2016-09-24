@@ -1669,6 +1669,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
+
 begin_function
 name|struct
 name|arm32_dma_range
@@ -1700,6 +1708,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

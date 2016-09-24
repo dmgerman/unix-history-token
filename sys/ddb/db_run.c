@@ -468,21 +468,28 @@ operator|=
 name|false
 expr_stmt|;
 comment|/* might be a breakpoint, but not ours */
-comment|/* 	 * If stepping, then abort if the trap type is unexpected. 	 * Breakpoints owned by us are expected and were handled above. 	 * Single-steps are expected and are handled below.  All others 	 * are unexpected. 	 * 	 * If the MD layer doesn't tell us when it is stepping, use the 	 * bad historical default that all unexepected traps. 	 */
-ifndef|#
-directive|ifndef
+comment|/* 	 * If not stepping, then silently ignore single-step traps 	 * (except for clearing the single-step-flag above). 	 * 	 * If stepping, then abort if the trap type is unexpected. 	 * Breakpoints owned by us are expected and were handled above. 	 * Single-steps are expected and are handled below.  All others 	 * are unexpected. 	 * 	 * Only do either of these if the MD layer claims to classify 	 * single-step traps unambiguously (by defining IS_SSTEP_TRAP). 	 * Otherwise, fall through to the bad historical behaviour 	 * given by turning unexpected traps into expected traps: if not 	 * stepping, then expect only breakpoints and stop, and if 	 * stepping, then expect only single-steps and step. 	 */
+ifdef|#
+directive|ifdef
 name|IS_SSTEP_TRAP
-define|#
-directive|define
+if|if
+condition|(
+name|db_run_mode
+operator|==
+name|STEP_CONTINUE
+operator|&&
 name|IS_SSTEP_TRAP
-parameter_list|(
+argument_list|(
 name|type
-parameter_list|,
+argument_list|,
 name|code
-parameter_list|)
-value|true
-endif|#
-directive|endif
+argument_list|)
+condition|)
+return|return
+operator|(
+name|false
+operator|)
+return|;
 if|if
 condition|(
 name|db_run_mode
@@ -509,6 +516,8 @@ name|true
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|db_run_mode

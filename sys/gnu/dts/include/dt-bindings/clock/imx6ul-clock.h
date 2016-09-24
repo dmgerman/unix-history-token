@@ -1586,8 +1586,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX6UL_CLK_END
+name|IMX6UL_CLK_KPP
 value|224
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6UL_CLK_END
+value|225
 end_define
 
 begin_endif

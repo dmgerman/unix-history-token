@@ -82,6 +82,13 @@ name|R8A7794_CLK_Z
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_RCAN
+value|9
+end_define
+
 begin_comment
 comment|/* MSTP0 */
 end_comment
@@ -290,6 +297,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|R8A7794_CLK_IIC0
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_IIC1
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
 name|R8A7794_CLK_CMT1
 value|29
 end_define
@@ -446,6 +467,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R8A7794_CLK_ETHERAVB
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|R8A7794_CLK_ETHER
 value|13
 end_define
@@ -501,6 +529,20 @@ define|#
 directive|define
 name|R8A7794_CLK_GPIO0
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_RCAN1
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8A7794_CLK_RCAN0
+value|16
 end_define
 
 begin_define

@@ -814,13 +814,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIBA_TML_SICF_SHIFT
-value|16
+name|SIBA_TML_SICF_MASK
+value|0xFFFF0000
 end_define
 
 begin_comment
-comment|/* Shift to locate the SI control flags in sbtml */
+comment|/* core IOCTL flags */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_TML_SICF_SHIFT
+value|16
+end_define
 
 begin_comment
 comment|/* sbtmstatehigh */
@@ -873,13 +880,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIBA_TMH_SISF_SHIFT
-value|16
+name|SIBA_TMH_SISF_MASK
+value|0xFFFF0000
 end_define
 
 begin_comment
-comment|/* Shift to locate the SI status flags in sbtmh */
+comment|/* core IOST flags */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIBA_TMH_SISF_SHIFT
+value|16
+end_define
 
 begin_comment
 comment|/* sbbwa0 */

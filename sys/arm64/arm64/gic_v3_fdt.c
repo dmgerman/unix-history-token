@@ -550,6 +550,14 @@ goto|goto
 name|error
 goto|;
 block|}
+comment|/* Register xref */
+name|OF_device_register_xref
+argument_list|(
+name|xref
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|intr_pic_claim_root

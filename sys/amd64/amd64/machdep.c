@@ -810,7 +810,7 @@ end_comment
 
 begin_decl_stmt
 name|vm_paddr_t
-name|efi_systbl
+name|efi_systbl_phys
 decl_stmt|;
 end_decl_stmt
 
@@ -5250,19 +5250,6 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|efi_next_descriptor
-parameter_list|(
-name|ptr
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|((struct efi_md *)(((uint8_t *) ptr) + size))
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -7089,7 +7076,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|efi_systbl
+name|efi_systbl_phys
 operator|=
 name|MD_FETCH
 argument_list|(

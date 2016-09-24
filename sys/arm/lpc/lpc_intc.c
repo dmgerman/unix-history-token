@@ -930,22 +930,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|struct
-name|fdt_fixup_entry
-name|fdt_fixup_table
-index|[]
-init|=
-block|{
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef

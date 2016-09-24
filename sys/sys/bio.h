@@ -679,26 +679,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|bio_taskqueue
-parameter_list|(
-name|struct
-name|bio
-modifier|*
-name|bp
-parameter_list|,
-name|bio_task_t
-modifier|*
-name|fund
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|physio
 parameter_list|(

@@ -722,7 +722,7 @@ name|whence
 parameter_list|,
 name|error
 parameter_list|)
-value|do {			\ 	errno = 0;						\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) != 0,	\ 	    "fseeko(%s, %s) did not fail, set pos to %jd\n",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp));				\ 	ATF_REQUIRE_MSG(errno == (error),			\ 	    "fseeko(%s, %s) failed with %d rather than %s\n",	\ 	    __STRING(offset), __STRING(whence),	errno,		\ 	    __STRING(error));					\ } while (0)
+value|do {			\ 	errno = 0;						\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) != 0,	\ 	    "fseeko(%s, %s) did not fail, set pos to %jd",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp));				\ 	ATF_REQUIRE_MSG(errno == (error),			\ 	    "fseeko(%s, %s) failed with %d rather than %s",	\ 	    __STRING(offset), __STRING(whence),	errno,		\ 	    __STRING(error));					\ } while (0)
 define|#
 directive|define
 name|SEEK_OK
@@ -733,7 +733,7 @@ name|whence
 parameter_list|,
 name|result
 parameter_list|)
-value|do {			\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) == 0,	\ 	    "fseeko(%s, %s) failed: %s",			\ 	    __STRING(offset), __STRING(whence), strerror(errno)); \ 	ATF_REQUIRE_MSG(ftello(fp) == (result),			\ 	    "fseeko(%s, %s) seeked to %jd rather than %s\n",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp), __STRING(result));		\ } while (0)
+value|do {			\ 	ATF_REQUIRE_MSG(fseeko(fp, (offset), (whence)) == 0,	\ 	    "fseeko(%s, %s) failed: %s",			\ 	    __STRING(offset), __STRING(whence), strerror(errno)); \ 	ATF_REQUIRE_MSG(ftello(fp) == (result),			\ 	    "fseeko(%s, %s) seeked to %jd rather than %s",	\ 	    __STRING(offset), __STRING(whence),			\ 	    (intmax_t)ftello(fp), __STRING(result));		\ } while (0)
 name|SEEK_FAIL
 argument_list|(
 operator|-

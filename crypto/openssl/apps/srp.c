@@ -3853,6 +3853,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

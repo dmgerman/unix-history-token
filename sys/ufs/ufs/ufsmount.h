@@ -557,7 +557,7 @@ name|UFS_RDONLY
 parameter_list|(
 name|aa
 parameter_list|)
-value|((aa)->i_ump->um_rdonly(aa))
+value|(ITOUMP(aa)->um_rdonly(aa))
 end_define
 
 begin_define
@@ -567,7 +567,7 @@ name|UFS_SNAPGONE
 parameter_list|(
 name|aa
 parameter_list|)
-value|((aa)->i_ump->um_snapgone(aa))
+value|(ITOUMP(aa)->um_snapgone(aa))
 end_define
 
 begin_define

@@ -722,9 +722,11 @@ block|}
 end_function
 
 begin_function
-name|int
+name|time_t
 name|getsecs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|host_timeval

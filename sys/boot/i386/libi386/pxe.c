@@ -2820,7 +2820,9 @@ end_function
 begin_function
 name|time_t
 name|getsecs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|time_t
 name|n

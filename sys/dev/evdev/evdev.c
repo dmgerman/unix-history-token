@@ -344,6 +344,10 @@ block|{
 if|if
 condition|(
 name|evdev
+operator|!=
+name|NULL
+operator|&&
+name|evdev
 operator|->
 name|ev_cdev
 operator|!=

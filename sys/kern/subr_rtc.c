@@ -129,7 +129,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|resettodr_lock
@@ -350,6 +349,12 @@ name|wrong_time
 goto|;
 block|}
 comment|/* XXX: We should poll all registered RTCs in case of failure */
+name|mtx_lock
+argument_list|(
+operator|&
+name|resettodr_lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|CLOCK_GETTIME
@@ -358,6 +363,12 @@ name|clock_dev
 argument_list|,
 operator|&
 name|ts
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|resettodr_lock
 argument_list|)
 expr_stmt|;
 if|if

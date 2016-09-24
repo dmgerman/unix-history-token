@@ -11359,6 +11359,9 @@ expr_stmt|;
 name|ipfw_init_sopt_handler
 argument_list|()
 expr_stmt|;
+name|ipfw_init_obj_rewriter
+argument_list|()
+expr_stmt|;
 name|ipfw_iface_init
 argument_list|()
 expr_stmt|;
@@ -11386,6 +11389,9 @@ name|ipfw_iface_destroy
 argument_list|()
 expr_stmt|;
 name|ipfw_destroy_sopt_handler
+argument_list|()
+expr_stmt|;
+name|ipfw_destroy_obj_rewriter
 argument_list|()
 expr_stmt|;
 name|printf
@@ -11490,9 +11496,6 @@ name|ipfw_init_srv
 argument_list|(
 name|chain
 argument_list|)
-expr_stmt|;
-name|ipfw_init_obj_rewriter
-argument_list|()
 expr_stmt|;
 name|ipfw_init_counters
 argument_list|()
@@ -11925,9 +11928,6 @@ argument_list|)
 expr_stmt|;
 comment|/* free the remaining parts */
 name|ipfw_destroy_counters
-argument_list|()
-expr_stmt|;
-name|ipfw_destroy_obj_rewriter
 argument_list|()
 expr_stmt|;
 name|ipfw_bpf_uninit

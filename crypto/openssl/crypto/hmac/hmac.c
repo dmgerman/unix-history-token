@@ -1097,11 +1097,9 @@ operator|->
 name|md_ctx
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|ctx
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 expr|*

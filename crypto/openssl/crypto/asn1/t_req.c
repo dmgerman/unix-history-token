@@ -898,6 +898,12 @@ operator|||
 operator|(
 name|type
 operator|==
+name|V_ASN1_UTF8STRING
+operator|)
+operator|||
+operator|(
+name|type
+operator|==
 name|V_ASN1_T61STRING
 operator|)
 operator|||

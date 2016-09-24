@@ -611,9 +611,12 @@ name|TEGRA210_CLK_D_AUDIO
 value|106
 end_define
 
-begin_comment
-comment|/* 107 ( affects abp -> ape) */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_APB2APE
+value|107
+end_define
 
 begin_comment
 comment|/* 108 */
@@ -1880,9 +1883,12 @@ name|TEGRA210_CLK_XUSB_SSP_SRC
 value|318
 end_define
 
-begin_comment
-comment|/* 319 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TEGRA210_CLK_PLL_RE_OUT1
+value|319
+end_define
 
 begin_comment
 comment|/* 320 */

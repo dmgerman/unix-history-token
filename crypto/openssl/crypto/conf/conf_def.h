@@ -278,7 +278,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* CHARSET_EBCDIC */
+comment|/*CHARSET_EBCDIC*/
 end_comment
 
 begin_define
@@ -420,7 +420,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CHARSET_EBCDIC */
+comment|/*CHARSET_EBCDIC*/
 end_comment
 
 begin_decl_stmt

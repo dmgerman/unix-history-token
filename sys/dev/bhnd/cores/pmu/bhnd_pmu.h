@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/bhnd/bhnd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_pmu_if.h"
 end_include
 

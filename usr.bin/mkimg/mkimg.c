@@ -2187,6 +2187,7 @@ condition|(
 operator|!
 name|error
 condition|)
+block|{
 name|error
 operator|=
 name|capacity_resize
@@ -2194,11 +2195,18 @@ argument_list|(
 name|block
 argument_list|)
 expr_stmt|;
+name|block
+operator|=
+name|image_get_size
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|error
 condition|)
+block|{
 name|error
 operator|=
 name|format_resize
@@ -2206,6 +2214,12 @@ argument_list|(
 name|block
 argument_list|)
 expr_stmt|;
+name|block
+operator|=
+name|image_get_size
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -2218,11 +2232,6 @@ name|error
 argument_list|,
 literal|"image sizing"
 argument_list|)
-expr_stmt|;
-name|block
-operator|=
-name|image_get_size
-argument_list|()
 expr_stmt|;
 name|ncyls
 operator|=

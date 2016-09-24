@@ -372,6 +372,24 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|vop_getextattr_args
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vop_deleteextattr_args
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vop_setextattr_args
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ufs_extattr_uepm_init

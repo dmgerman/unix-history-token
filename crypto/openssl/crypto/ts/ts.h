@@ -2313,6 +2313,11 @@ define|#
 directive|define
 name|TS_MAX_CLOCK_PRECISION_DIGITS
 value|6
+comment|/* Maximum status message length */
+define|#
+directive|define
+name|TS_MAX_STATUS_LENGTH
+value|(1024 * 1024)
 comment|/* No flags are set by default. */
 name|void
 name|TS_RESP_CTX_add_flags

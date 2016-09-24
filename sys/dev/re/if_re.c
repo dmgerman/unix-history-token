@@ -441,6 +441,16 @@ literal|"RealTek 8168/8111 B/C/CP/D/DP/E/F/G PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|NCUBE_VENDORID
+block|,
+name|RT_DEVICEID_8168
+block|,
+literal|0
+block|,
+literal|"TP-Link TG-3468 v2 (RTL8168) Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8169

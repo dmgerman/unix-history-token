@@ -296,7 +296,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bcm_mips_exts.h"
+file|"bcm_bmips_exts.h"
 end_include
 
 begin_ifdef
@@ -1663,9 +1663,9 @@ operator|=
 name|true
 expr_stmt|;
 comment|/* Switch to async mode */
-name|bcm_mips_wr_pllcfg3
+name|bcm_bmips_wr_pllcfg3
 argument_list|(
-name|MIPS_BCMCFG_PLLCFG3_SM
+name|BMIPS_BCMCFG_PLLCFG3_SM
 argument_list|)
 expr_stmt|;
 block|}

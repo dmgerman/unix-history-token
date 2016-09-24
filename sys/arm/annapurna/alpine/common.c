@@ -158,22 +158,6 @@ name|al_devmap_pa
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|fdt_fixup_entry
-name|fdt_fixup_table
-index|[]
-init|=
-block|{
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int

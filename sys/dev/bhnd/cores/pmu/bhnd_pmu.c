@@ -237,6 +237,17 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|BPMU_ASSERT_CLKCTL_AVAIL
+parameter_list|(
+name|_pinfo
+parameter_list|)
+define|\
+value|KASSERT(!bhnd_is_hw_suspended((_pinfo)->pm_dev),	\ 	    ("reading clkctl on suspended core will trigger system livelock"))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BPMU_CLKCTL_READ_4
 parameter_list|(
 name|_pinfo
@@ -1090,6 +1101,11 @@ decl_stmt|;
 name|uint32_t
 name|req
 decl_stmt|;
+name|BPMU_ASSERT_CLKCTL_AVAIL
+argument_list|(
+name|pinfo
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1247,6 +1263,11 @@ decl_stmt|;
 name|uint32_t
 name|req
 decl_stmt|;
+name|BPMU_ASSERT_CLKCTL_AVAIL
+argument_list|(
+name|pinfo
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1437,6 +1458,11 @@ decl_stmt|;
 name|uint32_t
 name|avail
 decl_stmt|;
+name|BPMU_ASSERT_CLKCTL_AVAIL
+argument_list|(
+name|pinfo
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1556,6 +1582,11 @@ decl_stmt|;
 name|uint32_t
 name|mask
 decl_stmt|;
+name|BPMU_ASSERT_CLKCTL_AVAIL
+argument_list|(
+name|pinfo
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1641,6 +1672,21 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* On PMU-equipped hardware, clkctl is cleared on RESET (and 	 * attempting to access it will trigger a system livelock). */
+if|if
+condition|(
+name|bhnd_is_hw_suspended
+argument_list|(
+name|pinfo
+operator|->
+name|pm_dev
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|BPMU_LOCK
 argument_list|(
 name|sc

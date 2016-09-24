@@ -18352,16 +18352,6 @@ index|]
 operator|.
 name|rate
 expr_stmt|;
-name|run_get_tsf
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|tap
-operator|->
-name|wt_tsf
-argument_list|)
-expr_stmt|;
 name|tap
 operator|->
 name|wt_chan_freq

@@ -1875,6 +1875,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|prompt
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|BUF_strlcpy
 argument_list|(
 name|prompt

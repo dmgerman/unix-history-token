@@ -6006,7 +6006,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return error if any of the vnodes, ignoring the root vnode  * and the syncer vnode, have non-zero usecount.  */
+comment|/*  * Return error if any of the vnodes, ignoring the root vnode  * and the syncer vnode, have non-zero usecount.  *  * This function is purely advisory - it can return false positives  * and negatives.  */
 end_comment
 
 begin_function
@@ -6388,6 +6388,28 @@ operator||
 name|MNTK_NOINSMNTQ
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_MWAIT
+condition|)
+block|{
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&=
+operator|~
+name|MNTK_MWAIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+block|}
 name|MNT_IUNLOCK
 argument_list|(
 name|mp

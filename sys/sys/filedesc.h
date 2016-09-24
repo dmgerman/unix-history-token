@@ -1239,6 +1239,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -1277,6 +1283,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* cdir/rdir/jdir manipulation functions. */

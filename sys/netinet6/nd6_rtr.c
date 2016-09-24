@@ -4587,7 +4587,7 @@ if|if
 condition|(
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|>
 literal|0
 condition|)
@@ -5574,7 +5574,7 @@ block|{
 comment|/* 			 * note that we should use pr (not new) for reference. 			 */
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|++
 expr_stmt|;
 name|ia6
@@ -8736,7 +8736,7 @@ name|newia
 operator|->
 name|ia6_ndpr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|++
 expr_stmt|;
 name|ifa_free

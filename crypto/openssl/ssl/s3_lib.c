@@ -430,7 +430,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -540,7 +540,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -649,7 +649,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -759,7 +759,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -868,7 +868,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -1050,7 +1050,7 @@ name|SSL_NOT_DEFAULT
 operator||
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -1137,7 +1137,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -1270,7 +1270,7 @@ name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -3177,7 +3177,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -3973,7 +3973,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -4136,7 +4136,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -4299,7 +4299,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -4462,7 +4462,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -4629,7 +4629,7 @@ name|SSL_NOT_DEFAULT
 operator||
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 operator||
 name|SSL_FIPS
 block|,
@@ -4738,7 +4738,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -4769,7 +4769,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -4800,7 +4800,7 @@ name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
 operator||
-name|SSL_HIGH
+name|SSL_MEDIUM
 block|,
 name|SSL_HANDSHAKE_MAC_DEFAULT
 operator||
@@ -13344,7 +13344,31 @@ parameter_list|)
 block|{
 name|long
 name|alg2
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|==
+name|NULL
+operator|||
+name|s
+operator|->
+name|s3
+operator|->
+name|tmp
+operator|.
+name|new_cipher
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|alg2
+operator|=
 name|s
 operator|->
 name|s3
@@ -13354,7 +13378,7 @@ operator|.
 name|new_cipher
 operator|->
 name|algorithm2
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|s

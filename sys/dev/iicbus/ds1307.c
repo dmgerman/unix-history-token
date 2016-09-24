@@ -1352,6 +1352,8 @@ expr_stmt|;
 if|if
 condition|(
 name|compat
+operator|->
+name|ocd_str
 operator|==
 name|NULL
 condition|)

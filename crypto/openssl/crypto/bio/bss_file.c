@@ -614,6 +614,15 @@ condition|(
 name|errno
 operator|==
 name|ENOENT
+ifdef|#
+directive|ifdef
+name|ENXIO
+operator|||
+name|errno
+operator|==
+name|ENXIO
+endif|#
+directive|endif
 condition|)
 name|BIOerr
 argument_list|(

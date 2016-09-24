@@ -2010,10 +2010,9 @@ literal|1
 return|;
 block|}
 comment|/*      * We must not leak whether a decryption failure occurs because of      * Bleichenbacher's attack on PKCS #1 v1.5 RSA padding (see RFC 2246,      * section 7.4.7.1). The code follows that advice of the TLS RFC and      * generates a random premaster secret for the case that the decrypt      * fails. See https://tools.ietf.org/html/rfc5246#section-7.4.7.1      */
-comment|/*      * should be RAND_bytes, but we cannot work around a failure.      */
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|rand_premaster_secret
 argument_list|,
@@ -3680,7 +3679,7 @@ name|SSL2_CONNECTION_ID_LENGTH
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|s
 operator|->
@@ -4553,7 +4552,7 @@ name|SSL2_AT_MD5_WITH_RSA_ENCRYPTION
 expr_stmt|;
 if|if
 condition|(
-name|RAND_pseudo_bytes
+name|RAND_bytes
 argument_list|(
 name|ccd
 argument_list|,

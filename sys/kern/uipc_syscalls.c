@@ -365,7 +365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert a user file descriptor to a kernel file entry and check if required  * capability rights are present.  * A reference on the file entry is held upon returning.  */
+comment|/*  * Convert a user file descriptor to a kernel file entry and check if required  * capability rights are present.  * If required copy of current set of capability rights is returned.  * A reference on the file entry is held upon returning.  */
 end_comment
 
 begin_function
@@ -393,6 +393,11 @@ parameter_list|,
 name|u_int
 modifier|*
 name|fflagp
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|havecapsp
 parameter_list|)
 block|{
 name|struct
@@ -405,13 +410,9 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|fget_unlocked
+name|fget_cap
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 argument_list|,
 name|fd
 argument_list|,
@@ -420,7 +421,7 @@ argument_list|,
 operator|&
 name|fp
 argument_list|,
-name|NULL
+name|havecapsp
 argument_list|)
 expr_stmt|;
 if|if
@@ -448,6 +449,17 @@ argument_list|(
 name|fp
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|havecapsp
+operator|!=
+name|NULL
+condition|)
+name|filecaps_free
+argument_list|(
+name|havecapsp
 argument_list|)
 expr_stmt|;
 return|return
@@ -938,6 +950,8 @@ operator|&
 name|fp
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1190,6 +1204,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -1614,6 +1630,10 @@ decl_stmt|,
 modifier|*
 name|so
 decl_stmt|;
+name|struct
+name|filecaps
+name|fcaps
+decl_stmt|;
 name|cap_rights_t
 name|rights
 decl_stmt|;
@@ -1667,6 +1687,9 @@ name|headfp
 argument_list|,
 operator|&
 name|fflag
+argument_list|,
+operator|&
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if
@@ -1734,7 +1757,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|falloc
+name|falloc_caps
 argument_list|(
 name|td
 argument_list|,
@@ -1753,6 +1776,9 @@ condition|?
 name|O_CLOEXEC
 else|:
 literal|0
+argument_list|,
+operator|&
+name|fcaps
 argument_list|)
 expr_stmt|;
 if|if
@@ -2297,6 +2323,18 @@ name|done
 label|:
 if|if
 condition|(
+name|nfp
+operator|==
+name|NULL
+condition|)
+name|filecaps_free
+argument_list|(
+operator|&
+name|fcaps
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fp
 operator|!=
 name|NULL
@@ -2673,6 +2711,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -4080,6 +4120,8 @@ operator|&
 name|fp
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5091,6 +5133,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -6634,6 +6678,8 @@ operator|&
 name|fp
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6907,6 +6953,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -7239,6 +7287,8 @@ operator|&
 name|fp
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7528,6 +7578,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -8002,6 +8054,8 @@ argument_list|)
 argument_list|,
 operator|&
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

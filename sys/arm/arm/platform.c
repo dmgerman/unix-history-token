@@ -21,12 +21,6 @@ begin_comment
 comment|/*  * Dispatch platform calls to the appropriate platform implementation  * through a previously registered kernel object.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_ARM32_BUS_DMA_PRIVATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -535,6 +529,40 @@ argument_list|(
 name|plat_obj
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|PLATFORM_CPU_RESET
+argument_list|(
+name|plat_obj
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cpu_reset failed"
+argument_list|)
+expr_stmt|;
+name|intr_disable
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|cpu_sleep
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

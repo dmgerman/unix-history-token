@@ -96,6 +96,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCLK_TSADC
+value|72
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCLK_UART0
 value|77
 end_define
@@ -233,6 +240,38 @@ name|SCLK_EMMC_SAMPLE
 value|121
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCLK_VOP
+value|122
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCLK_HDMI_HDCP
+value|123
+end_define
+
+begin_comment
+comment|/* dclk gates */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCLK_VOP
+value|190
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCLK_HDMI_PHY
+value|191
+end_define
+
 begin_comment
 comment|/* aclk gates */
 end_comment
@@ -249,6 +288,13 @@ define|#
 directive|define
 name|ACLK_PERI
 value|210
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACLK_VOP
+value|211
 end_define
 
 begin_comment
@@ -349,6 +395,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCLK_TSADC
+value|344
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCLK_PWM
 value|350
 end_define
@@ -367,9 +420,30 @@ name|PCLK_PERI
 value|363
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCLK_HDMI_CTRL
+value|364
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCLK_HDMI_PHY
+value|365
+end_define
+
 begin_comment
 comment|/* hclk gates */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HCLK_VOP
+value|452
+end_define
 
 begin_define
 define|#

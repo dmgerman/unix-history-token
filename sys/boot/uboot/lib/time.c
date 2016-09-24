@@ -72,7 +72,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|time_t
 name|getsecs
 parameter_list|(
 name|void

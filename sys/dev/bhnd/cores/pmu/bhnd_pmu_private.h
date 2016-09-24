@@ -574,7 +574,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|bhnd_pmu_radio_enable
 parameter_list|(
 name|struct

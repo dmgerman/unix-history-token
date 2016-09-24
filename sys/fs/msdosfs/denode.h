@@ -505,17 +505,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|findwin95
-parameter_list|(
-name|struct
-name|denode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|readep
 parameter_list|(
 name|struct

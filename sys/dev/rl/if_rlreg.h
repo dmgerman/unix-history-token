@@ -5666,5 +5666,16 @@ name|USR_DEVICEID_997902
 value|0x0116
 end_define
 
+begin_comment
+comment|/*   * NCube vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCUBE_VENDORID
+value|0x10FF
+end_define
+
 end_unit
 
