@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/bhnd/bhnd_core.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/bhnd/cores/pmu/bhnd_pmureg.h>
 end_include
 
@@ -417,13 +411,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|BHND_BUS_RESET_CORE
+name|bhnd_reset_hw
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 literal|0

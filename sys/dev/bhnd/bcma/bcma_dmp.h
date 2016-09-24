@@ -1374,6 +1374,28 @@ value|BCMA_DMP_OOBSEL_3_SHIFT
 end_define
 
 begin_comment
+comment|/* ioctrl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_IOCTRL_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/* iostatus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCMA_DMP_IOST_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
 comment|/* resetctrl */
 end_comment
 
@@ -1381,7 +1403,7 @@ begin_define
 define|#
 directive|define
 name|BMCA_DMP_RC_RESET
-value|1
+value|0x00000001
 end_define
 
 begin_comment

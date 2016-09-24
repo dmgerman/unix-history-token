@@ -373,6 +373,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bcma_dmp_wait_reset
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|struct
+name|bcma_devinfo
+modifier|*
+name|dinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bcma_dmp_write_reset
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|struct
+name|bcma_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/** BCMA master port descriptor */
 end_comment
@@ -552,11 +585,6 @@ struct|struct
 name|bcma_devinfo
 block|{
 name|struct
-name|bhnd_devinfo
-name|bhnd_dinfo
-decl_stmt|;
-comment|/**< superclass device info. */
-name|struct
 name|resource_list
 name|resources
 decl_stmt|;
@@ -572,11 +600,17 @@ name|bhnd_resource
 modifier|*
 name|res_agent
 decl_stmt|;
-comment|/**< Agent (wrapper) resource, or NULL. Not 						  *  all bcma(4) cores have or require an agent. */
+comment|/**< Agent (wrapper) resource, or NULL. Not 							  *  all bcma(4) cores have or require an agent. */
 name|int
 name|rid_agent
 decl_stmt|;
 comment|/**< Agent resource ID, or -1 */
+name|struct
+name|bhnd_core_pmu_info
+modifier|*
+name|pmu_info
+decl_stmt|;
+comment|/**< Bus-managed PMU state, or NULL */
 block|}
 struct|;
 end_struct

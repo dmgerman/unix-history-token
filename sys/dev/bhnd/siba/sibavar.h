@@ -401,6 +401,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|siba_write_target_state
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|bus_size_t
+name|reg
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|,
+name|uint32_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|siba_wait_target_busy
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|struct
+name|siba_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|int
+name|usec
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Sonics configuration register blocks */
 end_comment
@@ -573,11 +615,6 @@ struct|struct
 name|siba_devinfo
 block|{
 name|struct
-name|bhnd_devinfo
-name|bhnd_dinfo
-decl_stmt|;
-comment|/**< superclass device info. */
-name|struct
 name|resource_list
 name|resources
 decl_stmt|;
@@ -611,6 +648,12 @@ name|SIBA_MAX_CFG
 index|]
 decl_stmt|;
 comment|/**< SIBA_CFG_* resource IDs */
+name|struct
+name|bhnd_core_pmu_info
+modifier|*
+name|pmu_info
+decl_stmt|;
+comment|/**< Bus-managed PMU state, or NULL */
 block|}
 struct|;
 end_struct

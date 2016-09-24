@@ -59,12 +59,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|bhnd_core_pmu_info
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|bhnd_generic_attach
@@ -245,40 +239,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|device_t
-name|bhnd_generic_add_child
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|order
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bhnd_generic_child_added
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|bhnd_generic_child_deleted
 parameter_list|(
@@ -345,24 +305,6 @@ name|type
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/**  * bhnd per-device info.  Must be first member of all subclass  * devinfo structures.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bhnd_devinfo
-block|{
-name|struct
-name|bhnd_core_pmu_info
-modifier|*
-name|pmu_info
-decl_stmt|;
-comment|/**< PMU info, or NULL */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/**  * bhnd driver instance state. Must be first member of all subclass  * softc structures.  */
