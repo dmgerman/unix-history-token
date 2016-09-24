@@ -1014,9 +1014,9 @@ name|u_char
 name|ndpr_plen
 decl_stmt|;
 name|int
-name|ndpr_refcnt
+name|ndpr_addrcnt
 decl_stmt|;
-comment|/* reference couter from addresses */
+comment|/* count of derived addresses */
 block|}
 struct|;
 end_struct

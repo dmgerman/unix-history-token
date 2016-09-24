@@ -4472,7 +4472,7 @@ block|{
 comment|/* 			 * Because if_detach() does *not* release prefixes 			 * while purging addresses the reference count will 			 * still be above zero. We therefore reset it to 			 * make sure that the prefix really gets purged. 			 */
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -10372,7 +10372,7 @@ name|refcnt
 operator|=
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 expr_stmt|;
 name|p
 operator|.
