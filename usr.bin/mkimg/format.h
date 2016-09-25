@@ -15,16 +15,15 @@ directive|define
 name|_MKIMG_FORMAT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
-
 begin_struct
 struct|struct
 name|mkimg_format
 block|{
+name|struct
+name|mkimg_format
+modifier|*
+name|next
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -57,17 +56,6 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SET_DECLARE
-argument_list|(
-name|formats
-argument_list|,
-expr|struct
-name|mkimg_format
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -75,14 +63,30 @@ name|FORMAT_DEFINE
 parameter_list|(
 name|nm
 parameter_list|)
-value|DATA_SET(formats, nm)
+define|\
+value|static void format_register_##nm(void) __attribute__((constructor));	\ static void format_register_##nm(void) { format_register(&nm); }
 end_define
 
 begin_function_decl
-name|int
-name|format_resize
+name|struct
+name|mkimg_format
+modifier|*
+name|format_iterate
 parameter_list|(
-name|lba_t
+name|struct
+name|mkimg_format
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|format_register
+parameter_list|(
+name|struct
+name|mkimg_format
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -105,6 +109,15 @@ modifier|*
 name|format_selected
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|format_resize
+parameter_list|(
+name|lba_t
 parameter_list|)
 function_decl|;
 end_function_decl
