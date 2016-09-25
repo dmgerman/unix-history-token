@@ -221,9 +221,6 @@ name|pam_ssh_keyfiles
 index|[]
 init|=
 block|{
-literal|".ssh/identity"
-block|,
-comment|/* SSH1 RSA key */
 literal|".ssh/id_rsa"
 block|,
 comment|/* SSH2 RSA key */
@@ -233,6 +230,9 @@ comment|/* SSH2 DSA key */
 literal|".ssh/id_ecdsa"
 block|,
 comment|/* SSH2 ECDSA key */
+literal|".ssh/id_ed25519"
+block|,
+comment|/* SSH2 Ed25519 key */
 name|NULL
 block|}
 decl_stmt|;
