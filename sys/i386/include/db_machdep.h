@@ -255,6 +255,18 @@ name|DB_SMALL_VALUE_MIN
 value|(-0x400001)
 end_define
 
+begin_function_decl
+name|int
+name|db_segsize
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tfp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

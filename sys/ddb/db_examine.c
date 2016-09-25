@@ -1026,7 +1026,7 @@ name|db_disasm
 argument_list|(
 name|loc
 argument_list|,
-name|true
+name|false
 argument_list|)
 expr_stmt|;
 block|}
