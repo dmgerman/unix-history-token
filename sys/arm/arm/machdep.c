@@ -6817,19 +6817,6 @@ directive|ifdef
 name|EFI
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|efi_next_descriptor
-parameter_list|(
-name|ptr
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|((struct efi_md *)(((uint8_t *) ptr) + size))
-end_define
-
 begin_function
 specifier|static
 name|void
