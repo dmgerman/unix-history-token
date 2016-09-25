@@ -7096,6 +7096,38 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|amd64_kdb_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|kdb_init
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_enter
+argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
+literal|"Boot flags requested debugger"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
 name|u_int64_t
 name|hammer_time
 parameter_list|(
@@ -7138,6 +7170,9 @@ name|env
 decl_stmt|;
 name|size_t
 name|kstack0_sz
+decl_stmt|;
+name|int
+name|late_console
 decl_stmt|;
 comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
 name|proc_linkup0
@@ -7406,6 +7441,7 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Non-late cninit() and printf() can be moved up to here. */
 name|PCPU_SET
 argument_list|(
 name|tssp
@@ -8157,6 +8193,32 @@ operator||
 name|PSL_D
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The console and kdb should be initialized even earlier than here, 	 * but some console drivers don't work until after getmemsize(). 	 * Default to late console initialization to support these drivers. 	 * This loses mainly printf()s in getmemsize() and early debugging. 	 */
+name|late_console
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"debug.late_console"
+argument_list|,
+operator|&
+name|late_console
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|late_console
+condition|)
+block|{
+name|cninit
+argument_list|()
+expr_stmt|;
+name|amd64_kdb_init
+argument_list|()
+expr_stmt|;
+block|}
 name|getmemsize
 argument_list|(
 name|kmdp
@@ -8170,6 +8232,10 @@ name|physmem
 argument_list|)
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */
+if|if
+condition|(
+name|late_console
+condition|)
 name|cninit
 argument_list|()
 expr_stmt|;
@@ -8238,27 +8304,13 @@ literal|"have you forgotten the isa device?"
 error|;
 endif|#
 directive|endif
-name|kdb_init
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
 if|if
 condition|(
-name|boothowto
-operator|&
-name|RB_KDB
+name|late_console
 condition|)
-name|kdb_enter
-argument_list|(
-name|KDB_WHY_BOOTFLAGS
-argument_list|,
-literal|"Boot flags requested debugger"
-argument_list|)
+name|amd64_kdb_init
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|msgbufinit
 argument_list|(
 name|msgbufp
