@@ -164,6 +164,11 @@ directive|define
 name|PCB_32BIT
 value|0x40
 comment|/* process has 32 bit context (segs etc) */
+define|#
+directive|define
+name|PCB_FPUNOSAVE
+value|0x80
+comment|/* no save area for current FPU ctx */
 name|uint16_t
 name|pcb_initial_fpucw
 decl_stmt|;
