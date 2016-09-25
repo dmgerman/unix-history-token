@@ -2331,6 +2331,7 @@ comment|/* NB: DFS and HT40 don't mix */
 block|HALDEBUG(ah, HAL_DEBUG_REGDOMAIN, 			    "skip HT40 chan, DFS required\n"); 			continue; 		}
 endif|#
 directive|endif
+comment|/* 		 * XXX TODO: handle REG_EXT_FCC_CH_144. 		 * 		 * Figure out which instances/uses cause us to not 		 * be allowed to use channel 144 (pri or sec overlap.) 		 */
 name|bfreq_lo
 operator|=
 name|MAX
