@@ -2243,11 +2243,11 @@ block|}
 else|else
 block|{
 comment|/* 			 * I don't know what this means or whether it 			 * can happen at all... 			 */
-name|error
-operator|=
-name|EDOOFUS
+name|assert
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 if|if
@@ -2936,11 +2936,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
-name|EDOOFUS
-operator|)
-return|;
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|size
 operator|-=
