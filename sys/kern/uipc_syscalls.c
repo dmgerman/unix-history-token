@@ -3731,6 +3731,8 @@ name|struct
 name|mbuf
 modifier|*
 name|control
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -3981,6 +3983,15 @@ argument_list|(
 name|to
 argument_list|,
 name|M_SONAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|control
+condition|)
+name|m_freem
+argument_list|(
+name|control
 argument_list|)
 expr_stmt|;
 return|return
