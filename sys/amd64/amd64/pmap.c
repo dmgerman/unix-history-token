@@ -31125,6 +31125,9 @@ name|cached
 decl_stmt|,
 name|cr3
 decl_stmt|;
+name|register_t
+name|rflags
+decl_stmt|;
 name|u_int
 name|cpuid
 decl_stmt|;
@@ -31285,6 +31288,17 @@ name|pm_pcid
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the INVPCID instruction is not available, 		 * invltlb_pcid_handler() is used for handle 		 * invalidate_all IPI, which checks for curpmap == 		 * smp_tlb_pmap.  Below operations sequence has a 		 * window where %CR3 is loaded with the new pmap's 		 * PML4 address, but curpmap value is not yet updated. 		 * This causes invltlb IPI handler, called between the 		 * updates, to execute as NOP, which leaves stale TLB 		 * entries. 		 * 		 * Note that the most typical use of 		 * pmap_activate_sw(), from the context switch, is 		 * immune to this race, because interrupts are 		 * disabled (while the thread lock is owned), and IPI 		 * happends after curpmap is updated.  Protect other 		 * callers in a similar way, by disabling interrupts 		 * around the %cr3 register reload and curpmap 		 * assignment. 		 */
+if|if
+condition|(
+operator|!
+name|invpcid_works
+condition|)
+name|rflags
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -31330,6 +31344,23 @@ name|pm_save_cnt
 argument_list|)
 expr_stmt|;
 block|}
+name|PCPU_SET
+argument_list|(
+name|curpmap
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|invpcid_works
+condition|)
+name|intr_restore
+argument_list|(
+name|rflags
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -31348,7 +31379,6 @@ operator|->
 name|pm_cr3
 argument_list|)
 expr_stmt|;
-block|}
 name|PCPU_SET
 argument_list|(
 name|curpmap
@@ -31356,6 +31386,7 @@ argument_list|,
 name|pmap
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SMP
