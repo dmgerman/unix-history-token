@@ -1039,9 +1039,14 @@ case|:
 case|case
 name|TLSEXT_TYPE_heartbeat
 case|:
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_NEXTPROTONEG
 case|case
 name|TLSEXT_TYPE_next_proto_neg
 case|:
+endif|#
+directive|endif
 case|case
 name|TLSEXT_TYPE_padding
 case|:

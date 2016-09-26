@@ -4310,7 +4310,7 @@ if|if
 condition|(
 name|dstate
 operator|->
-name|ac_data
+name|mac_data
 operator|==
 name|NULL
 condition|)
