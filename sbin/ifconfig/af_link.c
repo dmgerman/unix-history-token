@@ -401,7 +401,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* Non-multicast and claim it is a hardware address */
+comment|/* Non-multicast and claim it is locally administered. */
 name|sdl
 operator|.
 name|sdl_data
@@ -410,6 +410,15 @@ literal|0
 index|]
 operator|&=
 literal|0xfc
+expr_stmt|;
+name|sdl
+operator|.
+name|sdl_data
+index|[
+literal|0
+index|]
+operator||=
+literal|0x02
 expr_stmt|;
 block|}
 else|else
