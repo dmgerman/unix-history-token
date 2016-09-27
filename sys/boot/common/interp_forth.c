@@ -998,7 +998,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Hopefully, all other codes filled this buffer */
+if|if
+condition|(
+name|command_errmsg
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -1006,6 +1012,11 @@ argument_list|,
 name|command_errmsg
 argument_list|)
 expr_stmt|;
+name|command_errmsg
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1034,7 +1045,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
