@@ -571,7 +571,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|size_t
 name|name_max
@@ -715,7 +715,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|struct
 name|dirent
@@ -7110,20 +7110,21 @@ name|defined
 argument_list|(
 name|VFCF_SYNTHETIC
 argument_list|)
+comment|/* TODO: configure should set GETVFSBYNAME_ARG_TYPE to make  * this accurate; some platforms have both and we need the one that's  * used by getvfsbyname()  *  * Then the following would become:  *  #if defined(GETVFSBYNAME_ARG_TYPE)  *   GETVFSBYNAME_ARG_TYPE vfc;  *  #endif  */
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_STRUCT_VFSCONF
+name|HAVE_STRUCT_XVFSCONF
 argument_list|)
 name|struct
-name|vfsconf
+name|xvfsconf
 name|vfc
 decl_stmt|;
 else|#
 directive|else
 name|struct
-name|xvfsconf
+name|vfsconf
 name|vfc
 decl_stmt|;
 endif|#
@@ -7585,7 +7586,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 comment|/* Set maximum filename length. */
 if|#
@@ -7712,7 +7713,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* HAVE_READDIR_R */
+comment|/* USE_READDIR_R */
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -8877,7 +8878,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 comment|/* Set maximum filename length. */
 name|t
@@ -9375,7 +9376,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 comment|/* Set maximum filename length. */
 name|t
@@ -9436,7 +9437,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|long
 name|nm
@@ -9526,7 +9527,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 comment|/* Set maximum filename length. */
 if|#
@@ -9660,7 +9661,7 @@ directive|endif
 comment|/* _PC_NAME_MAX */
 endif|#
 directive|endif
-comment|/* HAVE_READDIR_R */
+comment|/* USE_READDIR_R */
 return|return
 operator|(
 name|ARCHIVE_OK
@@ -11922,7 +11923,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|size_t
 name|dirent_size
@@ -12047,7 +12048,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|dirent_size
 operator|=
@@ -12169,7 +12170,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* HAVE_READDIR_R */
+comment|/* USE_READDIR_R */
 block|}
 for|for
 control|(
@@ -12185,7 +12186,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|r
 operator|=
@@ -13186,7 +13187,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_READDIR_R
+name|USE_READDIR_R
 argument_list|)
 name|free
 argument_list|(
