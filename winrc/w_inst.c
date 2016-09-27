@@ -1105,14 +1105,11 @@ comment|/* no tag identifier */
 name|NULL
 argument_list|,
 comment|/* no deps */
-operator|(
-name|LPCTSTR
-operator|)
-literal|"NT AUTHORITY\\NetworkService"
+name|NULL
 argument_list|,
-comment|/* network service account with restricted rights */
-literal|""
-comment|/* no password (must be an empty string) */
+comment|/* on LocalSystem */
+name|NULL
+comment|/* no password */
 argument_list|)
 expr_stmt|;
 if|if

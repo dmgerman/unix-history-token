@@ -107,7 +107,9 @@ specifier|const
 name|char
 modifier|*
 name|ub_event_get_version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

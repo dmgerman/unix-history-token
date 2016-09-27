@@ -3637,7 +3637,9 @@ name|struct
 name|module_func_block
 modifier|*
 name|dns64_get_funcblock
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|&

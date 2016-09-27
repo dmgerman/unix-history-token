@@ -493,8 +493,7 @@ name|AS_MY_EVENT_BASE
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct ub_event_base* a; struct my_event_base* b;})x).b)
+value|((struct my_event_base*)x)
 end_define
 
 begin_define
@@ -504,8 +503,7 @@ name|AS_MY_EVENT
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct ub_event* a; struct my_event* b;})x).b)
+value|((struct my_event*)x)
 end_define
 
 begin_function
@@ -513,7 +511,9 @@ specifier|const
 name|char
 modifier|*
 name|ub_event_get_version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|"pluggable-event"
@@ -2955,6 +2955,8 @@ block|{
 if|if
 condition|(
 name|ev
+operator|&&
+name|ev
 operator|->
 name|magic
 operator|==
@@ -3107,6 +3109,8 @@ block|{
 if|if
 condition|(
 name|ev
+operator|&&
+name|ev
 operator|->
 name|magic
 operator|==
@@ -3230,6 +3234,8 @@ block|{
 if|if
 condition|(
 name|ev
+operator|&&
+name|ev
 operator|->
 name|magic
 operator|==
@@ -3287,6 +3293,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|ev
+operator|&&
 name|ev
 operator|->
 name|magic

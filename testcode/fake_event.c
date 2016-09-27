@@ -6584,6 +6584,11 @@ operator|==
 name|cb_arg
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|cb_arg
+expr_stmt|;
 name|log_info
 argument_list|(
 literal|"serviced pending delete"

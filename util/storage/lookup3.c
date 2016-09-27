@@ -4127,7 +4127,9 @@ end_comment
 begin_function
 name|void
 name|driver1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint8_t
 name|buf
@@ -4267,7 +4269,9 @@ end_define
 begin_function
 name|void
 name|driver2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint8_t
 name|qa
@@ -4894,7 +4898,9 @@ end_comment
 begin_function
 name|void
 name|driver3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint8_t
 name|buf
@@ -6038,7 +6044,9 @@ end_comment
 begin_function
 name|void
 name|driver4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint8_t
 name|buf
@@ -6134,7 +6142,9 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|driver1
 argument_list|()

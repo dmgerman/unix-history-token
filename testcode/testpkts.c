@@ -1543,7 +1543,9 @@ name|struct
 name|entry
 modifier|*
 name|new_entry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|entry

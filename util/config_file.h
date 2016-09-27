@@ -39,6 +39,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|config_str3list
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|config_strbytelist
 struct_decl|;
 end_struct_decl
@@ -58,6 +64,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|ub_packed_rrset_key
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|regional
 struct_decl|;
 end_struct_decl
 
@@ -100,6 +112,10 @@ decl_stmt|;
 comment|/** do ip6 query support. */
 name|int
 name|do_ip6
+decl_stmt|;
+comment|/** prefer ip6 upstream queries. */
+name|int
+name|prefer_ip6
 decl_stmt|;
 comment|/** do udp query support. */
 name|int
@@ -556,6 +572,12 @@ name|config_strlist
 modifier|*
 name|local_data
 decl_stmt|;
+comment|/** local zone override types per netblock */
+name|struct
+name|config_str3list
+modifier|*
+name|local_zone_overrides
+decl_stmt|;
 comment|/** unblock lan zones (reverse lookups for AS112 zones) */
 name|int
 name|unblock_lan_zones
@@ -569,6 +591,24 @@ name|struct
 name|config_strbytelist
 modifier|*
 name|local_zone_tags
+decl_stmt|;
+comment|/** list of aclname, tagbitlist */
+name|struct
+name|config_strbytelist
+modifier|*
+name|acl_tags
+decl_stmt|;
+comment|/** list of aclname, tagname, localzonetype */
+name|struct
+name|config_str3list
+modifier|*
+name|acl_tag_actions
+decl_stmt|;
+comment|/** list of aclname, tagname, redirectdata */
+name|struct
+name|config_str3list
+modifier|*
+name|acl_tag_datas
 decl_stmt|;
 comment|/** tag list, array with tagname[i] is malloced string */
 name|char
@@ -861,6 +901,39 @@ comment|/** second string */
 name|char
 modifier|*
 name|str2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * List of three strings for config options  */
+end_comment
+
+begin_struct
+struct|struct
+name|config_str3list
+block|{
+comment|/** next item in list */
+name|struct
+name|config_str3list
+modifier|*
+name|next
+decl_stmt|;
+comment|/** first string */
+name|char
+modifier|*
+name|str
+decl_stmt|;
+comment|/** second string */
+name|char
+modifier|*
+name|str2
+decl_stmt|;
+comment|/** third string */
+name|char
+modifier|*
+name|str3
 decl_stmt|;
 block|}
 struct|;
@@ -1239,6 +1312,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** insert with region for allocation. */
+end_comment
+
+begin_function_decl
+name|int
+name|cfg_region_strlist_insert
+parameter_list|(
+name|struct
+name|regional
+modifier|*
+name|region
+parameter_list|,
+name|struct
+name|config_strlist
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|char
+modifier|*
+name|item
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Insert string into str2list.  * @param head: pointer to str2list head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @return: true on success.  */
 end_comment
 
@@ -1264,7 +1363,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Insert string into strbytelist.  * @param head: pointer to str2list head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @param i2len: length of the i2 bytestring.  * @return: true on success.  */
+comment|/**  * Insert string into str3list.  * @param head: pointer to str3list head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @param i3: 3rd string, malloced by caller. If NULL the insertion fails.  * @return: true on success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cfg_str3list_insert
+parameter_list|(
+name|struct
+name|config_str3list
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|char
+modifier|*
+name|item
+parameter_list|,
+name|char
+modifier|*
+name|i2
+parameter_list|,
+name|char
+modifier|*
+name|i3
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Insert string into strbytelist.  * @param head: pointer to strbytelist head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @param i2len: length of the i2 bytestring.  * @return: true on success.  */
 end_comment
 
 begin_function_decl
@@ -1342,6 +1470,38 @@ name|config_deldblstrlist
 parameter_list|(
 name|struct
 name|config_str2list
+modifier|*
+name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Delete items in config triple string list.  * @param list: list.  */
+end_comment
+
+begin_function_decl
+name|void
+name|config_deltrplstrlist
+parameter_list|(
+name|struct
+name|config_str3list
+modifier|*
+name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** delete stringbytelist */
+end_comment
+
+begin_function_decl
+name|void
+name|config_del_strbytelist
+parameter_list|(
+name|struct
+name|config_strbytelist
 modifier|*
 name|list
 parameter_list|)

@@ -2704,7 +2704,9 @@ begin_function
 specifier|static
 name|void
 name|set_cron_timer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timeval

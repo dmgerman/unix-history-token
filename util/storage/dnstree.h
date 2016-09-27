@@ -328,6 +328,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Find element in addr tree.  (search a netblock, not a match for an address)  * @param tree: addr tree  * @param addr: netblock to lookup.  * @param addrlen: length of addr  * @param net: size of subnet  * @return addr tree element, or NULL if not found.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|addr_tree_node
+modifier|*
+name|addr_tree_find
+parameter_list|(
+name|rbtree_t
+modifier|*
+name|tree
+parameter_list|,
+name|struct
+name|sockaddr_storage
+modifier|*
+name|addr
+parameter_list|,
+name|socklen_t
+name|addrlen
+parameter_list|,
+name|int
+name|net
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/** compare name tree nodes */
 end_comment
 
