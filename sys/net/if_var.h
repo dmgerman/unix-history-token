@@ -582,7 +582,7 @@ comment|/* Destination is broadcast */
 end_comment
 
 begin_comment
-comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
+comment|/*  * Structure defining a network interface.  */
 end_comment
 
 begin_struct
