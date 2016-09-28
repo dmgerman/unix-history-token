@@ -667,18 +667,6 @@ begin_comment
 comment|/*  * Globals  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|hv_promisc_mode
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* normal mode by default */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -8249,8 +8237,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|,
 name|i
 decl_stmt|;
 name|HN_LOCK_ASSERT
@@ -8320,11 +8306,12 @@ argument_list|,
 name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-name|hv_rf_on_close
+comment|/* Disable RX by clearing RX filter. */
+name|hn_rndis_set_rxfilter
 argument_list|(
 name|sc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8624,15 +8611,14 @@ condition|)
 block|{
 return|return;
 block|}
-name|hv_promisc_mode
-operator|=
-literal|1
-expr_stmt|;
+comment|/* TODO: add hn_rx_filter */
 name|ret
 operator|=
-name|hv_rf_on_open
+name|hn_rndis_set_rxfilter
 argument_list|(
 name|sc
+argument_list|,
+name|NDIS_PACKET_TYPE_PROMISCUOUS
 argument_list|)
 expr_stmt|;
 if|if
@@ -16773,10 +16759,12 @@ comment|/* 1 tick */
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Disable RX. 	 */
-name|hv_rf_on_close
+comment|/* 	 * Disable RX by clearing RX filter. 	 */
+name|hn_rndis_set_rxfilter
 argument_list|(
 name|sc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Give RNDIS enough time to flush all pending data packets. 	 */
@@ -16895,10 +16883,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Re-enable RX. 	 */
-name|hv_rf_on_open
+comment|/* 	 * Re-enable RX. 	 * TODO: add hn_rx_filter. 	 */
+name|hn_rndis_set_rxfilter
 argument_list|(
 name|sc
+argument_list|,
+name|NDIS_PACKET_TYPE_PROMISCUOUS
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure to clear suspend status on "all" TX rings, 	 * since hn_tx_ring_inuse can be changed after hn_suspend(). 	 */
