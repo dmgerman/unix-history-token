@@ -582,7 +582,7 @@ comment|/* Destination is broadcast */
 end_comment
 
 begin_comment
-comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
+comment|/*  * Structure defining a network interface.  */
 end_comment
 
 begin_struct
@@ -1811,17 +1811,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* For compatibility with other BSDs. SCTP uses it. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ifa_list
-value|ifa_link
-end_define
 
 begin_function_decl
 name|struct

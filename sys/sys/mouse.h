@@ -709,6 +709,13 @@ name|MOUSE_MODEL_TRACKPOINT
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_ELANTECH
+value|15
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1110,6 +1117,17 @@ end_define
 begin_comment
 comment|/* '3' works better */
 end_comment
+
+begin_comment
+comment|/* Elantech Touchpad */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_ELANTECH_PACKETSIZE
+value|6
+end_define
 
 begin_comment
 comment|/* Microsoft Serial mouse data packet */

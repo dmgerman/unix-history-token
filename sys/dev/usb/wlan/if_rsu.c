@@ -6534,6 +6534,13 @@ break|break;
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+name|startcal
+operator|!=
+literal|0
+condition|)
+block|{
 name|sc
 operator|->
 name|sc_calibrating
@@ -6553,6 +6560,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+block|}
 name|RSU_UNLOCK
 argument_list|(
 name|sc

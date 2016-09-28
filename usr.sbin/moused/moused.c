@@ -961,6 +961,14 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Elantech Touchpad"
+block|,
+name|MOUSE_MODEL_ELANTECH
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"generic"
 block|,
 name|MOUSE_MODEL_GENERIC

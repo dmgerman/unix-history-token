@@ -472,7 +472,7 @@ begin_define
 define|#
 directive|define
 name|AH_MAXCHAN
-value|96
+value|128
 end_define
 
 begin_endif

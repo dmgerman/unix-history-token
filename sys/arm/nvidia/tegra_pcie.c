@@ -1364,6 +1364,10 @@ name|bus_size_t
 name|afi_pex_ctrl
 decl_stmt|;
 comment|/* offset of afi_pex_ctrl */
+name|phy_t
+name|phy
+decl_stmt|;
+comment|/* port phy */
 comment|/* Config space properties. */
 name|bus_addr_t
 name|rp_base_addr
@@ -1454,9 +1458,6 @@ decl_stmt|;
 name|struct
 name|ofw_pci_range
 name|io_range
-decl_stmt|;
-name|phy_t
-name|phy
 decl_stmt|;
 name|clk_t
 name|clk_pex
@@ -4877,6 +4878,49 @@ operator|->
 name|port_idx
 operator|)
 expr_stmt|;
+comment|/* Phy. */
+name|rv
+operator|=
+name|phy_get_by_ofw_name
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|node
+argument_list|,
+literal|"pcie-0"
+argument_list|,
+operator|&
+name|port
+operator|->
+name|phy
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Cannot get 'pcie-0' phy for port %d\n"
+argument_list|,
+name|port
+operator|->
+name|port_idx
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 return|return
 operator|(
 name|port
@@ -5479,47 +5523,6 @@ operator|->
 name|dev
 argument_list|,
 literal|"Cannot get 'cml' clock\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-comment|/* Phy. */
-name|rv
-operator|=
-name|phy_get_by_ofw_name
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|0
-argument_list|,
-literal|"pcie"
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|phy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Cannot get 'pcie' phy\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6732,7 +6735,32 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Enable PCIe phy. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TEGRA_PCIB_MAX_PORTS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|ports
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
 name|rv
 operator|=
 name|phy_enable
@@ -6742,6 +6770,11 @@ operator|->
 name|dev
 argument_list|,
 name|sc
+operator|->
+name|ports
+index|[
+name|i
+index|]
 operator|->
 name|phy
 argument_list|)
@@ -6759,7 +6792,16 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Cannot enable phy\n"
+literal|"Cannot enable phy for port %d\n"
+argument_list|,
+name|sc
+operator|->
+name|ports
+index|[
+name|i
+index|]
+operator|->
+name|port_idx
 argument_list|)
 expr_stmt|;
 return|return
@@ -6767,6 +6809,8 @@ operator|(
 name|rv
 operator|)
 return|;
+block|}
+block|}
 block|}
 name|rv
 operator|=

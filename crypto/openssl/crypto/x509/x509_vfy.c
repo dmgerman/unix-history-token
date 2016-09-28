@@ -4974,6 +4974,10 @@ condition|(
 name|crl_score
 operator|<
 name|best_score
+operator|||
+name|crl_score
+operator|==
+literal|0
 condition|)
 continue|continue;
 comment|/* If current CRL is equivalent use it if it is newer */
@@ -4982,6 +4986,10 @@ condition|(
 name|crl_score
 operator|==
 name|best_score
+operator|&&
+name|best_crl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int

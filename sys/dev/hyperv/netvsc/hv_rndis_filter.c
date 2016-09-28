@@ -3966,7 +3966,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|hn_rndis_set_rxfilter
 parameter_list|(
@@ -4310,14 +4309,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter halt device  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_rf_halt_device
+name|hn_rndis_halt
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4511,13 +4506,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter on device remove  */
-end_comment
-
 begin_function
-name|int
-name|hv_rf_on_device_remove
+name|void
+name|hn_rndis_detach
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4525,111 +4516,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-comment|/* Halt and release the rndis device */
-name|ret
-operator|=
-name|hv_rf_halt_device
+comment|/* Halt the RNDIS. */
+name|hn_rndis_halt
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Pass control to inner driver to remove the device */
-name|ret
-operator||=
-name|hv_nv_on_device_remove
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * RNDIS filter on open  */
-end_comment
-
-begin_function
-name|int
-name|hv_rf_on_open
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|uint32_t
-name|filter
-decl_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|hv_promisc_mode
-operator|!=
-literal|1
-condition|)
-block|{
-name|filter
-operator|=
-name|NDIS_PACKET_TYPE_BROADCAST
-operator||
-name|NDIS_PACKET_TYPE_ALL_MULTICAST
-operator||
-name|NDIS_PACKET_TYPE_DIRECTED
-expr_stmt|;
-block|}
-else|else
-block|{
-name|filter
-operator|=
-name|NDIS_PACKET_TYPE_PROMISCUOUS
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|hn_rndis_set_rxfilter
-argument_list|(
-name|sc
-argument_list|,
-name|filter
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * RNDIS filter on close  */
-end_comment
-
-begin_function
-name|int
-name|hv_rf_on_close
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-return|return
-operator|(
-name|hn_rndis_set_rxfilter
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 

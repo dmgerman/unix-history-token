@@ -483,6 +483,48 @@ name|OCP85XX_RSTCR
 value|(CCSRBAR_VA + 0xe00b0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR
+value|(CCSRBAR_VA + 0xe0800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR_PXCKEN
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR_SSICKEN
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR_PXCKINV
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR_PXCLK_MASK
+value|0x00FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_CLKDVDR_SSICLK_MASK
+value|0x000000FF
+end_define
+
 begin_comment
 comment|/*  * Run Control/Power Management Registers.  */
 end_comment

@@ -431,6 +431,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|hn_rndis_detach
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|hn_rndis_conf_rss
 parameter_list|(
@@ -514,6 +526,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* filter: NDIS_PACKET_TYPE_ or 0. */
+end_comment
+
+begin_function_decl
+name|int
+name|hn_rndis_set_rxfilter
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|uint32_t
+name|filter
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|hn_nvs_attach
@@ -525,6 +556,18 @@ name|sc
 parameter_list|,
 name|int
 name|mtu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hn_nvs_detach
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

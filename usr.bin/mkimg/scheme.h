@@ -15,12 +15,6 @@ directive|define
 name|_MKIMG_SCHEME_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
-
 begin_enum
 enum|enum
 name|alias
@@ -110,6 +104,11 @@ begin_struct
 struct|struct
 name|mkimg_scheme
 block|{
+name|struct
+name|mkimg_scheme
+modifier|*
+name|next
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -180,17 +179,6 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SET_DECLARE
-argument_list|(
-name|schemes
-argument_list|,
-expr|struct
-name|mkimg_scheme
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -198,8 +186,33 @@ name|SCHEME_DEFINE
 parameter_list|(
 name|nm
 parameter_list|)
-value|DATA_SET(schemes, nm)
+define|\
+value|static void scheme_register_##nm(void) __attribute__((constructor));	\ static void scheme_register_##nm(void) { scheme_register(&nm); }
 end_define
+
+begin_function_decl
+name|struct
+name|mkimg_scheme
+modifier|*
+name|scheme_iterate
+parameter_list|(
+name|struct
+name|mkimg_scheme
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scheme_register
+parameter_list|(
+name|struct
+name|mkimg_scheme
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

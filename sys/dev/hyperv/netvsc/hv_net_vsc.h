@@ -522,6 +522,9 @@ name|uint64_t
 name|hn_csum_assist
 decl_stmt|;
 name|int
+name|hn_suspended
+decl_stmt|;
+name|int
 name|hn_gpa_cnt
 decl_stmt|;
 name|struct
@@ -819,13 +822,6 @@ begin_comment
 comment|/*  * Externs  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hv_promisc_mode
-decl_stmt|;
-end_decl_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|hn_send_ctx
@@ -843,33 +839,6 @@ name|sc
 parameter_list|,
 name|uint32_t
 name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|hn_nvs_attach
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|mtu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|hv_nv_on_device_remove
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

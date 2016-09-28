@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/endian.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"endian.h"
 end_include
 
 begin_include
@@ -300,11 +306,11 @@ name|QCOW2_CLSTR_LOG2SZ
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
-name|EDOOFUS
-operator|)
-return|;
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|imagesz
 operator|=
@@ -480,17 +486,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 name|clstr_log2sz
-operator|==
+operator|!=
 literal|0
-condition|)
-return|return
-operator|(
-name|EDOOFUS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|clstrsz
 operator|=
 literal|1U
@@ -834,11 +836,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
-name|EDOOFUS
-operator|)
-return|;
+name|assert
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

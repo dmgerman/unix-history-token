@@ -10264,10 +10264,6 @@ name|physmap_idx
 operator|=
 literal|0
 expr_stmt|;
-name|smapbase
-operator|=
-name|NULL
-expr_stmt|;
 name|kmdp
 operator|=
 name|preload_search_by_type
@@ -10755,7 +10751,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space.  It should be 	 * called something like "Maxphyspage".  We may adjust this  	 * based on ``hw.physmem'' and the results of the memory test. 	 */
+comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space.  It should be 	 * called something like "Maxphyspage".  We may adjust this  	 * based on ``hw.physmem'' and the results of the memory test. 	 * 	 * This is especially confusing when it is much larger than the 	 * memory size and is displayed as "realmem". 	 */
 name|Maxmem
 operator|=
 name|atop
@@ -11549,6 +11545,51 @@ block|}
 endif|#
 directive|endif
 comment|/* PC98 */
+specifier|static
+name|void
+name|i386_kdb_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DDB
+name|db_fetch_ksymtab
+argument_list|(
+name|bootinfo
+operator|.
+name|bi_symtab
+argument_list|,
+name|bootinfo
+operator|.
+name|bi_esymtab
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|kdb_init
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_enter
+argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
+literal|"Boot flags requested debugger"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|register_t
 name|init386
 parameter_list|(
@@ -11587,6 +11628,9 @@ name|xhdr
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|late_console
+decl_stmt|;
 name|thread0
 operator|.
 name|td_kstack
@@ -11967,6 +12011,7 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Non-late cninit() and printf() can be moved up to here. */
 comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 * 	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be 	 *	     under witness. 	 */
 name|mutex_init
 argument_list|()
@@ -13067,6 +13112,32 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* 	 * The console and kdb should be initialized even earlier than here, 	 * but some console drivers don't work until after getmemsize(). 	 * Default to late console initialization to support these drivers. 	 * This loses mainly printf()s in getmemsize() and early debugging. 	 */
+name|late_console
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"debug.late_console"
+argument_list|,
+operator|&
+name|late_console
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|late_console
+condition|)
+block|{
+name|cninit
+argument_list|()
+expr_stmt|;
+name|i386_kdb_init
+argument_list|()
+expr_stmt|;
+block|}
 name|vm86_initialize
 argument_list|()
 expr_stmt|;
@@ -13081,7 +13152,10 @@ name|physmem
 argument_list|)
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */
-comment|/* 	 * Initialize the console before we print anything out. 	 */
+if|if
+condition|(
+name|late_console
+condition|)
 name|cninit
 argument_list|()
 expr_stmt|;
@@ -13094,43 +13168,13 @@ argument_list|(
 literal|"WARNING: loader(8) metadata is missing!\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
-name|db_fetch_ksymtab
-argument_list|(
-name|bootinfo
-operator|.
-name|bi_symtab
-argument_list|,
-name|bootinfo
-operator|.
-name|bi_esymtab
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|kdb_init
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
 if|if
 condition|(
-name|boothowto
-operator|&
-name|RB_KDB
+name|late_console
 condition|)
-name|kdb_enter
-argument_list|(
-name|KDB_WHY_BOOTFLAGS
-argument_list|,
-literal|"Boot flags requested debugger"
-argument_list|)
+name|i386_kdb_init
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|msgbufinit
 argument_list|(
 name|msgbufp

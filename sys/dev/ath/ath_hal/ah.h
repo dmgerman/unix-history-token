@@ -1899,7 +1899,11 @@ block|,
 name|REG_EXT_JAPAN_DFS_HT40
 init|=
 literal|4
-block|}
+block|,
+name|REG_EXT_FCC_CH_144
+init|=
+literal|5
+block|, }
 name|REG_EXT_BITMAP
 typedef|;
 end_typedef

@@ -207,6 +207,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|unsigned
+name|coal_us
+decl_stmt|;
 comment|/* RX and TX buffer tracking */
 name|struct
 name|cpsw_queue

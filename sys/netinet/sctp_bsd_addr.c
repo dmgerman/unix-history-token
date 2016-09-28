@@ -800,9 +800,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&ifn->if_addrlist
+argument|&ifn->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 if|if
@@ -1374,9 +1374,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
 argument_list|,
-argument|&ifn->if_addrlist
+argument|&ifn->if_addrhead
 argument_list|,
-argument|ifa_list
+argument|ifa_link
 argument_list|)
 block|{
 name|sctp_addr_change
