@@ -2506,14 +2506,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC disconnect from VSP  */
-end_comment
-
 begin_function
-specifier|static
 name|void
-name|hv_nv_disconnect_from_vsp
+name|hn_nvs_detach
 parameter_list|(
 name|struct
 name|hn_softc
@@ -2521,6 +2516,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* NOTE: there are no requests to stop the NVS. */
 name|hn_nvs_disconn_rxbuf
 argument_list|(
 name|sc
@@ -2531,33 +2527,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Net VSC on device remove  */
-end_comment
-
-begin_function
-name|int
-name|hv_nv_on_device_remove
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|hv_nv_disconnect_from_vsp
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

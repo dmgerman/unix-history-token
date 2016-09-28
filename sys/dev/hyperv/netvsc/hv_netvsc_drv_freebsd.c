@@ -1850,6 +1850,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|hn_synth_detach
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|bool
 name|hn_tx_ring_pending
 parameter_list|(
@@ -3715,7 +3727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Standard detach entry point  */
+comment|/*  * TODO: Use this for error handling on attach path.  */
 end_comment
 
 begin_function
@@ -3737,23 +3749,19 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"netvsc_detach\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXXKYS:  Need to clean up all our 	 * driver state; this is the driver 	 * unloading. 	 */
-comment|/* 	 * XXXKYS:  Need to stop outgoing traffic and unregister 	 * the netdevice. 	 */
-name|hv_rf_on_device_remove
+comment|/* TODO: ether_ifdetach */
+name|HN_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hn_detach_allchans
+comment|/* TODO: hn_stop */
+name|hn_synth_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|HN_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -3808,6 +3816,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* TODO: if_free */
 return|return
 operator|(
 literal|0
@@ -7770,33 +7779,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* We must remove and add back the device to cause the new 		 * MTU to take effect.  This includes tearing down, but not 		 * deleting the channel, then bringing it back up. 		 */
-name|error
-operator|=
-name|hv_rf_on_device_remove
+comment|/* 		 * Detach the synthetics parts, i.e. NVS and RNDIS. 		 */
+name|hn_synth_detach
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|HN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* 		 * Detach all of the channels. 		 */
-name|hn_detach_allchans
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Attach the synthetic parts, i.e. NVS and RNDIS. 		 * XXX check error. 		 */
+comment|/* 		 * Reattach the synthetic parts, i.e. NVS and RNDIS, 		 * with the new MTU setting. 		 * XXX check error. 		 */
 name|hn_synth_attach
 argument_list|(
 name|sc
@@ -16513,6 +16502,47 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * NOTE:  * The interface must have been suspended though hn_suspend(), before  * this function get called.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|hn_synth_detach
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|HN_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Detach the RNDIS first. */
+name|hn_rndis_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Detach NVS. */
+name|hn_nvs_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Detach all of the channels. */
+name|hn_detach_allchans
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
