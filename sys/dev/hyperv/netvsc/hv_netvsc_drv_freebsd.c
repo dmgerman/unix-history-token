@@ -16779,7 +16779,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Give RNDIS enough time to flush all pending data packets. */
+comment|/* 	 * Give RNDIS enough time to flush all pending data packets. 	 */
 name|pause
 argument_list|(
 literal|"waitrx"
@@ -16793,6 +16793,7 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Drain RX/TX bufrings and interrupts. 	 */
 name|nsubch
 operator|=
 name|sc
@@ -16818,7 +16819,6 @@ argument_list|,
 name|nsubch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Drain RX/TX bufrings and interrupts. 	 */
 if|if
 condition|(
 name|subch
