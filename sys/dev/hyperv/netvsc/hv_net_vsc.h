@@ -522,6 +522,9 @@ name|uint64_t
 name|hn_csum_assist
 decl_stmt|;
 name|int
+name|hn_suspended
+decl_stmt|;
+name|int
 name|hn_gpa_cnt
 decl_stmt|;
 name|struct
