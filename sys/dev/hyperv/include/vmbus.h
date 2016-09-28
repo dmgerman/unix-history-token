@@ -436,6 +436,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vmbus_chan_intr_drain
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vmbus_chan_gpadl_connect
 parameter_list|(
