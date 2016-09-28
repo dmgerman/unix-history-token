@@ -522,12 +522,14 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|char
 modifier|*
 name|filename
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|directory
 init|=

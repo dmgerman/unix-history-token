@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2011, 2013, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2013, 2015, 2016  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -5197,6 +5197,11 @@ modifier|*
 name|node
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|top
+init|=
+name|NULL
 decl_stmt|;
 name|dns_fixedname_t
 name|fnodename
@@ -5205,6 +5210,22 @@ name|dns_name_t
 modifier|*
 name|nodename
 decl_stmt|;
+comment|/* 	 * Create the node if it doesn't exist so dns_dbiterator_seek() 	 * can find it.  We will continue even if this fails. 	 */
+operator|(
+name|void
+operator|)
+name|dns_db_findnode
+argument_list|(
+name|db
+argument_list|,
+name|name
+argument_list|,
+name|ISC_TRUE
+argument_list|,
+operator|&
+name|top
+argument_list|)
+expr_stmt|;
 name|dns_fixedname_init
 argument_list|(
 operator|&
@@ -5247,6 +5268,19 @@ argument_list|(
 name|iter
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|DNS_R_PARTIALMATCH
+condition|)
+name|result
+operator|=
+name|dns_dbiterator_next
+argument_list|(
+name|iter
 argument_list|)
 expr_stmt|;
 if|if
@@ -5406,6 +5440,20 @@ operator|&
 name|iter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|top
+operator|!=
+name|NULL
+condition|)
+name|dns_db_detachnode
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|top
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|answer
@@ -5475,6 +5523,8 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+name|tree
+operator|&&
 name|dns_name_equal
 argument_list|(
 name|name

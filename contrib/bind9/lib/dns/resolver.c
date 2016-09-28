@@ -342,6 +342,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|FCTXTRACE5
+parameter_list|(
+name|m1
+parameter_list|,
+name|m2
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|isc_log_write(dns_lctx, \ 				      DNS_LOGCATEGORY_RESOLVER, \ 				      DNS_LOGMODULE_RESOLVER, \ 				      ISC_LOG_DEBUG(3), \ 				      "fctx %p(%s): %s %s%u", \ 				      fctx, fctx->info, (m1), (m2), (v))
+end_define
+
+begin_define
+define|#
+directive|define
 name|FTRACE
 parameter_list|(
 name|m
@@ -433,6 +448,21 @@ name|res
 parameter_list|)
 define|\
 value|do { UNUSED(m1); UNUSED(m2); UNUSED(res); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCTXTRACE5
+parameter_list|(
+name|m1
+parameter_list|,
+name|m2
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do { UNUSED(m1); UNUSED(m2); UNUSED(v); } while (0)
 end_define
 
 begin_define
@@ -3390,6 +3420,9 @@ name|finish
 parameter_list|,
 name|isc_boolean_t
 name|no_response
+parameter_list|,
+name|isc_boolean_t
+name|age_untried
 parameter_list|)
 block|{
 name|fetchctx_t
@@ -3692,6 +3725,8 @@ condition|(
 name|finish
 operator|!=
 name|NULL
+operator|||
+name|age_untried
 condition|)
 for|for
 control|(
@@ -3737,9 +3772,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|finish
 operator|!=
 name|NULL
+operator|||
+name|age_untried
+operator|)
 operator|&&
 name|TRIEDFIND
 argument_list|(
@@ -3814,9 +3853,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|finish
 operator|!=
 name|NULL
+operator|||
+name|age_untried
+operator|)
 operator|&&
 name|TRIEDALT
 argument_list|(
@@ -4177,6 +4220,9 @@ name|fctx
 parameter_list|,
 name|isc_boolean_t
 name|no_response
+parameter_list|,
+name|isc_boolean_t
+name|age_untried
 parameter_list|)
 block|{
 name|resquery_t
@@ -4230,6 +4276,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|no_response
+argument_list|,
+name|age_untried
 argument_list|)
 expr_stmt|;
 block|}
@@ -4576,6 +4624,9 @@ name|fctx
 parameter_list|,
 name|isc_boolean_t
 name|no_response
+parameter_list|,
+name|isc_boolean_t
+name|age_untried
 parameter_list|)
 block|{
 name|FCTXTRACE
@@ -4588,6 +4639,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|no_response
+argument_list|,
+name|age_untried
 argument_list|)
 expr_stmt|;
 name|fctx_cleanupfinds
@@ -5815,6 +5868,13 @@ name|res
 decl_stmt|;
 name|isc_boolean_t
 name|no_response
+init|=
+name|ISC_FALSE
+decl_stmt|;
+name|isc_boolean_t
+name|age_untried
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|REQUIRE
 argument_list|(
@@ -5852,10 +5912,16 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
-else|else
-name|no_response
+elseif|else
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_TIMEDOUT
+condition|)
+name|age_untried
 operator|=
-name|ISC_FALSE
+name|ISC_TRUE
 expr_stmt|;
 name|fctx
 operator|->
@@ -5868,6 +5934,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|no_response
+argument_list|,
+name|age_untried
 argument_list|)
 expr_stmt|;
 name|LOCK
@@ -6082,6 +6150,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|retry
@@ -6108,6 +6178,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -9874,6 +9946,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|fctx_done
@@ -10014,6 +10088,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|fctx_done
@@ -10074,6 +10150,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|retry
@@ -10108,6 +10186,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -12224,9 +12304,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* ENABLE_FETCHLIMIT */
-name|FCTXTRACE
+name|FCTXTRACE5
 argument_list|(
 literal|"getaddresses"
+argument_list|,
+literal|"fctx->depth="
+argument_list|,
+name|fctx
+operator|->
+name|depth
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't pound on remote servers.  (Failsafe!) 	 */
@@ -12285,11 +12371,20 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"too much NS indirection resolving '%s'"
+literal|"too much NS indirection resolving '%s' "
+literal|"(depth=%u, maxdepth=%u)"
 argument_list|,
 name|fctx
 operator|->
 name|info
+argument_list|,
+name|fctx
+operator|->
+name|depth
+argument_list|,
+name|res
+operator|->
+name|maxdepth
 argument_list|)
 expr_stmt|;
 return|return
@@ -13569,6 +13664,26 @@ block|}
 elseif|else
 if|if
 condition|(
+name|isc_sockaddr_isnetzero
+argument_list|(
+name|sa
+argument_list|)
+condition|)
+block|{
+name|addr
+operator|->
+name|flags
+operator||=
+name|FCTX_ADDRINFO_MARK
+expr_stmt|;
+name|msg
+operator|=
+literal|"ignoring net zero address: "
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|isc_sockaddr_ismulticast
 argument_list|(
 name|sa
@@ -14331,9 +14446,18 @@ decl_stmt|;
 name|isc_boolean_t
 name|bucket_empty
 decl_stmt|;
-name|FCTXTRACE
+name|FCTXTRACE5
 argument_list|(
 literal|"try"
+argument_list|,
+literal|"fctx->qc="
+argument_list|,
+name|isc_counter_used
+argument_list|(
+name|fctx
+operator|->
+name|qc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -14379,11 +14503,23 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"exceeded max queries resolving '%s'"
+literal|"exceeded max queries resolving '%s' "
+literal|"(querycount=%u, maxqueries=%u)"
 argument_list|,
 name|fctx
 operator|->
 name|info
+argument_list|,
+name|isc_counter_used
+argument_list|(
+name|fctx
+operator|->
+name|qc
+argument_list|)
+argument_list|,
+name|res
+operator|->
+name|maxqueries
 argument_list|)
 expr_stmt|;
 name|fctx_done
@@ -14441,6 +14577,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|fctx_cleanupfinds
@@ -15580,6 +15718,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -15841,6 +15981,8 @@ comment|/* 	 * Shut down anything that is still running on behalf of this 	 * fe
 name|fctx_stopeverything
 argument_list|(
 name|fctx
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -17486,7 +17628,7 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 goto|goto
-name|cleanup_name
+name|cleanup_nameservers
 goto|;
 name|result
 operator|=
@@ -17508,19 +17650,9 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|dns_rdataset_disassociate
-argument_list|(
-operator|&
-name|fctx
-operator|->
-name|nameservers
-argument_list|)
-expr_stmt|;
 goto|goto
-name|cleanup_name
+name|cleanup_nameservers
 goto|;
-block|}
 name|fctx
 operator|->
 name|ns_ttl
@@ -18073,6 +18205,8 @@ argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
+name|cleanup_nameservers
+label|:
 if|if
 condition|(
 name|dns_rdataset_isassociated
@@ -31844,8 +31978,6 @@ name|dns_message_setclass
 argument_list|(
 name|message
 argument_list|,
-name|fctx
-operator|->
 name|res
 operator|->
 name|rdclass
@@ -32085,8 +32217,6 @@ name|message
 operator|->
 name|rdclass
 operator|!=
-name|fctx
-operator|->
 name|res
 operator|->
 name|rdclass
@@ -33639,6 +33769,8 @@ argument_list|,
 name|finish
 argument_list|,
 name|no_response
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -33960,6 +34092,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|fctx_cleanupfinds
@@ -34121,6 +34255,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We must not retransmit while the validator is working; 		 * it has references to the current rmessage. 		 */
@@ -34175,6 +34311,8 @@ argument_list|(
 name|fctx
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|fctx_cleanupfinds
@@ -37162,6 +37300,21 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|isc_mem_put
+argument_list|(
+name|res
+operator|->
+name|mctx
+argument_list|,
+name|rdataset
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rdataset
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&

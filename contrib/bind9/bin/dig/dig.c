@@ -262,10 +262,6 @@ decl_stmt|,
 name|onesoa
 init|=
 name|ISC_FALSE
-decl_stmt|,
-name|rrcomments
-init|=
-name|ISC_FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +271,19 @@ name|isc_uint32_t
 name|splitwidth
 init|=
 literal|0xffffffff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*% rrcomments are neither explicitly enabled nor disabled by default */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rrcomments
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1103,9 +1112,12 @@ literal|" "
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Turn on rrcomments if explicitly enabled */
 if|if
 condition|(
 name|rrcomments
+operator|>
+literal|0
 condition|)
 name|styleflags
 operator||=
@@ -1544,9 +1556,12 @@ name|styleflags
 operator||=
 name|DNS_STYLEFLAG_NO_CLASS
 expr_stmt|;
+comment|/* Turn on rrcomments if explicitly enabled */
 if|if
 condition|(
 name|rrcomments
+operator|>
+literal|0
 condition|)
 name|styleflags
 operator||=
@@ -1585,6 +1600,13 @@ name|styleflags
 operator||=
 name|DNS_STYLEFLAG_COMMENT
 expr_stmt|;
+comment|/* Turn on rrcomments if not explicitly disabled */
+if|if
+condition|(
+name|rrcomments
+operator|>=
+literal|0
+condition|)
 name|styleflags
 operator||=
 name|DNS_STYLEFLAG_RRCOMMENT
@@ -1799,9 +1821,12 @@ name|styleflags
 operator||=
 name|DNS_STYLEFLAG_COMMENT
 expr_stmt|;
+comment|/* Turn on rrcomments if explicitly enabled */
 if|if
 condition|(
 name|rrcomments
+operator|>
+literal|0
 condition|)
 name|styleflags
 operator||=
@@ -1852,6 +1877,13 @@ name|styleflags
 operator||=
 name|DNS_STYLEFLAG_MULTILINE
 expr_stmt|;
+comment|/* Turn on rrcomments unless explicitly disabled */
+if|if
+condition|(
+name|rrcomments
+operator|>=
+literal|0
+condition|)
 name|styleflags
 operator||=
 name|DNS_STYLEFLAG_RRCOMMENT
@@ -3256,6 +3288,7 @@ specifier|static
 name|void
 name|plus_option
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|option
@@ -3528,10 +3561,6 @@ expr_stmt|;
 name|lookup
 operator|->
 name|comments
-operator|=
-name|state
-expr_stmt|;
-name|rrcomments
 operator|=
 name|state
 expr_stmt|;
@@ -4235,10 +4264,6 @@ name|comments
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|rrcomments
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 name|lookup
 operator|->
 name|section_additional
@@ -4272,6 +4297,10 @@ expr_stmt|;
 name|short_form
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+name|rrcomments
+operator|=
+literal|0
 expr_stmt|;
 block|}
 break|break;
@@ -4492,6 +4521,11 @@ expr_stmt|;
 name|rrcomments
 operator|=
 name|state
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -4609,15 +4643,16 @@ name|comments
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|rrcomments
-operator|=
-name|ISC_FALSE
-expr_stmt|;
 name|lookup
 operator|->
 name|stats
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|rrcomments
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 break|break;
@@ -5000,7 +5035,7 @@ name|ISC_FALSE
 expr_stmt|;
 name|rrcomments
 operator|=
-name|ISC_FALSE
+literal|0
 expr_stmt|;
 name|lookup
 operator|->

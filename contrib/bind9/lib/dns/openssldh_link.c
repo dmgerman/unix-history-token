@@ -695,6 +695,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 name|BN_GENCB
 name|_cb
 decl_stmt|;
@@ -864,6 +869,12 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|>=
 literal|0x10100000L
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 if|if
 condition|(
 name|cb
@@ -3120,6 +3131,7 @@ operator|+=
 literal|2
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s

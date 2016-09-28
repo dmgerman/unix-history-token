@@ -4,10 +4,6 @@ comment|/*  * Portions Copyright (C) 2004-2007, 2012, 2013, 2015, 2016  Internet
 end_comment
 
 begin_comment
-comment|/* $Id: cc.c,v 1.18 2007/08/28 07:20:43 tbox Exp $ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 
@@ -2051,7 +2047,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|ISC_R_NOMEMORY
 operator|)
 return|;
 block|}

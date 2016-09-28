@@ -6486,6 +6486,23 @@ operator|->
 name|view
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Wait for the lock in client_resfind to be released before 	 * destroying the lock. 	 */
+name|LOCK
+argument_list|(
+operator|&
+name|rctx
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|rctx
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&

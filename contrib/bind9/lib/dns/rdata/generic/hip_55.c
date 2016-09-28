@@ -317,6 +317,16 @@ name|key_len
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|origin
+operator|==
+name|NULL
+condition|)
+name|origin
+operator|=
+name|dns_rootname
+expr_stmt|;
 comment|/* 	 * Rendezvous Servers. 	 */
 name|dns_name_init
 argument_list|(
@@ -364,18 +374,6 @@ name|value
 operator|.
 name|as_region
 argument_list|)
-expr_stmt|;
-name|origin
-operator|=
-operator|(
-name|origin
-operator|!=
-name|NULL
-operator|)
-condition|?
-name|origin
-else|:
-name|dns_rootname
 expr_stmt|;
 name|RETTOK
 argument_list|(

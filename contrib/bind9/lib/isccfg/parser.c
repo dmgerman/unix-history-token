@@ -1383,14 +1383,21 @@ decl_stmt|;
 if|if
 condition|(
 name|need_space
+operator|&&
+name|fieldobj
+operator|->
+name|type
+operator|->
+name|rep
+operator|!=
+operator|&
+name|cfg_rep_void
 condition|)
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|" "
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|cfg_print_obj
@@ -1404,6 +1411,8 @@ name|need_space
 operator|=
 name|ISC_TF
 argument_list|(
+name|need_space
+operator|||
 name|fieldobj
 operator|->
 name|type
@@ -1470,13 +1479,11 @@ if|if
 condition|(
 name|need_space
 condition|)
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|" "
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|cfg_doc_obj

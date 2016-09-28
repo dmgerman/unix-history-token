@@ -4,10 +4,6 @@ comment|/*  * Copyright (C) 2004-2012, 2014, 2015  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id$ */
-end_comment
-
-begin_comment
 comment|/*! \file  * \author Principal Author: Bob Halley  */
 end_comment
 
@@ -6310,6 +6306,12 @@ operator|*
 operator|)
 name|manager0
 decl_stmt|;
+name|manager
+operator|->
+name|pause_requested
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
@@ -6341,12 +6343,6 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-name|manager
-operator|->
-name|pause_requested
-operator|=
-name|ISC_TRUE
-expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&

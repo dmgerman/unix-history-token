@@ -5460,6 +5460,8 @@ name|isc_boolean_t
 name|check_ksk
 decl_stmt|,
 name|keyset_kskonly
+decl_stmt|,
+name|build_nsec3
 decl_stmt|;
 enum|enum
 block|{
@@ -5544,8 +5546,6 @@ name|isc_boolean_t
 name|flag
 decl_stmt|,
 name|build_nsec
-decl_stmt|,
-name|build_nsec3
 decl_stmt|;
 name|unsigned
 name|int
@@ -5737,6 +5737,12 @@ operator|->
 name|nkeys
 operator|=
 literal|0
+expr_stmt|;
+name|state
+operator|->
+name|build_nsec3
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 name|result
 operator|=
@@ -6457,6 +6463,8 @@ operator|&
 name|build_nsec
 argument_list|,
 operator|&
+name|state
+operator|->
 name|build_nsec3
 argument_list|)
 argument_list|)
@@ -7651,6 +7659,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|state
+operator|->
 name|build_nsec3
 condition|)
 block|{

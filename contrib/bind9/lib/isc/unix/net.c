@@ -420,11 +420,6 @@ name|ISC_ONCE_INIT
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -442,6 +437,11 @@ init|=
 name|ISC_ONCE_INIT
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

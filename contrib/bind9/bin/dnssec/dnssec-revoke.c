@@ -301,11 +301,13 @@ decl_stmt|;
 endif|#
 directive|endif
 name|char
+specifier|const
 modifier|*
 name|filename
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|dir
 init|=

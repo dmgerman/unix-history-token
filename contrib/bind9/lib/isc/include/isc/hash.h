@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2013, 2015, 2016  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -225,6 +225,56 @@ end_comment
 
 begin_comment
 comment|/*@}*/
+end_comment
+
+begin_function_decl
+name|isc_uint32_t
+name|isc_hash_function
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+name|isc_boolean_t
+name|case_sensitive
+parameter_list|,
+specifier|const
+name|isc_uint32_t
+modifier|*
+name|previous_hashp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_uint32_t
+name|isc_hash_function_reverse
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|length
+parameter_list|,
+name|isc_boolean_t
+name|case_sensitive
+parameter_list|,
+specifier|const
+name|isc_uint32_t
+modifier|*
+name|previous_hashp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*!<  * \brief Calculate a hash over data.  *  * This hash function is useful for hashtables. The hash function is  * opaque and not important to the caller. The returned hash values are  * non-deterministic and will have different mapping every time a  * process using this library is run, but will have uniform  * distribution.  *  * isc_hash_function() calculates the hash from start to end over the  * input data. isc_hash_function_reverse() calculates the hash from the  * end to the start over the input data. The difference in order is  * useful in incremental hashing; for example, a previously hashed  * value for 'com' can be used as input when hashing 'example.com'.  *  * This is a new variant of isc_hash_calc() and will supercede  * isc_hash_calc() eventually.  *  * 'data' is the data to be hashed.  *  * 'length' is the size of the data to be hashed.  *  * 'case_sensitive' specifies whether the hash key should be treated as  * case_sensitive values.  It should typically be ISC_FALSE if the hash key  * is a DNS name.  *  * 'previous_hashp' is a pointer to a previous hash value returned by  * this function. It can be used to perform incremental hashing. NULL  * must be passed during first calls.  */
 end_comment
 
 begin_macro

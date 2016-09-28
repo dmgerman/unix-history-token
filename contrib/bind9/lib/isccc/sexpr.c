@@ -4,10 +4,6 @@ comment|/*  * Portions Copyright (C) 2004, 2005, 2007, 2014, 2015  Internet Syst
 end_comment
 
 begin_comment
-comment|/* $Id: sexpr.c,v 1.9 2007/08/28 07:20:43 tbox Exp $ */
-end_comment
-
-begin_comment
 comment|/*! \file */
 end_comment
 

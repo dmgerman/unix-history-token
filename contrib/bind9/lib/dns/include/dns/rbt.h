@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2014, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2014-2016  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -240,40 +240,14 @@ name|magic
 decl_stmt|;
 endif|#
 directive|endif
-name|dns_rbtnode_t
-modifier|*
-name|parent
-decl_stmt|;
-name|dns_rbtnode_t
-modifier|*
-name|left
-decl_stmt|;
-name|dns_rbtnode_t
-modifier|*
-name|right
-decl_stmt|;
-name|dns_rbtnode_t
-modifier|*
-name|down
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DNS_RBT_USEHASH
-name|dns_rbtnode_t
-modifier|*
-name|hashnext
-decl_stmt|;
-endif|#
-directive|endif
-comment|/*% 	 * Used for LRU cache.  This linked list is used to mark nodes which 	 * have no data any longer, but we cannot unlink at that exact moment 	 * because we did not or could not obtain a write lock on the tree. 	 */
-name|ISC_LINK
-argument_list|(
-argument|dns_rbtnode_t
-argument_list|)
-name|deadlink
-expr_stmt|;
 comment|/*@{*/
-comment|/*! 	 * The following bitfields add up to a total bitwidth of 32. 	 * The range of values necessary for each item is indicated, 	 * but in the case of "attributes" the field is wider to accommodate 	 * possible future expansion. 	 * 	 * In each case below the "range" indicated is what's _necessary_ for 	 * the bitfield to hold, not what it actually _can_ hold. 	 */
+comment|/*! 	 * The following bitfields add up to a total bitwidth of 32. 	 * The range of values necessary for each item is indicated, 	 * but in the case of "attributes" the field is wider to accommodate 	 * possible future expansion. 	 * 	 * In each case below the "range" indicated is what's _necessary_ for 	 * the bitfield to hold, not what it actually _can_ hold. 	 * 	 * Note: Tree lock must be held before modifying these 	 * bit-fields. 	 * 	 * Note: The two "unsigned int :0;" unnamed bitfields on either 	 * side of the bitfields below are scaffolding that border the 	 * set of bitfields which are accessed after acquiring the tree 	 * lock. Please don't insert any other bitfield members between 	 * the unnamed bitfields unless they should also be accessed 	 * after acquiring the tree lock. 	 */
+name|unsigned
+name|int
+range|:
+literal|0
+decl_stmt|;
+comment|/* start of bitfields c/o tree lock */
 name|unsigned
 name|int
 name|is_root
@@ -338,6 +312,12 @@ name|rpz
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+range|:
+literal|0
+decl_stmt|;
+comment|/* end of bitfields c/o tree lock */
 ifdef|#
 directive|ifdef
 name|DNS_RBT_USEHASH
@@ -345,14 +325,51 @@ name|unsigned
 name|int
 name|hashval
 decl_stmt|;
+name|dns_rbtnode_t
+modifier|*
+name|uppernode
+decl_stmt|;
+name|dns_rbtnode_t
+modifier|*
+name|hashnext
+decl_stmt|;
 endif|#
 directive|endif
+name|dns_rbtnode_t
+modifier|*
+name|parent
+decl_stmt|;
+name|dns_rbtnode_t
+modifier|*
+name|left
+decl_stmt|;
+name|dns_rbtnode_t
+modifier|*
+name|right
+decl_stmt|;
+name|dns_rbtnode_t
+modifier|*
+name|down
+decl_stmt|;
+comment|/*% 	 * Used for LRU cache.  This linked list is used to mark nodes which 	 * have no data any longer, but we cannot unlink at that exact moment 	 * because we did not or could not obtain a write lock on the tree. 	 */
+name|ISC_LINK
+argument_list|(
+argument|dns_rbtnode_t
+argument_list|)
+name|deadlink
+expr_stmt|;
 comment|/*@{*/
-comment|/*! 	 * These values are used in the RBT DB implementation.  The appropriate 	 * node lock must be held before accessing them. 	 */
+comment|/*! 	 * These values are used in the RBT DB implementation.  The appropriate 	 * node lock must be held before accessing them. 	 * 	 * Note: The two "unsigned int :0;" unnamed bitfields on either 	 * side of the bitfields below are scaffolding that border the 	 * set of bitfields which are accessed after acquiring the node 	 * lock. Please don't insert any other bitfield members between 	 * the unnamed bitfields unless they should also be accessed 	 * after acquiring the node lock. 	 * 	 * NOTE: Do not merge these fields into bitfields above, as 	 * they'll all be put in the same qword that could be accessed 	 * without the node lock as it shares the qword with other 	 * members. Leave these members here so that they occupy a 	 * separate region of memory. 	 */
 name|void
 modifier|*
 name|data
 decl_stmt|;
+name|unsigned
+name|int
+range|:
+literal|0
+decl_stmt|;
+comment|/* start of bitfields c/o node lock */
 name|unsigned
 name|int
 name|dirty
@@ -380,8 +397,17 @@ name|references
 range|:
 name|DNS_RBT_REFLENGTH
 decl_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
+name|unsigned
+name|int
+range|:
+literal|0
+decl_stmt|;
+comment|/* end of bitfields c/o node lock */
+ifdef|#
+directive|ifdef
+name|DNS_RBT_USEISCREFCOUNT
 name|isc_refcount_t
 name|references
 decl_stmt|;

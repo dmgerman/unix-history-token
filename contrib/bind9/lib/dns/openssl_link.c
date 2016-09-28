@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2012, 2014, 2015  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2012, 2014-2016  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -293,6 +293,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 end_if
 
 begin_function
@@ -450,6 +455,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 end_if
 
 begin_function
@@ -756,6 +766,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 name|CRYPTO_set_id_callback
 argument_list|(
 name|id_callback
@@ -830,11 +845,43 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_ENGINE
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CONF_MFLAGS_DEFAULT_SECTION
+argument_list|)
 name|OPENSSL_config
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * OPENSSL_config() can only be called a single time as of 	 * 1.0.2e so do the steps individually. 	 */
+name|OPENSSL_load_builtin_modules
+argument_list|()
+expr_stmt|;
+name|ENGINE_load_builtin_engines
+argument_list|()
+expr_stmt|;
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
+name|CONF_modules_load_file
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|CONF_MFLAGS_DEFAULT_SECTION
+operator||
+name|CONF_MFLAGS_IGNORE_MISSING_FILE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|engine
@@ -1146,6 +1193,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 name|ERR_remove_state
 argument_list|(
 literal|0

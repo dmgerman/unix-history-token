@@ -302,6 +302,9 @@ comment|/*%< 61 */
 literal|"multiple"
 block|,
 comment|/*%< 62 */
+literal|"would block"
+block|,
+comment|/*%< 63 */
 block|}
 decl_stmt|;
 end_decl_stmt

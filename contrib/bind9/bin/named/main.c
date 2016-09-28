@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2016  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1256,11 +1256,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: lwresd [-4|-6] [-c conffile | -C resolvconffile] "
-literal|"[-d debuglevel]\n"
-literal|"              [-f|-g] [-n number_of_cpus] [-p port] "
-literal|"[-P listen-port] [-s]\n"
-literal|"              [-t chrootdir] [-u username] [-i pidfile]\n"
+literal|"[-d debuglevel] [-f|-g]\n"
+literal|"              [-i pidfile] [-n number_of_cpus] "
+literal|"[-p port] [-P listen-port]\n"
+literal|"              [-s] [-S sockets] [-t chrootdir] [-u username] "
+literal|"[-U listeners]\n"
 literal|"              [-m {usage|trace|record|size|mctx}]\n"
+literal|"usage: lwresd [-v|-V]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1291,8 +1293,10 @@ argument_list|,
 literal|"usage: named [-4|-6] [-c conffile] [-d debuglevel] "
 literal|"[-E engine] [-f|-g]\n"
 literal|"             [-n number_of_cpus] [-p port] [-s] "
-literal|"[-t chrootdir] [-u username]\n"
-literal|"             [-m {usage|trace|record|size|mctx}]\n"
+literal|"[-S sockets] [-t chrootdir]\n"
+literal|"             [-u username] [-U listeners] "
+literal|"[-m {usage|trace|record|size|mctx}]\n"
+literal|"usage: named [-v|-V]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2648,6 +2652,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"running on %s\n"
+argument_list|,
+name|ns_os_uname
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"built by %s with %s\n"
 argument_list|,
 name|ns_g_builder
@@ -2890,6 +2902,13 @@ name|unsigned
 name|int
 name|socks
 decl_stmt|;
+name|INSIST
+argument_list|(
+name|ns_g_cpus_detected
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_USETHREADS
@@ -2970,23 +2989,12 @@ name|ns_g_udpdisp
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ns_g_cpus_detected
-operator|<
-literal|4
-condition|)
-name|ns_g_udpdisp
-operator|=
-literal|2
-expr_stmt|;
 else|else
 name|ns_g_udpdisp
 operator|=
 name|ns_g_cpus_detected
-operator|/
-literal|2
+operator|-
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -3704,6 +3712,22 @@ argument_list|,
 name|ns_g_srcid
 argument_list|,
 name|saved_command_line
+argument_list|)
+expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_NOTICE
+argument_list|,
+literal|"running on %s"
+argument_list|,
+name|ns_os_uname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|isc_log_write

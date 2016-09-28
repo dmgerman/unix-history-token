@@ -660,6 +660,7 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -970,6 +971,7 @@ init|;
 condition|;
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|t
@@ -1997,6 +1999,7 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2557,6 +2560,7 @@ name|isc_mem_t
 modifier|*
 name|mctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2567,6 +2571,7 @@ modifier|*
 name|dirname
 parameter_list|,
 name|char
+specifier|const
 modifier|*
 modifier|*
 name|basename
@@ -2575,7 +2580,9 @@ block|{
 name|char
 modifier|*
 name|dir
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|file
 decl_stmt|,

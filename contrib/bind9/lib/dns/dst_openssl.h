@@ -114,6 +114,11 @@ directive|if
 name|OPENSSL_VERSION_NUMBER
 operator|<
 literal|0x10100000L
+operator|||
+name|defined
+argument_list|(
+name|LIBRESSL_VERSION_NUMBER
+argument_list|)
 end_if
 
 begin_comment
