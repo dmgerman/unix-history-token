@@ -700,6 +700,14 @@ comment|/* fill siginfo structure */
 name|sf
 operator|.
 name|sf_si
+operator|=
+name|ksi
+operator|->
+name|ksi_info
+expr_stmt|;
+name|sf
+operator|.
+name|sf_si
 operator|.
 name|si_signo
 operator|=
