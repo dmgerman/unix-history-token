@@ -1476,6 +1476,17 @@ begin_comment
 comment|/* DTrace induced trap.			*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TRAP_CAP
+value|4
+end_define
+
+begin_comment
+comment|/* Capabilities protective trap.	*/
+end_comment
+
 begin_comment
 comment|/* codes for SIGCHLD */
 end_comment

@@ -2148,6 +2148,8 @@ operator|(
 name|P2_NOTRACE
 operator||
 name|P2_NOTRACE_EXEC
+operator||
+name|P2_TRAPCAP
 operator|)
 expr_stmt|;
 name|p2
