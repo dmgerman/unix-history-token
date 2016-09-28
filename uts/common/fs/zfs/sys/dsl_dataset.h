@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rrwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<zfeature_common.h>
 end_include
 
@@ -274,6 +280,10 @@ block|{
 name|dmu_buf_user_t
 name|ds_dbu
 decl_stmt|;
+name|rrwlock_t
+name|ds_bp_rwlock
+decl_stmt|;
+comment|/* Protects ds_phys->ds_bp */
 comment|/* Immutable: */
 name|struct
 name|dsl_dir

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -241,6 +241,11 @@ decl_stmt|;
 name|int
 name|os_recordsize
 decl_stmt|;
+comment|/* 	 * Pointer is constant; the blkptr it points to is protected by 	 * os_dsl_dataset->ds_bp_rwlock 	 */
+name|blkptr_t
+modifier|*
+name|os_rootbp
+decl_stmt|;
 comment|/* no lock needed: */
 name|struct
 name|dmu_tx
@@ -248,10 +253,6 @@ modifier|*
 name|os_synctx
 decl_stmt|;
 comment|/* XXX sketchy */
-name|blkptr_t
-modifier|*
-name|os_rootbp
-decl_stmt|;
 name|zil_header_t
 name|os_zil_header
 decl_stmt|;
