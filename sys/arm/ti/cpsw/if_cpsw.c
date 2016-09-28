@@ -10138,7 +10138,7 @@ operator|)
 operator|)
 operator|==
 operator|(
-name|CPDMA_BD_EOP
+name|CPDMA_BD_SOP
 operator||
 name|CPDMA_BD_TDOWNCMPLT
 operator|)
