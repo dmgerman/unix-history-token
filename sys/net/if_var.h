@@ -1812,17 +1812,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* For compatibility with other BSDs. SCTP uses it. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ifa_list
-value|ifa_link
-end_define
-
 begin_function_decl
 name|struct
 name|ifaddr
