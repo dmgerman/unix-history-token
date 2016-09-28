@@ -1984,6 +1984,50 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|bare_lgdt
+parameter_list|(
+name|struct
+name|region_descriptor
+modifier|*
+name|addr
+parameter_list|)
+block|{
+asm|__asm __volatile("lgdt (%0)" : : "r" (addr));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sgdt
+parameter_list|(
+name|struct
+name|region_descriptor
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|loc
+decl_stmt|;
+name|loc
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+asm|__asm __volatile("sgdt %0" : "=m" (*loc) : : "memory");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|lidt
 parameter_list|(
 name|struct
@@ -1993,6 +2037,34 @@ name|addr
 parameter_list|)
 block|{
 asm|__asm __volatile("lidt (%0)" : : "r" (addr));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sidt
+parameter_list|(
+name|struct
+name|region_descriptor
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|loc
+decl_stmt|;
+name|loc
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+asm|__asm __volatile("sidt %0" : "=m" (*loc) : : "memory");
 block|}
 end_function
 
@@ -2021,6 +2093,27 @@ name|sel
 parameter_list|)
 block|{
 asm|__asm __volatile("ltr %0" : : "r" (sel));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|read_tr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_short
+name|sel
+decl_stmt|;
+asm|__asm __volatile("str %0" : "=r" (sel));
+return|return
+operator|(
+name|sel
+operator|)
+return|;
 block|}
 end_function
 
