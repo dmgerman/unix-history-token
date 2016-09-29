@@ -89,6 +89,18 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/broadcom/bcm2835/bcm2836_mp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -269,9 +281,10 @@ end_define
 
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|bcm2836_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|DPRINTF
@@ -308,9 +321,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|bcm2836_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|uint32_t
