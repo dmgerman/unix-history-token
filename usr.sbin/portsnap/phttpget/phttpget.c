@@ -2531,7 +2531,6 @@ name|fname
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* Read the message and send data to fd if appropriate */
 if|if
 condition|(
