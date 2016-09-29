@@ -4967,7 +4967,16 @@ name|rm_pktinfolen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set the hash value for this packet, so that the host could 	 * dispatch the TX done event for this packet back to this TX 	 * ring's channel. 	 */
+if|if
+condition|(
+name|txr
+operator|->
+name|hn_tx_flags
+operator|&
+name|HN_TX_FLAG_HASHVAL
+condition|)
+block|{
+comment|/* 		 * Set the hash value for this packet, so that the host could 		 * dispatch the TX done event for this packet back to this TX 		 * ring's channel. 		 */
 name|pi_data
 operator|=
 name|hn_rndis_pktinfo_append
@@ -4988,6 +4997,7 @@ name|txr
 operator|->
 name|hn_tx_idx
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|m_head
@@ -14056,6 +14066,43 @@ name|hn_csum_assist
 operator|=
 name|csum_assist
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_ndis_ver
+operator|>=
+name|HN_NDIS_VERSION_6_30
+condition|)
+block|{
+comment|/* Support HASHVAL pktinfo on TX path. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|hn_tx_ring_cnt
+condition|;
+operator|++
+name|i
+control|)
+name|sc
+operator|->
+name|hn_tx_ring
+index|[
+name|i
+index|]
+operator|.
+name|hn_tx_flags
+operator||=
+name|HN_TX_FLAG_HASHVAL
+expr_stmt|;
+block|}
 block|}
 end_function
 
