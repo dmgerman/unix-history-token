@@ -3042,15 +3042,16 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
-name|genahci_devclass
+name|tegra_ahci_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|genahci_methods
+name|tegra_ahci_methods
 index|[]
 init|=
 block|{
@@ -3146,12 +3147,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|genahci_driver
+name|tegra_ahci_driver
 init|=
 block|{
 literal|"ahci"
 block|,
-name|genahci_methods
+name|tegra_ahci_methods
 block|,
 expr|sizeof
 operator|(
@@ -3165,13 +3166,13 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|genahci
+name|tegra_ahci
 argument_list|,
 name|simplebus
 argument_list|,
-name|genahci_driver
+name|tegra_ahci_driver
 argument_list|,
-name|genahci_devclass
+name|tegra_ahci_devclass
 argument_list|,
 name|NULL
 argument_list|,
