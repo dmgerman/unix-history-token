@@ -115,6 +115,12 @@ name|B_TRUE
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -143,6 +149,11 @@ literal|"Send holes without birth time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
