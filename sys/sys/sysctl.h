@@ -3227,6 +3227,17 @@ begin_comment
 comment|/* int: from arc4rand() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_MAXPHYS
+value|38
+end_define
+
+begin_comment
+comment|/* int: MAXPHYS value */
+end_comment
+
 begin_comment
 comment|/*  * KERN_PROC subtypes  */
 end_comment
