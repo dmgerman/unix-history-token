@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013, 2014 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010 Isilon Systems, Inc.  * Copyright (c) 2010 iX Systems, Inc.  * Copyright (c) 2010 Panasas, Inc.  * Copyright (c) 2013-2016 Mellanox Technologies, Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -655,21 +655,21 @@ begin_define
 define|#
 directive|define
 name|IORESOURCE_MEM
-value|SYS_RES_MEMORY
+value|(1<< SYS_RES_MEMORY)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IORESOURCE_IO
-value|SYS_RES_IOPORT
+value|(1<< SYS_RES_IOPORT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IORESOURCE_IRQ
-value|SYS_RES_IRQ
+value|(1<< SYS_RES_IRQ)
 end_define
 
 begin_enum
@@ -1200,15 +1200,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * All drivers just seem to want to inspect the type not flags.  */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
 name|int
-name|pci_resource_flags
+name|pci_resource_type
 parameter_list|(
 name|struct
 name|pci_dev
@@ -1241,13 +1237,68 @@ name|NULL
 condition|)
 return|return
 operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|rle
+operator|->
+name|type
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * All drivers just seem to want to inspect the type not flags.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|pci_resource_flags
+parameter_list|(
+name|struct
+name|pci_dev
+modifier|*
+name|pdev
+parameter_list|,
+name|int
+name|bar
+parameter_list|)
+block|{
+name|int
+name|type
+decl_stmt|;
+name|type
+operator|=
+name|pci_resource_type
+argument_list|(
+name|pdev
+argument_list|,
+name|bar
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
 literal|0
 operator|)
 return|;
 return|return
-name|rle
-operator|->
+operator|(
+literal|1
+operator|<<
 name|type
+operator|)
 return|;
 block|}
 end_function
@@ -1475,7 +1526,7 @@ name|type
 decl_stmt|;
 name|type
 operator|=
-name|pci_resource_flags
+name|pci_resource_type
 argument_list|(
 name|pdev
 argument_list|,
@@ -1485,7 +1536,7 @@ expr_stmt|;
 if|if
 condition|(
 name|type
-operator|==
+operator|<
 literal|0
 condition|)
 return|return
