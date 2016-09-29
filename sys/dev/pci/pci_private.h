@@ -1219,6 +1219,11 @@ name|struct
 name|nvlist
 modifier|*
 name|vf_schema
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

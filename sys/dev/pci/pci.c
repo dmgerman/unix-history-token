@@ -1196,7 +1196,7 @@ directive|ifdef
 name|PCI_IOV
 name|DEVMETHOD
 argument_list|(
-name|pci_iov_attach
+name|pci_iov_attach_name
 argument_list|,
 name|pci_iov_attach_method
 argument_list|)
