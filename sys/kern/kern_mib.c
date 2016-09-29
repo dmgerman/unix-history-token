@@ -1686,6 +1686,8 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
 operator||
+name|CTLFLAG_CAPRD
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 operator|(
@@ -1728,6 +1730,8 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
 operator||
+name|CTLFLAG_CAPRD
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 operator|(
@@ -1769,6 +1773,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_CAPRD
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
