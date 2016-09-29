@@ -1002,6 +1002,13 @@ parameter_list|)
 value|microtime((struct timeval *)x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|if_addrlist
+value|if_addrhead
+end_define
+
 begin_include
 include|#
 directive|include
