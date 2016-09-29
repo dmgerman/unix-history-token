@@ -62,17 +62,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|platform_data
-block|{
-name|int
-name|delay_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -193,19 +182,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|PLATFORM_DATA
-parameter_list|(
-name|NAME
-parameter_list|,
-name|delay
-parameter_list|)
-define|\
-value|static struct platform_data NAME ## _platc = {				\ 	.delay_count = delay;						\ };
-end_define
 
 begin_define
 define|#
