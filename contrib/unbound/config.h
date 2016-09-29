@@ -166,6 +166,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `CRYPTO_cleanup_all_ex_data' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPTO_CLEANUP_ALL_EX_DATA
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `ctime_r' function. */
 end_comment
 
@@ -324,6 +335,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `endpwent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDPWENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `endservent' function. */
 end_comment
 
@@ -331,6 +353,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_ENDSERVENT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `ERR_free_strings' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERR_FREE_STRINGS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `ERR_load_crypto_strings' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ERR_LOAD_CRYPTO_STRINGS
 value|1
 end_define
 
@@ -373,6 +417,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_EVENT_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_cleanup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_CLEANUP
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `EVP_MD_CTX_new' function. */
@@ -810,12 +865,42 @@ comment|/* #undef HAVE_NETTLE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<nettle/dsa-compat.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETTLE_DSA_COMPAT_H */
+end_comment
+
+begin_comment
 comment|/* Use libnss for crypto */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_NSS */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `OpenSSL_add_all_digests' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_ADD_ALL_DIGESTS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<openssl/bn.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_BN_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `OPENSSL_config' function. */
@@ -836,6 +921,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_OPENSSL_CONF_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<openssl/dh.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_DH_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<openssl/dsa.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_DSA_H
 value|1
 end_define
 
@@ -862,6 +969,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `OPENSSL_init_crypto' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPENSSL_INIT_CRYPTO */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `OPENSSL_init_ssl' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPENSSL_INIT_SSL */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<openssl/rand.h> header file. */
 end_comment
 
@@ -869,6 +992,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_OPENSSL_RAND_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<openssl/rsa.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_RSA_H
 value|1
 end_define
 
@@ -954,6 +1088,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_RANDOM
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `RAND_cleanup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RAND_CLEANUP
 value|1
 end_define
 
@@ -1712,7 +1857,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.9"
+value|"unbound 1.5.10"
 end_define
 
 begin_comment
@@ -1745,7 +1890,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.9"
+value|"1.5.10"
 end_define
 
 begin_comment
@@ -1808,7 +1953,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,9,0
+value|1,5,10,0
 end_define
 
 begin_comment
@@ -1994,6 +2139,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define this to enable client TCP Fast Open. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_MSG_FASTOPEN */
+end_comment
+
+begin_comment
+comment|/* Define this to enable client TCP Fast Open. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_OSX_MSG_FASTOPEN */
+end_comment
+
+begin_comment
 comment|/* Define this to enable SHA256 and SHA512 support. */
 end_comment
 
@@ -2113,6 +2274,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Define this to enable server TCP Fast Open. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_TCP_FASTOPEN */
+end_comment
 
 begin_comment
 comment|/* Whether the windows socket API is used */

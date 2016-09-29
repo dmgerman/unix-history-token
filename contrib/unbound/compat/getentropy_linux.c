@@ -236,6 +236,24 @@ directive|include
 file|<sys/vfs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_ANON
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_ANON
+value|MAP_ANONYMOUS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

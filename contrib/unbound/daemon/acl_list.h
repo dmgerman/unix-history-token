@@ -108,6 +108,35 @@ name|enum
 name|acl_access
 name|control
 decl_stmt|;
+comment|/** tag bitlist */
+name|uint8_t
+modifier|*
+name|taglist
+decl_stmt|;
+comment|/** length of the taglist (in bytes) */
+name|size_t
+name|taglen
+decl_stmt|;
+comment|/** array per tagnumber of localzonetype(in one byte). NULL if none. */
+name|uint8_t
+modifier|*
+name|tag_actions
+decl_stmt|;
+comment|/** size of the tag_actions_array */
+name|size_t
+name|tag_actions_size
+decl_stmt|;
+comment|/** array per tagnumber, with per tag a list of rdata strings. 	 * NULL if none.  strings are like 'A 127.0.0.1' 'AAAA ::1' */
+name|struct
+name|config_strlist
+modifier|*
+modifier|*
+name|tag_datas
+decl_stmt|;
+comment|/** size of the tag_datas array */
+name|size_t
+name|tag_datas_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -165,13 +194,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Lookup address to see its access control status.  * @param acl: structure for address storage.  * @param addr: address to check  * @param addrlen: length of addr.  * @return: what to do with message from this address.  */
+comment|/**  * Lookup access control status for acl structure.  * @param acl: structure for acl storage.  * @return: what to do with message from this address.  */
 end_comment
 
 begin_function_decl
 name|enum
 name|acl_access
-name|acl_list_lookup
+name|acl_get_control
+parameter_list|(
+name|struct
+name|acl_addr
+modifier|*
+name|acl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Lookup address to see its acl structure  * @param acl: structure for address storage.  * @param addr: address to check  * @param addrlen: length of addr.  * @return: acl structure from this address.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|acl_addr
+modifier|*
+name|acl_addr_lookup
 parameter_list|(
 name|struct
 name|acl_list

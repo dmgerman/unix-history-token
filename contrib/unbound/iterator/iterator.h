@@ -146,6 +146,17 @@ value|10
 end_define
 
 begin_comment
+comment|/* max number of time-outs for minimised query. Prevents resolving failures  * when the QNAME minimisation QTYPE is blocked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MINIMISE_TIMEOUT_COUNT
+value|3
+end_define
+
+begin_comment
 comment|/**  * number of labels from QNAME that are always send individually when using  * QNAME minimisation, even when the number of labels of the QNAME is bigger  * tham MAX_MINIMISE_COUNT */
 end_comment
 
@@ -530,6 +541,10 @@ decl_stmt|;
 comment|/** 	 * Count number of QNAME minisation iterations. Used to limit number of 	 * outgoing queries when QNAME minimisation is enabled. 	 */
 name|int
 name|minimise_count
+decl_stmt|;
+comment|/** 	 * Count number of time-outs. Used to prevent resolving failures when 	 * the QNAME minimisation QTYPE is blocked. */
+name|int
+name|minimise_timeout_count
 decl_stmt|;
 block|}
 struct|;

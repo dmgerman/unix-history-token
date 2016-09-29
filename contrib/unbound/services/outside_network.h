@@ -333,6 +333,10 @@ comment|/** length of addr field */
 name|socklen_t
 name|addrlen
 decl_stmt|;
+comment|/** prefix length of network address (in bits), for randomisation. 	 * if 0, no randomisation. */
+name|int
+name|pfxlen
+decl_stmt|;
 comment|/** the available ports array. These are unused. 	 * Only the first total-inuse part is filled. */
 name|int
 modifier|*

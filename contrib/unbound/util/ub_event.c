@@ -454,8 +454,7 @@ name|AS_EVENT_BASE
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct ub_event_base* a; struct event_base* b;})x).b)
+value|((struct event_base*)x)
 end_define
 
 begin_define
@@ -465,8 +464,7 @@ name|AS_UB_EVENT_BASE
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct event_base* a; struct ub_event_base* b;})x).b)
+value|((struct ub_event_base*)x)
 end_define
 
 begin_define
@@ -476,8 +474,7 @@ name|AS_EVENT
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct ub_event* a; struct event* b;})x).b)
+value|((struct event*)x)
 end_define
 
 begin_define
@@ -487,8 +484,7 @@ name|AS_UB_EVENT
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(((union {struct event* a; struct ub_event* b;})x).b)
+value|((struct ub_event*)x)
 end_define
 
 begin_function
@@ -496,7 +492,9 @@ specifier|const
 name|char
 modifier|*
 name|ub_event_get_version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|event_get_version

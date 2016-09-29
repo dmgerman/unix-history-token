@@ -635,6 +635,12 @@ name|minimise_count
 operator|=
 literal|0
 expr_stmt|;
+name|iq
+operator|->
+name|minimise_timeout_count
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|qstate
@@ -832,6 +838,11 @@ name|dpns
 init|=
 name|NULL
 decl_stmt|;
+name|super_iq
+operator|->
+name|num_target_queries
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|super_iq
@@ -947,11 +958,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* mark as failed */
-name|super_iq
-operator|->
-name|num_target_queries
-operator|--
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -9482,7 +9488,7 @@ name|qinfo_out
 operator|.
 name|qtype
 operator|=
-name|LDNS_RR_TYPE_NS
+name|LDNS_RR_TYPE_A
 expr_stmt|;
 name|iq
 operator|->
@@ -9573,6 +9579,21 @@ name|iq
 operator|->
 name|minimise_count
 operator|++
+expr_stmt|;
+name|iq
+operator|->
+name|minimise_timeout_count
+operator|=
+literal|0
+expr_stmt|;
+name|iter_dec_attempts
+argument_list|(
+name|iq
+operator|->
+name|dp
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Limit number of iterations for QNAMEs with more 		 * than MAX_MINIMISE_COUNT labels. Send first MINIMISE_ONE_LAB 		 * labels of QNAME always individually. 		 */
 if|if
@@ -9707,6 +9728,7 @@ name|labdiff
 operator|<
 literal|2
 operator|&&
+operator|(
 name|iq
 operator|->
 name|qchase
@@ -9714,6 +9736,15 @@ operator|.
 name|qtype
 operator|==
 name|LDNS_RR_TYPE_DS
+operator|||
+name|iq
+operator|->
+name|qchase
+operator|.
+name|qtype
+operator|==
+name|LDNS_RR_TYPE_A
+operator|)
 operator|)
 condition|)
 comment|/* Stop minimising this query, resolve "as usual" */
@@ -9812,13 +9843,36 @@ name|minimisation_state
 operator|==
 name|SKIP_MINIMISE_STATE
 condition|)
-comment|/* Do not increment qname, continue incrementing next  		 * iteration */
+block|{
+name|iq
+operator|->
+name|minimise_timeout_count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|iq
+operator|->
+name|minimise_timeout_count
+operator|<
+name|MAX_MINIMISE_TIMEOUT_COUNT
+condition|)
+comment|/* Do not increment qname, continue incrementing next  			 * iteration */
 name|iq
 operator|->
 name|minimisation_state
 operator|=
 name|MINIMISE_STATE
 expr_stmt|;
+else|else
+comment|/* Too many time-outs detected for this QNAME and QTYPE. 			 * We give up, disable QNAME minimisation. */
+name|iq
+operator|->
+name|minimisation_state
+operator|=
+name|DONOT_MINIMISE_STATE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|iq
@@ -13010,6 +13064,12 @@ operator|->
 name|qinfo
 argument_list|)
 expr_stmt|;
+comment|/* Tell the originating event that this target query has finished 	 * (regardless if it succeeded or not). */
+name|foriq
+operator|->
+name|num_target_queries
+operator|--
+expr_stmt|;
 comment|/* check to see if parent event is still interested (in orig name).  */
 if|if
 condition|(
@@ -13067,12 +13127,6 @@ expr_stmt|;
 comment|/* could be because parent was jostled out of the cache, 		   and a new identical query arrived, that does not want it*/
 return|return;
 block|}
-comment|/* Tell the originating event that this target query has finished 	 * (regardless if it succeeded or not). */
-name|foriq
-operator|->
-name|num_target_queries
-operator|--
-expr_stmt|;
 comment|/* if iq->query_for_pside_glue then add the pside_glue (marked lame) */
 if|if
 condition|(
