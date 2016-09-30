@@ -469,7 +469,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  *	m - mountlist_mtx  *	i - interlock  *	v - vnode freelist mutex  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * Lock reference:  * 	l - mnt_listmtx  *	m - mountlist_mtx  *	i - interlock  *	v - vnode freelist mutex  *  * Unmarked fields are considered stable as long as a ref is held.  *  */
 end_comment
 
 begin_struct
@@ -533,15 +533,6 @@ name|int
 name|mnt_nvnodelistsize
 decl_stmt|;
 comment|/* (i) # of vnodes */
-name|struct
-name|vnodelst
-name|mnt_activevnodelist
-decl_stmt|;
-comment|/* (v) list of active vnodes */
-name|int
-name|mnt_activevnodelistsize
-decl_stmt|;
-comment|/* (v) # of active vnodes */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -637,6 +628,28 @@ modifier|*
 name|mnt_gjprovider
 decl_stmt|;
 comment|/* gjournal provider name */
+name|struct
+name|mtx
+name|mnt_listmtx
+decl_stmt|;
+name|struct
+name|vnodelst
+name|mnt_activevnodelist
+decl_stmt|;
+comment|/* (l) list of active vnodes */
+name|int
+name|mnt_activevnodelistsize
+decl_stmt|;
+comment|/* (l) # of active vnodes */
+name|struct
+name|vnodelst
+name|mnt_tmpfreevnodelist
+decl_stmt|;
+comment|/* (l) list of free vnodes */
+name|int
+name|mnt_tmpfreevnodelistsize
+decl_stmt|;
+comment|/* (l) # of free vnodes */
 name|struct
 name|lock
 name|mnt_explock

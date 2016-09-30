@@ -147,7 +147,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	I - updated with atomics, 0->1 and 1->0 transitions with interlock held  *	m - mount point interlock  *	p - pollinfo lock  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for DOOMED if the vnode lock is not required.  *	6) Perform your operation, then vput().  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	i - interlock  *	l - mp mnt_listmtx or freelist mutex  *	I - updated with atomics, 0->1 and 1->0 transitions with interlock held  *	m - mount point interlock  *	p - pollinfo lock  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for DOOMED if the vnode lock is not required.  *	6) Perform your operation, then vput().  */
 end_comment
 
 begin_if
@@ -284,7 +284,7 @@ argument|vnode
 argument_list|)
 name|v_actfreelist
 expr_stmt|;
-comment|/* f vnode active/free lists */
+comment|/* l vnode active/free lists */
 name|struct
 name|bufobj
 name|v_bufobj
@@ -347,6 +347,10 @@ name|u_int
 name|v_vflag
 decl_stmt|;
 comment|/* v vnode flags */
+name|u_int
+name|v_mflag
+decl_stmt|;
+comment|/* l mnt-specific vnode flags */
 name|int
 name|v_writecount
 decl_stmt|;
@@ -807,6 +811,17 @@ end_define
 
 begin_comment
 comment|/* force the insmntque to succeed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMP_TMPMNTFREELIST
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Vnode is on mnt's tmp free list */
 end_comment
 
 begin_comment
