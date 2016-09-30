@@ -2695,14 +2695,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|struct
-name|task
-name|tx_task
-decl_stmt|;
-name|struct
-name|timeout_task
-name|tx_timeout_task
-decl_stmt|;
 comment|/* ethernet client ID (each fastpath set of RX/TX/CQE is a client) */
 name|uint8_t
 name|cl_id
@@ -9128,19 +9120,9 @@ end_if
 begin_if
 if|#
 directive|if
-operator|(
 name|__FreeBSD_version
 operator|>=
-literal|1001513
-operator|&&
-name|__FreeBSD_version
-operator|<
-literal|1100000
-operator|)
-operator|||
-name|__FreeBSD_version
-operator|>=
-literal|1100048
+literal|1000000
 end_if
 
 begin_define
