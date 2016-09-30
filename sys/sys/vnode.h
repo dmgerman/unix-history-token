@@ -400,6 +400,16 @@ name|v_fifoinfo
 value|v_un.vu_fifoinfo
 end_define
 
+begin_define
+define|#
+directive|define
+name|bo2vnode
+parameter_list|(
+name|bo
+parameter_list|)
+value|__containerof((bo), struct vnode, v_bufobj)
+end_define
+
 begin_comment
 comment|/* XXX: These are temporary to avoid a source sweep at this time */
 end_comment

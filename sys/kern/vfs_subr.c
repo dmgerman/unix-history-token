@@ -1576,12 +1576,6 @@ name|vp
 operator|->
 name|v_bufobj
 expr_stmt|;
-name|bo
-operator|->
-name|__bo_vnode
-operator|=
-name|vp
-expr_stmt|;
 name|rw_init
 argument_list|(
 name|BO_LOCKPTR
@@ -8828,14 +8822,12 @@ operator|)
 return|;
 name|vp
 operator|=
-operator|(
+name|bo2vnode
+argument_list|(
 operator|*
 name|bo
-operator|)
-operator|->
-name|__bo_vnode
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|VOP_ISLOCKED

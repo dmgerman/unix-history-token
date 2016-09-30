@@ -10717,9 +10717,10 @@ name|nocopy
 decl_stmt|;
 name|vp
 operator|=
+name|bo2vnode
+argument_list|(
 name|bo
-operator|->
-name|__bo_vnode
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

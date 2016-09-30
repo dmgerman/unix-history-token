@@ -18200,9 +18200,10 @@ return|return
 operator|(
 name|VOP_FSYNC
 argument_list|(
+name|bo2vnode
+argument_list|(
 name|bo
-operator|->
-name|__bo_vnode
+argument_list|)
 argument_list|,
 name|waitfor
 argument_list|,
