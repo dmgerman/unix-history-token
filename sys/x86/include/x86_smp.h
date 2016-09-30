@@ -160,8 +160,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|uint64_t
-name|smp_tlb_generation
+name|int
+name|smp_tlb_wait
 decl_stmt|;
 end_decl_stmt
 

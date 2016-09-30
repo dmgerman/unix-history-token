@@ -1949,9 +1949,6 @@ name|struct
 name|invpcid_descr
 name|d
 decl_stmt|;
-name|uint64_t
-name|generation
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|COUNT_XINVLTLB_HITS
@@ -1985,10 +1982,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* COUNT_IPIS */
-name|generation
-operator|=
-name|smp_tlb_generation
-expr_stmt|;
 name|d
 operator|.
 name|pcid
@@ -2031,11 +2024,12 @@ else|:
 name|INVPCID_CTX
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
+name|atomic_add_int
 argument_list|(
-name|smp_tlb_done
+operator|&
+name|smp_tlb_wait
 argument_list|,
-name|generation
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2048,9 +2042,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uint64_t
-name|generation
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|COUNT_XINVLTLB_HITS
@@ -2084,10 +2075,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* COUNT_IPIS */
-name|generation
-operator|=
-name|smp_tlb_generation
-expr_stmt|;
 if|if
 condition|(
 name|smp_tlb_pmap
@@ -2133,11 +2120,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|PCPU_SET
+name|atomic_add_int
 argument_list|(
-name|smp_tlb_done
+operator|&
+name|smp_tlb_wait
 argument_list|,
-name|generation
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
