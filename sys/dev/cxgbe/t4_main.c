@@ -3732,6 +3732,13 @@ literal|"Chelsio T62100-CR"
 block|}
 block|,
 comment|/* 2 x 40/50/100G */
+block|{
+literal|0x6410
+block|,
+literal|"Chelsio T62100-DBG"
+block|}
+block|,
+comment|/* 2 x 40/50/100G, debug */
 block|}
 struct|;
 end_struct
