@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160831
+value|0x20160930
 end_define
 
 begin_include
@@ -558,6 +558,22 @@ argument_list|,
 name|AcpiGbl_ReducedHardware
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Maximum number of While() loop iterations before forced method abort.  * This mechanism is intended to prevent infinite loops during interpreter  * execution within a host kernel.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT32
+argument_list|,
+name|AcpiGbl_MaxLoopIterations
+argument_list|,
+name|ACPI_MAX_LOOP_COUNT
 argument_list|)
 expr_stmt|;
 end_expr_stmt

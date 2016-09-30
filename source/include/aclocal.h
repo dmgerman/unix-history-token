@@ -2492,7 +2492,7 @@ value|\     ACPI_PARSE_VALUE                Value;
 comment|/* Value or args associated with the opcode */
 value|\     UINT8                           ArgListLength;
 comment|/* Number of elements in the arg list */
-value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT8                           DisasmFlags;
+value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT16                          DisasmFlags;
 comment|/* Used during AML disassembly */
 value|\     UINT8                           DisasmOpcode;
 comment|/* Subtype used for disassembly */
@@ -2939,56 +2939,63 @@ begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_IGNORE
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_PARAMETER_LIST
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_EMPTY_TERMLIST
-value|0x04
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_PREDEFINED_CHECKED
-value|0x08
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_CLOSING_PAREN
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_ASSIGNMENT
-value|0x40
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PARSEOP_ELSEIF
-value|0x80
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_LEGACY_ASL_ONLY
+value|0x0100
 end_define
 
 begin_comment

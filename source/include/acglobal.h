@@ -1074,20 +1074,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Maximum number of While() loop iterations before forced abort */
-end_comment
-
-begin_expr_stmt
-name|ACPI_GLOBAL
-argument_list|(
-name|UINT16
-argument_list|,
-name|AcpiGbl_MaxLoopIterations
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Control method single step flag */
 end_comment
 
@@ -1405,6 +1391,18 @@ argument_list|,
 name|AcpiGbl_DmEmitExternalOpcodes
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|BOOLEAN
+argument_list|,
+name|AcpiGbl_DoDisassemblerOptimizations
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

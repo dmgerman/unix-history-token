@@ -34,13 +34,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|sem_destroy
-value|sem_close
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_USE_ALTERNATE_TIMEOUT
 end_define
 

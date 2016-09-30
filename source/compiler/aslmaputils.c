@@ -105,6 +105,19 @@ name|HidNode
 operator|->
 name|Op
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+comment|/* Object is not resolved, probably an External */
+return|return
+operator|(
+literal|"Unresolved Symbol - referenced but not defined in this table"
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|Op

@@ -1214,6 +1214,15 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+comment|/* Disable disassembler code optimizations */
+name|AcpiGbl_DoDisassemblerOptimizations
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 comment|/* iASL: Disable External opcode generation */

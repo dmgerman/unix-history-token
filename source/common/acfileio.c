@@ -574,19 +574,9 @@ condition|(
 name|GetOnlyAmlTables
 condition|)
 block|{
-comment|/* Table must be an AML table (DSDT/SSDT) or FADT */
+comment|/*          * Table must be an AML table (DSDT/SSDT).          * Used for iASL -e option only.          */
 if|if
 condition|(
-operator|!
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|)
-operator|&&
 operator|!
 name|AcpiUtIsAmlTable
 argument_list|(

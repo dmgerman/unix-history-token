@@ -249,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_LOOP_COUNT
-value|0xFFFF
+value|0x000FFFFF
 end_define
 
 begin_comment

@@ -1291,7 +1291,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error - Byte mismatch at offset %8.8X: 0x%2.2X 0x%2.2X\n"
+literal|"Error - Byte mismatch at offset %8.4X: 0x%2.2X 0x%2.2X\n"
 argument_list|,
 name|Offset
 argument_list|,
@@ -1423,10 +1423,18 @@ argument_list|,
 name|Mismatches
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Mismatches
+operator|==
+literal|0
+condition|)
+block|{
 name|Status
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|Exit2
 label|:
 name|fclose

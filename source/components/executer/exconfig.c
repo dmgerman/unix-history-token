@@ -1373,6 +1373,10 @@ name|Reference
 operator|.
 name|Value
 expr_stmt|;
+comment|/*      * Release the interpreter lock so that the table lock won't have      * strict order requirement against it.      */
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 comment|/* Ensure the table is still loaded */
 if|if
 condition|(
@@ -1383,11 +1387,13 @@ name|TableIndex
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NOT_EXIST
-argument_list|)
 expr_stmt|;
+goto|goto
+name|LockAndExit
+goto|;
 block|}
 comment|/* Invoke table handler if present */
 if|if
@@ -1443,11 +1449,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|LockAndExit
+goto|;
 block|}
 operator|(
 name|void
@@ -1464,7 +1468,21 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|LockAndExit
+label|:
+comment|/* Re-acquire the interpreter lock */
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
 comment|/*      * Invalidate the handle. We do this because the handle may be stored      * in a named object and may not be actually deleted until much later.      */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 name|DdbHandle
 operator|->
 name|Common
@@ -1474,9 +1492,10 @@ operator|&=
 operator|~
 name|AOPOBJ_DATA_VALID
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

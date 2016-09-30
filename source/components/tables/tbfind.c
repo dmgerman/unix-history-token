@@ -399,7 +399,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_NOT_FOUND
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

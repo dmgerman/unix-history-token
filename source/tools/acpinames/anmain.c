@@ -322,7 +322,7 @@ index|[
 name|AcpiGbl_Optind
 index|]
 argument_list|,
-name|ACPI_GET_ONLY_AML_TABLES
+name|ACPI_GET_ALL_TABLES
 argument_list|,
 operator|&
 name|ListHead

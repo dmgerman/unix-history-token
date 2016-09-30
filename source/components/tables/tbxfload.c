@@ -576,7 +576,7 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-literal|"%u ACPI AML tables successfully acquired and loaded\n"
+literal|"%u ACPI AML tables successfully acquired and loaded"
 operator|,
 name|TablesLoaded
 operator|)
@@ -604,6 +604,20 @@ operator|=
 name|AE_CTRL_TERMINATE
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_INIT
+operator|,
+literal|"\n"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|UnlockAndExit
 label|:
 operator|(
@@ -851,12 +865,12 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Must acquire the interpreter lock during this operation */
+comment|/* Must acquire the table lock during this operation */
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
-name|ACPI_MTX_INTERPRETER
+name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
 if|if
@@ -933,6 +947,14 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Ensure the table is actually loaded */
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_TABLES
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -945,6 +967,14 @@ block|{
 name|Status
 operator|=
 name|AE_NOT_EXIST
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_TABLES
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1006,6 +1036,14 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_TABLES
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 operator|(
@@ -1013,7 +1051,7 @@ name|void
 operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
-name|ACPI_MTX_INTERPRETER
+name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
