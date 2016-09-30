@@ -8246,6 +8246,12 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Reset DF_QUIET in case this driver doesn't 			 * end up as the best driver. 			 */
+name|device_verbose
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Probes that return BUS_PROBE_NOWILDCARD or lower 			 * only match on devices whose driver was explicitly 			 * specified. 			 */
 if|if
 condition|(
@@ -10828,6 +10834,11 @@ name|dev
 operator|->
 name|devclass
 argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|device_verbose
+argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
