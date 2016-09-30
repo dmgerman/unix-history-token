@@ -246,6 +246,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DMAR_CTX2_DID_MASK
+value|0xffff0
+end_define
+
+begin_define
+define|#
+directive|define
 name|DMAR_CTX2_DID
 parameter_list|(
 name|x
@@ -256,6 +263,16 @@ end_define
 begin_comment
 comment|/* Domain Identifier */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_CTX2_GET_DID
+parameter_list|(
+name|ctx2
+parameter_list|)
+value|(((ctx2)& DMAR_CTX2_DID_MASK)>> 8)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -1410,6 +1427,24 @@ define|#
 directive|define
 name|DMAR_RTADDR_REG
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_RTADDR_RTT
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Root Table Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_RTADDR_RTA_MASK
+value|0xfffffffffffff000
 end_define
 
 begin_comment
