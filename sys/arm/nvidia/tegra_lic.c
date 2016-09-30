@@ -1324,9 +1324,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|tegra_lic
+name|lic
 argument_list|,
 name|tegra_lic_driver
 argument_list|,

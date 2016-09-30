@@ -3043,13 +3043,6 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|devclass_t
-name|tegra_ahci_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_method_t
 name|tegra_ahci_methods
 index|[]
@@ -3146,22 +3139,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
-name|tegra_ahci_driver
-init|=
-block|{
-literal|"ahci"
-block|,
-name|tegra_ahci_methods
-block|,
-expr|sizeof
-operator|(
-expr|struct
-name|tegra_ahci_sc
-operator|)
-block|}
+name|devclass_t
+name|tegra_ahci_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|DEFINE_CLASS_0
+argument_list|(
+name|ahci
+argument_list|,
+name|tegra_ahci_driver
+argument_list|,
+name|tegra_ahci_methods
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tegra_ahci_sc
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE

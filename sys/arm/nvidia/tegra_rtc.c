@@ -1302,10 +1302,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|tegra_rtc_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|tegra_rtc
+name|rtc
 argument_list|,
 name|tegra_rtc_driver
 argument_list|,
@@ -1320,13 +1328,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|tegra_rtc_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -1338,9 +1339,9 @@ name|tegra_rtc_driver
 argument_list|,
 name|tegra_rtc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
