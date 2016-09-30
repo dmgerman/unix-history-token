@@ -1904,6 +1904,30 @@ name|length
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* if the new block is zero length, its padding */
+if|if
+condition|(
+name|isonum_711
+argument_list|(
+name|dp
+operator|->
+name|length
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* skip to next block, if any */
+name|off
+operator|=
+name|boff
+operator|*
+name|ISO_DEFAULT_BLOCK_SIZE
+expr_stmt|;
+continue|continue;
+block|}
+else|else
+block|{
 name|off
 operator|+=
 name|isonum_711
@@ -1913,6 +1937,7 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
