@@ -1295,16 +1295,6 @@ begin_comment
 comment|/*  * Basic debug support.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IF_DEBUG
-parameter_list|(
-name|_sc
-parameter_list|)
-value|if ((_sc)->if_flags& IFF_DEBUG)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -1416,19 +1406,7 @@ name|_sc
 parameter_list|,
 name|a
 parameter_list|)
-value|do {					\ 	if (sc->debug) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSWP_DEBUGF
-parameter_list|(
-name|_sc
-parameter_list|,
-name|a
-parameter_list|)
-value|do {					\ 	IF_DEBUG((_sc)) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
+value|do {					\ 	if ((_sc)->debug) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -5329,9 +5307,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -5537,9 +5517,11 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -5589,9 +5571,11 @@ decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -6329,9 +6313,11 @@ name|sc
 operator|->
 name|ifp
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -6820,9 +6806,11 @@ name|sc
 operator|->
 name|if_flags
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: UP& RUNNING (changed=0x%x)"
@@ -6868,9 +6856,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: UP but not RUNNING; starting up"
@@ -6894,9 +6884,11 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: not UP but RUNNING; shutting down"
@@ -7420,9 +7412,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -9043,9 +9037,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"Requeueing defragmented packet"
@@ -9136,9 +9132,11 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"Queueing TX packet: %d segments + %d pad bytes"
@@ -11007,9 +11005,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -11078,9 +11078,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
