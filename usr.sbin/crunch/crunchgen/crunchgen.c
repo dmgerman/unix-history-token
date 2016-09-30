@@ -4969,13 +4969,6 @@ argument_list|,
 literal|"LD?= ld\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|outmk
-argument_list|,
-literal|"STRIPBIN?= strip\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|subtract_strlst
@@ -5279,15 +5272,6 @@ argument_list|(
 name|outmk
 argument_list|,
 literal|".endif\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|outmk
-argument_list|,
-literal|"\t$(STRIPBIN) %s\n"
-argument_list|,
-name|execfname
 argument_list|)
 expr_stmt|;
 name|fprintf
