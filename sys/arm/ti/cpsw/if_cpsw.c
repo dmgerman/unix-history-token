@@ -1476,36 +1476,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPSW_GLOBAL_LOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {					\ 		if ((mtx_owned(&(sc)->tx.lock) ? 1 : 0) !=		\ 		    (mtx_owned(&(sc)->rx.lock) ? 1 : 0)) {		\ 			panic("cpsw deadlock possibility detection!");	\ 		}							\ 		mtx_lock(&(sc)->tx.lock);				\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSW_GLOBAL_UNLOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {					\ 		CPSW_RX_UNLOCK(sc);					\ 		CPSW_TX_UNLOCK(sc);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSW_GLOBAL_LOCK_ASSERT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {				\ 		CPSW_TX_LOCK_ASSERT(sc);				\ 		CPSW_RX_LOCK_ASSERT(sc);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CPSW_PORT_LOCK
 parameter_list|(
 name|_sc
@@ -6071,7 +6041,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_RX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6129,7 +6099,7 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|CPSW_GLOBAL_LOCK
+name|CPSW_RX_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6376,7 +6346,7 @@ name|swsc
 argument_list|)
 condition|)
 block|{
-name|CPSW_GLOBAL_LOCK
+name|CPSW_RX_LOCK
 argument_list|(
 name|sc
 operator|->
@@ -6390,6 +6360,20 @@ operator|->
 name|swsc
 argument_list|)
 expr_stmt|;
+name|CPSW_RX_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|swsc
+argument_list|)
+expr_stmt|;
+name|CPSW_TX_LOCK
+argument_list|(
+name|sc
+operator|->
+name|swsc
+argument_list|)
+expr_stmt|;
 name|cpsw_tx_teardown_locked
 argument_list|(
 name|sc
@@ -6397,7 +6381,7 @@ operator|->
 name|swsc
 argument_list|)
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_TX_UNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -11239,7 +11223,7 @@ name|sc
 operator|=
 name|msc
 expr_stmt|;
-name|CPSW_GLOBAL_LOCK
+name|CPSW_TX_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11374,7 +11358,7 @@ name|tx
 operator|.
 name|queue_removes
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_TX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
