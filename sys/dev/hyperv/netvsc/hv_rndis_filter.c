@@ -604,6 +604,25 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|RNDIS_STATUS_TASK_OFFLOAD_CURRENT_CONFIG
+case|:
+comment|/* Not really useful; ignore. */
+break|break;
+case|case
+name|RNDIS_STATUS_NETWORK_CHANGE
+case|:
+comment|/* TODO */
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"network changed\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* TODO: */
 name|if_printf
