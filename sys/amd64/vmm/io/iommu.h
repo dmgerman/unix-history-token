@@ -254,15 +254,6 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|iommu_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|iommu_cleanup
 parameter_list|(
 name|void

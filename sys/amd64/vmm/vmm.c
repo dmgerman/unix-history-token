@@ -1044,47 +1044,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|vmm_force_iommu
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.vmm.force_iommu"
-argument_list|,
-operator|&
-name|vmm_force_iommu
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_vmm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|force_iommu
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|vmm_force_iommu
-argument_list|,
-literal|0
-argument_list|,
-literal|"Force use of I/O MMU even if no passthrough devices were found."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -1654,18 +1613,6 @@ case|:
 name|vmmdev_init
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|vmm_force_iommu
-operator|||
-name|ppt_avail_devices
-argument_list|()
-operator|>
-literal|0
-condition|)
-name|iommu_init
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|vmm_init
@@ -1762,7 +1709,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * vmm initialization has the following dependencies:  *  * - iommu initialization must happen after the pci passthru driver has had  *   a chance to attach to any passthru devices (after SI_SUB_CONFIGURE).  *  * - VT-x initialization requires smp_rendezvous() and therefore must happen  *   after SMP is fully functional (after SI_SUB_SMP).  */
+comment|/*  * vmm initialization has the following dependencies:  *  * - VT-x initialization requires smp_rendezvous() and therefore must happen  *   after SMP is fully functional (after SI_SUB_SMP).  */
 end_comment
 
 begin_expr_stmt
@@ -4264,6 +4211,19 @@ argument_list|(
 name|maxaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vm
+operator|->
+name|iommu
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|vm_iommu_map
 argument_list|(
 name|vm
