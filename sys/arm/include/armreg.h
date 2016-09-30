@@ -764,7 +764,7 @@ value|(CPU_ID_CORTEXA9 | (4<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_comment
-comment|/* XXX: Cortx-A12 is the old name for this part, it has been renamed the A17 */
+comment|/* XXX: Cortex-A12 is the old name for this part, it has been renamed the A17 */
 end_comment
 
 begin_define
