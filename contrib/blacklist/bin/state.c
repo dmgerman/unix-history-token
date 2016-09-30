@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: state.c,v 1.18 2016/04/04 15:52:56 christos Exp $	*/
+comment|/*	$NetBSD: state.c,v 1.19 2016/09/26 19:43:43 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: state.c,v 1.18 2016/04/04 15:52:56 christos Exp $"
+literal|"$NetBSD: state.c,v 1.19 2016/09/26 19:43:43 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -947,10 +947,24 @@ name|db
 operator|==
 name|NULL
 condition|)
+block|{
+call|(
+modifier|*
+name|lfun
+call|)
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: called with no database file"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|first
 operator|=
 name|first
