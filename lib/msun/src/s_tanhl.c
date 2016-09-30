@@ -512,9 +512,16 @@ name|x4
 decl_stmt|,
 name|z
 decl_stmt|;
+if|#
+directive|if
+name|LDBL_MANT_DIG
+operator|==
+literal|113
 name|double
 name|dx2
 decl_stmt|;
+endif|#
+directive|endif
 name|int16_t
 name|jx
 decl_stmt|,
