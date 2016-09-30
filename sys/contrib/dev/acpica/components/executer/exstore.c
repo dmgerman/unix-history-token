@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -243,7 +243,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Target is not a Reference or Constant object - %s [%p]"
+literal|"Target is not a Reference or Constant object - [%s] %p"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -346,7 +346,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"**** Write to Debug Object: Object %p %s ****:\n\n"
+literal|"**** Write to Debug Object: Object %p [%s] ****:\n\n"
 operator|,
 name|SourceDesc
 operator|,
@@ -721,7 +721,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Source must be Integer/Buffer/String type, not %s"
+literal|"Source must be type [Integer/Buffer/String], found [%s]"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -759,13 +759,13 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Target is not a Package or BufferField"
+literal|"Target is not of type [Package/BufferField]"
 operator|)
 argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AE_AML_OPERAND_TYPE
+name|AE_AML_TARGET_TYPE
 expr_stmt|;
 break|break;
 block|}
@@ -778,7 +778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *              ImplicitConversion      - Perform implicit conversion (yes/no)  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object. This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation. A CopyObject can change  *              the target type, however.  *  *              The ImplicitConversion flag is set to NO/FALSE only when  *              storing to an ArgX -- as per the rules of the ACPI spec.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *              ImplicitConversion      - Perform implicit conversion (yes/no)  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  * The assignment of an object to a named object is handled here.  * The value passed in will replace the current value (if any)  * with the input value.  *  * When storing into an object the data is converted to the  * target object type then stored in the object. This means  * that the target object type (for an initialized target) will  * not be changed by a store operation. A CopyObject can change  * the target type, however.  *  * The ImplicitConversion flag is set to NO/FALSE only when  * storing to an ArgX -- as per the rules of the ACPI spec.  *  * Assumes parameters are already validated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -844,7 +844,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Storing %p (%s) to node %p (%s)\n"
+literal|"Storing %p [%s] to node %p [%s]\n"
 operator|,
 name|SourceDesc
 operator|,
@@ -862,6 +862,123 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Only limited target types possible for everything except CopyObject */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+operator|!=
+name|AML_COPY_OP
+condition|)
+block|{
+comment|/*          * Only CopyObject allows all object types to be overwritten. For          * TargetRef(s), there are restrictions on the object types that          * are allowed.          *          * Allowable operations/typing for Store:          *          * 1) Simple Store          *      Integer     --> Integer (Named/Local/Arg)          *      String      --> String  (Named/Local/Arg)          *      Buffer      --> Buffer  (Named/Local/Arg)          *      Package     --> Package (Named/Local/Arg)          *          * 2) Store with implicit conversion          *      Integer     --> String or Buffer  (Named)          *      String      --> Integer or Buffer (Named)          *      Buffer      --> Integer or String (Named)          */
+switch|switch
+condition|(
+name|TargetType
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+comment|/*              * Here, can only store a package to an existing package.              * Storing a package to a Local/Arg is OK, and handled              * elsewhere.              */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Opcode
+operator|==
+name|AML_STORE_OP
+condition|)
+block|{
+if|if
+condition|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_PACKAGE
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Cannot assign type [%s] to [Package] "
+literal|"(source must be type Pkg)"
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|SourceDesc
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_TARGET_TYPE
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+comment|/* Fallthrough */
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_EVENT
+case|:
+case|case
+name|ACPI_TYPE_MUTEX
+case|:
+case|case
+name|ACPI_TYPE_REGION
+case|:
+case|case
+name|ACPI_TYPE_POWER
+case|:
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Target must be [Buffer/Integer/String/Reference]"
+literal|", found [%s] (%4.4s)"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|Node
+operator|->
+name|Type
+argument_list|)
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_TARGET_TYPE
+argument_list|)
+expr_stmt|;
+default|default:
+break|break;
+block|}
+block|}
 comment|/*      * Resolve the source object to an actual value      * (If it is a reference object)      */
 name|Status
 operator|=
@@ -895,6 +1012,7 @@ condition|(
 name|TargetType
 condition|)
 block|{
+comment|/*          * The simple data types all support implicit source operand          * conversion before the store.          */
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
@@ -904,7 +1022,6 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*          * The simple data types all support implicit source operand          * conversion before the store.          */
 if|if
 condition|(
 operator|(
@@ -990,7 +1107,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Store %s into %s via Convert/Attach\n"
+literal|"Store type [%s] into [%s] via Convert/Attach\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -1035,7 +1152,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*          * No conversions for all other types. Directly store a copy of          * the source object. This is the ACPI spec-defined behavior for          * the CopyObject operator.          *          * NOTE: For the Store operator, this is a departure from the          * ACPI spec, which states "If conversion is impossible, abort          * the running control method". Instead, this code implements          * "If conversion is impossible, treat the Store operation as          * a CopyObject".          */
+comment|/*          * CopyObject operator: No conversions for all other types.          * Instead, directly store a copy of the source object.          *          * This is the ACPI spec-defined behavior for the CopyObject          * operator. (Note, for this default case, all normal          * Store/Target operations exited above with an error).          */
 name|Status
 operator|=
 name|AcpiExStoreDirectToNode

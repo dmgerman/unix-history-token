@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -34,20 +34,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -402,6 +390,14 @@ name|DisasmOpcode
 operator|=
 name|ACPI_DASM_LNOT_PREFIX
 expr_stmt|;
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
+expr_stmt|;
 comment|/* Save symbol string in the next child (not peer) */
 name|Child2
 operator|=
@@ -437,12 +433,68 @@ operator|(
 name|TRUE
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INDEX_SUPPORT
 case|case
 name|AML_INDEX_OP
 case|:
+comment|/*          * Check for constant source operand. Note: although technically          * legal syntax, the iASL compiler does not support this with          * the symbolic operators for Index(). It doesn't make sense to          * use Index() with a constant anyway.          */
+if|if
+condition|(
+operator|(
+name|Child1
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_STRING_OP
+operator|)
+operator|||
+operator|(
+name|Child1
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_BUFFER_OP
+operator|)
+operator|||
+operator|(
+name|Child1
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_PACKAGE_OP
+operator|)
+operator|||
+operator|(
+name|Child1
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_VAR_PACKAGE_OP
+operator|)
+condition|)
+block|{
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_CLOSING_PAREN
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+comment|/* Index operator is [] */
 name|Child1
 operator|->
 name|Common
@@ -460,8 +512,6 @@ operator|=
 literal|"]"
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 comment|/* Unary operators */
 case|case
 name|AML_DECREMENT_OP
@@ -667,7 +717,33 @@ argument_list|,
 name|Target
 argument_list|)
 expr_stmt|;
-comment|/*          * Check for possible conversion to a "Compound Assignment".          *          * Determine if either operand is the same as the target          * and display compound assignment operator and other operand.          */
+comment|/* Check operands for conversion to a "Compound Assignment" */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+condition|)
+block|{
+comment|/* Commutative operators */
+case|case
+name|AML_ADD_OP
+case|:
+case|case
+name|AML_MULTIPLY_OP
+case|:
+case|case
+name|AML_BIT_AND_OP
+case|:
+case|case
+name|AML_BIT_OR_OP
+case|:
+case|case
+name|AML_BIT_XOR_OP
+case|:
+comment|/*              * For the commutative operators, we can convert to a              * compound statement only if at least one (either) operand              * is the same as the target.              *              *      Add (A, B, A) --> A += B              *      Add (B, A, A) --> A += B              *      Add (B, C, A) --> A = (B + C)              */
 if|if
 condition|(
 operator|(
@@ -715,7 +791,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator||=
-name|ACPI_PARSEOP_COMPOUND
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
 expr_stmt|;
 name|Child1
 operator|->
@@ -730,6 +806,80 @@ operator|(
 name|TRUE
 operator|)
 return|;
+block|}
+break|break;
+comment|/* Non-commutative operators */
+case|case
+name|AML_SUBTRACT_OP
+case|:
+case|case
+name|AML_DIVIDE_OP
+case|:
+case|case
+name|AML_MOD_OP
+case|:
+case|case
+name|AML_SHIFT_LEFT_OP
+case|:
+case|case
+name|AML_SHIFT_RIGHT_OP
+case|:
+comment|/*              * For the non-commutative operators, we can convert to a              * compound statement only if the target is the same as the              * first operand.              *              *      Subtract (A, B, A) --> A -= B              *      Subtract (B, A, A) --> A = (B - A)              */
+if|if
+condition|(
+operator|(
+name|AcpiDmIsTargetAnOperand
+argument_list|(
+name|Target
+argument_list|,
+name|Child1
+argument_list|,
+name|TRUE
+argument_list|)
+operator|)
+condition|)
+block|{
+name|Target
+operator|->
+name|Common
+operator|.
+name|OperatorSymbol
+operator|=
+name|AcpiDmGetCompoundSymbol
+argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+comment|/* Convert operator to compound assignment */
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator||=
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
+expr_stmt|;
+name|Child1
+operator|->
+name|Common
+operator|.
+name|OperatorSymbol
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+break|break;
+default|default:
+break|break;
 block|}
 comment|/*          * If we are within a C-style expression, emit an extra open          * paren. Implemented by examining the parent op.          */
 switch|switch
@@ -833,9 +983,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INDEX_SUPPORT
 case|case
 name|AML_INDEX_OP
 case|:
@@ -888,8 +1035,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-endif|#
-directive|endif
 case|case
 name|AML_STORE_OP
 case|:
@@ -902,6 +1047,18 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 name|AcpiDmPromoteTarget
 argument_list|(
 name|Op
@@ -999,6 +1156,53 @@ return|;
 default|default:
 break|break;
 block|}
+comment|/*      * Nodes marked with ACPI_PARSEOP_PARAMLIST don't need a parens      * output here. We also need to check the parent to see if this op      * is part of a compound test (!=,>=,<=).      */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_PARAMETER_LIST
+operator|)
+operator|||
+operator|(
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_PARAMETER_LIST
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_LNOT_SUFFIX
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* Do Nothing. Paren already generated */
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
 comment|/* All other operators, emit an open paren */
 name|AcpiOsPrintf
 argument_list|(
@@ -1026,6 +1230,11 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+name|BOOLEAN
+name|IsCStyleOp
+init|=
+name|FALSE
+decl_stmt|;
 comment|/* Always emit paren if ASL+ disassembly disabled */
 if|if
 condition|(
@@ -1104,7 +1313,7 @@ name|Common
 operator|.
 name|DisasmFlags
 operator|&
-name|ACPI_PARSEOP_COMPOUND
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
 condition|)
 block|{
 return|return;
@@ -1127,16 +1336,34 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
+name|IsCStyleOp
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
-comment|/* No need for parens for these */
-ifdef|#
-directive|ifdef
-name|INDEX_SUPPORT
 case|case
 name|AML_INDEX_OP
 case|:
-endif|#
-directive|endif
+comment|/* This is case for unsupported Index() source constants */
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_CLOSING_PAREN
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+comment|/* No need for parens for these */
 case|case
 name|AML_DECREMENT_OP
 case|:
@@ -1157,11 +1384,58 @@ default|default:
 comment|/* Always emit paren for non-ASL+ operators */
 break|break;
 block|}
+comment|/*      * Nodes marked with ACPI_PARSEOP_PARAMLIST don't need a parens      * output here. We also need to check the parent to see if this op      * is part of a compound test (!=,>=,<=).      */
+if|if
+condition|(
+name|IsCStyleOp
+operator|&&
+operator|(
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_PARAMETER_LIST
+operator|)
+operator|||
+operator|(
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_PARAMETER_LIST
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_LNOT_SUFFIX
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1368,7 +1642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsValidTarget  *  * PARAMETERS:  Target              - Target Op from the parse tree  *  * RETURN:      TRUE if the Target is real. FALSE if it is just a placeholder  *              Op that was inserted by the parser.  *  * DESCRIPTION: Determine if a Target Op is a placeholder Op or a real Target.  *              In other words, determine if the optional target is used or  *              not.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIsValidTarget  *  * PARAMETERS:  Target              - Target Op from the parse tree  *  * RETURN:      TRUE if the Target is real. FALSE if it is just a placeholder  *              Op that was inserted by the parser.  *  * DESCRIPTION: Determine if a Target Op is a placeholder Op or a real Target.  *              In other words, determine if the optional target is used or  *              not. Note: If Target is NULL, something is seriously wrong,  *              probably with the parse tree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1381,6 +1655,18 @@ modifier|*
 name|Target
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1619,11 +1905,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

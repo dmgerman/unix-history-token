@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -114,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NODE_UNUSED_FLAG
+name|NODE_COULD_NOT_REDUCE
 value|0x00001000
 end_define
 
@@ -186,6 +186,10 @@ block|{
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|CurrentOp
 decl_stmt|;
 name|struct
 name|asl_method_info
@@ -350,7 +354,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  */
+comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the Gbl_Files array.  *  * Corresponding filename suffixes are in comments  *  * NOTE: Don't move the first 4 file types  */
 end_comment
 
 begin_typedef
@@ -365,32 +369,51 @@ name|ASL_FILE_STDERR
 block|,
 name|ASL_FILE_INPUT
 block|,
+comment|/* .asl */
 name|ASL_FILE_AML_OUTPUT
 block|,
-comment|/* Don't move these first 4 file types */
+comment|/* .aml */
 name|ASL_FILE_SOURCE_OUTPUT
 block|,
+comment|/* .src */
 name|ASL_FILE_PREPROCESSOR
 block|,
+comment|/* .pre */
+name|ASL_FILE_PREPROCESSOR_USER
+block|,
+comment|/* .i   */
 name|ASL_FILE_LISTING_OUTPUT
 block|,
+comment|/* .lst */
 name|ASL_FILE_HEX_OUTPUT
 block|,
+comment|/* .hex */
 name|ASL_FILE_NAMESPACE_OUTPUT
 block|,
+comment|/* .nsp */
 name|ASL_FILE_DEBUG_OUTPUT
 block|,
+comment|/* .txt */
 name|ASL_FILE_ASM_SOURCE_OUTPUT
 block|,
+comment|/* .asm */
 name|ASL_FILE_C_SOURCE_OUTPUT
 block|,
+comment|/* .c   */
 name|ASL_FILE_ASM_INCLUDE_OUTPUT
 block|,
+comment|/* .inc */
 name|ASL_FILE_C_INCLUDE_OUTPUT
 block|,
+comment|/* .h   */
 name|ASL_FILE_C_OFFSET_OUTPUT
 block|,
+comment|/* .offset.h */
 name|ASL_FILE_MAP_OUTPUT
+block|,
+comment|/* .map */
+name|ASL_FILE_XREF_OUTPUT
+comment|/* .xrf */
 block|}
 name|ASL_FILE_TYPES
 typedef|;
@@ -400,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|15
+value|17
 end_define
 
 begin_define
@@ -408,6 +431,122 @@ define|#
 directive|define
 name|ASL_NUM_FILES
 value|(ASL_MAX_FILE_TYPE + 1)
+end_define
+
+begin_comment
+comment|/* Name suffixes used to create filenames for output files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_AML_CODE
+value|"aml"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_SOURCE
+value|"src"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROCESSOR
+value|"pre"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_PREPROC_USER
+value|"i"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_LISTING
+value|"lst"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_HEX_DUMP
+value|"hex"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_NAMESPACE
+value|"nsp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_DEBUG
+value|"txt"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASM_SOURCE
+value|"asm"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_SOURCE
+value|"c"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASM_INCLUDE
+value|"inc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_INCLUDE
+value|"h"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_C_OFFSET
+value|"offset.h"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_MAP
+value|"map"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_XREF
+value|"xrf"
 end_define
 
 begin_comment
@@ -687,6 +826,105 @@ name|Address
 decl_stmt|;
 block|}
 name|ACPI_SERIAL_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_method_local
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
+block|}
+name|ASL_METHOD_LOCAL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_LOCAL_INITIALIZED
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_LOCAL_REFERENCED
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_ARG_IS_LOCAL
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_ARG_INITIALIZED
+value|(1<<3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_ARG_REFERENCED
+value|(1<<4)
+end_define
+
+begin_comment
+comment|/* Info used to track method counts for cross reference output file */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_xref_info
+block|{
+name|UINT32
+name|ThisMethodInvocations
+decl_stmt|;
+name|UINT32
+name|TotalPredefinedMethods
+decl_stmt|;
+name|UINT32
+name|TotalUserMethods
+decl_stmt|;
+name|UINT32
+name|TotalUnreferenceUserMethods
+decl_stmt|;
+name|UINT32
+name|ThisObjectReferences
+decl_stmt|;
+name|UINT32
+name|TotalObjects
+decl_stmt|;
+name|UINT32
+name|TotalUnreferencedObjects
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MethodOp
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|CurrentMethodOp
+decl_stmt|;
+block|}
+name|ASL_XREF_INFO
 typedef|;
 end_typedef
 

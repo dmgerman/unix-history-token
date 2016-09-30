@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -48,12 +48,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acinterp.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -127,112 +121,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmFindNameByIndex
+parameter_list|(
+name|UINT64
+name|Index
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|List
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
 name|ACPI_BUFFER_BYTES_PER_LINE
 value|8
 end_define
-
-begin_comment
-comment|/* Strings for ToPld */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|DmPanelList
-index|[]
-init|=
-block|{
-literal|"TOP"
-block|,
-literal|"BOTTOM"
-block|,
-literal|"LEFT"
-block|,
-literal|"RIGHT"
-block|,
-literal|"FRONT"
-block|,
-literal|"BACK"
-block|,
-literal|"UNKNOWN"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|DmVerticalPositionList
-index|[]
-init|=
-block|{
-literal|"UPPER"
-block|,
-literal|"CENTER"
-block|,
-literal|"LOWER"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|DmHorizontalPositionList
-index|[]
-init|=
-block|{
-literal|"LEFT"
-block|,
-literal|"CENTER"
-block|,
-literal|"RIGHT"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|DmShapeList
-index|[]
-init|=
-block|{
-literal|"ROUND"
-block|,
-literal|"OVAL"
-block|,
-literal|"SQUARE"
-block|,
-literal|"VERTICALRECTANGLE"
-block|,
-literal|"HORIZONTALRECTANGLE"
-block|,
-literal|"VERTICALTRAPEZOID"
-block|,
-literal|"HORIZONTALTRAPEZOID"
-block|,
-literal|"UNKNOWN"
-block|,
-literal|"CHAMFERED"
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisasmByteList  *  * PARAMETERS:  Level               - Current source code indentation level  *              ByteData            - Pointer to the byte list  *              ByteCount           - Length of the byte list  *  * RETURN:      None  *  * DESCRIPTION: Dump an AML "ByteList" in Hex format. 8 bytes per line, prefixed  *              with the hex buffer offset.  *  ******************************************************************************/
@@ -426,7 +339,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|BufChar
 argument_list|)
@@ -1310,7 +1223,7 @@ comment|/* TBD: allow some escapes (non-ascii chars).          * they will be ha
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|ByteData
 index|[
@@ -1541,6 +1454,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|AcpiDmFindNameByIndex
@@ -1548,21 +1462,23 @@ parameter_list|(
 name|UINT64
 name|Index
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|List
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
-name|Str
+name|NameString
 decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
 comment|/* Bounds check */
-name|Str
+name|NameString
 operator|=
 name|List
 index|[
@@ -1575,13 +1491,13 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|Str
+name|NameString
 condition|)
 block|{
 name|i
 operator|++
 expr_stmt|;
-name|Str
+name|NameString
 operator|=
 name|List
 index|[
@@ -1622,42 +1538,42 @@ begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUT08
-value|"%*.s%-18s = 0x%X,\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = 0x%X,\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUT08P
-value|"%*.s%-18s = 0x%X)\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = 0x%X)\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUT16
-value|"%*.s%-18s = 0x%X,\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = 0x%X,\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUT16P
-value|"%*.s%-18s = 0x%X)\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = 0x%X)\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUT24
-value|"%*.s%-18s = 0x%X,\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = 0x%X,\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PLD_OUTPUTSTR
-value|"%*.s%-18s = \"%s\",\n", ACPI_MUL_4 (Level), " "
+value|"%*.s%-22s = \"%s\",\n", ACPI_MUL_4 (Level), " "
 end_define
 
 begin_function
@@ -1846,7 +1762,7 @@ name|PldInfo
 operator|->
 name|Panel
 argument_list|,
-name|DmPanelList
+name|AcpiGbl_PldPanelList
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1862,7 +1778,7 @@ name|PldInfo
 operator|->
 name|VerticalPosition
 argument_list|,
-name|DmVerticalPositionList
+name|AcpiGbl_PldVerticalPositionList
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1878,7 +1794,7 @@ name|PldInfo
 operator|->
 name|HorizontalPosition
 argument_list|,
-name|DmHorizontalPositionList
+name|AcpiGbl_PldHorizontalPositionList
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1894,7 +1810,7 @@ name|PldInfo
 operator|->
 name|Shape
 argument_list|,
-name|DmShapeList
+name|AcpiGbl_PldShapeList
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2012,23 +1928,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ByteCount
-operator|<
-name|ACPI_PLD_REV1_BUFFER_SIZE
+operator|>=
+name|ACPI_PLD_REV2_BUFFER_SIZE
 condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-name|ACPI_PLD_OUTPUT08P
-argument_list|,
-literal|"PLD_Order"
-argument_list|,
-name|PldInfo
-operator|->
-name|Order
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
@@ -2041,15 +1943,7 @@ operator|->
 name|Order
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Fifth 32-bit dword */
-if|if
-condition|(
-name|ByteCount
-operator|>=
-name|ACPI_PLD_REV1_BUFFER_SIZE
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT16
@@ -2070,6 +1964,21 @@ argument_list|,
 name|PldInfo
 operator|->
 name|HorizontalOffset
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* Rev 1 buffer */
+block|{
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_PLD_OUTPUT08P
+argument_list|,
+literal|"PLD_Order"
+argument_list|,
+name|PldInfo
+operator|->
+name|Order
 argument_list|)
 expr_stmt|;
 block|}
@@ -2202,7 +2111,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|ACPI_IS_PRINT
+name|isprint
 argument_list|(
 name|OutputValue
 argument_list|)
@@ -2386,7 +2295,7 @@ index|]
 argument_list|)
 operator|||
 operator|!
-name|ACPI_IS_ALPHA
+name|isalpha
 argument_list|(
 name|Prefix
 index|[
@@ -2632,11 +2541,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

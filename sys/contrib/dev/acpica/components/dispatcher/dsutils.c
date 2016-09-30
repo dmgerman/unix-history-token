@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1312,33 +1312,10 @@ operator|==
 name|AML_EXTERNAL_OP
 condition|)
 block|{
-comment|/* TBD: May only be temporary */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateStringObject
-argument_list|(
-operator|(
-name|ACPI_SIZE
-operator|)
-name|NameLength
-argument_list|)
-expr_stmt|;
-name|ACPI_STRNCPY
-argument_list|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-argument_list|,
-name|NameString
-argument_list|,
-name|NameLength
-argument_list|)
-expr_stmt|;
+comment|/*                      * This opcode should never appear here. It is used only                      * by AML disassemblers and is surrounded by an If(0)                      * by the ASL compiler.                      *                      * Therefore, if we see it here, it is a serious error.                      */
 name|Status
 operator|=
-name|AE_OK
+name|AE_AML_BAD_OPCODE
 expr_stmt|;
 block|}
 else|else
@@ -1412,14 +1389,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1532,8 +1506,6 @@ literal|"Argument previously created, already stacked\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|WalkState
@@ -1548,7 +1520,6 @@ literal|1
 index|]
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*              * Use value that was already previously returned              * by the evaluation of this argument              */
@@ -1672,14 +1643,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
 name|AcpiDbDisplayArgumentObject
 argument_list|(
 name|ObjDesc
 argument_list|,
 name|WalkState
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

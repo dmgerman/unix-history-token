@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmobject - ACPI object decode and display  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbobject - ACPI object decode and display  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -28,14 +28,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -47,7 +41,7 @@ end_define
 begin_macro
 name|ACPI_MODULE_NAME
 argument_list|(
-literal|"dmnames"
+literal|"dbobject"
 argument_list|)
 end_macro
 
@@ -58,7 +52,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|AcpiDmDecodeNode
+name|AcpiDbDecodeNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -68,12 +62,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpMethodInfo  *  * PARAMETERS:  Status          - Method execution status  *              WalkState       - Current state of the parse tree walk  *              Op              - Executing parse op  *  * RETURN:      None  *  * DESCRIPTION: Called when a method has been aborted because of an error.  *              Dumps the method execution stack, and the method locals/args,  *              and disassembles the AML opcode that failed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpMethodInfo  *  * PARAMETERS:  Status          - Method execution status  *              WalkState       - Current state of the parse tree walk  *  * RETURN:      None  *  * DESCRIPTION: Called when a method has been aborted because of an error.  *              Dumps the method execution stack, and the method locals/args,  *              and disassembles the AML opcode that failed.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmDumpMethodInfo
+name|AcpiDbDumpMethodInfo
 parameter_list|(
 name|ACPI_STATUS
 name|Status
@@ -81,29 +75,11 @@ parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
 parameter_list|)
 block|{
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Next
-decl_stmt|;
 name|ACPI_THREAD_STATE
 modifier|*
 name|Thread
-decl_stmt|;
-name|ACPI_WALK_STATE
-modifier|*
-name|NextWalkState
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|PreviousMethod
-init|=
-name|NULL
 decl_stmt|;
 comment|/* Ignore control codes, they are not errors */
 if|if
@@ -149,146 +125,13 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Display exception and method name */
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n**** Exception %s during execution of method "
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|AcpiNsPrintNodePathname
-argument_list|(
-name|WalkState
-operator|->
-name|MethodNode
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Display stack of executing methods */
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n\nMethod Execution Stack:\n"
-argument_list|)
-expr_stmt|;
-name|NextWalkState
-operator|=
-name|Thread
-operator|->
-name|WalkStateList
-expr_stmt|;
-comment|/* Walk list of linked walk states */
-while|while
-condition|(
-name|NextWalkState
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"    Method [%4.4s] executing: "
-argument_list|,
-name|AcpiUtGetNodeName
-argument_list|(
-name|NextWalkState
-operator|->
-name|MethodNode
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* First method is the currently executing method */
-if|if
-condition|(
-name|NextWalkState
-operator|==
-name|WalkState
-condition|)
-block|{
-if|if
-condition|(
-name|Op
-condition|)
-block|{
-comment|/* Display currently executing ASL statement */
-name|Next
-operator|=
-name|Op
-operator|->
-name|Common
-operator|.
-name|Next
-expr_stmt|;
-name|Op
-operator|->
-name|Common
-operator|.
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiDmDisassemble
-argument_list|(
-name|NextWalkState
-argument_list|,
-name|Op
-argument_list|,
-name|ACPI_UINT32_MAX
-argument_list|)
-expr_stmt|;
-name|Op
-operator|->
-name|Common
-operator|.
-name|Next
-operator|=
-name|Next
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/*              * This method has called another method              * NOTE: the method call parse subtree is already deleted at this              * point, so we cannot disassemble the method invocation.              */
-name|AcpiOsPrintf
-argument_list|(
-literal|"Call to method "
-argument_list|)
-expr_stmt|;
-name|AcpiNsPrintNodePathname
-argument_list|(
-name|PreviousMethod
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-name|PreviousMethod
-operator|=
-name|NextWalkState
-operator|->
-name|MethodNode
-expr_stmt|;
-name|NextWalkState
-operator|=
-name|NextWalkState
-operator|->
-name|Next
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Display the method locals and arguments */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayLocals
+name|AcpiDbDecodeLocals
 argument_list|(
 name|WalkState
 argument_list|)
@@ -298,7 +141,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayArguments
+name|AcpiDbDecodeArguments
 argument_list|(
 name|WalkState
 argument_list|)
@@ -312,12 +155,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecodeInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object. Numbers/Strings/Buffers.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object. Numbers/Strings/Buffers.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -406,7 +249,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%u) \"%.24s"
+literal|"(%u) \"%.60s"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -429,7 +272,7 @@ name|String
 operator|.
 name|Length
 operator|>
-literal|24
+literal|60
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -517,13 +360,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDecodeNode  *  * PARAMETERS:  Node        - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of a namespace node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeNode  *  * PARAMETERS:  Node        - Object to be displayed  *  * RETURN:      None  *  * DESCRIPTION: Short display of a namespace node  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|AcpiDmDecodeNode
+name|AcpiDbDecodeNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -597,7 +440,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|AcpiNsGetAttachedObject
 argument_list|(
@@ -611,12 +454,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisplayInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *              WalkState       - Current walk state  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayInternalObject  *  * PARAMETERS:  ObjDesc         - Object to be displayed  *              WalkState       - Current walk state  *  * RETURN:      None  *  * DESCRIPTION: Short display of an internal object  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -671,7 +514,7 @@ break|break;
 case|case
 name|ACPI_DESC_TYPE_NAMED
 case|:
-name|AcpiDmDecodeNode
+name|AcpiDbDecodeNode
 argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
@@ -785,7 +628,7 @@ argument_list|,
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -833,7 +676,7 @@ argument_list|,
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -866,7 +709,7 @@ operator|.
 name|Object
 argument_list|)
 expr_stmt|;
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
 operator|->
@@ -908,7 +751,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 operator|*
 operator|(
@@ -967,7 +810,7 @@ block|{
 case|case
 name|ACPI_DESC_TYPE_NAMED
 case|:
-name|AcpiDmDecodeNode
+name|AcpiDbDecodeNode
 argument_list|(
 name|ObjDesc
 operator|->
@@ -980,7 +823,7 @@ break|break;
 case|case
 name|ACPI_DESC_TYPE_OPERAND
 case|:
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
 operator|->
@@ -997,7 +840,7 @@ break|break;
 case|case
 name|ACPI_REFCLASS_NAME
 case|:
-name|AcpiDmDecodeNode
+name|AcpiDbDecodeNode
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1041,7 +884,7 @@ argument_list|(
 literal|"<Obj>            "
 argument_list|)
 expr_stmt|;
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1071,12 +914,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisplayLocals  *  * PARAMETERS:  WalkState       - State for current method  *  * RETURN:      None  *  * DESCRIPTION: Display all locals for the currently running control method  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeLocals  *  * PARAMETERS:  WalkState       - State for current method  *  * RETURN:      None  *  * DESCRIPTION: Display all locals for the currently running control method  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmDisplayLocals
+name|AcpiDbDecodeLocals
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -1093,6 +936,11 @@ decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
+decl_stmt|;
+name|BOOLEAN
+name|DisplayLocals
+init|=
+name|FALSE
 decl_stmt|;
 name|ObjDesc
 operator|=
@@ -1135,9 +983,53 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Are any locals actually set? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_METHOD_NUM_LOCALS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|LocalVariables
+index|[
+name|i
+index|]
+operator|.
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
+name|DisplayLocals
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* If any are set, only display the ones that are set */
+if|if
+condition|(
+name|DisplayLocals
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local Variables for method [%4.4s]:\n"
+literal|"\nInitialized Local Variables for method [%4.4s]:\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1170,6 +1062,11 @@ index|]
 operator|.
 name|Object
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"    Local%X: "
@@ -1177,7 +1074,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1186,15 +1083,30 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"No Local Variables are initialized for method [%4.4s]\n"
+argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDisplayArguments  *  * PARAMETERS:  WalkState       - State for current method  *  * RETURN:      None  *  * DESCRIPTION: Display all arguments for the currently running control method  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDecodeArguments  *  * PARAMETERS:  WalkState       - State for current method  *  * RETURN:      None  *  * DESCRIPTION: Display all arguments for the currently running control method  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDmDisplayArguments
+name|AcpiDbDecodeArguments
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -1212,17 +1124,22 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|ObjDesc
-operator|=
-name|WalkState
-operator|->
-name|MethodDesc
-expr_stmt|;
+name|BOOLEAN
+name|DisplayArgs
+init|=
+name|FALSE
+decl_stmt|;
 name|Node
 operator|=
 name|WalkState
 operator|->
 name|MethodNode
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|MethodDesc
 expr_stmt|;
 if|if
 condition|(
@@ -1253,9 +1170,54 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Are any arguments actually set? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_METHOD_NUM_ARGS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ObjDesc
+operator|=
+name|WalkState
+operator|->
+name|Arguments
+index|[
+name|i
+index|]
+operator|.
+name|Object
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
+name|DisplayArgs
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* If any are set, only display the ones that are set */
+if|if
+condition|(
+name|DisplayArgs
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arguments for Method [%4.4s]:  (%X arguments defined, max concurrency = %X)\n"
+literal|"Initialized Arguments for Method [%4.4s]:  "
+literal|"(%X arguments defined for method invocation)\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1267,12 +1229,6 @@ operator|->
 name|Method
 operator|.
 name|ParamCount
-argument_list|,
-name|ObjDesc
-operator|->
-name|Method
-operator|.
-name|SyncLevel
 argument_list|)
 expr_stmt|;
 for|for
@@ -1300,6 +1256,11 @@ index|]
 operator|.
 name|Object
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"    Arg%u:   "
@@ -1307,7 +1268,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1316,12 +1277,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"No Arguments are initialized for method [%4.4s]\n"
+argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acparser.h>
 end_include
 
@@ -53,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/amlcode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_define
@@ -161,6 +161,12 @@ operator|=
 name|AcpiPsAllocOp
 argument_list|(
 name|AML_METHOD_OP
+argument_list|,
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|AmlStart
 argument_list|)
 expr_stmt|;
 if|if
@@ -422,7 +428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodError  *  * PARAMETERS:  Status          - Execution status  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Called on method error. Invoke the global exception handler if  *              present, dump the method data if the disassembler is configured  *  *              Note: Allows the exception handler to change the status code  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodError  *  * PARAMETERS:  Status          - Execution status  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Called on method error. Invoke the global exception handler if  *              present, dump the method data if the debugger is configured  *  *              Note: Allows the exception handler to change the status code  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -437,6 +443,9 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+name|UINT32
+name|AmlOffset
+decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
@@ -472,6 +481,24 @@ name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 comment|/*          * Handler can map the exception code to anything it wants, including          * AE_OK, in which case the executing method will not be aborted.          */
+name|AmlOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_PTR_DIFF
+argument_list|(
+name|WalkState
+operator|->
+name|Aml
+argument_list|,
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiGbl_ExceptionHandler
@@ -496,8 +523,6 @@ name|WalkState
 operator|->
 name|Opcode
 argument_list|,
-name|WalkState
-operator|->
 name|AmlOffset
 argument_list|,
 name|NULL
@@ -512,9 +537,6 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -523,8 +545,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* Display method locals/args if disassembler is present */
-name|AcpiDmDumpMethodInfo
+name|AcpiDsDumpMethodStack
 argument_list|(
 name|Status
 argument_list|,
@@ -535,9 +556,20 @@ operator|->
 name|Op
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Display method locals/args if debugger is present */
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+name|AcpiDbDumpMethodInfo
+argument_list|(
+name|Status
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 name|Status
@@ -697,6 +729,15 @@ name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiExStartTraceMethod
+argument_list|(
+name|MethodNode
+argument_list|,
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 comment|/* Prevent wraparound of thread count */
 if|if
 condition|(
@@ -811,7 +852,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex for method [%4.4s], current SyncLevel is too large (%u)"
+literal|"Cannot acquire Mutex for method [%4.4s]"
+literal|", current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -938,6 +980,21 @@ name|Thread
 operator|->
 name|ThreadId
 expr_stmt|;
+comment|/*                  * Update the current SyncLevel only if this is not an auto-                  * serialized method. In the auto case, we have to ignore                  * the sync level for the method mutex (created for the                  * auto-serialization) because we have no idea of what the                  * sync level should be. Therefore, just ignore it.                  */
+if|if
+condition|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|InfoFlags
+operator|&
+name|ACPI_METHOD_IGNORE_SYNC_LEVEL
+operator|)
+condition|)
+block|{
 name|WalkState
 operator|->
 name|Thread
@@ -950,6 +1007,7 @@ name|Method
 operator|.
 name|SyncLevel
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -972,6 +1030,19 @@ operator|->
 name|Mutex
 operator|.
 name|SyncLevel
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Mutex
+operator|->
+name|Mutex
+operator|.
+name|ThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1446,17 +1517,11 @@ argument_list|,
 name|NextWalkState
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NextWalkState
-condition|)
-block|{
 name|AcpiDsDeleteWalkState
 argument_list|(
 name|NextWalkState
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1901,9 +1966,8 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
-literal|"Marking method %4.4s as Serialized because of AE_ALREADY_EXISTS error"
+literal|"Marking method %4.4s as Serialized "
+literal|"because of AE_ALREADY_EXISTS error"
 operator|,
 name|WalkState
 operator|->
@@ -1974,6 +2038,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|AcpiExStopTraceMethod
+argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Node
+argument_list|,
+name|MethodDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}

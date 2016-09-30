@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -172,47 +172,14 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * For the default SpaceIDs, (the IDs for which there are default region handlers      * installed) Only execute the _REG methods if the global initialization _REG      * methods have already been run (via AcpiInitializeObjects). In other words,      * we will defer the execution of the _REG methods for these SpaceIDs until      * execution of AcpiInitializeObjects. This is done because we need the handlers      * for the default spaces (mem/io/pci/table) to be installed before we can run      * any control methods (or _REG methods). There is known BIOS code that depends      * on this.      *      * For all other SpaceIDs, we can safely execute the _REG methods immediately.      * This means that for IDs like EmbeddedController, this function should be called      * only after AcpiEnableSubsystem has been called.      */
-switch|switch
-condition|(
-name|SpaceId
-condition|)
-block|{
-case|case
-name|ACPI_ADR_SPACE_SYSTEM_MEMORY
-case|:
-case|case
-name|ACPI_ADR_SPACE_SYSTEM_IO
-case|:
-case|case
-name|ACPI_ADR_SPACE_PCI_CONFIG
-case|:
-case|case
-name|ACPI_ADR_SPACE_DATA_TABLE
-case|:
-if|if
-condition|(
-operator|!
-name|AcpiGbl_RegMethodsExecuted
-condition|)
-block|{
-comment|/* We will defer execution of the _REG methods for this space */
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-break|break;
-default|default:
-break|break;
-block|}
 comment|/* Run all _REG methods for this address space */
-name|Status
-operator|=
 name|AcpiEvExecuteRegMethods
 argument_list|(
 name|Node
 argument_list|,
 name|SpaceId
+argument_list|,
+name|ACPI_REG_CONNECT
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit
@@ -402,7 +369,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
@@ -411,7 +378,7 @@ operator|=
 operator|&
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;

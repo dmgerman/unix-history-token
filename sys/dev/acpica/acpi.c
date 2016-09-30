@@ -16306,6 +16306,8 @@ name|h
 argument_list|,
 operator|&
 name|handle_buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if

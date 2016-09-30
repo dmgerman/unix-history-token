@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -64,22 +64,66 @@ modifier|*
 name|TableIndex
 parameter_list|)
 block|{
-name|UINT32
-name|i
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 name|Header
 decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|TbFindTable
 argument_list|)
 expr_stmt|;
+comment|/* Validate the input table signature */
+if|if
+condition|(
+operator|!
+name|AcpiUtValidNameseg
+argument_list|(
+name|Signature
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_SIGNATURE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Don't allow the OEM strings to be too long */
+if|if
+condition|(
+operator|(
+name|strlen
+argument_list|(
+name|OemId
+argument_list|)
+operator|>
+name|ACPI_OEM_ID_SIZE
+operator|)
+operator|||
+operator|(
+name|strlen
+argument_list|(
+name|OemTableId
+argument_list|)
+operator|>
+name|ACPI_OEM_TABLE_ID_SIZE
+operator|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_STRING_LIMIT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Normalize the input strings */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|Header
@@ -101,7 +145,7 @@ argument_list|,
 name|Signature
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Header
 operator|.
@@ -112,7 +156,7 @@ argument_list|,
 name|ACPI_OEM_ID_SIZE
 argument_list|)
 expr_stmt|;
-name|ACPI_STRNCPY
+name|strncpy
 argument_list|(
 name|Header
 operator|.
@@ -142,7 +186,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 operator|&
 operator|(
@@ -229,7 +273,7 @@ comment|/* Check for table match on all IDs */
 if|if
 condition|(
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.
@@ -257,7 +301,7 @@ literal|0
 index|]
 operator|||
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.
@@ -286,7 +330,7 @@ literal|0
 index|]
 operator|||
 operator|!
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|AcpiGbl_RootTableList
 operator|.

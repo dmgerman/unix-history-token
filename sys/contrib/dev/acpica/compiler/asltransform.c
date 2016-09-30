@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -505,12 +505,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalkBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|TrAmlTransformWalk
+name|TrAmlTransformWalkBegin
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -529,6 +529,61 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    TrAmlTransformWalkEnd  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      None  *  * DESCRIPTION: Parse tree walk to generate both the AML opcodes and the AML  *              operands.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|TrAmlTransformWalkEnd
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+comment|/* Save possible Externals list in the DefintionBlock Op */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_DEFINITION_BLOCK
+condition|)
+block|{
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Arg
+operator|=
+name|Gbl_ExternalsListHead
+expr_stmt|;
+name|Gbl_ExternalsListHead
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -574,7 +629,7 @@ name|ParseOpcode
 condition|)
 block|{
 case|case
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 case|:
 name|TrDoDefinitionBlock
 argument_list|(
@@ -599,6 +654,23 @@ name|Gbl_TempCount
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|PARSEOP_EXTERNAL
+case|:
+if|if
+condition|(
+name|Gbl_DoExternals
+operator|==
+name|TRUE
+condition|)
+block|{
+name|ExDoExternal
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* Nothing to do here for other opcodes */
@@ -628,6 +700,11 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+comment|/* Reset external list when starting a definition block */
+name|Gbl_ExternalsListHead
+operator|=
+name|NULL
+expr_stmt|;
 name|Next
 operator|=
 name|Op
@@ -1637,7 +1714,7 @@ name|Asl
 operator|.
 name|ParseOpcode
 operator|!=
-name|PARSEOP_DEFINITIONBLOCK
+name|PARSEOP_DEFINITION_BLOCK
 operator|)
 condition|)
 block|{

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -28,8 +28,19 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUGGER
+name|ACPI_APPLICATION
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -88,6 +99,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -115,6 +127,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -153,8 +166,6 @@ name|CMD_BUSINFO
 block|,
 name|CMD_CALL
 block|,
-name|CMD_CLOSE
-block|,
 name|CMD_DEBUG
 block|,
 name|CMD_DISASSEMBLE
@@ -163,11 +174,7 @@ name|CMD_DISASM
 block|,
 name|CMD_DUMP
 block|,
-name|CMD_ENABLEACPI
-block|,
 name|CMD_EVALUATE
-block|,
-name|CMD_EVENT
 block|,
 name|CMD_EXECUTE
 block|,
@@ -176,10 +183,6 @@ block|,
 name|CMD_FIND
 block|,
 name|CMD_GO
-block|,
-name|CMD_GPE
-block|,
-name|CMD_GPES
 block|,
 name|CMD_HANDLERS
 block|,
@@ -203,8 +206,6 @@ name|CMD_LEVEL
 block|,
 name|CMD_LIST
 block|,
-name|CMD_LOAD
-block|,
 name|CMD_LOCALS
 block|,
 name|CMD_LOCKS
@@ -216,8 +217,6 @@ block|,
 name|CMD_NOTIFY
 block|,
 name|CMD_OBJECTS
-block|,
-name|CMD_OPEN
 block|,
 name|CMD_OSI
 block|,
@@ -237,11 +236,7 @@ name|CMD_RESOURCES
 block|,
 name|CMD_RESULTS
 block|,
-name|CMD_SCI
-block|,
 name|CMD_SET
-block|,
-name|CMD_SLEEP
 block|,
 name|CMD_STATS
 block|,
@@ -251,19 +246,43 @@ name|CMD_TABLES
 block|,
 name|CMD_TEMPLATE
 block|,
-name|CMD_TERMINATE
-block|,
-name|CMD_TEST
-block|,
-name|CMD_THREADS
-block|,
 name|CMD_TRACE
 block|,
 name|CMD_TREE
 block|,
 name|CMD_TYPE
 block|,
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+name|CMD_ENABLEACPI
+block|,
+name|CMD_EVENT
+block|,
+name|CMD_GPE
+block|,
+name|CMD_GPES
+block|,
+name|CMD_SCI
+block|,
+name|CMD_SLEEP
+block|,
+name|CMD_CLOSE
+block|,
+name|CMD_LOAD
+block|,
+name|CMD_OPEN
+block|,
 name|CMD_UNLOAD
+block|,
+name|CMD_TERMINATE
+block|,
+name|CMD_THREADS
+block|,
+name|CMD_TEST
+block|,
+endif|#
+directive|endif
 block|}
 enum|;
 end_enum
@@ -336,12 +355,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"CLOSE"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"DEBUG"
 block|,
 literal|1
@@ -366,19 +379,7 @@ literal|1
 block|}
 block|,
 block|{
-literal|"ENABLEACPI"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"EVALUATE"
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"EVENT"
 block|,
 literal|1
 block|}
@@ -403,18 +404,6 @@ block|}
 block|,
 block|{
 literal|"GO"
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"GPE"
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"GPES"
 block|,
 literal|0
 block|}
@@ -486,12 +475,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"LOAD"
-block|,
-literal|1
-block|}
-block|,
-block|{
 literal|"LOCALS"
 block|,
 literal|0
@@ -524,13 +507,7 @@ block|,
 block|{
 literal|"OBJECTS"
 block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"OPEN"
-block|,
-literal|1
+literal|0
 block|}
 block|,
 block|{
@@ -588,21 +565,9 @@ literal|0
 block|}
 block|,
 block|{
-literal|"SCI"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"SET"
 block|,
 literal|3
-block|}
-block|,
-block|{
-literal|"SLEEP"
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -630,24 +595,6 @@ literal|1
 block|}
 block|,
 block|{
-literal|"TERMINATE"
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"TEST"
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"THREADS"
-block|,
-literal|3
-block|}
-block|,
-block|{
 literal|"TRACE"
 block|,
 literal|1
@@ -665,12 +612,89 @@ block|,
 literal|1
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+block|{
+literal|"ENABLEACPI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"EVENT"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"GPE"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"GPES"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"SCI"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"SLEEP"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"CLOSE"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"LOAD"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"OPEN"
+block|,
+literal|1
+block|}
+block|,
 block|{
 literal|"UNLOAD"
 block|,
 literal|1
 block|}
 block|,
+block|{
+literal|"TERMINATE"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"THREADS"
+block|,
+literal|3
+block|}
+block|,
+block|{
+literal|"TEST"
+block|,
+literal|1
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -722,14 +746,6 @@ block|,
 literal|"       [Byte|Word|Dword|Qword]"
 block|,
 literal|"Display ACPI objects or memory\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  EnableAcpi"
-block|,
-literal|"Enable ACPI (hardware) mode\n"
 block|}
 block|,
 block|{
@@ -863,14 +879,6 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Unload<Namepath>"
-block|,
-literal|"Unload an ACPI table via namespace object\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
 literal|"  !<CommandNumber>"
 block|,
 literal|"Execute command from history buffer\n"
@@ -951,9 +959,9 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Objects<ObjectType>"
+literal|"  Objects [ObjectType]"
 block|,
-literal|"Display all objects of the given type\n"
+literal|"Display summary of all objects or just given type\n"
 block|}
 block|,
 block|{
@@ -983,7 +991,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Prefix [<NamePath>]"
+literal|"  Prefix [<Namepath>]"
 block|,
 literal|"Set or Get current execution prefix\n"
 block|}
@@ -1018,14 +1026,6 @@ block|,
 literal|"  Template<Object>"
 block|,
 literal|"Format/dump a Buffer/ResourceTemplate\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Terminate"
-block|,
-literal|"Delete namespace and all internal objects\n"
 block|}
 block|,
 block|{
@@ -1189,19 +1189,43 @@ literal|"Terminate control method\n"
 block|}
 block|,
 block|{
-literal|1
+literal|5
 block|,
-literal|"  Thread<Threads><Loops><NamePath>"
+literal|"  Trace<State> [<Namepath>] [Once]"
 block|,
-literal|"Spawn threads to execute method(s)\n"
+literal|"Trace control method execution\n"
 block|}
 block|,
 block|{
 literal|1
 block|,
-literal|"  Trace<method name>"
+literal|"     Enable"
 block|,
-literal|"Trace method execution\n"
+literal|"Enable all messages\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Disable"
+block|,
+literal|"Disable tracing\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Method"
+block|,
+literal|"Enable method execution messages\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Opcode"
+block|,
+literal|"Enable opcode execution messages\n"
 block|}
 block|,
 block|{
@@ -1220,12 +1244,23 @@ block|,
 literal|"Single step next AML opcode (over calls)\n"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
 block|{
 literal|0
 block|,
-literal|"\nHardware Related Commands:"
+literal|"\nHardware Simulation Commands:"
 block|,
 literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  EnableAcpi"
+block|,
+literal|"Enable ACPI (hardware) mode\n"
 block|}
 block|,
 block|{
@@ -1249,7 +1284,7 @@ literal|1
 block|,
 literal|"  Gpes"
 block|,
-literal|"Display info on all GPEs\n"
+literal|"Display info on all GPE devices\n"
 block|}
 block|,
 block|{
@@ -1301,6 +1336,38 @@ literal|"Open a file for debug output\n"
 block|}
 block|,
 block|{
+literal|1
+block|,
+literal|"  Unload<Namepath>"
+block|,
+literal|"Unload an ACPI table via namespace object\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nUser Space Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Terminate"
+block|,
+literal|"Delete namespace and all internal objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Thread<Threads><Loops><NamePath>"
+block|,
+literal|"Spawn threads to execute method(s)\n"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|"\nDebug Test Commands:"
@@ -1332,6 +1399,8 @@ block|,
 literal|"Execute all ACPI predefined names (_STA, etc.)\n"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
@@ -1352,6 +1421,7 @@ specifier|static
 name|BOOLEAN
 name|AcpiDbMatchCommandHelp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -1423,14 +1493,20 @@ condition|)
 block|{
 if|if
 condition|(
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|Command
 argument_list|)
 operator|!=
-name|ACPI_TOLOWER
+name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|Invocation
 argument_list|)
@@ -1498,6 +1574,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayCommandInfo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|Command
@@ -2079,14 +2156,6 @@ name|Next
 expr_stmt|;
 block|}
 comment|/* Uppercase the actual command */
-if|if
-condition|(
-name|AcpiGbl_DbArgs
-index|[
-literal|0
-index|]
-condition|)
-block|{
 name|AcpiUtStrupr
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -2095,7 +2164,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|Count
 operator|=
 name|i
@@ -2173,14 +2241,19 @@ control|)
 block|{
 if|if
 condition|(
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
 operator|.
 name|Name
+argument_list|)
 argument_list|,
 name|UserCommand
 argument_list|)
@@ -2251,7 +2324,7 @@ decl_stmt|;
 comment|/* If AcpiTerminate has been called, terminate this thread */
 if|if
 condition|(
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 return|return
@@ -2260,12 +2333,7 @@ name|AE_CTRL_TERMINATE
 operator|)
 return|;
 block|}
-comment|/* Add all commands that come here to the history buffer */
-name|AcpiDbAddToHistory
-argument_list|(
-name|InputBuffer
-argument_list|)
-expr_stmt|;
+comment|/* Find command and add to the history buffer */
 name|ParamCount
 operator|=
 name|AcpiDbGetLine
@@ -2287,6 +2355,20 @@ name|Temp
 operator|=
 literal|0
 expr_stmt|;
+comment|/*      * We don't want to add the !! command to the history buffer. It      * would cause an infinite loop because it would always be the      * previous command.      */
+if|if
+condition|(
+name|CommandIndex
+operator|!=
+name|CMD_HISTORY_LAST
+condition|)
+block|{
+name|AcpiDbAddToHistory
+argument_list|(
+name|InputBuffer
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Verify that we have the minimum number of params */
 if|if
 condition|(
@@ -2427,13 +2509,6 @@ name|AE_OK
 expr_stmt|;
 break|break;
 case|case
-name|CMD_CLOSE
-case|:
-name|AcpiDbCloseDebugFile
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
 name|CMD_DEBUG
 case|:
 name|AcpiDbExecute
@@ -2495,54 +2570,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_ENABLEACPI
-case|:
-if|#
-directive|if
-operator|(
-operator|!
-name|ACPI_REDUCED_HARDWARE
-operator|)
-name|Status
-operator|=
-name|AcpiEnable
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"AcpiEnable failed (Status=%X)\n"
-argument_list|,
-name|Status
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* !ACPI_REDUCED_HARDWARE */
-break|break;
-case|case
-name|CMD_EVENT
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Event command not implemented\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|CMD_EVALUATE
 case|:
 case|case
@@ -2597,30 +2624,6 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-case|case
-name|CMD_GPE
-case|:
-name|AcpiDbGenerateGpe
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|,
-name|AcpiGbl_DbArgs
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CMD_GPES
-case|:
-name|AcpiDbDisplayGpes
-argument_list|()
-expr_stmt|;
-break|break;
 case|case
 name|CMD_HANDLERS
 case|:
@@ -2805,7 +2808,7 @@ name|AcpiGbl_DbConsoleDebugLevel
 expr_stmt|;
 name|AcpiGbl_DbConsoleDebugLevel
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -2835,7 +2838,7 @@ name|AcpiGbl_DbDebugLevel
 expr_stmt|;
 name|AcpiGbl_DbDebugLevel
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -2869,24 +2872,6 @@ literal|1
 index|]
 argument_list|,
 name|Op
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CMD_LOAD
-case|:
-name|Status
-operator|=
-name|AcpiDbGetTableFromFile
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|,
-name|NULL
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2942,7 +2927,7 @@ name|CMD_NOTIFY
 case|:
 name|Temp
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -2993,18 +2978,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_OPEN
-case|:
-name|AcpiDbOpenDebugFile
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|CMD_OSI
 case|:
 name|AcpiDbDisplayInterfaces
@@ -3042,13 +3015,6 @@ case|case
 name|CMD_PATHS
 case|:
 name|AcpiDbDumpNamespacePaths
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|CMD_PREDEFINED
-case|:
-name|AcpiDbCheckPredefinedNames
 argument_list|()
 expr_stmt|;
 break|break;
@@ -3096,13 +3062,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|CMD_SCI
-case|:
-name|AcpiDbGenerateSci
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
 name|CMD_SET
 case|:
 name|AcpiDbSetMethodData
@@ -3120,20 +3079,6 @@ argument_list|,
 name|AcpiGbl_DbArgs
 index|[
 literal|3
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CMD_SLEEP
-case|:
-name|Status
-operator|=
-name|AcpiDbSleep
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -3185,6 +3130,206 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CMD_TRACE
+case|:
+name|AcpiDbTrace
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|2
+index|]
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_TREE
+case|:
+name|AcpiDbDisplayCallingTree
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_TYPE
+case|:
+name|AcpiDbDisplayObjectType
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+comment|/* Hardware simulation commands. */
+case|case
+name|CMD_ENABLEACPI
+case|:
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+name|Status
+operator|=
+name|AcpiEnable
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"AcpiEnable failed (Status=%X)\n"
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* !ACPI_REDUCED_HARDWARE */
+break|break;
+case|case
+name|CMD_EVENT
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Event command not implemented\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_GPE
+case|:
+name|AcpiDbGenerateGpe
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_GPES
+case|:
+name|AcpiDbDisplayGpes
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_SCI
+case|:
+name|AcpiDbGenerateSci
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_SLEEP
+case|:
+name|Status
+operator|=
+name|AcpiDbSleep
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* File I/O commands. */
+case|case
+name|CMD_CLOSE
+case|:
+name|AcpiDbCloseDebugFile
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_LOAD
+case|:
+block|{
+name|ACPI_NEW_TABLE_DESC
+modifier|*
+name|ListHead
+init|=
+name|NULL
+decl_stmt|;
+name|Status
+operator|=
+name|AcGetAllTablesFromFile
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+name|ACPI_GET_ALL_TABLES
+argument_list|,
+operator|&
+name|ListHead
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiDbLoadTables
+argument_list|(
+name|ListHead
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
+name|CMD_OPEN
+case|:
+name|AcpiDbOpenDebugFile
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* User space commands. */
+case|case
 name|CMD_TERMINATE
 case|:
 name|AcpiDbSetOutputDestination
@@ -3196,19 +3341,11 @@ name|AcpiUtSubsystemShutdown
 argument_list|()
 expr_stmt|;
 comment|/*          * TBD: [Restructure] Need some way to re-initialize without          * re-creating the semaphores!          */
-comment|/*  AcpiInitialize (NULL);  */
-break|break;
-case|case
-name|CMD_TEST
-case|:
-name|AcpiDbExecuteTest
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|TRUE
 expr_stmt|;
+comment|/*  AcpiInitialize (NULL);  */
 break|break;
 case|case
 name|CMD_THREADS
@@ -3232,38 +3369,18 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* Debug test commands. */
 case|case
-name|CMD_TRACE
+name|CMD_PREDEFINED
 case|:
-operator|(
-name|void
-operator|)
-name|AcpiDebugTrace
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CMD_TREE
-case|:
-name|AcpiDbDisplayCallingTree
+name|AcpiDbCheckPredefinedNames
 argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|CMD_TYPE
+name|CMD_TEST
 case|:
-name|AcpiDbDisplayObjectType
+name|AcpiDbExecuteTest
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[
@@ -3284,6 +3401,8 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|CMD_EXIT
 case|:
@@ -3317,10 +3436,15 @@ operator|=
 name|ACPI_DEBUG_DEFAULT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
 name|AcpiDbCloseDebugFile
 argument_list|()
 expr_stmt|;
-name|AcpiGbl_DbTerminateThreads
+endif|#
+directive|endif
+name|AcpiGbl_DbTerminateLoop
 operator|=
 name|TRUE
 expr_stmt|;
@@ -3397,6 +3521,9 @@ condition|(
 name|Status
 operator|!=
 name|AE_CTRL_TERMINATE
+operator|&&
+operator|!
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 name|AcpiGbl_MethodExecuting
@@ -3409,9 +3536,11 @@ name|FALSE
 expr_stmt|;
 name|MStatus
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3435,24 +3564,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|MStatus
-operator|=
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|MStatus
-argument_list|)
-condition|)
-block|{
-return|return;
 block|}
-block|}
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_function
 
@@ -3521,7 +3642,7 @@ comment|/* TBD: [Restructure] Need a separate command line buffer for step mode 
 while|while
 condition|(
 operator|!
-name|AcpiGbl_DbTerminateThreads
+name|AcpiGbl_DbTerminateLoop
 condition|)
 block|{
 comment|/* Force output to console until a command is entered */
@@ -3601,32 +3722,18 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/*              * Signal the debug thread that we have a command to execute,              * and wait for the command to complete.              */
-name|Status
-operator|=
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|Status
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3652,12 +3759,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Only this thread (the original thread) should actually terminate the      * subsystem, because all the semaphores are deleted during termination      */
-name|Status
-operator|=
-name|AcpiTerminate
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -3665,15 +3766,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

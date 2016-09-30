@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -154,37 +154,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
-value|6
-end_define
-
-begin_comment
-comment|/* AML debugger */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MTX_DEBUG_CMD_READY
-value|7
-end_define
-
-begin_comment
-comment|/* AML debugger */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACPI_MAX_MUTEX
-value|7
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_NUM_MUTEX
-value|ACPI_MAX_MUTEX+1
+value|(ACPI_MAX_MUTEX+1)
 end_define
 
 begin_comment
@@ -239,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_NUM_LOCK
-value|ACPI_MAX_LOCK+1
+value|(ACPI_MAX_LOCK+1)
 end_define
 
 begin_comment
@@ -250,8 +228,42 @@ begin_define
 define|#
 directive|define
 name|ACPI_MUTEX_NOT_ACQUIRED
-value|(ACPI_THREAD_ID) -1
+value|((ACPI_THREAD_ID) -1)
 end_define
+
+begin_comment
+comment|/* This Thread ID means an invalid thread ID */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_OS_INVALID_THREAD_ID
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INVALID_THREAD_ID
+value|ACPI_OS_INVALID_THREAD_ID
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_INVALID_THREAD_ID
+value|((ACPI_THREAD_ID) 0xFFFFFFFF)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Table for the global mutexes */
@@ -423,11 +435,22 @@ name|acpi_parse_object
 modifier|*
 name|Op
 decl_stmt|;
+name|void
+modifier|*
+name|MethodLocals
+decl_stmt|;
+name|void
+modifier|*
+name|MethodArgs
+decl_stmt|;
 name|UINT32
 name|Value
 decl_stmt|;
 name|UINT32
 name|Length
+decl_stmt|;
+name|UINT8
+name|ArgCount
 decl_stmt|;
 endif|#
 directive|endif
@@ -621,21 +644,37 @@ value|(2)
 end_define
 
 begin_comment
-comment|/* Predefined (fixed) table indexes */
+comment|/* List to manage incoming ACPI tables */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_new_table_desc
+block|{
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+decl_stmt|;
+name|struct
+name|acpi_new_table_desc
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_NEW_TABLE_DESC
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Predefined table indexes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_INDEX_DSDT
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_INDEX_FACS
-value|(1)
+name|ACPI_INVALID_TABLE_INDEX
+value|(0xFFFFFFFF)
 end_define
 
 begin_typedef
@@ -939,9 +978,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 value|0x00010000
 end_define
+
+begin_comment
+comment|/* From Index(), RefOf(), etc (Type6Opcodes) */
+end_comment
 
 begin_define
 define|#
@@ -949,6 +992,17 @@ directive|define
 name|ACPI_BTYPE_RESOURCE
 value|0x00020000
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BTYPE_NAMED_REFERENCE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Generic unresolved Name or Namepath */
+end_comment
 
 begin_define
 define|#
@@ -964,11 +1018,15 @@ name|ACPI_BTYPE_DATA
 value|(ACPI_BTYPE_COMPUTE_DATA  | ACPI_BTYPE_PACKAGE)
 end_define
 
+begin_comment
+comment|/* Used by Copy, DeRefOf, Store, Printf, Fprintf */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_BTYPE_DATA_REFERENCE
-value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE | ACPI_BTYPE_DDB_HANDLE)
+value|(ACPI_BTYPE_DATA | ACPI_BTYPE_REFERENCE_OBJECT | ACPI_BTYPE_DDB_HANDLE)
 end_define
 
 begin_define
@@ -1205,6 +1263,11 @@ modifier|*
 name|ACPI_OBJECT_CONVERTER
 function_decl|)
 parameter_list|(
+name|struct
+name|acpi_namespace_node
+modifier|*
+name|Scope
+parameter_list|,
 name|union
 name|acpi_operand_object
 modifier|*
@@ -1314,6 +1377,29 @@ end_define
 begin_comment
 comment|/* Number of actual object types */
 end_comment
+
+begin_comment
+comment|/* Info for running the _REG methods */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_reg_walk_info
+block|{
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+decl_stmt|;
+name|UINT32
+name|Function
+decl_stmt|;
+name|UINT32
+name|RegRunCount
+decl_stmt|;
+block|}
+name|ACPI_REG_WALK_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Event typedefs and structs  *  ****************************************************************************/
@@ -2332,11 +2418,19 @@ name|ACPI_PARSE_VALUE
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DISASSEMBLER
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_DEBUG_OUTPUT
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2380,8 +2474,8 @@ value|\     UINT8                           Flags;
 comment|/* Type of Op */
 value|\     UINT16                          AmlOpcode;
 comment|/* AML opcode */
-value|\     UINT32                          AmlOffset;
-comment|/* Offset of declaration in AML */
+value|\     UINT8                           *Aml;
+comment|/* Address of declaration in AML */
 value|\     union acpi_parse_object         *Next;
 comment|/* Next op */
 value|\     ACPI_NAMESPACE_NODE             *Node;
@@ -2790,7 +2884,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_NAMED
+name|ACPI_PARSEOP_NAMED_OBJECT
 value|0x02
 end_define
 
@@ -2843,7 +2937,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_PARAMLIST
+name|ACPI_PARSEOP_PARAMETER_LIST
 value|0x02
 end_define
 
@@ -2857,21 +2951,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_PREDEF_CHECKED
+name|ACPI_PARSEOP_PREDEFINED_CHECKED
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_SPECIAL
+name|ACPI_PARSEOP_CLOSING_PAREN
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PARSEOP_COMPOUND
+name|ACPI_PARSEOP_COMPOUND_ASSIGNMENT
 value|0x20
 end_define
 
@@ -2880,6 +2974,13 @@ define|#
 directive|define
 name|ACPI_PARSEOP_ASSIGNMENT
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_ELSEIF
+value|0x80
 end_define
 
 begin_comment
@@ -3810,6 +3911,17 @@ begin_comment
 comment|/* External() statement has been emitted */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_ORIGIN_FROM_OPCODE
+value|0x10
+end_define
+
+begin_comment
+comment|/* External came from a External() opcode */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3892,12 +4004,17 @@ comment|/*      * Arguments to be passed to method for the command      * Thread
 name|char
 name|InitArgs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
 name|ACPI_OBJECT_TYPE
 name|ArgTypes
 index|[
 literal|4
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|Arguments
@@ -3971,6 +4088,22 @@ directive|define
 name|ACPI_DB_DUPLICATE_OUTPUT
 value|0x03
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_info
+block|{
+name|UINT32
+name|Types
+index|[
+name|ACPI_TOTAL_TYPES
+index|]
+decl_stmt|;
+block|}
+name|ACPI_OBJECT_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug  *  ****************************************************************************/

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -70,6 +70,13 @@ decl_stmt|;
 name|UINT32
 name|Timer
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjectDesc
+decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|ExDoDebugObject
@@ -94,24 +101,76 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*      * We will emit the current timer value (in microseconds) with each      * debug output. Only need the lower 26 bits. This allows for 67      * million microseconds or 67 seconds before rollover.      */
-name|Timer
-operator|=
+comment|/* Null string or newline -- don't emit the line header */
+if|if
+condition|(
+name|SourceDesc
+operator|&&
+operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|SourceDesc
+argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_OPERAND
+operator|)
+operator|&&
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|==
+name|ACPI_TYPE_STRING
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|==
+literal|0
+operator|)
+operator|||
 operator|(
 operator|(
-name|UINT32
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|==
+literal|1
 operator|)
-name|AcpiOsGetTimer
-argument_list|()
-operator|/
-literal|10
+operator|&&
+operator|(
+operator|*
+name|SourceDesc
+operator|->
+name|String
+operator|.
+name|Pointer
+operator|==
+literal|'\n'
 operator|)
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
-comment|/* (100 nanoseconds to microseconds) */
-name|Timer
-operator|&=
-literal|0x03FFFFFF
+name|return_VOID
 expr_stmt|;
+block|}
+block|}
 comment|/*      * Print line header as long as we are not in the middle of an      * object display      */
 if|if
 condition|(
@@ -129,9 +188,31 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|AcpiGbl_DisplayDebugTimer
+condition|)
+block|{
+comment|/*              * We will emit the current timer value (in microseconds) with each              * debug output. Only need the lower 26 bits. This allows for 67              * million microseconds or 67 seconds before rollover.              *              * Convert 100 nanosecond units to microseconds              */
+name|Timer
+operator|=
+operator|(
+operator|(
+name|UINT32
+operator|)
+name|AcpiOsGetTimer
+argument_list|()
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+name|Timer
+operator|&=
+literal|0x03FFFFFF
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[ACPI Debug %.8u] %*s"
+literal|"[ACPI Debug T=0x%8.8X] %*s"
 argument_list|,
 name|Timer
 argument_list|,
@@ -140,6 +221,19 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[ACPI Debug] %*s"
+argument_list|,
+name|Level
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Display the index for package output only */
 if|if
@@ -183,9 +277,33 @@ operator|==
 name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
+comment|/* No object type prefix needed for integers and strings */
+if|if
+condition|(
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_INTEGER
+operator|)
+operator|&&
+operator|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|ACPI_TYPE_STRING
+operator|)
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s "
+literal|"%s  "
 argument_list|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -193,6 +311,7 @@ name|SourceDesc
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -226,7 +345,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s: %p\n"
+literal|"%s  (Node %p)\n"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -360,13 +479,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[0x%.2X] \"%s\"\n"
-argument_list|,
-name|SourceDesc
-operator|->
-name|String
-operator|.
-name|Length
+literal|"\"%s\"\n"
 argument_list|,
 name|SourceDesc
 operator|->
@@ -381,7 +494,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Contains 0x%.2X Elements]\n"
+literal|"(Contains 0x%.2X Elements):\n"
 argument_list|,
 name|SourceDesc
 operator|->
@@ -635,21 +748,19 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
+comment|/* Reference object is a namespace node */
 name|AcpiExDoDebugObject
 argument_list|(
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
 name|SourceDesc
 operator|->
 name|Reference
 operator|.
 name|Object
-operator|)
-operator|->
-name|Object
+argument_list|)
 argument_list|,
 name|Level
 operator|+
@@ -661,13 +772,113 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiExDoDebugObject
-argument_list|(
+name|ObjectDesc
+operator|=
 name|SourceDesc
 operator|->
 name|Reference
 operator|.
 name|Object
+expr_stmt|;
+name|Value
+operator|=
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Value
+expr_stmt|;
+switch|switch
+condition|(
+name|ObjectDesc
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Buffer[%u] = 0x%2.2X\n"
+argument_list|,
+name|Value
+argument_list|,
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|IndexPointer
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_STRING
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"String[%u] = \"%c\" (0x%2.2X)\n"
+argument_list|,
+name|Value
+argument_list|,
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|IndexPointer
+argument_list|,
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|IndexPointer
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Package[%u] = "
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Where
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[Uninitialized Package Element]\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiExDoDebugObject
+argument_list|(
+operator|*
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Where
 argument_list|,
 name|Level
 operator|+
@@ -677,12 +888,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Unknown Reference object type %X\n"
+argument_list|,
+name|ObjectDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p\n"
+literal|"(Descriptor %p)\n"
 argument_list|,
 name|SourceDesc
 argument_list|)

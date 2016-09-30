@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -543,7 +543,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_TYPE_OP
+name|AML_OBJECT_TYPE_OP
 value|(UINT16) 0x8e
 end_define
 
@@ -1265,6 +1265,21 @@ value|0x12
 end_define
 
 begin_comment
+comment|/* NameString | LocalTerm | ArgTerm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARGP_NAME_OR_REF
+value|0x13
+end_define
+
+begin_comment
+comment|/* For ObjectType only */
+end_comment
+
+begin_comment
 comment|/*  * Resolved argument types for the AML Interpreter  * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.  * There can be up to 31 unique argument types (0 is end-of-arg-list indicator)  *  * Note1: These values are completely independent from the ACPI_TYPEs  *        i.e., ARGI_INTEGER != ACPI_TYPE_INTEGER  *  * Note2: If and when 5 bits becomes insufficient, it would probably be best  * to convert to a 6-byte array of argument types, allowing 8 bits per argument.  */
 end_comment
 
@@ -1423,6 +1438,17 @@ begin_comment
 comment|/* Name, Local, Arg -- no implicit conversion */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARGI_STORE_TARGET
+value|0x12
+end_define
+
+begin_comment
+comment|/* Target for store is TARGETREF + package objects */
+end_comment
+
 begin_comment
 comment|/* Multiple/complex types */
 end_comment
@@ -1431,7 +1457,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_DATAOBJECT
-value|0x12
+value|0x13
 end_define
 
 begin_comment
@@ -1442,7 +1468,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_COMPLEXOBJ
-value|0x13
+value|0x14
 end_define
 
 begin_comment
@@ -1453,7 +1479,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_REF_OR_STRING
-value|0x14
+value|0x15
 end_define
 
 begin_comment
@@ -1464,7 +1490,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_REGION_OR_BUFFER
-value|0x15
+value|0x16
 end_define
 
 begin_comment
@@ -1475,7 +1501,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_DATAREFOBJ
-value|0x16
+value|0x17
 end_define
 
 begin_comment

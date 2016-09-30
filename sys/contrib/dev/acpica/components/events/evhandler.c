@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -262,7 +262,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
@@ -477,40 +477,33 @@ block|{
 comment|/* Check if this Device already has a handler for this address space */
 name|NextHandlerObj
 operator|=
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|Handler
-expr_stmt|;
-while|while
-condition|(
-name|NextHandlerObj
-condition|)
-block|{
-comment|/* Found a handler, is it for the same address space? */
-if|if
-condition|(
-name|NextHandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|SpaceId
-operator|==
+name|AcpiEvFindRegionHandler
+argument_list|(
 name|HandlerObj
 operator|->
 name|AddressSpace
 operator|.
 name|SpaceId
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonNotify
+operator|.
+name|Handler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NextHandlerObj
 condition|)
 block|{
+comment|/* Found a handler, is it for the same address space? */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Found handler for region [%s] in device %p(%p) "
-literal|"handler %p\n"
+literal|"Found handler for region [%s] in device %p(%p) handler %p\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -529,22 +522,12 @@ name|HandlerObj
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                  * Since the object we found it on was a device, then it                  * means that someone has already installed a handler for                  * the branch of the namespace from this device on. Just                  * bail out telling the walk routine to not traverse this                  * branch. This preserves the scoping rule for handlers.                  */
+comment|/*              * Since the object we found it on was a device, then it means              * that someone has already installed a handler for the branch              * of the namespace from this device on. Just bail out telling              * the walk routine to not traverse this branch. This preserves              * the scoping rule for handlers.              */
 return|return
 operator|(
 name|AE_CTRL_DEPTH
 operator|)
 return|;
-block|}
-comment|/* Walk the linked list of handlers attached to this device */
-name|NextHandlerObj
-operator|=
-name|NextHandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Next
-expr_stmt|;
 block|}
 comment|/*          * As long as the device didn't have a handler for this space we          * don't care about it. We just ignore it and proceed.          */
 return|return
@@ -605,6 +588,65 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFindRegionHandler  *  * PARAMETERS:  SpaceId         - The address space ID  *              HandlerObj      - Head of the handler object list  *  * RETURN:      Matching handler object. NULL if space ID not matched  *  * DESCRIPTION: Search a handler object list for a match on the address  *              space ID.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiEvFindRegionHandler
+parameter_list|(
+name|ACPI_ADR_SPACE_TYPE
+name|SpaceId
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|HandlerObj
+parameter_list|)
+block|{
+comment|/* Walk the handler list for this device */
+while|while
+condition|(
+name|HandlerObj
+condition|)
+block|{
+comment|/* Same SpaceId indicates a handler is installed */
+if|if
+condition|(
+name|HandlerObj
+operator|->
+name|AddressSpace
+operator|.
+name|SpaceId
+operator|==
+name|SpaceId
+condition|)
+block|{
+return|return
+operator|(
+name|HandlerObj
+operator|)
+return|;
+block|}
+comment|/* Next handler object */
+name|HandlerObj
+operator|=
+name|HandlerObj
+operator|->
+name|AddressSpace
+operator|.
+name|Next
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInstallSpaceHandler  *  * PARAMETERS:  Node            - Namespace node for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *              Setup           - Address of the setup function  *              Context         - Value passed to the handler on each access  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for all OpRegions of a given SpaceId.  *              Assumes namespace is locked  *  ******************************************************************************/
 end_comment
 
@@ -640,6 +682,8 @@ name|HandlerObj
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|Type
@@ -654,7 +698,7 @@ argument_list|(
 name|EvInstallSpaceHandler
 argument_list|)
 expr_stmt|;
-comment|/*      * This registration is valid for only the types below and the root. This      * is where the default handlers get placed.      */
+comment|/*      * This registration is valid for only the types below and the root.      * The root node is where the default handlers get installed.      */
 if|if
 condition|(
 operator|(
@@ -819,31 +863,23 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*          * The attached device object already exists. Make sure the handler          * is not already installed.          */
+comment|/*          * The attached device object already exists. Now make sure          * the handler is not already installed.          */
 name|HandlerObj
 operator|=
+name|AcpiEvFindRegionHandler
+argument_list|(
+name|SpaceId
+argument_list|,
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
+argument_list|)
 expr_stmt|;
-comment|/* Walk the handler list for this device */
-while|while
-condition|(
-name|HandlerObj
-condition|)
-block|{
-comment|/* Same SpaceId indicates a handler already installed */
 if|if
 condition|(
 name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|SpaceId
-operator|==
-name|SpaceId
 condition|)
 block|{
 if|if
@@ -857,7 +893,7 @@ operator|==
 name|Handler
 condition|)
 block|{
-comment|/*                      * It is (relatively) OK to attempt to install the SAME                      * handler twice. This can easily happen with the                      * PCI_Config space.                      */
+comment|/*                  * It is (relatively) OK to attempt to install the SAME                  * handler twice. This can easily happen with the                  * PCI_Config space.                  */
 name|Status
 operator|=
 name|AE_SAME_HANDLER
@@ -877,16 +913,6 @@ block|}
 goto|goto
 name|UnlockAndExit
 goto|;
-block|}
-comment|/* Walk the linked list of handlers */
-name|HandlerObj
-operator|=
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Next
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -995,7 +1021,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Installing address handler for region %s(%X) on Device %4.4s %p(%p)\n"
+literal|"Installing address handler for region %s(%X) "
+literal|"on Device %4.4s %p(%p)\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -1106,20 +1133,20 @@ name|Next
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 expr_stmt|;
 comment|/*      * The Device object is the first reference on the HandlerObj.      * Each region that uses the handler adds a reference.      */
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|Handler
 operator|=
 name|HandlerObj
 expr_stmt|;
-comment|/*      * Walk the namespace finding all of the regions this      * handler will manage.      *      * Start at the device and search the branch toward      * the leaf nodes until either the leaf is encountered or      * a device is detected that has an address handler of the      * same type.      *      * In either case, back up and search down the remainder      * of the branch      */
+comment|/*      * Walk the namespace finding all of the regions this handler will      * manage.      *      * Start at the device and search the branch toward the leaf nodes      * until either the leaf is encountered or a device is detected that      * has an address handler of the same type.      *      * In either case, back up and search down the remainder of the branch      */
 name|Status
 operator|=
 name|AcpiNsWalkNamespace

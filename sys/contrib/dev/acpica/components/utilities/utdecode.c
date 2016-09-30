@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -207,6 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetRegionName
@@ -272,15 +273,10 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_RegionTypes
 index|[
 name|SpaceId
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -319,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetEventName
@@ -342,15 +339,10 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_EventTypes
 index|[
 name|EventId
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -361,7 +353,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching;  * when stored in a table it really means that we have thus far seen no  * evidence to indicate what type is actually going to be stored for this entry.  */
+comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching;  * when stored in a table it really means that we have thus far seen no  * evidence to indicate what type is actually going to be stored for this& entry.  */
 end_comment
 
 begin_decl_stmt
@@ -485,6 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetTypeName
@@ -502,32 +495,23 @@ condition|)
 block|{
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_BadType
-argument_list|)
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_NsTypeNames
 index|[
 name|Type
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetObjectTypeName
@@ -537,20 +521,83 @@ modifier|*
 name|ObjDesc
 parameter_list|)
 block|{
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|UtGetObjectTypeName
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ObjDesc
 condition|)
 block|{
-return|return
+name|ACPI_DEBUG_PRINT
+argument_list|(
 operator|(
-literal|"[NULL Object Descriptor]"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Null Object Descriptor\n"
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+literal|"[NULL Object Descriptor]"
+argument_list|)
+expr_stmt|;
 block|}
-return|return
+comment|/* These descriptor types share a common area */
+if|if
+condition|(
 operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_OPERAND
+operator|)
+operator|&&
+operator|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_NAMED
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Invalid object descriptor type: 0x%2.2X [%s] (%p)\n"
+operator|,
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|,
+name|ObjDesc
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_PTR
+argument_list|(
+literal|"Invalid object"
+argument_list|)
+expr_stmt|;
+block|}
+name|return_STR
+argument_list|(
 name|AcpiUtGetTypeName
 argument_list|(
 name|ObjDesc
@@ -559,8 +606,8 @@ name|Common
 operator|.
 name|Type
 argument_list|)
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -569,6 +616,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetNodeName
@@ -732,6 +780,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetDescriptorName
@@ -771,10 +820,6 @@ return|;
 block|}
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
 name|AcpiGbl_DescTypeNames
 index|[
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -782,7 +827,6 @@ argument_list|(
 name|Object
 argument_list|)
 index|]
-argument_list|)
 operator|)
 return|;
 block|}
@@ -945,6 +989,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|AcpiGbl_MutexNames
@@ -964,15 +1009,12 @@ block|,
 literal|"ACPI_MTX_Caches"
 block|,
 literal|"ACPI_MTX_Memory"
-block|,
-literal|"ACPI_MTX_CommandComplete"
-block|,
-literal|"ACPI_MTX_CommandReady"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|AcpiUtGetMutexName
@@ -1020,7 +1062,7 @@ name|char
 modifier|*
 name|AcpiGbl_GenericNotify
 index|[
-name|ACPI_NOTIFY_MAX
+name|ACPI_GENERIC_NOTIFY_MAX
 operator|+
 literal|1
 index|]
@@ -1065,6 +1107,7 @@ block|,
 comment|/* 0C */
 literal|"Shutdown Request"
 block|,
+comment|/* Reserved in ACPI 6.0 */
 comment|/* 0D */
 literal|"System Resource Affinity Update"
 block|}
@@ -1078,7 +1121,7 @@ name|char
 modifier|*
 name|AcpiGbl_DeviceNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1093,6 +1136,9 @@ literal|"Device-Specific Change"
 block|,
 comment|/* 83 */
 literal|"Device-Specific Change"
+block|,
+comment|/* 84 */
+literal|"Reserved"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1104,7 +1150,7 @@ name|char
 modifier|*
 name|AcpiGbl_ProcessorNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1118,7 +1164,10 @@ comment|/* 82 */
 literal|"Throttling Capability Change"
 block|,
 comment|/* 83 */
-literal|"Device-Specific Change"
+literal|"Guaranteed Change"
+block|,
+comment|/* 84 */
+literal|"Minimum Excursion"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1130,7 +1179,7 @@ name|char
 modifier|*
 name|AcpiGbl_ThermalNotify
 index|[
-literal|4
+literal|5
 index|]
 init|=
 block|{
@@ -1145,6 +1194,9 @@ literal|"Thermal Device List Change"
 block|,
 comment|/* 83 */
 literal|"Thermal Relationship Change"
+block|,
+comment|/* 84 */
+literal|"Reserved"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1162,12 +1214,12 @@ name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
-comment|/* 00 - 0D are common to all object types */
+comment|/* 00 - 0D are "common to all object types" (from ACPI Spec) */
 if|if
 condition|(
 name|NotifyValue
 operator|<=
-name|ACPI_NOTIFY_MAX
+name|ACPI_GENERIC_NOTIFY_MAX
 condition|)
 block|{
 return|return
@@ -1179,7 +1231,7 @@ index|]
 operator|)
 return|;
 block|}
-comment|/* 0D - 7F are reserved */
+comment|/* 0E - 7F are reserved */
 if|if
 condition|(
 name|NotifyValue
@@ -1193,12 +1245,12 @@ literal|"Reserved"
 operator|)
 return|;
 block|}
-comment|/* 80 - 83 are per-object-type */
+comment|/* 80 - 84 are per-object-type */
 if|if
 condition|(
 name|NotifyValue
 operator|<=
-literal|0x83
+name|ACPI_SPECIFIC_NOTIFY_MAX
 condition|)
 block|{
 switch|switch

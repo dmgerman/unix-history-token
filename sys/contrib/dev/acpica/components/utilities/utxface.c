@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -64,53 +64,6 @@ argument_list|(
 name|AcpiTerminate
 argument_list|)
 expr_stmt|;
-comment|/* Just exit if subsystem is already shutdown */
-if|if
-condition|(
-name|AcpiGbl_Shutdown
-condition|)
-block|{
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"ACPI Subsystem is already terminated"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Subsystem appears active, go ahead and shut it down */
-name|AcpiGbl_Shutdown
-operator|=
-name|TRUE
-expr_stmt|;
-name|AcpiGbl_StartupFlags
-operator|=
-literal|0
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Shutting down ACPI Subsystem\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Terminate the AML Debugger if present */
-name|ACPI_DEBUGGER_EXEC
-argument_list|(
-name|AcpiGbl_DbTerminateThreads
-operator|=
-name|TRUE
-argument_list|)
-expr_stmt|;
 comment|/* Shutdown and free all resources */
 name|AcpiUtSubsystemShutdown
 argument_list|()
@@ -119,15 +72,6 @@ comment|/* Free the mutex objects */
 name|AcpiUtMutexTerminate
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-comment|/* Shut down the debugger */
-name|AcpiDbTerminate
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Now we can shutdown the OS-dependent layer */
 name|Status
 operator|=
@@ -406,7 +350,7 @@ name|GpeCount
 operator|=
 name|AcpiGpeCount
 expr_stmt|;
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|Stats
 operator|->
@@ -588,7 +532,7 @@ operator|!
 name|InterfaceName
 operator|||
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InterfaceName
 argument_list|)
@@ -722,7 +666,7 @@ operator|!
 name|InterfaceName
 operator|||
 operator|(
-name|ACPI_STRLEN
+name|strlen
 argument_list|(
 name|InterfaceName
 argument_list|)
@@ -1069,7 +1013,7 @@ operator|||
 operator|(
 name|Length
 operator|<
-literal|16
+name|ACPI_PLD_REV1_BUFFER_SIZE
 operator|)
 condition|)
 block|{
@@ -1407,7 +1351,7 @@ if|if
 condition|(
 name|Length
 operator|>=
-name|ACPI_PLD_BUFFER_SIZE
+name|ACPI_PLD_REV2_BUFFER_SIZE
 condition|)
 block|{
 comment|/* Fifth 32-bit DWord (Revision 2 of _PLD) */

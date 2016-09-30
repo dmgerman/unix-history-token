@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ACTBL2_H__
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * Additional ACPI Tables (2)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * The tables in this file are defined by third-party specifications, and are  * not defined directly by the ACPI specification itself.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Additional ACPI Tables (2)  *  * These tables are not consumed directly by the ACPICA subsystem, but are  * included here to support device drivers and the AML disassembler.  *  * Generally, the tables in this file are defined by third-party specifications,  * and are not defined directly by the ACPI specification itself.  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -234,6 +234,17 @@ end_define
 
 begin_comment
 comment|/* Trusted Computing Platform Alliance table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_TPM2
+value|"TPM2"
+end_define
+
+begin_comment
+comment|/* Trusted Platform Module 2.0 H/W interface table */
 end_comment
 
 begin_define
@@ -903,7 +914,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * DBG2 - Debug Port Table 2  *        Version 0 (Both main table and subtables)  *  * Conforms to "Microsoft Debug Port Table 2 (DBG2)", May 22 2012.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DBG2 - Debug Port Table 2  *        Version 0 (Both main table and subtables)  *  * Conforms to "Microsoft Debug Port Table 2 (DBG2)", December 10, 2015  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -1047,6 +1058,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DBG2_ARM_PL011
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG2_ARM_SBSA_32BIT
+value|0x000D
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG2_ARM_SBSA_GENERIC
+value|0x000E
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG2_ARM_DCC
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG2_BCM2835
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DBG2_1394_STANDARD
 value|0x0000
 end_define
@@ -1097,7 +1143,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 2.2, Sept. 2013  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 2.3, October 2014  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -1136,6 +1182,20 @@ define|#
 directive|define
 name|ACPI_DMAR_INTR_REMAP
 value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMAR_X2APIC_OPT_OUT
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMAR_X2APIC_MODE
+value|(1<<2)
 end_define
 
 begin_comment
@@ -1835,7 +1895,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * IORT - IO Remapping Table  *  * Conforms to "IO Remapping Table System Software on ARM Platforms",  * Document number: ARM DEN 0049A, 2015  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * IORT - IO Remapping Table  *  * Conforms to "IO Remapping Table System Software on ARM Platforms",  * Document number: ARM DEN 0049B, October 2015  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -1921,6 +1981,10 @@ block|,
 name|ACPI_IORT_NODE_SMMU
 init|=
 literal|0x03
+block|,
+name|ACPI_IORT_NODE_SMMU_V3
+init|=
+literal|0x04
 block|}
 enum|;
 end_enum
@@ -2270,6 +2334,63 @@ begin_define
 define|#
 directive|define
 name|ACPI_IORT_SMMU_COHERENT_WALK
+value|(1<<1)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_smmu_v3
+block|{
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+comment|/* SMMUv3 base address */
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|VatosAddress
+decl_stmt|;
+name|UINT32
+name|Model
+decl_stmt|;
+comment|/* O: generic SMMUv3 */
+name|UINT32
+name|EventGsiv
+decl_stmt|;
+name|UINT32
+name|PriGsiv
+decl_stmt|;
+name|UINT32
+name|GerrGsiv
+decl_stmt|;
+name|UINT32
+name|SyncGsiv
+decl_stmt|;
+block|}
+name|ACPI_IORT_SMMU_V3
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Masks for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_V3_COHACC_OVERRIDE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_V3_HTTU_OVERRIDE
 value|(1<<1)
 end_define
 
@@ -3140,7 +3261,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * SPCR - Serial Port Console Redirection table  *        Version 1  *  * Conforms to "Serial Port Console Redirection Table",  * Version 1.00, January 11, 2002  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * SPCR - Serial Port Console Redirection table  *        Version 2  *  * Conforms to "Serial Port Console Redirection Table",  * Version 1.03, August 10, 2015  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -3231,6 +3352,10 @@ directive|define
 name|ACPI_SPCR_DO_NOT_DISABLE
 value|(1)
 end_define
+
+begin_comment
+comment|/* Values for Interface Type: See the definition of the DBG2 table */
+end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  * SPMI - Server Platform Management Interface table  *        Version 5  *  * Conforms to "Intelligent Platform Management Interface Specification  * Second Generation v2.0", Document Revision 1.0, February 12, 2004 with  * June 12, 2009 markup.  *  ******************************************************************************/
@@ -3332,33 +3457,252 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 1  *  * Conforms to "TCG PC Specific Implementation Specification",  * Version 1.1, August 18, 2003  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * TCPA - Trusted Computing Platform Alliance table  *        Version 2  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  * NOTE: There are two versions of the table with the same signature --  * the client version and the server version. The common PlatformClass  * field is used to differentiate the two types of tables.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_table_tcpa
+name|acpi_table_tcpa_hdr
 block|{
 name|ACPI_TABLE_HEADER
 name|Header
 decl_stmt|;
 comment|/* Common ACPI table header */
 name|UINT16
-name|Reserved
+name|PlatformClass
 decl_stmt|;
+block|}
+name|ACPI_TABLE_TCPA_HDR
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Values for PlatformClass above.  * This is how the client and server subtables are differentiated  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_CLIENT_TABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_SERVER_TABLE
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tcpa_client
+block|{
 name|UINT32
-name|MaxLogLength
+name|MinimumLogLength
 decl_stmt|;
-comment|/* Maximum length for the event log area */
+comment|/* Minimum length for the event log area */
 name|UINT64
 name|LogAddress
 decl_stmt|;
 comment|/* Address of the event log area */
 block|}
-name|ACPI_TABLE_TCPA
+name|ACPI_TABLE_TCPA_CLIENT
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tcpa_server
+block|{
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|MinimumLogLength
+decl_stmt|;
+comment|/* Minimum length for the event log area */
+name|UINT64
+name|LogAddress
+decl_stmt|;
+comment|/* Address of the event log area */
+name|UINT16
+name|SpecRevision
+decl_stmt|;
+name|UINT8
+name|DeviceFlags
+decl_stmt|;
+name|UINT8
+name|InterruptFlags
+decl_stmt|;
+name|UINT8
+name|GpeNumber
+decl_stmt|;
+name|UINT8
+name|Reserved2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|UINT32
+name|GlobalInterrupt
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|Address
+decl_stmt|;
+name|UINT32
+name|Reserved3
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ConfigAddress
+decl_stmt|;
+name|UINT8
+name|Group
+decl_stmt|;
+name|UINT8
+name|Bus
+decl_stmt|;
+comment|/* PCI Bus/Segment/Function numbers */
+name|UINT8
+name|Device
+decl_stmt|;
+name|UINT8
+name|Function
+decl_stmt|;
+block|}
+name|ACPI_TABLE_TCPA_SERVER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for DeviceFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_PCI_DEVICE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_BUS_PNP
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_ADDRESS_VALID
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Values for InterruptFlags above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_INTERRUPT_MODE
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_INTERRUPT_POLARITY
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_SCI_VIA_GPE
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TCPA_GLOBAL_INTERRUPT
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 4  *  * Conforms to "TCG ACPI Specification, Family 1.2 and 2.0",  * December 19, 2014  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_tpm2
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT16
+name|PlatformClass
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|ControlAddress
+decl_stmt|;
+name|UINT32
+name|StartMethod
+decl_stmt|;
+comment|/* Platform-specific data follows */
+block|}
+name|ACPI_TABLE_TPM2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for StartMethod above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_NOT_ALLOWED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_START_METHOD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_MEMORY_MAPPED
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_COMMAND_BUFFER
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TPM2_COMMAND_BUFFER_WITH_START_METHOD
+value|8
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * UEFI - UEFI Boot optimization Table  *        Version 1  *  * Conforms to "Unified Extensible Firmware Interface Specification",  * Version 2.3, May 8, 2009  *  ******************************************************************************/

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -64,114 +64,18 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* iASL configuration */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_ASL_COMPILER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_APPLICATION
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DISASSEMBLER
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUG_OUTPUT
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_CONSTANT_EVAL_ONLY
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LARGE_NAMESPACE_NODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DATA_TABLE_DISASSEMBLY
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SINGLE_THREADED
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_32BIT_PHYSICAL_ADDRESS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AcpiExec configuration. Multithreaded with full AML debugger */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_EXEC_APP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_APPLICATION
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FULL_DEBUG
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MUTEX_DEBUG
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DBG_TRACK_ALLOCATIONS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * AcpiBin/AcpiDump/AcpiHelp/AcpiNames/AcpiSrc/AcpiXtract/Example configuration.  * All single threaded.  */
+comment|/* Common application configuration. All single threaded except for AcpiExec. */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|)
+operator|||
+expr|\
 operator|(
 name|defined
 name|ACPI_BIN_APP
@@ -224,6 +128,97 @@ begin_define
 define|#
 directive|define
 name|ACPI_SINGLE_THREADED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* iASL configuration */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OUTPUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CONSTANT_EVAL_ONLY
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LARGE_NAMESPACE_NODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DATA_TABLE_DISASSEMBLY
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_32BIT_PHYSICAL_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AcpiExec configuration. Multithreaded with full AML debugger */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_EXEC_APP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_APPLICATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FULL_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MUTEX_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG_TRACK_ALLOCATIONS
 end_define
 
 begin_endif
@@ -310,7 +305,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* AcpiDump configuration. Native mapping used if provied by OSPMs */
+comment|/* AcpiDump configuration. Native mapping used if provided by the host */
 end_comment
 
 begin_ifdef
@@ -368,7 +363,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Linkable ACPICA library */
+comment|/* Linkable ACPICA library. Two versions, one with full debug. */
 end_comment
 
 begin_ifdef
@@ -382,6 +377,37 @@ define|#
 directive|define
 name|ACPI_USE_LOCAL_CACHE
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUGGER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OUTPUT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -416,7 +442,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Common debug support */
+comment|/* Common debug/disassembler support */
 end_comment
 
 begin_ifdef
@@ -428,19 +454,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUGGER
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_DEBUG_OUTPUT
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_DEBUGGER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DISASSEMBLER
+value|1
 end_define
 
 begin_endif
@@ -711,6 +739,21 @@ directive|include
 file|"achaiku.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__QNX__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acqnx.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -976,17 +1019,26 @@ directive|ifndef
 name|DEBUGGER_THREADING
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|ACPI_APPLICATION
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_EXEC_APP
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|DEBUGGER_THREADING
-value|DEBUGGER_SINGLE_THREADED
+value|DEBUGGER_MULTI_THREADED
 end_define
 
 begin_else
@@ -998,7 +1050,7 @@ begin_define
 define|#
 directive|define
 name|DEBUGGER_THREADING
-value|DEBUGGER_MULTI_THREADED
+value|DEBUGGER_SINGLE_THREADED
 end_define
 
 begin_endif
@@ -1020,7 +1072,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not call  * operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
+comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
 end_comment
 
 begin_ifdef
@@ -1079,254 +1131,6 @@ end_comment
 begin_comment
 comment|/* We will be linking to the standard Clib functions */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRSTR
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|strstr((s1), (s2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCHR
-parameter_list|(
-name|s1
-parameter_list|,
-name|c
-parameter_list|)
-value|strchr((s1), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRLEN
-parameter_list|(
-name|s
-parameter_list|)
-value|(ACPI_SIZE) strlen((s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|(void) strcpy((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) strncpy((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCMP
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|strncmp((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCMP
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|strcmp((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCAT
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|(void) strcat((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCAT
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|strncat((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRTOUL
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|strtoul((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMCMP
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
-value|memcmp((const char *)(s1), (const char *)(s2), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) memcpy((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMSET
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) memset((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TOUPPER
-parameter_list|(
-name|i
-parameter_list|)
-value|toupper((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TOLOWER
-parameter_list|(
-name|i
-parameter_list|)
-value|tolower((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_XDIGIT
-parameter_list|(
-name|i
-parameter_list|)
-value|isxdigit((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_DIGIT
-parameter_list|(
-name|i
-parameter_list|)
-value|isdigit((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_SPACE
-parameter_list|(
-name|i
-parameter_list|)
-value|isspace((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_UPPER
-parameter_list|(
-name|i
-parameter_list|)
-value|isupper((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_PRINT
-parameter_list|(
-name|i
-parameter_list|)
-value|isprint((int) (i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_ALPHA
-parameter_list|(
-name|i
-parameter_list|)
-value|isalpha((int) (i))
-end_define
 
 begin_else
 else|#
@@ -1456,194 +1260,6 @@ end_comment
 begin_comment
 comment|/* Use the local (ACPICA) definitions of the clib functions */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRSTR
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|AcpiUtStrstr ((s1), (s2))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCHR
-parameter_list|(
-name|s1
-parameter_list|,
-name|c
-parameter_list|)
-value|AcpiUtStrchr ((s1), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRLEN
-parameter_list|(
-name|s
-parameter_list|)
-value|(ACPI_SIZE) AcpiUtStrlen ((s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|(void) AcpiUtStrcpy ((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) AcpiUtStrncpy ((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCMP
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|AcpiUtStrncmp ((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCMP
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|AcpiUtStrcmp ((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRCAT
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|(void) AcpiUtStrcat ((d), (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRNCAT
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|AcpiUtStrncat ((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STRTOUL
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|AcpiUtStrtoul ((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMCMP
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
-value|AcpiUtMemcmp((const char *)(s1), (const char *)(s2), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMCPY
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) AcpiUtMemcpy ((d), (s), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMSET
-parameter_list|(
-name|d
-parameter_list|,
-name|v
-parameter_list|,
-name|n
-parameter_list|)
-value|(void) AcpiUtMemset ((d), (v), (ACPI_SIZE)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TOUPPER
-parameter_list|(
-name|c
-parameter_list|)
-value|AcpiUtToUpper ((int) (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TOLOWER
-parameter_list|(
-name|c
-parameter_list|)
-value|AcpiUtToLower ((int) (c))
-end_define
 
 begin_endif
 endif|#

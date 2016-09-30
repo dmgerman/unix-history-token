@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -217,8 +217,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_LV_TRACE_POINT
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_LV_ALL_EXCEPTIONS
-value|0x0000000F
+value|0x0000001F
 end_define
 
 begin_comment
@@ -496,6 +503,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_DB_TRACE_POINT
+value|ACPI_DEBUG_LEVEL (ACPI_LV_TRACE_POINT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DB_ALL_EXCEPTIONS
 value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL_EXCEPTIONS)
 end_define
@@ -688,6 +702,63 @@ define|#
 directive|define
 name|ACPI_DEBUG_ALL
 value|(ACPI_LV_AML_DISASSEMBLE | ACPI_LV_ALL_EXCEPTIONS | ACPI_LV_ALL)
+end_define
+
+begin_comment
+comment|/*  * Global trace flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_ENABLED
+value|((UINT32) 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_ONESHOT
+value|((UINT32) 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_OPCODE
+value|((UINT32) 1)
+end_define
+
+begin_comment
+comment|/* Defaults for trace debugging level/layer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LEVEL_ALL
+value|ACPI_LV_ALL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LAYER_ALL
+value|0x000001FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LEVEL_DEFAULT
+value|ACPI_LV_TRACE_POINT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_LAYER_DEFAULT
+value|ACPI_EXECUTER
 end_define
 
 begin_if
@@ -957,7 +1028,7 @@ value|_AcpiFunctionName
 end_define
 
 begin_comment
-comment|/*  * The Name parameter should be the procedure name as a quoted string.  * The function name is also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
+comment|/*  * The Name parameter should be the procedure name as a non-quoted string.  * The function name is also used by the function exit macros below.  * Note: (const char) is used to be compatible with the debug interfaces  * and macros such as __FUNCTION__.  */
 end_comment
 
 begin_define
@@ -1070,6 +1141,12 @@ begin_comment
 comment|/* DEBUG_PRINT functions */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILER_VA_MACRO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1077,7 +1154,7 @@ name|ACPI_DEBUG_PRINT
 parameter_list|(
 name|plist
 parameter_list|)
-value|ACPI_ACTUAL_DEBUG plist
+value|AcpiDebugPrint plist
 end_define
 
 begin_define
@@ -1087,8 +1164,13 @@ name|ACPI_DEBUG_PRINT_RAW
 parameter_list|(
 name|plist
 parameter_list|)
-value|ACPI_ACTUAL_DEBUG_RAW plist
+value|AcpiDebugPrintRaw plist
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* Helper macros for DEBUG_PRINT */
@@ -1158,6 +1240,31 @@ parameter_list|)
 define|\
 value|ACPI_DO_DEBUG_PRINT (AcpiDebugPrintRaw, Level, Line, \         Filename, Modulename, Component, __VA_ARGS__)
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT
+parameter_list|(
+name|plist
+parameter_list|)
+value|ACPI_ACTUAL_DEBUG plist
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_PRINT_RAW
+parameter_list|(
+name|plist
+parameter_list|)
+value|ACPI_ACTUAL_DEBUG_RAW plist
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Function entry tracing  *  * The name of the function is emitted as a local variable that is  * intended to be used by both the entry trace and the exit trace.  */
@@ -1235,7 +1342,7 @@ parameter_list|,
 name|String
 parameter_list|)
 define|\
-value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, char *, String)
+value|ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, const char *, String)
 end_define
 
 begin_define
@@ -1341,6 +1448,17 @@ name|Pointer
 parameter_list|)
 define|\
 value|ACPI_TRACE_EXIT (AcpiUtPtrExit, void *, Pointer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_STR
+parameter_list|(
+name|String
+parameter_list|)
+define|\
+value|ACPI_TRACE_EXIT (AcpiUtStrExit, const char *, String)
 end_define
 
 begin_define
@@ -1472,6 +1590,22 @@ parameter_list|,
 name|b
 parameter_list|)
 value|AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_POINT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|AcpiTracePoint (a, b, c, d)
 end_define
 
 begin_else
@@ -1652,6 +1786,21 @@ parameter_list|)
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_TRACE_POINT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+end_define
+
 begin_comment
 comment|/* Return macros must have a return statement at the minimum */
 end_comment
@@ -1677,6 +1826,16 @@ begin_define
 define|#
 directive|define
 name|return_PTR
+parameter_list|(
+name|s
+parameter_list|)
+value|return(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|return_STR
 parameter_list|(
 name|s
 parameter_list|)

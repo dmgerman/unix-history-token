@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -78,8 +78,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
+name|ACPI_TABLE_FACS
+modifier|*
+name|Facs
 decl_stmt|;
 comment|/* If Hardware Reduced flag is set, there is no FACS */
 if|if
@@ -97,24 +98,78 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|Status
-operator|=
+elseif|else
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|XFacs
+operator|&&
+operator|(
+operator|!
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+operator|||
+operator|!
+name|AcpiGbl_Use32BitFacsAddresses
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|AcpiGetTableByIndex
 argument_list|(
-name|ACPI_TABLE_INDEX_FACS
+name|AcpiGbl_XFacsIndex
 argument_list|,
 name|ACPI_CAST_INDIRECT_PTR
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
 operator|&
-name|AcpiGbl_FACS
+name|Facs
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_FACS
+operator|=
+name|Facs
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|AcpiGetTableByIndex
+argument_list|(
+name|AcpiGbl_FacsIndex
+argument_list|,
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+operator|&
+name|Facs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_FACS
+operator|=
+name|Facs
+expr_stmt|;
+block|}
+comment|/* If there is no FACS, just continue. There was already an error msg */
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
 block|}
@@ -128,40 +183,6 @@ end_endif
 begin_comment
 comment|/* !ACPI_REDUCED_HARDWARE */
 end_comment
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbTablesLoaded  *  * PARAMETERS:  None  *  * RETURN:      TRUE if required ACPI tables are loaded  *  * DESCRIPTION: Determine if the minimum required ACPI tables are present  *              (FADT, FACS, DSDT)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiTbTablesLoaded
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|>=
-literal|3
-condition|)
-block|{
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbCheckDsdtHeader  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Quick compare to check validity of the DSDT. This will detect  *              if the DSDT has been replaced from outside the OS and/or if  *              the DSDT header has been corrupted.  *  ******************************************************************************/
@@ -305,7 +326,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|NewTable
 argument_list|,
@@ -330,7 +351,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|ACPI_TABLE_INDEX_DSDT
+name|AcpiGbl_DsdtIndex
 index|]
 argument_list|,
 name|ACPI_PTR_TO_PHYSADDR
@@ -346,8 +367,6 @@ expr_stmt|;
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Forced DSDT copy: length 0x%05X copied locally, original unmapped"
 operator|,
 name|NewTable
@@ -782,13 +801,6 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * First two entries in the table array are reserved for the DSDT      * and FACS, which are not actually present in the RSDT/XSDT - they      * come from the FADT      */
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
-operator|=
-literal|2
-expr_stmt|;
 comment|/* Initialize the root table array from the RSDT/XSDT */
 for|for
 control|(
@@ -864,10 +876,12 @@ name|ACPI_SIG_FADT
 argument_list|)
 condition|)
 block|{
-name|AcpiTbParseFadt
-argument_list|(
+name|AcpiGbl_FadtIndex
+operator|=
 name|TableIndex
-argument_list|)
+expr_stmt|;
+name|AcpiTbParseFadt
+argument_list|()
 expr_stmt|;
 block|}
 name|NextTable

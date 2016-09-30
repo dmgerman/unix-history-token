@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acparser.h>
 end_include
 
@@ -54,12 +48,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acpredef.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
 
 begin_define
 define|#
@@ -99,6 +87,9 @@ block|{
 name|UINT32
 name|Address
 decl_stmt|;
+name|UINT32
+name|AmlOffset
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -115,7 +106,7 @@ block|}
 comment|/* Get and verify the breakpoint address */
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Location
 argument_list|,
@@ -124,14 +115,30 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Address
-operator|<=
+name|AmlOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_PTR_DIFF
+argument_list|(
 name|Op
 operator|->
 name|Common
 operator|.
+name|Aml
+argument_list|,
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Address
+operator|<=
 name|AmlOffset
 condition|)
 block|{
@@ -141,10 +148,6 @@ literal|"Breakpoint %X is beyond current address %X\n"
 argument_list|,
 name|Address
 argument_list|,
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -289,7 +292,7 @@ return|return;
 block|}
 name|Value
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|ValueArg
 argument_list|,
@@ -355,7 +358,7 @@ block|}
 comment|/* Get the index and value */
 name|Index
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|IndexArg
 argument_list|,
@@ -479,7 +482,7 @@ argument_list|,
 name|Index
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -552,7 +555,7 @@ argument_list|,
 name|Index
 argument_list|)
 expr_stmt|;
-name|AcpiDmDisplayInternalObject
+name|AcpiDbDisplayInternalObject
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -615,7 +618,7 @@ condition|)
 block|{
 name|NumStatements
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|Statements
 argument_list|,
@@ -735,7 +738,13 @@ expr_stmt|;
 name|Op
 operator|=
 name|AcpiPsCreateScopeOp
-argument_list|()
+argument_list|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|AmlStart
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -887,6 +896,9 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DISASSEMBLER
 operator|(
 name|void
 operator|)
@@ -896,13 +908,10 @@ name|Op
 argument_list|)
 expr_stmt|;
 comment|/* Now we can disassemble the method */
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
 name|AcpiDmDisassemble
 argument_list|(
 name|NULL
@@ -912,12 +921,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|AcpiGbl_DbOpt_Verbose
+name|AcpiGbl_DmOpt_Verbose
 operator|=
 name|TRUE
 expr_stmt|;
+endif|#
+directive|endif
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|Op
@@ -955,15 +964,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
 
 end_unit
 

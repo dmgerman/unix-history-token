@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluate  *  * PARAMETERS:  Info            - Evaluation info block, contains:  *                  PrefixNode      - Prefix or Method/Object Node to execute  *                  RelativePath    - Name of method to execute, If NULL, the  *                                    Node is the object to execute  *                  Parameters      - List of parameters to pass to the method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  ParameterType   - Type of Parameter list  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  Flags           - ACPI_IGNORE_RETURN_VALUE to delete return  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method or return the current value of an  *              ACPI namespace object.  *  * MUTEX:       Locks interpreter  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsEvaluate  *  * PARAMETERS:  Info            - Evaluation info block, contains these fields  *                                and more:  *                  PrefixNode      - Prefix or Method/Object Node to execute  *                  RelativePath    - Name of method to execute, If NULL, the  *                                    Node is the object to execute  *                  Parameters      - List of parameters to pass to the method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *                  ParameterType   - Type of Parameter list  *                  ReturnObject    - Where to put method's return value (if  *                                    any). If NULL, no value is returned.  *                  Flags           - ACPI_IGNORE_RETURN_VALUE to delete return  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method or return the current value of an  *              ACPI namespace object.  *  * MUTEX:       Locks interpreter  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -250,11 +250,13 @@ name|Info
 operator|->
 name|FullPathname
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|Info
 operator|->
 name|Node
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -573,6 +575,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|Info
+operator|->
+name|ReturnObject
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -817,8 +825,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Executed %u blocks of module-level executable AML code"
 operator|,
 name|MethodCount
@@ -938,7 +944,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Initialize the evaluation information block */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|Info
 argument_list|,
@@ -956,7 +962,7 @@ name|PrefixNode
 operator|=
 name|ParentNode
 expr_stmt|;
-comment|/*      * Get the currently attached parent object. Add a reference, because the      * ref count will be decreased when the method object is installed to      * the parent node.      */
+comment|/*      * Get the currently attached parent object. Add a reference,      * because the ref count will be decreased when the method object      * is installed to the parent node.      */
 name|ParentObj
 operator|=
 name|AcpiNsGetAttachedObject
@@ -1010,7 +1016,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INIT
+name|ACPI_DB_INIT_NAMES
 operator|,
 literal|"Executed module-level code at %p\n"
 operator|,

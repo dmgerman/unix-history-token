@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -143,7 +143,7 @@ name|Length
 operator|!=
 name|TableLength
 operator|||
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|TableDesc
 operator|->
@@ -179,31 +179,47 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTableWithOverride  *  * PARAMETERS:  TableIndex              - Index into root table array  *              NewTableDesc            - New table descriptor to install  *              Override                - Whether override should be performed  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure. The  *              table override mechanism is called to allow the host  *              OS to replace any table before it is installed in the root  *              table array.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTableWithOverride  *  * PARAMETERS:  NewTableDesc            - New table descriptor to install  *              Override                - Whether override should be performed  *              TableIndex              - Where the table index is returned  *  * RETURN:      None  *  * DESCRIPTION: Install an ACPI table into the global data structure. The  *              table override mechanism is called to allow the host  *              OS to replace any table before it is installed in the root  *              table array.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiTbInstallTableWithOverride
 parameter_list|(
-name|UINT32
-name|TableIndex
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|NewTableDesc
 parameter_list|,
 name|BOOLEAN
 name|Override
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
 parameter_list|)
 block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetNextTableDescriptor
+argument_list|(
+operator|&
+name|i
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|TableIndex
-operator|>=
-name|AcpiGbl_RootTableList
-operator|.
-name|CurrentTableCount
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 return|return;
@@ -227,7 +243,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|i
 index|]
 argument_list|,
 name|NewTableDesc
@@ -254,12 +270,18 @@ operator|->
 name|Pointer
 argument_list|)
 expr_stmt|;
+comment|/* This synchronizes AcpiGbl_DsdtIndex */
+operator|*
+name|TableIndex
+operator|=
+name|i
+expr_stmt|;
 comment|/* Set the global integer width (based upon revision of the DSDT) */
 if|if
 condition|(
-name|TableIndex
+name|i
 operator|==
-name|ACPI_TABLE_INDEX_DSDT
+name|AcpiGbl_DsdtIndex
 condition|)
 block|{
 name|AcpiUtSetIntegerWidth
@@ -276,7 +298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallFixedTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Index into root table array  *  * RETURN:      Status  *  * DESCRIPTION: Install a fixed ACPI table (DSDT/FACS) into the global data  *              structure.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallFixedTable  *  * PARAMETERS:  Address                 - Physical address of DSDT or FACS  *              Signature               - Table signature, NULL if no need to  *                                        match  *              TableIndex              - Where the table index is returned  *  * RETURN:      Status  *  * DESCRIPTION: Install a fixed ACPI table (DSDT/FACS) into the global data  *              structure.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -291,6 +313,7 @@ modifier|*
 name|Signature
 parameter_list|,
 name|UINT32
+modifier|*
 name|TableIndex
 parameter_list|)
 block|{
@@ -392,14 +415,15 @@ goto|goto
 name|ReleaseAndExit
 goto|;
 block|}
+comment|/* Add the table to the global root table list */
 name|AcpiTbInstallTableWithOverride
 argument_list|(
-name|TableIndex
-argument_list|,
 operator|&
 name|NewTableDesc
 argument_list|,
 name|TRUE
+argument_list|,
+name|TableIndex
 argument_list|)
 expr_stmt|;
 name|ReleaseAndExit
@@ -523,8 +547,6 @@ block|{
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"Ignoring installation of %4.4s at %8.8X%8.8X"
 operator|,
 name|NewTableDesc
@@ -602,7 +624,7 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|ACPI_STRNCMP
+name|strncmp
 argument_list|(
 name|NewTableDesc
 operator|.
@@ -625,7 +647,7 @@ operator|,
 literal|"Table has invalid signature [%4.4s] (0x%8.8X), "
 literal|"must be SSDT or OEMx"
 operator|,
-name|AcpiUtValidAcpiName
+name|AcpiUtValidNameseg
 argument_list|(
 name|NewTableDesc
 operator|.
@@ -737,41 +759,14 @@ block|}
 block|}
 block|}
 comment|/* Add the table to the global root table list */
-name|Status
-operator|=
-name|AcpiTbGetNextTableDescriptor
-argument_list|(
-operator|&
-name|i
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|ReleaseAndExit
-goto|;
-block|}
-operator|*
-name|TableIndex
-operator|=
-name|i
-expr_stmt|;
 name|AcpiTbInstallTableWithOverride
 argument_list|(
-name|i
-argument_list|,
 operator|&
 name|NewTableDesc
 argument_list|,
 name|Override
+argument_list|,
+name|TableIndex
 argument_list|)
 expr_stmt|;
 name|ReleaseAndExit
@@ -942,8 +937,6 @@ block|}
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%4.4s 0x%8.8X%8.8X"
 literal|" %s table override, new table: 0x%8.8X%8.8X"
 operator|,

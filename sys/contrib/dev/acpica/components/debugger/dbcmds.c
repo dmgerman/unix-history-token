@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -48,12 +48,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
 
 begin_define
 define|#
@@ -161,6 +155,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|AcpiDbTraceMethodName
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbConvertToNode  *  * PARAMETERS:  InString            - String to convert  *  * RETURN:      Pointer to a NS node  *  * DESCRIPTION: Convert a string to a valid NS pointer. Handles numeric or  *              alphanumeric strings.  *  ******************************************************************************/
 end_comment
@@ -202,7 +206,7 @@ block|{
 comment|/* Numeric argument, convert */
 name|Address
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|InString
 argument_list|,
@@ -385,7 +389,7 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|ObjectArg
 argument_list|,
@@ -408,7 +412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      Status  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDoOneSleepState  *  * PARAMETERS:  SleepState          - Desired sleep state (0-5)  *  * RETURN:      None  *  * DESCRIPTION: Simulate a sleep/wake sequence  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -715,7 +719,8 @@ decl_stmt|;
 comment|/* Header */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Idx ID    Status Type              TableHeader (Sig, Address, Length)\n"
+literal|"Idx ID    Status Type                    "
+literal|"TableHeader (Sig, Address, Length, Misc)\n"
 argument_list|)
 expr_stmt|;
 comment|/* Walk the entire root table list */
@@ -872,8 +877,6 @@ comment|/* If the pointer is null, the table has been unloaded */
 name|ACPI_INFO
 argument_list|(
 operator|(
-name|AE_INFO
-operator|,
 literal|"%4.4s - Table has been unloaded"
 operator|,
 name|TableDesc
@@ -1049,7 +1052,8 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Named object [%4.4s] Type %s, must be Device/Thermal/Processor type\n"
+literal|"Named object [%4.4s] Type %s, "
+literal|"must be Device/Thermal/Processor type\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1181,7 +1185,7 @@ expr_stmt|;
 comment|/* Install - install an interface */
 name|SubString
 operator|=
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 literal|"INSTALL"
 argument_list|,
@@ -1226,7 +1230,7 @@ block|}
 comment|/* Remove - remove an interface */
 name|SubString
 operator|=
-name|ACPI_STRSTR
+name|strstr
 argument_list|(
 literal|"REMOVE"
 argument_list|,
@@ -1537,7 +1541,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Buffer length mismatch in converted AML: Original %X, New %X ****\n"
+literal|"**** Buffer length mismatch in converted "
+literal|"AML: Original %X, New %X ****\n"
 argument_list|,
 name|Aml1BufferLength
 argument_list|,
@@ -1613,7 +1618,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Length mismatch in descriptor [%.2X] type %2.2X, Offset %8.8X Len1 %X, Len2 %X ****\n"
+literal|"**** Length mismatch in descriptor [%.2X] type %2.2X, "
+literal|"Offset %8.8X Len1 %X, Len2 %X ****\n"
 argument_list|,
 name|Count
 argument_list|,
@@ -1631,7 +1637,7 @@ comment|/* Check for descriptor byte match */
 elseif|else
 if|if
 condition|(
-name|ACPI_MEMCMP
+name|memcmp
 argument_list|(
 name|Aml1
 argument_list|,
@@ -1643,7 +1649,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** Data mismatch in descriptor [%.2X] type %2.2X, Offset %8.8X ****\n"
+literal|"**** Data mismatch in descriptor [%.2X] type %2.2X, "
+literal|"Offset %8.8X ****\n"
 argument_list|,
 name|Count
 argument_list|,
@@ -1681,7 +1688,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Mismatch at byte offset %.2X: is %2.2X, should be %2.2X\n"
+literal|"Mismatch at byte offset %.2X: is %2.2X, "
+literal|"should be %2.2X\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2064,9 +2072,11 @@ argument_list|)
 expr_stmt|;
 name|ParentPath
 operator|=
-name|AcpiNsGetExternalPathname
+name|AcpiNsGetNormalizedPathname
 argument_list|(
 name|Node
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2826,7 +2836,7 @@ name|ObjectArg
 operator|||
 operator|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|ObjectArg
 argument_list|,
@@ -2966,7 +2976,7 @@ name|GpeEventInfo
 decl_stmt|;
 name|GpeNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|GpeArg
 argument_list|,
@@ -2983,7 +2993,7 @@ condition|)
 block|{
 name|BlockNumber
 operator|=
-name|ACPI_STRTOUL
+name|strtoul
 argument_list|(
 name|BlockArg
 argument_list|,
@@ -3045,6 +3055,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGenerateSci  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Simulate an SCI -- just call the SCI dispatch.  *  ******************************************************************************/
+end_comment
+
 begin_function
 name|void
 name|AcpiDbGenerateSci
@@ -3067,14 +3081,222 @@ begin_comment
 comment|/* !ACPI_REDUCED_HARDWARE */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* ACPI_DEBUGGER */
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbTrace  *  * PARAMETERS:  EnableArg           - ENABLE/AML to enable tracer  *                                    DISABLE to disable tracer  *              MethodArg           - Method to trace  *              OnceArg             - Whether trace once  *  * RETURN:      None  *  * DESCRIPTION: Control method tracing facility  *  ******************************************************************************/
 end_comment
+
+begin_function
+name|void
+name|AcpiDbTrace
+parameter_list|(
+name|char
+modifier|*
+name|EnableArg
+parameter_list|,
+name|char
+modifier|*
+name|MethodArg
+parameter_list|,
+name|char
+modifier|*
+name|OnceArg
+parameter_list|)
+block|{
+name|UINT32
+name|DebugLevel
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
+name|DebugLayer
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
+name|Flags
+init|=
+literal|0
+decl_stmt|;
+name|AcpiUtStrupr
+argument_list|(
+name|EnableArg
+argument_list|)
+expr_stmt|;
+name|AcpiUtStrupr
+argument_list|(
+name|OnceArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MethodArg
+condition|)
+block|{
+if|if
+condition|(
+name|AcpiDbTraceMethodName
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
+name|AcpiDbTraceMethodName
+argument_list|)
+expr_stmt|;
+name|AcpiDbTraceMethodName
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|AcpiDbTraceMethodName
+operator|=
+name|ACPI_ALLOCATE
+argument_list|(
+name|strlen
+argument_list|(
+name|MethodArg
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AcpiDbTraceMethodName
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Failed to allocate method name (%s)\n"
+argument_list|,
+name|MethodArg
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|strcpy
+argument_list|(
+name|AcpiDbTraceMethodName
+argument_list|,
+name|MethodArg
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|EnableArg
+argument_list|,
+literal|"ENABLE"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|EnableArg
+argument_list|,
+literal|"METHOD"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|EnableArg
+argument_list|,
+literal|"OPCODE"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|EnableArg
+argument_list|,
+literal|"ENABLE"
+argument_list|)
+condition|)
+block|{
+comment|/* Inherit current console settings */
+name|DebugLevel
+operator|=
+name|AcpiGbl_DbConsoleDebugLevel
+expr_stmt|;
+name|DebugLayer
+operator|=
+name|AcpiDbgLayer
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Restrict console output to trace points only */
+name|DebugLevel
+operator|=
+name|ACPI_LV_TRACE_POINT
+expr_stmt|;
+name|DebugLayer
+operator|=
+name|ACPI_EXECUTER
+expr_stmt|;
+block|}
+name|Flags
+operator|=
+name|ACPI_TRACE_ENABLED
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|EnableArg
+argument_list|,
+literal|"OPCODE"
+argument_list|)
+condition|)
+block|{
+name|Flags
+operator||=
+name|ACPI_TRACE_OPCODE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|OnceArg
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|OnceArg
+argument_list|,
+literal|"ONCE"
+argument_list|)
+condition|)
+block|{
+name|Flags
+operator||=
+name|ACPI_TRACE_ONESHOT
+expr_stmt|;
+block|}
+block|}
+operator|(
+name|void
+operator|)
+name|AcpiDebugTrace
+argument_list|(
+name|AcpiDbTraceMethodName
+argument_list|,
+name|DebugLevel
+argument_list|,
+name|DebugLayer
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

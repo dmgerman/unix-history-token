@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -131,6 +131,7 @@ index|[]
 init|=
 block|{
 comment|/*! [Begin] no source code translation (keep the table structure) */
+comment|/*  AML Opcode                  Value                           Flags               Btype */
 comment|/* ACCESSAS */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1489,6 +1490,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* I2CSERIALBUSV2 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* IF */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1546,7 +1559,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 argument_list|)
 block|,
 comment|/* INDEXFIELD */
@@ -2394,7 +2407,7 @@ block|,
 comment|/* OBJECTTYPE */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_TYPE_OP
+name|AML_OBJECT_TYPE_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -2406,7 +2419,7 @@ block|,
 comment|/* OBJECTTYPE_BFF */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_BUFFER_FIELD
 argument_list|,
@@ -2418,7 +2431,7 @@ block|,
 comment|/* OBJECTTYPE_BUF */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_BUFFER
 argument_list|,
@@ -2430,7 +2443,7 @@ block|,
 comment|/* OBJECTTYPE_DDB */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_DDB_HANDLE
 argument_list|,
@@ -2442,7 +2455,7 @@ block|,
 comment|/* OBJECTTYPE_DEV */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_DEVICE
 argument_list|,
@@ -2454,7 +2467,7 @@ block|,
 comment|/* OBJECTTYPE_EVT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_EVENT
 argument_list|,
@@ -2466,7 +2479,7 @@ block|,
 comment|/* OBJECTTYPE_FLD */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_FIELD_UNIT
 argument_list|,
@@ -2478,7 +2491,7 @@ block|,
 comment|/* OBJECTTYPE_INT */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
@@ -2490,7 +2503,7 @@ block|,
 comment|/* OBJECTTYPE_MTH */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
@@ -2502,7 +2515,7 @@ block|,
 comment|/* OBJECTTYPE_MTX */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_MUTEX
 argument_list|,
@@ -2514,7 +2527,7 @@ block|,
 comment|/* OBJECTTYPE_OPR */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_REGION
 argument_list|,
@@ -2526,7 +2539,7 @@ block|,
 comment|/* OBJECTTYPE_PKG */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_PACKAGE
 argument_list|,
@@ -2538,7 +2551,7 @@ block|,
 comment|/* OBJECTTYPE_POW */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_POWER
 argument_list|,
@@ -2550,7 +2563,7 @@ block|,
 comment|/* OBJECTTYPE_PRO */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_PROCESSOR
 argument_list|,
@@ -2562,7 +2575,7 @@ block|,
 comment|/* OBJECTTYPE_STR */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_STRING
 argument_list|,
@@ -2574,7 +2587,7 @@ block|,
 comment|/* OBJECTTYPE_THZ */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_THERMAL
 argument_list|,
@@ -2586,7 +2599,7 @@ block|,
 comment|/* OBJECTTYPE_UNK */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_BYTE_OP
+name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -2940,7 +2953,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ACPI_BTYPE_REFERENCE
+name|ACPI_BTYPE_REFERENCE_OBJECT
 argument_list|)
 block|,
 comment|/* REGIONSPACE_CMOS */
@@ -3375,6 +3388,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* SPISERIALBUSV2 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* STALL */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -3664,6 +3689,18 @@ literal|0
 argument_list|)
 block|,
 comment|/* UART_SERIALBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* UART_SERIALBUSV2 */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_DEFAULT_ARG_OP
@@ -4383,6 +4420,17 @@ argument_list|,
 name|ACPI_BTYPE_DATA_REFERENCE
 argument_list|)
 block|,
+comment|/* ASLCODE  */
+name|OP_TABLE_ENTRY
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}
 decl_stmt|;

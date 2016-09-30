@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -30,18 +30,6 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acdisasm.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-end_ifdef
 
 begin_define
 define|#
@@ -146,32 +134,18 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/* Handshake with the front-end that gets user command lines */
-name|Status
-operator|=
-name|AcpiUtReleaseMutex
+name|AcpiOsReleaseMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|Status
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -283,6 +257,47 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSignalBreakPoint  *  * PARAMETERS:  WalkState       - Current walk  *  * RETURN:      Status  *  * DESCRIPTION: Called for AML_BREAK_POINT_OP  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbSignalBreakPoint
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/*      * Set the single-step flag. This will cause the debugger (if present)      * to break to the console within the AML debugger at the start of the      * next AML instruction.      */
+name|AcpiGbl_CmSingleStep
+operator|=
+name|TRUE
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"**break** Executed AML BreakPoint opcode\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleStep  *  * PARAMETERS:  WalkState       - Current walk  *              Op              - Current executing op (from aml interpreter)  *              OpcodeClass     - Class of the current AML Opcode  *  * RETURN:      Status  *  * DESCRIPTION: Called just before execution of an AML opcode.  *  ******************************************************************************/
 end_comment
 
@@ -322,9 +337,31 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|ParentOp
 decl_stmt|;
+name|UINT32
+name|AmlOffset
+decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPI_APPLICATION
+if|if
+condition|(
+name|AcpiGbl_DbThreadId
+operator|!=
+name|AcpiOsGetThreadId
+argument_list|()
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* Check the abort flag */
 if|if
 condition|(
@@ -341,6 +378,26 @@ name|AE_ABORT_METHOD
 operator|)
 return|;
 block|}
+name|AmlOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ACPI_PTR_DIFF
+argument_list|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Aml
+argument_list|,
+name|WalkState
+operator|->
+name|ParserState
+operator|.
+name|AmlStart
+argument_list|)
+expr_stmt|;
 comment|/* Check for single-step breakpoint */
 if|if
 condition|(
@@ -353,10 +410,6 @@ name|WalkState
 operator|->
 name|MethodBreakpoint
 operator|<=
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -367,10 +420,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"***Break*** at AML offset %X\n"
 argument_list|,
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -402,10 +451,6 @@ name|WalkState
 operator|->
 name|UserBreakpoint
 operator|==
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -414,10 +459,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"***UserBreakpoint*** at AML offset %X\n"
 argument_list|,
-name|Op
-operator|->
-name|Common
-operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -910,12 +951,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and start debugger  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeDebugger  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and start debugger  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbInitialize
+name|AcpiInitializeDebugger
 parameter_list|(
 name|void
 parameter_list|)
@@ -925,7 +966,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-name|DbInitialize
+name|AcpiInitializeDebugger
 argument_list|)
 expr_stmt|;
 comment|/* Init globals */
@@ -955,19 +996,6 @@ name|AcpiGbl_DbOutputFlags
 operator|=
 name|ACPI_DB_CONSOLE_OUTPUT
 expr_stmt|;
-name|AcpiGbl_DbOpt_Disasm
-operator|=
-name|FALSE
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-name|AcpiGbl_DbOpt_Verbose
-operator|=
-name|TRUE
-expr_stmt|;
-endif|#
-directive|endif
 name|AcpiGbl_DbOpt_NoIniMethods
 operator|=
 name|FALSE
@@ -991,7 +1019,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 name|AcpiGbl_DbBuffer
 argument_list|,
@@ -1019,6 +1047,11 @@ name|AcpiGbl_DbScopeNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
+comment|/* Initialize user commands loop */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/*      * If configured for multi-thread support, the debug executor runs in      * a separate thread so that the front end can be in another address      * space, environment, or even another machine.      */
 if|if
 condition|(
@@ -1030,9 +1063,11 @@ block|{
 comment|/* These were created with one unit, grab it */
 name|Status
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|AcpiGbl_DbCommandComplete
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1056,9 +1091,11 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiUtAcquireMutex
+name|AcpiOsAcquireMutex
 argument_list|(
-name|ACPI_MTX_DEBUG_CMD_READY
+name|AcpiGbl_DbCommandReady
+argument_list|,
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1081,11 +1118,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create the debug execution thread to execute commands */
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|FALSE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsExecute
 argument_list|(
-name|OSL_DEBUGGER_THREAD
+name|OSL_DEBUGGER_MAIN_THREAD
 argument_list|,
 name|AcpiDbExecuteThread
 argument_list|,
@@ -1111,6 +1152,10 @@ literal|"Could not start debugger thread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_DbThreadsTerminated
+operator|=
+name|TRUE
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1118,22 +1163,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-if|if
-condition|(
-operator|!
-name|AcpiGbl_DbOpt_Verbose
-condition|)
+else|else
 block|{
-name|AcpiGbl_DbOpt_Disasm
+name|AcpiGbl_DbThreadId
 operator|=
-name|TRUE
+name|AcpiOsGetThreadId
+argument_list|()
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1142,17 +1179,55 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiInitializeDebugger
+argument_list|)
+end_macro
+
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbTerminate  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Stop debugger  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTerminateDebugger  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Stop debugger  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbTerminate
+name|AcpiTerminateDebugger
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Terminate the AML Debugger */
+name|AcpiGbl_DbTerminateLoop
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DebuggerConfiguration
+operator|&
+name|DEBUGGER_MULTI_THREADED
+condition|)
+block|{
+name|AcpiOsReleaseMutex
+argument_list|(
+name|AcpiGbl_DbCommandReady
+argument_list|)
+expr_stmt|;
+comment|/* Wait the AML Debugger threads */
+while|while
+condition|(
+operator|!
+name|AcpiGbl_DbThreadsTerminated
+condition|)
+block|{
+name|AcpiOsSleep
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|AcpiGbl_DbBuffer
@@ -1176,61 +1251,38 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_OBSOLETE_FUNCTIONS
-end_ifdef
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiTerminateDebugger
+argument_list|)
+end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMethodEnd  *  * PARAMETERS:  WalkState       - Current walk  *  * RETURN:      Status  *  * DESCRIPTION: Called at method termination  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetDebuggerThreadId  *  * PARAMETERS:  ThreadId        - Debugger thread ID  *  * RETURN:      None  *  * DESCRIPTION: Set debugger thread ID  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiDbMethodEnd
+name|AcpiSetDebuggerThreadId
 parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
+name|ACPI_THREAD_ID
+name|ThreadId
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|AcpiGbl_CmSingleStep
-condition|)
-block|{
-return|return;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"<Method Terminating>\n"
-argument_list|)
-expr_stmt|;
-name|AcpiDbStartCommand
-argument_list|(
-name|WalkState
-argument_list|,
-name|NULL
-argument_list|)
+name|AcpiGbl_DbThreadId
+operator|=
+name|ThreadId
 expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUGGER */
-end_comment
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiSetDebuggerThreadId
+argument_list|)
+end_macro
 
 end_unit
 

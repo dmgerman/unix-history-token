@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -42,6 +42,38 @@ end_macro
 begin_comment
 comment|/* Local prototypes */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AcpiHwSetFirmwareWakingVector
+parameter_list|(
+name|ACPI_TABLE_FACS
+modifier|*
+name|Facs
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress64
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -124,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These functions are removed for the ACPI_REDUCED_HARDWARE case:  *      AcpiSetFirmwareWakingVector  *      AcpiSetFirmwareWakingVector64  *      AcpiEnterSleepStateS4bios  */
+comment|/*  * These functions are removed for the ACPI_REDUCED_HARDWARE case:  *      AcpiSetFirmwareWakingVector  *      AcpiEnterSleepStateS4bios  */
 end_comment
 
 begin_if
@@ -137,15 +169,99 @@ operator|)
 end_if
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point.  *  * RETURN:      Status  *  * DESCRIPTION: Sets the 32-bit FirmwareWakingVector field of the FACS  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwSetFirmwareWakingVector  *  * PARAMETERS:  Facs                - Pointer to FACS table  *              PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    mode entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AcpiHwSetFirmwareWakingVector
+parameter_list|(
+name|ACPI_TABLE_FACS
+modifier|*
+name|Facs
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress64
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiHwSetFirmwareWakingVector
+argument_list|)
+expr_stmt|;
+comment|/*      * According to the ACPI specification 2.0c and later, the 64-bit      * waking vector should be cleared and the 32-bit waking vector should      * be used, unless we want the wake-up code to be called by the BIOS in      * Protected Mode. Some systems (for example HP dv5-1004nr) are known      * to fail to resume if the 64-bit vector is used.      */
+comment|/* Set the 32-bit vector */
+name|Facs
+operator|->
+name|FirmwareWakingVector
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|PhysicalAddress
+expr_stmt|;
+if|if
+condition|(
+name|Facs
+operator|->
+name|Length
+operator|>
+literal|32
+condition|)
+block|{
+if|if
+condition|(
+name|Facs
+operator|->
+name|Version
+operator|>=
+literal|1
+condition|)
+block|{
+comment|/* Set the 64-bit vector */
+name|Facs
+operator|->
+name|XFirmwareWakingVector
+operator|=
+name|PhysicalAddress64
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Clear the 64-bit vector if it exists */
+name|Facs
+operator|->
+name|XFirmwareWakingVector
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - 32-bit physical address of ACPI real mode  *                                    entry point  *              PhysicalAddress64   - 64-bit physical address of ACPI protected  *                                    mode entry point  *  * RETURN:      Status  *  * DESCRIPTION: Sets the FirmwareWakingVector fields of the FACS  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiSetFirmwareWakingVector
 parameter_list|(
-name|UINT32
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress64
 parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
@@ -153,39 +269,22 @@ argument_list|(
 name|AcpiSetFirmwareWakingVector
 argument_list|)
 expr_stmt|;
-comment|/*      * According to the ACPI specification 2.0c and later, the 64-bit      * waking vector should be cleared and the 32-bit waking vector should      * be used, unless we want the wake-up code to be called by the BIOS in      * Protected Mode. Some systems (for example HP dv5-1004nr) are known      * to fail to resume if the 64-bit vector is used.      */
-comment|/* Set the 32-bit vector */
-name|AcpiGbl_FACS
-operator|->
-name|FirmwareWakingVector
-operator|=
-name|PhysicalAddress
-expr_stmt|;
-comment|/* Clear the 64-bit vector if it exists */
 if|if
 condition|(
-operator|(
 name|AcpiGbl_FACS
-operator|->
-name|Length
-operator|>
-literal|32
-operator|)
-operator|&&
-operator|(
-name|AcpiGbl_FACS
-operator|->
-name|Version
-operator|>=
-literal|1
-operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|AcpiHwSetFirmwareWakingVector
+argument_list|(
 name|AcpiGbl_FACS
-operator|->
-name|XFirmwareWakingVector
-operator|=
-literal|0
+argument_list|,
+name|PhysicalAddress
+argument_list|,
+name|PhysicalAddress64
+argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
@@ -202,90 +301,6 @@ argument_list|(
 argument|AcpiSetFirmwareWakingVector
 argument_list|)
 end_macro
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_if
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector64  *  * PARAMETERS:  PhysicalAddress     - 64-bit physical address of ACPI protected  *                                    mode entry point.  *  * RETURN:      Status  *  * DESCRIPTION: Sets the 64-bit X_FirmwareWakingVector field of the FACS, if  *              it exists in the table. This function is intended for use with  *              64-bit host operating systems.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiSetFirmwareWakingVector64
-parameter_list|(
-name|UINT64
-name|PhysicalAddress
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|AcpiSetFirmwareWakingVector64
-argument_list|)
-expr_stmt|;
-comment|/* Determine if the 64-bit vector actually exists */
-if|if
-condition|(
-operator|(
-name|AcpiGbl_FACS
-operator|->
-name|Length
-operator|<=
-literal|32
-operator|)
-operator|||
-operator|(
-name|AcpiGbl_FACS
-operator|->
-name|Version
-operator|<
-literal|1
-operator|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_EXIST
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Clear 32-bit vector, set the 64-bit X_ vector */
-name|AcpiGbl_FACS
-operator|->
-name|FirmwareWakingVector
-operator|=
-literal|0
-expr_stmt|;
-name|AcpiGbl_FACS
-operator|->
-name|XFirmwareWakingVector
-operator|=
-name|PhysicalAddress
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|ACPI_EXPORT_SYMBOL
-argument_list|(
-argument|AcpiSetFirmwareWakingVector64
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnterSleepStateS4bios  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Perform a S4 bios request.  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/

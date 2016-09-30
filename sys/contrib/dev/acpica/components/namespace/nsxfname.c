@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -178,7 +178,7 @@ comment|/* Special case for root-only, since we can't search for it */
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
+name|strcmp
 argument_list|(
 name|Pathname
 argument_list|,
@@ -292,6 +292,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|NodeName
@@ -336,6 +337,10 @@ condition|(
 name|NameType
 operator|==
 name|ACPI_FULL_PATHNAME
+operator|||
+name|NameType
+operator|==
+name|ACPI_FULL_PATHNAME_NO_TRAILING
 condition|)
 block|{
 comment|/* Get the full pathname (From the namespace root) */
@@ -346,6 +351,14 @@ argument_list|(
 name|Handle
 argument_list|,
 name|Buffer
+argument_list|,
+name|NameType
+operator|==
+name|ACPI_FULL_PATHNAME
+condition|?
+name|FALSE
+else|:
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
@@ -519,7 +532,7 @@ operator|->
 name|Length
 expr_stmt|;
 comment|/* Copy actual string and return a pointer to the next string area */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|StringArea
 argument_list|,
@@ -545,7 +558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _SUB,  * _STA, _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle              - Object Handle  *              ReturnBuffer        - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  * For Device and Processor objects, run the Device _HID, _UID, _CID, _STA,  * _CLS, _ADR, _SxW, and _SxD methods.  *  * Note: Allocates the return buffer, must be freed by the caller.  *  * Note: This interface is intended to be used during the initial device  * discovery namespace traversal. Therefore, no complex methods can be  * executed, especially those that access operation regions. Therefore, do  * not add any additional methods that could cause problems in this area.  * this was the fate of the _SUB method which was found to cause such  * problems and was removed (11/2015).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -589,7 +602,7 @@ name|NULL
 decl_stmt|;
 name|ACPI_PNP_DEVICE_ID
 modifier|*
-name|Sub
+name|Cls
 init|=
 name|NULL
 decl_stmt|;
@@ -608,7 +621,7 @@ name|ParamCount
 init|=
 literal|0
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Valid
 init|=
 literal|0
@@ -764,7 +777,7 @@ name|ACPI_TYPE_PROCESSOR
 operator|)
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, _SUB, and _CID methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
+comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the Device _HID, _UID, _CLS, and _CID methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
 comment|/* Execute the Device._HID method */
 name|Status
 operator|=
@@ -825,36 +838,6 @@ operator||=
 name|ACPI_VALID_UID
 expr_stmt|;
 block|}
-comment|/* Execute the Device._SUB method */
-name|Status
-operator|=
-name|AcpiUtExecute_SUB
-argument_list|(
-name|Node
-argument_list|,
-operator|&
-name|Sub
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|InfoSize
-operator|+=
-name|Sub
-operator|->
-name|Length
-expr_stmt|;
-name|Valid
-operator||=
-name|ACPI_VALID_SUB
-expr_stmt|;
-block|}
 comment|/* Execute the Device._CID method */
 name|Status
 operator|=
@@ -891,6 +874,36 @@ expr_stmt|;
 name|Valid
 operator||=
 name|ACPI_VALID_CID
+expr_stmt|;
+block|}
+comment|/* Execute the Device._CLS method */
+name|Status
+operator|=
+name|AcpiUtExecute_CLS
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|Cls
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|InfoSize
+operator|+=
+name|Cls
+operator|->
+name|Length
+expr_stmt|;
+name|Valid
+operator||=
+name|ACPI_VALID_CLS
 expr_stmt|;
 block|}
 block|}
@@ -1083,7 +1096,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-comment|/*      * Copy the HID, UID, SUB, and CIDs to the return buffer.      * The variable-length strings are copied to the reserved area      * at the end of the buffer.      *      * For HID and CID, check if the ID is a PCI Root Bridge.      */
+comment|/*      * Copy the HID, UID, and CIDs to the return buffer. The variable-length      * strings are copied to the reserved area at the end of the buffer.      *      * For HID and CID, check if the ID is a PCI Root Bridge.      */
 if|if
 condition|(
 name|Hid
@@ -1136,26 +1149,6 @@ operator|->
 name|UniqueId
 argument_list|,
 name|Uid
-argument_list|,
-name|NextIdString
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Sub
-condition|)
-block|{
-name|NextIdString
-operator|=
-name|AcpiNsCopyDeviceId
-argument_list|(
-operator|&
-name|Info
-operator|->
-name|SubsystemId
-argument_list|,
-name|Sub
 argument_list|,
 name|NextIdString
 argument_list|)
@@ -1252,6 +1245,26 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|Cls
+condition|)
+block|{
+name|NextIdString
+operator|=
+name|AcpiNsCopyDeviceId
+argument_list|(
+operator|&
+name|Info
+operator|->
+name|ClassCode
+argument_list|,
+name|Cls
+argument_list|,
+name|NextIdString
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Copy the fixed-length data */
 name|Info
 operator|->
@@ -1318,23 +1331,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|Sub
+name|CidList
 condition|)
 block|{
 name|ACPI_FREE
 argument_list|(
-name|Sub
+name|CidList
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|CidList
+name|Cls
 condition|)
 block|{
 name|ACPI_FREE
 argument_list|(
-name|CidList
+name|Cls
 argument_list|)
 expr_stmt|;
 block|}
@@ -1676,7 +1689,7 @@ goto|;
 block|}
 block|}
 comment|/* Copy the method AML to the local buffer */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 name|AmlBuffer
 argument_list|,

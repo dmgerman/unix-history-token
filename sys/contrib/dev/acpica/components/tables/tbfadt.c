@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2016, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -61,6 +61,7 @@ parameter_list|,
 name|UINT64
 name|Address
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|RegisterName
@@ -118,6 +119,7 @@ typedef|typedef
 struct|struct
 name|acpi_fadt_info
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -495,6 +497,7 @@ parameter_list|,
 name|UINT64
 name|Address
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|RegisterName
@@ -706,15 +709,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseFadt  *  * PARAMETERS:  TableIndex          - Index for the FADT  *  * RETURN:      None  *  * DESCRIPTION: Initialize the FADT, DSDT and FACS tables  *              (FADT contains the addresses of the DSDT and FACS)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbParseFadt  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize the FADT, DSDT and FACS tables  *              (FADT contains the addresses of the DSDT and FACS)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiTbParseFadt
 parameter_list|(
-name|UINT32
-name|TableIndex
+name|void
 parameter_list|)
 block|{
 name|UINT32
@@ -731,7 +733,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|AcpiGbl_FadtIndex
 index|]
 operator|.
 name|Length
@@ -744,7 +746,7 @@ name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
-name|TableIndex
+name|AcpiGbl_FadtIndex
 index|]
 operator|.
 name|Address
@@ -799,7 +801,8 @@ name|XDsdt
 argument_list|,
 name|ACPI_SIG_DSDT
 argument_list|,
-name|ACPI_TABLE_INDEX_DSDT
+operator|&
+name|AcpiGbl_DsdtIndex
 argument_list|)
 expr_stmt|;
 comment|/* If Hardware Reduced flag is set, there is no FACS */
@@ -807,6 +810,36 @@ if|if
 condition|(
 operator|!
 name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+condition|)
+block|{
+name|AcpiTbInstallFixedTable
+argument_list|(
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+argument_list|,
+name|ACPI_SIG_FACS
+argument_list|,
+operator|&
+name|AcpiGbl_FacsIndex
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|XFacs
 condition|)
 block|{
 name|AcpiTbInstallFixedTable
@@ -820,9 +853,11 @@ name|XFacs
 argument_list|,
 name|ACPI_SIG_FACS
 argument_list|,
-name|ACPI_TABLE_INDEX_FACS
+operator|&
+name|AcpiGbl_XFacsIndex
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -843,7 +878,7 @@ name|UINT32
 name|Length
 parameter_list|)
 block|{
-comment|/*      * Check if the FADT is larger than the largest table that we expect      * (the ACPI 5.0 version). If so, truncate the table, and issue      * a warning.      */
+comment|/*      * Check if the FADT is larger than the largest table that we expect      * (typically the current ACPI specification version). If so, truncate      * the table, and issue a warning.      */
 if|if
 condition|(
 name|Length
@@ -859,12 +894,14 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"FADT (revision %u) is longer than ACPI 5.0 version, "
+literal|"FADT (revision %u) is longer than %s length, "
 literal|"truncating length %u to %u"
 operator|,
 name|Table
 operator|->
 name|Revision
+operator|,
+name|ACPI_FADT_CONFORMANCE
 operator|,
 name|Length
 operator|,
@@ -880,7 +917,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear the entire local FADT */
-name|ACPI_MEMSET
+name|memset
 argument_list|(
 operator|&
 name|AcpiGbl_FADT
@@ -894,7 +931,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Copy the original FADT, up to sizeof (ACPI_TABLE_FADT) */
-name|ACPI_MEMCPY
+name|memcpy
 argument_list|(
 operator|&
 name|AcpiGbl_FADT
@@ -954,6 +991,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -1023,24 +1061,7 @@ argument_list|(
 name|ACPI_TABLE_FADT
 argument_list|)
 expr_stmt|;
-comment|/*      * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.      * Later ACPICA code will always use the X 64-bit field.      */
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-operator|=
-name|AcpiTbSelectAddress
-argument_list|(
-literal|"FACS"
-argument_list|,
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-argument_list|,
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-argument_list|)
-expr_stmt|;
+comment|/*      * Expand the 32-bit DSDT addresses to 64-bit as necessary.      * Later ACPICA code will always use the X 64-bit field.      */
 name|AcpiGbl_FADT
 operator|.
 name|XDsdt
@@ -1419,10 +1440,26 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Optional FADT field %s has zero address or length: "
+literal|"Optional FADT field %s has valid %s but zero %s: "
 literal|"0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
+operator|,
+operator|(
+name|Length
+condition|?
+literal|"Length"
+else|:
+literal|"Address"
+operator|)
+operator|,
+operator|(
+name|Length
+condition|?
+literal|"Address"
+else|:
+literal|"Length"
+operator|)
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
