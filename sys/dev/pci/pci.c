@@ -20353,6 +20353,17 @@ operator|.
 name|dev
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|pci_add_device
+argument_list|,
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -26555,6 +26566,13 @@ operator|&
 name|dinfo
 operator|->
 name|resources
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|pci_delete_device
+argument_list|,
+name|child
+argument_list|)
 expr_stmt|;
 comment|/* Turn off access to resources we're about to free */
 if|if

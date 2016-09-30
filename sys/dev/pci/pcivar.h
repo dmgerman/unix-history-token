@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
 begin_comment
 comment|/* some PCI bus constants */
 end_comment
@@ -2688,6 +2694,48 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * Global eventhandlers invoked when PCI devices are added or removed  * from the system.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|pci_event_fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|pci_add_device
+argument_list|,
+name|pci_event_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|pci_delete_device
+argument_list|,
+name|pci_event_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
