@@ -275,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|PLL_LOCK_TIMEOUT
-value|1000
+value|5000
 end_define
 
 begin_comment
