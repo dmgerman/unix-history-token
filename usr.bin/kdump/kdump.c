@@ -2621,7 +2621,9 @@ name|timeval
 name|prevtime
 decl_stmt|,
 name|prevtime_e
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|timeval
 name|temp
 decl_stmt|;
 specifier|const
