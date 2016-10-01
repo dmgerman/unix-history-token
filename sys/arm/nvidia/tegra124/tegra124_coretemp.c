@@ -622,7 +622,7 @@ name|device_find_child
 argument_list|(
 name|parent
 argument_list|,
-literal|"tegra124_coretemp"
+literal|"coretemp"
 argument_list|,
 operator|-
 literal|1
@@ -639,7 +639,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"tegra124_coretemp"
+literal|"coretemp"
 argument_list|,
 operator|-
 literal|1
@@ -670,7 +670,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"CPU Frequency Control"
+literal|"CPU Thermal Sensor"
 argument_list|)
 expr_stmt|;
 return|return
