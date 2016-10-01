@@ -157,12 +157,35 @@ begin_comment
 comment|/* DEV_BPF */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_BPF
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|NBPFILTER
-value|DEV_BPF
+value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NBPFILTER
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
