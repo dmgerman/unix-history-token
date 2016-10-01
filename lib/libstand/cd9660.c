@@ -1926,8 +1926,6 @@ name|ISO_DEFAULT_BLOCK_SIZE
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
 name|off
 operator|+=
 name|isonum_711
@@ -1937,7 +1935,6 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
