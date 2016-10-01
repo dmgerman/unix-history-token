@@ -71,30 +71,6 @@ modifier|*
 name|i_ump
 decl_stmt|;
 comment|/* Ufsmount point associated with this inode. */
-name|u_int32_t
-name|i_flag
-decl_stmt|;
-comment|/* flags, see below */
-name|struct
-name|cdev
-modifier|*
-name|i_dev
-decl_stmt|;
-comment|/* Device associated with the inode. */
-name|ino_t
-name|i_number
-decl_stmt|;
-comment|/* The identity of the inode. */
-name|int
-name|i_effnlink
-decl_stmt|;
-comment|/* i_nlink when I/O completes */
-name|struct
-name|fs
-modifier|*
-name|i_fs
-decl_stmt|;
-comment|/* Associated filesystem superblock. */
 name|struct
 name|dquot
 modifier|*
@@ -104,6 +80,52 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* Dquot structures. */
+union|union
+block|{
+name|struct
+name|dirhash
+modifier|*
+name|dirhash
+decl_stmt|;
+comment|/* Hashing for large directories. */
+name|daddr_t
+modifier|*
+name|snapblklist
+decl_stmt|;
+comment|/* Collect expunged snapshot blocks. */
+block|}
+name|i_un
+union|;
+comment|/* 	 * The real copy of the on-disk inode. 	 */
+union|union
+block|{
+name|struct
+name|ufs1_dinode
+modifier|*
+name|din1
+decl_stmt|;
+comment|/* UFS1 on-disk dinode. */
+name|struct
+name|ufs2_dinode
+modifier|*
+name|din2
+decl_stmt|;
+comment|/* UFS2 on-disk dinode. */
+block|}
+name|dinode_u
+union|;
+name|ino_t
+name|i_number
+decl_stmt|;
+comment|/* The identity of the inode. */
+name|u_int32_t
+name|i_flag
+decl_stmt|;
+comment|/* flags, see below */
+name|int
+name|i_effnlink
+decl_stmt|;
+comment|/* i_nlink when I/O completes */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count
@@ -121,22 +143,6 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* Offset of free space in directory. */
-union|union
-block|{
-name|struct
-name|dirhash
-modifier|*
-name|dirhash
-decl_stmt|;
-comment|/* Hashing for large directories. */
-name|daddr_t
-modifier|*
-name|snapblklist
-decl_stmt|;
-comment|/* Collect expunged snapshot blocks. */
-block|}
-name|i_un
-union|;
 name|int
 name|i_nextclustercg
 decl_stmt|;
@@ -160,26 +166,18 @@ name|i_ea_refs
 decl_stmt|;
 comment|/* Number of users of EA area */
 comment|/* 	 * Copies from the on-disk dinode itself. 	 */
-name|u_int16_t
-name|i_mode
-decl_stmt|;
-comment|/* IFMT, permissions; see below. */
-name|int16_t
-name|i_nlink
-decl_stmt|;
-comment|/* File link count. */
 name|u_int64_t
 name|i_size
 decl_stmt|;
 comment|/* File byte count. */
-name|u_int32_t
-name|i_flags
-decl_stmt|;
-comment|/* Status flags (chflags). */
 name|u_int64_t
 name|i_gen
 decl_stmt|;
 comment|/* Generation number. */
+name|u_int32_t
+name|i_flags
+decl_stmt|;
+comment|/* Status flags (chflags). */
 name|u_int32_t
 name|i_uid
 decl_stmt|;
@@ -188,24 +186,14 @@ name|u_int32_t
 name|i_gid
 decl_stmt|;
 comment|/* File group. */
-comment|/* 	 * The real copy of the on-disk inode. 	 */
-union|union
-block|{
-name|struct
-name|ufs1_dinode
-modifier|*
-name|din1
+name|u_int16_t
+name|i_mode
 decl_stmt|;
-comment|/* UFS1 on-disk dinode. */
-name|struct
-name|ufs2_dinode
-modifier|*
-name|din2
+comment|/* IFMT, permissions; see below. */
+name|int16_t
+name|i_nlink
 decl_stmt|;
-comment|/* UFS2 on-disk dinode. */
-block|}
-name|dinode_u
-union|;
+comment|/* File link count. */
 block|}
 struct|;
 end_struct
@@ -273,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|IN_LAZYMOD
-value|0x0040
+value|0x0020
 end_define
 
 begin_comment
@@ -284,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|IN_LAZYACCESS
-value|0x0100
+value|0x0040
 end_define
 
 begin_comment
@@ -295,21 +283,21 @@ begin_define
 define|#
 directive|define
 name|IN_EA_LOCKED
-value|0x0200
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN_EA_LOCKWAIT
-value|0x0400
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|IN_TRUNCATED
-value|0x0800
+value|0x0200
 end_define
 
 begin_comment
@@ -319,16 +307,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|i_devvp
-value|i_ump->um_devvp
+name|IN_UFS2
+value|0x0400
 end_define
 
-begin_define
-define|#
-directive|define
-name|i_umbufobj
-value|i_ump->um_bo
-end_define
+begin_comment
+comment|/* UFS2 vs UFS1 */
+end_comment
 
 begin_define
 define|#
@@ -364,6 +349,114 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|ITOUMP
+parameter_list|(
+name|ip
+parameter_list|)
+value|((ip)->i_ump)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITODEV
+parameter_list|(
+name|ip
+parameter_list|)
+value|(ITOUMP(ip)->um_dev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITODEVVP
+parameter_list|(
+name|ip
+parameter_list|)
+value|(ITOUMP(ip)->um_devvp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITOFS
+parameter_list|(
+name|ip
+parameter_list|)
+value|(ITOUMP(ip)->um_fs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITOVFS
+parameter_list|(
+name|ip
+parameter_list|)
+value|((ip)->i_vnode->v_mount)
+end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|_Bool
+name|I_IS_UFS1
+parameter_list|(
+specifier|const
+name|struct
+name|inode
+modifier|*
+name|ip
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IN_UFS2
+operator|)
+operator|==
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|_Bool
+name|I_IS_UFS2
+parameter_list|(
+specifier|const
+name|struct
+name|inode
+modifier|*
+name|ip
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IN_UFS2
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The DIP macro is used to access fields in the dinode that are  * not cached in the inode itself.  */
 end_comment
@@ -377,8 +470,7 @@ name|ip
 parameter_list|,
 name|field
 parameter_list|)
-define|\
-value|(((ip)->i_ump->um_fstype == UFS1) ? \ 	(ip)->i_din1->d##field : (ip)->i_din2->d##field)
+value|(I_IS_UFS1(ip) ? (ip)->i_din1->d##field : \     (ip)->i_din2->d##field)
 end_define
 
 begin_define
@@ -392,7 +484,7 @@ name|field
 parameter_list|,
 name|val
 parameter_list|)
-value|do { \ 	if ((ip)->i_ump->um_fstype == UFS1) \ 		(ip)->i_din1->d##field = (val); \ 	else \ 		(ip)->i_din2->d##field = (val); \ 	} while (0)
+value|do {				\ 	if (I_IS_UFS1(ip))					\ 		(ip)->i_din1->d##field = (val); 		\ 	else							\ 		(ip)->i_din2->d##field = (val); 		\ 	} while (0)
 end_define
 
 begin_define
@@ -402,8 +494,7 @@ name|SHORTLINK
 parameter_list|(
 name|ip
 parameter_list|)
-define|\
-value|(((ip)->i_ump->um_fstype == UFS1) ? \ 	(caddr_t)(ip)->i_din1->di_db : (caddr_t)(ip)->i_din2->di_db)
+value|(I_IS_UFS1(ip) ?			\     (caddr_t)(ip)->i_din1->di_db : (caddr_t)(ip)->i_din2->di_db)
 end_define
 
 begin_define
