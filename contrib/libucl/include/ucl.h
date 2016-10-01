@@ -2057,7 +2057,7 @@ name|unsigned
 name|priority
 parameter_list|)
 function_decl|;
-comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_file
@@ -2073,7 +2073,7 @@ modifier|*
 name|filename
 parameter_list|)
 function_decl|;
-comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @return true if chunk has been added and false in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_parser_add_file_priority
@@ -2090,6 +2090,33 @@ name|filename
 parameter_list|,
 name|unsigned
 name|priority
+parameter_list|)
+function_decl|;
+comment|/**  * Load and add data from a file  * @param parser parser structure  * @param filename the name of file  * @param priority the desired priority of a chunk (only 4 least significant bits  * are considered for this parameter)  * @param strat Merge strategy to use while parsing this file  * @param parse_type Parser type to use while parsing this file  * @return true if chunk has been added and false in case of error  */
+name|UCL_EXTERN
+name|bool
+name|ucl_parser_add_file_full
+parameter_list|(
+name|struct
+name|ucl_parser
+modifier|*
+name|parser
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|unsigned
+name|priority
+parameter_list|,
+name|enum
+name|ucl_duplicate_strategy
+name|strat
+parameter_list|,
+name|enum
+name|ucl_parse_type
+name|parse_type
 parameter_list|)
 function_decl|;
 comment|/**  * Load and add data from a file descriptor  * @param parser parser structure  * @param filename the name of file  * @param err if *err is NULL it is set to parser error  * @return true if chunk has been added and false in case of error  */
