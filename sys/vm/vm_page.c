@@ -3904,7 +3904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unbusy and handle the page queueing for a page from the VOP_GETPAGES()  * array which was optionally read ahead or behind.  */
+comment|/*  * Unbusy and handle the page queueing for a page from a getpages request that  * was optionally read ahead or behind.  */
 end_comment
 
 begin_function
