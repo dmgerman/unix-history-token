@@ -152,7 +152,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_include
@@ -435,7 +435,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_function
@@ -2167,7 +2167,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 operator|(
@@ -2348,7 +2348,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|ti_adc_ev_report
 argument_list|(
 name|sc
@@ -2376,7 +2376,7 @@ name|ADC_IRQ_PEN_UP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|ti_adc_ev_report
 argument_list|(
 name|sc
@@ -4419,7 +4419,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -4667,7 +4667,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|evdev_free
 argument_list|(
 name|sc
@@ -4861,7 +4861,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_expr_stmt
