@@ -536,28 +536,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Exclude some internal functions */
-if|if
-condition|(
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-operator|&&
-name|name
-index|[
-literal|1
-index|]
-operator|==
-literal|'_'
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 comment|/* 	 * When DTrace is built into the kernel we need to exclude 	 * the FBT functions from instrumentation. 	 */
 ifndef|#
 directive|ifndef
