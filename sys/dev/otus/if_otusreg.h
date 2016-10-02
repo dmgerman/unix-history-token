@@ -6649,6 +6649,10 @@ name|ieee80211com
 name|sc_ic
 decl_stmt|;
 name|struct
+name|ieee80211_ratectl_tx_stats
+name|sc_txs
+decl_stmt|;
+name|struct
 name|mbufq
 name|sc_snd
 decl_stmt|;
