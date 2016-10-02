@@ -1880,6 +1880,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|ether_header
@@ -9356,6 +9358,12 @@ operator|~
 name|M_VLANTAG
 expr_stmt|;
 block|}
+name|M_ASSERTPKTHDR
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* We shouldn't transmit mbuf without pkthdr */
 if|if
 condition|(
 operator|(
@@ -14245,6 +14253,8 @@ condition|)
 comment|/* filter may consume */
 break|break;
 comment|/* check if we need to fragment the packet */
+comment|/* bridge_fragment generates a mbuf chain of packets */
+comment|/* that already include eth headers */
 if|if
 condition|(
 name|V_pfil_member
@@ -14284,7 +14294,6 @@ name|bridge_fragment
 argument_list|(
 name|ifp
 argument_list|,
-operator|*
 name|mp
 argument_list|,
 operator|&
@@ -15372,7 +15381,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * bridge_fragment:  *  *	Return a fragmented mbuf chain.  */
+comment|/*  * bridge_fragment:  *  *	Fragment mbuf chain in multiple packets and prepend ethernet header.  */
 end_comment
 
 begin_function
@@ -15388,7 +15397,8 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|ether_header
@@ -15407,7 +15417,25 @@ block|{
 name|struct
 name|mbuf
 modifier|*
-name|m0
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|,
+modifier|*
+name|nextpkt
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|mprev
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|mcur
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ip
@@ -15450,7 +15478,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|out
+name|dropit
 goto|;
 name|ip
 operator|=
@@ -15494,31 +15522,36 @@ condition|(
 name|error
 condition|)
 goto|goto
-name|out
+name|dropit
 goto|;
-comment|/* walk the chain and re-add the Ethernet header */
+comment|/* 	 * Walk the chain and re-add the Ethernet header for 	 * each mbuf packet. 	 */
 for|for
 control|(
-name|m0
+name|mcur
 operator|=
 name|m
 init|;
-name|m0
+name|mcur
 condition|;
-name|m0
+name|mcur
 operator|=
-name|m0
+name|mcur
 operator|->
 name|m_nextpkt
 control|)
 block|{
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
+name|nextpkt
+operator|=
+name|mcur
+operator|->
+name|m_nextpkt
+expr_stmt|;
+name|mcur
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|snap
@@ -15526,7 +15559,7 @@ condition|)
 block|{
 name|M_PREPEND
 argument_list|(
-name|m0
+name|mcur
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -15539,7 +15572,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m0
+name|mcur
 operator|==
 name|NULL
 condition|)
@@ -15548,7 +15581,21 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-continue|continue;
+if|if
+condition|(
+name|mprev
+operator|!=
+name|NULL
+condition|)
+name|mprev
+operator|->
+name|m_nextpkt
+operator|=
+name|nextpkt
+expr_stmt|;
+goto|goto
+name|dropit
+goto|;
 block|}
 name|bcopy
 argument_list|(
@@ -15556,7 +15603,7 @@ name|llc
 argument_list|,
 name|mtod
 argument_list|(
-name|m0
+name|mcur
 argument_list|,
 name|caddr_t
 argument_list|)
@@ -15571,7 +15618,7 @@ expr_stmt|;
 block|}
 name|M_PREPEND
 argument_list|(
-name|m0
+name|mcur
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
@@ -15580,7 +15627,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m0
+name|mcur
 operator|==
 name|NULL
 condition|)
@@ -15589,7 +15636,21 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-continue|continue;
+if|if
+condition|(
+name|mprev
+operator|!=
+name|NULL
+condition|)
+name|mprev
+operator|->
+name|m_nextpkt
+operator|=
+name|nextpkt
+expr_stmt|;
+goto|goto
+name|dropit
+goto|;
 block|}
 name|bcopy
 argument_list|(
@@ -15597,7 +15658,7 @@ name|eh
 argument_list|,
 name|mtod
 argument_list|(
-name|m0
+name|mcur
 argument_list|,
 name|caddr_t
 argument_list|)
@@ -15605,20 +15666,39 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
+comment|/* 		 * The previous two M_PREPEND could have inserted one or two 		 * mbufs in front so we have to update the previous packet's 		 * m_nextpkt. 		 */
+name|mcur
+operator|->
+name|m_nextpkt
+operator|=
+name|nextpkt
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|error
-operator|==
-literal|0
+name|mprev
+operator|!=
+name|NULL
 condition|)
+name|mprev
+operator|->
+name|m_nextpkt
+operator|=
+name|mcur
+expr_stmt|;
+else|else
+block|{
+comment|/* The first mbuf in the original chain needs to be 			 * updated. */
+operator|*
+name|mp
+operator|=
+name|mcur
+expr_stmt|;
+block|}
+name|mprev
+operator|=
+name|mcur
+expr_stmt|;
+block|}
 name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_fragmented
@@ -15629,19 +15709,35 @@ operator|(
 name|error
 operator|)
 return|;
-name|out
+name|dropit
 label|:
-if|if
-condition|(
+for|for
+control|(
+name|mcur
+operator|=
+operator|*
+name|mp
+init|;
+name|mcur
+condition|;
+name|mcur
+operator|=
 name|m
-operator|!=
-name|NULL
-condition|)
+control|)
+block|{
+comment|/* droping the full packet chain */
+name|m
+operator|=
+name|mcur
+operator|->
+name|m_nextpkt
+expr_stmt|;
 name|m_freem
 argument_list|(
-name|m
+name|mcur
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
