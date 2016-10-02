@@ -1451,6 +1451,10 @@ index|[
 name|IEEE80211_NODE_HASHSIZE
 index|]
 expr_stmt|;
+name|int
+name|nt_count
+decl_stmt|;
+comment|/* number of nodes */
 name|struct
 name|ieee80211_node
 modifier|*
@@ -2110,18 +2114,21 @@ end_typedef
 
 begin_function_decl
 name|int
-name|ieee80211_iterate_nt
+name|ieee80211_iterate_nodes_vap
 parameter_list|(
 name|struct
 name|ieee80211_node_table
 modifier|*
 parameter_list|,
 name|struct
-name|ieee80211_node
-modifier|*
+name|ieee80211vap
 modifier|*
 parameter_list|,
-name|uint16_t
+name|ieee80211_iter_func
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
