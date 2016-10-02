@@ -2498,7 +2498,7 @@ name|pr
 expr_stmt|;
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|++
 expr_stmt|;
 comment|/* 			 * If this is the first autoconf address from the 			 * prefix, create a temporary address as well 			 * (when required). 			 */
@@ -2516,7 +2516,7 @@ name|V_ip6_use_tempaddr
 operator|&&
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|==
 literal|1
 condition|)
@@ -2660,7 +2660,7 @@ name|nd_prefix
 modifier|*
 name|pr
 decl_stmt|;
-comment|/* 		 * If the address being deleted is the only one that owns 		 * the corresponding prefix, expire the prefix as well. 		 * XXX: theoretically, we don't have to worry about such 		 * relationship, since we separate the address management 		 * and the prefix management.  We do this, however, to provide 		 * as much backward compatibility as possible in terms of 		 * the ioctl operation. 		 * Note that in6_purgeaddr() will decrement ndpr_refcnt. 		 */
+comment|/* 		 * If the address being deleted is the only one that owns 		 * the corresponding prefix, expire the prefix as well. 		 * XXX: theoretically, we don't have to worry about such 		 * relationship, since we separate the address management 		 * and the prefix management.  We do this, however, to provide 		 * as much backward compatibility as possible in terms of 		 * the ioctl operation. 		 * Note that in6_purgeaddr() will decrement ndpr_addrcnt. 		 */
 name|pr
 operator|=
 name|ia
@@ -2681,7 +2681,7 @@ name|pr
 operator|&&
 name|pr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|==
 literal|0
 condition|)
@@ -5434,7 +5434,7 @@ name|ia
 operator|->
 name|ia6_ndpr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|--
 expr_stmt|;
 comment|/* Do not delete lles within prefix if refcont != 0 */
@@ -5444,7 +5444,7 @@ name|ia
 operator|->
 name|ia6_ndpr
 operator|->
-name|ndpr_refcnt
+name|ndpr_addrcnt
 operator|==
 literal|0
 condition|)
