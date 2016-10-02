@@ -935,6 +935,9 @@ operator|==
 name|SYSTRACE_ENTRY
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|id
 operator|=
 name|sa
@@ -942,7 +945,11 @@ operator|->
 name|callp
 operator|->
 name|sy_entry
-expr_stmt|;
+operator|)
+operator|==
+name|DTRACE_IDNONE
+condition|)
+return|return;
 if|if
 condition|(
 name|sa
@@ -1001,6 +1008,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|(
 name|id
 operator|=
 name|sa
@@ -1008,7 +1018,11 @@ operator|->
 name|callp
 operator|->
 name|sy_return
-expr_stmt|;
+operator|)
+operator|==
+name|DTRACE_IDNONE
+condition|)
+return|return;
 name|curthread
 operator|->
 name|t_dtrace_systrace_args
