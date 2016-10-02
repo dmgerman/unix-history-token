@@ -1059,6 +1059,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|timer_oshandle_np
+parameter_list|(
+name|timer_t
+name|timerid
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

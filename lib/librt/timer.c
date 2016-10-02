@@ -777,9 +777,16 @@ return|;
 block|}
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|timer_oshandle_np
+end_pragma
+
 begin_function
 name|int
-name|__timer_oshandle
+name|timer_oshandle_np
 parameter_list|(
 name|timer_t
 name|timerid
