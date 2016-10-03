@@ -1904,7 +1904,7 @@ name|length
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* if the new block is zero length, its padding */
+comment|/* If the new block has zero length, it is padding. */
 if|if
 condition|(
 name|isonum_711
@@ -1917,7 +1917,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* skip to next block, if any */
+comment|/* Skip to next block, if any. */
 name|off
 operator|=
 name|boff
