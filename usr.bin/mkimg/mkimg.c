@@ -2388,7 +2388,7 @@ name|capacity
 argument_list|,
 literal|1
 argument_list|,
-name|OFF_MAX
+name|INT64_MAX
 argument_list|,
 name|optarg
 argument_list|)
