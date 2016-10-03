@@ -216,8 +216,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VCHR
+operator|==
+name|VREG
 condition|)
 block|{
 comment|/* devvp is a snapshot */
@@ -247,7 +247,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 block|{
 comment|/* devvp is a normal disk device */
 name|dev
@@ -270,6 +278,18 @@ name|cg
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 if|if
 condition|(

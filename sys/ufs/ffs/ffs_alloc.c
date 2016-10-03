@@ -10844,7 +10844,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 block|{
 comment|/* devvp is a normal disk device */
 name|dev
@@ -10875,6 +10883,8 @@ literal|"ffs_blkfree_cg"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+return|return;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -11508,8 +11518,8 @@ operator|&&
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VREG
+operator|==
+name|VCHR
 condition|)
 name|softdep_setup_blkfree
 argument_list|(
@@ -11807,8 +11817,8 @@ condition|(
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VREG
+operator|==
+name|VCHR
 operator|&&
 operator|(
 name|devvp
@@ -12597,7 +12607,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 block|{
 comment|/* devvp is a normal disk device */
 name|dev
@@ -12620,6 +12638,18 @@ name|cg
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -12921,8 +12951,8 @@ operator|&&
 name|devvp
 operator|->
 name|v_type
-operator|!=
-name|VREG
+operator|==
+name|VCHR
 condition|)
 name|softdep_setup_inofree
 argument_list|(
@@ -13042,7 +13072,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|devvp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 block|{
 comment|/* devvp is a normal disk device */
 name|cgbno
@@ -13059,6 +13097,14 @@ name|cg
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
