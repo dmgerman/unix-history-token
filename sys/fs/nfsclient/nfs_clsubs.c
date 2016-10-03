@@ -248,8 +248,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstats
-name|newnfsstats
+name|nfsstatsv1
+name|nfsstatsv1
 decl_stmt|;
 end_decl_stmt
 
@@ -842,7 +842,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|attrcache_misses
 operator|++
@@ -866,7 +866,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|newnfsstats
+name|nfsstatsv1
 operator|.
 name|attrcache_hits
 operator|++
