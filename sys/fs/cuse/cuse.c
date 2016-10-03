@@ -209,6 +209,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Prevent cuse4bsd.ko and cuse.ko from loading at the same time by  * declaring support for the cuse4bsd interface in cuse.ko:  */
+end_comment
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|cuse4bsd
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
