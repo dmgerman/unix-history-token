@@ -364,6 +364,7 @@ name|uint64_t
 name|ev_report_count
 decl_stmt|;
 comment|/* Parent driver callbacks: */
+specifier|const
 name|struct
 name|evdev_methods
 modifier|*

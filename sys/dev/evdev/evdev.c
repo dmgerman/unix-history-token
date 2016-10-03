@@ -1306,6 +1306,7 @@ name|void
 modifier|*
 name|softc
 parameter_list|,
+specifier|const
 name|struct
 name|evdev_methods
 modifier|*
