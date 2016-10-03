@@ -2248,6 +2248,15 @@ case|case
 name|CPU_ID_CORTEXA15
 case|:
 case|case
+name|CPU_ID_CORTEXA53
+case|:
+case|case
+name|CPU_ID_CORTEXA57
+case|:
+case|case
+name|CPU_ID_CORTEXA72
+case|:
+case|case
 name|CPU_ID_KRAIT300
 case|:
 name|cpufuncs
