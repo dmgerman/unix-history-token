@@ -397,7 +397,7 @@ operator|+
 name|secsz
 operator|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,

@@ -348,15 +348,13 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|STAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
 argument|&partlist
 argument_list|,
 argument|link
-argument_list|,
-argument|next
 argument_list|)
 block|{
 name|block
@@ -466,6 +464,15 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Add link entry */
+name|next
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|part
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|next

@@ -215,7 +215,7 @@ name|struct
 name|partlisthead
 name|partlist
 init|=
-name|STAILQ_HEAD_INITIALIZER
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|partlist
 argument_list|)
@@ -1316,7 +1316,7 @@ name|index
 operator|=
 name|nparts
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|partlist
@@ -1868,7 +1868,7 @@ decl_stmt|,
 name|fd
 decl_stmt|;
 comment|/* First check partition information */
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
@@ -1913,7 +1913,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
