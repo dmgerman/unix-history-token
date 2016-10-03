@@ -67,23 +67,13 @@ begin_comment
 comment|/*  * UNIX password, and DES, encryption.  *  * since this is non-exportable, this is just a dummy.  if you want real  * encryption, make sure you've got libcrypt.a around.  */
 end_comment
 
-begin_expr_stmt
-name|__warn_references
-argument_list|(
-name|des_setkey
-argument_list|,
-literal|"WARNING!  des_setkey(3) not present in the system!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|int
-name|des_setkey
+name|__freebsd11_des_setkey
 parameter_list|(
 specifier|const
 name|char
@@ -107,23 +97,13 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__warn_references
-argument_list|(
-name|des_cipher
-argument_list|,
-literal|"WARNING!  des_cipher(3) not present in the system!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|int
-name|des_cipher
+name|__freebsd11_des_cipher
 parameter_list|(
 specifier|const
 name|char
@@ -167,23 +147,13 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__warn_references
-argument_list|(
-name|setkey
-argument_list|,
-literal|"WARNING!  setkey(3) not present in the system!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|int
-name|setkey
+name|__freebsd11_setkey
 parameter_list|(
 specifier|const
 name|char
@@ -207,23 +177,13 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__warn_references
-argument_list|(
-name|encrypt
-argument_list|,
-literal|"WARNING!  encrypt(3) not present in the system!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_function
 name|int
-name|encrypt
+name|__freebsd11_encrypt
 parameter_list|(
 name|char
 modifier|*
@@ -249,6 +209,58 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|des_setkey
+argument_list|,
+name|__freebsd11_des_setkey
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|des_cipher
+argument_list|,
+name|__freebsd11_des_cipher
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|setkey
+argument_list|,
+name|__freebsd11_setkey
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
+name|encrypt
+argument_list|,
+name|__freebsd11_encrypt
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
