@@ -36,8 +36,8 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstatsv1
-name|nfsstatsv1
+name|nfsstats
+name|newnfsstats
 decl_stmt|;
 end_decl_stmt
 
@@ -804,13 +804,13 @@ name|nfsrc_udpcachesize
 operator|=
 literal|0
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_tcppeak
 operator|=
 literal|0
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_size
 operator|=
@@ -1247,7 +1247,7 @@ operator|&
 name|RC_INPROG
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_inproghits
 operator|++
@@ -1273,7 +1273,7 @@ name|RC_REPSTATUS
 condition|)
 block|{
 comment|/* 				 * V2 only. 				 */
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_nonidemdonehits
 operator|++
@@ -1322,7 +1322,7 @@ operator|&
 name|RC_REPMBUF
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_nonidemdonehits
 operator|++
@@ -1390,7 +1390,7 @@ name|out
 goto|;
 block|}
 block|}
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_misses
 operator|++
@@ -1398,7 +1398,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_size
 argument_list|,
@@ -1686,7 +1686,7 @@ operator|==
 name|NFSERR_REPLYFROMCACHE
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_nonidemdonehits
 operator|++
@@ -1925,11 +1925,11 @@ if|if
 condition|(
 name|nfsrc_tcpsavedreplies
 operator|>
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_tcppeak
 condition|)
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_tcppeak
 operator|=
@@ -2711,7 +2711,7 @@ operator|&
 name|RC_INPROG
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_inproghits
 operator|++
@@ -2754,7 +2754,7 @@ name|RC_REPSTATUS
 condition|)
 block|{
 comment|/* 			 * V2 only. 			 */
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_nonidemdonehits
 operator|++
@@ -2820,7 +2820,7 @@ operator|&
 name|RC_REPMBUF
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_nonidemdonehits
 operator|++
@@ -2904,7 +2904,7 @@ goto|goto
 name|out
 goto|;
 block|}
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_misses
 operator|++
@@ -2912,7 +2912,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_size
 argument_list|,
@@ -3305,7 +3305,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_size
 argument_list|,
@@ -3429,7 +3429,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvcache_size
 operator|=

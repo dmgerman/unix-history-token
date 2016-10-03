@@ -69,8 +69,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstatsv1
-name|nfsstatsv1
+name|nfsstats
+name|newnfsstats
 decl_stmt|;
 end_decl_stmt
 
@@ -1850,7 +1850,7 @@ argument_list|,
 name|lc_hash
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvclients
 operator|++
@@ -2391,7 +2391,7 @@ argument_list|,
 name|lc_hash
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvclients
 operator|++
@@ -2810,7 +2810,7 @@ argument_list|,
 name|lc_hash
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvclients
 operator|++
@@ -4551,7 +4551,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dump out stats for all clients. Called from nfssvc(2), that is used  * nfsstatsv1.  */
+comment|/*  * Dump out stats for all clients. Called from nfssvc(2), that is used  * newnfsstats.  */
 end_comment
 
 begin_function
@@ -6697,7 +6697,7 @@ expr_stmt|;
 name|NFSLOCKSTATE
 argument_list|()
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvclients
 operator|--
@@ -6882,7 +6882,7 @@ argument_list|,
 name|M_NFSDSTATE
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvdelegates
 operator|--
@@ -7008,7 +7008,7 @@ argument_list|,
 name|M_NFSDSTATE
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopenowners
 operator|--
@@ -7222,7 +7222,7 @@ argument_list|,
 name|M_NFSDSTATE
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopens
 operator|--
@@ -7311,7 +7311,7 @@ argument_list|,
 name|M_NFSDSTATE
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvlockowners
 operator|--
@@ -7651,7 +7651,7 @@ argument_list|,
 name|lo_lckfile
 argument_list|)
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvlocks
 operator|--
@@ -10973,7 +10973,7 @@ name|new_stpp
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvlockowners
 operator|++
@@ -13718,7 +13718,7 @@ name|new_stpp
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopenowners
 operator|++
@@ -13735,7 +13735,7 @@ name|new_open
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopens
 operator|++
@@ -14062,7 +14062,7 @@ name|rflagsp
 operator||=
 name|NFSV4OPEN_RECALL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvdelegates
 operator|++
@@ -14316,7 +14316,7 @@ name|new_stpp
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopenowners
 operator|++
@@ -14333,7 +14333,7 @@ name|new_open
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopens
 operator|++
@@ -14816,7 +14816,7 @@ name|new_deleg
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvdelegates
 operator|++
@@ -14985,7 +14985,7 @@ name|new_open
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopens
 operator|++
@@ -15297,7 +15297,7 @@ name|new_deleg
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvdelegates
 operator|++
@@ -15767,7 +15767,7 @@ name|new_deleg
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvdelegates
 operator|++
@@ -15868,7 +15868,7 @@ name|new_stpp
 operator|=
 name|NULL
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopens
 operator|++
@@ -15876,7 +15876,7 @@ expr_stmt|;
 name|nfsrv_openpluslock
 operator|++
 expr_stmt|;
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvopenowners
 operator|++
@@ -18078,7 +18078,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|srvlocks
 operator|++
@@ -18847,7 +18847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the client ip address for callbacks. If the strings can't be parsed,  * just set lc_program to 0 to indicate no callbacks are possible.  * (For cases where the address can't be parsed or is 0.0.0.0.0.0, set  *  the address to the client's transport address. This won't be used  *  for callbacks, but can be printed out by nfsstats for info.)  * Return error if the xdr can't be parsed, 0 otherwise.  */
+comment|/*  * Get the client ip address for callbacks. If the strings can't be parsed,  * just set lc_program to 0 to indicate no callbacks are possible.  * (For cases where the address can't be parsed or is 0.0.0.0.0.0, set  *  the address to the client's transport address. This won't be used  *  for callbacks, but can be printed out by newnfsstats for info.)  * Return error if the xdr can't be parsed, 0 otherwise.  */
 end_comment
 
 begin_function

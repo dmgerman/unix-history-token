@@ -311,8 +311,8 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstatsv1
-name|nfsstatsv1
+name|nfsstats
+name|newnfsstats
 decl_stmt|;
 end_decl_stmt
 
@@ -1247,6 +1247,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&newnfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&newnfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1987,7 +1999,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|accesscache_hits
 argument_list|)
@@ -2056,7 +2068,7 @@ block|{
 comment|/* 			 * Either a no, or a don't know.  Go to the wire. 			 */
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|accesscache_misses
 argument_list|)
@@ -4026,7 +4038,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|accesscache_misses
 argument_list|)
@@ -5485,7 +5497,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|lookupcache_hits
 argument_list|)
@@ -5615,7 +5627,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|lookupcache_hits
 argument_list|)
@@ -5642,7 +5654,7 @@ name|NULLVP
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|lookupcache_misses
 argument_list|)
@@ -12083,7 +12095,7 @@ argument_list|)
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|direofcache_hits
 argument_list|)
@@ -12184,7 +12196,7 @@ condition|)
 block|{
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|direofcache_misses
 argument_list|)

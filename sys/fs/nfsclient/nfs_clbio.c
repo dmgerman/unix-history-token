@@ -159,8 +159,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|nfsstatsv1
-name|nfsstatsv1
+name|nfsstats
+name|newnfsstats
 decl_stmt|;
 end_decl_stmt
 
@@ -2334,7 +2334,7 @@ name|VREG
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|biocache_reads
 argument_list|)
@@ -2734,7 +2734,7 @@ name|VLNK
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|biocache_readlinks
 argument_list|)
@@ -2869,7 +2869,7 @@ name|VDIR
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|biocache_readdirs
 argument_list|)
@@ -5003,7 +5003,7 @@ block|}
 block|}
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|biocache_writes
 argument_list|)
@@ -7639,7 +7639,7 @@ name|DEV_BSIZE
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|read_bios
 argument_list|)
@@ -7807,7 +7807,7 @@ literal|0
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|readlink_bios
 argument_list|)
@@ -7829,7 +7829,7 @@ name|VDIR
 case|:
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|readdir_bios
 argument_list|)
@@ -8208,7 +8208,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|NFSINCRGLOBAL
 argument_list|(
-name|nfsstatsv1
+name|newnfsstats
 operator|.
 name|write_bios
 argument_list|)

@@ -118,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/namei.h>
 end_include
 
@@ -1037,7 +1031,7 @@ value|58
 end_define
 
 begin_comment
-comment|/*  * Must be one more than last op#.  * NFSv4.2 isn't implemented yet, but define the op# limit for it.  */
+comment|/*  * Must be one more than last op#.  */
 end_comment
 
 begin_define
@@ -1045,13 +1039,6 @@ define|#
 directive|define
 name|NFSV41_NOPS
 value|59
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSV42_NOPS
-value|72
 end_define
 
 begin_comment
@@ -1066,70 +1053,70 @@ value|10044
 end_define
 
 begin_comment
-comment|/*  * Fake NFSV4OP_xxx used for nfsstat. Start at NFSV42_NOPS.  */
+comment|/*  * Fake NFSV4OP_xxx used for nfsstat. Start at NFSV4OP_NOPS.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_SYMLINK
-value|(NFSV42_NOPS)
+value|(NFSV4OP_NOPS)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_MKDIR
-value|(NFSV42_NOPS + 1)
+value|(NFSV4OP_NOPS + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_RMDIR
-value|(NFSV42_NOPS + 2)
+value|(NFSV4OP_NOPS + 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_READDIRPLUS
-value|(NFSV42_NOPS + 3)
+value|(NFSV4OP_NOPS + 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_MKNOD
-value|(NFSV42_NOPS + 4)
+value|(NFSV4OP_NOPS + 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_FSSTAT
-value|(NFSV42_NOPS + 5)
+value|(NFSV4OP_NOPS + 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_FSINFO
-value|(NFSV42_NOPS + 6)
+value|(NFSV4OP_NOPS + 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_PATHCONF
-value|(NFSV42_NOPS + 7)
+value|(NFSV4OP_NOPS + 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NFSV4OP_V3CREATE
-value|(NFSV42_NOPS + 8)
+value|(NFSV4OP_NOPS + 8)
 end_define
 
 begin_comment
@@ -1162,7 +1149,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Must be one greater than the last Callback Operation# for NFSv4.0.  */
+comment|/*  * Must be one greater than the last Callback Operation#.  */
 end_comment
 
 begin_define
@@ -1173,7 +1160,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Additional Callback Ops for NFSv4.1 only.  */
+comment|/*  * Additional Callback Ops for NFSv4.1 only. Not yet in nfsstats.  */
 end_comment
 
 begin_define
@@ -1244,20 +1231,6 @@ define|#
 directive|define
 name|NFSV4OP_CBNOTIFYDEVID
 value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSV41_CBNOPS
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSV42_CBNOPS
-value|16
 end_define
 
 begin_comment
@@ -1537,230 +1510,7 @@ comment|/* NFS_V3NPROCS */
 end_comment
 
 begin_comment
-comment|/*  * New stats structure.  * The vers field will be set to NFSSTATS_V1 by the caller.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSSTATS_V1
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|nfsstatsv1
-block|{
-name|int
-name|vers
-decl_stmt|;
-comment|/* Set to version requested by caller. */
-name|uint64_t
-name|attrcache_hits
-decl_stmt|;
-name|uint64_t
-name|attrcache_misses
-decl_stmt|;
-name|uint64_t
-name|lookupcache_hits
-decl_stmt|;
-name|uint64_t
-name|lookupcache_misses
-decl_stmt|;
-name|uint64_t
-name|direofcache_hits
-decl_stmt|;
-name|uint64_t
-name|direofcache_misses
-decl_stmt|;
-name|uint64_t
-name|accesscache_hits
-decl_stmt|;
-name|uint64_t
-name|accesscache_misses
-decl_stmt|;
-name|uint64_t
-name|biocache_reads
-decl_stmt|;
-name|uint64_t
-name|read_bios
-decl_stmt|;
-name|uint64_t
-name|read_physios
-decl_stmt|;
-name|uint64_t
-name|biocache_writes
-decl_stmt|;
-name|uint64_t
-name|write_bios
-decl_stmt|;
-name|uint64_t
-name|write_physios
-decl_stmt|;
-name|uint64_t
-name|biocache_readlinks
-decl_stmt|;
-name|uint64_t
-name|readlink_bios
-decl_stmt|;
-name|uint64_t
-name|biocache_readdirs
-decl_stmt|;
-name|uint64_t
-name|readdir_bios
-decl_stmt|;
-name|uint64_t
-name|rpccnt
-index|[
-name|NFSV41_NPROCS
-operator|+
-literal|15
-index|]
-decl_stmt|;
-name|uint64_t
-name|rpcretries
-decl_stmt|;
-name|uint64_t
-name|srvrpccnt
-index|[
-name|NFSV42_NOPS
-operator|+
-name|NFSV4OP_FAKENOPS
-index|]
-decl_stmt|;
-name|uint64_t
-name|srvrpc_errs
-decl_stmt|;
-name|uint64_t
-name|srv_errs
-decl_stmt|;
-name|uint64_t
-name|rpcrequests
-decl_stmt|;
-name|uint64_t
-name|rpctimeouts
-decl_stmt|;
-name|uint64_t
-name|rpcunexpected
-decl_stmt|;
-name|uint64_t
-name|rpcinvalid
-decl_stmt|;
-name|uint64_t
-name|srvcache_inproghits
-decl_stmt|;
-name|uint64_t
-name|srvcache_idemdonehits
-decl_stmt|;
-name|uint64_t
-name|srvcache_nonidemdonehits
-decl_stmt|;
-name|uint64_t
-name|srvcache_misses
-decl_stmt|;
-name|uint64_t
-name|srvcache_tcppeak
-decl_stmt|;
-name|int
-name|srvcache_size
-decl_stmt|;
-comment|/* Updated by atomic_xx_int(). */
-name|uint64_t
-name|srvclients
-decl_stmt|;
-name|uint64_t
-name|srvopenowners
-decl_stmt|;
-name|uint64_t
-name|srvopens
-decl_stmt|;
-name|uint64_t
-name|srvlockowners
-decl_stmt|;
-name|uint64_t
-name|srvlocks
-decl_stmt|;
-name|uint64_t
-name|srvdelegates
-decl_stmt|;
-name|uint64_t
-name|cbrpccnt
-index|[
-name|NFSV42_CBNOPS
-index|]
-decl_stmt|;
-name|uint64_t
-name|clopenowners
-decl_stmt|;
-name|uint64_t
-name|clopens
-decl_stmt|;
-name|uint64_t
-name|cllockowners
-decl_stmt|;
-name|uint64_t
-name|cllocks
-decl_stmt|;
-name|uint64_t
-name|cldelegates
-decl_stmt|;
-name|uint64_t
-name|cllocalopenowners
-decl_stmt|;
-name|uint64_t
-name|cllocalopens
-decl_stmt|;
-name|uint64_t
-name|cllocallockowners
-decl_stmt|;
-name|uint64_t
-name|cllocallocks
-decl_stmt|;
-name|uint64_t
-name|srvstartcnt
-decl_stmt|;
-name|uint64_t
-name|srvdonecnt
-decl_stmt|;
-name|uint64_t
-name|srvbytes
-index|[
-name|NFSV42_NOPS
-operator|+
-name|NFSV4OP_FAKENOPS
-index|]
-decl_stmt|;
-name|uint64_t
-name|srvops
-index|[
-name|NFSV42_NOPS
-operator|+
-name|NFSV4OP_FAKENOPS
-index|]
-decl_stmt|;
-name|struct
-name|bintime
-name|srvduration
-index|[
-name|NFSV42_NOPS
-operator|+
-name|NFSV4OP_FAKENOPS
-index|]
-decl_stmt|;
-name|struct
-name|bintime
-name|busyfrom
-decl_stmt|;
-name|struct
-name|bintime
-name|busytime
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Old stats structure.  */
+comment|/*  * Stats structure  */
 end_comment
 
 begin_struct
@@ -1934,6 +1684,17 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Define the ext_nfsstats as nfsstats for the kernel code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nfsstats
+value|ext_nfsstats
+end_define
 
 begin_comment
 comment|/*  * Define NFS_NPROCS as NFSV4_NPROCS for the experimental kernel code.  */

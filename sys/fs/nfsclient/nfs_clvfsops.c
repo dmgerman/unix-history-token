@@ -242,6 +242,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|nfsstats
+name|newnfsstats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nfsrv_useacl
 decl_stmt|;
