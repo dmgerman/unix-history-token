@@ -20,19 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vtoc.h>
+file|<stdint.h>
 end_include
 
 begin_include
@@ -57,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vtoc.h>
 end_include
 
 begin_include
