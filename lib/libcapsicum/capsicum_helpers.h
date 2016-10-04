@@ -340,7 +340,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|caph_limit_stdout
+name|caph_limit_stderr
 argument_list|()
 operator|==
 operator|-
