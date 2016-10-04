@@ -245,6 +245,10 @@ decl_stmt|;
 name|int
 name|icache_line_mask
 decl_stmt|;
+comment|/* mpidr */
+name|int
+name|mp_ext
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -603,6 +603,21 @@ operator|)
 operator|&
 literal|0xF
 expr_stmt|;
+comment|/* mpidr */
+name|cpuinfo
+operator|.
+name|mp_ext
+operator|=
+operator|(
+name|cpuinfo
+operator|.
+name|mpidr
+operator|>>
+literal|31u
+operator|)
+operator|&
+literal|0x1
+expr_stmt|;
 comment|/* L1 Cache sizes */
 if|if
 condition|(
