@@ -10669,7 +10669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increment the use and hold counts on the vnode, taking care to reference  * the driver's usecount if this is a chardev.  The _vhold() will remove  * the vnode from the free list if it is presently free.  */
+comment|/*  * Increment the use count on the vnode, taking care to reference  * the driver's usecount if this is a chardev.  */
 end_comment
 
 begin_function
@@ -11168,7 +11168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increase the reference count of a vnode.  */
+comment|/*  * Increase the reference (use) and hold count of a vnode.  * This will also remove the vnode from the free list if it is presently free.  */
 end_comment
 
 begin_function
