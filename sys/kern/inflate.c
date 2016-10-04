@@ -994,69 +994,50 @@ begin_comment
 comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return zero on success, one if    the given code set is incomplete (the tables are still built in this    case), two if the input is invalid (all zero length codes or an    oversubscribed set of lengths), and three if not enough memory.    The code with value 256 is special, and the tables are constructed    so that no bits beyond that code are fetched when that code is    decoded. */
 end_comment
 
+begin_comment
+comment|/*  * Arguments:  * b	code lengths in bits (all assumed<= BMAX)  * n	number of codes (assumed<= N_MAX)  * s	number of simple-valued codes (0..s-1)  * d	list of base values for non-simple codes  * e	list of extra bits for non-simple codes  * t	result: starting table  * m	maximum lookup bits, returns actual  */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|huft_build
 parameter_list|(
-name|glbl
-parameter_list|,
-name|b
-parameter_list|,
-name|n
-parameter_list|,
-name|s
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|t
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|,
 name|unsigned
 modifier|*
 name|b
-decl_stmt|;
-comment|/* code lengths in bits (all assumed<= BMAX) */
+parameter_list|,
 name|unsigned
 name|n
-decl_stmt|;
-comment|/* number of codes (assumed<= N_MAX) */
+parameter_list|,
 name|unsigned
 name|s
-decl_stmt|;
-comment|/* number of simple-valued codes (0..s-1) */
+parameter_list|,
 specifier|const
 name|ush
 modifier|*
 name|d
-decl_stmt|;
-comment|/* list of base values for non-simple codes */
+parameter_list|,
 specifier|const
 name|ush
 modifier|*
 name|e
-decl_stmt|;
-comment|/* list of extra bits for non-simple codes */
+parameter_list|,
 name|struct
 name|huft
 modifier|*
 modifier|*
 name|t
-decl_stmt|;
-comment|/* result: starting table */
+parameter_list|,
 name|int
 modifier|*
 name|m
-decl_stmt|;
-comment|/* maximum lookup bits, returns actual */
+parameter_list|)
 block|{
 name|unsigned
 name|a
@@ -2182,26 +2163,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Arguments:  * t	table to free  */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|huft_free
 parameter_list|(
-name|glbl
-parameter_list|,
-name|t
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|,
 name|struct
 name|huft
 modifier|*
 name|t
-decl_stmt|;
-comment|/* table to free */
+parameter_list|)
 comment|/* Free the malloc'ed tables built by huft_build(), which makes a linked    list of the tables it made, with the links in a dummy first entry of    each table. */
 block|{
 specifier|register
@@ -2263,53 +2243,36 @@ begin_comment
 comment|/* inflate (decompress) the codes in a deflated (compressed) block.    Return an error code or zero if it all goes ok. */
 end_comment
 
+begin_comment
+comment|/*  * Arguments:  * tl, td	literal/length and distance decoder tables  * bl, bd	number of bits decoded by tl[] and td[]  */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|inflate_codes
 parameter_list|(
-name|glbl
-parameter_list|,
-name|tl
-parameter_list|,
-name|td
-parameter_list|,
-name|bl
-parameter_list|,
-name|bd
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|,
 name|struct
 name|huft
 modifier|*
 name|tl
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|huft
+modifier|*
 name|td
-decl_stmt|;
-end_function
-
-begin_comment
-comment|/* literal/length and distance decoder tables */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|bl
-decl_stmt|,
+parameter_list|,
+name|int
 name|bd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of bits decoded by tl[] and td[] */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -2859,7 +2822,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* "decompress" an inflated type 0 (stored) block. */
@@ -2870,13 +2833,11 @@ specifier|static
 name|int
 name|inflate_stored
 parameter_list|(
-name|glbl
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|n
@@ -3067,13 +3028,11 @@ specifier|static
 name|int
 name|inflate_fixed
 parameter_list|(
-name|glbl
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* if first time, set up tables for fixed blocks */
 if|if
@@ -3354,13 +3313,11 @@ specifier|static
 name|int
 name|inflate_dynamic
 parameter_list|(
-name|glbl
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4176,25 +4133,24 @@ unit|}
 comment|/* decompress an inflated block */
 end_comment
 
+begin_comment
+comment|/*  * Arguments:  * e	last block flag  */
+end_comment
+
 begin_function
 unit|static
 name|int
 name|inflate_block
 parameter_list|(
-name|glbl
-parameter_list|,
-name|e
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|e
-decl_stmt|;
-comment|/* last block flag */
+parameter_list|)
 block|{
 name|unsigned
 name|t
@@ -4330,13 +4286,11 @@ specifier|static
 name|int
 name|xinflate
 parameter_list|(
-name|glbl
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|e
@@ -4458,13 +4412,11 @@ begin_function
 name|int
 name|inflate
 parameter_list|(
-name|glbl
-parameter_list|)
 name|struct
 name|inflate
 modifier|*
 name|glbl
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
