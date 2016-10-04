@@ -67,7 +67,9 @@ value|\ 	u_int	pc_vcpu_id;
 comment|/* Xen vCPU ID */
 value|\ 	vm_offset_t pc_qmap_addr;
 comment|/* KVA for temporary mappings */
-value|\ 	char	__pad[229]
+value|\ 	uint32_t pc_smp_tlb_done;
+comment|/* TLB op acknowledgement */
+value|\ 	char	__pad[225]
 end_define
 
 begin_ifdef
