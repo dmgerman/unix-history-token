@@ -6833,7 +6833,7 @@ name|rule
 operator|->
 name|rt
 operator|>
-name|PF_FASTROUTE
+name|PF_NOPFROUTE
 operator|)
 operator|)
 operator|&&
@@ -8438,7 +8438,7 @@ name|newrule
 operator|->
 name|rt
 operator|>
-name|PF_FASTROUTE
+name|PF_NOPFROUTE
 operator|)
 operator|)
 operator|&&

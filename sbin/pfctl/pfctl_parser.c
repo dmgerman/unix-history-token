@@ -5045,29 +5045,6 @@ argument_list|(
 literal|" dup-to"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|r
-operator|->
-name|rt
-operator|==
-name|PF_FASTROUTE
-condition|)
-name|printf
-argument_list|(
-literal|" fastroute"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|->
-name|rt
-operator|!=
-name|PF_FASTROUTE
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|" "
@@ -5091,7 +5068,6 @@ argument_list|,
 name|PF_PASS
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
