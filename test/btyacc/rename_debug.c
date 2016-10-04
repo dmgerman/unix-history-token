@@ -8,7 +8,7 @@ comment|/* yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93" */
 end_comment
 
 begin_comment
-comment|/* (use YYMAJOR/YYMINOR for ifdefs dependent of parser version) */
+comment|/* (use YYMAJOR/YYMINOR for ifdefs dependent on parser version) */
 end_comment
 
 begin_define
@@ -1206,15 +1206,15 @@ block|{
 name|unsigned
 name|stacksize
 decl_stmt|;
-name|short
+name|YYINT
 modifier|*
 name|s_base
 decl_stmt|;
-name|short
+name|YYINT
 modifier|*
 name|s_mark
 decl_stmt|;
-name|short
+name|YYINT
 modifier|*
 name|s_last
 decl_stmt|;
@@ -1707,7 +1707,7 @@ decl_stmt|;
 name|unsigned
 name|newsize
 decl_stmt|;
-name|short
+name|YYINT
 modifier|*
 name|newss
 decl_stmt|;
@@ -1791,7 +1791,7 @@ expr_stmt|;
 name|newss
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|*
 operator|)
 name|realloc
@@ -2179,7 +2179,7 @@ operator|.
 name|s_base
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|*
 operator|)
 name|malloc
@@ -2188,7 +2188,7 @@ name|size
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2554,6 +2554,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* YYBTYACC */
+name|yym
+operator|=
+literal|0
+expr_stmt|;
+name|yyn
+operator|=
+literal|0
+expr_stmt|;
 name|yynerrs
 operator|=
 literal|0
@@ -2989,7 +2997,6 @@ name|yychar
 operator|=
 name|YYEOF
 expr_stmt|;
-comment|/* if ((yychar = YYLEX)< 0) yychar = YYEOF; */
 if|#
 directive|if
 name|YYDEBUG
@@ -2998,6 +3005,9 @@ condition|(
 name|yydebug
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|yys
 operator|=
 name|yyname
@@ -3006,6 +3016,16 @@ name|YYTRANSLATE
 argument_list|(
 name|yychar
 argument_list|)
+index|]
+operator|)
+operator|==
+name|NULL
+condition|)
+name|yys
+operator|=
+name|yyname
+index|[
+name|YYUNDFTOKEN
 index|]
 expr_stmt|;
 name|fprintf
@@ -3333,7 +3353,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3874,7 +3894,7 @@ operator|.
 name|s_mark
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|)
 name|yystate
 expr_stmt|;
@@ -4163,8 +4183,48 @@ goto|;
 goto|goto
 name|yyerrlab
 goto|;
+comment|/* redundant goto avoids 'unused label' warning */
 name|yyerrlab
 label|:
+comment|/* explicit YYERROR from an action -- pop the rhs of the rule reduced      * before looking for error recovery */
+name|yystack
+operator|.
+name|s_mark
+operator|-=
+name|yym
+expr_stmt|;
+name|yystate
+operator|=
+operator|*
+name|yystack
+operator|.
+name|s_mark
+expr_stmt|;
+name|yystack
+operator|.
+name|l_mark
+operator|-=
+name|yym
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYLTYPE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|YYLTYPE_IS_DECLARED
+argument_list|)
+name|yystack
+operator|.
+name|p_mark
+operator|-=
+name|yym
+expr_stmt|;
+endif|#
+directive|endif
 name|yynewerrflag
 operator|=
 literal|0
@@ -4359,7 +4419,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4592,7 +4652,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4923,7 +4983,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5116,6 +5176,7 @@ name|YYBTYACC
 goto|goto
 name|yyerrlab
 goto|;
+comment|/* redundant goto avoids 'unused label' warning */
 name|yyerrlab
 label|:
 endif|#
@@ -5491,6 +5552,9 @@ condition|(
 name|yydebug
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|yys
 operator|=
 name|yyname
@@ -5499,6 +5563,16 @@ name|YYTRANSLATE
 argument_list|(
 name|yychar
 argument_list|)
+index|]
+operator|)
+operator|==
+name|NULL
+condition|)
+name|yys
+operator|=
+name|yyname
+index|[
+name|YYUNDFTOKEN
 index|]
 expr_stmt|;
 name|fprintf
@@ -6319,7 +6393,6 @@ name|yychar
 operator|=
 name|YYEOF
 expr_stmt|;
-comment|/* if ((yychar = YYLEX)< 0) yychar = YYEOF; */
 if|#
 directive|if
 name|YYDEBUG
@@ -6328,6 +6401,9 @@ condition|(
 name|yydebug
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|yys
 operator|=
 name|yyname
@@ -6337,12 +6413,22 @@ argument_list|(
 name|yychar
 argument_list|)
 index|]
+operator|)
+operator|==
+name|NULL
+condition|)
+name|yys
+operator|=
+name|yyname
+index|[
+name|YYUNDFTOKEN
+index|]
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s[%d]: state %d, reading %d (%s)\n"
+literal|"%s[%d]: state %d, reading token %d (%s)\n"
 argument_list|,
 name|YYDEBUGSTR
 argument_list|,
@@ -6521,7 +6607,7 @@ operator|.
 name|s_mark
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|)
 name|yystate
 expr_stmt|;
@@ -6749,7 +6835,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;

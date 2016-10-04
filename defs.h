@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.51 2014/10/02 22:38:13 tom Exp $ */
+comment|/* $Id: defs.h,v 1.52 2016/06/01 22:56:37 Tom.Shields Exp $ */
 end_comment
 
 begin_ifdef
@@ -2495,7 +2495,9 @@ specifier|extern
 name|void
 name|default_action_warning
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|s
 parameter_list|)
 function_decl|;
 end_function_decl
