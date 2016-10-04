@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
+value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA8) +			\ 			 defined(CPU_CORTEXA_MP) +			\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
 end_define
 
 begin_comment
@@ -181,9 +181,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA
+name|CPU_CORTEXA8
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA_MP
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|CPU_KRAIT
@@ -474,9 +480,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_CORTEXA
+name|CPU_CORTEXA8
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA_MP
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|CPU_KRAIT
