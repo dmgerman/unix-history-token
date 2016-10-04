@@ -3001,11 +3001,6 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|vref
-argument_list|(
-name|ldvp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|null_nodeget
