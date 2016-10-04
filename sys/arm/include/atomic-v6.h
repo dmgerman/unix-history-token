@@ -2262,7 +2262,7 @@ operator|:
 index|[
 name|ret
 index|]
-literal|"=r"
+literal|"=&r"
 operator|(
 name|ret
 operator|)
