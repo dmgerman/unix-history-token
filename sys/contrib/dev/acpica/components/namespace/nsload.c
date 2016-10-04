@@ -37,6 +37,12 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acinterp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -117,28 +123,6 @@ argument_list|(
 name|NsLoadTable
 argument_list|)
 expr_stmt|;
-comment|/*      * Parse the table and load the namespace with all named      * objects found within. Control methods are NOT parsed      * at this time. In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
-name|Status
-operator|=
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If table already loaded into namespace, just return */
 if|if
 condition|(
@@ -184,6 +168,7 @@ goto|goto
 name|Unlock
 goto|;
 block|}
+comment|/*      * Parse the table and load the namespace with all named      * objects found within. Control methods are NOT parsed      * at this time. In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
 name|Status
 operator|=
 name|AcpiNsParseTable
@@ -212,14 +197,6 @@ block|}
 else|else
 block|{
 comment|/*          * On error, delete any namespace objects created by this table.          * We cannot initialize these objects, so delete them. There are          * a couple of expecially bad cases:          * AE_ALREADY_EXISTS - namespace collision.          * AE_NOT_FOUND - the target of a Scope operator does not          * exist. This target of Scope must already exist in the          * namespace, as per the ACPI specification.          */
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
 name|AcpiGbl_RootTableList
@@ -245,14 +222,6 @@ expr_stmt|;
 block|}
 name|Unlock
 label|:
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -298,6 +267,9 @@ expr_stmt|;
 comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      *      * This case executes the module-level code for each table immediately      * after the table has been loaded. This provides compatibility with      * other ACPI implementations. Optionally, the execution can be deferred      * until later, see AcpiInitializeObjects.      */
 if|if
 condition|(
+operator|!
+name|AcpiGbl_ParseTableAsTermList
+operator|&&
 operator|!
 name|AcpiGbl_GroupModuleLevelCode
 condition|)

@@ -43,6 +43,12 @@ directive|include
 file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acparser.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -75,6 +81,23 @@ name|ACPI_STATUS
 name|AcpiNsInitializeObjects
 parameter_list|(
 name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiPsExecuteTable
+parameter_list|(
+name|ACPI_EVALUATE_INFO
+modifier|*
+name|Info
 parameter_list|)
 block|{
 return|return
@@ -308,6 +331,18 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|AcpiEvUpdateGpes
+parameter_list|(
+name|ACPI_OWNER_ID
+name|TableOwnerId
+parameter_list|)
+block|{
+return|return;
 block|}
 end_function
 

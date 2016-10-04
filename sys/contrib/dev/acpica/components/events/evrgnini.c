@@ -1228,6 +1228,9 @@ case|:
 comment|/*                  * If we are executing module level code, the original                  * Node's object was replaced by this Method object and we                  * saved the handler in the method object.                  *                  * See AcpiNsExecModuleCode                  */
 if|if
 condition|(
+operator|!
+name|AcpiGbl_ParseTableAsTermList
+operator|&&
 name|ObjDesc
 operator|->
 name|Method

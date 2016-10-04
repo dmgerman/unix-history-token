@@ -113,8 +113,6 @@ name|String
 operator|.
 name|Pointer
 argument_list|,
-name|ACPI_ANY_BASE
-argument_list|,
 name|AcpiGbl_IntegerByteWidth
 argument_list|,
 operator|&

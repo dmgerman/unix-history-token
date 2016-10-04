@@ -907,7 +907,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtOsiImplementation  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Implementation of the _OSI predefined control method. When  *              an invocation of _OSI is encountered in the system AML,  *              control is transferred to this function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtOsiImplementation  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *              Integer: TRUE (0) if input string is matched  *                       FALSE (-1) if string is not matched  *  * DESCRIPTION: Implementation of the _OSI predefined control method. When  *              an invocation of _OSI is encountered in the system AML,  *              control is transferred to this function.  *  * (August 2016)  * Note:  _OSI is now defined to return "Ones" to indicate a match, for  * compatibility with other ACPI implementations. On a 32-bit DSDT, Ones  * is 0xFFFFFFFF. On a 64-bit DSDT, Ones is 0xFFFFFFFFFFFFFFFF  * (ACPI_UINT64_MAX).  *  * This function always returns ACPI_UINT64_MAX for TRUE, and later code  * will truncate this to 32 bits if necessary.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -937,7 +937,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|UINT64
 name|ReturnValue
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -1077,7 +1077,7 @@ expr_stmt|;
 block|}
 name|ReturnValue
 operator|=
-name|ACPI_UINT32_MAX
+name|ACPI_UINT64_MAX
 expr_stmt|;
 block|}
 name|AcpiOsReleaseMutex
@@ -1095,8 +1095,8 @@ condition|(
 name|InterfaceHandler
 condition|)
 block|{
-name|ReturnValue
-operator|=
+if|if
+condition|(
 name|InterfaceHandler
 argument_list|(
 name|StringDesc
@@ -1105,9 +1105,18 @@ name|String
 operator|.
 name|Pointer
 argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ReturnValue
 argument_list|)
+condition|)
+block|{
+name|ReturnValue
+operator|=
+name|ACPI_UINT64_MAX
 expr_stmt|;
+block|}
 block|}
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(

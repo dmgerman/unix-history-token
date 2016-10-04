@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160527
+value|0x20160930
 end_define
 
 begin_include
@@ -419,6 +419,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Optionally support module level code by parsing the entire table as  * a TermList. Default is FALSE, do not execute entire table until some  * lock order issues are fixed.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_ParseTableAsTermList
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Optionally use 32-bit FADT addresses if and when there is a conflict  * (address mismatch) between the 32-bit and 64-bit versions of the  * address. Although ACPICA adheres to the ACPI specification which  * requires the use of the corresponding 64-bit address if it is non-zero,  * some machines have been found to have a corrupted non-zero 64-bit  * address. Default is FALSE, do not favor the 32-bit addresses.  */
 end_comment
 
@@ -542,6 +558,22 @@ argument_list|,
 name|AcpiGbl_ReducedHardware
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Maximum number of While() loop iterations before forced method abort.  * This mechanism is intended to prevent infinite loops during interpreter  * execution within a host kernel.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT32
+argument_list|,
+name|AcpiGbl_MaxLoopIterations
+argument_list|,
+name|ACPI_MAX_LOOP_COUNT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1020,35 +1052,35 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeTables (     ACPI_TABLE_DESC         *InitialStorage,     UINT32                  InitialTableCount,     BOOLEAN                 AllowResize)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeTables (     ACPI_TABLE_DESC         *InitialStorage,     UINT32                  InitialTableCount,     BOOLEAN                 AllowResize)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeSubsystem (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeSubsystem (     void)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiEnableSubsystem (     UINT32                  Flags)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiEnableSubsystem (     UINT32                  Flags)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInitializeObjects (     UINT32                  Flags)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInitializeObjects (     UINT32                  Flags)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiTerminate (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiTerminate (     void)
 argument_list|)
 end_macro
 
@@ -1147,7 +1179,7 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiInstallTable (     ACPI_PHYSICAL_ADDRESS   Address,     BOOLEAN                 Physical)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiInstallTable (     ACPI_PHYSICAL_ADDRESS   Address,     BOOLEAN                 Physical)
 argument_list|)
 end_macro
 
@@ -1168,7 +1200,7 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiLoadTables (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiLoadTables (     void)
 argument_list|)
 end_macro
 
@@ -1179,14 +1211,14 @@ end_comment
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiReallocateRootTable (     void)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiReallocateRootTable (     void)
 argument_list|)
 end_macro
 
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiFindRootPointer (     ACPI_PHYSICAL_ADDRESS   *RsdpAddress)
+argument|ACPI_STATUS ACPI_INIT_FUNCTION AcpiFindRootPointer (     ACPI_PHYSICAL_ADDRESS   *RsdpAddress)
 argument_list|)
 end_macro
 
@@ -1564,6 +1596,13 @@ end_macro
 begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS
 argument_list|(
+argument|ACPI_STATUS AcpiMaskGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     BOOLEAN                 IsMasked)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
 argument|ACPI_STATUS AcpiMarkGpeForWake (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
 argument_list|)
 end_macro
@@ -1925,15 +1964,6 @@ begin_macro
 name|ACPI_DBG_DEPENDENT_RETURN_VOID
 argument_list|(
 argument|void AcpiTracePoint (     ACPI_TRACE_EVENT_TYPE   Type,     BOOLEAN                 Begin,     UINT8                   *Aml,     char                    *Pathname)
-argument_list|)
-end_macro
-
-begin_macro
-name|ACPI_APP_DEPENDENT_RETURN_VOID
-argument_list|(
-argument|ACPI_PRINTF_LIKE(
-literal|1
-argument|) void ACPI_INTERNAL_VAR_XFACE AcpiLogError (     const char              *Format,     ...)
 argument_list|)
 end_macro
 

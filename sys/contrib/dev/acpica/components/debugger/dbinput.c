@@ -1125,6 +1125,14 @@ literal|"Package method argument\n"
 block|}
 block|,
 block|{
+literal|5
+block|,
+literal|"  Execute predefined"
+block|,
+literal|"Execute all predefined (public) methods\n"
+block|}
+block|,
+block|{
 literal|1
 block|,
 literal|"  Go"

@@ -130,6 +130,12 @@ directive|define
 name|ACPI_SINGLE_THREADED
 end_define
 
+begin_define
+define|#
+directive|define
+name|USE_NATIVE_ALLOCATE_ZEROED
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -320,12 +326,6 @@ directive|define
 name|ACPI_USE_NATIVE_MEMORY_MAPPING
 end_define
 
-begin_define
-define|#
-directive|define
-name|USE_NATIVE_ALLOCATE_ZEROED
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -427,12 +427,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_USE_LOCAL_CACHE
 end_define
 
@@ -481,8 +475,64 @@ comment|/*! [Begin] no source code translation */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * Host configuration files. The compiler configuration files are included  * by the host files.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Host configuration files. The compiler configuration files are included  * first.  *  *****************************************************************************/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/platform/acgcc.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acmsvc.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acintel.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -699,36 +749,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_AED_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefi.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_GNU_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefi.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__HAIKU__
 argument_list|)
 end_elif
@@ -752,6 +772,35 @@ begin_include
 include|#
 directive|include
 file|"acqnx.h"
+end_include
+
+begin_comment
+comment|/*  * EFI applications can be built with -nostdlib, in this case, it must be  * included after including all other host environmental definitions, in  * order to override the definitions.  */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_AED_EFI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_GNU_EFI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_EDK2_EFI
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acefi.h"
 end_include
 
 begin_else
@@ -1072,14 +1121,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
+comment|/*  * ACPI_USE_SYSTEM_CLIBRARY - Define this if linking to an actual C library.  *      Otherwise, local versions of string/memory functions will be used.  * ACPI_USE_STANDARD_HEADERS - Define this if linking to a C library and  *      the standard header files may be used. Defining this implies that  *      ACPI_USE_SYSTEM_CLIBRARY has been defined.  *  * The ACPICA subsystem only uses low level C library functions that do not  * call operating system services and may therefore be inlined in the code.  *  * It may be necessary to tailor these include files to the target  * generation environment.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_ifdef
 
 begin_comment
 comment|/* Use the standard C library headers. We want to keep these to a minimum. */
@@ -1094,12 +1137,6 @@ end_ifdef
 begin_comment
 comment|/* Use the standard headers from the standard locations */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
 
 begin_include
 include|#
@@ -1119,163 +1156,6 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_USE_STANDARD_HEADERS */
-end_comment
-
-begin_comment
-comment|/* We will be linking to the standard Clib functions */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/******************************************************************************  *  * Not using native C library, use local implementations  *  *****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Use local definitions of C library macros and functions. These function  * implementations may not be as efficient as an inline or assembly code  * implementation provided by a native C library, but they are functionally  * equivalent.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|va_arg
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VALIST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_VALIST
-end_define
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|va_list
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _VALIST */
-end_comment
-
-begin_comment
-comment|/* Storage alignment properties */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_AUPBND
-value|(sizeof (ACPI_NATIVE_INT) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ADNBND
-value|(sizeof (ACPI_NATIVE_INT) - 1)
-end_define
-
-begin_comment
-comment|/* Variable argument list macro definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_Bnd
-parameter_list|(
-name|X
-parameter_list|,
-name|bnd
-parameter_list|)
-value|(((sizeof (X)) + (bnd))& (~(bnd)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_arg
-parameter_list|(
-name|ap
-parameter_list|,
-name|T
-parameter_list|)
-value|(*(T *)(((ap) += (_Bnd (T, _AUPBND))) - (_Bnd (T,_ADNBND))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_end
-parameter_list|(
-name|ap
-parameter_list|)
-value|(ap = (va_list) NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_start
-parameter_list|(
-name|ap
-parameter_list|,
-name|A
-parameter_list|)
-value|(void) ((ap) = (((char *)&(A)) + (_Bnd (A,_AUPBND))))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* va_arg */
-end_comment
-
-begin_comment
-comment|/* Use the local (ACPICA) definitions of the clib functions */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_USE_SYSTEM_CLIBRARY */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_FILE
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1287,6 +1167,50 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_USE_STANDARD_HEADERS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
 
 begin_define
 define|#
@@ -1344,14 +1268,22 @@ begin_comment
 comment|/* ACPI_APPLICATION */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_INIT_FUNCTION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_FUNCTION
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ACPI_FILE */
-end_comment
 
 begin_endif
 endif|#

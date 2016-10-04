@@ -25,12 +25,6 @@ directive|include
 file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -69,7 +63,7 @@ decl_stmt|;
 comment|/* Save the current file pointer, seek to EOF to obtain file size */
 name|CurrentOffset
 operator|=
-name|AcpiOsGetFileOffset
+name|ftell
 argument_list|(
 name|File
 argument_list|)
@@ -87,13 +81,13 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiOsSetFileOffset
+name|fseek
 argument_list|(
 name|File
 argument_list|,
 literal|0
 argument_list|,
-name|ACPI_FILE_END
+name|SEEK_END
 argument_list|)
 expr_stmt|;
 if|if
@@ -110,7 +104,7 @@ goto|;
 block|}
 name|FileSize
 operator|=
-name|AcpiOsGetFileOffset
+name|ftell
 argument_list|(
 name|File
 argument_list|)
@@ -129,13 +123,13 @@ block|}
 comment|/* Restore original file pointer */
 name|Status
 operator|=
-name|AcpiOsSetFileOffset
+name|fseek
 argument_list|(
 name|File
 argument_list|,
 name|CurrentOffset
 argument_list|,
-name|ACPI_FILE_BEGIN
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -160,9 +154,11 @@ operator|)
 return|;
 name|OffsetError
 label|:
-name|AcpiLogError
+name|fprintf
 argument_list|(
-literal|"Could not get file offset"
+name|stderr
+argument_list|,
+literal|"Could not get file offset\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -172,9 +168,11 @@ operator|)
 return|;
 name|SeekError
 label|:
-name|AcpiLogError
+name|fprintf
 argument_list|(
-literal|"Could not set file offset"
+name|stderr
+argument_list|,
+literal|"Could not set file offset\n"
 argument_list|)
 expr_stmt|;
 return|return

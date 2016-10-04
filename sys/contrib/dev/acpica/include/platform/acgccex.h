@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenvex.h - Extra host and compiler configuration  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgccex.h - Extra GCC specific defines, etc.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,127 +10,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACENVEX_H__
+name|__ACGCCEX_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACENVEX_H__
+name|__ACGCCEX_H__
 end_define
 
 begin_comment
-comment|/*! [Begin] no source code translation */
+comment|/*  * Some versions of gcc implement strchr() with a buggy macro. So,  * undef it here. Prevents error messages of this form (usually from the  * file getopt.c):  *  * error: logical '&&' with non-zero constant will always evaluate as true  */
 end_comment
 
-begin_comment
-comment|/******************************************************************************  *  * Extra host configuration files. All ACPICA headers are included before  * including these files.  *  *****************************************************************************/
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|strchr
+end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_LINUX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"aclinuxex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acdragonflyex.h"
-end_include
-
-begin_comment
-comment|/*  * EFI applications can be built with -nostdlib, in this case, it must be  * included after including all other host environmental definitions, in  * order to override the definitions.  */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_AED_EFI
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_GNU_EFI
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_EDK2_EFI
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acefiex.h"
-end_include
+begin_undef
+undef|#
+directive|undef
+name|strchr
+end_undef
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"acgccex.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acmsvcex.h"
-end_include
 
 begin_endif
 endif|#
@@ -138,16 +46,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*! [End] no source code translation !*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ACENVEX_H__ */
+comment|/* __ACGCCEX_H__ */
 end_comment
 
 end_unit

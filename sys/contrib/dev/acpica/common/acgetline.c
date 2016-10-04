@@ -37,12 +37,6 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_comment
 comment|/*  * This is an os-independent implementation of line-editing services needed  * by the AcpiExec utility. It uses getchar() and putchar() and the existing  * history support provided by the AML debugger. It assumes that the terminal  * is in the correct line-editing mode such as raw and noecho. The OSL  * interface AcpiOsInitialize should do this. AcpiOsTerminate should put the  * terminal back into the original mode.  */
 end_comment

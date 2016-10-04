@@ -1389,6 +1389,9 @@ operator|)
 condition|)
 block|{
 comment|/* Either the method parse or actual execution failed */
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 name|ACPI_ERROR_METHOD
 argument_list|(
 literal|"Method parse/execution failed"
@@ -1401,6 +1404,9 @@ name|NULL
 argument_list|,
 name|Status
 argument_list|)
+expr_stmt|;
+name|AcpiExEnterInterpreter
+argument_list|()
 expr_stmt|;
 comment|/* Check for possible multi-thread reentrancy problem */
 if|if
@@ -1467,6 +1473,15 @@ name|ACPI_PARSE_MODE_MASK
 operator|)
 operator|==
 name|ACPI_PARSE_EXECUTE
+operator|&&
+operator|!
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODULE_LEVEL
+operator|)
 operator|)
 operator|||
 operator|(

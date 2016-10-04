@@ -19,16 +19,6 @@ directive|define
 name|__ACFREEBSD_H__
 end_define
 
-begin_comment
-comment|/* FreeBSD uses GCC */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/platform/acgcc.h>
-end_include
-
 begin_include
 include|#
 directive|include

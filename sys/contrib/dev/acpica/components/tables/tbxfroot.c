@@ -201,6 +201,7 @@ end_comment
 
 begin_function
 name|ACPI_STATUS
+name|ACPI_INIT_FUNCTION
 name|AcpiFindRootPointer
 parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -486,7 +487,7 @@ block|}
 end_function
 
 begin_macro
-name|ACPI_EXPORT_SYMBOL
+name|ACPI_EXPORT_SYMBOL_INIT
 argument_list|(
 argument|AcpiFindRootPointer
 argument_list|)

@@ -883,6 +883,7 @@ name|UINT8
 name|SpecificFlags
 parameter_list|)
 block|{
+comment|/* _TTP */
 name|AcpiOsPrintf
 argument_list|(
 literal|", %s"
@@ -898,14 +899,7 @@ argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* TRS is only used if TTP is TypeTranslation */
-if|if
-condition|(
-name|SpecificFlags
-operator|&
-literal|0x10
-condition|)
-block|{
+comment|/*      * TRS is only used if TTP is TypeTranslation. However, the disassembler      * always emits exactly what is in the AML.      */
 name|AcpiOsPrintf
 argument_list|(
 literal|", %s"
@@ -921,7 +915,6 @@ argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

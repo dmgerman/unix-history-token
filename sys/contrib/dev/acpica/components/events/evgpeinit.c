@@ -663,8 +663,14 @@ name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|UINT32
 name|GpeNumber
+decl_stmt|;
+name|UINT8
+name|TempGpeNumber
 decl_stmt|;
 name|char
 name|Name
@@ -792,9 +798,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 4) The last two characters of the name are the hex GPE Number */
-name|GpeNumber
+name|Status
 operator|=
-name|strtoul
+name|AcpiUtAsciiToHexByte
 argument_list|(
 operator|&
 name|Name
@@ -802,16 +808,16 @@ index|[
 literal|2
 index|]
 argument_list|,
-name|NULL
-argument_list|,
-literal|16
+operator|&
+name|TempGpeNumber
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GpeNumber
-operator|==
-name|ACPI_UINT32_MAX
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 comment|/* Conversion failed; invalid method, just ignore it */
@@ -834,6 +840,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Ensure that we have a valid GPE number for this GPE block */
+name|GpeNumber
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|TempGpeNumber
+expr_stmt|;
 name|GpeEventInfo
 operator|=
 name|AcpiEvLowGetGpeInfo
