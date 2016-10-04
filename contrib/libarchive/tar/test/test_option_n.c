@@ -174,7 +174,10 @@ name|assertIsDir
 argument_list|(
 literal|"d1"
 argument_list|,
+name|umasked
+argument_list|(
 literal|0755
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertFileNotExists

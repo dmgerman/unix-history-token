@@ -313,7 +313,10 @@ name|assertIsDir
 argument_list|(
 literal|"ld1"
 argument_list|,
+name|umasked
+argument_list|(
 literal|0755
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertIsSymlink
@@ -334,7 +337,10 @@ name|assertIsReg
 argument_list|(
 literal|"link2"
 argument_list|,
+name|umasked
+argument_list|(
 literal|0644
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertIsSymlink
