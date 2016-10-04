@@ -1424,6 +1424,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *<---------------- ravail --------------------->  *<-- diff ------><---  avail ----------------->  *<---- len ----------->  * | Previous lines | line being parsed  nl extra |  *                  ^  *                  b  *  */
+end_comment
+
 begin_function
 specifier|static
 name|ssize_t
@@ -1633,9 +1637,13 @@ name|get_line_size
 argument_list|(
 operator|*
 name|b
+operator|+
+name|len
 argument_list|,
 operator|*
 name|avail
+operator|-
+name|len
 argument_list|,
 name|nl
 argument_list|)

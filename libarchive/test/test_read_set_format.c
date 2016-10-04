@@ -1452,7 +1452,7 @@ condition|(
 operator|!
 name|canRunCommand
 argument_list|(
-literal|"bunzip2 -V"
+literal|"bunzip2 -h"
 argument_list|)
 condition|)
 block|{
