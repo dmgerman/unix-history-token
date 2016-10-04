@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: output.c,v 1.74 2014/10/05 23:21:09 tom Exp $ */
+comment|/* $Id: output.c,v 1.76 2016/06/07 00:14:34 tom Exp $ */
 end_comment
 
 begin_include
@@ -5524,6 +5524,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|token_table
+operator|&&
+name|rflag
+operator|&&
+name|fp
+operator|!=
+name|externs_file
+condition|)
+block|{
+if|if
+condition|(
+name|fp
+operator|==
+name|code_file
+condition|)
+operator|++
+name|outline
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"#undef yytname\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|code_file
+condition|)
+operator|++
+name|outline
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"#define yytname yyname\n"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|fp
 operator|==
 name|defines_file
@@ -6058,6 +6102,12 @@ condition|(
 name|token_table
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rflag
+condition|)
+block|{
 name|output_line
 argument_list|(
 literal|"#undef yytname"
@@ -6068,6 +6118,7 @@ argument_list|(
 literal|"#define yytname yyname"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
