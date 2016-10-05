@@ -15667,9 +15667,8 @@ literal|0x74
 argument_list|,
 literal|0x71
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EACCES
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit access not authorized"
 argument_list|)
 block|}
@@ -15682,9 +15681,8 @@ literal|0x74
 argument_list|,
 literal|0x79
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EACCES
 argument_list|,
-comment|/* XXX TBD */
 literal|"Security conflict in translated device"
 argument_list|)
 block|}
