@@ -581,17 +581,6 @@ name|cpu_functions
 name|pj4bv7_cpufuncs
 init|=
 block|{
-comment|/* MMU functions */
-operator|.
-name|cf_control
-operator|=
-name|cpufunc_control
-block|,
-operator|.
-name|cf_setttb
-operator|=
-name|armv7_setttb
-block|,
 comment|/* Cache operations */
 operator|.
 name|cf_l2cache_wbinv_all
@@ -639,11 +628,6 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* Other functions */
-operator|.
-name|cf_drain_writebuf
-operator|=
-name|armv7_drain_writebuf
-block|,
 operator|.
 name|cf_sleep
 operator|=
@@ -1039,17 +1023,6 @@ name|cpu_functions
 name|arm1176_cpufuncs
 init|=
 block|{
-comment|/* MMU functions */
-operator|.
-name|cf_control
-operator|=
-name|cpufunc_control
-block|,
-operator|.
-name|cf_setttb
-operator|=
-name|arm11x6_setttb
-block|,
 comment|/* Cache operations */
 operator|.
 name|cf_l2cache_wbinv_all
@@ -1097,11 +1070,6 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* Other functions */
-operator|.
-name|cf_drain_writebuf
-operator|=
-name|arm11_drain_writebuf
-block|,
 operator|.
 name|cf_sleep
 operator|=
@@ -1150,17 +1118,6 @@ name|cpu_functions
 name|cortexa_cpufuncs
 init|=
 block|{
-comment|/* MMU functions */
-operator|.
-name|cf_control
-operator|=
-name|cpufunc_control
-block|,
-operator|.
-name|cf_setttb
-operator|=
-name|armv7_setttb
-block|,
 comment|/* Cache operations */
 comment|/* 	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
 operator|.
@@ -1205,11 +1162,6 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* Other functions */
-operator|.
-name|cf_drain_writebuf
-operator|=
-name|armv7_drain_writebuf
-block|,
 operator|.
 name|cf_sleep
 operator|=

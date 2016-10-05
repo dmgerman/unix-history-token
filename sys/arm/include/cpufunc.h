@@ -75,8 +75,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 comment|/* MMU functions */
 name|u_int
 function_decl|(
@@ -101,11 +99,6 @@ name|u_int
 name|ttb
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|__ARM_ARCH
-operator|<
-literal|6
 comment|/* TLB functions */
 name|void
 function_decl|(
@@ -282,6 +275,11 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* Other functions */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 name|void
 function_decl|(
 modifier|*
@@ -291,6 +289,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|void
 function_decl|(
 modifier|*
