@@ -707,6 +707,8 @@ literal|2
 index|]
 decl_stmt|;
 name|size_t
+name|expected
+decl_stmt|,
 name|len
 decl_stmt|;
 if|if
@@ -715,6 +717,8 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
+name|expected
+operator|=
 name|len
 operator|=
 sizeof|sizeof
@@ -726,6 +730,8 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+name|expected
+operator|=
 name|len
 operator|=
 name|rand_deg
@@ -752,6 +758,8 @@ index|]
 operator|=
 name|KERN_ARND
 expr_stmt|;
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|mib
@@ -767,6 +775,16 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|len
+operator|!=
+name|expected
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
