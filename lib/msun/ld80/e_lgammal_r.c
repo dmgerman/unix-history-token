@@ -1797,8 +1797,6 @@ name|p1
 decl_stmt|,
 name|p2
 decl_stmt|,
-name|p3
-decl_stmt|,
 name|q
 decl_stmt|,
 name|r
