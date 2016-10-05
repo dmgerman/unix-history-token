@@ -277,7 +277,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|bool
 name|vm_pageout_scan
 parameter_list|(
 name|struct
@@ -3330,12 +3330,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Free inactive pages  *	pass 2 - Launder dirty pages  */
+comment|/*  *	vm_pageout_scan does the dirty work for the pageout daemon.  *  *	pass 0 - Update active LRU/deactivate pages  *	pass 1 - Free inactive pages  *	pass 2 - Launder dirty pages  *  * Returns true if pass was zero or enough pages were freed by the inactive  * queue scan to meet the target.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|vm_pageout_scan
 parameter_list|(
 name|struct
@@ -3372,20 +3372,22 @@ name|deficit
 decl_stmt|,
 name|error
 decl_stmt|,
+name|inactq_shortage
+decl_stmt|;
+name|int
 name|maxlaunder
 decl_stmt|,
 name|maxscan
-decl_stmt|;
-name|int
+decl_stmt|,
 name|page_shortage
 decl_stmt|,
 name|scan_tick
 decl_stmt|,
 name|scanned
-decl_stmt|,
-name|starting_page_shortage
 decl_stmt|;
 name|int
+name|starting_page_shortage
+decl_stmt|,
 name|vnodes_skipped
 decl_stmt|;
 name|boolean_t
@@ -3446,7 +3448,7 @@ name|addl_page_shortage
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Calculate the number of pages that we want to free. 	 */
+comment|/* 	 * Calculate the number of pages that we want to free.  This number 	 * can be negative if many pages are freed between the wakeup call to 	 * the page daemon and this calculation. 	 */
 if|if
 condition|(
 name|pass
@@ -3686,7 +3688,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Held pages are essentially stuck in the 			 * queue.  So, they ought to be discounted 			 * from the inactive count.  See the 			 * calculation of the page_shortage for the 			 * loop over the active queue below. 			 */
+comment|/* 			 * Held pages are essentially stuck in the 			 * queue.  So, they ought to be discounted 			 * from the inactive count.  See the 			 * calculation of inactq_shortage before the 			 * loop over the active queue below. 			 */
 name|addl_page_shortage
 operator|++
 expr_stmt|;
@@ -4303,7 +4305,7 @@ name|starting_page_shortage
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the number of pages we want to try to move from the 	 * active queue to the inactive queue. 	 */
-name|page_shortage
+name|inactq_shortage
 operator|=
 name|vm_cnt
 operator|.
@@ -4386,7 +4388,7 @@ operator|>
 literal|0
 operator|||
 operator|(
-name|page_shortage
+name|inactq_shortage
 operator|>
 literal|0
 operator|&&
@@ -4428,7 +4430,7 @@ operator|<
 name|min_scan
 operator|||
 operator|(
-name|page_shortage
+name|inactq_shortage
 operator|>
 literal|0
 operator|&&
@@ -4665,7 +4667,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|page_shortage
+name|inactq_shortage
 operator|--
 expr_stmt|;
 block|}
@@ -4727,6 +4729,13 @@ block|}
 block|}
 endif|#
 directive|endif
+return|return
+operator|(
+name|page_shortage
+operator|<=
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5469,6 +5478,9 @@ decl_stmt|;
 name|int
 name|domidx
 decl_stmt|;
+name|bool
+name|target_met
+decl_stmt|;
 name|domidx
 operator|=
 operator|(
@@ -5483,6 +5495,10 @@ name|vm_dom
 index|[
 name|domidx
 index|]
+expr_stmt|;
+name|target_met
+operator|=
+name|true
 expr_stmt|;
 comment|/* 	 * XXXKIB It could be useful to bind pageout daemon threads to 	 * the cores belonging to the domain, from which vm_page_array 	 * is allocated. 	 */
 name|KASSERT
@@ -5581,14 +5597,12 @@ name|v_free_count
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Do not clear vm_pageout_wanted until we reach our target. 		 * Otherwise, we may be awakened over and over again, wasting 		 * CPU time. 		 */
+comment|/* 		 * Do not clear vm_pageout_wanted until we reach our free page 		 * target.  Otherwise, we may be awakened over and over again, 		 * wasting CPU time. 		 */
 if|if
 condition|(
 name|vm_pageout_wanted
 operator|&&
-operator|!
-name|vm_paging_needed
-argument_list|()
+name|target_met
 condition|)
 name|vm_pageout_wanted
 operator|=
@@ -5677,6 +5691,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|target_met
+operator|=
 name|vm_pageout_scan
 argument_list|(
 name|domain
