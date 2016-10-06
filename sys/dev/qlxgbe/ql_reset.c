@@ -50,7 +50,7 @@ name|unsigned
 name|int
 name|ql83xx_resetseq_version_sub
 init|=
-literal|58
+literal|62
 decl_stmt|;
 end_decl_stmt
 
@@ -32777,7 +32777,7 @@ literal|0x05
 block|,
 literal|0x04
 block|,
-literal|0x3a
+literal|0x3e
 block|,
 literal|0x00
 block|,
@@ -32825,7 +32825,7 @@ literal|0xdf
 block|,
 literal|0xfa
 block|,
-literal|0x98
+literal|0x94
 block|,
 literal|0x87
 block|}
