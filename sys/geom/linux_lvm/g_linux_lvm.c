@@ -1678,7 +1678,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|lv
 operator|->
