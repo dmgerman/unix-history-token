@@ -91,6 +91,26 @@ end_struct
 begin_define
 define|#
 directive|define
+name|RIB_LOCK_INIT
+parameter_list|(
+name|rh
+parameter_list|)
+value|rw_init(&(rh)->rib_lock, "rib head lock")
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIB_LOCK_DESTROY
+parameter_list|(
+name|rh
+parameter_list|)
+value|rw_destroy(&(rh)->rib_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RIB_RLOCK
 parameter_list|(
 name|rh

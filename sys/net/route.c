@@ -1614,14 +1614,9 @@ operator|->
 name|rmhead
 expr_stmt|;
 comment|/* Init locks */
-name|rw_init
+name|RIB_LOCK_INIT
 argument_list|(
-operator|&
 name|rh
-operator|->
-name|rib_lock
-argument_list|,
-literal|"rib head lock"
 argument_list|)
 expr_stmt|;
 comment|/* Finally, set base callbacks */
@@ -1764,12 +1759,9 @@ name|head
 argument_list|)
 expr_stmt|;
 comment|/* Assume table is already empty */
-name|rw_destroy
+name|RIB_LOCK_DESTROY
 argument_list|(
-operator|&
 name|rh
-operator|->
-name|rib_lock
 argument_list|)
 expr_stmt|;
 name|free
