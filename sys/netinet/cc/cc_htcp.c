@@ -1697,6 +1697,9 @@ name|snd_ssthresh
 argument_list|)
 operator|=
 operator|(
+operator|(
+name|u_long
+operator|)
 name|CCV
 argument_list|(
 name|ccv
@@ -1724,6 +1727,9 @@ name|snd_ssthresh
 argument_list|)
 operator|=
 operator|(
+operator|(
+name|u_long
+operator|)
 name|CCV
 argument_list|(
 name|ccv

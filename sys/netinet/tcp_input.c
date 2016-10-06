@@ -6806,7 +6806,7 @@ name|todrop
 decl_stmt|,
 name|win
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|tiwin
 decl_stmt|;
 name|uint16_t
@@ -7794,7 +7794,7 @@ operator|.
 name|to_tsecr
 condition|)
 block|{
-name|u_int
+name|uint32_t
 name|t
 decl_stmt|;
 name|t
@@ -8940,7 +8940,7 @@ name|tp
 operator|->
 name|rcv_adv
 operator|+=
-name|imin
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -11123,7 +11123,7 @@ argument_list|,
 name|CC_DUPACK
 argument_list|)
 expr_stmt|;
-name|u_long
+name|uint32_t
 name|oldcwnd
 init|=
 name|tp
@@ -11618,7 +11618,7 @@ operator|.
 name|to_tsecr
 condition|)
 block|{
-name|u_int
+name|uint32_t
 name|t
 decl_stmt|;
 name|t
@@ -11891,7 +11891,7 @@ operator|->
 name|snd_wnd
 operator|>=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|acked
 condition|)
@@ -12503,7 +12503,7 @@ operator|->
 name|th_urp
 operator|<=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|tlen
 operator|&&
@@ -14729,7 +14729,7 @@ name|mss
 init|=
 literal|0
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|maxmtu
 init|=
 literal|0
@@ -15163,7 +15163,7 @@ block|{
 name|int
 name|mss
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|bufsize
 decl_stmt|;
 name|struct
@@ -15519,13 +15519,13 @@ name|mss
 init|=
 literal|0
 decl_stmt|;
-name|u_long
-name|maxmtu
+name|uint32_t
+name|thcmtu
 init|=
 literal|0
 decl_stmt|;
-name|u_long
-name|thcmtu
+name|uint32_t
+name|maxmtu
 init|=
 literal|0
 decl_stmt|;
@@ -15717,7 +15717,7 @@ name|tp
 operator|->
 name|snd_nxt
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|ocwnd
 init|=
 name|tp

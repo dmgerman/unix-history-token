@@ -80,31 +80,31 @@ name|ip6_zoneid
 decl_stmt|;
 comment|/* IPv6 scope zone id */
 comment|/* endpoint specific values for tcp */
-name|u_long
+name|uint32_t
 name|rmx_mtu
 decl_stmt|;
 comment|/* MTU for this path */
-name|u_long
+name|uint32_t
 name|rmx_ssthresh
 decl_stmt|;
 comment|/* outbound gateway buffer limit */
-name|u_long
+name|uint32_t
 name|rmx_rtt
 decl_stmt|;
 comment|/* estimated round trip time */
-name|u_long
+name|uint32_t
 name|rmx_rttvar
 decl_stmt|;
 comment|/* estimated rtt variance */
-name|u_long
+name|uint32_t
 name|rmx_cwnd
 decl_stmt|;
 comment|/* congestion window */
-name|u_long
+name|uint32_t
 name|rmx_sendpipe
 decl_stmt|;
 comment|/* outbound delay-bandwidth product */
-name|u_long
+name|uint32_t
 name|rmx_recvpipe
 decl_stmt|;
 comment|/* inbound delay-bandwidth product */

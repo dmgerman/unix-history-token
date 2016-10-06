@@ -273,7 +273,7 @@ struct|struct
 name|txseginfo
 block|{
 comment|/* Segment length. */
-name|long
+name|uint32_t
 name|len
 decl_stmt|;
 comment|/* Segment sequence number. */
@@ -1368,21 +1368,21 @@ operator|&
 name|TXSI_TSO
 condition|)
 block|{
-name|txsi
-operator|->
-name|len
-operator|-=
-name|acked
-expr_stmt|;
 if|if
 condition|(
 name|txsi
 operator|->
 name|len
 operator|>
-literal|0
+name|acked
 condition|)
 block|{
+name|txsi
+operator|->
+name|len
+operator|-=
+name|acked
+expr_stmt|;
 comment|/* 					 * This presumes ack for first bytes in 					 * txsi, this may not be true but it 					 * shouldn't cause problems for the 					 * timing. 					 * 					 * We remeasure RTT even though we only 					 * have a single txsi. The rationale 					 * behind this is that it is better to 					 * have a slightly inaccurate 					 * measurement than no additional 					 * measurement for the rest of the bulk 					 * transfer. Since TSO is only used on 					 * high speed interface cards, so the 					 * packets should be transmitted at line 					 * rate back to back with little 					 * difference in transmission times (in 					 * ticks). 					 */
 name|txsi
 operator|->
@@ -1401,6 +1401,12 @@ expr_stmt|;
 comment|/* 					 * There is still more data to be acked 					 * from tso bulk transmission, so we 					 * won't remove it from the TAILQ yet. 					 */
 break|break;
 block|}
+name|txsi
+operator|->
+name|len
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -1522,7 +1528,7 @@ name|txseginfo
 modifier|*
 name|txsi
 decl_stmt|;
-name|long
+name|uint32_t
 name|len
 decl_stmt|;
 name|int

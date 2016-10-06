@@ -195,7 +195,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|uint32_t
 name|tcp_ts_getticks
 parameter_list|(
 name|void
@@ -205,9 +205,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|u_long
-name|ms
-decl_stmt|;
 comment|/* 	 * getmicrouptime() should be good enough for any 1-1000ms granularity. 	 * Do not use getmicrotime() here as it might break nfsroot/tcp. 	 */
 name|getmicrouptime
 argument_list|(
@@ -215,8 +212,8 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
-name|ms
-operator|=
+return|return
+operator|(
 name|tv
 operator|.
 name|tv_sec
@@ -228,10 +225,6 @@ operator|.
 name|tv_usec
 operator|/
 literal|1000
-expr_stmt|;
-return|return
-operator|(
-name|ms
 operator|)
 return|;
 block|}

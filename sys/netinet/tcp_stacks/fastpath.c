@@ -616,7 +616,7 @@ parameter_list|,
 name|int
 name|ti_locked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|tiwin
 parameter_list|)
 block|{
@@ -912,7 +912,7 @@ operator|->
 name|to_tsecr
 condition|)
 block|{
-name|u_int
+name|uint32_t
 name|t
 decl_stmt|;
 name|t
@@ -1364,7 +1364,7 @@ parameter_list|,
 name|int
 name|ti_locked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|tiwin
 parameter_list|)
 block|{
@@ -1904,7 +1904,7 @@ parameter_list|,
 name|int
 name|ti_locked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|tiwin
 parameter_list|,
 name|int
@@ -2292,7 +2292,7 @@ name|tp
 operator|->
 name|rcv_adv
 operator|+=
-name|imin
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -4359,7 +4359,7 @@ argument_list|,
 name|CC_DUPACK
 argument_list|)
 expr_stmt|;
-name|u_long
+name|uint32_t
 name|oldcwnd
 init|=
 name|tp
@@ -4817,7 +4817,7 @@ operator|->
 name|to_tsecr
 condition|)
 block|{
-name|u_int
+name|uint32_t
 name|t
 decl_stmt|;
 name|t
@@ -5663,7 +5663,7 @@ operator|->
 name|th_urp
 operator|<=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|tlen
 operator|&&
@@ -6614,7 +6614,7 @@ block|{
 name|int
 name|thflags
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|tiwin
 decl_stmt|;
 name|char
@@ -7651,7 +7651,7 @@ parameter_list|,
 name|int
 name|ti_locked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|tiwin
 parameter_list|)
 block|{
@@ -8132,7 +8132,7 @@ operator|->
 name|to_tsecr
 condition|)
 block|{
-name|u_int
+name|uint32_t
 name|t
 decl_stmt|;
 name|t
@@ -8582,7 +8582,7 @@ block|{
 name|int
 name|thflags
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|tiwin
 decl_stmt|;
 name|char

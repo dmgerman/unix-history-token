@@ -1774,7 +1774,7 @@ comment|/*  * External function: look up an entry in the hostcache and return th
 end_comment
 
 begin_function
-name|u_long
+name|uint32_t
 name|tcp_hc_getmtu
 parameter_list|(
 name|struct
@@ -1788,7 +1788,7 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|mtu
 decl_stmt|;
 if|if
@@ -1866,7 +1866,7 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|u_long
+name|uint32_t
 name|mtu
 parameter_list|)
 block|{
@@ -2079,10 +2079,16 @@ operator|->
 name|rmx_rtt
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|hc_entry
 operator|->
 name|rmx_rtt
 operator|+
+operator|(
+name|uint64_t
+operator|)
 name|hcml
 operator|->
 name|rmx_rtt
@@ -2127,10 +2133,16 @@ operator|->
 name|rmx_rttvar
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|hc_entry
 operator|->
 name|rmx_rttvar
 operator|+
+operator|(
+name|uint64_t
+operator|)
 name|hcml
 operator|->
 name|rmx_rttvar
@@ -2223,10 +2235,16 @@ operator|->
 name|rmx_cwnd
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|hc_entry
 operator|->
 name|rmx_cwnd
 operator|+
+operator|(
+name|uint64_t
+operator|)
 name|hcml
 operator|->
 name|rmx_cwnd
@@ -2267,10 +2285,16 @@ operator|->
 name|rmx_sendpipe
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|hc_entry
 operator|->
 name|rmx_sendpipe
 operator|+
+operator|(
+name|uint64_t
+operator|)
 name|hcml
 operator|->
 name|rmx_sendpipe
@@ -2311,10 +2335,16 @@ operator|->
 name|rmx_recvpipe
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|hc_entry
 operator|->
 name|rmx_recvpipe
 operator|+
+operator|(
+name|uint64_t
+operator|)
 name|hcml
 operator|->
 name|rmx_recvpipe
@@ -2487,7 +2517,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"%-15s %5lu %8lu %6lums %6lums %8lu %8lu %8lu %4lu "
+literal|"%-15s %5u %8u %6lums %6lums %8u %8u %8u %4lu "
 literal|"%4lu %4i\n"
 argument_list|,
 name|hc_entry
@@ -2532,6 +2562,9 @@ name|rmx_ssthresh
 argument_list|,
 name|msec
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|hc_entry
 operator|->
 name|rmx_rtt
@@ -2549,6 +2582,9 @@ argument_list|)
 argument_list|,
 name|msec
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|hc_entry
 operator|->
 name|rmx_rttvar

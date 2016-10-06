@@ -2534,8 +2534,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|unsigned
-name|long
+name|uint32_t
 name|cdg_window_decrease
 parameter_list|(
 name|struct
@@ -2979,7 +2978,7 @@ argument_list|,
 name|snd_ssthresh
 argument_list|)
 operator|=
-name|ulmax
+name|max
 argument_list|(
 name|cdg_data
 operator|->
