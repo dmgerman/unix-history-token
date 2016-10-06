@@ -11421,6 +11421,9 @@ name|genid
 decl_stmt|,
 name|syncid
 decl_stmt|;
+name|bool
+name|broken
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -11652,6 +11655,10 @@ operator|=
 name|genid
 expr_stmt|;
 comment|/* 		 * Remove all disks without the biggest genid. 		 */
+name|broken
+operator|=
+name|false
+expr_stmt|;
 name|LIST_FOREACH_SAFE
 argument_list|(
 argument|disk
@@ -11692,6 +11699,11 @@ name|g_mirror_destroy_disk
 argument_list|(
 name|disk
 argument_list|)
+expr_stmt|;
+comment|/* 				 * Bump the syncid in case we discover a healthy 				 * replacement disk after starting the mirror. 				 */
+name|broken
+operator|=
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -12022,6 +12034,8 @@ expr_stmt|;
 if|if
 condition|(
 name|force
+operator|||
+name|broken
 condition|)
 block|{
 comment|/* Remember to bump syncid on first write. */
