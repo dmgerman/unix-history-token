@@ -5927,7 +5927,7 @@ name|tp
 operator|->
 name|snd_nxt
 operator|+
-name|len
+name|xlen
 expr_stmt|;
 block|}
 if|if
