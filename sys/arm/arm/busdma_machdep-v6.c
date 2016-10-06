@@ -161,33 +161,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__ARM_ARCH
-operator|<
-literal|6
-end_if
-
-begin_define
-define|#
-directive|define
-name|BUSDMA_DCACHE_ALIGN
-value|arm_dcache_align
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUSDMA_DCACHE_MASK
-value|arm_dcache_align_mask
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -201,11 +174,6 @@ directive|define
 name|BUSDMA_DCACHE_MASK
 value|cpuinfo.dcache_line_mask
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1463,7 +1431,7 @@ operator||
 name|size
 operator|)
 operator|&
-name|arm_dcache_align_mask
+name|BUSDMA_DCACHE_MASK
 operator|)
 return|;
 block|}
