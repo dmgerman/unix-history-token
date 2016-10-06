@@ -40482,7 +40482,7 @@ literal|"Write mem:"
 block|,
 literal|"Flush:"
 block|,
-literal|" Rx FIFO wait"
+literal|"Rx FIFO wait"
 block|,
 name|NULL
 block|,
