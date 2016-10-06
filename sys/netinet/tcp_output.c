@@ -2384,7 +2384,7 @@ name|oldwin
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  		 * If the new window size ends up being the same as the old 		 * size when it is scaled, then don't force a window update. 		 */
+comment|/*  		 * If the new window size ends up being the same as or less 		 * than the old size when it is scaled, then don't force 		 * a window update. 		 */
 if|if
 condition|(
 name|oldwin
@@ -2392,7 +2392,7 @@ operator|>>
 name|tp
 operator|->
 name|rcv_scale
-operator|==
+operator|>=
 operator|(
 name|adv
 operator|+
