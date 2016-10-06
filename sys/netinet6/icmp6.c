@@ -9218,7 +9218,7 @@ argument_list|(
 operator|&
 name|ip6
 operator|->
-name|ip6_dst
+name|ip6_src
 argument_list|,
 operator|&
 name|dst6
