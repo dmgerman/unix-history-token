@@ -701,7 +701,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|sc
 operator|->

@@ -1701,7 +1701,7 @@ name|pp
 operator|!=
 name|NULL
 condition|)
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|pp
 argument_list|,

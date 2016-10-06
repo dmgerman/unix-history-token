@@ -12080,13 +12080,7 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-name|pp
-operator|->
-name|flags
-operator||=
-name|G_PF_WITHER
-expr_stmt|;
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|pp
 argument_list|,

@@ -517,14 +517,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sc
-operator|->
-name|sc_provider
-operator|->
-name|flags
-operator||=
-name|G_PF_WITHER
-expr_stmt|;
 name|G_CONCAT_DEBUG
 argument_list|(
 literal|0
@@ -538,7 +530,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|g_orphan_provider
+name|g_wither_provider
 argument_list|(
 name|sc
 operator|->
