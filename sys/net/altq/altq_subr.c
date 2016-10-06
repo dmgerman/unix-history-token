@@ -2064,7 +2064,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|ifp
 argument_list|,
-name|if_list
+name|if_link
 argument_list|)
 control|)
 block|{

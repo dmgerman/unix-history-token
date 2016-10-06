@@ -775,7 +775,7 @@ argument|ifn
 argument_list|,
 argument|&MODULE_GLOBAL(ifnet)
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 if|if
@@ -1353,7 +1353,7 @@ argument|ifn
 argument_list|,
 argument|&MODULE_GLOBAL(ifnet)
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 if|if
