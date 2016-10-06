@@ -1509,6 +1509,8 @@ name|dmd
 operator|->
 name|intr_handle
 argument_list|,
+literal|"%s"
+argument_list|,
 name|dmd
 operator|->
 name|name

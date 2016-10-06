@@ -23703,6 +23703,8 @@ name|irq
 operator|->
 name|tag
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
