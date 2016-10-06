@@ -2050,7 +2050,8 @@ modifier|*
 name|buf
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|temp
 init|=
@@ -2337,13 +2338,6 @@ name|mediasize
 operator|-
 name|sectorsize
 expr_stmt|;
-if|if
-condition|(
-name|temp
-operator|==
-name|NULL
-condition|)
-block|{
 name|temp
 operator|=
 name|malloc
@@ -2368,7 +2362,6 @@ expr_stmt|;
 goto|goto
 name|closefd
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -3639,6 +3632,11 @@ argument_list|(
 name|xostdout
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -3654,6 +3652,11 @@ argument_list|)
 expr_stmt|;
 name|closefd
 label|:
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
