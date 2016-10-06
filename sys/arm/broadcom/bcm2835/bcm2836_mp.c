@@ -500,7 +500,10 @@ literal|1
 condition|)
 do|;
 comment|/* dsb and sev */
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 comment|/* recode AP in CPU map */

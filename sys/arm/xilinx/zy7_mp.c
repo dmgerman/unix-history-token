@@ -266,7 +266,10 @@ name|dcache_wbinv_poc_all
 argument_list|()
 expr_stmt|;
 comment|/* Wake up CPU1. */
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 block|}

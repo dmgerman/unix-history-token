@@ -1643,16 +1643,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Wake the other threads up */
-if|#
-directive|if
-name|__ARM_ARCH
-operator|>=
-literal|7
-name|armv7_sev
+name|dsb
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+name|sev
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Release APs\n"

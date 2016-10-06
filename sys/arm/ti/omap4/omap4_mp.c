@@ -192,7 +192,10 @@ argument_list|,
 name|WRITE_AUX_CORE_1
 argument_list|)
 expr_stmt|;
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 name|bus_space_unmap

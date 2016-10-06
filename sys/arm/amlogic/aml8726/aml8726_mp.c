@@ -1738,7 +1738,10 @@ name|AML_CPUCONF_CONTROL_REG
 argument_list|)
 expr_stmt|;
 comment|/* Wakeup the now enabled APs */
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Free the resources which are not needed after startup. 	 */
