@@ -11217,6 +11217,13 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|ASSERT_VI_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_VFS
