@@ -3359,6 +3359,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vrecyclel
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vn_bmap_seekhole
 parameter_list|(
 name|struct
