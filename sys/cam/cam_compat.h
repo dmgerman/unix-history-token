@@ -91,14 +91,14 @@ begin_define
 define|#
 directive|define
 name|CAMIOCOMMAND_0x16
-value|_IOWR(CAM_VERSION_0x16, 2, union ccb)
+value|_IOC(IOC_INOUT, CAM_VERSION_0x16, 2, CAM_0X17_LEN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAMGETPASSTHRU_0x16
-value|_IOWR(CAM_VERSION_0x16, 3, union ccb)
+value|_IOC(IOC_INOUT, CAM_VERSION_0x16, 3, CAM_0X17_LEN)
 end_define
 
 begin_define
@@ -369,15 +369,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CAM_0X17_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr) + sizeof(struct ccb_hdr_0x17))
+name|CAM_0X17_DATA_LEN
+value|(sizeof(union ccb) - sizeof(struct ccb_hdr))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAM_0X17_DATA_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr_0x17))
+name|CAM_0X17_LEN
+value|(sizeof(struct ccb_hdr_0x17) + CAM_0X17_DATA_LEN)
 end_define
 
 begin_define
