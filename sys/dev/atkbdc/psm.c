@@ -13100,7 +13100,13 @@ decl_stmt|,
 name|nfingers
 decl_stmt|,
 name|ewcode
+decl_stmt|,
+name|extended_buttons
 decl_stmt|;
+name|extended_buttons
+operator|=
+literal|0
+expr_stmt|;
 comment|/* TouchPad PS/2 absolute mode message format with capFourButtons: 	 * 	 *  Bits:        7   6   5   4   3   2   1   0 (LSB) 	 *  ------------------------------------------------ 	 *  ipacket[0]:  1   0  W3  W2   0  W1   R   L 	 *  ipacket[1]: Yb  Ya  Y9  Y8  Xb  Xa  X9  X8 	 *  ipacket[2]: Z7  Z6  Z5  Z4  Z3  Z2  Z1  Z0 	 *  ipacket[3]:  1   1  Yc  Xc   0  W0 D^R U^L 	 *  ipacket[4]: X7  X6  X5  X4  X3  X2  X1  X0 	 *  ipacket[5]: Y7  Y6  Y5  Y4  Y3  Y2  Y1  Y0 	 * 	 * Legend: 	 *  L: left physical mouse button 	 *  R: right physical mouse button 	 *  D: down button 	 *  U: up button 	 *  W: "wrist" value 	 *  X: x position 	 *  Y: y position 	 *  Z: pressure 	 * 	 * Without capFourButtons but with nExtendeButtons and/or capMiddle 	 * 	 *  Bits:        7   6   5   4      3      2      1      0 (LSB) 	 *  ------------------------------------------------------ 	 *  ipacket[3]:  1   1  Yc  Xc      0     W0    E^R    M^L 	 *  ipacket[4]: X7  X6  X5  X4  X3|b7  X2|b5  X1|b3  X0|b1 	 *  ipacket[5]: Y7  Y6  Y5  Y4  Y3|b8  Y2|b6  Y1|b4  Y0|b2 	 * 	 * Legend: 	 *  M: Middle physical mouse button 	 *  E: Extended mouse buttons reported instead of low bits of X and Y 	 *  b1-b8: Extended mouse buttons 	 *    Only ((nExtendedButtons + 1)>> 1) bits are used in packet 	 *    4 and 5, for reading X and Y value they should be zeroed. 	 * 	 * Absolute reportable limits:    0 - 6143. 	 * Typical bezel limits:       1472 - 5472. 	 * Typical edge marings:       1632 - 5312. 	 * 	 * w = 3 Passthrough Packet 	 * 	 * Byte 2,5,6 == Byte 1,2,3 of "Guest" 	 */
 if|if
 condition|(
@@ -13382,6 +13388,10 @@ operator|=
 name|touchpad_buttons
 operator||
 name|guest_buttons
+operator||
+name|sc
+operator|->
+name|extended_buttons
 expr_stmt|;
 block|}
 goto|goto
@@ -13897,48 +13907,6 @@ name|synhw
 operator|.
 name|capExtended
 operator|&&
-name|sc
-operator|->
-name|synhw
-operator|.
-name|capClickPad
-condition|)
-block|{
-comment|/* ClickPad Button */
-if|if
-condition|(
-operator|(
-name|pb
-operator|->
-name|ipacket
-index|[
-literal|0
-index|]
-operator|^
-name|pb
-operator|->
-name|ipacket
-index|[
-literal|3
-index|]
-operator|)
-operator|&
-literal|0x01
-condition|)
-name|touchpad_buttons
-operator|=
-name|MOUSE_BUTTON1DOWN
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sc
-operator|->
-name|synhw
-operator|.
-name|capExtended
-operator|&&
 operator|(
 name|sc
 operator|->
@@ -13992,7 +13960,7 @@ index|]
 operator|&
 literal|0x01
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON4DOWN
 expr_stmt|;
@@ -14007,7 +13975,7 @@ index|]
 operator|&
 literal|0x01
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON5DOWN
 expr_stmt|;
@@ -14022,7 +13990,7 @@ index|]
 operator|&
 literal|0x02
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON6DOWN
 expr_stmt|;
@@ -14037,7 +14005,7 @@ index|]
 operator|&
 literal|0x02
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON7DOWN
 expr_stmt|;
@@ -14055,7 +14023,7 @@ index|]
 operator|&
 literal|0x01
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON1DOWN
 expr_stmt|;
@@ -14070,7 +14038,7 @@ index|]
 operator|&
 literal|0x01
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON3DOWN
 expr_stmt|;
@@ -14085,7 +14053,7 @@ index|]
 operator|&
 literal|0x02
 condition|)
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|MOUSE_BUTTON2DOWN
 expr_stmt|;
@@ -14093,7 +14061,7 @@ name|sc
 operator|->
 name|extended_buttons
 operator|=
-name|touchpad_buttons
+name|extended_buttons
 expr_stmt|;
 block|}
 comment|/* 			 * Zero out bits used by extended buttons to avoid 			 * misinterpretation of the data absolute position. 			 * 			 * The bits represented by 			 * 			 *     (nExtendedButtons + 1)>> 1 			 * 			 * will be masked out in both bytes. 			 * The mask for n bits is computed with the formula 			 * 			 *     (1<< n) - 1 			 */
@@ -14175,7 +14143,7 @@ name|in_vscroll
 condition|)
 block|{
 comment|/* 			 * Keep reporting MOUSE DOWN until we get a new packet 			 * indicating otherwise. 			 */
-name|touchpad_buttons
+name|extended_buttons
 operator||=
 name|sc
 operator|->
@@ -14183,6 +14151,39 @@ name|extended_buttons
 expr_stmt|;
 block|}
 block|}
+comment|/* Handle ClickPad */
+if|if
+condition|(
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capClickPad
+operator|&&
+operator|(
+operator|(
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|0
+index|]
+operator|^
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+operator|)
+operator|&
+literal|0x01
+operator|)
+condition|)
+name|touchpad_buttons
+operator||=
+name|MOUSE_BUTTON1DOWN
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -14528,8 +14529,6 @@ operator|->
 name|button
 operator|=
 name|touchpad_buttons
-operator||
-name|guest_buttons
 expr_stmt|;
 comment|/* Palm detection doesn't terminate the current action. */
 if|if
@@ -14618,6 +14617,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ms
+operator|->
+name|button
+operator||=
+name|extended_buttons
+operator||
+name|guest_buttons
+expr_stmt|;
 name|SYNAPTICS_END
 label|:
 comment|/* 	 * Use the extra buttons as a scrollwheel 	 * 	 * XXX X.Org uses the Z axis for vertical wheel only, 	 * whereas moused(8) understands special values to differ 	 * vertical and horizontal wheels. 	 * 	 * xf86-input-mouse needs therefore a small patch to 	 * understand these special values. Without it, the 	 * horizontal wheel acts as a vertical wheel in X.Org. 	 * 	 * That's why the horizontal wheel is disabled by 	 * default for now. 	 */
