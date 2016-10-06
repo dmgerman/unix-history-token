@@ -165,7 +165,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not determine audit condition"
+literal|"could not determine audit condition"
 argument_list|)
 expr_stmt|;
 block|}
@@ -196,7 +196,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not set audit mask"
+literal|"could not set audit mask"
 argument_list|)
 expr_stmt|;
 comment|/* Set the audit info for the user. */
@@ -281,7 +281,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_open() failed"
+literal|"audit error: au_open() failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -318,7 +318,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_subject32() failed"
+literal|"audit error: au_to_subject32() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -347,7 +347,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_return32() failed"
+literal|"audit error: au_to_return32() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -375,7 +375,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Record was not committed."
+literal|"audit record was not committed."
 argument_list|)
 expr_stmt|;
 block|}
@@ -450,7 +450,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not determine audit condition"
+literal|"could not determine audit condition"
 argument_list|)
 expr_stmt|;
 block|}
@@ -477,7 +477,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_open() failed"
+literal|"audit error: au_open() failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -524,7 +524,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_subject32() failed"
+literal|"audit error: au_to_subject32() failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -577,7 +577,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_subject32() failed"
+literal|"audit error: au_to_subject32() failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -606,7 +606,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_text() failed"
+literal|"audit error: au_to_text() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -635,7 +635,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_return32() failed"
+literal|"audit error: au_to_return32() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -663,7 +663,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_close() was not committed"
+literal|"audit error: au_close() was not committed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -740,7 +740,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not determine audit condition"
+literal|"could not determine audit condition"
 argument_list|)
 expr_stmt|;
 block|}
@@ -767,7 +767,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_open() failed"
+literal|"audit error: au_open() failed"
 argument_list|)
 expr_stmt|;
 comment|/* The subject that is created (euid, egid of the current process). */
@@ -805,7 +805,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_subject32() failed"
+literal|"audit error: au_to_subject32() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -834,7 +834,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Error: au_to_return32() failed"
+literal|"audit error: au_to_return32() failed"
 argument_list|)
 expr_stmt|;
 name|au_write
@@ -862,7 +862,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Audit Record was not committed."
+literal|"audit record was not committed."
 argument_list|)
 expr_stmt|;
 block|}
