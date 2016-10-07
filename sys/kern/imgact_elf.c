@@ -2317,6 +2317,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 return|return
 operator|(
@@ -2425,14 +2427,14 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|KERN_FAILURE
 operator|)
 return|;
-block|}
 name|offset
 operator|+=
 name|sz
