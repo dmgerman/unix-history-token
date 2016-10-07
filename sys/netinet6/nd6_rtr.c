@@ -5767,7 +5767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if each prefix in the prefix list has at least one available router  * that advertised the prefix (a router is "available" if its neighbor cache  * entry is reachable or probably reachable).  * If the check fails, the prefix may be off-link, because, for example,  * we have moved from the network but the lifetime of the prefix has not  * expired yet.  So we should not use the prefix if there is another prefix  * that has an available router.  * But, if there is no prefix that has an available router, we still regards  * all the prefixes as on-link.  This is because we can't tell if all the  * routers are simply dead or if we really moved from the network and there  * is no router around us.  */
+comment|/*  * Check if each prefix in the prefix list has at least one available router  * that advertised the prefix (a router is "available" if its neighbor cache  * entry is reachable or probably reachable).  * If the check fails, the prefix may be off-link, because, for example,  * we have moved from the network but the lifetime of the prefix has not  * expired yet.  So we should not use the prefix if there is another prefix  * that has an available router.  * But, if there is no prefix that has an available router, we still regard  * all the prefixes as on-link.  This is because we can't tell if all the  * routers are simply dead or if we really moved from the network and there  * is no router around us.  */
 end_comment
 
 begin_function
