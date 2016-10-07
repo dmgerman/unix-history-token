@@ -4761,6 +4761,7 @@ name|struct
 name|sockaddr_in6
 name|rt_key
 decl_stmt|;
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -4925,6 +4926,7 @@ comment|/* Always use the default FIB here. */
 name|dst6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
