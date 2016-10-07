@@ -1940,6 +1940,11 @@ name|struct
 name|nd_prefixctl
 name|pr0
 decl_stmt|;
+name|struct
+name|nd_prefix
+modifier|*
+name|pr
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2282,11 +2287,15 @@ expr_stmt|;
 comment|/* 	 * Since there is no other link-local addresses, nd6_prefix_lookup() 	 * probably returns NULL.  However, we cannot always expect the result. 	 * For example, if we first remove the (only) existing link-local 	 * address, and then reconfigure another one, the prefix is still 	 * valid with referring to the old link-local address. 	 */
 if|if
 condition|(
+operator|(
+name|pr
+operator|=
 name|nd6_prefix_lookup
 argument_list|(
 operator|&
 name|pr0
 argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2315,6 +2324,12 @@ name|error
 operator|)
 return|;
 block|}
+else|else
+name|nd6_prefix_rele
+argument_list|(
+name|pr
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3263,16 +3278,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Remove neighbor management table. 	 * Enabling the nd6_purge will panic on vmove for interfaces on VNET 	 * teardown as the IPv6 layer is cleaned up already and the locks 	 * are destroyed. 	 */
-if|if
-condition|(
-name|purgeulp
-condition|)
-name|nd6_purge
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * nuke any of IPv6 addresses we have 	 * XXX: all addresses should be already removed 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
@@ -3338,7 +3343,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * remove neighbor management table.  we call it twice just to make 	 * sure we nuke everything.  maybe we need just one call. 	 * XXX: since the first call did not release addresses, some prefixes 	 * might remain.  We should call nd6_purge() again to release the 	 * prefixes after removing all addresses above. 	 * (Or can we just delay calling nd6_purge until at this point?) 	 */
+comment|/* 	 * Remove neighbor management table. 	 * Enabling the nd6_purge will panic on vmove for interfaces on VNET 	 * teardown as the IPv6 layer is cleaned up already and the locks 	 * are destroyed. 	 */
 if|if
 condition|(
 name|purgeulp
