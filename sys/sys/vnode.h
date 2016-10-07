@@ -2693,6 +2693,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|bool
+name|force
 parameter_list|)
 function_decl|;
 end_function_decl

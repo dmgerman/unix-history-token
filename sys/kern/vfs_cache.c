@@ -9028,6 +9028,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|bool
+name|force
 parameter_list|)
 block|{
 name|TAILQ_HEAD
@@ -9089,6 +9092,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|force
+operator|&&
 name|mp
 operator|->
 name|mnt_nvnodelistsize
