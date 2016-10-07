@@ -416,7 +416,6 @@ break|break;
 case|case
 name|RELOC_TYPE_RELATIVE
 case|:
-comment|/* Address relative to the base address. */
 name|newaddr
 operator|=
 operator|(
@@ -431,21 +430,26 @@ operator|+
 name|baseaddr
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ELF_RELA
+comment|/* 			 * For R_AARCH64_RELATIVE we need to calculate the 			 * delta between the address we are run from and the 			 * address we are linked at. As the latter is 0 we 			 * just use the address we are run from for this. 			 */
+operator|*
+name|newaddr
+operator|=
+name|baseaddr
+operator|+
+name|rel
+operator|->
+name|r_addend
+expr_stmt|;
+else|#
+directive|else
+comment|/* Address relative to the base address. */
 operator|*
 name|newaddr
 operator|+=
 name|baseaddr
-expr_stmt|;
-comment|/* Add the addend when the ABI uses them */
-ifdef|#
-directive|ifdef
-name|ELF_RELA
-operator|*
-name|newaddr
-operator|+=
-name|rel
-operator|->
-name|r_addend
 expr_stmt|;
 endif|#
 directive|endif
