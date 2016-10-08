@@ -658,7 +658,7 @@ name|cat
 parameter_list|,
 name|args
 parameter_list|)
-value|do {						\ 	if (mod_debug& MOD_DEBUG_##cat)				\ 		printf(args);						\ } while (0)
+value|do {						\ 	if (mod_debug& MOD_DEBUG_##cat)				\ 		printf args;						\ } while (0)
 end_define
 
 begin_else
