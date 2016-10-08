@@ -128,6 +128,9 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+name|int
+name|hdrlen
+decl_stmt|;
 block|}
 struct|;
 end_struct
