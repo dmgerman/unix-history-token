@@ -1257,7 +1257,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_COPYM
+name|M_COPY
 parameter_list|(
 name|x
 parameter_list|)
@@ -2039,7 +2039,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_COPYM
+name|M_COPY
 parameter_list|(
 name|m
 parameter_list|)

@@ -15490,7 +15490,7 @@ condition|)
 block|{
 name|mc
 operator|=
-name|M_COPYM
+name|M_COPY
 argument_list|(
 name|fin
 operator|->
