@@ -1854,8 +1854,17 @@ name|__restrict
 parameter_list|,
 name|__va_list
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * Every programmer and his dog wrote functions called getline() and dprintf()  * before POSIX.1-2008 came along and decided to usurp the names, so we  * don't prototype them by default unless one of the following is true:  *   a) the app has requested them specifically by defining _WITH_GETLINE or  *      _WITH_DPRINTF, respectively  *   b) the app has requested a POSIX.1-2008 environment via _POSIX_C_SOURCE  *   c) the app defines a GNUism such as _BSD_SOURCE or _GNU_SOURCE  */
@@ -2041,8 +2050,17 @@ name|__restrict
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
