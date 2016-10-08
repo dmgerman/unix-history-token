@@ -418,6 +418,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|evdev_register_mtx
+parameter_list|(
+name|struct
+name|evdev_dev
+modifier|*
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|evdev_unregister
 parameter_list|(
 name|struct

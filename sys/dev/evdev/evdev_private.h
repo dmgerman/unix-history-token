@@ -168,6 +168,22 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|evdev_lock_type
+block|{
+name|EV_LOCK_INTERNAL
+init|=
+literal|0
+block|,
+comment|/* Internal evdev mutex */
+name|EV_LOCK_MTX
+block|,
+comment|/* Driver`s mutex */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|evdev_dev
@@ -197,6 +213,15 @@ name|ev_cdev
 decl_stmt|;
 name|int
 name|ev_unit
+decl_stmt|;
+name|enum
+name|evdev_lock_type
+name|ev_lock_type
+decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|ev_lock
 decl_stmt|;
 name|struct
 name|mtx
@@ -398,7 +423,7 @@ name|EVDEV_LOCK
 parameter_list|(
 name|evdev
 parameter_list|)
-value|mtx_lock(&(evdev)->ev_mtx)
+value|mtx_lock((evdev)->ev_lock)
 end_define
 
 begin_define
@@ -408,7 +433,7 @@ name|EVDEV_UNLOCK
 parameter_list|(
 name|evdev
 parameter_list|)
-value|mtx_unlock(&(evdev)->ev_mtx)
+value|mtx_unlock((evdev)->ev_lock)
 end_define
 
 begin_define
@@ -418,7 +443,7 @@ name|EVDEV_LOCK_ASSERT
 parameter_list|(
 name|evdev
 parameter_list|)
-value|mtx_assert(&(evdev)->ev_mtx, MA_OWNED)
+value|mtx_assert((evdev)->ev_lock, MA_OWNED)
 end_define
 
 begin_struct
