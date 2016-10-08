@@ -2482,6 +2482,19 @@ if|if
 condition|(
 name|mp
 operator|->
+name|mnt_tmpfreevnodelistsize
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vfs_mount_destroy: nonzero tmpfreevnodelistsize"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
 name|mnt_lockref
 operator|!=
 literal|0
