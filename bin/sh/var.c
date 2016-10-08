@@ -877,6 +877,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|setvareq_const
+argument_list|(
+literal|"IFS= \t\n"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
