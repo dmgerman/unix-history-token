@@ -8076,7 +8076,7 @@ name|IEEE80211_R_RSSI
 expr_stmt|;
 name|rxs
 operator|.
-name|nf
+name|c_nf
 operator|=
 name|sc
 operator|->
@@ -8088,7 +8088,7 @@ expr_stmt|;
 comment|/* XXX chain 0 != combined rssi/nf */
 name|rxs
 operator|.
-name|rssi
+name|c_rssi
 operator|=
 name|tail
 operator|->

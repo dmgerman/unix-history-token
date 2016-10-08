@@ -14384,7 +14384,7 @@ block|}
 comment|/* rssi is in 1/2db units */
 name|rxs
 operator|.
-name|rssi
+name|c_rssi
 operator|=
 name|rssi
 operator|*
@@ -14392,7 +14392,7 @@ literal|2
 expr_stmt|;
 name|rxs
 operator|.
-name|nf
+name|c_nf
 operator|=
 name|sc
 operator|->
