@@ -257,6 +257,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVDEV_FLAG_MT_AUTOREL
+value|0x02
+end_define
+
+begin_comment
+comment|/* Autorelease MT-slots not listed in 					 * current MT protocol type B report */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVDEV_FLAG_MAX
 value|0x1F
 end_define

@@ -863,6 +863,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|evdev_send_mt_autorel
+parameter_list|(
+name|struct
+name|evdev_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Utility functions: */
 end_comment
