@@ -1726,7 +1726,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|physAddress_t
 name|XX_TrackAddress
 parameter_list|(
 name|void
