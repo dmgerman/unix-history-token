@@ -1096,6 +1096,7 @@ argument_list|)
 expr_stmt|;
 name|ctrl
 operator|&=
+operator|~
 name|GT_CTRL_ENABLE
 expr_stmt|;
 name|set_ctrl
