@@ -13,7 +13,7 @@ parameter_list|,
 name|type_magic
 parameter_list|)
 define|\
-value|do {								\ 		(to) = calloc(sizeof *(to), 1);				\ 		if ((to) != NULL)					\ 			(to)->magic = (type_magic);			\ 	} while (0)
+value|do {								\ 		(to) = calloc(1, sizeof *(to));				\ 		if ((to) != NULL)					\ 			(to)->magic = (type_magic);			\ 	} while (0)
 end_define
 
 begin_define
