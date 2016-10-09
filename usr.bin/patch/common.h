@@ -95,25 +95,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|strNE
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|(strcmp(s1, s2))
-end_define
-
-begin_define
-define|#
-directive|define
 name|strEQ
 parameter_list|(
 name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-value|(!strcmp(s1, s2))
+value|(strcmp(s1, s2) == 0)
 end_define
 
 begin_define
@@ -127,7 +115,7 @@ name|s2
 parameter_list|,
 name|l
 parameter_list|)
-value|(strncmp(s1, s2, l))
+value|(strncmp(s1, s2, l) != 0)
 end_define
 
 begin_define
@@ -141,7 +129,7 @@ name|s2
 parameter_list|,
 name|l
 parameter_list|)
-value|(!strncmp(s1, s2, l))
+value|(strncmp(s1, s2, l) == 0)
 end_define
 
 begin_comment
