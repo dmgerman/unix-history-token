@@ -586,6 +586,14 @@ directive|define
 name|FB_FLAG_NOWRITE
 value|2
 comment|/* disable writes for the time being */
+define|#
+directive|define
+name|FB_FLAG_MEMATTR
+value|4
+comment|/* override memattr for mmap */
+name|vm_memattr_t
+name|fb_memattr
+decl_stmt|;
 name|int
 name|fb_stride
 decl_stmt|;

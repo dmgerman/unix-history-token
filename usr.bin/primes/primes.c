@@ -74,6 +74,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -123,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nl_types.h>
 end_include
 
 begin_include
@@ -222,6 +234,35 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Cache NLS data, for strerror, for err(3), before cap_enter. */
+operator|(
+name|void
+operator|)
+name|catopen
+argument_list|(
+literal|"libc"
+argument_list|,
+name|NL_CAT_LOCALE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_enter
+argument_list|()
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"cap_enter"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(

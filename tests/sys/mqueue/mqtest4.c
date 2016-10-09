@@ -296,7 +296,7 @@ argument_list|(
 operator|&
 name|kev
 argument_list|,
-name|__mq_oshandle
+name|mq_getfd_np
 argument_list|(
 name|mq
 argument_list|)
@@ -546,7 +546,7 @@ argument_list|(
 operator|&
 name|kev
 argument_list|,
-name|__mq_oshandle
+name|mq_getfd_np
 argument_list|(
 name|mq
 argument_list|)

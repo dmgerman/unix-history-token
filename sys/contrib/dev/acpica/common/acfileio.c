@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acapps.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
@@ -40,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
 begin_define
@@ -167,9 +161,13 @@ operator|!
 name|File
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"Could not open input file"
+name|stderr
+argument_list|,
+literal|"Could not open input file: %s\n"
+argument_list|,
+name|Filename
 argument_list|)
 expr_stmt|;
 if|if
@@ -576,19 +574,9 @@ condition|(
 name|GetOnlyAmlTables
 condition|)
 block|{
-comment|/* Table must be an AML table (DSDT/SSDT) or FADT */
+comment|/*          * Table must be an AML table (DSDT/SSDT).          * Used for iASL -e option only.          */
 if|if
 condition|(
-operator|!
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|)
-operator|&&
 operator|!
 name|AcpiUtIsAmlTable
 argument_list|(
@@ -623,7 +611,7 @@ operator|=
 name|AcpiOsAllocate
 argument_list|(
 operator|(
-name|size_t
+name|ACPI_SIZE
 operator|)
 name|TableHeader
 operator|.
@@ -863,7 +851,7 @@ block|{
 name|ACPI_TABLE_HEADER
 name|TableHeader
 decl_stmt|;
-name|size_t
+name|ACPI_SIZE
 name|Actual
 decl_stmt|;
 name|long

@@ -920,6 +920,9 @@ name|tp
 operator|->
 name|rcv_nxt
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|tp
 operator|->
 name|rcv_wnd
@@ -971,6 +974,9 @@ name|tp
 operator|->
 name|snd_wl2
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|tp
 operator|->
 name|snd_wnd

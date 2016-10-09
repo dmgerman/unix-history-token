@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ratectl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 

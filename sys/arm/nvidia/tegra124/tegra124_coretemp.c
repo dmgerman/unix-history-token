@@ -622,7 +622,7 @@ name|device_find_child
 argument_list|(
 name|parent
 argument_list|,
-literal|"tegra124_coretemp"
+literal|"coretemp"
 argument_list|,
 operator|-
 literal|1
@@ -639,7 +639,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"tegra124_coretemp"
+literal|"coretemp"
 argument_list|,
 operator|-
 literal|1
@@ -670,7 +670,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"CPU Frequency Control"
+literal|"CPU Thermal Sensor"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1005,24 +1005,24 @@ name|tegra124_coretemp_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|driver_t
+name|DEFINE_CLASS_0
+argument_list|(
+name|coretemp
+argument_list|,
 name|tegra124_coretemp_driver
-init|=
-block|{
-literal|"tegra124_coretemp"
-block|,
+argument_list|,
 name|tegra124_coretemp_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tegra124_coretemp_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -1035,9 +1035,9 @@ name|tegra124_coretemp_driver
 argument_list|,
 name|tegra124_coretemp_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

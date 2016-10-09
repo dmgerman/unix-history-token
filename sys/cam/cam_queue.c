@@ -685,7 +685,7 @@ decl_stmt|;
 if|if
 condition|(
 name|index
-operator|==
+operator|<=
 literal|0
 operator|||
 name|index
@@ -694,11 +694,22 @@ name|queue
 operator|->
 name|entries
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"%s: Attempt to remove out-of-bounds index %d "
+literal|"from queue %p of size %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|index
+argument_list|,
+name|queue
+argument_list|,
+name|queue
+operator|->
+name|entries
+argument_list|)
+expr_stmt|;
 name|removed_entry
 operator|=
 name|queue

@@ -1405,6 +1405,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|ahci_devclass
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: blacklistd.c,v 1.34 2016/04/04 15:52:56 christos Exp $	*/
+comment|/*	$NetBSD: blacklistd.c,v 1.35 2016/09/26 19:43:43 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: blacklistd.c,v 1.34 2016/04/04 15:52:56 christos Exp $"
+literal|"$NetBSD: blacklistd.c,v 1.35 2016/09/26 19:43:43 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2424,13 +2424,6 @@ operator||=
 name|O_TRUNC
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|restore
-condition|)
-name|rules_restore
-argument_list|()
-expr_stmt|;
 name|struct
 name|pollfd
 modifier|*
@@ -2598,6 +2591,13 @@ condition|)
 return|return
 name|EXIT_FAILURE
 return|;
+if|if
+condition|(
+name|restore
+condition|)
+name|rules_restore
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

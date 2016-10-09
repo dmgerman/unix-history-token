@@ -4078,9 +4078,6 @@ if|if
 condition|(
 name|win
 operator|>
-operator|(
-name|long
-operator|)
 name|TCP_MAXWIN
 operator|<<
 name|tp
@@ -4089,9 +4086,6 @@ name|rcv_scale
 condition|)
 name|win
 operator|=
-operator|(
-name|long
-operator|)
 name|TCP_MAXWIN
 operator|<<
 name|tp
@@ -6507,7 +6501,7 @@ name|struct
 name|hc_metrics_lite
 name|metrics
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|ssthresh
 decl_stmt|;
 name|bzero
@@ -6574,10 +6568,7 @@ literal|2
 expr_stmt|;
 name|ssthresh
 operator|*=
-call|(
-name|u_long
-call|)
-argument_list|(
+operator|(
 name|tp
 operator|->
 name|t_maxseg
@@ -6613,7 +6604,7 @@ name|INET6
 operator|)
 endif|#
 directive|endif
-argument_list|)
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -11285,7 +11276,7 @@ comment|/*  * Look-up the routing entry to the peer of this inpcb.  If no route 
 end_comment
 
 begin_function
-name|u_long
+name|uint32_t
 name|tcp_maxmtu
 parameter_list|(
 name|struct
@@ -11308,7 +11299,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|maxmtu
 init|=
 literal|0
@@ -11464,7 +11455,7 @@ name|INET6
 end_ifdef
 
 begin_function
-name|u_long
+name|uint32_t
 name|tcp_maxmtu6
 parameter_list|(
 name|struct
@@ -11494,7 +11485,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|maxmtu
 init|=
 literal|0

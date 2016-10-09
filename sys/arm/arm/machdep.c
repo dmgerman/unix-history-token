@@ -1980,6 +1980,11 @@ name|vector_page
 operator|=
 name|va
 expr_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
 if|if
 condition|(
 name|va
@@ -1996,6 +2001,8 @@ name|CPU_CONTROL_VECRELOC
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 

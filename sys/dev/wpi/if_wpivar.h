@@ -128,6 +128,9 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
+name|int
+name|hdrlen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -540,6 +543,10 @@ decl_stmt|;
 name|struct
 name|ieee80211com
 name|sc_ic
+decl_stmt|;
+name|struct
+name|ieee80211_ratectl_tx_status
+name|sc_txs
 decl_stmt|;
 name|struct
 name|mtx

@@ -6072,19 +6072,16 @@ name|ti
 operator|->
 name|tcpi_last_data_recv
 operator|=
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
+operator|(
+name|uint32_t
+operator|)
 name|ticks
 operator|-
-operator|(
-name|int
-operator|)
 name|tp
 operator|->
 name|t_rcvtime
-argument_list|)
+operator|)
 operator|*
 name|tick
 expr_stmt|;
@@ -10140,7 +10137,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"rcv_adv: 0x%08x   rcv_wnd: %lu   rcv_up: 0x%08x\n"
+literal|"rcv_adv: 0x%08x   rcv_wnd: %u   rcv_up: 0x%08x\n"
 argument_list|,
 name|tp
 operator|->
@@ -10162,7 +10159,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_wnd: %lu   snd_cwnd: %lu\n"
+literal|"snd_wnd: %u   snd_cwnd: %u\n"
 argument_list|,
 name|tp
 operator|->
@@ -10180,7 +10177,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_ssthresh: %lu   snd_recover: "
+literal|"snd_ssthresh: %u   snd_recover: "
 literal|"0x%08x\n"
 argument_list|,
 name|tp
@@ -10284,7 +10281,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_rttupdated: %lu   max_sndwnd: %lu   t_softerror: %d\n"
+literal|"t_rttupdated: %lu   max_sndwnd: %u   t_softerror: %d\n"
 argument_list|,
 name|tp
 operator|->
@@ -10377,7 +10374,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"ts_offset: %u   last_ack_sent: 0x%08x   snd_cwnd_prev: "
-literal|"%lu\n"
+literal|"%u\n"
 argument_list|,
 name|tp
 operator|->
@@ -10399,7 +10396,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_ssthresh_prev: %lu   snd_recover_prev: 0x%08x   "
+literal|"snd_ssthresh_prev: %u   snd_recover_prev: 0x%08x   "
 literal|"t_badrxtwin: %u\n"
 argument_list|,
 name|tp

@@ -495,6 +495,9 @@ decl_stmt|;
 name|int
 name|hn_tx_idx
 decl_stmt|;
+name|int
+name|hn_tx_flags
+decl_stmt|;
 name|struct
 name|mtx
 name|hn_tx_lock
@@ -569,9 +572,6 @@ name|sysctl_oid
 modifier|*
 name|hn_tx_sysctl_tree
 decl_stmt|;
-name|int
-name|hn_tx_flags
-decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -586,6 +586,17 @@ directive|define
 name|HN_TX_FLAG_ATTACHED
 value|0x1
 end_define
+
+begin_define
+define|#
+directive|define
+name|HN_TX_FLAG_HASHVAL
+value|0x2
+end_define
+
+begin_comment
+comment|/* support HASHVAL pktinfo */
+end_comment
 
 begin_comment
 comment|/*  * Device-specific softc structure  */
@@ -753,6 +764,13 @@ define|#
 directive|define
 name|HN_FLAG_HAS_RSSIND
 value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_SYNTH_ATTACHED
+value|0x0010
 end_define
 
 begin_define

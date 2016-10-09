@@ -107,6 +107,54 @@ begin_comment
 comment|/* 50MB */
 end_comment
 
+begin_decl_stmt
+name|boolean_t
+name|send_holes_without_birth_time
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|send_holes_without_birth_time
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|send_holes_without_birth_time
+argument_list|,
+literal|0
+argument_list|,
+literal|"Send holes without birth time"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -994,6 +1042,9 @@ block|{
 comment|/* 		 * Since this block has a birth time of 0 it must be one of 		 * two things: a hole created before the 		 * SPA_FEATURE_HOLE_BIRTH feature was enabled, or a hole 		 * which has always been a hole in an object. 		 * 		 * If a file is written sparsely, then the unwritten parts of 		 * the file were "always holes" -- that is, they have been 		 * holes since this object was allocated.  However, we (and 		 * our callers) can not necessarily tell when an object was 		 * allocated.  Therefore, if it's possible that this object 		 * was freed and then its object number reused, we need to 		 * visit all the holes with birth==0. 		 * 		 * If it isn't possible that the object number was reused, 		 * then if SPA_FEATURE_HOLE_BIRTH was enabled before we wrote 		 * all the blocks we will visit as part of this traversal, 		 * then this hole must have always existed, so we can skip 		 * it.  We visit blocks born after (exclusive) td_min_txg. 		 * 		 * Note that the meta-dnode cannot be reallocated. 		 */
 if|if
 condition|(
+operator|!
+name|send_holes_without_birth_time
+operator|&&
 operator|(
 operator|!
 name|td

@@ -11441,7 +11441,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the request will not be requeued, drop a reference on 	 * the the aiotx buffer.  Any mbufs in flight should still 	 * contain a reference, but this drops the reference that the 	 * job owns while it is waiting to queue mbufs to the socket. 	 */
+comment|/* 	 * If the request will not be requeued, drop a reference on 	 * the aiotx buffer.  Any mbufs in flight should still 	 * contain a reference, but this drops the reference that the 	 * job owns while it is waiting to queue mbufs to the socket. 	 */
 name|free_aiotx_buffer
 argument_list|(
 name|ab

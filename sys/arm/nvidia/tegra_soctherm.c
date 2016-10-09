@@ -3429,9 +3429,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|tegra_soctherm
+name|soctherm
 argument_list|,
 name|tegra_soctherm_driver
 argument_list|,
@@ -3457,9 +3458,9 @@ name|tegra_soctherm_driver
 argument_list|,
 name|tegra_soctherm_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|79
 argument_list|)

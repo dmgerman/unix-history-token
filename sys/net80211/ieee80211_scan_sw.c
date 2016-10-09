@@ -136,18 +136,27 @@ value|0x0002
 comment|/* discard rx'd frames */
 define|#
 directive|define
-name|ISCAN_CANCEL
+name|ISCAN_INTERRUPT
 value|0x0004
+comment|/* interrupt current scan */
+define|#
+directive|define
+name|ISCAN_CANCEL
+value|0x0008
 comment|/* cancel current scan */
 define|#
 directive|define
+name|ISCAN_PAUSE
+value|(ISCAN_INTERRUPT | ISCAN_CANCEL)
+define|#
+directive|define
 name|ISCAN_ABORT
-value|0x0008
+value|0x0010
 comment|/* end the scan immediately */
 define|#
 directive|define
 name|ISCAN_RUNNING
-value|0x0010
+value|0x0020
 comment|/* scan was started */
 name|unsigned
 name|long
@@ -1649,10 +1658,31 @@ name|ic
 operator|->
 name|ic_scan
 decl_stmt|;
+name|struct
+name|scan_state
+modifier|*
+name|ss_priv
+init|=
+name|SCAN_PRIVATE
+argument_list|(
+name|ss
+argument_list|)
+decl_stmt|;
+name|int
+name|signal
+decl_stmt|;
 name|IEEE80211_LOCK
 argument_list|(
 name|ic
 argument_list|)
+expr_stmt|;
+name|signal
+operator|=
+name|any
+condition|?
+name|ISCAN_PAUSE
+else|:
+name|ISCAN_CANCEL
 expr_stmt|;
 if|if
 condition|(
@@ -1675,14 +1705,11 @@ name|vap
 operator|)
 operator|&&
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
-name|ISCAN_CANCEL
+name|signal
 operator|)
 operator|==
 literal|0
@@ -1694,9 +1721,15 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: cancel %s scan\n"
+literal|"%s: %s %s scan\n"
 argument_list|,
 name|func
+argument_list|,
+name|any
+condition|?
+literal|"pause"
+else|:
+literal|"cancel"
 argument_list|,
 name|ss
 operator|->
@@ -1717,12 +1750,12 @@ operator|&=
 operator|~
 name|IEEE80211_SCAN_NOPICK
 expr_stmt|;
-comment|/* mark cancel request and wake up the scan task */
+comment|/* mark request and wake up the scan task */
 name|scan_signal_locked
 argument_list|(
 name|ss
 argument_list|,
-name|ISCAN_CANCEL
+name|signal
 argument_list|)
 expr_stmt|;
 block|}
@@ -1734,7 +1767,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: called; F_SCAN=%d, vap=%s, CANCEL=%d\n"
+literal|"%s: called; F_SCAN=%d, vap=%s, signal=%d\n"
 argument_list|,
 name|func
 argument_list|,
@@ -1763,14 +1796,11 @@ argument_list|,
 operator|!
 operator|!
 operator|(
-name|SCAN_PRIVATE
-argument_list|(
-name|ss
-argument_list|)
+name|ss_priv
 operator|->
 name|ss_iflags
 operator|&
-name|ISCAN_CANCEL
+name|signal
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3490,6 +3520,18 @@ operator|&=
 operator|~
 name|IEEE80211_FEXT_BGSCAN
 expr_stmt|;
+comment|/* send 'scan done' event if not interrupted due to traffic. */
+if|if
+condition|(
+operator|!
+operator|(
+name|ss_priv
+operator|->
+name|ss_iflags
+operator|&
+name|ISCAN_INTERRUPT
+operator|)
+condition|)
 name|ieee80211_notify_scan_done
 argument_list|(
 name|vap
@@ -3502,7 +3544,7 @@ name|ss_iflags
 operator|&=
 operator|~
 operator|(
-name|ISCAN_CANCEL
+name|ISCAN_PAUSE
 operator||
 name|ISCAN_ABORT
 operator|)

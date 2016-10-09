@@ -118,7 +118,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|prealloc
+name|prealloc_setup
 parameter_list|(
 name|struct
 name|alloc_cache
@@ -940,7 +940,7 @@ return|;
 block|}
 block|}
 comment|/* allocate new */
-name|prealloc
+name|prealloc_setup
 argument_list|(
 name|alloc
 argument_list|)

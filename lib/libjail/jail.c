@@ -1221,6 +1221,16 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+comment|/* No more entries. */
+break|break;
+block|}
 name|snprintf
 argument_list|(
 name|jail_errmsg

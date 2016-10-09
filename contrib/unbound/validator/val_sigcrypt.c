@@ -6545,9 +6545,45 @@ name|expi
 operator|-
 name|now
 expr_stmt|;
-comment|/* so now: 	 * d->ttl: rrset ttl read from message or cache. May be reduced 	 * origttl: original TTL from signature, authoritative TTL max. 	 * expittl: TTL until the signature expires. 	 * 	 * Use the smallest of these. 	 */
+comment|/* so now: 	 * d->ttl: rrset ttl read from message or cache. May be reduced 	 * origttl: original TTL from signature, authoritative TTL max. 	 * MIN_TTL: minimum TTL from config. 	 * expittl: TTL until the signature expires. 	 * 	 * Use the smallest of these, but don't let origttl set the TTL 	 * below the minimum. 	 */
 if|if
 condition|(
+name|MIN_TTL
+operator|>
+operator|(
+name|time_t
+operator|)
+name|origttl
+operator|&&
+name|d
+operator|->
+name|ttl
+operator|>
+name|MIN_TTL
+condition|)
+block|{
+name|verbose
+argument_list|(
+name|VERB_QUERY
+argument_list|,
+literal|"rrset TTL larger than original and minimum"
+literal|" TTL, adjusting TTL downwards to mimimum ttl"
+argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|ttl
+operator|=
+name|MIN_TTL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|MIN_TTL
+operator|<=
+name|origttl
+operator|&&
 name|d
 operator|->
 name|ttl
@@ -6562,8 +6598,8 @@ name|verbose
 argument_list|(
 name|VERB_QUERY
 argument_list|,
-literal|"rrset TTL larger than original TTL,"
-literal|" adjusting TTL downwards"
+literal|"rrset TTL larger than original TTL, "
+literal|"adjusting TTL downwards to original ttl"
 argument_list|)
 expr_stmt|;
 name|d

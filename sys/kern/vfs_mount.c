@@ -397,6 +397,20 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_listmtx
+argument_list|,
+literal|"struct mount vlist mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
@@ -454,6 +468,14 @@ operator|&
 name|mp
 operator|->
 name|mnt_explock
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_listmtx
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -2075,6 +2097,20 @@ name|mnt_activevnodelistsize
 operator|=
 literal|0
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_tmpfreevnodelist
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_tmpfreevnodelistsize
+operator|=
+literal|0
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_ref
@@ -2440,6 +2476,19 @@ condition|)
 name|panic
 argument_list|(
 literal|"vfs_mount_destroy: nonzero activevnodelistsize"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_tmpfreevnodelistsize
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vfs_mount_destroy: nonzero tmpfreevnodelistsize"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6629,6 +6678,8 @@ expr_stmt|;
 name|cache_purgevfs
 argument_list|(
 name|mp
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* remove cache entries for this file sys */

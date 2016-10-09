@@ -25,7 +25,7 @@ begin_struct
 struct|struct
 name|part
 block|{
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|part
 argument_list|)
@@ -87,7 +87,7 @@ struct|;
 end_struct
 
 begin_extern
-extern|extern STAILQ_HEAD(partlisthead
+extern|extern TAILQ_HEAD(partlisthead
 operator|,
 extern|part
 end_extern

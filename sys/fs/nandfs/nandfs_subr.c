@@ -288,9 +288,10 @@ literal|0
 decl_stmt|;
 name|vp
 operator|=
+name|bo2vnode
+argument_list|(
 name|bo
-operator|->
-name|__bo_vnode
+argument_list|)
 expr_stmt|;
 name|ASSERT_VOP_LOCKED
 argument_list|(

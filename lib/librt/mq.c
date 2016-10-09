@@ -1355,9 +1355,16 @@ return|;
 block|}
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|mq_getfd_np
+end_pragma
+
 begin_function
 name|int
-name|__mq_oshandle
+name|mq_getfd_np
 parameter_list|(
 name|mqd_t
 name|mqd

@@ -132,7 +132,7 @@ name|sc_pen_down
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|int
 name|sc_x
 decl_stmt|;

@@ -668,7 +668,7 @@ name|tcpopt
 modifier|*
 name|to
 parameter_list|,
-name|long
+name|uint32_t
 name|len
 parameter_list|,
 name|int
@@ -716,7 +716,7 @@ name|tcpopt
 modifier|*
 name|to
 parameter_list|,
-name|long
+name|uint32_t
 name|len
 parameter_list|,
 name|int
@@ -862,9 +862,10 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
-name|long
+name|int32_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|recwin
 decl_stmt|,
 name|sendwin
@@ -1259,11 +1260,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|long
+name|uint32_t
 name|cwin
 decl_stmt|;
 name|cwin
 operator|=
+name|imax
+argument_list|(
 name|min
 argument_list|(
 name|tp
@@ -1276,16 +1279,9 @@ name|snd_cwnd
 argument_list|)
 operator|-
 name|sack_bytes_rxmt
-expr_stmt|;
-if|if
-condition|(
-name|cwin
-operator|<
+argument_list|,
 literal|0
-condition|)
-name|cwin
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Do not retransmit SACK segments beyond snd_recover */
 if|if
@@ -1332,7 +1328,7 @@ name|len
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|)
 name|ulmin
 argument_list|(
@@ -1354,7 +1350,7 @@ name|len
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|)
 name|ulmin
 argument_list|(
@@ -1543,7 +1539,7 @@ name|len
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|)
 name|ulmin
 argument_list|(
@@ -1563,7 +1559,7 @@ operator|)
 expr_stmt|;
 else|else
 block|{
-name|long
+name|int32_t
 name|cwin
 decl_stmt|;
 comment|/* 			 * We are inside of a SACK recovery episode and are 			 * sending new data, having retransmitted all the 			 * data possible in the scoreboard. 			 */
@@ -1571,9 +1567,9 @@ name|len
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|)
-name|ulmin
+name|min
 argument_list|(
 name|sbavail
 argument_list|(
@@ -1629,7 +1625,7 @@ literal|0
 expr_stmt|;
 name|len
 operator|=
-name|lmin
+name|imin
 argument_list|(
 name|len
 argument_list|,
@@ -2158,12 +2154,29 @@ expr_stmt|;
 block|}
 name|recwin
 operator|=
+name|lmin
+argument_list|(
+name|lmax
+argument_list|(
 name|sbspace
 argument_list|(
 operator|&
 name|so
 operator|->
 name|so_rcv
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+name|TCP_MAXWIN
+operator|<<
+name|tp
+operator|->
+name|rcv_scale
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Sender silly window avoidance.   We transmit under the following 	 * conditions when len is non-zero: 	 * 	 *	- We have a full segment (or more with TSO) 	 *	- This is the last buffer in a write()/send() and we are 	 *	  either idle or running NODELAY 	 *	- we've timed out (e.g. persist timer) 	 *	- we have more then 1/2 the maximum send window's worth of 	 *	  data (receiver may be limited the window size) 	 *	- we need to retransmit 	 */
@@ -2208,8 +2221,14 @@ name|TF_NODELAY
 operator|)
 operator|)
 operator|&&
+operator|(
+name|uint32_t
+operator|)
 name|len
 operator|+
+operator|(
+name|uint32_t
+operator|)
 name|off
 operator|>=
 name|sbavail
@@ -2326,7 +2345,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * "adv" is the amount we could increase the window, 		 * taking into account that we are limited by 		 * TCP_MAXWIN<< tp->rcv_scale. 		 */
-name|long
+name|int32_t
 name|adv
 decl_stmt|;
 name|int
@@ -2334,19 +2353,7 @@ name|oldwin
 decl_stmt|;
 name|adv
 operator|=
-name|min
-argument_list|(
 name|recwin
-argument_list|,
-operator|(
-name|long
-operator|)
-name|TCP_MAXWIN
-operator|<<
-name|tp
-operator|->
-name|rcv_scale
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2384,7 +2391,7 @@ name|oldwin
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  		 * If the new window size ends up being the same as the old 		 * size when it is scaled, then don't force a window update. 		 */
+comment|/*  		 * If the new window size ends up being the same as or less 		 * than the old size when it is scaled, then don't force 		 * a window update. 		 */
 if|if
 condition|(
 name|oldwin
@@ -2392,7 +2399,7 @@ operator|>>
 name|tp
 operator|->
 name|rcv_scale
-operator|==
+operator|>=
 operator|(
 name|adv
 operator|+
@@ -2411,7 +2418,7 @@ condition|(
 name|adv
 operator|>=
 call|(
-name|long
+name|int32_t
 call|)
 argument_list|(
 literal|2
@@ -2425,7 +2432,7 @@ operator|(
 name|adv
 operator|>=
 call|(
-name|long
+name|int32_t
 call|)
 argument_list|(
 name|so
@@ -2439,10 +2446,7 @@ argument_list|)
 operator|||
 name|recwin
 operator|<=
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|so
 operator|->
 name|so_rcv
@@ -2450,7 +2454,7 @@ operator|.
 name|sb_hiwat
 operator|/
 literal|8
-argument_list|)
+operator|)
 operator|||
 name|so
 operator|->
@@ -3437,8 +3441,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
+name|uint32_t
+operator|)
 name|off
 operator|+
+operator|(
+name|uint32_t
+operator|)
 name|len
 operator|)
 operator|<
@@ -3786,9 +3796,6 @@ name|mb
 argument_list|,
 name|moff
 argument_list|,
-operator|(
-name|int
-operator|)
 name|len
 argument_list|,
 name|mtod
@@ -3867,8 +3874,14 @@ comment|/* 		 * If we're sending everything we've got, set PUSH. 		 * (This will
 if|if
 condition|(
 operator|(
+operator|(
+name|uint32_t
+operator|)
 name|off
 operator|+
+operator|(
+name|uint32_t
+operator|)
 name|len
 operator|==
 name|sbused
@@ -4494,10 +4507,7 @@ if|if
 condition|(
 name|recwin
 operator|<
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|so
 operator|->
 name|so_rcv
@@ -4505,13 +4515,10 @@ operator|.
 name|sb_hiwat
 operator|/
 literal|4
-argument_list|)
+operator|)
 operator|&&
 name|recwin
 operator|<
-operator|(
-name|long
-operator|)
 name|tp
 operator|->
 name|t_maxseg
@@ -4535,10 +4542,7 @@ argument_list|)
 operator|&&
 name|recwin
 operator|<
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|tp
 operator|->
 name|rcv_adv
@@ -4546,14 +4550,11 @@ operator|-
 name|tp
 operator|->
 name|rcv_nxt
-argument_list|)
+operator|)
 condition|)
 name|recwin
 operator|=
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|tp
 operator|->
 name|rcv_adv
@@ -4561,31 +4562,7 @@ operator|-
 name|tp
 operator|->
 name|rcv_nxt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|recwin
-operator|>
-operator|(
-name|long
 operator|)
-name|TCP_MAXWIN
-operator|<<
-name|tp
-operator|->
-name|rcv_scale
-condition|)
-name|recwin
-operator|=
-operator|(
-name|long
-operator|)
-name|TCP_MAXWIN
-operator|<<
-name|tp
-operator|->
-name|rcv_scale
 expr_stmt|;
 comment|/* 	 * According to RFC1323 the window field in a SYN (i.e., a<SYN> 	 * or<SYN,ACK>) segment itself is never scaled.  The<SYN,ACK> 	 * case is handled in syncache. 	 */
 if|if
@@ -4986,7 +4963,7 @@ name|NULL
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: mbuf chain shorter than expected: %ld + %u + %u - %u != %u"
+literal|"%s: mbuf chain shorter than expected: %d + %u + %u - %u != %u"
 operator|,
 name|__func__
 operator|,
@@ -5025,7 +5002,7 @@ name|NULL
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: mbuf chain shorter than expected: %ld + %u + %u != %u"
+literal|"%s: mbuf chain shorter than expected: %d + %u + %u != %u"
 operator|,
 name|__func__
 operator|,
@@ -5927,7 +5904,7 @@ name|tp
 operator|->
 name|snd_nxt
 operator|+
-name|len
+name|xlen
 expr_stmt|;
 block|}
 if|if
@@ -6167,10 +6144,6 @@ expr_stmt|;
 comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertised window. 	 * Any pending ACK has now been sent. 	 */
 if|if
 condition|(
-name|recwin
-operator|>=
-literal|0
-operator|&&
 name|SEQ_GT
 argument_list|(
 name|tp

@@ -3033,7 +3033,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The next section of code is a a collection of small routines that set  * fields in the fr_info_t structure passed based on properties of the  * current packet.  There are different routines for the same protocol  * for each of IPv4 and IPv6.  Adding a new protocol, for which there  * will "special" inspection for setup, is now more easily done by adding  * a new routine and expanding the ipf_pr_ipinit*() function rather than by  * adding more code to a growing switch statement.  */
+comment|/*  * The next section of code is a collection of small routines that set  * fields in the fr_info_t structure passed based on properties of the  * current packet.  There are different routines for the same protocol  * for each of IPv4 and IPv6.  Adding a new protocol, for which there  * will "special" inspection for setup, is now more easily done by adding  * a new routine and expanding the ipf_pr_ipinit*() function rather than by  * adding more code to a growing switch statement.  */
 end_comment
 
 begin_ifdef
@@ -15490,7 +15490,7 @@ condition|)
 block|{
 name|mc
 operator|=
-name|M_COPYM
+name|M_COPY
 argument_list|(
 name|fin
 operator|->

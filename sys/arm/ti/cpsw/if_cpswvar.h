@@ -113,6 +113,9 @@ decl_stmt|;
 name|int
 name|running
 decl_stmt|;
+name|int
+name|teardown
+decl_stmt|;
 name|struct
 name|cpsw_slots
 name|active
@@ -133,6 +136,9 @@ name|uint32_t
 name|queue_removes_at_last_tick
 decl_stmt|;
 comment|/* Used by watchdog */
+name|uint32_t
+name|queue_restart
+decl_stmt|;
 name|int
 name|queue_slots
 decl_stmt|;
@@ -192,6 +198,9 @@ decl_stmt|;
 name|int
 name|dualemac
 decl_stmt|;
+name|int
+name|rx_batch
+decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
@@ -216,9 +225,6 @@ name|cpsw_queue
 name|rx
 decl_stmt|,
 name|tx
-decl_stmt|;
-name|uint32_t
-name|last_hdp
 decl_stmt|;
 comment|/* We expect 1 memory resource and 4 interrupts from the device tree. */
 name|int

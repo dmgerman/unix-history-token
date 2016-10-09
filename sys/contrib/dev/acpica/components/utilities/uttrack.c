@@ -140,7 +140,7 @@ name|Cache
 decl_stmt|;
 name|Cache
 operator|=
-name|AcpiOsAllocate
+name|AcpiOsAllocateZeroed
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -160,18 +160,6 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|Cache
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_MEMORY_LIST
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|Cache
 operator|->
 name|ListName

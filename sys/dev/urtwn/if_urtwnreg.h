@@ -6454,14 +6454,11 @@ define|#
 directive|define
 name|R88E_RPTB2_RETRY_OVER
 value|0x80
-name|uint8_t
-name|rptb3
+name|uint16_t
+name|ccx_qtime
 decl_stmt|;
 name|uint8_t
-name|rptb4
-decl_stmt|;
-name|uint8_t
-name|rptb5
+name|final_rate
 decl_stmt|;
 name|uint8_t
 name|rptb6

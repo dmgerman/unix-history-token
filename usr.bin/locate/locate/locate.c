@@ -498,18 +498,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -871,25 +867,23 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Arguments:  * db	database  * s	search strings  */
+end_comment
+
 begin_function
 name|void
 name|search_fopen
 parameter_list|(
+name|char
+modifier|*
 name|db
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|s
 parameter_list|)
-name|char
-modifier|*
-name|db
-decl_stmt|;
-comment|/* database */
-name|char
-modifier|*
-modifier|*
-name|s
-decl_stmt|;
-comment|/* search strings */
 block|{
 name|FILE
 modifier|*
@@ -1101,25 +1095,23 @@ directive|ifdef
 name|MMAP
 end_ifdef
 
+begin_comment
+comment|/*  * Arguments:  * db	database  * s	search strings  */
+end_comment
+
 begin_function
 name|void
 name|search_mmap
 parameter_list|(
+name|char
+modifier|*
 name|db
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|s
 parameter_list|)
-name|char
-modifier|*
-name|db
-decl_stmt|;
-comment|/* database */
-name|char
-modifier|*
-modifier|*
-name|s
-decl_stmt|;
-comment|/* search strings */
 block|{
 name|struct
 name|stat

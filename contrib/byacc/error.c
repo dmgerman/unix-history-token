@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: error.c,v 1.11 2014/04/07 22:22:49 tom Exp $ */
+comment|/* $Id: error.c,v 1.13 2016/06/07 00:15:16 tom Exp $ */
 end_comment
 
 begin_comment
@@ -1123,20 +1123,24 @@ begin_function
 name|void
 name|default_action_warning
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|s
 parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: w - line %d of \"%s\", the default action assigns an \ undefined value to $$\n"
+literal|"%s: w - line %d of \"%s\", the default action for %s assigns an \ undefined value to $$\n"
 argument_list|,
 name|myname
 argument_list|,
 name|lineno
 argument_list|,
 name|input_file_name
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 block|}

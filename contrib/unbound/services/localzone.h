@@ -31,6 +31,12 @@ directive|include
 file|"util/locks.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"util/storage/dnstree.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|ub_packed_rrset_key
@@ -73,6 +79,12 @@ name|comm_reply
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|config_strlist
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/**  * Local zone type  * This type determines processing for queries that did not match  * local-data directly.  */
 end_comment
@@ -109,6 +121,15 @@ name|local_zone_inform
 block|,
 comment|/** log client address, and block (drop) */
 name|local_zone_inform_deny
+block|,
+comment|/** resolve normally, even when there is local data */
+name|local_zone_always_transparent
+block|,
+comment|/** answer with error, even when there is local data */
+name|local_zone_always_refuse
+block|,
+comment|/** answer with nxdomain, even when there is local data */
+name|local_zone_always_nxdomain
 block|}
 enum|;
 end_enum
@@ -186,6 +207,12 @@ comment|/** length of the taglist (in bytes) */
 name|size_t
 name|taglen
 decl_stmt|;
+comment|/** netblock addr_tree with struct local_zone_override information 	 * or NULL if there are no override elements */
+name|struct
+name|rbtree_t
+modifier|*
+name|override_tree
+decl_stmt|;
 comment|/** in this region the zone's data is allocated. 	 * the struct local_zone itself is malloced. */
 name|struct
 name|regional
@@ -260,6 +287,28 @@ name|struct
 name|ub_packed_rrset_key
 modifier|*
 name|rrset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * Local zone override information  */
+end_comment
+
+begin_struct
+struct|struct
+name|local_zone_override
+block|{
+comment|/** node in addrtree */
+name|struct
+name|addr_tree_node
+name|node
+decl_stmt|;
+comment|/** override for local zone type */
+name|enum
+name|localzone_type
+name|type
 decl_stmt|;
 block|}
 struct|;
@@ -376,6 +425,47 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Lookup zone that contains the given name, class and taglist.  * User must lock the tree or result zone.  * @param zones: the zones tree  * @param name: dname to lookup  * @param len: length of name.  * @param labs: labelcount of name.  * @param dclass: class to lookup.  * @param taglist: taglist to lookup.  * @param taglen: lenth of taglist.  * @param ignoretags: lookup zone by name and class, regardless the  * local-zone's tags.  * @return closest local_zone or NULL if no covering zone is found.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|local_zone
+modifier|*
+name|local_zones_tags_lookup
+parameter_list|(
+name|struct
+name|local_zones
+modifier|*
+name|zones
+parameter_list|,
+name|uint8_t
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|int
+name|labs
+parameter_list|,
+name|uint16_t
+name|dclass
+parameter_list|,
+name|uint8_t
+modifier|*
+name|taglist
+parameter_list|,
+name|size_t
+name|taglen
+parameter_list|,
+name|int
+name|ignoretags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Lookup zone that contains the given name, class.  * User must lock the tree or result zone.  * @param zones: the zones tree  * @param name: dname to lookup  * @param len: length of name.  * @param labs: labelcount of name.  * @param dclass: class to lookup.  * @return closest local_zone or NULL if no covering zone is found.  */
 end_comment
 
@@ -423,7 +513,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Answer authoritatively for local zones.  * Takes care of locking.  * @param zones: the stored zones (shared, read only).  * @param qinfo: query info (parsed).  * @param edns: edns info (parsed).  * @param buf: buffer with query ID and flags, also for reply.  * @param temp: temporary storage region.  * @param repinfo: source address for checks. may be NULL.  * @return true if answer is in buffer. false if query is not answered   * by authority data. If the reply should be dropped altogether, the return   * value is true, but the buffer is cleared (empty).  */
+comment|/**  * Answer authoritatively for local zones.  * Takes care of locking.  * @param zones: the stored zones (shared, read only).  * @param qinfo: query info (parsed).  * @param edns: edns info (parsed).  * @param buf: buffer with query ID and flags, also for reply.  * @param temp: temporary storage region.  * @param repinfo: source address for checks. may be NULL.  * @param taglist: taglist for checks. May be NULL.  * @param taglen: length of the taglist.  * @param tagactions: local zone actions for tags. May be NULL.  * @param tagactionssize: length of the tagactions.  * @param tag_datas: array per tag of strlist with rdata strings. or NULL.  * @param tag_datas_size: size of tag_datas array.  * @param tagname: array of tag name strings (for debug output).  * @param num_tags: number of items in tagname array.  * @return true if answer is in buffer. false if query is not answered   * by authority data. If the reply should be dropped altogether, the return   * value is true, but the buffer is cleared (empty).  */
 end_comment
 
 begin_function_decl
@@ -459,6 +549,37 @@ name|struct
 name|comm_reply
 modifier|*
 name|repinfo
+parameter_list|,
+name|uint8_t
+modifier|*
+name|taglist
+parameter_list|,
+name|size_t
+name|taglen
+parameter_list|,
+name|uint8_t
+modifier|*
+name|tagactions
+parameter_list|,
+name|size_t
+name|tagactionssize
+parameter_list|,
+name|struct
+name|config_strlist
+modifier|*
+modifier|*
+name|tag_datas
+parameter_list|,
+name|size_t
+name|tag_datas_size
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|tagname
+parameter_list|,
+name|int
+name|num_tags
 parameter_list|)
 function_decl|;
 end_function_decl

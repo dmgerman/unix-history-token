@@ -759,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtNormalizeBuffer  *  * PARAMETERS:  Buffer              - Input buffer  *              Count               - Output the count of hex number in  *                                    the Buffer  *  * RETURN:      The normalized buffer, freed by caller  *  * DESCRIPTION: [1A,2B,3C,4D] or 1A, 2B, 3C, 4D will be normalized  *              to 1A 2B 3C 4D  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtNormalizeBuffer  *  * PARAMETERS:  Buffer              - Input buffer  *              Count               - Output the count of hex numbers in  *                                    the Buffer  *  * RETURN:      The normalized buffer, must be freed by caller  *  * DESCRIPTION: [1A,2B,3C,4D] or 1A, 2B, 3C, 4D will be normalized  *              to 1A 2B 3C 4D  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -926,23 +926,18 @@ name|UINT32
 name|ByteLength
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|Substring
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|char
-name|Hex
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|UINT64
-name|Value
+name|UINT32
+name|Count
 decl_stmt|;
 name|UINT32
 name|i
-decl_stmt|;
-name|UINT32
-name|Count
 decl_stmt|;
 comment|/* Allow several different types of value separators */
 name|StringValue
@@ -955,13 +950,11 @@ operator|&
 name|Count
 argument_list|)
 expr_stmt|;
-name|Hex
-index|[
-literal|2
-index|]
+name|Substring
 operator|=
-literal|0
+name|StringValue
 expr_stmt|;
+comment|/* Each element of StringValue is now three chars (2 hex + 1 space) */
 for|for
 control|(
 name|i
@@ -974,52 +967,65 @@ name|Count
 condition|;
 name|i
 operator|++
+operator|,
+name|Substring
+operator|+=
+literal|3
 control|)
 block|{
-comment|/* Each element of StringValue is three chars */
-name|Hex
-index|[
-literal|0
-index|]
-operator|=
-name|StringValue
-index|[
-operator|(
-literal|3
+comment|/* Check for byte value too long */
+if|if
+condition|(
 operator|*
-name|i
-operator|)
-index|]
-expr_stmt|;
-name|Hex
-index|[
-literal|1
-index|]
-operator|=
-name|StringValue
-index|[
 operator|(
-literal|3
-operator|*
-name|i
-operator|)
-operator|+
-literal|1
+operator|&
+name|Substring
+index|[
+literal|2
 index|]
+operator|)
+operator|&&
+operator|(
+operator|*
+operator|(
+operator|&
+name|Substring
+index|[
+literal|2
+index|]
+operator|)
+operator|!=
+literal|' '
+operator|)
+condition|)
+block|{
+name|DtError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_BUFFER_ELEMENT
+argument_list|,
+name|Field
+argument_list|,
+name|Substring
+argument_list|)
 expr_stmt|;
-comment|/* Convert one hex byte */
-name|Value
-operator|=
-literal|0
-expr_stmt|;
+goto|goto
+name|Exit
+goto|;
+block|}
+comment|/* Convert two ASCII characters to one hex byte */
 name|Status
 operator|=
-name|DtStrtoul64
+name|AcpiUtAsciiToHexByte
 argument_list|(
-name|Hex
+name|Substring
 argument_list|,
 operator|&
-name|Value
+name|Buffer
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -1038,23 +1044,13 @@ name|ASL_MSG_BUFFER_ELEMENT
 argument_list|,
 name|Field
 argument_list|,
-name|MsgBuffer
+name|Substring
 argument_list|)
 expr_stmt|;
 goto|goto
 name|Exit
 goto|;
 block|}
-name|Buffer
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Value
-expr_stmt|;
 block|}
 name|Exit
 label|:
@@ -1074,7 +1070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtCompileFlag  *  * PARAMETERS:  Buffer              - Output buffer  *              Field               - Field to be compiled  *              Info                - Flag info  *  * RETURN:  *  * DESCRIPTION: Compile a flag  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtCompileFlag  *  * PARAMETERS:  Buffer                      - Output buffer  *              Field                       - Field to be compiled  *              Info                        - Flag info  *  * RETURN:      None  *  * DESCRIPTION: Compile a flag field. Handles flags up to 64 bits.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1114,11 +1110,17 @@ name|Status
 decl_stmt|;
 name|Status
 operator|=
-name|DtStrtoul64
+name|AcpiUtStrtoul64
 argument_list|(
 name|Field
 operator|->
 name|Value
+argument_list|,
+operator|(
+name|ACPI_STRTOUL_64BIT
+operator||
+name|ACPI_STRTOUL_BASE16
+operator|)
 argument_list|,
 operator|&
 name|Value

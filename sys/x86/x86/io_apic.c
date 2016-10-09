@@ -1857,6 +1857,31 @@ decl_stmt|;
 name|u_int
 name|old_id
 decl_stmt|;
+comment|/* 	 * On Hyper-V: 	 * - Stick to the first cpu for all I/O APIC pins. 	 * - And don't allow destination cpu changes. 	 */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_HV
+condition|)
+block|{
+if|if
+condition|(
+name|intpin
+operator|->
+name|io_vector
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+else|else
+name|apic_id
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * keep 1st core as the destination for NMI 	 */
 if|if
 condition|(

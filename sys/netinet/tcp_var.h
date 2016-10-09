@@ -594,7 +594,7 @@ name|tcp_seq
 name|rcv_adv
 decl_stmt|;
 comment|/* advertised window */
-name|u_long
+name|uint32_t
 name|rcv_wnd
 decl_stmt|;
 comment|/* receive window */
@@ -602,11 +602,11 @@ name|tcp_seq
 name|rcv_up
 decl_stmt|;
 comment|/* receive urgent pointer */
-name|u_long
+name|uint32_t
 name|snd_wnd
 decl_stmt|;
 comment|/* send window */
-name|u_long
+name|uint32_t
 name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
@@ -614,7 +614,7 @@ name|u_long
 name|snd_spare1
 decl_stmt|;
 comment|/* unused */
-name|u_long
+name|uint32_t
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshold for 					 * for slow start exponential to 					 * linear switch 					 */
@@ -686,7 +686,7 @@ name|u_long
 name|t_rttupdated
 decl_stmt|;
 comment|/* number of times rtt sampled */
-name|u_long
+name|uint32_t
 name|max_sndwnd
 decl_stmt|;
 comment|/* largest window peer has offered */
@@ -732,11 +732,11 @@ name|tcp_seq
 name|last_ack_sent
 decl_stmt|;
 comment|/* experimental */
-name|u_long
+name|uint32_t
 name|snd_cwnd_prev
 decl_stmt|;
 comment|/* cwnd prior to retransmit */
-name|u_long
+name|uint32_t
 name|snd_ssthresh_prev
 decl_stmt|;
 comment|/* ssthresh prior to retransmit */
@@ -1691,31 +1691,31 @@ struct|struct
 name|hc_metrics_lite
 block|{
 comment|/* must stay in sync with hc_metrics */
-name|u_long
+name|uint32_t
 name|rmx_mtu
 decl_stmt|;
 comment|/* MTU for this path */
-name|u_long
+name|uint32_t
 name|rmx_ssthresh
 decl_stmt|;
 comment|/* outbound gateway buffer limit */
-name|u_long
+name|uint32_t
 name|rmx_rtt
 decl_stmt|;
 comment|/* estimated round trip time */
-name|u_long
+name|uint32_t
 name|rmx_rttvar
 decl_stmt|;
 comment|/* estimated rtt variance */
-name|u_long
+name|uint32_t
 name|rmx_cwnd
 decl_stmt|;
 comment|/* congestion window */
-name|u_long
+name|uint32_t
 name|rmx_sendpipe
 decl_stmt|;
 comment|/* outbound delay-bandwidth product */
-name|u_long
+name|uint32_t
 name|rmx_recvpipe
 decl_stmt|;
 comment|/* inbound delay-bandwidth product */
@@ -2546,7 +2546,7 @@ name|tcpopt
 modifier|*
 name|to
 decl_stmt|;
-name|long
+name|uint32_t
 name|len
 decl_stmt|;
 name|int
@@ -3752,7 +3752,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint32_t
 name|tcp_maxmtu
 parameter_list|(
 name|struct
@@ -3767,7 +3767,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint32_t
 name|tcp_maxmtu6
 parameter_list|(
 name|struct
@@ -4284,7 +4284,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uint32_t
 name|tcp_hc_getmtu
 parameter_list|(
 name|struct
@@ -4302,7 +4302,7 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|u_long
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4456,17 +4456,6 @@ parameter_list|,
 name|struct
 name|tcphdr
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|tcp_seq_subtract
-parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl

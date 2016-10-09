@@ -20,19 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -75,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -215,7 +209,7 @@ name|struct
 name|partlisthead
 name|partlist
 init|=
-name|STAILQ_HEAD_INITIALIZER
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|partlist
 argument_list|)
@@ -1316,7 +1310,7 @@ name|index
 operator|=
 name|nparts
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|partlist
@@ -1868,7 +1862,7 @@ decl_stmt|,
 name|fd
 decl_stmt|;
 comment|/* First check partition information */
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
@@ -1913,7 +1907,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|part
 argument_list|,
@@ -2394,7 +2388,7 @@ name|capacity
 argument_list|,
 literal|1
 argument_list|,
-name|OFF_MAX
+name|INT64_MAX
 argument_list|,
 name|optarg
 argument_list|)

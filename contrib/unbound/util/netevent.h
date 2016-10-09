@@ -402,10 +402,23 @@ comment|/** if set, read/write completes: 		read/write state of tcp is toggled. 
 name|int
 name|tcp_do_toggle_rw
 decl_stmt|;
+comment|/** timeout in msec for TCP wait times for this connection */
+name|int
+name|tcp_timeout_msec
+decl_stmt|;
 comment|/** if set, checks for pending error from nonblocking connect() call.*/
 name|int
 name|tcp_check_nb_connect
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_MSG_FASTOPEN
+comment|/** used to track if the sendto() call should be done when using TFO. */
+name|int
+name|tcp_do_fastopen
+decl_stmt|;
+endif|#
+directive|endif
 comment|/** number of queries outstanding on this socket, used by 	 * outside network for udp ports */
 name|int
 name|inuse
@@ -989,7 +1002,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Start listening again for input on the comm point.  * @param c: commpoint to enable again.  * @param newfd: new fd, or -1 to leave fd be.  * @param sec: timeout in seconds, or -1 for no (change to the) timeout.  */
+comment|/**  * Start listening again for input on the comm point.  * @param c: commpoint to enable again.  * @param newfd: new fd, or -1 to leave fd be.  * @param msec: timeout in milliseconds, or -1 for no (change to the) timeout.  *	So seconds*1000.  */
 end_comment
 
 begin_function_decl
@@ -1005,7 +1018,7 @@ name|int
 name|newfd
 parameter_list|,
 name|int
-name|sec
+name|msec
 parameter_list|)
 function_decl|;
 end_function_decl

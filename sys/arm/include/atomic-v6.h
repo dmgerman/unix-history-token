@@ -2262,7 +2262,82 @@ operator|:
 index|[
 name|ret
 index|]
-literal|"=r"
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|:
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|,
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_swap_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1: ldrexd	%Q[ret], %R[ret], [%[ptr]]		\n"
+literal|"   strexd	%[exf], %Q[val], %R[val], [%[ptr]]	\n"
+literal|"   teq	%[exf], #0				\n"
+literal|"   it	ne					\n"
+literal|"   bne	1b					\n"
+operator|:
+index|[
+name|ret
+index|]
+literal|"=&r"
 operator|(
 name|ret
 operator|)

@@ -493,11 +493,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDbBatchExecute
+name|AcpiDbEvaluatePredefinedNames
 parameter_list|(
-name|char
-modifier|*
-name|CountArg
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

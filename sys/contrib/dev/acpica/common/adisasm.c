@@ -49,12 +49,6 @@ directive|include
 file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_define
 define|#
 directive|define

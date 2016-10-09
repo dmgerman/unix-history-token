@@ -26,19 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -189,7 +177,7 @@ begin_struct
 struct|struct
 name|chunk
 block|{
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|chunk
 argument_list|)
@@ -255,7 +243,7 @@ end_struct
 
 begin_expr_stmt
 specifier|static
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|chunk_head
 argument_list|,
@@ -540,7 +528,7 @@ operator|)
 condition|?
 name|last
 else|:
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|image_chunks
@@ -589,7 +577,7 @@ break|break;
 block|}
 name|ch
 operator|=
-name|STAILQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|ch
 argument_list|,
@@ -809,7 +797,7 @@ name|ch
 operator|->
 name|ch_size
 expr_stmt|;
-name|STAILQ_INSERT_AFTER
+name|TAILQ_INSERT_AFTER
 argument_list|(
 operator|&
 name|image_chunks
@@ -897,7 +885,7 @@ name|ch_size
 operator|-=
 name|secsz
 expr_stmt|;
-name|STAILQ_INSERT_AFTER
+name|TAILQ_INSERT_AFTER
 argument_list|(
 operator|&
 name|image_chunks
@@ -959,14 +947,12 @@ name|sz
 decl_stmt|;
 name|ch
 operator|=
-name|STAILQ_LAST
+name|TAILQ_LAST
 argument_list|(
 operator|&
 name|image_chunks
 argument_list|,
-name|chunk
-argument_list|,
-name|ch_list
+name|chunk_head
 argument_list|)
 expr_stmt|;
 name|from
@@ -1147,7 +1133,7 @@ name|ch_type
 operator|=
 name|CH_TYPE_ZEROES
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|image_chunks
@@ -1193,14 +1179,12 @@ name|ch
 decl_stmt|;
 name|ch
 operator|=
-name|STAILQ_LAST
+name|TAILQ_LAST
 argument_list|(
 operator|&
 name|image_chunks
 argument_list|,
-name|chunk
-argument_list|,
-name|ch_list
+name|chunk_head
 argument_list|)
 expr_stmt|;
 if|if
@@ -1390,7 +1374,7 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|image_chunks
@@ -3355,7 +3339,7 @@ condition|(
 operator|(
 name|ch
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|image_chunks
@@ -3419,10 +3403,12 @@ break|break;
 default|default:
 break|break;
 block|}
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|image_chunks
+argument_list|,
+name|ch
 argument_list|,
 name|ch_list
 argument_list|)
@@ -3465,7 +3451,7 @@ name|char
 modifier|*
 name|tmpdir
 decl_stmt|;
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|image_chunks

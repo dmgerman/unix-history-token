@@ -16755,7 +16755,7 @@ block|{
 comment|/* XXX ignore EVM for now */
 name|printf
 argument_list|(
-literal|" (rssi %d:%d:%d nf %d:%d:%d)"
+literal|" (rssi %.1f:%.1f:%.1f nf %d:%d:%d)"
 argument_list|,
 name|mi
 operator|->
@@ -16763,6 +16763,8 @@ name|rssi
 index|[
 literal|0
 index|]
+operator|/
+literal|2.0
 argument_list|,
 name|mi
 operator|->
@@ -16770,6 +16772,8 @@ name|rssi
 index|[
 literal|1
 index|]
+operator|/
+literal|2.0
 argument_list|,
 name|mi
 operator|->
@@ -16777,6 +16781,8 @@ name|rssi
 index|[
 literal|2
 index|]
+operator|/
+literal|2.0
 argument_list|,
 name|mi
 operator|->

@@ -721,6 +721,28 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
+name|_kern
+argument_list|,
+name|KERN_MAXPHYS
+argument_list|,
+name|maxphys
+argument_list|,
+name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
+argument_list|,
+name|SYSCTL_NULL_INT_PTR
+argument_list|,
+name|MAXPHYS
+argument_list|,
+literal|"Maximum block I/O access size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
 name|_hw
 argument_list|,
 name|HW_NCPU
@@ -1686,6 +1708,8 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
 operator||
+name|CTLFLAG_CAPRD
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 operator|(
@@ -1728,6 +1752,8 @@ name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
 operator||
+name|CTLFLAG_CAPRD
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 operator|(
@@ -1769,6 +1795,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_PRISON
+operator||
+name|CTLFLAG_CAPRD
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,

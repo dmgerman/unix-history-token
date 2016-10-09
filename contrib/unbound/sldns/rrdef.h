@@ -459,7 +459,7 @@ name|LDNS_RR_TYPE_OPENPGPKEY
 init|=
 literal|61
 block|,
-comment|/* draft-ietf-dane-openpgpkey */
+comment|/* RFC 7929 */
 name|LDNS_RR_TYPE_CSYNC
 init|=
 literal|62

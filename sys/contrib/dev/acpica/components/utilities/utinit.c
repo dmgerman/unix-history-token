@@ -539,7 +539,7 @@ name|NULL
 expr_stmt|;
 name|AcpiGbl_MaxLoopIterations
 operator|=
-literal|0xFFFF
+name|ACPI_MAX_LOOP_COUNT
 expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized

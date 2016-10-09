@@ -31,29 +31,6 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acapps.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -67,6 +44,18 @@ argument_list|(
 literal|"dbfileio"
 argument_list|)
 end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -85,9 +74,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
 if|if
 condition|(
 name|AcpiGbl_DebugFile
@@ -114,8 +100,6 @@ name|AcpiGbl_DbDebugFilename
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -132,9 +116,6 @@ modifier|*
 name|Name
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
 name|AcpiDbCloseDebugFile
 argument_list|()
 expr_stmt|;
@@ -185,8 +166,6 @@ name|AcpiGbl_DbOutputToFile
 operator|=
 name|TRUE
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -286,10 +265,8 @@ name|Status
 operator|)
 return|;
 block|}
-name|fprintf
+name|AcpiOsPrintf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Acpi table [%4.4s] successfully installed and loaded\n"
 argument_list|,
 name|Table
@@ -311,6 +288,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

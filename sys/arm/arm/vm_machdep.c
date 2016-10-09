@@ -821,7 +821,14 @@ name|frame
 operator|->
 name|tf_r0
 operator|=
+name|SV_ABI_ERRNO
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
 name|error
+argument_list|)
 expr_stmt|;
 name|frame
 operator|->

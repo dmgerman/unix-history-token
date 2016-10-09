@@ -90,6 +90,9 @@ comment|/* get information about a tracer */
 name|T4_SET_TRACER
 block|,
 comment|/* program a tracer */
+name|T4_LOAD_CFG
+block|,
+comment|/* copy a config file to card's flash */
 block|}
 enum|;
 end_enum
@@ -1171,6 +1174,13 @@ define|#
 directive|define
 name|CHELSIO_T4_SET_TRACER
 value|_IOW('f', T4_SET_TRACER, struct t4_tracer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_LOAD_CFG
+value|_IOW('f', T4_LOAD_CFG, struct t4_data)
 end_define
 
 begin_endif

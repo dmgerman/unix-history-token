@@ -2111,6 +2111,14 @@ name|dname_len
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tp
+condition|)
+return|return
+name|NULL
+return|;
 name|lock_basic_lock
 argument_list|(
 operator|&
@@ -6583,9 +6591,12 @@ argument_list|(
 operator|(
 name|HANDLE
 operator|)
+name|_get_osfhandle
+argument_list|(
 name|_fileno
 argument_list|(
 name|out
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

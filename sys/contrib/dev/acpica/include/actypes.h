@@ -2540,7 +2540,7 @@ value|ACPI_EVENT_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+-+  * |   Bits 31:5 |4|3|2|1|0|  * +-------------+-+-+-+-+-+  *          |     | | | | |  *          |     | | | | +- Enabled?  *          |     | | | +--- Enabled for wake?  *          |     | | +----- Status bit set?  *          |     | +------- Enable bit set?  *          |     +--------- Has a handler?  *          +---------------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+-+-+  * |   Bits 31:6 |5|4|3|2|1|0|  * +-------------+-+-+-+-+-+-+  *          |     | | | | | |  *          |     | | | | | +- Enabled?  *          |     | | | | +--- Enabled for wake?  *          |     | | | +----- Status bit set?  *          |     | | +------- Enable bit set?  *          |     | +--------- Has a handler?  *          |     +----------- Masked?  *          +-----------------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2595,6 +2595,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_EVENT_FLAG_MASKED
+value|(ACPI_EVENT_STATUS) 0x20
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_EVENT_FLAG_SET
 value|ACPI_EVENT_FLAG_STATUS_SET
 end_define
@@ -2625,7 +2632,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-------+-+-+---+  * |  7:5  |4|3|2:0|  * +-------+-+-+---+  *     |    | |  |  *     |    | |  +-- Type of dispatch:to method, handler, notify, or none  *     |    | +----- Interrupt type: edge or level triggered  *     |    +------- Is a Wake GPE  *     +------------<Reserved>  */
+comment|/*  * GPE info flags - Per GPE  * +---+-+-+-+---+  * |7:6|5|4|3|2:0|  * +---+-+-+-+---+  *   |  | | |  |  *   |  | | |  +-- Type of dispatch:to method, handler, notify, or none  *   |  | | +----- Interrupt type: edge or level triggered  *   |  | +------- Is a Wake GPE  *   |  +--------- Is GPE masked by the software GPE masking machanism  *   +------------<Reserved>  */
 end_comment
 
 begin_define
@@ -3579,31 +3586,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Table Event Types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_EVENT_LOAD
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_EVENT_UNLOAD
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_TABLE_EVENTS
-value|2
-end_define
-
-begin_comment
 comment|/*  * Types specific to the OS service interfaces  */
 end_comment
 
@@ -3848,25 +3830,43 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/* Table Event Types */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_LOAD
+name|ACPI_TABLE_EVENT_LOAD
 value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_UNLOAD
+name|ACPI_TABLE_EVENT_UNLOAD
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_TABLE_EVENT_INSTALL
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_EVENT_UNINSTALL
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NUM_TABLE_EVENTS
-value|2
+value|4
 end_define
 
 begin_comment
@@ -4625,45 +4625,6 @@ define|#
 directive|define
 name|ACPI_OSI_WIN_10
 value|0x0D
-end_define
-
-begin_comment
-comment|/* Definitions of file IO */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_READING
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_WRITING
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_BINARY
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_BEGIN
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FILE_END
-value|0x02
 end_define
 
 begin_comment

@@ -2499,11 +2499,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Note: this is fine for 3x3 (and 4x4) 11n HT40;  * but getting EVM information for VHT80, VHT160  * will involve more than 6 EVM pilots.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IEEE80211_MAX_CHAINS
-value|3
+value|4
 end_define
 
 begin_define
@@ -2517,7 +2521,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_NF
-value|0x0000001
+value|0x00000001
 end_define
 
 begin_comment
@@ -2528,7 +2532,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_RSSI
-value|0x0000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -2539,7 +2543,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_C_CHAIN
-value|0x0000004
+value|0x00000004
 end_define
 
 begin_comment
@@ -2550,7 +2554,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_C_NF
-value|0x0000008
+value|0x00000008
 end_define
 
 begin_comment
@@ -2561,7 +2565,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_C_RSSI
-value|0x0000010
+value|0x00000010
 end_define
 
 begin_comment
@@ -2572,7 +2576,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_C_EVM
-value|0x0000020
+value|0x00000020
 end_define
 
 begin_comment
@@ -2583,7 +2587,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_C_HT40
-value|0x0000040
+value|0x00000040
 end_define
 
 begin_comment
@@ -2594,7 +2598,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_FREQ
-value|0x0000080
+value|0x00000080
 end_define
 
 begin_comment
@@ -2605,7 +2609,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_IEEE
-value|0x0000100
+value|0x00000100
 end_define
 
 begin_comment
@@ -2616,12 +2620,182 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_R_BAND
-value|0x0000200
+value|0x00000200
 end_define
 
 begin_comment
 comment|/* Frequency band populated */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF32
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* 32 bit TSF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF64
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* 64 bit TSF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF_START
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* TSF is sampled at start of frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_TSF_END
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* TSF is sampled at end of frame */
+end_comment
+
+begin_comment
+comment|/* RX packet flags - describe the kind of frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_STBC
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_LDPC
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMSDU
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* This is the start of an decap AMSDU list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMSDU_MORE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* This is another decap AMSDU frame in the batch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMPDU
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* This is the start of an decap AMPDU list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_AMPDU_MORE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* This is another decap AMPDU frame in the batch */
+end_comment
+
+begin_comment
+comment|/* Channel width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_20MHZ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_40MHZ
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FW_80MHZ
+value|3
+end_define
+
+begin_comment
+comment|/* PHY type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11B
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11G
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11A
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11NA
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_FP_11NG
+value|5
+end_define
 
 begin_struct
 struct|struct
@@ -2631,10 +2805,15 @@ name|uint32_t
 name|r_flags
 decl_stmt|;
 comment|/* IEEE80211_R_* flags */
-name|uint8_t
-name|c_chain
+name|uint32_t
+name|c_pktflags
 decl_stmt|;
-comment|/* number of RX chains involved */
+comment|/* IEEE80211_RX_F_* flags */
+name|uint64_t
+name|c_rx_tsf
+decl_stmt|;
+comment|/* 32 or 64 bit TSF */
+comment|/* All DWORD aligned */
 name|int16_t
 name|c_nf_ctl
 index|[
@@ -2663,14 +2842,39 @@ name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-chain RSSI */
+comment|/* 32 bits */
 name|uint8_t
-name|nf
+name|c_nf
 decl_stmt|;
 comment|/* global NF */
 name|uint8_t
-name|rssi
+name|c_rssi
 decl_stmt|;
 comment|/* global RSSI */
+name|uint8_t
+name|c_chain
+decl_stmt|;
+comment|/* number of RX chains involved */
+name|uint8_t
+name|c_rate
+decl_stmt|;
+comment|/* legacy + 11n rate code */
+comment|/* 32 bits */
+name|uint16_t
+name|c_freq
+decl_stmt|;
+comment|/* Frequency, MHz */
+name|uint8_t
+name|c_ieee
+decl_stmt|;
+comment|/* Channel */
+name|uint8_t
+name|c_width
+decl_stmt|;
+comment|/* channel width, FW flags above */
+comment|/* Force alignment to DWORD */
+union|union
+block|{
 name|uint8_t
 name|evm
 index|[
@@ -2681,11 +2885,25 @@ name|IEEE80211_MAX_EVM_PILOTS
 index|]
 decl_stmt|;
 comment|/* per-chain, per-pilot EVM values */
-name|uint16_t
-name|c_freq
+name|uint32_t
+name|__aln
+index|[
+literal|8
+index|]
 decl_stmt|;
+block|}
+name|evm
+union|;
+comment|/* 32 bits */
 name|uint8_t
-name|c_ieee
+name|c_phytype
+decl_stmt|;
+comment|/* PHY type, FW flags above */
+name|uint8_t
+name|c_pad2
+index|[
+literal|3
+index|]
 decl_stmt|;
 block|}
 struct|;

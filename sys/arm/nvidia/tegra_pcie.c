@@ -1015,11 +1015,15 @@ name|RP_LINK_CONTROL_STATUS_LINKSTAT_MASK
 value|0x3fff0000
 end_define
 
+begin_comment
+comment|/* Wait 50 ms (per port) for link. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TEGRA_PCIE_LINKUP_TIMEOUT
-value|200
+value|50000
 end_define
 
 begin_define
@@ -3542,12 +3546,15 @@ name|irq
 operator|=
 literal|0
 init|;
+operator|(
 name|irq
+operator|+
+name|count
+operator|-
+literal|1
+operator|)
 operator|<
 name|TEGRA_PCIB_MAX_MSI
-operator|&&
-operator|!
-name|found
 condition|;
 name|irq
 operator|++
@@ -3582,35 +3589,15 @@ operator|=
 name|irq
 init|;
 name|end_irq
-operator|!=
+operator|<
 name|irq
 operator|+
 name|count
-operator|-
-literal|1
 condition|;
 name|end_irq
 operator|++
 control|)
 block|{
-comment|/* No free interrupts */
-if|if
-condition|(
-name|end_irq
-operator|==
-operator|(
-name|TEGRA_PCIB_MAX_MSI
-operator|-
-literal|1
-operator|)
-condition|)
-block|{
-name|found
-operator|=
-name|false
-expr_stmt|;
-break|break;
-block|}
 comment|/* This is already used */
 if|if
 condition|(
@@ -3619,7 +3606,7 @@ name|sc
 operator|->
 name|isrcs
 index|[
-name|irq
+name|end_irq
 index|]
 operator|.
 name|flags
@@ -3637,6 +3624,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|found
+condition|)
+break|break;
 block|}
 comment|/* Not enough interrupts were found */
 if|if
@@ -3824,6 +3816,9 @@ name|tegra_pcib_irqsrc
 operator|*
 operator|)
 name|isrc
+index|[
+name|i
+index|]
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3851,6 +3846,7 @@ operator|&=
 operator|~
 name|TEGRA_FLAG_MSI_USED
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3859,7 +3855,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -5983,6 +5978,11 @@ operator|&
 name|RP_VEND_XP_DL_UP
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6037,6 +6037,11 @@ operator|&
 name|RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8354,6 +8359,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|pcib_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
@@ -8374,12 +8386,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|devclass_t
-name|pcib_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -8391,9 +8397,9 @@ name|tegra_pcib_driver
 argument_list|,
 name|pcib_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -180,7 +180,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -271,7 +273,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"      			breaks validation if the fwder does not do DNSSEC.\n"
+literal|"      			breaks validation if the forwarder does not do DNSSEC.\n"
 argument_list|)
 expr_stmt|;
 name|printf

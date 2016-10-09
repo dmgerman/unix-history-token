@@ -300,7 +300,7 @@ argument_list|,
 operator|&
 name|LocalObjDesc
 argument_list|,
-literal|16
+name|ACPI_STRTOUL_BASE16
 argument_list|)
 expr_stmt|;
 if|if

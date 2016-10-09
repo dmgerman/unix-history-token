@@ -8218,7 +8218,7 @@ expr_stmt|;
 comment|/* This is a number from 0..100; so let's just divide it down a bit */
 name|rxs
 operator|.
-name|rssi
+name|c_rssi
 operator|=
 name|le32toh
 argument_list|(
@@ -8231,7 +8231,7 @@ literal|2
 expr_stmt|;
 name|rxs
 operator|.
-name|nf
+name|c_nf
 operator|=
 operator|-
 literal|96

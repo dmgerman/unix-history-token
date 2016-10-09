@@ -868,7 +868,7 @@ operator|->
 name|pr_tag_mask
 condition|)
 block|{
-comment|/* 		 * Recent firmwares are supposed to set up the the iSCSI tagmask 		 * but we'll do it ourselves it the computed value doesn't match 		 * what's in the register. 		 */
+comment|/* 		 * Recent firmwares are supposed to set up the iSCSI tagmask 		 * but we'll do it ourselves it the computed value doesn't match 		 * what's in the register. 		 */
 name|device_printf
 argument_list|(
 name|sc

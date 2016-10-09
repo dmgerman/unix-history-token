@@ -1314,7 +1314,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" --> %s "
+literal|" --> %s"
 argument_list|,
 name|addr_buf
 argument_list|)

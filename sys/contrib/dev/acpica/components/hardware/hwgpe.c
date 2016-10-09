@@ -149,6 +149,8 @@ name|GpeRegisterInfo
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|UINT32
 name|EnableMask
@@ -282,6 +284,18 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|RegisterBit
+operator|&
+name|GpeRegisterInfo
+operator|->
+name|MaskForRun
+operator|)
+condition|)
+block|{
 comment|/* Write the updated enable mask */
 name|Status
 operator|=
@@ -295,6 +309,7 @@ operator|->
 name|EnableAddress
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -472,6 +487,21 @@ block|{
 name|LocalEventStatus
 operator||=
 name|ACPI_EVENT_FLAG_ENABLED
+expr_stmt|;
+block|}
+comment|/* GPE currently masked? (masked for runtime?) */
+if|if
+condition|(
+name|RegisterBit
+operator|&
+name|GpeRegisterInfo
+operator|->
+name|MaskForRun
+condition|)
+block|{
+name|LocalEventStatus
+operator||=
+name|ACPI_EVENT_FLAG_MASKED
 expr_stmt|;
 block|}
 comment|/* GPE enabled for wake? */
@@ -830,6 +860,9 @@ name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
 decl_stmt|;
+name|UINT8
+name|EnableMask
+decl_stmt|;
 comment|/* NOTE: assumes that all GPEs are currently disabled */
 comment|/* Examine each GPE Register within the block */
 for|for
@@ -869,13 +902,22 @@ block|{
 continue|continue;
 block|}
 comment|/* Enable all "runtime" GPEs in this register */
+name|EnableMask
+operator|=
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator|&
+operator|~
+name|GpeRegisterInfo
+operator|->
+name|MaskForRun
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwGpeEnableWrite
 argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableForRun
+name|EnableMask
 argument_list|,
 name|GpeRegisterInfo
 argument_list|)

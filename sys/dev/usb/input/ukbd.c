@@ -205,7 +205,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_include
@@ -685,7 +685,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|struct
 name|evdev_dev
 modifier|*
@@ -2032,11 +2032,12 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|evdev_methods
 name|ukbd_evdev_methods
@@ -2215,7 +2216,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|evdev_rcpt_mask
@@ -4804,7 +4805,7 @@ condition|)
 break|break;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -6324,7 +6325,7 @@ name|hid_len
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|struct
 name|evdev_dev
 modifier|*
@@ -6841,7 +6842,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|evdev
 operator|=
 name|evdev_alloc
@@ -7313,7 +7314,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|evdev_free
 argument_list|(
 name|sc
@@ -9507,7 +9508,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -10121,7 +10122,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|struct
 name|ukbd_softc
 modifier|*
@@ -10263,7 +10264,7 @@ index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -11065,6 +11066,33 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EVDEV_SUPPORT
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ukbd
+argument_list|,
+name|evdev
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MODULE_VERSION

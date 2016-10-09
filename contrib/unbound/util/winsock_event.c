@@ -1285,7 +1285,7 @@ name|verbose
 argument_list|(
 name|VERB_CLIENT
 argument_list|,
-literal|"winsock_event bmax=%d numwait=%d wait=%x "
+literal|"winsock_event bmax=%d numwait=%d wait=%s "
 literal|"timeout=%d"
 argument_list|,
 name|base
@@ -1295,9 +1295,12 @@ argument_list|,
 name|numwait
 argument_list|,
 operator|(
-name|int
-operator|)
 name|wait
+condition|?
+literal|"<wait>"
+else|:
+literal|"<null>"
+operator|)
 argument_list|,
 operator|(
 name|int

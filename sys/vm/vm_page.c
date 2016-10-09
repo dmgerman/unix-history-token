@@ -1514,12 +1514,6 @@ name|vmd_oom
 operator|=
 name|FALSE
 expr_stmt|;
-name|vmd
-operator|->
-name|vmd_pass
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -14440,7 +14434,7 @@ control|)
 block|{
 name|db_printf
 argument_list|(
-literal|"dom %d page_cnt %d free %d pq_act %d pq_inact %d pass %d\n"
+literal|"dom %d page_cnt %d free %d pq_act %d pq_inact %d\n"
 argument_list|,
 name|dom
 argument_list|,
@@ -14481,13 +14475,6 @@ name|PQ_INACTIVE
 index|]
 operator|.
 name|pq_cnt
-argument_list|,
-name|vm_dom
-index|[
-name|dom
-index|]
-operator|.
-name|vmd_pass
 argument_list|)
 expr_stmt|;
 block|}

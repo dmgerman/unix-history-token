@@ -39,7 +39,7 @@ parameter_list|,
 name|badchar
 parameter_list|)
 define|\
-value|if (AcpiGbl_Opterr) {AcpiLogError ("%s%c\n", msg, badchar);}
+value|if (AcpiGbl_Opterr) {fprintf (stderr, "%s%c\n", msg, badchar);}
 end_define
 
 begin_decl_stmt
@@ -156,9 +156,9 @@ condition|)
 block|{
 name|ACPI_OPTION_ERROR
 argument_list|(
-literal|"Option requires an argument: -"
+literal|"\nOption requires an argument"
 argument_list|,
-literal|'v'
+literal|0
 argument_list|)
 expr_stmt|;
 name|CurrentCharPtr

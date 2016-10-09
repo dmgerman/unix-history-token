@@ -792,7 +792,7 @@ begin_define
 define|#
 directive|define
 name|Q8_MAX_NUM_MULTICAST_ADDRS
-value|1023
+value|1022
 end_define
 
 begin_define
@@ -1966,6 +1966,13 @@ begin_comment
 comment|/*  * Configure MAC Address  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|Q8_ETHER_ADDR_LEN
+value|6
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1974,7 +1981,7 @@ block|{
 name|uint8_t
 name|addr
 index|[
-literal|6
+name|Q8_ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint16_t
@@ -5305,7 +5312,7 @@ decl_stmt|;
 name|uint8_t
 name|addr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 block|}
@@ -5626,6 +5633,16 @@ name|qla_mcast_t
 name|mcast
 index|[
 name|Q8_MAX_NUM_MULTICAST_ADDRS
+index|]
+decl_stmt|;
+name|uint8_t
+name|mac_addr_arr
+index|[
+operator|(
+name|Q8_MAX_MAC_ADDRS
+operator|*
+name|ETHER_ADDR_LEN
+operator|)
 index|]
 decl_stmt|;
 comment|/* reset sequence */

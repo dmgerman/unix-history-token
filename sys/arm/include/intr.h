@@ -271,7 +271,12 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_CORTEXA
+name|CPU_CORTEXA8
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA_MP
 argument_list|)
 end_elif
 

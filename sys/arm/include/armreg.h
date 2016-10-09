@@ -764,7 +764,7 @@ value|(CPU_ID_CORTEXA9 | (4<< CPU_ID_VARIANT_SHIFT))
 end_define
 
 begin_comment
-comment|/* XXX: Cortx-A12 is the old name for this part, it has been renamed the A17 */
+comment|/* XXX: Cortex-A12 is the old name for this part, it has been renamed the A17 */
 end_comment
 
 begin_define
@@ -814,6 +814,27 @@ define|#
 directive|define
 name|CPU_ID_CORTEXA15R3
 value|(CPU_ID_CORTEXA15 | (3<< CPU_ID_VARIANT_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA53
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd030)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA57
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd070)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA72
+value|(CPU_ID_ARM_LTD | CPU_ID_CPUID_SCHEME | 0xd080)
 end_define
 
 begin_define

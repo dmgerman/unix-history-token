@@ -205,7 +205,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_include
@@ -527,7 +527,7 @@ name|sc_fflags
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|int
 name|sc_evflags
 decl_stmt|;
@@ -551,7 +551,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|struct
 name|evdev_dev
 modifier|*
@@ -641,7 +641,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_decl_stmt
@@ -770,11 +770,12 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|evdev_methods
 name|ums_evdev_methods
@@ -1723,7 +1724,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -3529,7 +3530,7 @@ name|detach
 goto|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|sc
 operator|->
 name|sc_evdev
@@ -3871,7 +3872,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 name|evdev_free
 argument_list|(
 name|sc
@@ -4607,7 +4608,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|evdev_rcpt_mask
@@ -4778,7 +4779,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 end_ifdef
 
 begin_function
@@ -4976,7 +4977,7 @@ return|;
 comment|/* check for first open */
 ifdef|#
 directive|ifdef
-name|EVDEV
+name|EVDEV_SUPPORT
 if|if
 condition|(
 name|sc
@@ -6319,6 +6320,33 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EVDEV_SUPPORT
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ums
+argument_list|,
+name|evdev
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MODULE_VERSION

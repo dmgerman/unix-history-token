@@ -4,7 +4,7 @@ comment|/* This file generated automatically using  * @Id: skel2c,v 1.3 2014/04/
 end_comment
 
 begin_comment
-comment|/* @Id: btyaccpar.skel,v 1.1 2014/04/02 22:44:41 tom Exp @ */
+comment|/* @Id: btyaccpar.skel,v 1.3 2016/06/06 23:35:55 Tom.Shields Exp @ */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ literal|"/* original parser id follows */"
 block|,
 literal|"/* yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\" */"
 block|,
-literal|"/* (use YYMAJOR/YYMINOR for ifdefs dependent of parser version) */"
+literal|"/* (use YYMAJOR/YYMINOR for ifdefs dependent on parser version) */"
 block|,
 literal|""
 block|,
@@ -184,9 +184,13 @@ directive|endif
 comment|/* defined(YYBTYACC) */
 literal|""
 block|,
-literal|"#if YYDEBUG"
+literal|"#if YYDEBUG || defined(yytname)"
 block|,
 literal|"extern const char *const yyname[];"
+block|,
+literal|"#endif"
+block|,
+literal|"#if YYDEBUG"
 block|,
 literal|"extern const char *const yyrule[];"
 block|,
@@ -365,11 +369,11 @@ literal|"typedef struct {"
 block|,
 literal|"    unsigned stacksize;"
 block|,
-literal|"    short    *s_base;"
+literal|"    YYINT    *s_base;"
 block|,
-literal|"    short    *s_mark;"
+literal|"    YYINT    *s_mark;"
 block|,
-literal|"    short    *s_last;"
+literal|"    YYINT    *s_last;"
 block|,
 literal|"    YYSTYPE  *l_base;"
 block|,
@@ -687,15 +691,15 @@ literal|""
 block|,
 literal|"#if YYDEBUG"
 block|,
-literal|"#include<stdio.h>         /* needed for printf */"
+literal|"#include<stdio.h>	/* needed for printf */"
 block|,
 literal|"#endif"
 block|,
 literal|""
 block|,
-literal|"#include<stdlib.h>        /* needed for malloc, etc */"
+literal|"#include<stdlib.h>	/* needed for malloc, etc */"
 block|,
-literal|"#include<string.h>        /* needed for memset */"
+literal|"#include<string.h>	/* needed for memset */"
 block|,
 literal|""
 block|,
@@ -709,7 +713,7 @@ literal|"    int i;"
 block|,
 literal|"    unsigned newsize;"
 block|,
-literal|"    short *newss;"
+literal|"    YYINT *newss;"
 block|,
 literal|"    YYSTYPE *newvs;"
 block|,
@@ -737,7 +741,7 @@ literal|""
 block|,
 literal|"    i = (int) (data->s_mark - data->s_base);"
 block|,
-literal|"    newss = (short *)realloc(data->s_base, newsize * sizeof(*newss));"
+literal|"    newss = (YYINT *)realloc(data->s_base, newsize * sizeof(*newss));"
 block|,
 literal|"    if (newss == 0)"
 block|,
@@ -871,7 +875,7 @@ literal|"        return p;"
 block|,
 literal|"    }"
 block|,
-literal|"    p->yystack.s_base    = (short *) malloc(size * sizeof(short));"
+literal|"    p->yystack.s_base    = (YYINT *) malloc(size * sizeof(YYINT));"
 block|,
 literal|"    if (p->yystack.s_base == NULL) return NULL;"
 block|,
@@ -1035,6 +1039,10 @@ block|,
 endif|#
 directive|endif
 comment|/* defined(YYBTYACC) */
+literal|"    yym = 0;"
+block|,
+literal|"    yyn = 0;"
+block|,
 literal|"    yynerrs = 0;"
 block|,
 literal|"    yyerrflag = 0;"
@@ -1199,15 +1207,13 @@ directive|endif
 comment|/* defined(YYBTYACC) */
 literal|"        if (yychar< 0) yychar = YYEOF;"
 block|,
-literal|"        /* if ((yychar = YYLEX)< 0) yychar = YYEOF; */"
-block|,
 literal|"#if YYDEBUG"
 block|,
 literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = yyname[YYTRANSLATE(yychar)];"
+literal|"            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
 literal|"            fprintf(stderr, \"%s[%d]: state %d, reading token %d (%s)\","
 block|,
@@ -1340,7 +1346,7 @@ literal|"            save->errflag         = yyerrflag;"
 block|,
 literal|"            save->yystack.s_mark  = save->yystack.s_base + (yystack.s_mark - yystack.s_base);"
 block|,
-literal|"            memcpy (save->yystack.s_base, yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(short));"
+literal|"            memcpy (save->yystack.s_base, yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(YYINT));"
 block|,
 literal|"            save->yystack.l_mark  = save->yystack.l_base + (yystack.l_mark - yystack.l_base);"
 block|,
@@ -1502,7 +1508,7 @@ literal|"                goto yyoverflow;"
 block|,
 literal|"            yystate = yyctable[ctry];"
 block|,
-literal|"            *++yystack.s_mark = (short) yystate;"
+literal|"            *++yystack.s_mark = (YYINT) yystate;"
 block|,
 literal|"            *++yystack.l_mark = yylval;"
 block|,
@@ -1603,11 +1609,29 @@ literal|"    yynewerrflag = 1;"
 block|,
 literal|"    goto yyerrhandler;"
 block|,
-literal|"    goto yyerrlab;"
+literal|"    goto yyerrlab; /* redundant goto avoids 'unused label' warning */"
 block|,
 literal|""
 block|,
 literal|"yyerrlab:"
+block|,
+literal|"    /* explicit YYERROR from an action -- pop the rhs of the rule reduced"
+block|,
+literal|"     * before looking for error recovery */"
+block|,
+literal|"    yystack.s_mark -= yym;"
+block|,
+literal|"    yystate = *yystack.s_mark;"
+block|,
+literal|"    yystack.l_mark -= yym;"
+block|,
+literal|"#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)"
+block|,
+literal|"    yystack.p_mark -= yym;"
+block|,
+literal|"#endif"
+block|,
+literal|""
 block|,
 literal|"    yynewerrflag = 0;"
 block|,
@@ -1657,7 +1681,7 @@ literal|"            yyerrctx->errflag        = yyerrflag;"
 block|,
 literal|"            yyerrctx->yystack.s_mark = yyerrctx->yystack.s_base + (yystack.s_mark - yystack.s_base);"
 block|,
-literal|"            memcpy (yyerrctx->yystack.s_base, yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(short));"
+literal|"            memcpy (yyerrctx->yystack.s_base, yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(YYINT));"
 block|,
 literal|"            yyerrctx->yystack.l_mark = yyerrctx->yystack.l_base + (yystack.l_mark - yystack.l_base);"
 block|,
@@ -1689,7 +1713,7 @@ literal|"        yychar         = YYEMPTY;"
 block|,
 literal|"        yystack.s_mark = yystack.s_base + (save->yystack.s_mark - save->yystack.s_base);"
 block|,
-literal|"        memcpy (yystack.s_base, save->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(short));"
+literal|"        memcpy (yystack.s_base, save->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(YYINT));"
 block|,
 literal|"        yystack.l_mark = yystack.l_base + (save->yystack.l_mark - save->yystack.l_base);"
 block|,
@@ -1759,7 +1783,7 @@ literal|"#endif"
 block|,
 literal|"            yystack.s_mark = yystack.s_base + (yyerrctx->yystack.s_mark - yyerrctx->yystack.s_base);"
 block|,
-literal|"            memcpy (yystack.s_base, yyerrctx->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(short));"
+literal|"            memcpy (yystack.s_base, yyerrctx->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(YYINT));"
 block|,
 literal|"            yystack.l_mark = yystack.l_base + (yyerrctx->yystack.l_mark - yyerrctx->yystack.l_base);"
 block|,
@@ -1806,7 +1830,7 @@ literal|""
 block|,
 literal|"#if !YYBTYACC"
 block|,
-literal|"    goto yyerrlab;"
+literal|"    goto yyerrlab; /* redundant goto avoids 'unused label' warning */"
 block|,
 literal|"yyerrlab:"
 block|,
@@ -1953,7 +1977,7 @@ literal|"        if (yydebug)"
 block|,
 literal|"        {"
 block|,
-literal|"            yys = yyname[YYTRANSLATE(yychar)];"
+literal|"            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
 literal|"            fprintf(stderr, \"%s[%d]: state %d, error recovery discarding token %d (%s)\\n\","
 block|,
@@ -2329,17 +2353,15 @@ directive|endif
 comment|/* defined(YYBTYACC) */
 literal|"            if (yychar< 0) yychar = YYEOF;"
 block|,
-literal|"            /* if ((yychar = YYLEX)< 0) yychar = YYEOF; */"
-block|,
 literal|"#if YYDEBUG"
 block|,
 literal|"            if (yydebug)"
 block|,
 literal|"            {"
 block|,
-literal|"                yys = yyname[YYTRANSLATE(yychar)];"
+literal|"                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];"
 block|,
-literal|"                fprintf(stderr, \"%s[%d]: state %d, reading %d (%s)\\n\","
+literal|"                fprintf(stderr, \"%s[%d]: state %d, reading token %d (%s)\\n\","
 block|,
 literal|"                                YYDEBUGSTR, yydepth, YYFINAL, yychar, yys);"
 block|,
@@ -2402,7 +2424,7 @@ literal|"#endif"
 block|,
 literal|"    if (yystack.s_mark>= yystack.s_last&& yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;"
 block|,
-literal|"    *++yystack.s_mark = (short) yystate;"
+literal|"    *++yystack.s_mark = (YYINT) yystate;"
 block|,
 literal|"    *++yystack.l_mark = yyval;"
 block|,
@@ -2478,7 +2500,7 @@ literal|"    yychar         = YYEMPTY;"
 block|,
 literal|"    yystack.s_mark = yystack.s_base + (yypath->yystack.s_mark - yypath->yystack.s_base);"
 block|,
-literal|"    memcpy (yystack.s_base, yypath->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(short));"
+literal|"    memcpy (yystack.s_base, yypath->yystack.s_base, (size_t) (yystack.s_mark - yystack.s_base + 1) * sizeof(YYINT));"
 block|,
 literal|"    yystack.l_mark = yystack.l_base + (yypath->yystack.l_mark - yypath->yystack.l_base);"
 block|,

@@ -2051,7 +2051,7 @@ name|PARSEOP_METHODCALL
 operator|)
 condition|)
 block|{
-comment|/*          * A reference to a method within one of these opcodes is not an          * invocation of the method, it is simply a reference to the method.          */
+comment|/*          * A reference to a method within one of these opcodes is not an          * invocation of the method, it is simply a reference to the method.          *          * September 2016: Removed DeRefOf from this list          */
 if|if
 condition|(
 operator|(
@@ -2075,20 +2075,6 @@ operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_REFOF
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|Parent
-operator|->
-name|Asl
-operator|.
-name|ParseOpcode
-operator|==
-name|PARSEOP_DEREFOF
 operator|)
 operator|||
 operator|(
