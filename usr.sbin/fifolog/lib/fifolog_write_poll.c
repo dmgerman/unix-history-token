@@ -106,7 +106,7 @@ name|ptr
 parameter_list|,
 name|size
 parameter_list|)
-value|do {                   \ 	(*(ptr)) = calloc(size, 1);             \ 	assert(*(ptr) != NULL);                 \ } while (0)
+value|do {                   \ 	(*(ptr)) = calloc(1, size);             \ 	assert(*(ptr) != NULL);                 \ } while (0)
 end_define
 
 begin_decl_stmt
