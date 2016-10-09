@@ -359,7 +359,7 @@ name|null_sin
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" --> %s "
+literal|" --> %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
