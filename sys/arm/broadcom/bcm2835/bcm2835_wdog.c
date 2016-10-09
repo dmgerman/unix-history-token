@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/machdep.h>
 end_include
 
