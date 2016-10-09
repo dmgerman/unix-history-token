@@ -7316,6 +7316,9 @@ name|gic_irqsrc
 operator|*
 operator|)
 name|isrc
+index|[
+name|i
+index|]
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -7343,6 +7346,7 @@ operator|&=
 operator|~
 name|GI_FLAG_MSI_USED
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7351,7 +7355,6 @@ operator|->
 name|sc_mutex
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
