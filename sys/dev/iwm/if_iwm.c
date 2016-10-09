@@ -14117,7 +14117,9 @@ operator|->
 name|cfg_phy_cnt
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|fail
+goto|;
 block|}
 if|if
 condition|(
@@ -14147,8 +14149,9 @@ argument_list|,
 name|rx_pkt_status
 argument_list|)
 expr_stmt|;
-return|return;
-comment|/* drop */
+goto|goto
+name|fail
+goto|;
 block|}
 if|if
 condition|(
@@ -14242,7 +14245,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|fail
+goto|;
 block|}
 name|IWM_DPRINTF
 argument_list|(
@@ -14697,6 +14702,18 @@ block|}
 name|IWM_LOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+name|fail
+label|:
+name|counter_u64_add
+argument_list|(
+name|ic
+operator|->
+name|ic_ierrors
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
