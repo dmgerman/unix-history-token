@@ -11257,6 +11257,12 @@ name|if_capabilities
 operator||=
 name|IFCAP_LRO
 expr_stmt|;
+name|dev
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_HWSTATS
+expr_stmt|;
 if|if
 condition|(
 name|mdev
