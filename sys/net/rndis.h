@@ -443,6 +443,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OID_TCP_OFFLOAD_HARDWARE_CAPABILITIES
+value|0xFC01020D
+end_define
+
+begin_define
+define|#
+directive|define
 name|RNDIS_MEDIUM_802_3
 value|0x00000000
 end_define
