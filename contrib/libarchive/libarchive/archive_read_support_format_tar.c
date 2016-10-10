@@ -500,6 +500,9 @@ decl_stmt|;
 name|int64_t
 name|realsize
 decl_stmt|;
+name|int
+name|sparse_allowed
+decl_stmt|;
 name|struct
 name|sparse_block
 modifier|*
@@ -6135,6 +6138,17 @@ case|:
 comment|/* GNU sparse files */
 comment|/* 		 * Sparse files are really just regular files with 		 * sparse information in the extended area. 		 */
 comment|/* FALLTHROUGH */
+case|case
+literal|'0'
+case|:
+comment|/* 		 * Enable sparse file "read" support only for regular 		 * files and explicit GNU sparse files.  However, we 		 * don't allow non-standard file types to be sparse. 		 */
+name|tar
+operator|->
+name|sparse_allowed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* Regular file  and non-standard types */
 comment|/* 		 * Per POSIX: non-recognized types should always be 		 * treated as regular files. 		 */
@@ -8330,6 +8344,44 @@ block|{
 case|case
 literal|'G'
 case|:
+comment|/* Reject GNU.sparse.* headers on non-regular files. */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|key
+argument_list|,
+literal|"GNU.sparse"
+argument_list|,
+literal|10
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|!
+name|tar
+operator|->
+name|sparse_allowed
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Non-regular file cannot be sparse"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 comment|/* GNU "0.0" sparse pax format. */
 if|if
 condition|(
