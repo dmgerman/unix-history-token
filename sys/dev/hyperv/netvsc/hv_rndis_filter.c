@@ -5473,7 +5473,7 @@ name|NDIS_OFFLOAD_REV_2
 expr_stmt|;
 name|size
 operator|=
-name|NDIS_OFFLOAD_SIZE_2
+name|NDIS_OFFLOAD_SIZE_6_1
 expr_stmt|;
 block|}
 else|else
@@ -5488,7 +5488,7 @@ name|NDIS_OFFLOAD_REV_1
 expr_stmt|;
 name|size
 operator|=
-name|NDIS_OFFLOAD_SIZE_1
+name|NDIS_OFFLOAD_SIZE_6_0
 expr_stmt|;
 block|}
 name|in
@@ -5521,7 +5521,7 @@ argument_list|,
 operator|&
 name|caps_len
 argument_list|,
-name|NDIS_OFFLOAD_SIZE_1
+name|NDIS_OFFLOAD_SIZE_6_0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5642,7 +5642,7 @@ name|ndis_hdr
 operator|.
 name|ndis_size
 operator|<
-name|NDIS_OFFLOAD_SIZE_1
+name|NDIS_OFFLOAD_SIZE_6_0
 condition|)
 block|{
 name|if_printf
@@ -5671,7 +5671,7 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-comment|/* 		 * Fields for NDIS 6.0 are accessable. 		 */
+comment|/* 		 * NOTE: 		 * caps->ndis_hdr.ndis_size MUST be checked before accessing 		 * NDIS 6.1+ specific fields. 		 */
 name|if_printf
 argument_list|(
 name|sc

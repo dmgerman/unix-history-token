@@ -1161,7 +1161,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDIS_OFFLOAD_SIZE_1
+name|NDIS_OFFLOAD_SIZE_6_0
 define|\
 value|__offsetof(struct ndis_offload, ndis_ipsecv2)
 end_define
@@ -1169,7 +1169,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDIS_OFFLOAD_SIZE_2
+name|NDIS_OFFLOAD_SIZE_6_1
 define|\
 value|__offsetof(struct ndis_offload, ndis_rsc)
 end_define
