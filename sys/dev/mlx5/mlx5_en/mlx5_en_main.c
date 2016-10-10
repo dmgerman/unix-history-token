@@ -14432,6 +14432,12 @@ name|IFCAP_TSO
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_HWSTATS
+expr_stmt|;
 comment|/* set TSO limits so that we don't have to drop TX packets */
 name|ifp
 operator|->
