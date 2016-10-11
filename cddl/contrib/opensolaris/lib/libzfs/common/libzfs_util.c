@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
 end_comment
 
 begin_comment
@@ -4811,6 +4811,17 @@ operator|=
 literal|"received"
 expr_stmt|;
 break|break;
+default|default:
+name|str
+operator|=
+name|NULL
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+literal|"unhandled zprop_source_t"
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
