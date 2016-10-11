@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1630,6 +1636,10 @@ argument|hv_vmbus_channel
 argument_list|)
 name|ch_link
 expr_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|ch_sysctl_ctx
+decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
@@ -1974,6 +1984,18 @@ name|subchan
 parameter_list|,
 name|int
 name|subchan_cnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_drain_subchan
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|pri_chan
 parameter_list|)
 function_decl|;
 end_function_decl
