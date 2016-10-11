@@ -221,44 +221,6 @@ name|hv_vmbus_channel_packet_multipage_buffer
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * VM Bus connection states  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|HV_DISCONNECTED
-block|,
-name|HV_CONNECTING
-block|,
-name|HV_CONNECTED
-block|,
-name|HV_DISCONNECTING
-block|}
-name|hv_vmbus_connect_state
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|hv_vmbus_connect_state
-name|connect_state
-decl_stmt|;
-comment|/** 	 * channel table for fast lookup through id. 	*/
-name|hv_vmbus_channel
-modifier|*
-modifier|*
-name|channels
-decl_stmt|;
-block|}
-name|hv_vmbus_connection
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 union|union
@@ -396,17 +358,6 @@ block|}
 name|hv_vmbus_monitor_page
 typedef|;
 end_typedef
-
-begin_comment
-comment|/**  * Global variables  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|hv_vmbus_connection
-name|hv_vmbus_g_connection
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Private, VM Bus functions  */
@@ -653,30 +604,6 @@ name|struct
 name|hv_device
 modifier|*
 name|child_dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Connection interfaces  */
-end_comment
-
-begin_function_decl
-name|int
-name|hv_vmbus_connect
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|hv_vmbus_disconnect
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
