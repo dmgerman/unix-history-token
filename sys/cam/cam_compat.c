@@ -1367,7 +1367,7 @@ name|cts17
 operator|->
 name|type
 operator|=
-name|cts17
+name|cts
 operator|->
 name|type
 expr_stmt|;
@@ -2101,7 +2101,7 @@ name|cts18
 operator|->
 name|type
 operator|=
-name|cts18
+name|cts
 operator|->
 name|type
 expr_stmt|;
