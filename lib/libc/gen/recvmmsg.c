@@ -322,7 +322,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* We have received messages. Let caller know 				 * about the data received, socket 				 * error is returned on next 				 * invocation. 				 */
+comment|/* We have received messages. Let caller know 			 * about the data received, socket error is 			 * returned on next invocation. 			 */
 return|return
 operator|(
 name|rcvd
