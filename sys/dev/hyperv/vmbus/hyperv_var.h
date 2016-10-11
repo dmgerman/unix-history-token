@@ -82,7 +82,7 @@ name|uint64_t
 name|hypercall_signal_event
 parameter_list|(
 name|bus_addr_t
-name|sigevt_paddr
+name|monprm_paddr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1461,12 +1461,14 @@ name|ch_id
 decl_stmt|;
 comment|/* channel id */
 comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
-name|uint8_t
-name|monitor_group
+name|int
+name|ch_montrig_idx
 decl_stmt|;
-name|uint8_t
-name|monitor_bit
+comment|/* MNF trig index */
+name|uint32_t
+name|ch_montrig_mask
 decl_stmt|;
+comment|/* MNF trig mask */
 name|uint32_t
 name|ring_buffer_gpadl_handle
 decl_stmt|;
@@ -1507,13 +1509,13 @@ modifier|*
 name|channel_callback_context
 decl_stmt|;
 name|struct
-name|hypercall_sigevt_in
+name|hyperv_mon_param
 modifier|*
-name|ch_sigevt
+name|ch_monprm
 decl_stmt|;
 name|struct
 name|hyperv_dma
-name|ch_sigevt_dma
+name|ch_monprm_dma
 decl_stmt|;
 comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
 name|uint32_t
