@@ -319,6 +319,12 @@ name|hyperv_guid
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|task
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -443,6 +449,23 @@ name|struct
 name|vmbus_channel
 modifier|*
 name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_chan_run_task
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
 parameter_list|)
 function_decl|;
 end_function_decl
