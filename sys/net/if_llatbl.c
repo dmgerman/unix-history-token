@@ -223,24 +223,65 @@ value|VNET(lltables)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|rwlock
-name|lltable_rwlock
+name|lltable_list_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|RW_SYSINIT
 argument_list|(
-name|lltable_rwlock
+name|lltable_list_lock
 argument_list|,
 operator|&
-name|lltable_rwlock
+name|lltable_list_lock
 argument_list|,
-literal|"lltable_rwlock"
+literal|"lltable_list_lock"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|LLTABLE_LIST_RLOCK
+parameter_list|()
+value|rw_rlock(&lltable_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLTABLE_LIST_RUNLOCK
+parameter_list|()
+value|rw_runlock(&lltable_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLTABLE_LIST_WLOCK
+parameter_list|()
+value|rw_wlock(&lltable_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLTABLE_LIST_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&lltable_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLTABLE_LIST_LOCK_ASSERT
+parameter_list|()
+value|rw_assert(&lltable_list_lock, RA_LOCKED)
+end_define
 
 begin_function_decl
 specifier|static
@@ -348,7 +389,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|LLTABLE_LOCK_ASSERT
+name|LLTABLE_LIST_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -436,7 +477,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|LLTABLE_RLOCK
+name|LLTABLE_LIST_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -479,7 +520,7 @@ block|}
 block|}
 name|done
 label|:
-name|LLTABLE_RUNLOCK
+name|LLTABLE_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -2172,7 +2213,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void lltable_drain(int af) { 	struct lltable	*llt; 	struct llentry	*lle; 	register int i;  	LLTABLE_RLOCK(); 	SLIST_FOREACH(llt,&V_lltables, llt_link) { 		if (llt->llt_af != af) 			continue;  		for (i=0; i< llt->llt_hsize; i++) { 			LIST_FOREACH(lle,&llt->lle_head[i], lle_next) { 				LLE_WLOCK(lle); 				if (lle->la_hold) { 					m_freem(lle->la_hold); 					lle->la_hold = NULL; 				} 				LLE_WUNLOCK(lle); 			} 		} 	} 	LLTABLE_RUNLOCK(); }
+unit|void lltable_drain(int af) { 	struct lltable	*llt; 	struct llentry	*lle; 	register int i;  	LLTABLE_LIST_RLOCK(); 	SLIST_FOREACH(llt,&V_lltables, llt_link) { 		if (llt->llt_af != af) 			continue;  		for (i=0; i< llt->llt_hsize; i++) { 			LIST_FOREACH(lle,&llt->lle_head[i], lle_next) { 				LLE_WLOCK(lle); 				if (lle->la_hold) { 					m_freem(lle->la_hold); 					lle->la_hold = NULL; 				} 				LLE_WUNLOCK(lle); 			} 		} 	} 	LLTABLE_LIST_RUNLOCK(); }
 endif|#
 directive|endif
 end_endif
@@ -2342,7 +2383,7 @@ name|lltable
 modifier|*
 name|llt
 decl_stmt|;
-name|LLTABLE_RLOCK
+name|LLTABLE_LIST_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2377,7 +2418,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|LLTABLE_RUNLOCK
+name|LLTABLE_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2524,7 +2565,7 @@ modifier|*
 name|llt
 parameter_list|)
 block|{
-name|LLTABLE_WLOCK
+name|LLTABLE_LIST_WLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -2537,7 +2578,7 @@ argument_list|,
 name|llt_link
 argument_list|)
 expr_stmt|;
-name|LLTABLE_WUNLOCK
+name|LLTABLE_LIST_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2554,7 +2595,7 @@ modifier|*
 name|llt
 parameter_list|)
 block|{
-name|LLTABLE_WLOCK
+name|LLTABLE_LIST_WLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_REMOVE
@@ -2569,7 +2610,7 @@ argument_list|,
 name|llt_link
 argument_list|)
 expr_stmt|;
-name|LLTABLE_WUNLOCK
+name|LLTABLE_LIST_WUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -2958,7 +2999,7 @@ name|EINVAL
 return|;
 block|}
 comment|/* XXX linked list may be too expensive */
-name|LLTABLE_RLOCK
+name|LLTABLE_LIST_RLOCK
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2988,7 +3029,7 @@ name|ifp
 condition|)
 break|break;
 block|}
-name|LLTABLE_RUNLOCK
+name|LLTABLE_LIST_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|KASSERT
