@@ -606,11 +606,11 @@ name|channel
 expr_stmt|;
 name|new_channel
 operator|->
-name|device
+name|ch_dev
 operator|=
 name|channel
 operator|->
-name|device
+name|ch_dev
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -726,26 +726,10 @@ name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
 expr_stmt|;
-comment|/* 	 * Start the process of binding this offer to the driver 	 * (We need to set the device field before calling 	 * hv_vmbus_child_device_add()) 	 */
-name|new_channel
-operator|->
-name|device
-operator|=
-name|hv_vmbus_child_device_create
-argument_list|(
-name|new_channel
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Add the new device to the bus. This will kick off device-driver 	 * binding which eventually invokes the device driver's AddDevice() 	 * method. 	 */
+comment|/* 	 * Add the new device to the bus. This will kick off device-driver 	 * binding which eventually invokes the device driver's AddDevice() 	 * method. 	 * 	 * NOTE: 	 * Error is ignored here; don't have much to do if error really 	 * happens. 	 */
 name|hv_vmbus_child_device_register
 argument_list|(
 name|new_channel
-operator|->
-name|vmbus_sc
-argument_list|,
-name|new_channel
-operator|->
-name|device
 argument_list|)
 expr_stmt|;
 block|}
@@ -1332,12 +1316,10 @@ name|chan
 argument_list|)
 condition|)
 block|{
-comment|/* Only primary channel owns the hv_device */
+comment|/* Only primary channel owns the device */
 name|hv_vmbus_child_device_unregister
 argument_list|(
 name|chan
-operator|->
-name|device
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: DO NOT free primary channel for now */
@@ -1686,12 +1668,10 @@ name|channel
 argument_list|)
 condition|)
 block|{
-comment|/* Only primary channel owns the hv_device */
+comment|/* Only primary channel owns the device */
 name|hv_vmbus_child_device_unregister
 argument_list|(
 name|channel
-operator|->
-name|device
 argument_list|)
 expr_stmt|;
 block|}

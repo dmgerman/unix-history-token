@@ -392,9 +392,7 @@ name|dev
 operator|=
 name|channel
 operator|->
-name|device
-operator|->
-name|device
+name|ch_dev
 expr_stmt|;
 name|ch_id
 operator|=
@@ -409,9 +407,7 @@ name|dev
 operator|=
 name|primary_ch
 operator|->
-name|device
-operator|->
-name|device
+name|ch_dev
 expr_stmt|;
 name|ch_id
 operator|=
