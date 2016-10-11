@@ -4627,6 +4627,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* New channel has been offered */
+name|vmbus_scan_newchan
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|chan
 operator|->
 name|ch_dev

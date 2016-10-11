@@ -98,9 +98,6 @@ block|{
 name|uint32_t
 name|rel_id
 decl_stmt|;
-name|hv_vmbus_channel_state
-name|state
-decl_stmt|;
 name|struct
 name|hyperv_guid
 name|interface_type
@@ -399,17 +396,6 @@ parameter_list|(
 name|hv_vmbus_ring_buffer_info
 modifier|*
 name|ring_info
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hv_vmbus_free_vmbus_channel
-parameter_list|(
-name|hv_vmbus_channel
-modifier|*
-name|channel
 parameter_list|)
 function_decl|;
 end_function_decl

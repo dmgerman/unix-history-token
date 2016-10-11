@@ -792,24 +792,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-enum|enum
-block|{
-name|HV_CHANNEL_OFFER_STATE
-block|,
-name|HV_CHANNEL_OPENING_STATE
-block|,
-name|HV_CHANNEL_OPEN_STATE
-block|,
-name|HV_CHANNEL_OPENED_STATE
-block|,
-name|HV_CHANNEL_CLOSING_NONDESTRUCTIVE_STATE
-block|, }
-name|hv_vmbus_channel_state
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 struct|struct
 name|hv_vmbus_channel
 block|{
@@ -820,9 +802,6 @@ name|struct
 name|vmbus_softc
 modifier|*
 name|vmbus_sc
-decl_stmt|;
-name|hv_vmbus_channel_state
-name|state
 decl_stmt|;
 name|uint32_t
 name|ch_flags
@@ -952,6 +931,12 @@ name|uint32_t
 name|ch_subidx
 decl_stmt|;
 comment|/* subchan index */
+specifier|volatile
+name|uint32_t
+name|ch_stflags
+decl_stmt|;
+comment|/* atomic-op */
+comment|/* VMBUS_CHAN_ST_ */
 name|struct
 name|hyperv_guid
 name|ch_guid_type
@@ -972,11 +957,11 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_CHAN_ISPRIMARY
+name|VMBUS_CHAN_ISPRIMARY
 parameter_list|(
 name|chan
 parameter_list|)
-value|((chan)->primary_channel == NULL)
+value|((chan)->ch_subidx == 0)
 end_define
 
 begin_define
@@ -995,6 +980,20 @@ define|#
 directive|define
 name|VMBUS_CHAN_FLAG_BATCHREAD
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_OPENED_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_OPENED
+value|(1<< VMBUS_CHAN_ST_OPENED_SHIFT)
 end_define
 
 begin_function
