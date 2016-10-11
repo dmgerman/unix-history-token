@@ -512,6 +512,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vmbus_msghc_reset
+parameter_list|(
+name|struct
+name|vmbus_msghc
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vmbus_scan_done
 parameter_list|(
 name|struct
