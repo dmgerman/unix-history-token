@@ -3422,7 +3422,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|GTASK_INIT
@@ -4006,6 +4006,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|taskqgroup_bind
+argument_list|(
+name|qgroup
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4019,11 +4024,6 @@ operator|->
 name|tqg_adjusting
 operator|=
 literal|0
-expr_stmt|;
-name|taskqgroup_bind
-argument_list|(
-name|qgroup
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
