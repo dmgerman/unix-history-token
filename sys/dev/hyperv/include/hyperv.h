@@ -1889,6 +1889,11 @@ name|hv_device
 modifier|*
 name|device
 decl_stmt|;
+name|struct
+name|vmbus_softc
+modifier|*
+name|vmbus_sc
+decl_stmt|;
 name|hv_vmbus_channel_state
 name|state
 decl_stmt|;
@@ -2005,6 +2010,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|hv_chan_priv3
+decl_stmt|;
+name|struct
+name|task
+name|ch_detach_task
 decl_stmt|;
 block|}
 name|hv_vmbus_channel

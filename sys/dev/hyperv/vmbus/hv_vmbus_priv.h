@@ -964,31 +964,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|hv_vmbus_channel
-modifier|*
-name|hv_vmbus_allocate_channel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|hv_vmbus_free_vmbus_channel
 parameter_list|(
 name|hv_vmbus_channel
 modifier|*
 name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|hv_vmbus_request_channel_offers
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1052,10 +1033,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vmbus_softc
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
-name|int
+name|void
 name|hv_vmbus_child_device_register
 parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|,
 name|struct
 name|hv_device
 modifier|*
@@ -1079,12 +1070,6 @@ end_function_decl
 begin_comment
 comment|/**  * Connection interfaces  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|vmbus_softc
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
@@ -1127,19 +1112,6 @@ parameter_list|(
 name|hv_vmbus_channel
 modifier|*
 name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Wait for device creation */
-end_comment
-
-begin_function_decl
-name|void
-name|vmbus_scan
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
