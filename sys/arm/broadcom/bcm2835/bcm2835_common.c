@@ -122,6 +122,13 @@ name|node
 argument_list|,
 literal|"broadcom,bcm2835-armctrl-ic"
 argument_list|)
+operator|||
+name|fdt_is_compatible
+argument_list|(
+name|node
+argument_list|,
+literal|"brcm,bcm2836-armctrl-ic"
+argument_list|)
 condition|)
 block|{
 operator|*
