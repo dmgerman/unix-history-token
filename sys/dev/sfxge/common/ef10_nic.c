@@ -4254,7 +4254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The external port mapping is a one-based numbering of the external  * connectors on the board. It does not distinguish off-board separated  * outputs such as multi-headed cables.  * The number of ports that map to each external port connector  * on the board is determined by the chip family and the port modes to  * which the NIC can be configured. The mapping table lists modes with  * port numbering requirements in increasing order.  */
+comment|/*  * Table of mapping schemes from port number to the number of the external  * connector on the board. The external numbering does not distinguish  * off-board separated outputs such as from multi-headed cables.  *  * The count of adjacent port numbers that map to each external port  * and the offset in the numbering, is determined by the chip family and  * current port mode.  *  * For the Huntington family, the current port mode cannot be discovered,  * so the mapping used is instead the last match in the table to the full  * set of port modes to which the NIC can be configured. Therefore the  * ordering of entries in the the mapping table is significant.  */
 end_comment
 
 begin_struct
@@ -4267,15 +4267,18 @@ decl_stmt|;
 name|uint32_t
 name|modes_mask
 decl_stmt|;
-name|uint32_t
-name|stride
+name|int32_t
+name|count
+decl_stmt|;
+name|int32_t
+name|offset
 decl_stmt|;
 block|}
 name|__ef10_external_port_mappings
 index|[]
 init|=
 block|{
-comment|/* Supported modes requiring 1 output per port */
+comment|/* Supported modes with 1 output per external port */
 block|{
 name|EFX_FAMILY_HUNTINGTON
 block|,
@@ -4298,6 +4301,8 @@ name|TLV_PORT_MODE_10G_10G_10G_10G
 operator|)
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -4316,9 +4321,11 @@ name|TLV_PORT_MODE_10G_10G
 operator|)
 block|,
 literal|1
+block|,
+literal|1
 block|}
 block|,
-comment|/* Supported modes requiring 2 outputs per port */
+comment|/* Supported modes with 2 outputs per external port */
 block|{
 name|EFX_FAMILY_HUNTINGTON
 block|,
@@ -4347,6 +4354,8 @@ name|TLV_PORT_MODE_10G_10G_40G
 operator|)
 block|,
 literal|2
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -4383,9 +4392,11 @@ name|TLV_PORT_MODE_10G_10G_10G_10G_Q1_Q2
 operator|)
 block|,
 literal|2
+block|,
+literal|1
 block|}
 block|,
-comment|/* Supported modes requiring 4 outputs per port */
+comment|/* Supported modes with 4 outputs per external port */
 block|{
 name|EFX_FAMILY_MEDFORD
 block|,
@@ -4400,7 +4411,15 @@ literal|1
 operator|<<
 name|TLV_PORT_MODE_10G_10G_10G_10G_Q1
 operator|)
-operator||
+block|,
+literal|4
+block|,
+literal|1
+block|, 	}
+block|,
+block|{
+name|EFX_FAMILY_MEDFORD
+block|,
 operator|(
 literal|1
 operator|<<
@@ -4408,6 +4427,8 @@ name|TLV_PORT_MODE_10G_10G_10G_10G_Q2
 operator|)
 block|,
 literal|4
+block|,
+literal|2
 block|}
 block|, }
 struct|;
@@ -4446,11 +4467,41 @@ name|uint32_t
 name|matches
 decl_stmt|;
 name|uint32_t
-name|stride
+name|current
+decl_stmt|;
+name|int32_t
+name|count
 init|=
 literal|1
 decl_stmt|;
-comment|/* default 1-1 mapping */
+comment|/* Default 1-1 mapping */
+name|int32_t
+name|offset
+init|=
+literal|1
+decl_stmt|;
+comment|/* Default starting external port number */
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|efx_mcdi_get_port_modes
+argument_list|(
+name|enp
+argument_list|,
+operator|&
+name|port_modes
+argument_list|,
+operator|&
+name|current
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * No current port mode information 		 * - infer mapping from available modes 		 */
 if|if
 condition|(
 operator|(
@@ -4470,10 +4521,21 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* No port mode information available - use default mapping */
+comment|/* 			 * No port mode information available 			 * - use default mapping 			 */
 goto|goto
 name|out
 goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Only need to scan the current mode */
+name|port_modes
+operator|=
+literal|1
+operator|<<
+name|current
+expr_stmt|;
 block|}
 comment|/* 	 * Infer the internal port -> external port mapping from 	 * the possible port modes for this NIC. 	 */
 for|for
@@ -4527,14 +4589,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|stride
+name|count
 operator|=
 name|__ef10_external_port_mappings
 index|[
 name|i
 index|]
 operator|.
-name|stride
+name|count
+expr_stmt|;
+name|offset
+operator|=
+name|__ef10_external_port_mappings
+index|[
+name|i
+index|]
+operator|.
+name|offset
 expr_stmt|;
 name|port_modes
 operator|&=
@@ -4561,7 +4632,7 @@ goto|;
 block|}
 name|out
 label|:
-comment|/* 	 * Scale as required by last matched mode and then convert to 	 * one-based numbering 	 */
+comment|/* 	 * Scale as required by last matched mode and then convert to 	 * correctly offset numbering 	 */
 operator|*
 name|external_portp
 operator|=
@@ -4569,12 +4640,14 @@ call|(
 name|uint8_t
 call|)
 argument_list|(
+operator|(
 name|port
 operator|/
-name|stride
-argument_list|)
+name|count
+operator|)
 operator|+
-literal|1
+name|offset
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
