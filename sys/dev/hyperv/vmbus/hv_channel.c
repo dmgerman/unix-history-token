@@ -376,7 +376,7 @@ name|primary_ch
 init|=
 name|channel
 operator|->
-name|primary_channel
+name|ch_prichan
 decl_stmt|;
 if|if
 condition|(
@@ -2362,7 +2362,7 @@ name|subchan_cnt
 operator|=
 name|chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 expr_stmt|;
 if|if
 condition|(

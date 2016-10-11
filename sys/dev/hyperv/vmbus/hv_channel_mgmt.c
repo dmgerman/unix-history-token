@@ -71,26 +71,6 @@ directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|vmbus_chanmsg_proc_t
-function_decl|)
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|vmbus_message
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 specifier|static
 name|void
@@ -100,23 +80,6 @@ name|void
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|vmbus_channel_on_offers_delivered
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|vmbus_message
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -159,35 +122,11 @@ begin_comment
 comment|/*  * Vmbus channel message processing.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VMBUS_CHANMSG_PROC
-parameter_list|(
-name|name
-parameter_list|,
-name|func
-parameter_list|)
-define|\
-value|[VMBUS_CHANMSG_TYPE_##name] = func
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_CHANMSG_PROC_WAKEUP
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|VMBUS_CHANMSG_PROC(name, vmbus_msghc_wakeup)
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|vmbus_chanmsg_proc_t
-name|vmbus_chanmsg_process
+name|vmbus_chan_msgprocs
 index|[
 name|VMBUS_CHANMSG_TYPE_MAX
 index|]
@@ -207,13 +146,6 @@ argument_list|,
 name|vmbus_chan_msgproc_chrescind
 argument_list|)
 block|,
-name|VMBUS_CHANMSG_PROC
-argument_list|(
-name|CHOFFER_DONE
-argument_list|,
-name|vmbus_channel_on_offers_delivered
-argument_list|)
-block|,
 name|VMBUS_CHANMSG_PROC_WAKEUP
 argument_list|(
 name|CHOPEN_RESP
@@ -226,28 +158,11 @@ argument_list|)
 block|,
 name|VMBUS_CHANMSG_PROC_WAKEUP
 argument_list|(
-name|GPADL_DISCONNRESP
-argument_list|)
-block|,
-name|VMBUS_CHANMSG_PROC_WAKEUP
-argument_list|(
-argument|CONNECT_RESP
+argument|GPADL_DISCONNRESP
 argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|VMBUS_CHANMSG_PROC_WAKEUP
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|VMBUS_CHANMSG_PROC
-end_undef
 
 begin_function
 specifier|static
@@ -357,9 +272,9 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
-literal|"vmbus multi channel"
+literal|"vmbus subchan"
 argument_list|,
 name|NULL
 argument_list|,
@@ -371,7 +286,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -425,7 +340,7 @@ argument_list|(
 operator|&
 name|chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -564,6 +479,7 @@ argument_list|,
 argument|ch_prilink
 argument_list|)
 block|{
+comment|/* 		 * Sub-channel will have the same type GUID and instance 		 * GUID as its primary channel. 		 */
 if|if
 condition|(
 name|memcmp
@@ -752,7 +668,7 @@ argument_list|)
 expr_stmt|;
 name|newchan
 operator|->
-name|primary_channel
+name|ch_prichan
 operator|=
 name|prichan
 expr_stmt|;
@@ -769,7 +685,7 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -777,17 +693,17 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|,
 name|newchan
 argument_list|,
-name|sc_list_entry
+name|ch_sublink
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Bump up sub-channel count and notify anyone that is 	 * interested in this sub-channel, after this sub-channel 	 * is setup. 	 */
 name|prichan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|++
 expr_stmt|;
 name|mtx_unlock
@@ -795,7 +711,7 @@ argument_list|(
 operator|&
 name|prichan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1409,7 +1325,7 @@ name|pri_chan
 init|=
 name|chan
 operator|->
-name|primary_channel
+name|ch_prichan
 decl_stmt|;
 name|struct
 name|vmbus_chanmsg_chfree
@@ -1549,7 +1465,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1557,18 +1473,18 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|,
 name|chan
 argument_list|,
-name|sc_list_entry
+name|ch_sublink
 argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|>
 literal|0
 argument_list|,
@@ -1577,13 +1493,13 @@ literal|"invalid subchan_cnt %d"
 operator|,
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|)
 argument_list|)
 expr_stmt|;
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|--
 expr_stmt|;
 name|mtx_unlock
@@ -1591,7 +1507,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1605,37 +1521,6 @@ name|chan
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/**  *  * @brief Invoked when all offers have been delivered.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|vmbus_channel_on_offers_delivered
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|struct
-name|vmbus_message
-modifier|*
-name|msg
-name|__unused
-parameter_list|)
-block|{
-comment|/* No more new channels for the channel request. */
-name|vmbus_scan_done
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1819,7 +1704,7 @@ argument_list|(
 operator|&
 name|primary
 operator|->
-name|sc_list_anchor
+name|ch_subchans
 argument_list|)
 condition|)
 block|{
@@ -1851,13 +1736,14 @@ argument_list|,
 name|smp_pro_id
 argument_list|)
 expr_stmt|;
+comment|/* XXX need lock */
 name|TAILQ_FOREACH
 argument_list|(
 argument|new_channel
 argument_list|,
-argument|&primary->sc_list_anchor
+argument|&primary->ch_subchans
 argument_list|,
-argument|sc_list_entry
+argument|ch_sublink
 argument_list|)
 block|{
 if|if
@@ -2017,14 +1903,14 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|<
 name|subchan_cnt
 condition|)
@@ -2035,7 +1921,7 @@ argument_list|,
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -2052,9 +1938,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|chan
 argument_list|,
-argument|&pri_chan->sc_list_anchor
+argument|&pri_chan->ch_subchans
 argument_list|,
-argument|sc_list_entry
+argument|ch_sublink
 argument_list|)
 block|{
 comment|/* TODO: refcnt chan */
@@ -2087,7 +1973,7 @@ literal|"invalid subchan count %d, should be %d"
 operator|,
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|,
 name|subchan_cnt
 operator|)
@@ -2098,7 +1984,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2147,14 +2033,14 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|pri_chan
 operator|->
-name|subchan_cnt
+name|ch_subchan_cnt
 operator|>
 literal|0
 condition|)
@@ -2165,7 +2051,7 @@ argument_list|,
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -2179,7 +2065,7 @@ argument_list|(
 operator|&
 name|pri_chan
 operator|->
-name|sc_lock
+name|ch_subchan_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2223,29 +2109,22 @@ operator|)
 operator|->
 name|chm_type
 expr_stmt|;
-if|if
-condition|(
-name|msg_type
-operator|>=
-name|VMBUS_CHANMSG_TYPE_MAX
-condition|)
-block|{
-name|device_printf
+name|KASSERT
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
-argument_list|,
-literal|"unknown message type 0x%x\n"
-argument_list|,
 name|msg_type
+operator|<
+name|VMBUS_CHANMSG_TYPE_MAX
+argument_list|,
+operator|(
+literal|"invalid message type %u"
+operator|,
+name|msg_type
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|msg_proc
 operator|=
-name|vmbus_chanmsg_process
+name|vmbus_chan_msgprocs
 index|[
 name|msg_type
 index|]
