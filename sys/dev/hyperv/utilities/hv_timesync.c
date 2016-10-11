@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
@@ -616,7 +622,7 @@ name|recvlen
 argument_list|,
 name|requestId
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
