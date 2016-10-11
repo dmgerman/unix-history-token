@@ -293,12 +293,13 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|hv_guid
+name|struct
+name|hyperv_guid
 name|service_guid
 init|=
 block|{
 operator|.
-name|data
+name|hv_guid
 operator|=
 block|{
 literal|0xe7

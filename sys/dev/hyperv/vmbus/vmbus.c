@@ -4861,7 +4861,7 @@ name|dev
 parameter_list|,
 specifier|const
 name|struct
-name|hv_guid
+name|hyperv_guid
 modifier|*
 name|guid
 parameter_list|)
@@ -4891,7 +4891,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hv_guid
+name|hyperv_guid
 argument_list|)
 argument_list|)
 operator|==

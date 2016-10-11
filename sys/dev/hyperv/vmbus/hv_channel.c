@@ -3689,13 +3689,13 @@ name|f
 control|)
 block|{
 name|uint32_t
-name|rel_id_base
+name|chid_base
 decl_stmt|;
 name|u_long
 name|flags
 decl_stmt|;
 name|int
-name|bit
+name|chid_ofs
 decl_stmt|;
 if|if
 condition|(
@@ -3720,7 +3720,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rel_id_base
+name|chid_base
 operator|=
 name|f
 operator|<<
@@ -3729,7 +3729,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|bit
+name|chid_ofs
 operator|=
 name|ffsl
 argument_list|(
@@ -3745,11 +3745,8 @@ name|hv_vmbus_channel
 modifier|*
 name|channel
 decl_stmt|;
-name|uint32_t
-name|rel_id
-decl_stmt|;
 operator|--
-name|bit
+name|chid_ofs
 expr_stmt|;
 comment|/* NOTE: ffsl is 1-based */
 name|flags
@@ -3758,14 +3755,8 @@ operator|~
 operator|(
 literal|1UL
 operator|<<
-name|bit
+name|chid_ofs
 operator|)
-expr_stmt|;
-name|rel_id
-operator|=
-name|rel_id_base
-operator|+
-name|bit
 expr_stmt|;
 name|channel
 operator|=
@@ -3773,7 +3764,9 @@ name|sc
 operator|->
 name|vmbus_chmap
 index|[
-name|rel_id
+name|chid_base
+operator|+
+name|chid_ofs
 index|]
 expr_stmt|;
 comment|/* if channel is closed or closing */
