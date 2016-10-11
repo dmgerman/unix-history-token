@@ -664,6 +664,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|hn_link_status_update
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
