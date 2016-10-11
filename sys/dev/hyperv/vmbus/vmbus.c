@@ -3021,7 +3021,7 @@ operator|&
 name|CPUID_HV_MSR_VP_INDEX
 condition|)
 block|{
-comment|/* 		 * Save virtual processor id. 		 */
+comment|/* Save virtual processor id. */
 name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
@@ -3039,7 +3039,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX 		 * Virtual processoor id is only used by a pretty broken 		 * channel selection code from storvsc.  It's nothing 		 * critical even if CPUID_HV_MSR_VP_INDEX is not set; keep 		 * moving on. 		 */
+comment|/* Set virtual processor id to 0 for compatibility. */
 name|VMBUS_PCPU_GET
 argument_list|(
 name|sc
@@ -3049,7 +3049,7 @@ argument_list|,
 name|cpu
 argument_list|)
 operator|=
-name|cpu
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Setup the SynIC message. 	 */

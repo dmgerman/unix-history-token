@@ -780,12 +780,11 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|hv_vmbus_pfn_channel_callback
+name|vmbus_chan_callback_t
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|context
 parameter_list|)
 function_decl|;
 end_typedef
@@ -831,18 +830,18 @@ decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
-name|rxq
+name|ch_tq
 decl_stmt|;
 name|struct
 name|task
-name|channel_task
+name|ch_task
 decl_stmt|;
-name|hv_vmbus_pfn_channel_callback
-name|on_channel_callback
+name|vmbus_chan_callback_t
+name|ch_cb
 decl_stmt|;
 name|void
 modifier|*
-name|channel_callback_context
+name|ch_cbarg
 decl_stmt|;
 name|struct
 name|hyperv_mon_param
@@ -853,13 +852,13 @@ name|struct
 name|hyperv_dma
 name|ch_monprm_dma
 decl_stmt|;
-comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
-name|uint32_t
-name|target_vcpu
+name|int
+name|ch_cpuid
 decl_stmt|;
-comment|/* The corresponding CPUID in the guest */
+comment|/* owner cpu */
+comment|/* 	 * Virtual cpuid for ch_cpuid; it is used to communicate cpuid 	 * related information w/ Hyper-V.  If MSR_HV_VP_INDEX does not 	 * exist, ch_vcpuid will always be 0 for compatibility. 	 */
 name|uint32_t
-name|target_cpu
+name|ch_vcpuid
 decl_stmt|;
 comment|/* 	 * If this is a primary channel, ch_subchan* fields 	 * contain sub-channels belonging to this primary 	 * channel. 	 */
 name|struct
@@ -1104,12 +1103,12 @@ parameter_list|,
 name|uint32_t
 name|user_data_len
 parameter_list|,
-name|hv_vmbus_pfn_channel_callback
-name|pfn_on_channel_callback
+name|vmbus_chan_callback_t
+name|cb
 parameter_list|,
 name|void
 modifier|*
-name|context
+name|cbarg
 parameter_list|)
 function_decl|;
 end_function_decl
