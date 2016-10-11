@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright 2014 Xin Li<delphij@FreeBSD.org>. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014, 2016 Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -27390,13 +27390,6 @@ condition|(
 name|error
 operator|==
 literal|0
-operator|&&
-operator|!
-operator|(
-name|flag
-operator|&
-name|FKIOCTL
-operator|)
 condition|)
 name|error
 operator|=
