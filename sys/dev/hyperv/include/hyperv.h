@@ -1512,9 +1512,14 @@ decl_stmt|;
 name|hv_vmbus_channel_state
 name|state
 decl_stmt|;
-name|hv_vmbus_channel_offer_channel
-name|offer_msg
+name|uint32_t
+name|ch_flags
 decl_stmt|;
+comment|/* VMBUS_CHAN_FLAG_ */
+name|uint32_t
+name|ch_id
+decl_stmt|;
+comment|/* channel id */
 comment|/* 	 * These are based on the offer_msg.monitor_id. 	 * Save it here for easy access. 	 */
 name|uint8_t
 name|monitor_group
@@ -1636,6 +1641,18 @@ argument|hv_vmbus_channel
 argument_list|)
 name|ch_link
 expr_stmt|;
+name|uint32_t
+name|ch_subidx
+decl_stmt|;
+comment|/* subchan index */
+name|struct
+name|hv_guid
+name|ch_guid_type
+decl_stmt|;
+name|struct
+name|hv_guid
+name|ch_guid_inst
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|ch_sysctl_ctx
@@ -1653,6 +1670,13 @@ parameter_list|(
 name|chan
 parameter_list|)
 value|((chan)->primary_channel == NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_FLAG_HASMNF
+value|0x0001
 end_define
 
 begin_function
