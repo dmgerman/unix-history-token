@@ -196,6 +196,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|cdev
+modifier|*
+name|efi_cdev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|efi_status2err
 index|[
@@ -1750,7 +1759,11 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|efidev_init
+argument_list|(
+operator|&
+name|efi_cdev
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1764,6 +1777,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|efidev_uninit
+argument_list|(
+name|efi_cdev
+argument_list|)
+expr_stmt|;
 name|efi_destroy_1t1_map
 argument_list|()
 expr_stmt|;
