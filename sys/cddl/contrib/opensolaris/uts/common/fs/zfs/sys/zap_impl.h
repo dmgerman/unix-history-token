@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_ifndef
@@ -618,11 +618,11 @@ parameter_list|,
 name|int
 name|add
 parameter_list|,
-name|uint64_t
+name|refcount_t
 modifier|*
 name|towrite
 parameter_list|,
-name|uint64_t
+name|refcount_t
 modifier|*
 name|tooverwrite
 parameter_list|)

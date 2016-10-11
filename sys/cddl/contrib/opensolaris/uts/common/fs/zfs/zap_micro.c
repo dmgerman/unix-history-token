@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -7723,11 +7723,11 @@ parameter_list|,
 name|int
 name|add
 parameter_list|,
-name|uint64_t
+name|refcount_t
 modifier|*
 name|towrite
 parameter_list|,
-name|uint64_t
+name|refcount_t
 modifier|*
 name|tooverwrite
 parameter_list|)
@@ -7741,7 +7741,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Since, we don't have a name, we cannot figure out which blocks will 	 * be affected in this operation. So, account for the worst case : 	 * - 3 blocks overwritten: target leaf, ptrtbl block, header block 	 * - 4 new blocks written if adding: 	 * 	- 2 blocks for possibly split leaves, 	 * 	- 2 grown ptrtbl blocks 	 * 	 * This also accomodates the case where an add operation to a fairly 	 * large microzap results in a promotion to fatzap. 	 */
+comment|/* 	 * Since, we don't have a name, we cannot figure out which blocks will 	 * be affected in this operation. So, account for the worst case : 	 * - 3 blocks overwritten: target leaf, ptrtbl block, header block 	 * - 4 new blocks written if adding: 	 *    - 2 blocks for possibly split leaves, 	 *    - 2 grown ptrtbl blocks 	 * 	 * This also accomodates the case where an add operation to a fairly 	 * large microzap results in a promotion to fatzap. 	 */
 if|if
 condition|(
 name|name
@@ -7749,9 +7749,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|*
+operator|(
+name|void
+operator|)
+name|refcount_add_many
+argument_list|(
 name|towrite
-operator|+=
+argument_list|,
 operator|(
 literal|3
 operator|+
@@ -7765,6 +7769,9 @@ operator|)
 operator|)
 operator|*
 name|SPA_OLD_MAXBLOCKSIZE
+argument_list|,
+name|FTAG
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7850,9 +7857,13 @@ block|}
 else|else
 block|{
 comment|/* 			 * We treat this case as similar to (name == NULL) 			 */
-operator|*
+operator|(
+name|void
+operator|)
+name|refcount_add_many
+argument_list|(
 name|towrite
-operator|+=
+argument_list|,
 operator|(
 literal|3
 operator|+
@@ -7866,6 +7877,9 @@ operator|)
 operator|)
 operator|*
 name|SPA_OLD_MAXBLOCKSIZE
+argument_list|,
+name|FTAG
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -7881,28 +7895,53 @@ operator|->
 name|zap_dbuf
 argument_list|)
 condition|)
-operator|*
+block|{
+operator|(
+name|void
+operator|)
+name|refcount_add_many
+argument_list|(
 name|tooverwrite
-operator|+=
+argument_list|,
 name|MZAP_MAX_BLKSZ
+argument_list|,
+name|FTAG
+argument_list|)
 expr_stmt|;
+block|}
 else|else
-operator|*
+block|{
+operator|(
+name|void
+operator|)
+name|refcount_add_many
+argument_list|(
 name|towrite
-operator|+=
+argument_list|,
 name|MZAP_MAX_BLKSZ
+argument_list|,
+name|FTAG
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|add
 condition|)
 block|{
-operator|*
+operator|(
+name|void
+operator|)
+name|refcount_add_many
+argument_list|(
 name|towrite
-operator|+=
+argument_list|,
 literal|4
 operator|*
 name|MZAP_MAX_BLKSZ
+argument_list|,
+name|FTAG
+argument_list|)
 expr_stmt|;
 block|}
 block|}

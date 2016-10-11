@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -198,22 +198,22 @@ name|dnode
 modifier|*
 name|txh_dnode
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_space_towrite
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_space_tofree
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_space_tooverwrite
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_space_tounref
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_memory_tohold
 decl_stmt|;
-name|uint64_t
+name|refcount_t
 name|txh_fudge
 decl_stmt|;
 ifdef|#
