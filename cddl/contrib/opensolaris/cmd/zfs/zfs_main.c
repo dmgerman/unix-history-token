@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>.  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -30524,6 +30524,25 @@ block|{
 name|ret
 operator|=
 literal|1
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 			 * Ignore datasets that are excluded/restricted by 			 * parent pool name. 			 */
+if|if
+condition|(
+name|zpool_skip_pool
+argument_list|(
+name|zfs_get_pool_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|zfs_close
+argument_list|(
+name|zhp
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
