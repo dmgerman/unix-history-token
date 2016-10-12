@@ -839,7 +839,7 @@ block|{
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -1648,7 +1648,7 @@ block|{
 name|char
 name|snapname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -1760,7 +1760,7 @@ block|{
 name|char
 name|snapname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zfs_handle_t

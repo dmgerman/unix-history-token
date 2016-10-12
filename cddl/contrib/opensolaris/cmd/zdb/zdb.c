@@ -220,12 +220,6 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|ZFS_MAXNAMELEN
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|verify
 end_undef
 
@@ -11090,7 +11084,7 @@ decl_stmt|;
 name|char
 name|osname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -19484,6 +19478,8 @@ name|NULL
 decl_stmt|;
 name|char
 name|sep
+init|=
+literal|'\0'
 decl_stmt|;
 name|int
 name|count

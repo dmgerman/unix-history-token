@@ -2543,7 +2543,7 @@ decl_stmt|;
 name|char
 name|fsname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -9777,7 +9777,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 block|}
@@ -10059,7 +10059,7 @@ decl_stmt|;
 name|char
 name|pool
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -13511,7 +13511,7 @@ decl_stmt|;
 name|char
 name|parent
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -14657,7 +14657,7 @@ comment|/* open zpool handle for prop validation */
 name|char
 name|pool_path
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -14990,7 +14990,7 @@ block|{
 name|char
 name|parent
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 operator|(
@@ -15400,7 +15400,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -15863,7 +15863,7 @@ block|{
 name|char
 name|parent
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -16494,7 +16494,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -16716,7 +16716,7 @@ comment|/* 	 * get pool handle for prop validation. assumes all snaps are in the
 name|char
 name|pool
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|elem
@@ -17018,7 +17018,7 @@ decl_stmt|;
 name|char
 name|fsname
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -17824,7 +17824,7 @@ decl_stmt|;
 name|char
 name|parent
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -20585,7 +20585,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -21169,7 +21169,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -21862,7 +21862,12 @@ name|zhp
 operator|->
 name|zfs_name
 argument_list|,
-name|ZFS_MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|zc
+operator|.
+name|zc_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

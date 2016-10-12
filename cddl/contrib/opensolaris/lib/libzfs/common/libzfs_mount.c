@@ -739,7 +739,7 @@ block|{
 name|char
 name|sourceloc
 index|[
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
 index|]
 decl_stmt|;
 name|zprop_source_t

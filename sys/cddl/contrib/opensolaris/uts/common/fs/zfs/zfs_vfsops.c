@@ -8196,7 +8196,9 @@ name|statp
 operator|->
 name|f_namemax
 operator|=
-name|ZFS_MAXNAMELEN
+name|MAXNAMELEN
+operator|-
+literal|1
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
