@@ -59,11 +59,22 @@ directive|include
 file|<sys/domain.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/hhook.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -647,6 +658,12 @@ define|\
 value|KASSERT(((len) == 0&& ((th_flags)& (TH_SYN | TH_FIN)) == 0) ||\ 	    tcp_timer_active((tp), TT_REXMT) ||				\ 	    tcp_timer_active((tp), TT_PERSIST),				\ 	    ("neither rexmt nor persist timer is set"))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -677,6 +694,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -690,6 +712,12 @@ name|tp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
 
 begin_comment
 comment|/*  * Wrapper for the TCP established output helper hook.  */
@@ -787,6 +815,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * CC wrapper hook functions  */
@@ -5023,6 +5056,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_OUT helper hooks. */
 name|hhook_run_tcp_est_out
 argument_list|(
@@ -5038,6 +5074,8 @@ argument_list|,
 name|tso
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TCPDEBUG

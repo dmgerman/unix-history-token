@@ -53,11 +53,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/hhook.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1456,6 +1467,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_comment
 comment|/*  * Wrapper for the TCP established input helper hook.  */
 end_comment
@@ -1532,6 +1549,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * CC wrapper hook functions  */
@@ -7905,6 +7927,9 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -7916,6 +7941,8 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackpack
@@ -10598,6 +10625,9 @@ name|sacked_bytes
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -10609,6 +10639,8 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|SEQ_LEQ
