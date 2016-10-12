@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 DEY Storage Systems, Inc.  All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 Martin Matuska. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2012 DEY Storage Systems, Inc.  All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek. All rights reserved.  * Copyright (c) 2013 Martin Matuska. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Igor Kozhukhov<ikozhukhov@gmail.com>  * Copyright 2016 Nexenta Systems, Inc.  */
 end_comment
 
 begin_include
@@ -13242,6 +13242,34 @@ operator|(
 name|zhp
 operator|->
 name|zfs_name
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns the name of the parent pool for the given zfs handle.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|zfs_get_pool_name
+parameter_list|(
+specifier|const
+name|zfs_handle_t
+modifier|*
+name|zhp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|zhp
+operator|->
+name|zpool_hdl
+operator|->
+name|zpool_name
 operator|)
 return|;
 block|}
