@@ -5762,7 +5762,7 @@ name|dsname
 init|=
 name|kmem_alloc
 argument_list|(
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 argument_list|,
 name|KM_SLEEP
 argument_list|)
@@ -5816,7 +5816,7 @@ name|kmem_free
 argument_list|(
 name|dsname
 argument_list|,
-name|ZFS_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 argument_list|)
 expr_stmt|;
 if|if

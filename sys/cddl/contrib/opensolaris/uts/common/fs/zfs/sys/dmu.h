@@ -2578,7 +2578,7 @@ decl_stmt|;
 name|char
 name|dds_origin
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 block|}

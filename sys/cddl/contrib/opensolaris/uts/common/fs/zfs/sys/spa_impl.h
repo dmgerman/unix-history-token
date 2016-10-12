@@ -290,7 +290,7 @@ comment|/* 	 * Fields protected by spa_namespace_lock. 	 */
 name|char
 name|spa_name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* pool name */

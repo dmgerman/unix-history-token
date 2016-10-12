@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright 2015, OmniTI Computer Consulting, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3368,23 +3368,23 @@ decl_stmt|;
 name|char
 name|from
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|,
 name|to
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
 name|real
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|,
 name|fsname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -3430,7 +3430,10 @@ name|snm
 argument_list|,
 name|real
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|real
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -3489,7 +3492,10 @@ name|sdvp
 argument_list|,
 name|snm
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|from
+argument_list|)
 argument_list|,
 name|from
 argument_list|)
@@ -3508,7 +3514,10 @@ name|tdvp
 argument_list|,
 name|tnm
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|to
+argument_list|)
 argument_list|,
 name|to
 argument_list|)
@@ -3744,13 +3753,13 @@ decl_stmt|;
 name|char
 name|snapname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
 name|real
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -3796,7 +3805,10 @@ name|name
 argument_list|,
 name|real
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|real
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -3846,7 +3858,10 @@ name|dvp
 argument_list|,
 name|name
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|snapname
+argument_list|)
 argument_list|,
 name|snapname
 argument_list|)
@@ -4053,7 +4068,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
@@ -4313,13 +4328,13 @@ decl_stmt|;
 name|char
 name|snapname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
 name|real
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|char
@@ -4550,7 +4565,10 @@ name|nm
 argument_list|,
 name|real
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|real
+argument_list|)
 argument_list|,
 operator|&
 name|conflict
@@ -4742,7 +4760,10 @@ name|dvp
 argument_list|,
 name|nm
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|snapname
+argument_list|)
 argument_list|,
 name|snapname
 argument_list|)
@@ -5477,7 +5498,7 @@ decl_stmt|;
 name|char
 name|snapname
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|uint64_t
@@ -5521,7 +5542,10 @@ name|zfsvfs
 operator|->
 name|z_os
 argument_list|,
-name|MAXNAMELEN
+sizeof|sizeof
+argument_list|(
+name|snapname
+argument_list|)
 argument_list|,
 name|snapname
 argument_list|,

@@ -169,7 +169,7 @@ argument_list|(
 name|path
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 if|if
@@ -406,7 +406,7 @@ decl_stmt|;
 name|int
 name|found_snapshot
 decl_stmt|;
-comment|/* 	 * Make sure the name is not too long. 	 * 	 * ZFS_MAXNAMELEN is the maximum dataset length used in the userland 	 * which is the same as MAXNAMELEN used in the kernel. 	 * If ZFS_MAXNAMELEN value is changed, make sure to cleanup all 	 * places using MAXNAMELEN. 	 */
+comment|/* 	 * Make sure the name is not too long. 	 */
 if|if
 condition|(
 name|strlen
@@ -414,7 +414,7 @@ argument_list|(
 name|path
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 if|if
@@ -832,7 +832,7 @@ name|end
 operator|-
 name|start
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 if|if
@@ -901,7 +901,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-comment|/* 	 * Make sure the name is not too long. 	 * 	 * ZPOOL_MAXNAMELEN is the maximum pool length used in the userland 	 * which is the same as MAXNAMELEN used in the kernel. 	 * If ZPOOL_MAXNAMELEN value is changed, make sure to cleanup all 	 * places using MAXNAMELEN. 	 */
+comment|/* 	 * Make sure the name is not too long. 	 */
 if|if
 condition|(
 name|strlen
@@ -909,7 +909,7 @@ argument_list|(
 name|pool
 argument_list|)
 operator|>=
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 condition|)
 block|{
 if|if

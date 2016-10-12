@@ -9129,7 +9129,7 @@ block|{
 name|char
 name|name
 index|[
-name|MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|zilog

@@ -19975,7 +19975,7 @@ decl_stmt|;
 name|char
 name|cb_poolname
 index|[
-name|ZPOOL_MAXNAMELEN
+name|ZFS_MAX_DATASET_NAME_LEN
 index|]
 decl_stmt|;
 name|int
