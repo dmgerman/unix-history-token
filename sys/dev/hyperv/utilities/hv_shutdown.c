@@ -196,15 +196,17 @@ name|softc
 operator|->
 name|channel
 expr_stmt|;
+name|recv_len
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_recv_packet
+name|vmbus_chan_recv
 argument_list|(
 name|channel
 argument_list|,
 name|buf
-argument_list|,
-name|PAGE_SIZE
 argument_list|,
 operator|&
 name|recv_len
@@ -213,6 +215,18 @@ operator|&
 name|request_id
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ret
+operator|!=
+name|ENOBUFS
+argument_list|,
+operator|(
+literal|"hvshutdown recvbuf is not large enough"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX check recv_len to make sure that it contains enough data */
 if|if
 condition|(
 operator|(

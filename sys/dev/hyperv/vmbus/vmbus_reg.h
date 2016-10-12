@@ -344,13 +344,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMBUS_CHANPKT_SIZE_SHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|VMBUS_CHANPKT_SIZE_ALIGN
 value|(1<< VMBUS_CHANPKT_SIZE_SHIFT)
 end_define
@@ -378,32 +371,6 @@ parameter_list|)
 define|\
 value|roundup2((tlen), VMBUS_CHANPKT_SIZE_ALIGN)
 end_define
-
-begin_struct
-struct|struct
-name|vmbus_chanpkt_hdr
-block|{
-name|uint16_t
-name|cph_type
-decl_stmt|;
-name|uint16_t
-name|cph_hlen
-decl_stmt|;
-comment|/* header len, in 8 bytes */
-name|uint16_t
-name|cph_tlen
-decl_stmt|;
-comment|/* total len, in 8 bytes */
-name|uint16_t
-name|cph_flags
-decl_stmt|;
-name|uint64_t
-name|cph_xactid
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
 
 begin_struct
 struct|struct

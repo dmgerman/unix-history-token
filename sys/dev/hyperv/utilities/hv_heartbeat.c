@@ -143,7 +143,7 @@ name|hv_vmbus_channel
 modifier|*
 name|channel
 decl_stmt|;
-name|uint32_t
+name|int
 name|recvlen
 decl_stmt|;
 name|uint64_t
@@ -187,15 +187,17 @@ name|softc
 operator|->
 name|channel
 expr_stmt|;
+name|recvlen
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_recv_packet
+name|vmbus_chan_recv
 argument_list|(
 name|channel
 argument_list|,
 name|buf
-argument_list|,
-name|PAGE_SIZE
 argument_list|,
 operator|&
 name|recvlen
@@ -204,6 +206,18 @@ operator|&
 name|requestid
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ret
+operator|!=
+name|ENOBUFS
+argument_list|,
+operator|(
+literal|"hvheartbeat recvbuf is not large enough"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX check recvlen to make sure that it contains enough data */
 if|if
 condition|(
 operator|(
