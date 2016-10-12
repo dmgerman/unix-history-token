@@ -5132,19 +5132,6 @@ endif|#
 directive|endif
 comment|/* TCPDEBUG */
 comment|/* 	 * When the socket is accepting connections (the INPCB is in LISTEN 	 * state) we look into the SYN cache if this is a new connection 	 * attempt or the completion of a previous one. 	 */
-if|if
-condition|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_ACCEPTCONN
-condition|)
-block|{
-name|struct
-name|in_conninfo
-name|inc
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|tp
@@ -5152,15 +5139,46 @@ operator|->
 name|t_state
 operator|==
 name|TCPS_LISTEN
+operator|||
+operator|!
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
 argument_list|,
 operator|(
-literal|"%s: so accepting but "
-literal|"tp not listening"
+literal|"%s: so accepting but tp %p not listening"
 operator|,
 name|__func__
+operator|,
+name|tp
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+operator|&&
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+condition|)
+block|{
+name|struct
+name|in_conninfo
+name|inc
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
