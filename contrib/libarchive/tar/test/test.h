@@ -1461,6 +1461,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|assertion_file_mode
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|assertion_file_mtime
 parameter_list|(
 specifier|const
@@ -2158,6 +2177,20 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Subtract umask from mode */
+end_comment
+
+begin_function_decl
+name|mode_t
+name|umasked
+parameter_list|(
+name|mode_t
+name|expected_mode
 parameter_list|)
 function_decl|;
 end_function_decl

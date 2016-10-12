@@ -349,6 +349,8 @@ comment|/* For this test, we need to be able to read and write the ACL. */
 block|{
 name|ARCHIVE_ENTRY_ACL_TYPE_ALLOW
 block|,
+name|ARCHIVE_ENTRY_ACL_READ_DATA
+operator||
 name|ARCHIVE_ENTRY_ACL_READ_ACL
 block|,
 name|ARCHIVE_ENTRY_ACL_USER_OBJ

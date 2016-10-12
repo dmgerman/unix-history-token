@@ -321,6 +321,12 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
+name|rule
+operator|->
+name|result
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|subst
