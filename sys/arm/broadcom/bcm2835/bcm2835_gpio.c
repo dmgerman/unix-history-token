@@ -3412,7 +3412,7 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-comment|/* Get read-only pins if they're porvided */
+comment|/* Get read-only pins if they're provided */
 name|gpio
 operator|=
 name|ofw_bus_get_node
