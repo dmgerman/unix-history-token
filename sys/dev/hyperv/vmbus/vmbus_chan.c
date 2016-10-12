@@ -693,7 +693,6 @@ argument_list|,
 literal|"has monitor notification facilities"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create sysctl tree for RX bufring. 	 */
 name|br_tree
 operator|=
 name|SYSCTL_ADD_NODE
@@ -707,7 +706,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"in"
+literal|"br"
 argument_list|,
 name|CTLFLAG_RD
 operator||
@@ -725,71 +724,34 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|hv_ring_buffer_stat
+comment|/* 		 * Create sysctl tree for RX bufring. 		 */
+name|vmbus_br_sysctl_create
 argument_list|(
 name|ctx
 argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
 name|br_tree
-argument_list|)
 argument_list|,
 operator|&
 name|chan
 operator|->
 name|ch_rxbr
 argument_list|,
-literal|"inbound ring buffer stats"
+literal|"rx"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Create sysctl tree for TX bufring. 	 */
-name|br_tree
-operator|=
-name|SYSCTL_ADD_NODE
+comment|/* 		 * Create sysctl tree for TX bufring. 		 */
+name|vmbus_br_sysctl_create
 argument_list|(
 name|ctx
 argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|chid_tree
-argument_list|)
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"out"
-argument_list|,
-name|CTLFLAG_RD
-operator||
-name|CTLFLAG_MPSAFE
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|br_tree
-operator|!=
-name|NULL
-condition|)
-block|{
-name|hv_ring_buffer_stat
-argument_list|(
-name|ctx
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|br_tree
-argument_list|)
 argument_list|,
 operator|&
 name|chan
 operator|->
 name|ch_txbr
 argument_list|,
-literal|"outbound ring buffer stats"
+literal|"tx"
 argument_list|)
 expr_stmt|;
 block|}
