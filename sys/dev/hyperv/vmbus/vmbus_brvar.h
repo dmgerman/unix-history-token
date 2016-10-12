@@ -198,6 +198,37 @@ name|sysctl_oid
 struct_decl|;
 end_struct_decl
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|vmbus_txbr_maxpktsz
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_txbr
+modifier|*
+name|tbr
+parameter_list|)
+block|{
+comment|/* 	 * - 64 bits for the trailing start index (- sizeof(uint64_t)). 	 * - The rindex and windex can't be same (- 1).  See 	 *   the comment near vmbus_bufring.br_{r,w}index. 	 */
+return|return
+operator|(
+name|tbr
+operator|->
+name|txbr_dsize
+operator|-
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 name|vmbus_br_sysctl_create
