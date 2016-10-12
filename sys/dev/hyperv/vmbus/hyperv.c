@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/include/hyperv_busdma.h>
+file|<dev/hyperv/include/hyperv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
+file|<dev/hyperv/include/hyperv_busdma.h>
 end_include
 
 begin_include
@@ -111,11 +111,22 @@ directive|include
 file|<dev/hyperv/vmbus/hyperv_var.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
