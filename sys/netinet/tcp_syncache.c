@@ -5557,13 +5557,12 @@ if|if
 condition|(
 name|V_tcp_fastopen_enabled
 operator|&&
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|tp

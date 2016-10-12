@@ -1053,13 +1053,12 @@ name|TCP_RFC7413
 comment|/* 	 * For TFO connections in SYN_RECEIVED, only allow the initial 	 * SYN|ACK and those sent by the retransmit timer. 	 */
 if|if
 condition|(
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|tp
@@ -1708,13 +1707,12 @@ name|TCP_RFC7413
 comment|/* 		 * When sending additional segments following a TFO SYN|ACK, 		 * do not include the SYN bit. 		 */
 if|if
 condition|(
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|tp
@@ -1772,13 +1770,12 @@ name|TCP_RFC7413
 comment|/* 	 * When retransmitting SYN|ACK on a passively-created TFO socket, 	 * don't include data, as the presence of data may have caused the 	 * original SYN|ACK to have been dropped by a middlebox. 	 */
 if|if
 condition|(
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 operator|(
@@ -2844,13 +2841,12 @@ name|TCP_RFC7413
 comment|/* 			 * Only include the TFO option on the first 			 * transmission of the SYN|ACK on a 			 * passively-created TFO socket, as the presence of 			 * the TFO option may have caused the original 			 * SYN|ACK to have been dropped by a middlebox. 			 */
 if|if
 condition|(
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|tp
