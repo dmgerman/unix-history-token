@@ -6876,6 +6876,8 @@ name|nvl_len
 decl_stmt|;
 name|int
 name|added_resv
+init|=
+literal|0
 decl_stmt|;
 operator|(
 name|void
@@ -14388,6 +14390,8 @@ name|path_copy
 decl_stmt|;
 name|int
 name|rc
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -17494,6 +17498,8 @@ literal|0
 decl_stmt|;
 name|uint64_t
 name|old_volsize
+init|=
+literal|0
 decl_stmt|,
 name|new_volsize
 decl_stmt|;
@@ -18633,6 +18639,11 @@ name|EZFS_ZONED
 argument_list|,
 name|errbuf
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|error
