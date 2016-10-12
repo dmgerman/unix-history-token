@@ -3462,7 +3462,7 @@ name|levels
 init|=
 literal|1
 decl_stmt|;
-comment|/* 		 * Determine the number of levels necessary for the meta-dnode 		 * to contain DN_MAX_OBJECT dnodes. 		 */
+comment|/* 		 * Determine the number of levels necessary for the meta-dnode 		 * to contain DN_MAX_OBJECT dnodes.  Note that in order to 		 * ensure that we do not overflow 64 bits, there has to be 		 * a nlevels that gives us a number of blocks> DN_MAX_OBJECT 		 * but< 2^64.  Therefore, 		 * (mdn->dn_indblkshift - SPA_BLKPTRSHIFT) (10) must be 		 * less than (64 - log2(DN_MAX_OBJECT)) (16). 		 */
 while|while
 condition|(
 operator|(
@@ -3476,6 +3476,8 @@ operator|(
 name|mdn
 operator|->
 name|dn_datablkshift
+operator|-
+name|DNODE_SHIFT
 operator|+
 operator|(
 name|levels
@@ -3493,11 +3495,6 @@ operator|)
 operator|)
 operator|<
 name|DN_MAX_OBJECT
-operator|*
-sizeof|sizeof
-argument_list|(
-name|dnode_phys_t
-argument_list|)
 condition|)
 name|levels
 operator|++

@@ -1676,7 +1676,7 @@ define|#
 directive|define
 name|VDEV_TYPE_L2CACHE
 value|"l2cache"
-comment|/*  * This is needed in userland to report the minimum necessary device size.  */
+comment|/*  * This is needed in userland to report the minimum necessary device size.  *  * Note that the zfs test suite uses 64MB vdevs.  */
 define|#
 directive|define
 name|SPA_MINDEVSIZE
