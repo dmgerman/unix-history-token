@@ -783,9 +783,12 @@ name|len
 operator|!=
 name|expected
 condition|)
+block|{
+comment|/* 		 * The sysctl cannot fail. If it does fail on some FreeBSD 		 * derivative or after some future change, just abort so that 		 * the problem will be found and fixed. abort is not normally 		 * suitable for a library but makes sense here. 		 */
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rand_type
