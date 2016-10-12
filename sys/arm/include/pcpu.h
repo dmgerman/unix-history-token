@@ -225,7 +225,8 @@ name|void
 modifier|*
 name|tls
 decl_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 3" : "=r" (tls));
+comment|/* TPIDRURW contains the authoritative value. */
+asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 2" : "=r" (tls));
 return|return
 operator|(
 name|tls
@@ -245,11 +246,22 @@ modifier|*
 name|tls
 parameter_list|)
 block|{
-asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 3" : : "r" (tls));
-block|}
+comment|/* 	 * Update both TPIDRURW and TPIDRURO. TPIDRURW needs to be written 	 * first to ensure that a context switch between the two writes will 	 * still give the desired result of updating both. 	 */
+asm|__asm __volatile(
+literal|"mcr p15, 0, %0, c13, c0, 2\n"
+literal|"mcr p15, 0, %0, c13, c0, 3\n"
+operator|:
+operator|:
+literal|"r"
+operator|(
+name|tls
+operator|)
+block|)
+function|;
 end_function
 
 begin_define
+unit|}
 define|#
 directive|define
 name|curthread
@@ -328,14 +340,14 @@ parameter_list|)
 value|(get_pcpu()->pc_ ## member = (value))
 end_define
 
-begin_function_decl
-name|void
+begin_expr_stmt
+unit|void
 name|pcpu0_init
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

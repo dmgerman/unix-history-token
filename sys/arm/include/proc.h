@@ -68,14 +68,14 @@ decl_stmt|;
 name|int
 name|md_ptrace_addr_alt
 decl_stmt|;
-name|register_t
-name|md_tp
-decl_stmt|;
 if|#
 directive|if
 name|__ARM_ARCH
 operator|<
 literal|6
+name|register_t
+name|md_tp
+decl_stmt|;
 name|void
 modifier|*
 name|md_ras_start
