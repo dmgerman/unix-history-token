@@ -90,6 +90,43 @@ parameter_list|)
 value|(((idx) + (inc)) % (sz))
 end_define
 
+begin_function_decl
+specifier|static
+name|int
+name|vmbus_br_sysctl_state
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vmbus_br_sysctl_state_bin
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vmbus_br_setup
+parameter_list|(
+name|struct
+name|vmbus_br
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -836,9 +873,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* XXX only compiler fence is needed */
-comment|/* Read memory barrier */
-name|rmb
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 comment|/* 	 * This is the only case we need to signal when the 	 * ring transitions from being empty to non-empty. 	 */
@@ -1209,11 +1244,10 @@ name|save_windex
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX only compiler fence is needed. 	 * Full memory barrier before upding the write index.  	 */
-name|mb
+comment|/* 	 * Update the write index _after_ the channel packet 	 * is copied. 	 */
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Update the write index _after_ the channel packet 	 * is copied. 	 */
 name|tbr
 operator|->
 name|txbr_windex
@@ -1575,11 +1609,10 @@ argument_list|,
 name|br_dsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX only compiler fence is needed. 	 * Make sure all reads are done before we update the read index since 	 * the writer may start writing to the read area once the read index 	 * is updated. 	 */
-name|wmb
+comment|/* 	 * Update the read index _after_ the channel packet is fetched. 	 */
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Update the read index _after_ the channel packet is fetched. 	 */
 name|rbr
 operator|->
 name|rxbr_rindex
