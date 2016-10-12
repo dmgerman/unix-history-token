@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/utilities/hv_utilreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
@@ -130,6 +136,11 @@ specifier|static
 name|void
 name|hv_heartbeat_cb
 parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|channel
+parameter_list|,
 name|void
 modifier|*
 name|context
@@ -138,10 +149,6 @@ block|{
 name|uint8_t
 modifier|*
 name|buf
-decl_stmt|;
-name|hv_vmbus_channel
-modifier|*
-name|channel
 decl_stmt|;
 name|int
 name|recvlen
@@ -181,12 +188,6 @@ operator|->
 name|receive_buffer
 expr_stmt|;
 empty_stmt|;
-name|channel
-operator|=
-name|softc
-operator|->
-name|channel
-expr_stmt|;
 name|recvlen
 operator|=
 name|PAGE_SIZE

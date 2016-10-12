@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/utilities/hv_utilreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
@@ -136,6 +142,11 @@ specifier|static
 name|void
 name|hv_shutdown_cb
 parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|channel
+parameter_list|,
 name|void
 modifier|*
 name|context
@@ -144,10 +155,6 @@ block|{
 name|uint8_t
 modifier|*
 name|buf
-decl_stmt|;
-name|hv_vmbus_channel
-modifier|*
-name|channel
 decl_stmt|;
 name|uint8_t
 name|execute_shutdown
@@ -190,12 +197,6 @@ operator|->
 name|receive_buffer
 expr_stmt|;
 empty_stmt|;
-name|channel
-operator|=
-name|softc
-operator|->
-name|channel
-expr_stmt|;
 name|recv_len
 operator|=
 name|PAGE_SIZE

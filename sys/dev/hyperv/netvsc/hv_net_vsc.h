@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -2100,13 +2106,13 @@ decl_stmt|;
 name|nvsp_msg
 name|revoke_packet
 decl_stmt|;
-comment|/*uint8_t				hw_mac_addr[HW_MACADDR_LEN];*/
+comment|/*uint8_t				hw_mac_addr[ETHER_ADDR_LEN];*/
 comment|/* Holds rndis device info */
 name|void
 modifier|*
 name|extension
 decl_stmt|;
-name|hv_bool_uint8_t
+name|uint8_t
 name|destroy
 decl_stmt|;
 comment|/* Negotiated NVSP version */
@@ -2137,7 +2143,7 @@ end_typedef
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 struct_decl|;
 end_struct_decl
 
@@ -2150,7 +2156,7 @@ name|pfn_on_send_rx_completion
 function_decl|)
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|,
 name|void
@@ -2285,7 +2291,7 @@ typedef|typedef
 struct|struct
 name|netvsc_packet_
 block|{
-name|hv_bool_uint8_t
+name|uint8_t
 name|is_data_pkt
 decl_stmt|;
 comment|/* One byte */
@@ -2376,7 +2382,7 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* Assumption unsigned long */
-name|hv_bool_uint8_t
+name|uint8_t
 name|link_state
 decl_stmt|;
 block|}
@@ -2422,6 +2428,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|hn_tx_ring
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|hn_rx_ring
@@ -2430,6 +2442,15 @@ name|struct
 name|ifnet
 modifier|*
 name|hn_ifp
+decl_stmt|;
+name|struct
+name|hn_tx_ring
+modifier|*
+name|hn_txr
+decl_stmt|;
+name|void
+modifier|*
+name|hn_rdbuf
 decl_stmt|;
 name|int
 name|hn_rx_idx
@@ -2596,7 +2617,7 @@ modifier|*
 name|hn_sc
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hn_chan
 decl_stmt|;
@@ -2715,7 +2736,7 @@ modifier|*
 name|net_dev
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|hn_prichan
 decl_stmt|;
@@ -2806,6 +2827,11 @@ parameter_list|,
 name|void
 modifier|*
 name|additional_info
+parameter_list|,
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2830,7 +2856,7 @@ name|int
 name|hv_nv_on_send
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -2857,9 +2883,14 @@ name|void
 name|hv_nv_subchan_attach
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
+parameter_list|,
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
 parameter_list|)
 function_decl|;
 end_function_decl

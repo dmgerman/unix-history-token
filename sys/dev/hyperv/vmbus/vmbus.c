@@ -4661,7 +4661,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -4771,7 +4771,7 @@ name|int
 name|vmbus_add_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4783,7 +4783,7 @@ name|sc
 init|=
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 decl_stmt|;
 name|device_t
 name|parent
@@ -4873,7 +4873,7 @@ name|int
 name|vmbus_delete_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -4908,7 +4908,7 @@ name|device_delete_child
 argument_list|(
 name|chan
 operator|->
-name|vmbus_sc
+name|ch_vmbus
 operator|->
 name|vmbus_dev
 argument_list|,
@@ -5044,7 +5044,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 init|=
@@ -5255,7 +5255,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 operator|*
 argument_list|)
 operator|*

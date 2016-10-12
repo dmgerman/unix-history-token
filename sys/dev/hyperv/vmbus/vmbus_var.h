@@ -228,7 +228,7 @@ name|vmbus_rx_evtflags
 decl_stmt|;
 comment|/* compat evtflgs from host */
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|vmbus_chmap
@@ -306,7 +306,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|hv_vmbus_channel
+argument|vmbus_channel
 argument_list|)
 name|vmbus_prichans
 expr_stmt|;
@@ -409,7 +409,7 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 struct_decl|;
 end_struct_decl
 
@@ -433,32 +433,6 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|vmbus_event_proc
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vmbus_event_proc_compat
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vmbus_handle_intr
 parameter_list|(
 name|struct
@@ -473,7 +447,7 @@ name|int
 name|vmbus_add_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -484,7 +458,7 @@ name|int
 name|vmbus_delete_child
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -502,24 +476,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vmbus_chan_msgproc
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|vmbus_message
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vmbus_chan_destroy_all
+name|uint32_t
+name|vmbus_gpadl_alloc
 parameter_list|(
 name|struct
 name|vmbus_softc
@@ -639,17 +597,6 @@ name|vmbus_msghc
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|vmbus_gpadl_alloc
-parameter_list|(
-name|struct
-name|vmbus_softc
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

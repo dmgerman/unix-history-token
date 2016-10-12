@@ -22,6 +22,58 @@ file|<sys/param.h>
 end_include
 
 begin_comment
+comment|/*  * VMBUS version is 32 bit, upper 16 bit for major_number and lower  * 16 bit for minor_number.  *  * 0.13  --  Windows Server 2008  * 1.1   --  Windows 7  * 2.4   --  Windows 8  * 3.0   --  Windows 8.1  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WS2008
+value|((0<< 16) | (13))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN7
+value|((1<< 16) | (1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN8
+value|((2<< 16) | (4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_WIN8_1
+value|((3<< 16) | (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))& 0xffff)
+end_define
+
+begin_comment
 comment|/*  * GPA stuffs.  */
 end_comment
 
@@ -222,16 +274,60 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 struct_decl|;
 end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hyperv_guid
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|vmbus_chan_callback_t
+function_decl|)
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|vmbus_channel
+operator|*
+name|vmbus_get_channel
+argument_list|(
+argument|device_t dev
+argument_list|)
+block|{
+return|return
+name|device_get_ivars
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function_decl
 name|int
 name|vmbus_chan_open
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -264,7 +360,7 @@ name|void
 name|vmbus_chan_close
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -276,7 +372,7 @@ name|int
 name|vmbus_chan_gpadl_connect
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -298,7 +394,7 @@ name|int
 name|vmbus_chan_gpadl_disconnect
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -313,7 +409,7 @@ name|void
 name|vmbus_chan_cpu_set
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -328,7 +424,7 @@ name|void
 name|vmbus_chan_cpu_rr
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -337,12 +433,12 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|vmbus_chan_cpu2chan
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -357,7 +453,7 @@ name|void
 name|vmbus_chan_set_readbatch
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -369,13 +465,13 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|vmbus_subchan_get
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|pri_chan
 parameter_list|,
@@ -390,7 +486,7 @@ name|void
 name|vmbus_subchan_rel
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 modifier|*
 name|subchan
@@ -406,7 +502,7 @@ name|void
 name|vmbus_subchan_drain
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|pri_chan
 parameter_list|)
@@ -418,7 +514,7 @@ name|int
 name|vmbus_chan_recv
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -442,7 +538,7 @@ name|int
 name|vmbus_chan_recv_pkt
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -463,7 +559,7 @@ name|int
 name|vmbus_chan_send
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -491,7 +587,7 @@ name|int
 name|vmbus_chan_send_sglist
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -521,7 +617,7 @@ name|int
 name|vmbus_chan_send_prplist
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -542,6 +638,61 @@ name|dlen
 parameter_list|,
 name|uint64_t
 name|xactid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|vmbus_chan_id
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|vmbus_chan_subidx
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|vmbus_chan_is_primary
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|hyperv_guid
+modifier|*
+name|vmbus_chan_guid_inst
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
