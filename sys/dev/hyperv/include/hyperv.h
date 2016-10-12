@@ -838,30 +838,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hv_vmbus_channel_establish_gpadl
-parameter_list|(
-name|hv_vmbus_channel
-modifier|*
-name|channel
-parameter_list|,
-comment|/* must be phys and virt contiguous */
-name|void
-modifier|*
-name|contig_buffer
-parameter_list|,
-comment|/*  page-size multiple	*/
-name|uint32_t
-name|size
-parameter_list|,
-name|uint32_t
-modifier|*
-name|gpadl_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|hv_vmbus_channel_teardown_gpdal
 parameter_list|(
 name|hv_vmbus_channel
