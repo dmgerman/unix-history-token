@@ -7285,7 +7285,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Wait for subchannels to be destroyed */
-name|vmbus_drain_subchan
+name|vmbus_subchan_drain
 argument_list|(
 name|sc
 operator|->
@@ -14208,7 +14208,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Bind channel to a proper CPU */
-name|vmbus_channel_cpu_set
+name|vmbus_chan_cpu_set
 argument_list|(
 name|chan
 argument_list|,
@@ -14316,7 +14316,7 @@ decl_stmt|;
 comment|/* Wait for sub-channels setup to complete. */
 name|subchan
 operator|=
-name|vmbus_get_subchan
+name|vmbus_subchan_get
 argument_list|(
 name|sc
 operator|->
@@ -14361,7 +14361,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Release the sub-channels */
-name|vmbus_rel_subchan
+name|vmbus_subchan_rel
 argument_list|(
 name|subchan
 argument_list|,

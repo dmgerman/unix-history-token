@@ -531,6 +531,14 @@ decl_stmt|;
 name|device_t
 name|hs_dev
 decl_stmt|;
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|hs_cpu2chan
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1251,14 +1259,14 @@ name|hv_chan_priv1
 operator|=
 name|sc
 expr_stmt|;
-name|vmbus_channel_cpu_rr
+name|vmbus_chan_cpu_rr
 argument_list|(
 name|new_channel
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|new_channel
 argument_list|,
@@ -1501,7 +1509,7 @@ block|}
 comment|/* Wait for sub-channels setup to complete. */
 name|subchan
 operator|=
-name|vmbus_get_subchan
+name|vmbus_subchan_get
 argument_list|(
 name|sc
 operator|->
@@ -1535,7 +1543,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Release the sub-channels. */
-name|vmbus_rel_subchan
+name|vmbus_subchan_rel
 argument_list|(
 name|subchan
 argument_list|,
@@ -2287,7 +2295,7 @@ literal|"invalid chan priv1"
 operator|)
 argument_list|)
 expr_stmt|;
-name|vmbus_channel_cpu_rr
+name|vmbus_chan_cpu_rr
 argument_list|(
 name|sc
 operator|->
@@ -2296,7 +2304,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|sc
 operator|->
@@ -2625,12 +2633,12 @@ name|VSTOR_OPERATION_EXECUTESRB
 expr_stmt|;
 name|outgoing_channel
 operator|=
-name|vmbus_select_outgoing_channel
-argument_list|(
 name|sc
 operator|->
-name|hs_chan
-argument_list|)
+name|hs_cpu2chan
+index|[
+name|curcpu
+index|]
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -3500,6 +3508,71 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|storvsc_create_cpu2chan
+parameter_list|(
+name|struct
+name|storvsc_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|cpu
+decl_stmt|;
+name|CPU_FOREACH
+argument_list|(
+argument|cpu
+argument_list|)
+block|{
+name|sc
+operator|->
+name|hs_cpu2chan
+index|[
+name|cpu
+index|]
+operator|=
+name|vmbus_chan_cpu2chan
+argument_list|(
+name|sc
+operator|->
+name|hs_chan
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|hs_dev
+argument_list|,
+literal|"cpu%d -> chan%u\n"
+argument_list|,
+name|cpu
+argument_list|,
+name|sc
+operator|->
+name|hs_cpu2chan
+index|[
+name|cpu
+index|]
+operator|->
+name|ch_id
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/**  * @brief StorVSC attach function  *  * Function responsible for allocating per-device structures,  * setting up CAM interfaces and scanning for available LUNs to  * be used for SCSI device peripherals.  *  * @param a device  * @returns 0 on success or an error on failure  */
 end_comment
@@ -3893,6 +3966,12 @@ goto|goto
 name|cleanup
 goto|;
 block|}
+comment|/* Construct cpu to channel mapping */
+name|storvsc_create_cpu2chan
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create the device queue. 	 * Hyper-V maps each target to one SCSI HBA 	 */
 name|devq
 operator|=
@@ -4362,7 +4441,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* 	 * Since we have already drained, we don't need to busy wait. 	 * The call to close the channel will reset the callback 	 * under the protection of the incoming channel lock. 	 */
-name|hv_vmbus_channel_close
+name|vmbus_chan_close
 argument_list|(
 name|sc
 operator|->
