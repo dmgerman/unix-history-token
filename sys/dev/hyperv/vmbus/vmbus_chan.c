@@ -741,6 +741,8 @@ operator|&
 name|chan
 operator|->
 name|ch_rxbr
+operator|.
+name|rxbr
 argument_list|,
 literal|"rx"
 argument_list|)
@@ -756,6 +758,8 @@ operator|&
 name|chan
 operator|->
 name|ch_txbr
+operator|.
+name|txbr
 argument_list|,
 literal|"tx"
 argument_list|)
@@ -1047,7 +1051,7 @@ operator|=
 name|br
 expr_stmt|;
 comment|/* TX bufring comes first */
-name|hv_vmbus_ring_buffer_init
+name|vmbus_txbr_setup
 argument_list|(
 operator|&
 name|chan
@@ -1060,7 +1064,7 @@ name|txbr_size
 argument_list|)
 expr_stmt|;
 comment|/* RX bufring immediately follows TX bufring */
-name|hv_vmbus_ring_buffer_init
+name|vmbus_rxbr_setup
 argument_list|(
 operator|&
 name|chan
@@ -2378,22 +2382,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Destroy the TX+RX bufrings. 	 */
-name|hv_ring_buffer_cleanup
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|ch_txbr
-argument_list|)
-expr_stmt|;
-name|hv_ring_buffer_cleanup
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|ch_rxbr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|chan
@@ -2704,7 +2692,7 @@ name|pktlen
 expr_stmt|;
 name|error
 operator|=
-name|hv_ring_buffer_write
+name|vmbus_txbr_write
 argument_list|(
 operator|&
 name|chan
@@ -2977,7 +2965,7 @@ name|pktlen
 expr_stmt|;
 name|error
 operator|=
-name|hv_ring_buffer_write
+name|vmbus_txbr_write
 argument_list|(
 operator|&
 name|chan
@@ -3258,7 +3246,7 @@ name|pktlen
 expr_stmt|;
 name|error
 operator|=
-name|hv_ring_buffer_write
+name|vmbus_txbr_write
 argument_list|(
 operator|&
 name|chan
@@ -3326,7 +3314,7 @@ name|hlen
 decl_stmt|;
 name|error
 operator|=
-name|hv_ring_buffer_peek
+name|vmbus_rxbr_peek
 argument_list|(
 operator|&
 name|chan
@@ -3402,7 +3390,7 @@ expr_stmt|;
 comment|/* Skip packet header */
 name|error
 operator|=
-name|hv_ring_buffer_read
+name|vmbus_rxbr_read
 argument_list|(
 operator|&
 name|chan
@@ -3422,7 +3410,7 @@ operator|!
 name|error
 argument_list|,
 operator|(
-literal|"hv_ring_buffer_read failed"
+literal|"vmbus_rxbr_read failed"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3462,7 +3450,7 @@ name|pktlen
 decl_stmt|;
 name|error
 operator|=
-name|hv_ring_buffer_peek
+name|vmbus_rxbr_peek
 argument_list|(
 operator|&
 name|chan
@@ -3520,7 +3508,7 @@ expr_stmt|;
 comment|/* Include packet header */
 name|error
 operator|=
-name|hv_ring_buffer_read
+name|vmbus_rxbr_read
 argument_list|(
 operator|&
 name|chan
@@ -3540,7 +3528,7 @@ operator|!
 name|error
 argument_list|,
 operator|(
-literal|"hv_ring_buffer_read failed"
+literal|"vmbus_rxbr_read failed"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3605,7 +3593,7 @@ argument_list|)
 expr_stmt|;
 name|left
 operator|=
-name|hv_ring_buffer_read_end
+name|vmbus_rxbr_intr_unmask
 argument_list|(
 operator|&
 name|chan
@@ -3623,7 +3611,7 @@ block|{
 comment|/* No more data in RX bufring; done */
 break|break;
 block|}
-name|hv_ring_buffer_read_begin
+name|vmbus_rxbr_intr_mask
 argument_list|(
 operator|&
 name|chan
@@ -3810,7 +3798,7 @@ name|ch_flags
 operator|&
 name|VMBUS_CHAN_FLAG_BATCHREAD
 condition|)
-name|hv_ring_buffer_read_begin
+name|vmbus_rxbr_intr_mask
 argument_list|(
 operator|&
 name|chan
@@ -4205,6 +4193,22 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
+name|vmbus_rxbr_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_rxbr
+argument_list|)
+expr_stmt|;
+name|vmbus_txbr_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_txbr
+argument_list|)
+expr_stmt|;
 return|return
 name|chan
 return|;
@@ -4243,6 +4247,22 @@ operator|&
 name|chan
 operator|->
 name|ch_subchan_lock
+argument_list|)
+expr_stmt|;
+name|vmbus_rxbr_deinit
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_rxbr
+argument_list|)
+expr_stmt|;
+name|vmbus_txbr_deinit
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_txbr
 argument_list|)
 expr_stmt|;
 name|free
