@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CLOUDABI64_UTIL_H_
+name|_CLOUDABI32_UTIL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CLOUDABI64_UTIL_H_
+name|_CLOUDABI32_UTIL_H_
 end_define
 
 begin_include
@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|__ELF_WORD_SIZE
-value|64
+value|32
 end_define
 
 begin_include
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/cloudabi/cloudabi64_types.h>
+file|<contrib/cloudabi/cloudabi32_types.h>
 end_include
 
 begin_struct_decl
@@ -54,8 +54,8 @@ end_struct_decl
 
 begin_decl_stmt
 specifier|extern
-name|Elf64_Brandinfo
-name|cloudabi64_brand
+name|Elf32_Brandinfo
+name|cloudabi32_brand
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_comment
 begin_function_decl
 name|register_t
 modifier|*
-name|cloudabi64_copyout_strings
+name|cloudabi32_copyout_strings
 parameter_list|(
 name|struct
 name|image_params
@@ -87,7 +87,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cloudabi64_fixup
+name|cloudabi32_fixup
 parameter_list|(
 name|register_t
 modifier|*
@@ -102,17 +102,17 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cloudabi64_thread_setregs
+name|cloudabi32_thread_setregs
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
 specifier|const
-name|cloudabi64_threadattr_t
+name|cloudabi32_threadattr_t
 modifier|*
 parameter_list|,
-name|uint64_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

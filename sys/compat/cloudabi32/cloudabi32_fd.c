@@ -62,32 +62,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/cloudabi/cloudabi64_types.h>
+file|<contrib/cloudabi/cloudabi32_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_proto.h>
+file|<compat/cloudabi32/cloudabi32_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_util.h>
+file|<compat/cloudabi32/cloudabi32_util.h>
 end_include
 
 begin_comment
-comment|/* Copies in 64-bit iovec structures from userspace. */
+comment|/* Copies in 32-bit iovec structures from userspace. */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|cloudabi64_copyinuio
+name|cloudabi32_copyinuio
 parameter_list|(
 specifier|const
-name|cloudabi64_iovec_t
+name|cloudabi32_iovec_t
 modifier|*
 name|iovp
 parameter_list|,
@@ -101,7 +101,7 @@ modifier|*
 name|uiop
 parameter_list|)
 block|{
-name|cloudabi64_iovec_t
+name|cloudabi32_iovec_t
 name|iovobj
 decl_stmt|;
 name|struct
@@ -288,7 +288,7 @@ index|]
 operator|.
 name|iov_len
 operator|>
-name|INT64_MAX
+name|INT32_MAX
 operator|-
 name|uio
 operator|->
@@ -335,7 +335,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_fd_pread
+name|cloudabi32_sys_fd_pread
 parameter_list|(
 name|struct
 name|thread
@@ -343,7 +343,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_fd_pread_args
+name|cloudabi32_sys_fd_pread_args
 modifier|*
 name|uap
 parameter_list|)
@@ -358,7 +358,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|cloudabi64_copyinuio
+name|cloudabi32_copyinuio
 argument_list|(
 name|uap
 operator|->
@@ -417,7 +417,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_fd_pwrite
+name|cloudabi32_sys_fd_pwrite
 parameter_list|(
 name|struct
 name|thread
@@ -425,7 +425,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_fd_pwrite_args
+name|cloudabi32_sys_fd_pwrite_args
 modifier|*
 name|uap
 parameter_list|)
@@ -440,7 +440,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|cloudabi64_copyinuio
+name|cloudabi32_copyinuio
 argument_list|(
 name|TO_PTR
 argument_list|(
@@ -502,7 +502,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_fd_read
+name|cloudabi32_sys_fd_read
 parameter_list|(
 name|struct
 name|thread
@@ -510,7 +510,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_fd_read_args
+name|cloudabi32_sys_fd_read_args
 modifier|*
 name|uap
 parameter_list|)
@@ -525,7 +525,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|cloudabi64_copyinuio
+name|cloudabi32_copyinuio
 argument_list|(
 name|uap
 operator|->
@@ -580,7 +580,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_fd_write
+name|cloudabi32_sys_fd_write
 parameter_list|(
 name|struct
 name|thread
@@ -588,7 +588,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_fd_write_args
+name|cloudabi32_sys_fd_write_args
 modifier|*
 name|uap
 parameter_list|)
@@ -603,7 +603,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|cloudabi64_copyinuio
+name|cloudabi32_copyinuio
 argument_list|(
 name|TO_PTR
 argument_list|(

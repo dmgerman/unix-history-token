@@ -132,7 +132,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/stdint.h>
+file|<sys/types.h>
 end_include
 
 begin_elif
@@ -301,6 +301,13 @@ define|#
 directive|define
 name|CLOUDABI_AT_PHNUM
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOUDABI_AT_SYSINFO_EHDR
+value|262
 end_define
 
 begin_define

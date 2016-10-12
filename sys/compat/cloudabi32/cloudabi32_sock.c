@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/cloudabi/cloudabi64_types.h>
+file|<contrib/cloudabi/cloudabi32_types.h>
 end_include
 
 begin_include
@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_proto.h>
+file|<compat/cloudabi32/cloudabi32_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_util.h>
+file|<compat/cloudabi32/cloudabi32_util.h>
 end_include
 
 begin_expr_stmt
@@ -104,7 +104,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|cloudabi64_sys_sock_recv
+name|cloudabi32_sys_sock_recv
 parameter_list|(
 name|struct
 name|thread
@@ -112,7 +112,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_sock_recv_args
+name|cloudabi32_sys_sock_recv_args
 modifier|*
 name|uap
 parameter_list|)
@@ -121,15 +121,15 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
-name|cloudabi64_recv_in_t
+name|cloudabi32_recv_in_t
 name|ri
 decl_stmt|;
-name|cloudabi64_recv_out_t
+name|cloudabi32_recv_out_t
 name|ro
 init|=
 block|{}
 decl_stmt|;
-name|cloudabi64_iovec_t
+name|cloudabi32_iovec_t
 name|iovobj
 decl_stmt|;
 name|struct
@@ -139,7 +139,7 @@ init|=
 block|{}
 decl_stmt|;
 specifier|const
-name|cloudabi64_iovec_t
+name|cloudabi32_iovec_t
 modifier|*
 name|user_iov
 decl_stmt|;
@@ -471,7 +471,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_sock_send
+name|cloudabi32_sys_sock_send
 parameter_list|(
 name|struct
 name|thread
@@ -479,20 +479,20 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_sock_send_args
+name|cloudabi32_sys_sock_send_args
 modifier|*
 name|uap
 parameter_list|)
 block|{
-name|cloudabi64_send_in_t
+name|cloudabi32_send_in_t
 name|si
 decl_stmt|;
-name|cloudabi64_send_out_t
+name|cloudabi32_send_out_t
 name|so
 init|=
 block|{}
 decl_stmt|;
-name|cloudabi64_ciovec_t
+name|cloudabi32_ciovec_t
 name|iovobj
 decl_stmt|;
 name|struct
@@ -502,7 +502,7 @@ init|=
 block|{}
 decl_stmt|;
 specifier|const
-name|cloudabi64_ciovec_t
+name|cloudabi32_ciovec_t
 modifier|*
 name|user_iov
 decl_stmt|;

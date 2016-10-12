@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/cloudabi/cloudabi64_types.h>
+file|<contrib/cloudabi/cloudabi32_types.h>
 end_include
 
 begin_include
@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_util.h>
+file|<compat/cloudabi32/cloudabi32_util.h>
 end_include
 
 begin_decl_stmt
 specifier|extern
 name|char
-name|_binary_cloudabi64_vdso_o_start
+name|_binary_cloudabi32_vdso_o_start
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -100,7 +100,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|_binary_cloudabi64_vdso_o_end
+name|_binary_cloudabi32_vdso_o_end
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -108,7 +108,7 @@ end_decl_stmt
 begin_function
 name|register_t
 modifier|*
-name|cloudabi64_copyout_strings
+name|cloudabi32_copyout_strings
 parameter_list|(
 name|struct
 name|image_params
@@ -191,7 +191,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_fixup
+name|cloudabi32_fixup
 parameter_list|(
 name|register_t
 modifier|*
@@ -210,7 +210,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|Elf64_Auxargs
+name|Elf32_Auxargs
 modifier|*
 name|args
 decl_stmt|;
@@ -313,7 +313,7 @@ comment|/* 	 * Compute length of program arguments. As the argument data is 	 * 
 name|args
 operator|=
 operator|(
-name|Elf64_Auxargs
+name|Elf32_Auxargs
 operator|*
 operator|)
 name|imgp
@@ -344,7 +344,7 @@ operator|--
 name|argdatalen
 expr_stmt|;
 comment|/* Write out an auxiliary vector. */
-name|cloudabi64_auxv_t
+name|cloudabi32_auxv_t
 name|auxv
 index|[]
 init|=
@@ -527,7 +527,7 @@ name|howmany
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|cloudabi64_tcb_t
+name|cloudabi32_tcb_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -547,7 +547,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|cloudabi64_modevent
+name|cloudabi32_modevent
 parameter_list|(
 name|module_t
 name|mod
@@ -570,21 +570,21 @@ name|MOD_LOAD
 case|:
 name|cloudabi_vdso_init
 argument_list|(
-name|cloudabi64_brand
+name|cloudabi32_brand
 operator|.
 name|sysvec
 argument_list|,
-name|_binary_cloudabi64_vdso_o_start
+name|_binary_cloudabi32_vdso_o_start
 argument_list|,
-name|_binary_cloudabi64_vdso_o_end
+name|_binary_cloudabi32_vdso_o_end
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|elf64_insert_brand_entry
+name|elf32_insert_brand_entry
 argument_list|(
 operator|&
-name|cloudabi64_brand
+name|cloudabi32_brand
 argument_list|)
 operator|<
 literal|0
@@ -611,10 +611,10 @@ name|MOD_UNLOAD
 case|:
 if|if
 condition|(
-name|elf64_brand_inuse
+name|elf32_brand_inuse
 argument_list|(
 operator|&
-name|cloudabi64_brand
+name|cloudabi32_brand
 argument_list|)
 condition|)
 return|return
@@ -624,10 +624,10 @@ operator|)
 return|;
 if|if
 condition|(
-name|elf64_remove_brand_entry
+name|elf32_remove_brand_entry
 argument_list|(
 operator|&
-name|cloudabi64_brand
+name|cloudabi32_brand
 argument_list|)
 operator|<
 literal|0
@@ -646,7 +646,7 @@ return|;
 block|}
 name|cloudabi_vdso_destroy
 argument_list|(
-name|cloudabi64_brand
+name|cloudabi32_brand
 operator|.
 name|sysvec
 argument_list|)
@@ -669,12 +669,12 @@ end_function
 begin_decl_stmt
 specifier|static
 name|moduledata_t
-name|cloudabi64_module
+name|cloudabi32_module
 init|=
 block|{
-literal|"cloudabi64"
+literal|"cloudabi32"
 block|,
-name|cloudabi64_modevent
+name|cloudabi32_modevent
 block|,
 name|NULL
 block|}
@@ -684,9 +684,9 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE_TIED
 argument_list|(
-name|cloudabi64
+name|cloudabi32
 argument_list|,
-name|cloudabi64_module
+name|cloudabi32_module
 argument_list|,
 name|SI_SUB_EXEC
 argument_list|,
@@ -698,7 +698,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|cloudabi64
+name|cloudabi32
 argument_list|,
 name|cloudabi
 argument_list|,
@@ -714,9 +714,9 @@ end_expr_stmt
 begin_expr_stmt
 name|FEATURE
 argument_list|(
-name|cloudabi64
+name|cloudabi32
 argument_list|,
-literal|"CloudABI 64bit support"
+literal|"CloudABI 32bit support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/cloudabi/cloudabi64_types.h>
+file|<contrib/cloudabi/cloudabi32_types.h>
 end_include
 
 begin_include
@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_proto.h>
+file|<compat/cloudabi32/cloudabi32_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/cloudabi64/cloudabi64_util.h>
+file|<compat/cloudabi32/cloudabi32_util.h>
 end_include
 
 begin_comment
@@ -275,14 +275,14 @@ end_function
 
 begin_struct
 struct|struct
-name|cloudabi64_kevent_args
+name|cloudabi32_kevent_args
 block|{
 specifier|const
-name|cloudabi64_subscription_t
+name|cloudabi32_subscription_t
 modifier|*
 name|in
 decl_stmt|;
-name|cloudabi64_event_t
+name|cloudabi32_event_t
 modifier|*
 name|out
 decl_stmt|;
@@ -300,7 +300,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|cloudabi64_kevent_copyin
+name|cloudabi32_kevent_copyin
 parameter_list|(
 name|void
 modifier|*
@@ -315,11 +315,11 @@ name|int
 name|count
 parameter_list|)
 block|{
-name|cloudabi64_subscription_t
+name|cloudabi32_subscription_t
 name|sub
 decl_stmt|;
 name|struct
-name|cloudabi64_kevent_args
+name|cloudabi32_kevent_args
 modifier|*
 name|args
 decl_stmt|;
@@ -759,7 +759,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|cloudabi64_kevent_copyout
+name|cloudabi32_kevent_copyout
 parameter_list|(
 name|void
 modifier|*
@@ -774,11 +774,11 @@ name|int
 name|count
 parameter_list|)
 block|{
-name|cloudabi64_event_t
+name|cloudabi32_event_t
 name|ev
 decl_stmt|;
 name|struct
-name|cloudabi64_kevent_args
+name|cloudabi32_kevent_args
 modifier|*
 name|args
 decl_stmt|;
@@ -1096,7 +1096,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_poll
+name|cloudabi32_sys_poll
 parameter_list|(
 name|struct
 name|thread
@@ -1104,13 +1104,13 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_poll_args
+name|cloudabi32_sys_poll_args
 modifier|*
 name|uap
 parameter_list|)
 block|{
 name|struct
-name|cloudabi64_kevent_args
+name|cloudabi32_kevent_args
 name|args
 init|=
 block|{
@@ -1142,12 +1142,12 @@ block|{
 operator|.
 name|k_copyin
 operator|=
-name|cloudabi64_kevent_copyin
+name|cloudabi32_kevent_copyin
 block|,
 operator|.
 name|k_copyout
 operator|=
-name|cloudabi64_kevent_copyout
+name|cloudabi32_kevent_copyout
 block|,
 operator|.
 name|arg
@@ -1166,10 +1166,10 @@ operator|==
 literal|1
 condition|)
 block|{
-name|cloudabi64_subscription_t
+name|cloudabi32_subscription_t
 name|sub
 decl_stmt|;
-name|cloudabi64_event_t
+name|cloudabi32_event_t
 name|ev
 init|=
 block|{}
@@ -1498,13 +1498,13 @@ operator|==
 literal|2
 condition|)
 block|{
-name|cloudabi64_subscription_t
+name|cloudabi32_subscription_t
 name|sub
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|cloudabi64_event_t
+name|cloudabi32_event_t
 name|ev
 index|[
 literal|2
@@ -2276,7 +2276,7 @@ end_function
 
 begin_function
 name|int
-name|cloudabi64_sys_poll_fd
+name|cloudabi32_sys_poll_fd
 parameter_list|(
 name|struct
 name|thread
@@ -2284,13 +2284,13 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cloudabi64_sys_poll_fd_args
+name|cloudabi32_sys_poll_fd_args
 modifier|*
 name|uap
 parameter_list|)
 block|{
 name|struct
-name|cloudabi64_kevent_args
+name|cloudabi32_kevent_args
 name|args
 init|=
 block|{
@@ -2322,12 +2322,12 @@ block|{
 operator|.
 name|k_copyin
 operator|=
-name|cloudabi64_kevent_copyin
+name|cloudabi32_kevent_copyin
 block|,
 operator|.
 name|k_copyout
 operator|=
-name|cloudabi64_kevent_copyout
+name|cloudabi32_kevent_copyout
 block|,
 operator|.
 name|arg
@@ -2336,7 +2336,7 @@ operator|&
 name|args
 block|, 	}
 decl_stmt|;
-name|cloudabi64_subscription_t
+name|cloudabi32_subscription_t
 name|subtimo
 decl_stmt|;
 name|struct

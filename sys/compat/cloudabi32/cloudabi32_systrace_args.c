@@ -304,13 +304,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_fd_pread */
+comment|/* cloudabi32_sys_fd_pread */
 case|case
 literal|8
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_fd_pread_args
+name|cloudabi32_sys_fd_pread_args
 modifier|*
 name|p
 init|=
@@ -338,7 +338,7 @@ name|p
 operator|->
 name|iov
 expr_stmt|;
-comment|/* const cloudabi64_iovec_t * */
+comment|/* const cloudabi32_iovec_t * */
 name|uarg
 index|[
 literal|2
@@ -366,13 +366,13 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_fd_pwrite */
+comment|/* cloudabi32_sys_fd_pwrite */
 case|case
 literal|9
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_fd_pwrite_args
+name|cloudabi32_sys_fd_pwrite_args
 modifier|*
 name|p
 init|=
@@ -400,7 +400,7 @@ name|p
 operator|->
 name|iov
 expr_stmt|;
-comment|/* const cloudabi64_ciovec_t * */
+comment|/* const cloudabi32_ciovec_t * */
 name|uarg
 index|[
 literal|2
@@ -428,13 +428,13 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_fd_read */
+comment|/* cloudabi32_sys_fd_read */
 case|case
 literal|10
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_fd_read_args
+name|cloudabi32_sys_fd_read_args
 modifier|*
 name|p
 init|=
@@ -462,7 +462,7 @@ name|p
 operator|->
 name|iov
 expr_stmt|;
-comment|/* const cloudabi64_iovec_t * */
+comment|/* const cloudabi32_iovec_t * */
 name|uarg
 index|[
 literal|2
@@ -691,13 +691,13 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_fd_write */
+comment|/* cloudabi32_sys_fd_write */
 case|case
 literal|16
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_fd_write_args
+name|cloudabi32_sys_fd_write_args
 modifier|*
 name|p
 init|=
@@ -725,7 +725,7 @@ name|p
 operator|->
 name|iov
 expr_stmt|;
-comment|/* const cloudabi64_ciovec_t * */
+comment|/* const cloudabi32_ciovec_t * */
 name|uarg
 index|[
 literal|2
@@ -2072,13 +2072,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_poll */
+comment|/* cloudabi32_sys_poll */
 case|case
 literal|39
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_poll_args
+name|cloudabi32_sys_poll_args
 modifier|*
 name|p
 init|=
@@ -2096,7 +2096,7 @@ name|p
 operator|->
 name|in
 expr_stmt|;
-comment|/* const cloudabi64_subscription_t * */
+comment|/* const cloudabi32_subscription_t * */
 name|uarg
 index|[
 literal|1
@@ -2109,7 +2109,7 @@ name|p
 operator|->
 name|out
 expr_stmt|;
-comment|/* cloudabi64_event_t * */
+comment|/* cloudabi32_event_t * */
 name|uarg
 index|[
 literal|2
@@ -2127,13 +2127,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_poll_fd */
+comment|/* cloudabi32_sys_poll_fd */
 case|case
 literal|40
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_poll_fd_args
+name|cloudabi32_sys_poll_fd_args
 modifier|*
 name|p
 init|=
@@ -2161,7 +2161,7 @@ name|p
 operator|->
 name|in
 expr_stmt|;
-comment|/* const cloudabi64_subscription_t * */
+comment|/* const cloudabi32_subscription_t * */
 name|uarg
 index|[
 literal|2
@@ -2184,7 +2184,7 @@ name|p
 operator|->
 name|out
 expr_stmt|;
-comment|/* cloudabi64_event_t * */
+comment|/* cloudabi32_event_t * */
 name|uarg
 index|[
 literal|4
@@ -2207,7 +2207,7 @@ name|p
 operator|->
 name|timeout
 expr_stmt|;
-comment|/* const cloudabi64_subscription_t * */
+comment|/* const cloudabi32_subscription_t * */
 operator|*
 name|n_args
 operator|=
@@ -2607,13 +2607,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_sock_recv */
+comment|/* cloudabi32_sys_sock_recv */
 case|case
 literal|50
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_sock_recv_args
+name|cloudabi32_sys_sock_recv_args
 modifier|*
 name|p
 init|=
@@ -2641,7 +2641,7 @@ name|p
 operator|->
 name|in
 expr_stmt|;
-comment|/* const cloudabi64_recv_in_t * */
+comment|/* const cloudabi32_recv_in_t * */
 name|uarg
 index|[
 literal|2
@@ -2654,7 +2654,7 @@ name|p
 operator|->
 name|out
 expr_stmt|;
-comment|/* cloudabi64_recv_out_t * */
+comment|/* cloudabi32_recv_out_t * */
 operator|*
 name|n_args
 operator|=
@@ -2662,13 +2662,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_sock_send */
+comment|/* cloudabi32_sys_sock_send */
 case|case
 literal|51
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_sock_send_args
+name|cloudabi32_sys_sock_send_args
 modifier|*
 name|p
 init|=
@@ -2696,7 +2696,7 @@ name|p
 operator|->
 name|in
 expr_stmt|;
-comment|/* const cloudabi64_send_in_t * */
+comment|/* const cloudabi32_send_in_t * */
 name|uarg
 index|[
 literal|2
@@ -2709,7 +2709,7 @@ name|p
 operator|->
 name|out
 expr_stmt|;
-comment|/* cloudabi64_send_out_t * */
+comment|/* cloudabi32_send_out_t * */
 operator|*
 name|n_args
 operator|=
@@ -2808,13 +2808,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cloudabi64_sys_thread_create */
+comment|/* cloudabi32_sys_thread_create */
 case|case
 literal|54
 case|:
 block|{
 name|struct
-name|cloudabi64_sys_thread_create_args
+name|cloudabi32_sys_thread_create_args
 modifier|*
 name|p
 init|=
@@ -2832,7 +2832,7 @@ name|p
 operator|->
 name|attr
 expr_stmt|;
-comment|/* cloudabi64_threadattr_t * */
+comment|/* cloudabi32_threadattr_t * */
 operator|*
 name|n_args
 operator|=
@@ -3137,7 +3137,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_pread */
+comment|/* cloudabi32_sys_fd_pread */
 case|case
 literal|8
 case|:
@@ -3159,7 +3159,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_iovec_t *"
+literal|"const cloudabi32_iovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3183,7 +3183,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_pwrite */
+comment|/* cloudabi32_sys_fd_pwrite */
 case|case
 literal|9
 case|:
@@ -3205,7 +3205,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_ciovec_t *"
+literal|"const cloudabi32_ciovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3229,7 +3229,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_read */
+comment|/* cloudabi32_sys_fd_read */
 case|case
 literal|10
 case|:
@@ -3251,7 +3251,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_iovec_t *"
+literal|"const cloudabi32_iovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -3425,7 +3425,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_write */
+comment|/* cloudabi32_sys_fd_write */
 case|case
 literal|16
 case|:
@@ -3447,7 +3447,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_ciovec_t *"
+literal|"const cloudabi32_ciovec_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4435,7 +4435,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_poll */
+comment|/* cloudabi32_sys_poll */
 case|case
 literal|39
 case|:
@@ -4449,7 +4449,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"const cloudabi32_subscription_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4457,7 +4457,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"cloudabi64_event_t *"
+literal|"cloudabi32_event_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4473,7 +4473,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_poll_fd */
+comment|/* cloudabi32_sys_poll_fd */
 case|case
 literal|40
 case|:
@@ -4495,7 +4495,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"const cloudabi32_subscription_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4511,7 +4511,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"cloudabi64_event_t *"
+literal|"cloudabi32_event_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4527,7 +4527,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_subscription_t *"
+literal|"const cloudabi32_subscription_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4820,7 +4820,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_sock_recv */
+comment|/* cloudabi32_sys_sock_recv */
 case|case
 literal|50
 case|:
@@ -4842,7 +4842,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_recv_in_t *"
+literal|"const cloudabi32_recv_in_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4850,7 +4850,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_recv_out_t *"
+literal|"cloudabi32_recv_out_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4858,7 +4858,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_sock_send */
+comment|/* cloudabi32_sys_sock_send */
 case|case
 literal|51
 case|:
@@ -4880,7 +4880,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const cloudabi64_send_in_t *"
+literal|"const cloudabi32_send_in_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -4888,7 +4888,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"cloudabi64_send_out_t *"
+literal|"cloudabi32_send_out_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -4964,7 +4964,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cloudabi64_sys_thread_create */
+comment|/* cloudabi32_sys_thread_create */
 case|case
 literal|54
 case|:
@@ -4978,7 +4978,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"cloudabi64_threadattr_t *"
+literal|"cloudabi32_threadattr_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -5226,7 +5226,7 @@ operator|=
 literal|"cloudabi_fd_t"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_pread */
+comment|/* cloudabi32_sys_fd_pread */
 case|case
 literal|8
 case|:
@@ -5245,7 +5245,7 @@ operator|=
 literal|"size_t"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_pwrite */
+comment|/* cloudabi32_sys_fd_pwrite */
 case|case
 literal|9
 case|:
@@ -5264,7 +5264,7 @@ operator|=
 literal|"size_t"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_read */
+comment|/* cloudabi32_sys_fd_read */
 case|case
 literal|10
 case|:
@@ -5378,7 +5378,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_fd_write */
+comment|/* cloudabi32_sys_fd_write */
 case|case
 literal|16
 case|:
@@ -5815,7 +5815,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_poll */
+comment|/* cloudabi32_sys_poll */
 case|case
 literal|39
 case|:
@@ -5834,7 +5834,7 @@ operator|=
 literal|"size_t"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_poll_fd */
+comment|/* cloudabi32_sys_poll_fd */
 case|case
 literal|40
 case|:
@@ -6009,7 +6009,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_sock_recv */
+comment|/* cloudabi32_sys_sock_recv */
 case|case
 literal|50
 case|:
@@ -6028,7 +6028,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_sock_send */
+comment|/* cloudabi32_sys_sock_send */
 case|case
 literal|51
 case|:
@@ -6085,7 +6085,7 @@ operator|=
 literal|"void"
 expr_stmt|;
 break|break;
-comment|/* cloudabi64_sys_thread_create */
+comment|/* cloudabi32_sys_thread_create */
 case|case
 literal|54
 case|:
