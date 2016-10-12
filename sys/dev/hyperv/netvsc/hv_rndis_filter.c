@@ -4965,11 +4965,15 @@ literal|1
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -4985,10 +4989,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
