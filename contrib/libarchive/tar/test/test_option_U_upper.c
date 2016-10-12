@@ -556,7 +556,10 @@ name|assertIsReg
 argument_list|(
 literal|"d1/file1"
 argument_list|,
+name|umasked
+argument_list|(
 literal|0644
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertFileContents
@@ -644,7 +647,10 @@ name|assertIsReg
 argument_list|(
 literal|"d1/file1"
 argument_list|,
+name|umasked
+argument_list|(
 literal|0644
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|assertFileContents

@@ -4320,6 +4320,16 @@ name|return_value
 operator|=
 literal|1
 expr_stmt|;
+name|archive_entry_free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|archive_read_close
+argument_list|(
+name|disk
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elseif|else
