@@ -1738,6 +1738,26 @@ name|dsl_pool_t
 modifier|*
 name|dp
 decl_stmt|;
+comment|/* 	 * First do a quick check for root in the global zone, which 	 * is allowed to do all write_perms.  This ensures that zfs_ioc_* 	 * will get to handle nonexistent datasets. 	 */
+if|if
+condition|(
+name|INGLOBALZONE
+argument_list|(
+name|curthread
+argument_list|)
+operator|&&
+name|secpolicy_zfs
+argument_list|(
+name|cr
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|error
 operator|=
 name|dsl_pool_hold
