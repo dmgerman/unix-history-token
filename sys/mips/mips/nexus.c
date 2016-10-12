@@ -2196,6 +2196,8 @@ name|INTRNG
 ifdef|#
 directive|ifdef
 name|FDT
+name|err
+operator|=
 name|intr_activate_irq
 argument_list|(
 name|child
@@ -2203,6 +2205,24 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+block|{
+name|rman_deactivate_resource
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
 else|#
 directive|else
 comment|/* 		 * INTRNG without FDT needs to have the interrupt properly 		 * mapped first. cpu_create_intr_map() will do that and 		 * call intr_activate_irq() at the end. 		 */
