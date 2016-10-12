@@ -741,6 +741,7 @@ name|ZFS_CASE_MIXED
 block|}
 name|zfs_case_t
 typedef|;
+comment|/*  * Note: this struct must have the same layout in 32-bit and 64-bit, so  * that 32-bit processes (like /sbin/zfs) can pass it to the 64-bit  * kernel.  Therefore, we add padding to it so that no "hidden" padding  * is automatically added on 64-bit (but not on 32-bit).  */
 typedef|typedef
 struct|struct
 name|zfs_cmd
@@ -854,8 +855,17 @@ decl_stmt|;
 name|uint8_t
 name|zc_simple
 decl_stmt|;
+name|uint8_t
+name|zc_pad3
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|boolean_t
 name|zc_resumable
+decl_stmt|;
+name|uint32_t
+name|zc_pad4
 decl_stmt|;
 name|uint64_t
 name|zc_sendobj
