@@ -8360,6 +8360,35 @@ name|desc
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ENAMETOOLONG
+case|:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"new name of at least one dataset is longer than "
+literal|"the maximum allowable length"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|zfs_error
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_NAMETOOLONG
+argument_list|,
+name|desc
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 operator|(
 name|void
