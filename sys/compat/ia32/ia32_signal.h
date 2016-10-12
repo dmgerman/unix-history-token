@@ -15,6 +15,12 @@ directive|define
 name|_COMPAT_IA32_IA32_SIGNAL_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<compat/freebsd32/freebsd32_signal.h>
+end_include
+
 begin_define
 define|#
 directive|define
