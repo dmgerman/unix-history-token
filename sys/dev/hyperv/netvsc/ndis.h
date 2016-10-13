@@ -1,0 +1,420 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 2016 Microsoft Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NET_NDIS_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NET_NDIS_H_
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_MEDIA_STATE_CONNECTED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_MEDIA_STATE_DISCONNECTED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_TCP_OFFLOAD_PARAMETERS
+value|0xFC01020C
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_DEFAULT
+value|0x80
+end_define
+
+begin_comment
+comment|/* common_set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_SET_NOCHG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_SET_ON
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_SET_OFF
+value|2
+end_define
+
+begin_comment
+comment|/* a.k.a GRE MAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_ENCAP_TYPE_NVGRE
+value|0x00000001
+end_define
+
+begin_struct
+struct|struct
+name|ndis_object_hdr
+block|{
+name|uint8_t
+name|ndis_type
+decl_stmt|;
+comment|/* NDIS_OBJTYPE_ */
+name|uint8_t
+name|ndis_rev
+decl_stmt|;
+comment|/* type specific */
+name|uint16_t
+name|ndis_size
+decl_stmt|;
+comment|/* incl. this hdr */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* OID_TCP_OFFLOAD_PARAMETERS */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_offload_params
+block|{
+name|struct
+name|ndis_object_hdr
+name|ndis_hdr
+decl_stmt|;
+name|uint8_t
+name|ndis_ip4csum
+decl_stmt|;
+comment|/* param_set */
+name|uint8_t
+name|ndis_tcp4csum
+decl_stmt|;
+comment|/* param_set */
+name|uint8_t
+name|ndis_udp4csum
+decl_stmt|;
+comment|/* param_set */
+name|uint8_t
+name|ndis_tcp6csum
+decl_stmt|;
+comment|/* param_set */
+name|uint8_t
+name|ndis_udp6csum
+decl_stmt|;
+comment|/* param_set */
+name|uint8_t
+name|ndis_lsov1
+decl_stmt|;
+comment|/* lsov1_set */
+name|uint8_t
+name|ndis_ipsecv1
+decl_stmt|;
+comment|/* ipsecv1_set */
+name|uint8_t
+name|ndis_lsov2_ip4
+decl_stmt|;
+comment|/* lsov2_set */
+name|uint8_t
+name|ndis_lsov2_ip6
+decl_stmt|;
+comment|/* lsov2_set */
+name|uint8_t
+name|ndis_tcp4conn
+decl_stmt|;
+comment|/* PARAM_NOCHG */
+name|uint8_t
+name|ndis_tcp6conn
+decl_stmt|;
+comment|/* PARAM_NOCHG */
+name|uint32_t
+name|ndis_flags
+decl_stmt|;
+comment|/* 0 */
+comment|/* NDIS>= 6.1 */
+name|uint8_t
+name|ndis_ipsecv2
+decl_stmt|;
+comment|/* ipsecv2_set */
+name|uint8_t
+name|ndis_ipsecv2_ip4
+decl_stmt|;
+comment|/* ipsecv2_set */
+comment|/* NDIS>= 6.30 */
+name|uint8_t
+name|ndis_rsc_ip4
+decl_stmt|;
+comment|/* rsc_set */
+name|uint8_t
+name|ndis_rsc_ip6
+decl_stmt|;
+comment|/* rsc_set */
+name|uint8_t
+name|ndis_encap
+decl_stmt|;
+comment|/* common_set */
+name|uint8_t
+name|ndis_encap_types
+decl_stmt|;
+comment|/* NDIS_ENCAP_TYPE_ */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAMS_SIZE
+value|sizeof(struct ndis_offload_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAMS_SIZE_6_1
+define|\
+value|__offsetof(struct ndis_offload_params, ndis_rsc_ip4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAMS_REV_2
+value|2
+end_define
+
+begin_comment
+comment|/* NDIS 6.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAMS_REV_3
+value|3
+end_define
+
+begin_comment
+comment|/* NDIS 6.30 */
+end_comment
+
+begin_comment
+comment|/* param_set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAM_NOCHG
+value|0
+end_define
+
+begin_comment
+comment|/* common to all sets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAM_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAM_TX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAM_RX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_PARAM_TXRX
+value|4
+end_define
+
+begin_comment
+comment|/* lsov1_set */
+end_comment
+
+begin_comment
+comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_LSOV1_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_LSOV1_ON
+value|2
+end_define
+
+begin_comment
+comment|/* ipsecv1_set */
+end_comment
+
+begin_comment
+comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV1_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV1_AH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV1_ESP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV1_AH_ESP
+value|4
+end_define
+
+begin_comment
+comment|/* lsov2_set */
+end_comment
+
+begin_comment
+comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_LSOV2_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_LSOV2_ON
+value|2
+end_define
+
+begin_comment
+comment|/* ipsecv2_set */
+end_comment
+
+begin_comment
+comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV2_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV2_AH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV2_ESP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_IPSECV2_AH_ESP
+value|4
+end_define
+
+begin_comment
+comment|/* rsc_set */
+end_comment
+
+begin_comment
+comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_RSC_OFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OFFLOAD_RSC_ON
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NET_NDIS_H_ */
+end_comment
+
+end_unit
+

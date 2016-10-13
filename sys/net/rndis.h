@@ -680,6 +680,14 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RNDIS_QUERY_REQ_INFOBUFOFFSET
+define|\
+value|(sizeof(struct rndis_query_req) -	\ 	 __offsetof(struct rndis_query_req, rm_rid))
+end_define
+
 begin_struct
 struct|struct
 name|rndis_query_comp
@@ -705,6 +713,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_QUERY_COMP_INFOBUFABS
+parameter_list|(
+name|ofs
+parameter_list|)
+define|\
+value|((ofs) + __offsetof(struct rndis_query_req, rm_rid))
+end_define
 
 begin_comment
 comment|/* Send a set object request. */
@@ -752,6 +771,14 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RNDIS_SET_REQ_INFOBUFOFFSET
+define|\
+value|(sizeof(struct rndis_set_req) -		\ 	 __offsetof(struct rndis_set_req, rm_rid))
+end_define
 
 begin_struct
 struct|struct
