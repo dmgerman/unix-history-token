@@ -606,15 +606,8 @@ name|int
 name|hn_if_flags
 decl_stmt|;
 name|struct
-name|mtx
+name|sx
 name|hn_lock
-decl_stmt|;
-name|int
-name|hn_initdone
-decl_stmt|;
-comment|/* See hv_netvsc_drv_freebsd.c for rules on how to use */
-name|int
-name|temp_unusable
 decl_stmt|;
 name|struct
 name|vmbus_channel
