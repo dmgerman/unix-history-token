@@ -22274,6 +22274,11 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|socantsendmore
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|sctp_sowwakeup
 argument_list|(
 name|inp
