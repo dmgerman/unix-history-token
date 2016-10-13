@@ -1476,31 +1476,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|response
-operator|->
-name|ndis_msg_type
-operator|==
-name|REMOTE_NDIS_RESET_CMPLT
-condition|)
-block|{
-comment|/* Does not have a request id field */
-name|request
-operator|->
-name|response_msg
-operator|.
-name|msg
-operator|.
-name|reset_complete
-operator|.
-name|status
-operator|=
-name|STATUS_BUFFER_OVERFLOW
-expr_stmt|;
-block|}
-else|else
-block|{
 name|request
 operator|->
 name|response_msg
@@ -1513,7 +1488,6 @@ name|status
 operator|=
 name|STATUS_BUFFER_OVERFLOW
 expr_stmt|;
-block|}
 block|}
 name|sema_post
 argument_list|(
@@ -2523,9 +2497,6 @@ case|case
 name|REMOTE_NDIS_SET_CMPLT
 case|:
 case|case
-name|REMOTE_NDIS_RESET_CMPLT
-case|:
-case|case
 name|REMOTE_NDIS_KEEPALIVE_CMPLT
 case|:
 name|hv_rf_receive_response
@@ -2548,10 +2519,28 @@ name|rndis_hdr
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|printf
+case|case
+name|REMOTE_NDIS_RESET_CMPLT
+case|:
+comment|/* 		 * Reset completed, no rid. 		 * 		 * NOTE: 		 * RESET is not issued by hn(4), so this message should 		 * _not_ be observed. 		 */
+name|if_printf
 argument_list|(
-literal|"hv_rf_on_receive():  Unknown msg_type 0x%x\n"
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"RESET CMPLT received\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"unknown RNDIS message 0x%x\n"
 argument_list|,
 name|rndis_hdr
 operator|->
@@ -4010,10 +3999,6 @@ name|rndis_request
 modifier|*
 name|request
 decl_stmt|;
-name|rndis_halt_request
-modifier|*
-name|halt
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -4054,39 +4039,6 @@ operator|->
 name|halt_complete_flag
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Set up the rndis set */
-name|halt
-operator|=
-operator|&
-name|request
-operator|->
-name|request_msg
-operator|.
-name|msg
-operator|.
-name|halt_request
-expr_stmt|;
-name|halt
-operator|->
-name|request_id
-operator|=
-name|atomic_fetchadd_int
-argument_list|(
-operator|&
-name|device
-operator|->
-name|new_request_id
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Increment to get the new value (call above returns old value) */
-name|halt
-operator|->
-name|request_id
-operator|+=
-literal|1
 expr_stmt|;
 name|ret
 operator|=
