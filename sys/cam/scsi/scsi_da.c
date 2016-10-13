@@ -1944,6 +1944,24 @@ comment|/*quirks*/
 name|DA_Q_NO_RC16
 block|}
 block|,
+block|{
+comment|/* 		 * I-O Data USB Flash Disk 		 * PR: usb/211716 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"I-O DATA"
+block|,
+literal|"USB Flash Disk*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_RC16
+block|}
+block|,
 comment|/* ATA/SATA devices over SAS/USB/... */
 block|{
 comment|/* Hitachi Advanced Format (4k) drives */
