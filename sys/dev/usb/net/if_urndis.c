@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rndis.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -326,7 +332,7 @@ name|uint32_t
 name|oid
 parameter_list|,
 name|struct
-name|urndis_query_req
+name|rndis_query_req
 modifier|*
 name|msg
 parameter_list|,
@@ -360,7 +366,7 @@ name|uint32_t
 name|oid
 parameter_list|,
 name|struct
-name|urndis_set_req
+name|rndis_set_req
 modifier|*
 name|msg
 parameter_list|,
@@ -382,7 +388,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|)
@@ -401,7 +407,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|,
@@ -430,7 +436,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|)
@@ -1080,11 +1086,11 @@ block|{
 union|union
 block|{
 name|struct
-name|urndis_query_req
+name|rndis_query_req
 name|query
 decl_stmt|;
 name|struct
-name|urndis_set_req
+name|rndis_set_req
 name|set
 decl_stmt|;
 block|}
@@ -2235,7 +2241,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|urndis_ctrl_recv
 parameter_list|(
@@ -2246,7 +2252,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -2291,7 +2297,7 @@ name|hdr
 operator|=
 operator|(
 expr|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 operator|*
 operator|)
 name|sc
@@ -2368,7 +2374,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|,
@@ -2527,14 +2533,14 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|urndis_init_comp
+name|rndis_init_comp
 modifier|*
 name|msg
 decl_stmt|;
@@ -2543,7 +2549,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|urndis_init_comp
+name|rndis_init_comp
 operator|*
 operator|)
 name|hdr
@@ -2770,7 +2776,7 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|,
@@ -2787,7 +2793,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|urndis_query_comp
+name|rndis_query_comp
 modifier|*
 name|msg
 decl_stmt|;
@@ -2799,7 +2805,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|urndis_query_comp
+name|rndis_query_comp
 operator|*
 operator|)
 name|hdr
@@ -3033,14 +3039,14 @@ name|sc
 parameter_list|,
 specifier|const
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|urndis_reset_comp
+name|rndis_reset_comp
 modifier|*
 name|msg
 decl_stmt|;
@@ -3052,7 +3058,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|urndis_reset_comp
+name|rndis_reset_comp
 operator|*
 operator|)
 name|hdr
@@ -3120,7 +3126,7 @@ block|{
 struct|struct
 block|{
 name|struct
-name|urndis_set_req
+name|rndis_set_req
 name|hdr
 decl_stmt|;
 name|uint32_t
@@ -3198,11 +3204,11 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|urndis_init_req
+name|rndis_init_req
 name|msg
 decl_stmt|;
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -3242,7 +3248,7 @@ name|rm_ver_major
 operator|=
 name|htole32
 argument_list|(
-literal|1
+name|RNDIS_VERSION_MAJOR
 argument_list|)
 expr_stmt|;
 name|msg
@@ -3402,7 +3408,7 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|urndis_halt_req
+name|rndis_halt_req
 name|msg
 decl_stmt|;
 name|uint32_t
@@ -3513,7 +3519,7 @@ name|uint32_t
 name|oid
 parameter_list|,
 name|struct
-name|urndis_query_req
+name|rndis_query_req
 modifier|*
 name|msg
 parameter_list|,
@@ -3532,7 +3538,7 @@ name|rbufsz
 parameter_list|)
 block|{
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -3776,7 +3782,7 @@ name|uint32_t
 name|oid
 parameter_list|,
 name|struct
-name|urndis_set_req
+name|rndis_set_req
 modifier|*
 name|msg
 parameter_list|,
@@ -3785,7 +3791,7 @@ name|len
 parameter_list|)
 block|{
 name|struct
-name|urndis_comp_hdr
+name|rndis_comp_hdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -4078,7 +4084,7 @@ name|sc_ue
 argument_list|)
 decl_stmt|;
 name|struct
-name|urndis_packet_msg
+name|rndis_packet_msg
 name|msg
 decl_stmt|;
 name|struct
@@ -4504,7 +4510,7 @@ operator|)
 name|__offsetof
 argument_list|(
 expr|struct
-name|urndis_packet_msg
+name|rndis_packet_msg
 argument_list|,
 name|rm_dataoffset
 argument_list|)
@@ -4534,7 +4540,7 @@ operator|)
 name|__offsetof
 argument_list|(
 expr|struct
-name|urndis_packet_msg
+name|rndis_packet_msg
 argument_list|,
 name|rm_dataoffset
 argument_list|)
@@ -4717,7 +4723,7 @@ operator|+
 name|__offsetof
 argument_list|(
 expr|struct
-name|urndis_packet_msg
+name|rndis_packet_msg
 argument_list|,
 name|rm_dataoffset
 argument_list|)
@@ -4864,7 +4870,7 @@ name|error
 parameter_list|)
 block|{
 name|struct
-name|urndis_packet_msg
+name|rndis_packet_msg
 name|msg
 decl_stmt|;
 name|struct
