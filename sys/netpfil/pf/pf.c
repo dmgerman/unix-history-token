@@ -36325,6 +36325,9 @@ operator|=
 name|h
 operator|->
 name|ip_tos
+operator|&
+operator|~
+name|IPTOS_ECN_MASK
 expr_stmt|;
 name|pd
 operator|.
