@@ -236,24 +236,6 @@ name|NETVSC_PACKET_MAXPAGE
 value|32
 end_define
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint8_t
-name|mac_addr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-name|uint32_t
-name|link_state
-decl_stmt|;
-block|}
-name|netvsc_device_info
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -792,7 +774,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hv_nv_on_device_add
+name|hn_nvs_attach
 parameter_list|(
 name|struct
 name|hn_softc
