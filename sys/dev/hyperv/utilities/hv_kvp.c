@@ -1337,7 +1337,6 @@ name|devcnt
 operator|--
 control|)
 block|{
-comment|/* XXX access other driver's softc?  are you kidding? */
 name|device_t
 name|dev
 init|=
@@ -1357,7 +1356,9 @@ index|[
 name|HYPERV_GUID_STRLEN
 index|]
 decl_stmt|;
-comment|/* 			 * Trying to find GUID of Network Device 			 */
+name|int
+name|n
+decl_stmt|;
 name|chan
 operator|=
 name|vmbus_get_channel
@@ -1365,6 +1366,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|n
+operator|=
 name|hyperv_guid2str
 argument_list|(
 name|vmbus_chan_guid_inst
@@ -1380,6 +1383,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The string in the 'kvp_ip_val.adapter_id' has 			 * braces around the GUID; skip the leading brace 			 * in 'kvp_ip_val.adapter_id'. 			 */
 if|if
 condition|(
 name|strncmp
@@ -1387,9 +1391,11 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
+operator|(
 name|char
 operator|*
 operator|)
+operator|&
 name|umsg
 operator|->
 name|body
@@ -1397,10 +1403,11 @@ operator|.
 name|kvp_ip_val
 operator|.
 name|adapter_id
-argument_list|,
-name|HYPERV_GUID_STRLEN
-operator|-
+operator|)
+operator|+
 literal|1
+argument_list|,
+name|n
 argument_list|)
 operator|==
 literal|0
