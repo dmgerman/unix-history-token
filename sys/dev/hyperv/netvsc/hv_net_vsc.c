@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/netvsc/hv_rndis.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/netvsc/hv_rndis_filter.h>
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/netvsc/if_hnreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/if_hnvar.h>
 end_include
 
 begin_expr_stmt
@@ -2174,7 +2174,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|=
-name|NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_30
 expr_stmt|;
 if|if
 condition|(
@@ -2188,7 +2188,7 @@ name|sc
 operator|->
 name|hn_ndis_ver
 operator|=
-name|NDIS_VERSION_6_1
+name|HN_NDIS_VERSION_6_1
 expr_stmt|;
 if|if
 condition|(
@@ -2208,14 +2208,14 @@ name|sc
 operator|->
 name|hn_nvs_ver
 argument_list|,
-name|NDIS_VERSION_MAJOR
+name|HN_NDIS_VERSION_MAJOR
 argument_list|(
 name|sc
 operator|->
 name|hn_ndis_ver
 argument_list|)
 argument_list|,
-name|NDIS_VERSION_MINOR
+name|HN_NDIS_VERSION_MINOR
 argument_list|(
 name|sc
 operator|->
@@ -2296,7 +2296,7 @@ name|ndis
 operator|.
 name|nvs_ndis_major
 operator|=
-name|NDIS_VERSION_MAJOR
+name|HN_NDIS_VERSION_MAJOR
 argument_list|(
 name|sc
 operator|->
@@ -2307,7 +2307,7 @@ name|ndis
 operator|.
 name|nvs_ndis_minor
 operator|=
-name|NDIS_VERSION_MINOR
+name|HN_NDIS_VERSION_MINOR
 argument_list|(
 name|sc
 operator|->
@@ -3197,7 +3197,7 @@ name|pkt
 operator|->
 name|cp_rxbuf_id
 operator|!=
-name|NETVSC_RECEIVE_BUFFER_ID
+name|HN_NVS_RXBUF_SIG
 argument_list|)
 condition|)
 block|{
