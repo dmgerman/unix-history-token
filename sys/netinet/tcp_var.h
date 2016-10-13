@@ -4445,17 +4445,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
-name|tcp_seq_subtract
-parameter_list|(
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|tcp_compute_pipe
 parameter_list|(
