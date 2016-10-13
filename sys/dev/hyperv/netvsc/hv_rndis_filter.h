@@ -142,9 +142,10 @@ typedef|typedef
 struct|struct
 name|rndis_device_
 block|{
-name|netvsc_dev
+name|struct
+name|hn_softc
 modifier|*
-name|net_dev
+name|sc
 decl_stmt|;
 name|rndis_device_state
 name|state
@@ -184,12 +185,6 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|hn_softc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|hn_rx_ring
 struct_decl|;
 end_struct_decl
@@ -198,9 +193,10 @@ begin_function_decl
 name|int
 name|hv_rf_on_receive
 parameter_list|(
-name|netvsc_dev
+name|struct
+name|hn_softc
 modifier|*
-name|net_dev
+name|sc
 parameter_list|,
 name|struct
 name|hn_rx_ring
@@ -214,17 +210,6 @@ name|data
 parameter_list|,
 name|int
 name|dlen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hv_rf_receive_rollup
-parameter_list|(
-name|netvsc_dev
-modifier|*
-name|net_dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -260,6 +245,7 @@ modifier|*
 name|additl_info
 parameter_list|,
 name|int
+modifier|*
 name|nchan
 parameter_list|,
 name|struct
