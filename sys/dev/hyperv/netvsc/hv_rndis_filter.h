@@ -102,10 +102,8 @@ name|int
 modifier|*
 name|nchan
 parameter_list|,
-name|struct
-name|hn_rx_ring
-modifier|*
-name|rxr
+name|int
+name|mtu
 parameter_list|)
 function_decl|;
 end_function_decl
