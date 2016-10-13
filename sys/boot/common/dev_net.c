@@ -328,9 +328,6 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NETIF_OPEN_CLOSE_ONCE
 comment|/* Before opening another interface, close the previous one first. */
 if|if
 condition|(
@@ -350,8 +347,6 @@ condition|)
 name|net_cleanup
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* On first open, do netif open, mount, etc. */
 if|if
 condition|(
@@ -674,56 +669,6 @@ name|f_devdata
 operator|=
 name|NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NETIF_OPEN_CLOSE_ONCE
-comment|/* Extra close call? */
-if|if
-condition|(
-name|netdev_opens
-operator|<=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|netdev_opens
-operator|--
-expr_stmt|;
-comment|/* Not last close? */
-if|if
-condition|(
-name|netdev_opens
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* On last close, do netif close, etc. */
-ifdef|#
-directive|ifdef
-name|NETIF_DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"net_close: calling net_cleanup()\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|net_cleanup
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
