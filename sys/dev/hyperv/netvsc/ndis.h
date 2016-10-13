@@ -32,24 +32,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OID_TCP_OFFLOAD_PARAMETERS
-value|0xFC01020C
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDIS_OBJTYPE_DEFAULT
-value|0x80
-end_define
-
-begin_comment
-comment|/* common_set */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NDIS_OFFLOAD_SET_NOCHG
 value|0
 end_define
@@ -79,6 +61,120 @@ name|NDIS_ENCAP_TYPE_NVGRE
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_FUNCTION_MASK
+value|0x000000FF
+end_define
+
+begin_comment
+comment|/* see hash function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_TYPE_MASK
+value|0x00FFFF00
+end_define
+
+begin_comment
+comment|/* see hash type */
+end_comment
+
+begin_comment
+comment|/* hash function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_FUNCTION_TOEPLITZ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* hash type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_IPV4
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_TCP_IPV4
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_IPV6
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_IPV6_EX
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_TCP_IPV6
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_TCP_IPV6_EX
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_KEYSIZE_TOEPLITZ
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_INDCNT
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_DEFAULT
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_RSS_CAPS
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_OBJTYPE_RSS_PARAMS
+value|0x89
+end_define
+
 begin_struct
 struct|struct
 name|ndis_object_hdr
@@ -100,7 +196,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* OID_TCP_OFFLOAD_PARAMETERS */
+comment|/*  * OID_TCP_OFFLOAD_PARAMETERS  * ndis_type: NDIS_OBJTYPE_DEFAULT  */
 end_comment
 
 begin_struct
@@ -114,47 +210,47 @@ decl_stmt|;
 name|uint8_t
 name|ndis_ip4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_tcp4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_udp4csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_tcp6csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_udp6csum
 decl_stmt|;
-comment|/* param_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_lsov1
 decl_stmt|;
-comment|/* lsov1_set */
+comment|/* NDIS_OFFLOAD_PARAM_ */
 name|uint8_t
 name|ndis_ipsecv1
 decl_stmt|;
-comment|/* ipsecv1_set */
+comment|/* NDIS_OFFLOAD_IPSECV1_ */
 name|uint8_t
 name|ndis_lsov2_ip4
 decl_stmt|;
-comment|/* lsov2_set */
+comment|/* NDIS_OFFLOAD_LSOV2_ */
 name|uint8_t
 name|ndis_lsov2_ip6
 decl_stmt|;
-comment|/* lsov2_set */
+comment|/* NDIS_OFFLOAD_LSOV2_ */
 name|uint8_t
 name|ndis_tcp4conn
 decl_stmt|;
-comment|/* PARAM_NOCHG */
+comment|/* 0 */
 name|uint8_t
 name|ndis_tcp6conn
 decl_stmt|;
-comment|/* PARAM_NOCHG */
+comment|/* 0 */
 name|uint32_t
 name|ndis_flags
 decl_stmt|;
@@ -163,24 +259,24 @@ comment|/* NDIS>= 6.1 */
 name|uint8_t
 name|ndis_ipsecv2
 decl_stmt|;
-comment|/* ipsecv2_set */
+comment|/* NDIS_OFFLOAD_IPSECV2_ */
 name|uint8_t
 name|ndis_ipsecv2_ip4
 decl_stmt|;
-comment|/* ipsecv2_set */
+comment|/* NDIS_OFFLOAD_IPSECV2_ */
 comment|/* NDIS>= 6.30 */
 name|uint8_t
 name|ndis_rsc_ip4
 decl_stmt|;
-comment|/* rsc_set */
+comment|/* NDIS_OFFLOAD_RSC_ */
 name|uint8_t
 name|ndis_rsc_ip6
 decl_stmt|;
-comment|/* rsc_set */
+comment|/* NDIS_OFFLOAD_RSC_ */
 name|uint8_t
 name|ndis_encap
 decl_stmt|;
-comment|/* common_set */
+comment|/* NDIS_OFFLOAD_SET_ */
 name|uint8_t
 name|ndis_encap_types
 decl_stmt|;
@@ -226,10 +322,6 @@ begin_comment
 comment|/* NDIS 6.30 */
 end_comment
 
-begin_comment
-comment|/* param_set */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -238,7 +330,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* common to all sets */
+comment|/* common */
 end_comment
 
 begin_define
@@ -270,10 +362,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* lsov1_set */
-end_comment
-
-begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
 end_comment
 
@@ -290,10 +378,6 @@ directive|define
 name|NDIS_OFFLOAD_LSOV1_ON
 value|2
 end_define
-
-begin_comment
-comment|/* ipsecv1_set */
-end_comment
 
 begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
@@ -328,10 +412,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* lsov2_set */
-end_comment
-
-begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
 end_comment
 
@@ -348,10 +428,6 @@ directive|define
 name|NDIS_OFFLOAD_LSOV2_ON
 value|2
 end_define
-
-begin_comment
-comment|/* ipsecv2_set */
-end_comment
 
 begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
@@ -386,10 +462,6 @@ value|4
 end_define
 
 begin_comment
-comment|/* rsc_set */
-end_comment
-
-begin_comment
 comment|/* NDIS_OFFLOAD_PARAM_NOCHG */
 end_comment
 
@@ -406,6 +478,290 @@ directive|define
 name|NDIS_OFFLOAD_RSC_ON
 value|2
 end_define
+
+begin_comment
+comment|/*  * OID_GEN_RECEIVE_SCALE_CAPABILITIES  * ndis_type: NDIS_OBJTYPE_RSS_CAPS  */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_rss_caps
+block|{
+name|struct
+name|ndis_object_hdr
+name|ndis_hdr
+decl_stmt|;
+name|uint32_t
+name|ndis_flags
+decl_stmt|;
+comment|/* NDIS_RSS_CAP_ */
+name|uint32_t
+name|ndis_nmsi
+decl_stmt|;
+comment|/* # of MSIs */
+name|uint32_t
+name|ndis_nrxr
+decl_stmt|;
+comment|/* # of RX rings */
+comment|/* NDIS>= 6.30 */
+name|uint16_t
+name|ndis_nind
+decl_stmt|;
+comment|/* # of indtbl ent. */
+name|uint16_t
+name|ndis_pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_SIZE
+define|\
+value|__offsetof(struct ndis_rss_caps, ndis_pad)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_SIZE_6_0
+define|\
+value|__offsetof(struct ndis_rss_caps, ndis_nind)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_REV_1
+value|1
+end_define
+
+begin_comment
+comment|/* NDIS 6.{0,1,20} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAPS_REV_2
+value|2
+end_define
+
+begin_comment
+comment|/* NDIS 6.30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_MSI
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_CLASSIFY_ISR
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_CLASSIFY_DPC
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_MSIX
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV4
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV6
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_IPV6_EX
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_HASH_TOEPLITZ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*  * OID_GEN_RECEIVE_SCALE_PARAMETERS  * ndis_type: NDIS_OBJTYPE_RSS_PARAMS  */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_rss_params
+block|{
+name|struct
+name|ndis_object_hdr
+name|ndis_hdr
+decl_stmt|;
+name|uint16_t
+name|ndis_flags
+decl_stmt|;
+comment|/* NDIS_RSS_FLAG_ */
+name|uint16_t
+name|ndis_bcpu
+decl_stmt|;
+comment|/* base cpu 0 */
+name|uint32_t
+name|ndis_hash
+decl_stmt|;
+comment|/* NDIS_HASH_ */
+name|uint16_t
+name|ndis_indsize
+decl_stmt|;
+comment|/* indirect table */
+name|uint32_t
+name|ndis_indoffset
+decl_stmt|;
+name|uint16_t
+name|ndis_keysize
+decl_stmt|;
+comment|/* hash key */
+name|uint32_t
+name|ndis_keyoffset
+decl_stmt|;
+comment|/* NDIS>= 6.20 */
+name|uint32_t
+name|ndis_cpumaskoffset
+decl_stmt|;
+name|uint32_t
+name|ndis_cpumaskcnt
+decl_stmt|;
+name|uint32_t
+name|ndis_cpumaskentsz
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_PARAMS_SIZE
+value|sizeof(struct ndis_rss_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_PARAMS_SIZE_6_0
+define|\
+value|__offsetof(struct ndis_rss_params, ndis_cpumaskoffset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_PARAMS_REV_1
+value|1
+end_define
+
+begin_comment
+comment|/* NDIS 6.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_PARAMS_REV_2
+value|2
+end_define
+
+begin_comment
+comment|/* NDIS 6.20 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_FLAG_BCPU_UNCHG
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_FLAG_HASH_UNCHG
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_FLAG_IND_UNCHG
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_FLAG_KEY_UNCHG
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_FLAG_DISABLE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* non-standard convenient struct */
+end_comment
+
+begin_struct
+struct|struct
+name|ndis_rssprm_toeplitz
+block|{
+name|struct
+name|ndis_rss_params
+name|rss_params
+decl_stmt|;
+comment|/* Toeplitz hash key */
+name|uint8_t
+name|rss_key
+index|[
+name|NDIS_HASH_KEYSIZE_TOEPLITZ
+index|]
+decl_stmt|;
+comment|/* Indirect table */
+name|uint32_t
+name|rss_ind
+index|[
+name|NDIS_HASH_INDCNT
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

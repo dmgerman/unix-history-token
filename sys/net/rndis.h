@@ -282,6 +282,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|OID_GEN_RECEIVE_SCALE_CAPABILITIES
+value|0x00010203
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_GEN_RECEIVE_SCALE_PARAMETERS
+value|0x00010204
+end_define
+
+begin_define
+define|#
+directive|define
 name|OID_GEN_MACHINE_NAME
 value|0x0001021A
 end_define
@@ -403,6 +417,13 @@ define|#
 directive|define
 name|OID_802_3_XMIT_LATE_COLLISIONS
 value|0x01020207
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_TCP_OFFLOAD_PARAMETERS
+value|0xFC01020C
 end_define
 
 begin_define
@@ -965,84 +986,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_DIRECTED
+name|NDIS_PACKET_TYPE_DIRECTED
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_MULTICAST
+name|NDIS_PACKET_TYPE_MULTICAST
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_ALL_MULTICAST
+name|NDIS_PACKET_TYPE_ALL_MULTICAST
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_BROADCAST
+name|NDIS_PACKET_TYPE_BROADCAST
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_SOURCE_ROUTING
+name|NDIS_PACKET_TYPE_SOURCE_ROUTING
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_PROMISCUOUS
+name|NDIS_PACKET_TYPE_PROMISCUOUS
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_SMT
+name|NDIS_PACKET_TYPE_SMT
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_ALL_LOCAL
+name|NDIS_PACKET_TYPE_ALL_LOCAL
 value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_GROUP
+name|NDIS_PACKET_TYPE_GROUP
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_ALL_FUNCTIONAL
+name|NDIS_PACKET_TYPE_ALL_FUNCTIONAL
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_FUNCTIONAL
+name|NDIS_PACKET_TYPE_FUNCTIONAL
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RNDIS_PACKET_TYPE_MAC_FRAME
+name|NDIS_PACKET_TYPE_MAC_FRAME
 value|0x00008000
 end_define
 
