@@ -836,6 +836,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|assertFileMode
+parameter_list|(
+name|pathname
+parameter_list|,
+name|mode
+parameter_list|)
+define|\
+value|assertion_file_mode(__FILE__, __LINE__, pathname, mode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|assertTextFileContents
 parameter_list|(
 name|text
@@ -2177,6 +2190,20 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Subtract umask from mode */
+end_comment
+
+begin_function_decl
+name|mode_t
+name|umasked
+parameter_list|(
+name|mode_t
+name|expected_mode
 parameter_list|)
 function_decl|;
 end_function_decl

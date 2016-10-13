@@ -781,6 +781,23 @@ define|\
 value|assertion_file_contents(__FILE__, __LINE__, data, data_size, pathname)
 end_define
 
+begin_comment
+comment|/* Verify that a file does not contain invalid strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|assertFileContainsNoInvalidStrings
+parameter_list|(
+name|pathname
+parameter_list|,
+name|strings
+parameter_list|)
+define|\
+value|assertion_file_contains_no_invalid_strings(__FILE__, __LINE__, pathname, strings)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -831,6 +848,19 @@ name|size
 parameter_list|)
 define|\
 value|assertion_file_size(__FILE__, __LINE__, pathname, size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|assertFileMode
+parameter_list|(
+name|pathname
+parameter_list|,
+name|mode
+parameter_list|)
+define|\
+value|assertion_file_mode(__FILE__, __LINE__, pathname, mode)
 end_define
 
 begin_define
@@ -1400,6 +1430,28 @@ end_function_decl
 begin_function_decl
 name|int
 name|assertion_file_contains_lines_any_order
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|assertion_file_contains_no_invalid_strings
 parameter_list|(
 specifier|const
 name|char

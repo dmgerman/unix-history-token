@@ -1122,6 +1122,12 @@ name|passwd
 modifier|*
 name|result
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|cache
+expr_stmt|;
+comment|/* UNUSED */
 name|result
 operator|=
 name|getpwuid
@@ -1451,6 +1457,12 @@ name|group
 modifier|*
 name|result
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|cache
+expr_stmt|;
+comment|/* UNUSED */
 name|result
 operator|=
 name|getgrgid

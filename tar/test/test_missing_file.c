@@ -26,6 +26,18 @@ end_macro
 
 begin_block
 block|{
+specifier|const
+name|char
+modifier|*
+name|invalid_stderr
+index|[]
+init|=
+block|{
+literal|"INTERNAL ERROR"
+block|,
+name|NULL
+block|}
+decl_stmt|;
 name|assertMakeFile
 argument_list|(
 literal|"file1"
@@ -73,6 +85,13 @@ name|testprog
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assertFileContainsNoInvalidStrings
+argument_list|(
+literal|"stderr2"
+argument_list|,
+name|invalid_stderr
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 literal|0
@@ -85,16 +104,30 @@ name|testprog
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|assertFileContainsNoInvalidStrings
+argument_list|(
+literal|"stderr3"
+argument_list|,
+name|invalid_stderr
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 literal|0
 operator|!=
 name|systemf
 argument_list|(
-literal|"%s -cf archive.tar file3 2>stderr4"
+literal|"%s -cf archive.tar file3 file4 2>stderr4"
 argument_list|,
 name|testprog
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertFileContainsNoInvalidStrings
+argument_list|(
+literal|"stderr4"
+argument_list|,
+name|invalid_stderr
 argument_list|)
 expr_stmt|;
 block|}
