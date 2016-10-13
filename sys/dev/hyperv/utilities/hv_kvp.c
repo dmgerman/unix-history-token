@@ -2871,9 +2871,11 @@ argument_list|)
 expr_stmt|;
 name|recvlen
 operator|=
-literal|2
-operator|*
-name|PAGE_SIZE
+name|sc
+operator|->
+name|util_sc
+operator|.
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=
@@ -3121,9 +3123,11 @@ expr_stmt|;
 comment|/* 		 * Try reading next buffer 		 */
 name|recvlen
 operator|=
-literal|2
-operator|*
-name|PAGE_SIZE
+name|sc
+operator|->
+name|util_sc
+operator|.
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=
@@ -4000,14 +4004,6 @@ argument_list|)
 decl_stmt|;
 name|sc
 operator|->
-name|util_sc
-operator|.
-name|callback
-operator|=
-name|hv_kvp_callback
-expr_stmt|;
-name|sc
-operator|->
 name|dev
 operator|=
 name|dev
@@ -4140,6 +4136,8 @@ return|return
 name|hv_util_attach
 argument_list|(
 name|dev
+argument_list|,
+name|hv_kvp_callback
 argument_list|)
 return|;
 block|}
