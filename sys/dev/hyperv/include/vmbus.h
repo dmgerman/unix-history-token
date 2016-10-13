@@ -717,6 +717,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vmbus_chan_prplist_nelem
+parameter_list|(
+name|int
+name|br_size
+parameter_list|,
+name|int
+name|prpcnt_max
+parameter_list|,
+name|int
+name|dlen_max
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
