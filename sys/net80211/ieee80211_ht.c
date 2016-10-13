@@ -4208,11 +4208,6 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|IEEE80211_FC0_QOSDATA
-define|\
-value|(IEEE80211_FC0_TYPE_DATA|IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_VERSION_0)
-define|#
-directive|define
 name|PROCESS
 value|0
 comment|/* caller should process frame */
@@ -4914,9 +4909,6 @@ name|CONSUMED
 undef|#
 directive|undef
 name|PROCESS
-undef|#
-directive|undef
-name|IEEE80211_FC0_QOSDATA
 block|}
 end_function
 
