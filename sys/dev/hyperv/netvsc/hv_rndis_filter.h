@@ -27,6 +27,12 @@ directive|include
 file|<net/ethernet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/if_hnvar.h>
+end_include
+
 begin_comment
 comment|/*  * Defines  */
 end_comment
@@ -108,8 +114,9 @@ name|PAGE_SIZE
 index|]
 decl_stmt|;
 comment|/* Simplify allocation by having a netvsc packet inline */
-name|netvsc_packet
-name|pkt
+name|struct
+name|hn_send_ctx
+name|send_ctx
 decl_stmt|;
 comment|/* 	 * The max request size is sizeof(rndis_msg) + PAGE_SIZE. 	 * 	 * NOTE: 	 * This is required for the large request like RSS settings. 	 * 	 * XXX 	 * This is ugly and should be cleaned up once we busdma-fy 	 * RNDIS request bits. 	 */
 name|rndis_msg
