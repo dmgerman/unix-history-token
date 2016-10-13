@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/hyperv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/vmbus.h>
 end_include
 
@@ -41,6 +47,31 @@ block|}
 name|hv_util_sc
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|vmbus_ic_desc
+block|{
+specifier|const
+name|struct
+name|hyperv_guid
+name|ic_guid
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ic_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VMBUS_IC_DESC_END
+value|{ .ic_desc = NULL }
+end_define
 
 begin_function_decl
 name|void
@@ -77,6 +108,22 @@ name|hv_util_detach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vmbus_ic_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|vmbus_ic_desc
+name|descs
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
