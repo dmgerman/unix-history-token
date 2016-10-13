@@ -2097,10 +2097,6 @@ decl_stmt|;
 name|uint32_t
 name|rx_section_count
 decl_stmt|;
-name|nvsp_1_rx_buf_section
-modifier|*
-name|rx_sections
-decl_stmt|;
 comment|/* Used for NetVSP initialization protocol */
 name|struct
 name|sema
@@ -2743,6 +2739,11 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|hn_rx_sysctl_tree
+decl_stmt|;
+name|struct
+name|vmbus_xact_ctx
+modifier|*
+name|hn_xact
 decl_stmt|;
 block|}
 name|hn_softc_t
