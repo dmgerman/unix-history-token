@@ -106,14 +106,14 @@ end_ifdef
 begin_typedef
 typedef|typedef
 struct|struct
-name|node
+name|__posix_tnode
 block|{
 name|void
 modifier|*
 name|key
 decl_stmt|;
 name|struct
-name|node
+name|__posix_tnode
 modifier|*
 name|llink
 decl_stmt|,
@@ -125,7 +125,7 @@ name|char
 name|balance
 decl_stmt|;
 block|}
-name|node_t
+name|posix_tnode
 typedef|;
 end_typedef
 
@@ -146,6 +146,18 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|void
+name|posix_tnode
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -309,7 +321,7 @@ name|void
 modifier|*
 name|__restrict
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 modifier|*
 name|__restrict
@@ -332,7 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|posix_tnode
 modifier|*
 name|tfind
 parameter_list|(
@@ -340,7 +352,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 specifier|const
 modifier|*
@@ -363,7 +375,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|posix_tnode
 modifier|*
 name|tsearch
 parameter_list|(
@@ -371,7 +383,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 modifier|*
 parameter_list|,
@@ -397,7 +409,7 @@ name|void
 name|twalk
 parameter_list|(
 specifier|const
-name|void
+name|posix_tnode
 modifier|*
 parameter_list|,
 name|void
@@ -406,7 +418,7 @@ modifier|*
 function_decl|)
 parameter_list|(
 specifier|const
-name|void
+name|posix_tnode
 modifier|*
 parameter_list|,
 name|VISIT

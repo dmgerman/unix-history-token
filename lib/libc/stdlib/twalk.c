@@ -4,7 +4,7 @@ comment|/*	$NetBSD: twalk.c,v 1.4 2012/03/20 16:38:45 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Tree search generalized from Knuth (6.2.2) Algorithm T just like  * the AT&T man page says.  *  * The node_t structure is for internal use only, lint doesn't grok it.  *  * Written by reading the System V Interface Definition, not the code.  *  * Totally public domain.  */
+comment|/*  * Tree search generalized from Knuth (6.2.2) Algorithm T just like  * the AT&T man page says.  *  * Written by reading the System V Interface Definition, not the code.  *  * Totally public domain.  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ name|cmp_fn_t
 function_decl|)
 parameter_list|(
 specifier|const
-name|void
+name|posix_tnode
 modifier|*
 parameter_list|,
 name|VISIT
@@ -104,11 +104,10 @@ name|void
 name|trecurse
 parameter_list|(
 specifier|const
-name|node_t
+name|posix_tnode
 modifier|*
 name|root
 parameter_list|,
-comment|/* Root of the tree to be walked */
 name|cmp_fn_t
 name|action
 parameter_list|,
@@ -235,14 +234,13 @@ name|void
 name|twalk
 parameter_list|(
 specifier|const
-name|void
+name|posix_tnode
 modifier|*
 name|vroot
 parameter_list|,
 name|cmp_fn_t
 name|action
 parameter_list|)
-comment|/* Root of the tree to be walked */
 block|{
 if|if
 condition|(

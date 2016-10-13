@@ -57,8 +57,8 @@ directive|define
 name|GO_LEFT
 parameter_list|()
 value|do {							\ 	if ((*leaf)->balance == 0 ||					\ 	    ((*leaf)->balance< 0&& (*leaf)->rlink->balance == 0)) {	\
-comment|/*							\ 		 * If we reach a node that is balanced, or has a child	\ 		 * in the opposite direction that is balanced, we know	\ 		 * that we won't need to perform any rotations above	\ 		 * this point. In this case rotations are always	\ 		 * capable of keeping the subtree in balance. Make	\ 		 * this the base node and reset the path.		\ 		 */
-value|\ 		base = leaf;						\ 		path_init(&path);					\ 	}								\ 	path_taking_left(&path);					\ 	leaf =&(*leaf)->llink;						\ } while (0)
+comment|/*							\ 		 * If we reach a node that is balanced, or has a child	\ 		 * in the opposite direction that is balanced, we know	\ 		 * that we won't need to perform any rotations above	\ 		 * this point. In this case rotations are always	\ 		 * capable of keeping the subtree in balance. Make	\ 		 * this the root node and reset the path.		\ 		 */
+value|\ 		rootp = leaf;						\ 		path_init(&path);					\ 	}								\ 	path_taking_left(&path);					\ 	leaf =&(*leaf)->llink;						\ } while (0)
 end_define
 
 begin_comment
@@ -70,7 +70,7 @@ define|#
 directive|define
 name|GO_RIGHT
 parameter_list|()
-value|do {							\ 	if ((*leaf)->balance == 0 ||					\ 	    ((*leaf)->balance> 0&& (*leaf)->llink->balance == 0)) {	\ 		base = leaf;						\ 		path_init(&path);					\ 	}								\ 	path_taking_right(&path);					\ 	leaf =&(*leaf)->rlink;						\ } while (0)
+value|do {							\ 	if ((*leaf)->balance == 0 ||					\ 	    ((*leaf)->balance> 0&& (*leaf)->llink->balance == 0)) {	\ 		rootp = leaf;						\ 		path_init(&path);					\ 	}								\ 	path_taking_right(&path);					\ 	leaf =&(*leaf)->rlink;						\ } while (0)
 end_define
 
 begin_function
@@ -84,7 +84,7 @@ modifier|*
 specifier|restrict
 name|key
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 modifier|*
 specifier|restrict
@@ -110,14 +110,7 @@ name|struct
 name|path
 name|path
 decl_stmt|;
-name|node_t
-modifier|*
-name|root
-decl_stmt|,
-modifier|*
-modifier|*
-name|base
-decl_stmt|,
+name|posix_tnode
 modifier|*
 modifier|*
 name|leaf
@@ -137,8 +130,7 @@ name|y
 decl_stmt|,
 modifier|*
 name|z
-decl_stmt|;
-name|void
+decl_stmt|,
 modifier|*
 name|result
 decl_stmt|;
@@ -157,16 +149,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|root
-operator|=
-operator|*
-name|rootp
-expr_stmt|;
 comment|/* 	 * Find the leaf that needs to be removed. Return if we cannot 	 * find an existing entry. Keep track of the path that is taken 	 * to get to the node, as we will need it to adjust the 	 * balances. 	 */
 name|result
 operator|=
 operator|(
-name|void
+name|posix_tnode
 operator|*
 operator|)
 literal|1
@@ -177,15 +164,9 @@ operator|&
 name|path
 argument_list|)
 expr_stmt|;
-name|base
-operator|=
-operator|&
-name|root
-expr_stmt|;
 name|leaf
 operator|=
-operator|&
-name|root
+name|rootp
 expr_stmt|;
 for|for
 control|(
@@ -228,13 +209,8 @@ condition|)
 block|{
 name|result
 operator|=
-operator|&
-operator|(
 operator|*
 name|leaf
-operator|)
-operator|->
-name|key
 expr_stmt|;
 name|GO_LEFT
 argument_list|()
@@ -250,13 +226,8 @@ condition|)
 block|{
 name|result
 operator|=
-operator|&
-operator|(
 operator|*
 name|leaf
-operator|)
-operator|->
-name|key
 expr_stmt|;
 name|GO_RIGHT
 argument_list|()
@@ -362,7 +333,7 @@ for|for
 control|(
 name|n
 operator|=
-name|base
+name|rootp
 init|;
 name|n
 operator|!=
@@ -749,11 +720,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Return the parent of the old entry. */
-operator|*
-name|rootp
-operator|=
-name|root
-expr_stmt|;
 return|return
 operator|(
 name|result
