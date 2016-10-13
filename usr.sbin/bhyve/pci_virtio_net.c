@@ -3695,7 +3695,7 @@ name|strncmp
 argument_list|(
 name|devname
 argument_list|,
-literal|"vmmnet"
+literal|"vmnet"
 argument_list|,
 literal|5
 argument_list|)
