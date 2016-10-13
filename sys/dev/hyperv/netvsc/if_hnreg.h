@@ -44,9 +44,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_CHIM_IDX_INVALID
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_RNDIS_MTYPE_DATA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_RNDIS_MTYPE_CTRL
+value|1
+end_define
+
+begin_comment
+comment|/*  * NVS message transacion status codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_STATUS_OK
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_STATUS_FAILED
+value|2
+end_define
+
+begin_comment
+comment|/*  * NVS request/response message types.  */
+end_comment
 
 begin_define
 define|#
@@ -114,8 +150,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NVS_TYPE_RNDIS
+value|107
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_RNDIS_ACK
+value|108
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NVS_TYPE_NDIS_CONF
 value|125
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_VFASSOC_NOTE
+value|128
+end_define
+
+begin_comment
+comment|/* notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_SET_DATAPATH
+value|129
 end_define
 
 begin_define
@@ -136,6 +204,17 @@ begin_comment
 comment|/* same as SUBCH_REQ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HN_NVS_TYPE_TXTBL_NOTE
+value|134
+end_define
+
+begin_comment
+comment|/* notification */
+end_comment
+
 begin_comment
 comment|/*  * Any size less than this one will _not_ work, e.g. hn_nvs_init  * only has 12B valid data, however, if only 12B data were sent,  * Hypervisor would never reply.  */
 end_comment
@@ -146,6 +225,22 @@ directive|define
 name|HN_NVS_REQSIZE_MIN
 value|32
 end_define
+
+begin_comment
+comment|/* NVS message common header */
+end_comment
+
+begin_struct
+struct|struct
+name|hn_nvs_hdr
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -614,6 +709,87 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|hn_nvs_rndis
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_RNDIS */
+name|uint32_t
+name|nvs_rndis_mtype
+decl_stmt|;
+comment|/* HN_NVS_RNDIS_MTYPE_ */
+comment|/* 	 * Chimney sending buffer index and size. 	 * 	 * NOTE: 	 * If nvs_chim_idx is set to HN_NVS_CHIM_IDX_INVALID 	 * and nvs_chim_sz is set to 0, then chimney sending 	 * buffer is _not_ used by this RNDIS message. 	 */
+name|uint32_t
+name|nvs_chim_idx
+decl_stmt|;
+name|uint32_t
+name|nvs_chim_sz
+decl_stmt|;
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_rndis
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|hn_nvs_rndis_ack
+block|{
+name|uint32_t
+name|nvs_type
+decl_stmt|;
+comment|/* HN_NVS_TYPE_RNDIS_ACK */
+name|uint32_t
+name|nvs_status
+decl_stmt|;
+comment|/* HN_NVS_STATUS_ */
+name|uint8_t
+name|nvs_rsvd
+index|[
+literal|24
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hn_nvs_rndis_ack
+argument_list|)
+operator|>=
+name|HN_NVS_REQSIZE_MIN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
