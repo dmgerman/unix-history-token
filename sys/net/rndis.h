@@ -534,6 +534,36 @@ value|(sizeof(struct rndis_packet_msg) -	\ 	 __offsetof(struct rndis_packet_msg,
 end_define
 
 begin_comment
+comment|/* Offset from the beginning of rndis_packet_msg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PACKET_MSG_OFFSET_ABS
+parameter_list|(
+name|ofs
+parameter_list|)
+define|\
+value|((ofs) + __offsetof(struct rndis_packet_msg, rm_dataoffset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PACKET_MSG_OFFSET_ALIGN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PACKET_MSG_OFFSET_ALIGNMASK
+define|\
+value|(RNDIS_PACKET_MSG_OFFSET_ALIGN - 1)
+end_define
+
+begin_comment
 comment|/* Per-packet-info for RNDIS data message */
 end_comment
 
@@ -570,8 +600,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNDIS_PKTINFO_ALIGN
+name|RNDIS_PKTINFO_SIZE_ALIGN
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RNDIS_PKTINFO_SIZE_ALIGNMASK
+value|(RNDIS_PKTINFO_SIZE_ALIGN - 1)
 end_define
 
 begin_define
@@ -891,10 +928,14 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* infobuf offset from the beginning of rndis_query_comp. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|RNDIS_QUERY_COMP_INFOBUFABS
+name|RNDIS_QUERY_COMP_INFOBUFOFFSET_ABS
 parameter_list|(
 name|ofs
 parameter_list|)
@@ -1074,7 +1115,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* 802.3 link-state or undefined message error. */
+comment|/* 802.3 link-state or undefined message error.  Sent by device. */
 end_comment
 
 begin_define
@@ -1083,6 +1124,48 @@ directive|define
 name|REMOTE_NDIS_INDICATE_STATUS_MSG
 value|0x00000007
 end_define
+
+begin_struct
+struct|struct
+name|rndis_status_msg
+block|{
+name|uint32_t
+name|rm_type
+decl_stmt|;
+name|uint32_t
+name|rm_len
+decl_stmt|;
+name|uint32_t
+name|rm_status
+decl_stmt|;
+name|uint32_t
+name|rm_stbuflen
+decl_stmt|;
+name|uint32_t
+name|rm_stbufoffset
+decl_stmt|;
+comment|/* rndis_diag_info */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Immediately after rndis_status_msg.rm_stbufoffset, if a control  * message is malformatted, or a packet message contains inappropriate  * content.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rndis_diag_info
+block|{
+name|uint32_t
+name|rm_diagstatus
+decl_stmt|;
+name|uint32_t
+name|rm_erroffset
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Keepalive messsage.  May be sent by device. */
