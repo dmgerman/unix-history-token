@@ -292,33 +292,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|hn_nvs_sent_xact
-parameter_list|(
-name|struct
-name|hn_send_ctx
-modifier|*
-parameter_list|,
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|vmbus_channel
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|hn_send_ctx
@@ -2745,7 +2718,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|hn_nvs_sent_xact
 parameter_list|(
