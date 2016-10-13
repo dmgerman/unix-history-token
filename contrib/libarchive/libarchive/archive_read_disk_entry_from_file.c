@@ -2945,7 +2945,6 @@ operator|(
 name|ARCHIVE_WARN
 operator|)
 return|;
-break|break;
 block|}
 endif|#
 directive|endif
