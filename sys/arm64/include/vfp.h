@@ -27,6 +27,26 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_struct
+struct|struct
+name|vfpstate
+block|{
+name|__uint128_t
+name|vfp_regs
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|uint32_t
+name|vfp_fpcr
+decl_stmt|;
+name|uint32_t
+name|vfp_fpsr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|void
 name|vfp_init

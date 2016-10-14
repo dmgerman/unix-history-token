@@ -21,6 +21,12 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<machine/vfp.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|trapframe
@@ -72,18 +78,10 @@ define|#
 directive|define
 name|PCB_SINGLE_STEP
 value|(1<< PCB_SINGLE_STEP_SHIFT)
-comment|/* Place last to simplify the asm to access the rest if the struct */
-name|__uint128_t
-name|pcb_vfp
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|uint32_t
-name|pcb_fpcr
-decl_stmt|;
-name|uint32_t
-name|pcb_fpsr
+name|struct
+name|vfpstate
+modifier|*
+name|pcb_fpusaved
 decl_stmt|;
 name|int
 name|pcb_fpflags
@@ -96,6 +94,11 @@ name|u_int
 name|pcb_vfpcpu
 decl_stmt|;
 comment|/* Last cpu this thread ran VFP code */
+comment|/* 	 * The userspace VFP state. The pcb_fpusaved pointer will point to 	 * this unless the kernel has allocated a VFP context. 	 * Place last to simplify the asm to access the rest if the struct. 	 */
+name|struct
+name|vfpstate
+name|pcb_fpustate
+decl_stmt|;
 block|}
 struct|;
 end_struct
