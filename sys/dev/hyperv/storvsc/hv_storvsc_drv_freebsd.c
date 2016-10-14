@@ -9478,7 +9478,7 @@ operator|==
 name|SRB_STATUS_SUCCESS
 operator|&&
 name|data_len
-operator|>
+operator|>=
 name|SHORT_INQUIRY_LENGTH
 condition|)
 block|{
