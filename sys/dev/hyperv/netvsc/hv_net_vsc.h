@@ -773,6 +773,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_FLAG_SYNTH_ATTACHED
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_CAP_VLAN
 value|0x0001
 end_define
