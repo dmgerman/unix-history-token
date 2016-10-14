@@ -1704,8 +1704,11 @@ condition|)
 block|{
 continue|continue;
 block|}
+comment|/* 		 * Calculate if we have enough space to add additional 		 * metaslabs. We report the expandable space in terms 		 * of the metaslab size since that's the unit of expansion. 		 */
 name|space
 operator|+=
+name|P2ALIGN
+argument_list|(
 name|tvd
 operator|->
 name|vdev_max_asize
@@ -1713,6 +1716,13 @@ operator|-
 name|tvd
 operator|->
 name|vdev_asize
+argument_list|,
+literal|1ULL
+operator|<<
+name|tvd
+operator|->
+name|vdev_ms_shift
+argument_list|)
 expr_stmt|;
 block|}
 name|spa_config_exit
