@@ -284,20 +284,25 @@ name|struct
 name|hyperv_dma
 name|vmbus_mnf2_dma
 decl_stmt|;
+name|bool
+name|vmbus_scandone
+decl_stmt|;
 name|struct
-name|mtx
-name|vmbus_scan_lock
+name|task
+name|vmbus_scandone_task
 decl_stmt|;
-name|uint32_t
-name|vmbus_scan_chcnt
+name|struct
+name|taskqueue
+modifier|*
+name|vmbus_devtq
 decl_stmt|;
-define|#
-directive|define
-name|VMBUS_SCAN_CHCNT_DONE
-value|0x80000000
-name|uint32_t
-name|vmbus_scan_devcnt
+comment|/* for dev attach/detach */
+name|struct
+name|taskqueue
+modifier|*
+name|vmbus_subchtq
 decl_stmt|;
+comment|/* for sub-chan attach/detach */
 comment|/* Primary channels */
 name|struct
 name|mtx
@@ -309,6 +314,18 @@ argument_list|,
 argument|vmbus_channel
 argument_list|)
 name|vmbus_prichans
+expr_stmt|;
+comment|/* Complete channel list */
+name|struct
+name|mtx
+name|vmbus_chan_lock
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vmbus_channel
+argument_list|)
+name|vmbus_chans
 expr_stmt|;
 block|}
 struct|;

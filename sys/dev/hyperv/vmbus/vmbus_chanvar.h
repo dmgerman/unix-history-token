@@ -213,8 +213,20 @@ name|ch_bufring_gpadl
 decl_stmt|;
 name|struct
 name|task
+name|ch_attach_task
+decl_stmt|;
+comment|/* run in ch_mgmt_tq */
+name|struct
+name|task
 name|ch_detach_task
 decl_stmt|;
+comment|/* run in ch_mgmt_tq */
+name|struct
+name|taskqueue
+modifier|*
+name|ch_mgmt_tq
+decl_stmt|;
+comment|/* If this is a primary channel */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vmbus_channel
@@ -222,6 +234,13 @@ argument_list|)
 name|ch_prilink
 expr_stmt|;
 comment|/* primary chan link */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vmbus_channel
+argument_list|)
+name|ch_link
+expr_stmt|;
+comment|/* channel link */
 name|uint32_t
 name|ch_subidx
 decl_stmt|;
@@ -290,8 +309,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHAN_ST_ONPRIL_SHIFT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_ONSUBL_SHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_ONLIST_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHAN_ST_OPENED
 value|(1<< VMBUS_CHAN_ST_OPENED_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_ONPRIL
+value|(1<< VMBUS_CHAN_ST_ONPRIL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_ONSUBL
+value|(1<< VMBUS_CHAN_ST_ONSUBL_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_ONLIST
+value|(1<< VMBUS_CHAN_ST_ONLIST_SHIFT)
 end_define
 
 begin_struct_decl
