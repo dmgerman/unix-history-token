@@ -263,6 +263,12 @@ decl_stmt|;
 name|uint64_t
 name|dsa_resume_offset
 decl_stmt|;
+name|boolean_t
+name|dsa_sent_begin
+decl_stmt|;
+name|boolean_t
+name|dsa_sent_end
+decl_stmt|;
 block|}
 name|dmu_sendarg_t
 typedef|;
