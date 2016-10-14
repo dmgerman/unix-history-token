@@ -194,8 +194,9 @@ name|vmbus_softc
 modifier|*
 name|sc
 init|=
-name|vmbus_get_softc
-argument_list|()
+name|channel
+operator|->
+name|vmbus_sc
 decl_stmt|;
 name|hv_vmbus_monitor_page
 modifier|*
@@ -889,8 +890,9 @@ name|rxq
 operator|=
 name|VMBUS_PCPU_GET
 argument_list|(
-name|vmbus_get_softc
-argument_list|()
+name|new_channel
+operator|->
+name|vmbus_sc
 argument_list|,
 name|event_tq
 argument_list|,
