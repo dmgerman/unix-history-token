@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3199,6 +3199,10 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -3345,6 +3349,8 @@ expr_stmt|;
 name|zap_unlockdir
 argument_list|(
 name|zap
+argument_list|,
+name|tag
 argument_list|)
 expr_stmt|;
 name|err
@@ -3362,6 +3368,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|FALSE
+argument_list|,
+name|tag
 argument_list|,
 operator|&
 name|zn
@@ -3749,6 +3757,10 @@ name|zap_leaf_t
 modifier|*
 name|l
 parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -3854,6 +3866,8 @@ decl_stmt|;
 name|zap_unlockdir
 argument_list|(
 name|zap
+argument_list|,
+name|tag
 argument_list|)
 expr_stmt|;
 name|err
@@ -3871,6 +3885,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|FALSE
+argument_list|,
+name|tag
 argument_list|,
 operator|&
 name|zn
@@ -4297,6 +4313,10 @@ parameter_list|,
 name|uint32_t
 name|cd
 parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -4476,6 +4496,8 @@ name|zn
 argument_list|,
 name|l
 argument_list|,
+name|tag
+argument_list|,
 name|tx
 argument_list|,
 operator|&
@@ -4513,6 +4535,8 @@ name|zn
 argument_list|,
 name|l
 argument_list|,
+name|tag
+argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
@@ -4542,6 +4566,10 @@ specifier|const
 name|void
 modifier|*
 name|val
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -4585,6 +4613,8 @@ name|val
 argument_list|,
 name|ZAP_NEED_CD
 argument_list|,
+name|tag
+argument_list|,
 name|tx
 argument_list|)
 operator|)
@@ -4610,6 +4640,10 @@ specifier|const
 name|void
 modifier|*
 name|val
+parameter_list|,
+name|void
+modifier|*
+name|tag
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -4804,6 +4838,8 @@ name|zn
 argument_list|,
 name|l
 argument_list|,
+name|tag
+argument_list|,
 name|tx
 argument_list|,
 operator|&
@@ -4838,6 +4874,8 @@ argument_list|(
 name|zn
 argument_list|,
 name|l
+argument_list|,
+name|tag
 argument_list|,
 name|tx
 argument_list|)
