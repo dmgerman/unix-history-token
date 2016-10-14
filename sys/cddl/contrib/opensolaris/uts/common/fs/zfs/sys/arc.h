@@ -51,6 +51,38 @@ define|#
 directive|define
 name|ARC_EVICT_ALL
 value|-1ULL
+define|#
+directive|define
+name|HDR_SET_LSIZE
+parameter_list|(
+name|hdr
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(IS_P2ALIGNED(x, 1U<< SPA_MINBLOCKSHIFT)); \ 	(hdr)->b_lsize = ((x)>> SPA_MINBLOCKSHIFT); \ _NOTE(CONSTCOND) } while (0)
+define|#
+directive|define
+name|HDR_SET_PSIZE
+parameter_list|(
+name|hdr
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(IS_P2ALIGNED((x), 1U<< SPA_MINBLOCKSHIFT)); \ 	(hdr)->b_psize = ((x)>> SPA_MINBLOCKSHIFT); \ _NOTE(CONSTCOND) } while (0)
+define|#
+directive|define
+name|HDR_GET_LSIZE
+parameter_list|(
+name|hdr
+parameter_list|)
+value|((hdr)->b_lsize<< SPA_MINBLOCKSHIFT)
+define|#
+directive|define
+name|HDR_GET_PSIZE
+parameter_list|(
+name|hdr
+parameter_list|)
+value|((hdr)->b_psize<< SPA_MINBLOCKSHIFT)
 typedef|typedef
 name|struct
 name|arc_buf_hdr
@@ -78,15 +110,6 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-typedef|typedef
-name|int
-name|arc_evict_func_t
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|)
-function_decl|;
 comment|/* generic arc_done_func_t's which you can use */
 name|arc_done_func_t
 name|arc_bcopy_func
@@ -94,65 +117,55 @@ decl_stmt|;
 name|arc_done_func_t
 name|arc_getbuf_func
 decl_stmt|;
+specifier|extern
+name|int
+name|zfs_arc_num_sublists_per_state
+decl_stmt|;
 typedef|typedef
 enum|enum
 name|arc_flags
 block|{
 comment|/* 	 * Public flags that can be passed into the ARC by external consumers. 	 */
-name|ARC_FLAG_NONE
-init|=
-literal|1
-operator|<<
-literal|0
-block|,
-comment|/* No flags set */
 name|ARC_FLAG_WAIT
 init|=
 literal|1
 operator|<<
-literal|1
+literal|0
 block|,
 comment|/* perform sync I/O */
 name|ARC_FLAG_NOWAIT
 init|=
 literal|1
 operator|<<
-literal|2
+literal|1
 block|,
 comment|/* perform async I/O */
 name|ARC_FLAG_PREFETCH
 init|=
 literal|1
 operator|<<
-literal|3
+literal|2
 block|,
 comment|/* I/O is a prefetch */
 name|ARC_FLAG_CACHED
 init|=
 literal|1
 operator|<<
-literal|4
+literal|3
 block|,
 comment|/* I/O was in cache */
 name|ARC_FLAG_L2CACHE
 init|=
 literal|1
 operator|<<
-literal|5
+literal|4
 block|,
 comment|/* cache in L2ARC */
-name|ARC_FLAG_L2COMPRESS
-init|=
-literal|1
-operator|<<
-literal|6
-block|,
-comment|/* compress in L2ARC */
 name|ARC_FLAG_PREDICTIVE_PREFETCH
 init|=
 literal|1
 operator|<<
-literal|7
+literal|5
 block|,
 comment|/* I/O from zfetch */
 comment|/* 	 * Private ARC flags.  These flags are private ARC only flags that 	 * will show up in b_flags in the arc_hdr_buf_t. These flags should 	 * only be set by ARC code. 	 */
@@ -160,42 +173,28 @@ name|ARC_FLAG_IN_HASH_TABLE
 init|=
 literal|1
 operator|<<
-literal|8
+literal|6
 block|,
 comment|/* buffer is hashed */
 name|ARC_FLAG_IO_IN_PROGRESS
 init|=
 literal|1
 operator|<<
-literal|9
+literal|7
 block|,
 comment|/* I/O in progress */
 name|ARC_FLAG_IO_ERROR
 init|=
 literal|1
 operator|<<
-literal|10
+literal|8
 block|,
 comment|/* I/O failed for buf */
-name|ARC_FLAG_FREED_IN_READ
-init|=
-literal|1
-operator|<<
-literal|11
-block|,
-comment|/* freed during read */
-name|ARC_FLAG_BUF_AVAILABLE
-init|=
-literal|1
-operator|<<
-literal|12
-block|,
-comment|/* block not in use */
 name|ARC_FLAG_INDIRECT
 init|=
 literal|1
 operator|<<
-literal|13
+literal|9
 block|,
 comment|/* indirect block */
 comment|/* Indicates that block was read with ASYNC priority. */
@@ -203,27 +202,27 @@ name|ARC_FLAG_PRIO_ASYNC_READ
 init|=
 literal|1
 operator|<<
-literal|14
+literal|10
 block|,
 name|ARC_FLAG_L2_WRITING
 init|=
 literal|1
 operator|<<
-literal|15
+literal|11
 block|,
 comment|/* write in progress */
 name|ARC_FLAG_L2_EVICTED
 init|=
 literal|1
 operator|<<
-literal|16
+literal|12
 block|,
 comment|/* evicted during I/O */
 name|ARC_FLAG_L2_WRITE_HEAD
 init|=
 literal|1
 operator|<<
-literal|17
+literal|13
 block|,
 comment|/* head of write list */
 comment|/* indicates that the buffer contains metadata (otherwise, data) */
@@ -231,21 +230,77 @@ name|ARC_FLAG_BUFC_METADATA
 init|=
 literal|1
 operator|<<
-literal|18
+literal|14
 block|,
 comment|/* Flags specifying whether optional hdr struct fields are defined */
 name|ARC_FLAG_HAS_L1HDR
 init|=
 literal|1
 operator|<<
-literal|19
+literal|15
 block|,
 name|ARC_FLAG_HAS_L2HDR
 init|=
 literal|1
 operator|<<
-literal|20
-block|, }
+literal|16
+block|,
+comment|/* 	 * Indicates the arc_buf_hdr_t's b_pdata matches the on-disk data. 	 * This allows the l2arc to use the blkptr's checksum to verify 	 * the data without having to store the checksum in the hdr. 	 */
+name|ARC_FLAG_COMPRESSED_ARC
+init|=
+literal|1
+operator|<<
+literal|17
+block|,
+name|ARC_FLAG_SHARED_DATA
+init|=
+literal|1
+operator|<<
+literal|18
+block|,
+comment|/* 	 * The arc buffer's compression mode is stored in the top 7 bits of the 	 * flags field, so these dummy flags are included so that MDB can 	 * interpret the enum properly. 	 */
+name|ARC_FLAG_COMPRESS_0
+init|=
+literal|1
+operator|<<
+literal|24
+block|,
+name|ARC_FLAG_COMPRESS_1
+init|=
+literal|1
+operator|<<
+literal|25
+block|,
+name|ARC_FLAG_COMPRESS_2
+init|=
+literal|1
+operator|<<
+literal|26
+block|,
+name|ARC_FLAG_COMPRESS_3
+init|=
+literal|1
+operator|<<
+literal|27
+block|,
+name|ARC_FLAG_COMPRESS_4
+init|=
+literal|1
+operator|<<
+literal|28
+block|,
+name|ARC_FLAG_COMPRESS_5
+init|=
+literal|1
+operator|<<
+literal|29
+block|,
+name|ARC_FLAG_COMPRESS_6
+init|=
+literal|1
+operator|<<
+literal|30
+block|}
 name|arc_flags_t
 typedef|;
 struct|struct
@@ -266,20 +321,15 @@ name|void
 modifier|*
 name|b_data
 decl_stmt|;
-name|arc_evict_func_t
-modifier|*
-name|b_efunc
-decl_stmt|;
-name|void
-modifier|*
-name|b_private
-decl_stmt|;
 block|}
 struct|;
 typedef|typedef
 enum|enum
 name|arc_buf_contents
 block|{
+name|ARC_BUFC_INVALID
+block|,
+comment|/* invalid type */
 name|ARC_BUFC_DATA
 block|,
 comment|/* buffer contains data */
@@ -331,13 +381,13 @@ parameter_list|)
 function_decl|;
 name|arc_buf_t
 modifier|*
-name|arc_buf_alloc
+name|arc_alloc_buf
 parameter_list|(
 name|spa_t
 modifier|*
 name|spa
 parameter_list|,
-name|int
+name|int32_t
 name|size
 parameter_list|,
 name|void
@@ -385,19 +435,7 @@ name|tag
 parameter_list|)
 function_decl|;
 name|void
-name|arc_buf_add_ref
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|,
-name|void
-modifier|*
-name|tag
-parameter_list|)
-function_decl|;
-name|boolean_t
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 parameter_list|(
 name|arc_buf_t
 modifier|*
@@ -446,14 +484,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|arc_buf_thaw
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-name|boolean_t
-name|arc_buf_eviction_needed
 parameter_list|(
 name|arc_buf_t
 modifier|*
@@ -539,9 +569,6 @@ parameter_list|,
 name|boolean_t
 name|l2arc
 parameter_list|,
-name|boolean_t
-name|l2arc_compress
-parameter_list|,
 specifier|const
 name|zio_prop_t
 modifier|*
@@ -593,30 +620,6 @@ name|bp
 parameter_list|)
 function_decl|;
 name|void
-name|arc_set_callback
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|,
-name|arc_evict_func_t
-modifier|*
-name|func
-parameter_list|,
-name|void
-modifier|*
-name|priv
-parameter_list|)
-function_decl|;
-name|boolean_t
-name|arc_clear_callback
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-name|void
 name|arc_flush
 parameter_list|(
 name|spa_t
@@ -642,6 +645,12 @@ name|reserve
 parameter_list|,
 name|uint64_t
 name|txg
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|arc_max_bytes
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 name|void

@@ -560,6 +560,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|boolean_t
+name|zfs_compressed_arc_enabled
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|ztest_shared_opts_t
 modifier|*
@@ -26583,6 +26590,23 @@ argument_list|,
 literal|0
 argument_list|,
 literal|100
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Periodically change the zfs_compressed_arc_enabled setting. 		 */
+if|if
+condition|(
+name|ztest_random
+argument_list|(
+literal|10
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|zfs_compressed_arc_enabled
+operator|=
+name|ztest_random
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
