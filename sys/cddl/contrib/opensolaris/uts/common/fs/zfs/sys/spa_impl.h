@@ -456,6 +456,12 @@ name|list_t
 name|spa_state_dirty_list
 decl_stmt|;
 comment|/* vdevs with dirty state */
+name|kmutex_t
+name|spa_alloc_lock
+decl_stmt|;
+name|avl_tree_t
+name|spa_alloc_tree
+decl_stmt|;
 name|spa_aux_vdev_t
 name|spa_spares
 decl_stmt|;

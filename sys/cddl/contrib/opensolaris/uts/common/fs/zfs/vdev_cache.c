@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -910,6 +910,12 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Even if this cache line was invalidated by a missed write update, 	 * any reads that were queued up before the missed update are still 	 * valid, so we can satisfy them from this line before we evict it. 	 */
+name|zio_link_t
+modifier|*
+name|zl
+init|=
+name|NULL
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -918,6 +924,9 @@ operator|=
 name|zio_walk_parents
 argument_list|(
 name|fio
+argument_list|,
+operator|&
+name|zl
 argument_list|)
 operator|)
 operator|!=

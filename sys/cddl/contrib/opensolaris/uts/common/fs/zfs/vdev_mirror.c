@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1273,6 +1273,12 @@ name|zio_t
 modifier|*
 name|pio
 decl_stmt|;
+name|zio_link_t
+modifier|*
+name|zl
+init|=
+name|NULL
+decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -1289,6 +1295,9 @@ operator|=
 name|zio_walk_parents
 argument_list|(
 name|zio
+argument_list|,
+operator|&
+name|zl
 argument_list|)
 operator|)
 operator|!=
