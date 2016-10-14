@@ -2931,7 +2931,7 @@ operator|->
 name|db_mtx
 argument_list|)
 expr_stmt|;
-name|dbuf_evict
+name|dbuf_destroy
 argument_list|(
 name|dn
 operator|->

@@ -339,6 +339,10 @@ directive|define
 name|SPA_ASIZEBITS
 value|24
 comment|/* ASIZE up to 64 times larger	*/
+define|#
+directive|define
+name|SPA_COMPRESSBITS
+value|7
 comment|/*  * All SPA data is represented by 128-bit data virtual addresses (DVAs).  * The members of the dva_t should be considered opaque outside the SPA.  */
 typedef|typedef
 struct|struct
@@ -644,7 +648,8 @@ name|BP_GET_COMPRESS
 parameter_list|(
 name|bp
 parameter_list|)
-value|BF64_GET((bp)->blk_prop, 32, 7)
+define|\
+value|BF64_GET((bp)->blk_prop, 32, SPA_COMPRESSBITS)
 define|#
 directive|define
 name|BP_SET_COMPRESS
@@ -653,7 +658,8 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|BF64_SET((bp)->blk_prop, 32, 7, x)
+define|\
+value|BF64_SET((bp)->blk_prop, 32, SPA_COMPRESSBITS, x)
 define|#
 directive|define
 name|BP_IS_EMBEDDED

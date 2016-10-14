@@ -3427,10 +3427,7 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,
@@ -3644,10 +3641,7 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,
@@ -3801,10 +3795,7 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|buf
 argument_list|,

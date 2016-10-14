@@ -1144,17 +1144,6 @@ name|aflags
 operator||=
 name|ARC_FLAG_L2CACHE
 expr_stmt|;
-if|if
-condition|(
-name|DMU_OS_IS_L2COMPRESSIBLE
-argument_list|(
-name|os
-argument_list|)
-condition|)
-name|aflags
-operator||=
-name|ARC_FLAG_L2COMPRESS
-expr_stmt|;
 name|dprintf_bp
 argument_list|(
 name|os
@@ -1260,7 +1249,7 @@ name|arc_buf_t
 modifier|*
 name|buf
 init|=
-name|arc_buf_alloc
+name|arc_alloc_buf
 argument_list|(
 name|spa
 argument_list|,
@@ -1309,10 +1298,7 @@ name|os_phys_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|os
 operator|->
@@ -1375,7 +1361,7 @@ name|os
 operator|->
 name|os_phys_buf
 operator|=
-name|arc_buf_alloc
+name|arc_alloc_buf
 argument_list|(
 name|spa
 argument_list|,
@@ -1712,9 +1698,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|VERIFY
-argument_list|(
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|os
 operator|->
@@ -1724,7 +1708,6 @@ operator|&
 name|os
 operator|->
 name|os_phys_buf
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|kmem_free
@@ -3245,9 +3228,7 @@ operator|->
 name|os_zil
 argument_list|)
 expr_stmt|;
-name|VERIFY
-argument_list|(
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|os
 operator|->
@@ -3257,7 +3238,6 @@ operator|&
 name|os
 operator|->
 name|os_phys_buf
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This is a barrier to prevent the objset from going away in 	 * dnode_move() until we can safely ensure that the objset is still in 	 * use. We consider the objset valid before the barrier and invalid 	 * after the barrier. 	 */
@@ -5229,11 +5209,6 @@ operator|->
 name|os_phys_buf
 argument_list|,
 name|DMU_OS_IS_L2CACHEABLE
-argument_list|(
-name|os
-argument_list|)
-argument_list|,
-name|DMU_OS_IS_L2COMPRESSIBLE
 argument_list|(
 name|os
 argument_list|)

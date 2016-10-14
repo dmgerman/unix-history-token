@@ -1394,7 +1394,6 @@ comment|/*  * ==================================================================
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|zio_push_transform
 parameter_list|(
@@ -1489,7 +1488,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|zio_pop_transforms
 parameter_list|(
@@ -11378,15 +11376,12 @@ argument_list|(
 name|EEXIST
 argument_list|)
 expr_stmt|;
-name|VERIFY
-argument_list|(
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,
 operator|&
 name|abuf
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -1105,15 +1105,12 @@ name|zc_next_blk
 expr_stmt|;
 block|}
 block|}
-name|VERIFY
-argument_list|(
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,
 operator|&
 name|abuf
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1317,10 +1314,7 @@ name|abuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|arc_buf_remove_ref
+name|arc_buf_destroy
 argument_list|(
 name|abuf
 argument_list|,
