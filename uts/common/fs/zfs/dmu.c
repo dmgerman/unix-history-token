@@ -16,7 +16,7 @@ comment|/* Copyright (c) 2013, Joyent, Inc. All rights reserved. */
 end_comment
 
 begin_comment
-comment|/* Copyright (c) 2014, Nexenta Systems, Inc. All rights reserved. */
+comment|/* Copyright 2016 Nexenta Systems, Inc. All rights reserved. */
 end_comment
 
 begin_include
@@ -3394,6 +3394,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * If this objset is of type OST_ZFS return true if vfs's unmounted flag is set,  * otherwise return false.  * Used below in dmu_free_long_range_impl() to enable abort when unmounting  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_function
+specifier|static
+name|boolean_t
+name|dmu_objset_zfs_unmounting
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
+if|if
+condition|(
+name|dmu_objset_type
+argument_list|(
+name|os
+argument_list|)
+operator|==
+name|DMU_OST_ZFS
+condition|)
+return|return
+operator|(
+name|zfs_get_vfs_flag_unmounted
+argument_list|(
+name|os
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -3473,6 +3521,23 @@ name|chunk_end
 decl_stmt|,
 name|chunk_begin
 decl_stmt|;
+if|if
+condition|(
+name|dmu_objset_zfs_unmounting
+argument_list|(
+name|dn
+operator|->
+name|dn_objset
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EINTR
+argument_list|)
+operator|)
+return|;
 name|chunk_end
 operator|=
 name|chunk_begin

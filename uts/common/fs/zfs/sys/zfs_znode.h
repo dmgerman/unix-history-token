@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -984,6 +984,15 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|nv
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zfs_get_vfs_flag_unmounted
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
 parameter_list|)
 function_decl|;
 specifier|extern

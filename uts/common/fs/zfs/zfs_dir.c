@@ -2546,7 +2546,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 			 * Not enough space.  Leave the file in the unlinked 			 * set. 			 */
+comment|/* 			 * Not enough space or we were interrupted by unmount. 			 * Leave the file in the unlinked set. 			 */
 name|zfs_znode_dmu_fini
 argument_list|(
 name|zp

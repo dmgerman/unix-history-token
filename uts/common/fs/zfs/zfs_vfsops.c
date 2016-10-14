@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -7940,7 +7940,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Teardown the zfsvfs::z_os.  *  * Note, if 'unmounting' if FALSE, we return with the 'z_teardown_lock'  * and 'z_teardown_inactive_lock' held.  */
+comment|/*  * Teardown the zfsvfs::z_os.  *  * Note, if 'unmounting' is FALSE, we return with the 'z_teardown_lock'  * and 'z_teardown_inactive_lock' held.  */
 end_comment
 
 begin_function
@@ -8154,6 +8154,14 @@ name|z_unmounted
 operator|=
 name|B_TRUE
 expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|zfsvfs
+operator|->
+name|z_teardown_inactive_lock
+argument_list|)
+expr_stmt|;
 name|rrm_exit
 argument_list|(
 operator|&
@@ -8162,14 +8170,6 @@ operator|->
 name|z_teardown_lock
 argument_list|,
 name|FTAG
-argument_list|)
-expr_stmt|;
-name|rw_exit
-argument_list|(
-operator|&
-name|zfsvfs
-operator|->
-name|z_teardown_inactive_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -10071,6 +10071,95 @@ block|}
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return true if the coresponding vfs's unmounted flag is set.  * Otherwise return false.  * If this function returns true we know VFS unmount has been initiated.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|zfs_get_vfs_flag_unmounted
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|)
+block|{
+name|zfsvfs_t
+modifier|*
+name|zfvp
+decl_stmt|;
+name|boolean_t
+name|unmounted
+init|=
+name|B_FALSE
+decl_stmt|;
+name|ASSERT
+argument_list|(
+name|dmu_objset_type
+argument_list|(
+name|os
+argument_list|)
+operator|==
+name|DMU_OST_ZFS
+argument_list|)
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|os
+operator|->
+name|os_user_ptr_lock
+argument_list|)
+expr_stmt|;
+name|zfvp
+operator|=
+name|dmu_objset_get_user
+argument_list|(
+name|os
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zfvp
+operator|!=
+name|NULL
+operator|&&
+name|zfvp
+operator|->
+name|z_vfs
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|zfvp
+operator|->
+name|z_vfs
+operator|->
+name|vfs_flag
+operator|&
+name|VFS_UNMOUNTED
+operator|)
+condition|)
+name|unmounted
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|os
+operator|->
+name|os_user_ptr_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|unmounted
 operator|)
 return|;
 block|}
