@@ -381,18 +381,6 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|vmbus_on_channel_open
-parameter_list|(
-specifier|const
-name|struct
-name|hv_vmbus_channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vmbus_event_proc
 parameter_list|(
 name|struct
