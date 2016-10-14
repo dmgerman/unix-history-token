@@ -166,7 +166,8 @@ modifier|*
 name|vmbus_tx_evtflags
 decl_stmt|;
 comment|/* event flags to host */
-name|void
+name|struct
+name|vmbus_mnf
 modifier|*
 name|vmbus_mnf2
 decl_stmt|;
