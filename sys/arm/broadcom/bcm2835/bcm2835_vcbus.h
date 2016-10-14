@@ -40,11 +40,19 @@ name|BCM2835_VCBUS_SDRAM_UNCACHED
 value|0xC0000000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SOC_BCM2836
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SOC_BCM2837
+argument_list|)
+end_if
 
 begin_define
 define|#
