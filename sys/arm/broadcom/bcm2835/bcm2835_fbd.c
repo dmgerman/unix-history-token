@@ -486,6 +486,9 @@ name|fb
 operator|.
 name|yres
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_MEMATTR_WRITE_COMBINING
 name|sc
 operator|->
 name|info
@@ -494,9 +497,6 @@ name|fb_flags
 operator|=
 name|FB_FLAG_MEMATTR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VM_MEMATTR_WRITE_COMBINING
 name|sc
 operator|->
 name|info
