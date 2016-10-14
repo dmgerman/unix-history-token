@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
 end_comment
 
 begin_ifndef
@@ -258,7 +258,7 @@ parameter_list|(
 name|compress
 parameter_list|)
 define|\
-value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	(compress) == ZIO_COMPRESS_ON ||		\ 	(compress) == ZIO_COMPRESS_OFF)
+value|((compress) == ZIO_COMPRESS_LZJB ||		\ 	(compress) == ZIO_COMPRESS_LZ4 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_1 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_2 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_3 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_4 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_5 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_6 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_7 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_8 ||		\ 	(compress) == ZIO_COMPRESS_GZIP_9 ||		\ 	(compress) == ZIO_COMPRESS_ON ||		\ 	(compress) == ZIO_COMPRESS_OFF)
 define|#
 directive|define
 name|ZIO_FAILURE_MODE_WAIT
