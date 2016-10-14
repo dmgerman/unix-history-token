@@ -421,9 +421,14 @@ expr_stmt|;
 block|}
 name|ctx
 operator|=
-name|device_get_sysctl_ctx
+operator|&
+name|channel
+operator|->
+name|ch_sysctl_ctx
+expr_stmt|;
+name|sysctl_ctx_init
 argument_list|(
-name|dev
+name|ctx
 argument_list|)
 expr_stmt|;
 comment|/* This creates dev.DEVNAME.DEVUNIT.channel tree */
@@ -1904,6 +1909,31 @@ return|return
 name|EIO
 return|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|vmbus_dev
+argument_list|,
+literal|"gpadl->chan%u "
+literal|"succeeded\n"
+argument_list|,
+name|channel
+operator|->
+name|offer_msg
+operator|.
+name|child_rel_id
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 literal|0
 return|;
@@ -2128,6 +2158,14 @@ operator|->
 name|state
 operator|=
 name|HV_CHANNEL_OPEN_STATE
+expr_stmt|;
+name|sysctl_ctx_free
+argument_list|(
+operator|&
+name|channel
+operator|->
+name|ch_sysctl_ctx
+argument_list|)
 expr_stmt|;
 comment|/* 	 * set rxq to NULL to avoid more requests be scheduled 	 */
 name|channel
