@@ -826,13 +826,6 @@ begin_comment
 comment|/*  * Externs  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hv_promisc_mode
-decl_stmt|;
-end_decl_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|hn_send_ctx
