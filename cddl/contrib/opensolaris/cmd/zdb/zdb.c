@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -480,7 +480,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-CumMdibcsDvhLXFPA] [-t txg] [-e [-p path...]] "
+literal|"Usage: %s [-CumMdibcsDvhLXFPAG] [-t txg] [-e [-p path...]] "
 literal|"[-U config] [-I inflight I/Os] [-x dumpdir] poolname [object...]\n"
 literal|"       %s [-divPA] [-e -p path...] [-U config] dataset "
 literal|"[object...]\n"
@@ -841,6 +841,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"        -G dump zfs_dbgmsg buffer before "
+literal|"exiting\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"Specify an option more than once (e.g. -bb) "
 literal|"to make only that option verbose\n"
 argument_list|)
@@ -860,6 +871,37 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dump_debug_buffer
+parameter_list|()
+block|{
+if|if
+condition|(
+name|dump_opt
+index|[
+literal|'G'
+index|]
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|zfs_dbgmsg_print
+argument_list|(
+literal|"zdb"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -928,6 +970,9 @@ name|stderr
 argument_list|,
 literal|"\n"
 argument_list|)
+expr_stmt|;
+name|dump_debug_buffer
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -17386,11 +17431,16 @@ name|rc
 operator|!=
 literal|0
 condition|)
+block|{
+name|dump_debug_buffer
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|rc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -19944,7 +19994,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcdhilmMI:suCDRSAFLXx:evp:t:U:P"
+literal|"bcdhilmMI:suCDRSAFLXx:evp:t:U:PG"
 argument_list|)
 operator|)
 operator|!=
@@ -19998,6 +20048,9 @@ literal|'R'
 case|:
 case|case
 literal|'S'
+case|:
+case|case
+literal|'G'
 case|:
 name|dump_opt
 index|[
@@ -21136,6 +21189,9 @@ expr_stmt|;
 name|sa_loaded
 operator|=
 name|B_FALSE
+expr_stmt|;
+name|dump_debug_buffer
+argument_list|()
 expr_stmt|;
 name|libzfs_fini
 argument_list|(
