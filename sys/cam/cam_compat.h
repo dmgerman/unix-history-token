@@ -91,14 +91,14 @@ begin_define
 define|#
 directive|define
 name|CAMIOCOMMAND_0x16
-value|_IOWR(CAM_VERSION_0x16, 2, union ccb)
+value|_IOC(IOC_INOUT, CAM_VERSION_0x16, 2, CAM_0X17_LEN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAMGETPASSTHRU_0x16
-value|_IOWR(CAM_VERSION_0x16, 3, union ccb)
+value|_IOC(IOC_INOUT, CAM_VERSION_0x16, 3, CAM_0X17_LEN)
 end_define
 
 begin_define
@@ -366,18 +366,92 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|CAM_0X17_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr) + sizeof(struct ccb_hdr_0x17))
-end_define
+begin_struct
+struct|struct
+name|ccb_trans_settings_0x17
+block|{
+name|struct
+name|ccb_hdr_0x17
+name|ccb_h
+decl_stmt|;
+name|cts_type
+name|type
+decl_stmt|;
+comment|/* Current or User settings */
+name|cam_proto
+name|protocol
+decl_stmt|;
+name|u_int
+name|protocol_version
+decl_stmt|;
+name|cam_xport
+name|transport
+decl_stmt|;
+name|u_int
+name|transport_version
+decl_stmt|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_ata
+name|ata
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_scsi
+name|scsi
+decl_stmt|;
+block|}
+name|proto_specific
+union|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_spi
+name|spi
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_fc
+name|fc
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sas
+name|sas
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_pata
+name|ata
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sata
+name|sata
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
 name|CAM_0X17_DATA_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr_0x17))
+value|CAM_0X18_DATA_LEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAM_0X17_LEN
+value|(sizeof(struct ccb_hdr_0x17) + CAM_0X17_DATA_LEN)
 end_define
 
 begin_define
@@ -519,6 +593,80 @@ end_typedef
 
 begin_struct
 struct|struct
+name|ccb_trans_settings_0x18
+block|{
+name|struct
+name|ccb_hdr_0x18
+name|ccb_h
+decl_stmt|;
+name|cts_type
+name|type
+decl_stmt|;
+comment|/* Current or User settings */
+name|cam_proto
+name|protocol
+decl_stmt|;
+name|u_int
+name|protocol_version
+decl_stmt|;
+name|cam_xport
+name|transport
+decl_stmt|;
+name|u_int
+name|transport_version
+decl_stmt|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_ata
+name|ata
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_scsi
+name|scsi
+decl_stmt|;
+block|}
+name|proto_specific
+union|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_trans_settings_spi
+name|spi
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_fc
+name|fc
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sas
+name|sas
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_pata
+name|ata
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_sata
+name|sata
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|dev_match_result_0x18
 block|{
 name|dev_match_type
@@ -591,15 +739,15 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CAM_0X18_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr) + sizeof(struct ccb_hdr_0x18))
+name|CAM_0X18_DATA_LEN
+value|(sizeof(union ccb) - 2*sizeof(void *) - sizeof(struct ccb_hdr))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAM_0X18_DATA_LEN
-value|(sizeof(union ccb) - sizeof(struct ccb_hdr_0x18))
+name|CAM_0X18_LEN
+value|(sizeof(struct ccb_hdr_0x18) + CAM_0X18_DATA_LEN)
 end_define
 
 begin_define
