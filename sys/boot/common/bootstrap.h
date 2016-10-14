@@ -715,14 +715,6 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|pnpinfo_stql
-name|pnp_devices
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|pnphandler
 modifier|*
 name|pnphandlers
