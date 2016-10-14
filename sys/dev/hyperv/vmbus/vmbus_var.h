@@ -177,6 +177,12 @@ name|vmbus_rx_evtflags
 decl_stmt|;
 comment|/* compat evtflgs from host */
 name|struct
+name|hv_vmbus_channel
+modifier|*
+modifier|*
+name|vmbus_chmap
+decl_stmt|;
+name|struct
 name|vmbus_msghc_ctx
 modifier|*
 name|vmbus_msg_hc
