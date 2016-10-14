@@ -382,6 +382,51 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|tcp_use_hostcache
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_tcp_use_hostcache
+value|VNET(tcp_use_hostcache)
+end_define
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp_hostcache
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable
+argument_list|,
+name|CTLFLAG_VNET
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|tcp_use_hostcache
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable the TCP hostcache"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_hostcache
@@ -1096,6 +1141,14 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return
+name|NULL
+return|;
 name|KASSERT
 argument_list|(
 name|inc
@@ -1280,6 +1333,14 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return
+name|NULL
+return|;
 name|KASSERT
 argument_list|(
 name|inc
@@ -1589,6 +1650,12 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return;
 comment|/* 	 * Find the right bucket. 	 */
 name|hc_entry
 operator|=
@@ -1703,7 +1770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: look up an entry in the hostcache and return the  * discovered path MTU.  Returns NULL if no entry is found or value is not  * set.  */
+comment|/*  * External function: look up an entry in the hostcache and return the  * discovered path MTU.  Returns 0 if no entry is found or value is not  * set.  */
 end_comment
 
 begin_function
@@ -1724,6 +1791,14 @@ decl_stmt|;
 name|u_long
 name|mtu
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return
+literal|0
+return|;
 name|hc_entry
 operator|=
 name|tcp_hc_lookup
@@ -1800,6 +1875,12 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return;
 comment|/* 	 * Find the right bucket. 	 */
 name|hc_entry
 operator|=
@@ -1918,6 +1999,12 @@ name|hc_metrics
 modifier|*
 name|hc_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|V_tcp_use_hostcache
+condition|)
+return|return;
 name|hc_entry
 operator|=
 name|tcp_hc_lookup
