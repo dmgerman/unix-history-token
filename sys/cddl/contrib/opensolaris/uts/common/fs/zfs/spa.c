@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2015, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
 end_comment
 
 begin_comment
@@ -2470,44 +2470,6 @@ name|BOOTFS_COMPRESS_VALID
 argument_list|(
 name|propval
 argument_list|)
-condition|)
-block|{
-name|error
-operator|=
-name|SET_ERROR
-argument_list|(
-name|ENOTSUP
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|dsl_prop_get_int_ds
-argument_list|(
-name|dmu_objset_ds
-argument_list|(
-name|os
-argument_list|)
-argument_list|,
-name|zfs_prop_to_name
-argument_list|(
-name|ZFS_PROP_RECORDSIZE
-argument_list|)
-argument_list|,
-operator|&
-name|propval
-argument_list|)
-operator|)
-operator|==
-literal|0
-operator|&&
-name|propval
-operator|>
-name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 block|{
 name|error
