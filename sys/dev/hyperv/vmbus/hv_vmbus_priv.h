@@ -221,9 +221,6 @@ decl_stmt|;
 name|hv_vmbus_channel_gpadl_created
 name|gpadl_created
 decl_stmt|;
-name|hv_vmbus_channel_version_response
-name|version_response
-decl_stmt|;
 block|}
 name|hv_vmbus_channel_msg_response
 typedef|;

@@ -377,6 +377,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|uint64_t
+name|hypercall_post_message
+parameter_list|(
+name|bus_addr_t
+name|msg_paddr
+parameter_list|)
+block|{
+return|return
+name|hypercall_md
+argument_list|(
+name|hypercall_context
+operator|.
+name|hc_addr
+argument_list|,
+name|HYPERCALL_POST_MESSAGE
+argument_list|,
+name|msg_paddr
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * @brief Post a message using the hypervisor message IPC.  * (This involves a hypercall.)  */
 end_comment
