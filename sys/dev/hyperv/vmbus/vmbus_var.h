@@ -61,6 +61,24 @@ name|VMBUS_SINT_TIMER
 value|4
 end_define
 
+begin_comment
+comment|/*  * NOTE: DO NOT CHANGE THESE  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CONNID_MESSAGE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CONNID_EVENT
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_pcpu_data
@@ -170,7 +188,7 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-comment|/* Rarely used fields */
+comment|/* 	 * Rarely used fields 	 */
 name|device_t
 name|vmbus_dev
 decl_stmt|;
@@ -181,6 +199,12 @@ name|uint32_t
 name|vmbus_flags
 decl_stmt|;
 comment|/* see VMBUS_FLAG_ */
+name|uint32_t
+name|vmbus_version
+decl_stmt|;
+name|uint32_t
+name|vmbus_gpadl
+decl_stmt|;
 comment|/* Shared memory for vmbus_{rx,tx}_evtflags */
 name|void
 modifier|*
@@ -217,6 +241,17 @@ value|0x80000000
 name|uint32_t
 name|vmbus_scan_devcnt
 decl_stmt|;
+name|struct
+name|mtx
+name|vmbus_chlist_lock
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|hv_vmbus_channel
+argument_list|)
+name|vmbus_chlist
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -543,6 +578,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|vmbus_scan_newchan
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|vmbus_gpadl_alloc
 parameter_list|(
 name|struct
 name|vmbus_softc

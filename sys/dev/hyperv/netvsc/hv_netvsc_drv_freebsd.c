@@ -327,6 +327,12 @@ directive|include
 file|"hv_rndis_filter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vmbus_if.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -11026,6 +11032,13 @@ index|[
 name|id
 index|]
 decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|sc
+operator|->
+name|hn_dev
+decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dtag
 decl_stmt|;
@@ -11033,6 +11046,9 @@ name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|;
+name|uint32_t
+name|version
 decl_stmt|;
 name|txr
 operator|->
@@ -11262,25 +11278,67 @@ name|hn_direct_tx_size
 operator|=
 name|hn_direct_tx_size
 expr_stmt|;
+name|version
+operator|=
+name|VMBUS_GET_VERSION
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|hv_vmbus_protocal_version
+name|version
 operator|>=
-name|HV_VMBUS_VERSION_WIN8_1
+name|VMBUS_VERSION_WIN8_1
 condition|)
+block|{
 name|txr
 operator|->
 name|hn_csum_assist
 operator|=
 name|HN_CSUM_ASSIST
 expr_stmt|;
+block|}
 else|else
+block|{
 name|txr
 operator|->
 name|hn_csum_assist
 operator|=
 name|HN_CSUM_ASSIST_WIN8
 expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bus version %u.%u, "
+literal|"no UDP checksum offloading\n"
+argument_list|,
+name|VMBUS_VERSION_MAJOR
+argument_list|(
+name|version
+argument_list|)
+argument_list|,
+name|VMBUS_VERSION_MINOR
+argument_list|(
+name|version
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Always schedule transmission instead of trying to do direct 	 * transmission.  This one gives the best performance so far. 	 */
 name|txr
 operator|->
@@ -11292,9 +11350,7 @@ name|parent_dtag
 operator|=
 name|bus_get_dma_tag
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* DMA tag for RNDIS messages. */
@@ -11353,9 +11409,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|,
 literal|"failed to create rndis dmatag\n"
 argument_list|)
@@ -11420,9 +11474,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|,
 literal|"failed to create data dmatag\n"
 argument_list|)
@@ -11502,9 +11554,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|,
 literal|"failed to allocate rndis_msg, %d\n"
 argument_list|,
@@ -11550,9 +11600,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|,
 literal|"failed to load rndis_msg, %d\n"
 argument_list|,
@@ -11602,9 +11650,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|,
 literal|"failed to allocate tx data dmamap\n"
 argument_list|)
@@ -11713,9 +11759,7 @@ name|ctx
 operator|=
 name|device_get_sysctl_ctx
 argument_list|(
-name|sc
-operator|->
-name|hn_dev
+name|dev
 argument_list|)
 expr_stmt|;
 name|child

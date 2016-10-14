@@ -15,6 +15,24 @@ directive|define
 name|_HYPERV_BUSDMA_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_struct
 struct|struct
 name|hyperv_dma

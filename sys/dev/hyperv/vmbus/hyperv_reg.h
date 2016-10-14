@@ -633,6 +633,13 @@ name|HYPERCALL_POST_MESSAGE
 value|0x005c
 end_define
 
+begin_define
+define|#
+directive|define
+name|HYPERCALL_SIGNAL_EVENT
+value|0x005d
+end_define
+
 begin_comment
 comment|/*  * Hypercall input parameters  */
 end_comment
@@ -703,6 +710,35 @@ name|HYPERCALL_POSTMSGIN_SIZE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * HYPERCALL_SIGNAL_EVENT  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYPERCALL_SIGEVTIN_ALIGN
+value|8
+end_define
+
+begin_struct
+struct|struct
+name|hypercall_sigevt_in
+block|{
+name|uint32_t
+name|hc_connid
+decl_stmt|;
+name|uint16_t
+name|hc_evtflag_ofs
+decl_stmt|;
+name|uint16_t
+name|hc_rsvd
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_endif
 endif|#

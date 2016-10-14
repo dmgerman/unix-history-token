@@ -121,6 +121,12 @@ directive|include
 file|<amd64/include/atomic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/hyperv_busdma.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -163,29 +169,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WS2008
+name|VMBUS_VERSION_WS2008
 value|((0<< 16) | (13))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN7
+name|VMBUS_VERSION_WIN7
 value|((1<< 16) | (1))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN8
+name|VMBUS_VERSION_WIN8
 value|((2<< 16) | (4))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_VERSION_WIN8_1
+name|VMBUS_VERSION_WIN8_1
 value|((3<< 16) | (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((uint32_t)(ver))& 0xffff)
 end_define
 
 begin_comment
@@ -1462,56 +1488,11 @@ name|hv_vmbus_connection_id
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * Definition of the hv_vmbus_signal_event hypercall input structure  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|hv_vmbus_connection_id
-name|connection_id
-decl_stmt|;
-name|uint16_t
-name|flag_number
-decl_stmt|;
-name|uint16_t
-name|rsvd_z
-decl_stmt|;
-block|}
-name|__packed
-name|hv_vmbus_input_signal_event
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint64_t
-name|align8
-decl_stmt|;
-name|hv_vmbus_input_signal_event
-name|event
-decl_stmt|;
-block|}
-name|__packed
-name|hv_vmbus_input_signal_event_buffer
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
 name|hv_vmbus_channel
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|hv_vmbus_channel
-argument_list|)
-name|list_entry
-expr_stmt|;
 name|struct
 name|hv_device
 modifier|*
@@ -1581,14 +1562,14 @@ decl_stmt|;
 name|boolean_t
 name|is_dedicated_interrupt
 decl_stmt|;
-comment|/* 	 * Used as an input param for HV_CALL_SIGNAL_EVENT hypercall. 	 */
-name|hv_vmbus_input_signal_event_buffer
-name|signal_event_buffer
-decl_stmt|;
-comment|/* 	 * 8-bytes aligned of the buffer above 	 */
-name|hv_vmbus_input_signal_event
+name|struct
+name|hypercall_sigevt_in
 modifier|*
-name|signal_event_param
+name|ch_sigevt
+decl_stmt|;
+name|struct
+name|hyperv_dma
+name|ch_sigevt_dma
 decl_stmt|;
 comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interrupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
 name|uint32_t
@@ -1643,6 +1624,12 @@ name|struct
 name|task
 name|ch_detach_task
 decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|hv_vmbus_channel
+argument_list|)
+name|ch_link
+expr_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
@@ -1946,6 +1933,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vmbus_channel_cpu_rr
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|hv_vmbus_channel
 modifier|*
@@ -2024,13 +2023,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|hv_vmbus_protocal_version
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
