@@ -342,18 +342,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Read our default configuration. */
-if|if
-condition|(
 name|include
 argument_list|(
 literal|"/boot/loader.rc"
-argument_list|)
-operator|!=
-name|CMD_OK
-condition|)
-name|include
-argument_list|(
-literal|"/boot/boot.conf"
 argument_list|)
 expr_stmt|;
 block|}
