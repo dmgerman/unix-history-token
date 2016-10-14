@@ -1057,57 +1057,6 @@ name|HW_MACADDR_LEN
 value|6
 end_define
 
-begin_enum
-enum|enum
-block|{
-name|HV_VMBUS_IVAR_TYPE
-block|,
-name|HV_VMBUS_IVAR_INSTANCE
-block|,
-name|HV_VMBUS_IVAR_NODE
-block|,
-name|HV_VMBUS_IVAR_DEVCTX
-block|}
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|HV_VMBUS_ACCESSOR
-parameter_list|(
-name|var
-parameter_list|,
-name|ivar
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|__BUS_ACCESSOR(vmbus, var, HV_VMBUS, ivar, type)
-end_define
-
-begin_macro
-name|HV_VMBUS_ACCESSOR
-argument_list|(
-argument|type
-argument_list|,
-argument|TYPE
-argument_list|,
-argument|const char *
-argument_list|)
-end_macro
-
-begin_macro
-name|HV_VMBUS_ACCESSOR
-argument_list|(
-argument|devctx
-argument_list|,
-argument|DEVCTX
-argument_list|,
-argument|struct hv_device *
-argument_list|)
-end_macro
-
 begin_comment
 comment|/*  * Common defines for Hyper-V ICs  */
 end_comment
@@ -1499,10 +1448,8 @@ typedef|typedef
 struct|struct
 name|hv_vmbus_channel
 block|{
-name|struct
-name|hv_device
-modifier|*
-name|device
+name|device_t
+name|ch_dev
 decl_stmt|;
 name|struct
 name|vmbus_softc
@@ -1701,29 +1648,6 @@ name|state
 expr_stmt|;
 block|}
 end_function
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|hv_device
-block|{
-name|hv_guid
-name|class_id
-decl_stmt|;
-name|hv_guid
-name|device_id
-decl_stmt|;
-name|device_t
-name|device
-decl_stmt|;
-name|hv_vmbus_channel
-modifier|*
-name|channel
-decl_stmt|;
-block|}
-name|hv_device
-typedef|;
-end_typedef
 
 begin_function_decl
 name|int
@@ -2069,6 +1993,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|hv_vmbus_channel
+operator|*
+name|vmbus_get_channel
+argument_list|(
+argument|device_t dev
+argument_list|)
+block|{
+return|return
+name|device_get_ivars
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_endif
 endif|#
