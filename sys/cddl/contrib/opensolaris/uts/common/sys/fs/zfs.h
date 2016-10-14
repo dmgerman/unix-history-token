@@ -2354,7 +2354,10 @@ name|SPA_LOAD_RECOVER
 block|,
 comment|/* recovery requested	*/
 name|SPA_LOAD_ERROR
+block|,
 comment|/* load failed		*/
+name|SPA_LOAD_CREATE
+comment|/* creation in progress */
 block|}
 name|spa_load_state_t
 typedef|;
