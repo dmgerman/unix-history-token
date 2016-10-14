@@ -7094,27 +7094,6 @@ name|t_rcvtime
 operator|=
 name|ticks
 expr_stmt|;
-if|if
-condition|(
-name|TCPS_HAVEESTABLISHED
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-condition|)
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_KEEP
-argument_list|,
-name|TP_KEEPIDLE
-argument_list|(
-name|tp
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Scale up the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin
 operator|=
