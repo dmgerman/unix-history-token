@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright 2013 Saso Kiselkov. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -1710,6 +1710,15 @@ comment|/*  * Returns the user data (dmu_buf_user_t *) associated with this dbuf
 name|void
 modifier|*
 name|dmu_buf_get_user
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|db
+parameter_list|)
+function_decl|;
+name|objset_t
+modifier|*
+name|dmu_buf_get_objset
 parameter_list|(
 name|dmu_buf_t
 modifier|*
