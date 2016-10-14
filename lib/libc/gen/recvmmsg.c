@@ -256,6 +256,15 @@ operator|(
 name|ret
 operator|)
 return|;
+name|msgvec
+index|[
+literal|0
+index|]
+operator|.
+name|msg_len
+operator|=
+name|ret
+expr_stmt|;
 comment|/*  	 * Do non-blocking receive for second and later messages if 	 * WAITFORONE is set. 	 */
 if|if
 condition|(
