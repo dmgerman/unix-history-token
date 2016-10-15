@@ -170,6 +170,22 @@ begin_comment
 comment|/* DEV_PMU */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|sev
+parameter_list|()
+value|__asm __volatile("sev" : : : "memory")
+end_define
+
+begin_define
+define|#
+directive|define
+name|wfe
+parameter_list|()
+value|__asm __volatile("wfe" : : : "memory")
+end_define
+
 begin_comment
 comment|/*  * Macros to generate CP15 (system control processor) read/write functions.  */
 end_comment

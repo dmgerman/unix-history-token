@@ -552,7 +552,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 name|bus_space_unmap

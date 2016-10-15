@@ -464,7 +464,10 @@ condition|)
 do|;
 block|}
 block|}
-name|armv7_sev
+name|dsb
+argument_list|()
+expr_stmt|;
+name|sev
 argument_list|()
 expr_stmt|;
 name|bus_space_unmap
