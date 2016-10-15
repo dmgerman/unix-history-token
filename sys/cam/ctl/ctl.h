@@ -1005,6 +1005,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_get_opt_number
+parameter_list|(
+name|ctl_options_t
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uint64_t
+modifier|*
+name|num
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_expand_number
 parameter_list|(
 specifier|const
