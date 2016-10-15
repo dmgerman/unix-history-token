@@ -294,7 +294,11 @@ specifier|static
 name|u_long
 name|attrib
 init|=
-literal|0x7
+name|EFI_VARIABLE_NON_VOLATILE
+operator||
+name|EFI_VARIABLE_BOOTSERVICE_ACCESS
+operator||
+name|EFI_VARIABLE_RUNTIME_ACCESS
 decl_stmt|;
 end_decl_stmt
 
@@ -1312,6 +1316,21 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|attrib
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'w'
 case|:
 name|wflag
@@ -1320,9 +1339,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|'f'
-case|:
-case|case
-literal|'t'
 case|:
 case|case
 literal|0
