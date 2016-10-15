@@ -1213,7 +1213,7 @@ value|M_HASHTYPE_HASH(6)
 end_define
 
 begin_comment
-comment|/* TCPv6 4-tiple + 							    * ext hdrs */
+comment|/* TCPv6 4-tuple + 							    * ext hdrs */
 end_comment
 
 begin_comment
