@@ -275,6 +275,15 @@ literal|"Allwinner Bus Clock Gates"
 block|}
 block|,
 block|{
+literal|"allwinner,sun8i-h3-apb0-gates-clk"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+literal|"Allwinner APB0 Clock Gates"
+block|}
+block|,
+block|{
 literal|"allwinner,sun9i-a80-apbs-gates-clk"
 block|,
 operator|(
