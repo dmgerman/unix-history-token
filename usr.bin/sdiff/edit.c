@@ -99,22 +99,12 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_function_decl
-name|int
-name|editit
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Execute an editor on the specified pathname, which is interpreted  * from the shell.  This means flags may be included.  *  * Returns -1 on error, or the exit value on success.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|editit
 parameter_list|(
