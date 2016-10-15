@@ -102,6 +102,27 @@ name|CPU_ARCH_CORTEX_A17
 value|0xC11
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_CORTEX_A53
+value|0xD03
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_CORTEX_A57
+value|0xD07
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_CORTEX_A72
+value|0xD08
+end_define
+
 begin_comment
 comment|/* QCOM */
 end_comment
@@ -112,6 +133,32 @@ directive|define
 name|CPU_ARCH_KRAIT_300
 value|0x06F
 end_define
+
+begin_comment
+comment|/* MRVL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_SHEEVA_851
+value|0x581
+end_define
+
+begin_comment
+comment|/* PJ4/PJ4B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ARCH_SHEEVA_584
+value|0x584
+end_define
+
+begin_comment
+comment|/* PJ4B-MP/PJ4C */
+end_comment
 
 begin_struct
 struct|struct

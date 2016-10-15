@@ -763,6 +763,17 @@ name|part_number
 condition|)
 block|{
 case|case
+name|CPU_ARCH_CORTEX_A72
+case|:
+case|case
+name|CPU_ARCH_CORTEX_A57
+case|:
+case|case
+name|CPU_ARCH_CORTEX_A53
+case|:
+comment|/* Nothing to do for AArch32 */
+break|break;
+case|case
 name|CPU_ARCH_CORTEX_A17
 case|:
 case|case
