@@ -838,41 +838,43 @@ name|help_msg
 index|[]
 init|=
 block|{
-literal|"\nusage: sdiff [-abdilstW] [-I regexp] [-o outfile] [-w width] file1 file2\n"
+literal|"usage: sdiff [-abdilstW] [-I regexp] [-o outfile] [-w width] file1 file2\n"
 block|,
-literal|"\t-l, --left-column, Only print the left column for identical lines."
+literal|"-l, --left-column: only print the left column for identical lines."
 block|,
-literal|"\t-o OUTFILE, --output=OUTFILE, nteractively merge file1 and file2 into outfile."
+literal|"-o OUTFILE, --output=OUTFILE: interactively merge file1 and file2 into outfile."
 block|,
-literal|"\t-s, --suppress-common-lines, Skip identical lines."
+literal|"-s, --suppress-common-lines: skip identical lines."
 block|,
-literal|"\t-w WIDTH, --width=WIDTH, Print a maximum of WIDTH characters on each line."
+literal|"-w WIDTH, --width=WIDTH: print a maximum of WIDTH characters on each line."
 block|,
-literal|"\tOptions passed to diff(1) are:"
+literal|""
 block|,
-literal|"\t\t-a, --text, Treat file1 and file2 as text files."
+literal|"Options passed to diff(1) are:"
 block|,
-literal|"\t\t-b, --ignore-trailing-cr, Ignore trailing blank spaces."
+literal|"\t-a, --text: treat file1 and file2 as text files."
 block|,
-literal|"\t\t-d, --minimal, Minimize diff size."
+literal|"\t-b, --ignore-trailing-cr: ignore trailing blank spaces."
 block|,
-literal|"\t\t-I RE, --ignore-matching-lines=RE, Ignore changes whose line matches RE."
+literal|"\t-d, --minimal: minimize diff size."
 block|,
-literal|"\t\t-i, --ignore-case, Do a case-insensitive comparison."
+literal|"\t-I RE, --ignore-matching-lines=RE: ignore changes whose line matches RE."
 block|,
-literal|"\t\t-t, --expand-tabs Expand tabs to spaces."
+literal|"\t-i, --ignore-case: do a case-insensitive comparison."
 block|,
-literal|"\t\t-W, --ignore-all-spaces, Ignore all spaces."
+literal|"\t-t, --expand-tabs: sxpand tabs to spaces."
 block|,
-literal|"\t\t--speed-large-files, Assume large file with scattered changes."
+literal|"\t-W, --ignore-all-spaces: ignore all spaces."
 block|,
-literal|"\t\t--strip-trailing-cr, Strip trailing carriage return."
+literal|"\t--speed-large-files: assume large file with scattered changes."
 block|,
-literal|"\t\t--ignore-file-name-case, Ignore case of file names."
+literal|"\t--strip-trailing-cr: strip trailing carriage return."
 block|,
-literal|"\t\t--no-ignore-file-name-case, Do not ignore file name case"
+literal|"\t--ignore-file-name-case: ignore case of file names."
 block|,
-literal|"\t\t--tabsize NUM, Change size of tabs (default 8.)"
+literal|"\t--no-ignore-file-name-case: do not ignore file name case"
+block|,
+literal|"\t--tabsize NUM: change size of tabs (default 8.)"
 block|,
 name|NULL
 block|, }
