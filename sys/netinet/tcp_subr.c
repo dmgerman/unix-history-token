@@ -71,11 +71,22 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/hhook.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -83,11 +94,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/khelp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1170,6 +1192,12 @@ name|V_sack_hole_zone
 value|VNET(sack_hole_zone)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1186,6 +1214,11 @@ index|]
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2135,10 +2168,15 @@ name|struct
 name|cc_var
 name|ccv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 name|struct
 name|osd
 name|osd
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2793,6 +2831,9 @@ name|tcbhash_tuneable
 operator|=
 literal|"net.inet.tcp.tcbhashsize"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 if|if
 condition|(
 name|hhook_head_register
@@ -2849,6 +2890,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|hashsize
 operator|=
 name|TCBHASHSIZE
@@ -3281,10 +3324,16 @@ name|__unused
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * All our processes are gone, all our sockets should be cleaned 	 * up, which means, we should be past the tcp_discardcb() calls. 	 * Sleep to let all tcpcb timers really disappear and cleanup. 	 */
 for|for
 control|(
@@ -3362,6 +3411,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 name|error
 operator|=
 name|hhook_head_deregister
@@ -3426,6 +3478,8 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5761,6 +5815,9 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 name|tp
 operator|->
 name|osd
@@ -5827,6 +5884,8 @@ name|NULL
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VIMAGE
@@ -6746,6 +6805,9 @@ operator|->
 name|ccv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 name|khelp_destroy_osd
 argument_list|(
 name|tp
@@ -6753,6 +6815,8 @@ operator|->
 name|osd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CC_ALGO
 argument_list|(
 name|tp

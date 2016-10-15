@@ -1728,11 +1728,12 @@ directive|ifdef
 name|TCP_RFC7413
 if|if
 condition|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
+argument_list|)
 condition|)
 name|tp
 operator|->
@@ -2014,11 +2015,12 @@ directive|ifdef
 name|TCP_RFC7413
 if|if
 condition|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
+argument_list|)
 condition|)
 name|tp
 operator|->
@@ -3719,13 +3721,12 @@ name|TCP_RFC7413
 comment|/* 	 * For passively-created TFO connections, don't attempt a window 	 * update while still in SYN_RECEIVED as this may trigger an early 	 * SYN|ACK.  It is preferable to have the SYN|ACK be sent along with 	 * application response data, or failing that, when the DELACK timer 	 * expires. 	 */
 if|if
 condition|(
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|tp

@@ -638,7 +638,7 @@ name|argv
 argument_list|,
 name|fts_options
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 operator|)
 operator|==

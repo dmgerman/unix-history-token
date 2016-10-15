@@ -137,7 +137,7 @@ name|pfm
 range|:
 literal|2
 decl_stmt|;
-comment|/**< Three Port Filtering Modes (0, 1, 2) used in handling registed/unregistered                                             multicast (unknown L2 multicast and IPMC) packets. This field is used                                             when OPCODE is 011 or 100 Semantics of PFM bits are as follows;                                             For registered L2 multicast packets:                                                 PFM= 0 ­ Flood to VLAN                                                 PFM= 1 or 2 ­ Send to group members in the L2MC table                                             For unregistered L2 multicast packets:                                                 PFM= 0 or 1 ­ Flood to VLAN                                                 PFM= 2 ­ Drop the packet */
+comment|/**< Three Port Filtering Modes (0, 1, 2) used in handling registed/unregistered                                             multicast (unknown L2 multicast and IPMC) packets. This field is used                                             when OPCODE is 011 or 100 Semantics of PFM bits are as follows;                                             For registered L2 multicast packets:                                                 PFM= 0 - Flood to VLAN                                                 PFM= 1 or 2 - Send to group members in the L2MC table                                             For unregistered L2 multicast packets:                                                 PFM= 0 or 1 - Flood to VLAN                                                 PFM= 2 - Drop the packet */
 name|uint32_t
 name|src_port_tgid
 range|:
@@ -167,7 +167,7 @@ name|cng_low
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Semantics of CNG_HIGH and CNG_LOW are as follows: The following                                             encodings are to make it backward compatible:                                             [CNG_HIGH, CNG_LOW] - COLOR                                             [0, 0] ­ Packet is green                                             [0, 1] ­ Packet is red                                             [1, 1] ­ Packet is yellow                                             [1, 0] ­ Undefined */
+comment|/**< Semantics of CNG_HIGH and CNG_LOW are as follows: The following                                             encodings are to make it backward compatible:                                             [CNG_HIGH, CNG_LOW] - COLOR                                             [0, 0] - Packet is green                                             [0, 1] - Packet is red                                             [1, 1] - Packet is yellow                                             [1, 0] - Undefined */
 name|uint32_t
 name|dst_modid_low
 range|:
@@ -489,7 +489,7 @@ name|pfm
 range|:
 literal|2
 decl_stmt|;
-comment|/**< Three Port Filtering Modes (0, 1, 2) used in handling registed/unregistered                                             multicast (unknown L2 multicast and IPMC) packets. This field is used                                             when OPCODE is 011 or 100 Semantics of PFM bits are as follows;                                             For registered L2 multicast packets:                                                 PFM= 0 ­ Flood to VLAN                                                 PFM= 1 or 2 ­ Send to group members in the L2MC table                                             For unregistered L2 multicast packets:                                                 PFM= 0 or 1 ­ Flood to VLAN                                                 PFM= 2 ­ Drop the packet */
+comment|/**< Three Port Filtering Modes (0, 1, 2) used in handling registed/unregistered                                             multicast (unknown L2 multicast and IPMC) packets. This field is used                                             when OPCODE is 011 or 100 Semantics of PFM bits are as follows;                                             For registered L2 multicast packets:                                                 PFM= 0 - Flood to VLAN                                                 PFM= 1 or 2 - Send to group members in the L2MC table                                             For unregistered L2 multicast packets:                                                 PFM= 0 or 1 - Flood to VLAN                                                 PFM= 2 - Drop the packet */
 name|uint32_t
 name|src_t
 range|:

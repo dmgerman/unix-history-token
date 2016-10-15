@@ -59,7 +59,7 @@ name|int
 name|tnode_assert
 parameter_list|(
 specifier|const
-name|node_t
+name|posix_tnode
 modifier|*
 name|n
 parameter_list|)
@@ -262,7 +262,7 @@ operator|=
 name|i
 expr_stmt|;
 comment|/* Apply random operations on a binary tree and check the results. */
-name|void
+name|posix_tnode
 modifier|*
 name|root
 init|=

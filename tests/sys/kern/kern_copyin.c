@@ -162,6 +162,17 @@ index|[]
 init|=
 literal|"copyin.XXXXXX"
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__mips__
+comment|/* MIPS has no shared page implemented yet. */
+name|atf_tc_skip
+argument_list|(
+literal|"Platform is not supported."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|scratch_file
 operator|=
 name|mkstemp

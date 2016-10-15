@@ -8236,6 +8236,19 @@ operator|=
 operator|-
 literal|96
 expr_stmt|;
+if|if
+condition|(
+name|ieee80211_add_rx_params
+argument_list|(
+name|m
+argument_list|,
+operator|&
+name|rxs
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* XXX avoid a LOR */
 name|RSU_UNLOCK
 argument_list|(
@@ -8247,9 +8260,6 @@ argument_list|(
 name|ic
 argument_list|,
 name|m
-argument_list|,
-operator|&
-name|rxs
 argument_list|)
 expr_stmt|;
 name|RSU_LOCK

@@ -703,6 +703,80 @@ parameter_list|)
 value|(1<< (x + 4))
 end_define
 
+begin_comment
+comment|/* Regulators registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL_DCDC3
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL_LDO2
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL_LDO4
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL_DCDC2
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_POWERCTL_LDO3
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_REG_DCDC2_VOLTAGE
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_REG_DCDC3_VOLTAGE
+value|0x27
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_REG_LDO24_VOLTAGE
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXP209_REG_LDO3_VOLTAGE
+value|0x29
+end_define
+
 begin_enum
 enum|enum
 name|axp209_sensor
@@ -722,6 +796,27 @@ block|,
 name|AXP209_BATCHARGECURRENT
 block|,
 name|AXP209_BATDISCHARGECURRENT
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|axp209_regulators
+block|{
+name|AXP209_REG_ID_DCDC2
+block|,
+name|AXP209_REG_ID_DCDC3
+block|,
+name|AXP209_REG_ID_LDO1
+block|,
+name|AXP209_REG_ID_LDO2
+block|,
+name|AXP209_REG_ID_LDO3
+block|,
+comment|/* LDO4 is weird, need to find a correct way to handle it */
+comment|/* AXP209_REG_ID_LDO4, */
+name|AXP209_REG_ID_LDO5
 block|, }
 enum|;
 end_enum

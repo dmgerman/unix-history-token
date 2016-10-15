@@ -2978,8 +2978,8 @@ argument_list|)
 expr_stmt|;
 comment|/* Setup BAR2 attributes */
 comment|/* Relaxed Ordering (NPEI_CTL_PORTn[PTLP_RO,CTLP_RO, WAIT_COM]) */
-comment|/* ­ PTLP_RO,CTLP_RO should normally be set (except for debug). */
-comment|/* ­ WAIT_COM=0 will likely work for all applications. */
+comment|/* - PTLP_RO,CTLP_RO should normally be set (except for debug). */
+comment|/* - WAIT_COM=0 will likely work for all applications. */
 comment|/* Load completion relaxed ordering (NPEI_CTL_PORTn[WAITL_COM]) */
 if|if
 condition|(
@@ -3974,15 +3974,17 @@ expr_stmt|;
 name|ep_mode
 operator|=
 operator|(
+operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN61XX
+argument_list|)
 operator|||
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CNF71XX
 argument_list|)
-argument_list|)
+operator|)
 condition|?
 operator|(
 name|mio_rst_ctl
@@ -4741,8 +4743,8 @@ argument_list|)
 expr_stmt|;
 comment|/* Setup BAR2 attributes */
 comment|/* Relaxed Ordering (NPEI_CTL_PORTn[PTLP_RO,CTLP_RO, WAIT_COM]) */
-comment|/* ­ PTLP_RO,CTLP_RO should normally be set (except for debug). */
-comment|/* ­ WAIT_COM=0 will likely work for all applications. */
+comment|/* - PTLP_RO,CTLP_RO should normally be set (except for debug). */
+comment|/* - WAIT_COM=0 will likely work for all applications. */
 comment|/* Load completion relaxed ordering (NPEI_CTL_PORTn[WAITL_COM]) */
 name|pemx_bar_ctl
 operator|.

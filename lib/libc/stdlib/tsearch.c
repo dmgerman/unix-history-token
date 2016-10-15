@@ -42,7 +42,7 @@ file|"tsearch_path.h"
 end_include
 
 begin_function
-name|void
+name|posix_tnode
 modifier|*
 name|tsearch
 parameter_list|(
@@ -51,7 +51,7 @@ name|void
 modifier|*
 name|key
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 modifier|*
 name|rootp
@@ -76,14 +76,7 @@ name|struct
 name|path
 name|path
 decl_stmt|;
-name|node_t
-modifier|*
-name|root
-decl_stmt|,
-modifier|*
-modifier|*
-name|base
-decl_stmt|,
+name|posix_tnode
 modifier|*
 modifier|*
 name|leaf
@@ -118,11 +111,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|root
-operator|=
-operator|*
-name|rootp
-expr_stmt|;
 comment|/* 	 * Find the leaf where the new key needs to be inserted. Return 	 * if we've found an existing entry. Keep track of the path that 	 * is taken to get to the node, as we will need it to adjust the 	 * balances. 	*/
 name|path_init
 argument_list|(
@@ -130,15 +118,9 @@ operator|&
 name|path
 argument_list|)
 expr_stmt|;
-name|base
-operator|=
-operator|&
-name|root
-expr_stmt|;
 name|leaf
 operator|=
-operator|&
-name|root
+name|rootp
 expr_stmt|;
 while|while
 condition|(
@@ -160,8 +142,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * If we reach a node that has a non-zero 			 * balance on the way, we know that we won't 			 * need to perform any rotations above this 			 * point. In this case rotations are always 			 * capable of keeping the subtree in balance. 			 * Make this the base node and reset the path. 			 */
-name|base
+comment|/* 			 * If we reach a node that has a non-zero 			 * balance on the way, we know that we won't 			 * need to perform any rotations above this 			 * point. In this case rotations are always 			 * capable of keeping the subtree in balance. 			 * Make this the root node and reset the path. 			 */
+name|rootp
 operator|=
 name|leaf
 expr_stmt|;
@@ -239,13 +221,8 @@ else|else
 block|{
 return|return
 operator|(
-operator|&
-operator|(
 operator|*
 name|leaf
-operator|)
-operator|->
-name|key
 operator|)
 return|;
 block|}
@@ -311,7 +288,7 @@ control|(
 name|n
 operator|=
 operator|*
-name|base
+name|rootp
 init|;
 name|n
 operator|!=
@@ -358,11 +335,11 @@ name|rlink
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Adjusting the balances may have pushed the balance of the 	 * base node out of range. Perform a rotation to bring the 	 * balance back in range. 	 */
+comment|/* 	 * Adjusting the balances may have pushed the balance of the 	 * root node out of range. Perform a rotation to bring the 	 * balance back in range. 	 */
 name|x
 operator|=
 operator|*
-name|base
+name|rootp
 expr_stmt|;
 if|if
 condition|(
@@ -424,7 +401,7 @@ operator|=
 name|x
 expr_stmt|;
 operator|*
-name|base
+name|rootp
 operator|=
 name|z
 expr_stmt|;
@@ -482,7 +459,7 @@ operator|=
 name|x
 expr_stmt|;
 operator|*
-name|base
+name|rootp
 operator|=
 name|y
 expr_stmt|;
@@ -527,7 +504,7 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Right-left case. 			 * 			 *       x 			 *      / \              z 			 *     A   y            / \ 			 *        / \   -->    x   y 			 *       z   D        /|   |\ 			 *      / \          A B   C D 			 *     B   C 			 */
-name|node_t
+name|posix_tnode
 modifier|*
 name|z
 init|=
@@ -564,7 +541,7 @@ operator|=
 name|y
 expr_stmt|;
 operator|*
-name|base
+name|rootp
 operator|=
 name|z
 expr_stmt|;
@@ -622,7 +599,7 @@ operator|=
 name|x
 expr_stmt|;
 operator|*
-name|base
+name|rootp
 operator|=
 name|y
 expr_stmt|;
@@ -641,17 +618,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Return the new entry. */
-operator|*
-name|rootp
-operator|=
-name|root
-expr_stmt|;
 return|return
 operator|(
-operator|&
 name|result
-operator|->
-name|key
 operator|)
 return|;
 block|}

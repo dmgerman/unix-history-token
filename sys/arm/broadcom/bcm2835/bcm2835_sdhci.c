@@ -235,6 +235,35 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"broadcom,bcm2835-sdhci"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"brcm,bcm2835-mmc"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -514,13 +543,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"broadcom,bcm2835-sdhci"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1056,18 +1088,19 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* FIXME: Fix along with other BUS_SPACE_PHYSADDR instances */
 name|sc
 operator|->
 name|sc_sdhci_buffer_phys
 operator|=
-name|BUS_SPACE_PHYSADDR
+name|rman_get_start
 argument_list|(
 name|sc
 operator|->
 name|sc_mem_res
-argument_list|,
-name|SDHCI_BUFFER
 argument_list|)
+operator|+
+name|SDHCI_BUFFER
 expr_stmt|;
 name|bus_generic_probe
 argument_list|(
@@ -2605,7 +2638,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len = %d, not word-aligned"
+literal|"%s: len = %zu, not word-aligned"
 operator|,
 name|__func__
 operator|,
@@ -2757,7 +2790,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len = %d, not word-aligned"
+literal|"%s: len = %zu, not word-aligned"
 operator|,
 name|__func__
 operator|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  * Copyright 2016 Toomas Soome<tsoome@me.com>  */
 end_comment
 
 begin_include
@@ -15296,7 +15296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the vdev configuration to ensure that it's capable of supporting  * a root pool.  *  * On Solaris, we do not support RAID-Z or partial configuration.  In  * addition, only a single top-level vdev is allowed and none of the  * leaves can be wholedisks.  *  * For FreeBSD, we can boot from any configuration. There is a  * limitation that the boot filesystem must be either uncompressed or  * compresses with lzjb compression but I'm not sure how to enforce  * that here.  */
+comment|/*  * Check the vdev configuration to ensure that it's capable of supporting  * a root pool. We do not support partial configuration.  * In addition, only a single top-level vdev is allowed.  *  * FreeBSD does not have above limitations.  */
 end_comment
 
 begin_function
@@ -15358,15 +15358,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|vdev_type
-argument_list|,
-name|VDEV_TYPE_RAIDZ
-argument_list|)
-operator|==
-literal|0
-operator|||
 name|strcmp
 argument_list|(
 name|vdev_type

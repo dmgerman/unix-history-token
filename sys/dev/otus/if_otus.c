@@ -8095,6 +8095,8 @@ operator|->
 name|rssi
 expr_stmt|;
 comment|/* XXX TODO: add MIMO RSSI/NF as well */
+if|if
+condition|(
 name|ieee80211_add_rx_params
 argument_list|(
 name|m
@@ -8102,7 +8104,21 @@ argument_list|,
 operator|&
 name|rxs
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|counter_u64_add
+argument_list|(
+name|ic
+operator|->
+name|ic_ierrors
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* XXX make a method */
 name|STAILQ_INSERT_TAIL
 argument_list|(
@@ -8619,8 +8635,6 @@ argument_list|(
 name|ni
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|ieee80211_free_node
@@ -8638,8 +8652,6 @@ argument_list|(
 name|ic
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

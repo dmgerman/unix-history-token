@@ -211,6 +211,11 @@ directive|define
 name|LINKER_FILE_LINKED
 value|0x1
 comment|/* file has been fully linked */
+define|#
+directive|define
+name|LINKER_FILE_MODULES
+value|0x2
+comment|/* file has>0 modules at preload */
 name|TAILQ_ENTRY
 argument_list|(
 argument|linker_file

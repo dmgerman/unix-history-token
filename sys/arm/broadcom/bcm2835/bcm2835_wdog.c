@@ -152,7 +152,7 @@ name|_sc
 parameter_list|,
 name|_r
 parameter_list|)
-value|bus_space_read_4((_sc)->bst, (_sc)->bsh, (_r))
+value|bus_space_read_4((_sc)->bst, (_sc)->bsh, (_r) + (_sc)->regs_offset)
 end_define
 
 begin_define
@@ -166,7 +166,7 @@ name|_r
 parameter_list|,
 name|_v
 parameter_list|)
-value|bus_space_write_4((_sc)->bst, (_sc)->bsh, (_r), (_v))
+value|bus_space_write_4((_sc)->bst, (_sc)->bsh, (_r) + (_sc)->regs_offset, (_v))
 end_define
 
 begin_define
@@ -260,9 +260,62 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+name|int
+name|regs_offset
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BSD_DTB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPSTREAM_DTB
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPSTREAM_DTB_REGS_OFFSET
+value|0x1c
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"broadcom,bcm2835-wdt"
+block|,
+name|BSD_DTB
+block|}
+block|,
+block|{
+literal|"brcm,bcm2835-pm-wdt"
+block|,
+name|UPSTREAM_DTB
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -307,14 +360,22 @@ operator|)
 return|;
 if|if
 condition|(
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"broadcom,bcm2835-wdt"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -325,12 +386,6 @@ expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 block|}
@@ -458,6 +513,26 @@ name|sc
 operator|->
 name|res
 argument_list|)
+expr_stmt|;
+comment|/* compensate base address difference */
+if|if
+condition|(
+name|ofw_bus_search_compatible
+argument_list|(
+name|dev
+argument_list|,
+name|compat_data
+argument_list|)
+operator|->
+name|ocd_data
+operator|==
+name|UPSTREAM_DTB
+condition|)
+name|sc
+operator|->
+name|regs_offset
+operator|=
+name|UPSTREAM_DTB_REGS_OFFSET
 expr_stmt|;
 name|bcmwd_lsc
 operator|=

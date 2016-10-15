@@ -1065,7 +1065,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

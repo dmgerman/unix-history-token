@@ -155,13 +155,6 @@ name|bf_vm
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FICL_WORD
-modifier|*
-name|pInterp
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Shim for taking commands from BF and passing them out to 'standard'  * argv/argc command functions.  */
 end_comment
@@ -843,15 +836,6 @@ literal|'0'
 operator|)
 argument_list|)
 expr_stmt|;
-name|pInterp
-operator|=
-name|ficlLookup
-argument_list|(
-name|bf_sys
-argument_list|,
-literal|"interpret"
-argument_list|)
-expr_stmt|;
 comment|/* try to load and run init file if present */
 if|if
 condition|(
@@ -905,16 +889,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Do this again, so that interpret can be redefined. */
-name|pInterp
-operator|=
-name|ficlLookup
-argument_list|(
-name|bf_sys
-argument_list|,
-literal|"interpret"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

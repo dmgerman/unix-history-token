@@ -43,6 +43,24 @@ value|(~(flags)& (flags))
 end_define
 
 begin_comment
+comment|/* Order constants for smbus children. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMBUS_ORDER_HINTED
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBUS_ORDER_PNP
+value|40
+end_define
+
+begin_comment
 comment|/*  * How tsleep() is called in smb_request_bus().  */
 end_comment
 

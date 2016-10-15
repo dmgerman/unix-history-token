@@ -53,11 +53,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/hhook.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1456,6 +1467,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_comment
 comment|/*  * Wrapper for the TCP established input helper hook.  */
 end_comment
@@ -1532,6 +1549,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * CC wrapper hook functions  */
@@ -4900,13 +4922,12 @@ name|TH_SYN
 operator|)
 operator|&&
 operator|!
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|)
 operator|)
 condition|)
@@ -5110,19 +5131,6 @@ endif|#
 directive|endif
 comment|/* TCPDEBUG */
 comment|/* 	 * When the socket is accepting connections (the INPCB is in LISTEN 	 * state) we look into the SYN cache if this is a new connection 	 * attempt or the completion of a previous one. 	 */
-if|if
-condition|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_ACCEPTCONN
-condition|)
-block|{
-name|struct
-name|in_conninfo
-name|inc
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|tp
@@ -5130,15 +5138,46 @@ operator|->
 name|t_state
 operator|==
 name|TCPS_LISTEN
+operator|||
+operator|!
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
 argument_list|,
 operator|(
-literal|"%s: so accepting but "
-literal|"tp not listening"
+literal|"%s: so accepting but tp %p not listening"
 operator|,
 name|__func__
+operator|,
+name|tp
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+operator|&&
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+condition|)
+block|{
+name|struct
+name|in_conninfo
+name|inc
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5296,7 +5335,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|TCP_RFC7413
-name|new_tfo_socket
+name|tfo_socket_result
 label|:
 endif|#
 directive|endif
@@ -6283,7 +6322,7 @@ name|NULL
 argument_list|)
 condition|)
 goto|goto
-name|new_tfo_socket
+name|tfo_socket_result
 goto|;
 else|#
 directive|else
@@ -6830,9 +6869,14 @@ name|struct
 name|tcpopt
 name|to
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
 name|int
 name|tfo_syn
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -7049,27 +7093,6 @@ operator|->
 name|t_rcvtime
 operator|=
 name|ticks
-expr_stmt|;
-if|if
-condition|(
-name|TCPS_HAVEESTABLISHED
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-condition|)
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_KEEP
-argument_list|,
-name|TP_KEEPIDLE
-argument_list|(
-name|tp
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Scale up the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin
@@ -7905,6 +7928,9 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -7916,6 +7942,8 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackpack
@@ -8655,11 +8683,12 @@ directive|ifdef
 name|TCP_RFC7413
 if|if
 condition|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * When a TFO connection is in SYN_RECEIVED, the 			 * only valid packets are the initial SYN, a 			 * retransmit/copy of the initial SYN (possibly with 			 * a subset of the original data), a valid ACK, a 			 * FIN, or a RST. 			 */
@@ -10228,11 +10257,12 @@ name|t_state
 operator|==
 name|TCPS_SYN_RECEIVED
 operator|&&
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
+argument_list|)
 condition|)
 block|{
 name|tp
@@ -10425,13 +10455,12 @@ comment|/* 			 * TFO connections call cc_conn_init() during SYN 			 * processing
 if|if
 condition|(
 operator|!
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 condition|)
 endif|#
 directive|endif
@@ -10598,6 +10627,9 @@ name|sacked_bytes
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -10609,6 +10641,8 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|SEQ_LEQ
@@ -12567,6 +12601,9 @@ name|t_inpcb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
+ifdef|#
+directive|ifdef
+name|TCP_RFC7413
 name|tfo_syn
 operator|=
 operator|(
@@ -12578,15 +12615,22 @@ operator|==
 name|TCPS_SYN_RECEIVED
 operator|)
 operator|&&
-operator|(
+name|IS_FASTOPEN
+argument_list|(
 name|tp
 operator|->
 name|t_flags
-operator|&
-name|TF_FASTOPEN
-operator|)
+argument_list|)
 operator|)
 expr_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|tfo_syn
+value|(false)
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -13431,6 +13475,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TCP_RFC7413
+undef|#
+directive|undef
+name|tfo_syn
+endif|#
+directive|endif
 block|}
 end_function
 

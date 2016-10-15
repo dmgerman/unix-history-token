@@ -133,7 +133,7 @@ name|fw
 range|:
 literal|1
 decl_stmt|;
-comment|/**< When set, indicates that RAD can modify any byte in any (128B) cache line touched                                                 by L2/DRAM addresses OWORD[PTR] through OWORD[PTR]+CWORD[SIZE]­1.                                                 Setting OWORD[FW] can improve hardware performance, as some DRAM loads can                                                 be avoided on L2 cache misses. The Q OWORD[FW] must not be set when                                                 CWORD[Q_CMP] is set, and the P OWORD[FW] must not be set when                                                 CWORD[P_CMP] is set. */
+comment|/**< When set, indicates that RAD can modify any byte in any (128B) cache line touched                                                 by L2/DRAM addresses OWORD[PTR] through OWORD[PTR]+CWORD[SIZE]-1.                                                 Setting OWORD[FW] can improve hardware performance, as some DRAM loads can                                                 be avoided on L2 cache misses. The Q OWORD[FW] must not be set when                                                 CWORD[Q_CMP] is set, and the P OWORD[FW] must not be set when                                                 CWORD[P_CMP] is set. */
 name|uint64_t
 name|nc
 range|:

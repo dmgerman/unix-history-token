@@ -1118,12 +1118,17 @@ define|#
 directive|define
 name|TLV_PORT_MODE_10G_10G_10G_10G
 value|(4)
-comment|/* 2x10G + 2x10G, quad SFP/10G-KR or dual QSFP (Greenport, Medford) */
+comment|/* 2x10G + 2x10G, quad SFP/10G-KR or dual QSFP (Greenport) */
+define|#
+directive|define
+name|TLV_PORT_MODE_10G_10G_10G_10G_Q1
+value|(4)
+comment|/* 4x10G, single QSFP, cage 0 (Medford) */
 define|#
 directive|define
 name|TLV_PORT_MODE_10G_10G_10G_10G_Q
 value|(5)
-comment|/* 4x10G, single QSFP, cage 0 (Medford) */
+comment|/* 4x10G, single QSFP, cage 0 (Medford) OBSOLETE DO NOT USE */
 define|#
 directive|define
 name|TLV_PORT_MODE_40G_10G_10G
@@ -1141,8 +1146,13 @@ value|(8)
 comment|/* 4x10G, single QSFP, cage 1 (Medford) */
 define|#
 directive|define
+name|TLV_PORT_MODE_10G_10G_10G_10G_Q1_Q2
+value|(9)
+comment|/* 2x10G + 2x10G, dual QSFP (Medford) */
+define|#
+directive|define
 name|TLV_PORT_MODE_MAX
-value|TLV_PORT_MODE_10G_10G_10G_10G_Q2
+value|TLV_PORT_MODE_10G_10G_10G_10G_Q1_Q2
 block|}
 struct|;
 end_struct
@@ -1649,14 +1659,14 @@ begin_define
 define|#
 directive|define
 name|TLV_RX_EVENT_MERGING_MAX_EVENTS_DEFAULT
-value|7
+value|(0xffffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLV_RX_EVENT_MERGING_TIMEOUT_NS_DEFAULT
-value|8740
+value|(0xffffffff)
 end_define
 
 begin_define
@@ -1731,21 +1741,21 @@ begin_define
 define|#
 directive|define
 name|TLV_TX_EVENT_MERGING_MAX_EVENTS_DEFAULT
-value|7
+value|(0xffffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLV_TX_EVENT_MERGING_TIMEOUT_NS_DEFAULT
-value|1400
+value|(0xffffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLV_TX_EVENT_MERGING_QEMPTY_TIMEOUT_NS_DEFAULT
-value|700
+value|(0xffffffff)
 end_define
 
 begin_comment
@@ -1776,6 +1786,49 @@ define|#
 directive|define
 name|TLV_TX_VFIFO_ULL_MODE_DEFAULT
 value|0
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* BIU mode  *  * Medford2 tag for selecting VI window decode (see values below)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLV_TAG_BIU_VI_WINDOW_MODE
+value|(0x10280000)
+end_define
+
+begin_struct
+struct|struct
+name|tlv_biu_vi_window_mode
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|mode
+decl_stmt|;
+define|#
+directive|define
+name|TLV_BIU_VI_WINDOW_MODE_8K
+value|0
+comment|/*  8k per VI, CTPIO not mapped, medford/hunt compatible */
+define|#
+directive|define
+name|TLV_BIU_VI_WINDOW_MODE_16K
+value|1
+comment|/* 16k per VI, CTPIO mapped */
+define|#
+directive|define
+name|TLV_BIU_VI_WINDOW_MODE_64K
+value|2
+comment|/* 64k per VI, CTPIO mapped, POWER-friendly */
 block|}
 struct|;
 end_struct

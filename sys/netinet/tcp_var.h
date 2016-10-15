@@ -1443,6 +1443,51 @@ parameter_list|)
 value|t_flags&= ~(TF_CONGRECOVERY | TF_FASTRECOVERY)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TCP_RFC7413
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IS_FASTOPEN
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|(false)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IS_FASTOPEN
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|(t_flags& TF_FASTOPEN)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3160,6 +3205,12 @@ name|V_tcp_ecn_maxretries
 value|VNET(tcp_ecn_maxretries)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -3183,6 +3234,11 @@ directive|define
 name|V_tcp_hhh
 value|VNET(tcp_hhh)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -3599,6 +3655,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_function_decl
 name|void
 name|hhook_run_tcp_est_in
@@ -3620,6 +3682,11 @@ name|to
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

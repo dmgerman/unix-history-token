@@ -50,7 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -59,11 +71,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/hhook.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1030,6 +1053,9 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -1040,6 +1066,8 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackbyte
@@ -3863,6 +3891,9 @@ name|sacked_bytes
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -3873,6 +3904,8 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|SEQ_LEQ
@@ -6810,27 +6843,6 @@ name|t_rcvtime
 operator|=
 name|ticks
 expr_stmt|;
-if|if
-condition|(
-name|TCPS_HAVEESTABLISHED
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-condition|)
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_KEEP
-argument_list|,
-name|TP_KEEPIDLE
-argument_list|(
-name|tp
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin
 operator|=
@@ -8250,6 +8262,9 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
 comment|/* Run HHOOK_TCP_ESTABLISHED_IN helper hooks. */
 name|hhook_run_tcp_est_in
 argument_list|(
@@ -8260,6 +8275,8 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TCPSTAT_ADD
 argument_list|(
 name|tcps_rcvackbyte
@@ -8758,27 +8775,6 @@ operator|->
 name|t_rcvtime
 operator|=
 name|ticks
-expr_stmt|;
-if|if
-condition|(
-name|TCPS_HAVEESTABLISHED
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-condition|)
-name|tcp_timer_activate
-argument_list|(
-name|tp
-argument_list|,
-name|TT_KEEP
-argument_list|,
-name|TP_KEEPIDLE
-argument_list|(
-name|tp
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin

@@ -9723,6 +9723,14 @@ operator|->
 name|ip_tos
 operator|=
 name|tos
+operator||
+operator|(
+name|h
+operator|->
+name|ip_tos
+operator|&
+name|IPTOS_ECN_MASK
+operator|)
 expr_stmt|;
 name|nv
 operator|=
