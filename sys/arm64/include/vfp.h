@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_VFP_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -46,6 +40,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_function_decl
 name|void
