@@ -3324,10 +3324,16 @@ name|__unused
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_HHOOK
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * All our processes are gone, all our sockets should be cleaned 	 * up, which means, we should be past the tcp_discardcb() calls. 	 * Sleep to let all tcpcb timers really disappear and cleanup. 	 */
 for|for
 control|(
