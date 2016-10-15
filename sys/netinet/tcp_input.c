@@ -5335,7 +5335,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|TCP_RFC7413
-name|new_tfo_socket
+name|tfo_socket_result
 label|:
 endif|#
 directive|endif
@@ -6322,7 +6322,7 @@ name|NULL
 argument_list|)
 condition|)
 goto|goto
-name|new_tfo_socket
+name|tfo_socket_result
 goto|;
 else|#
 directive|else

@@ -5282,7 +5282,7 @@ comment|/* TCP_RFC7413 */
 end_comment
 
 begin_comment
-comment|/*  * Given a LISTEN socket and an inbound SYN request, add  * this to the syn cache, and send back a segment:  *<SEQ=ISS><ACK=RCV_NXT><CTL=SYN,ACK>  * to the source.  *  * IMPORTANT NOTE: We do _NOT_ ACK data that might accompany the SYN.  * Doing so would require that we hold onto the data and deliver it  * to the application.  However, if we are the target of a SYN-flood  * DoS attack, an attacker could send data which would eventually  * consume all available buffer space if it were ACKed.  By not ACKing  * the data, we avoid this DoS scenario.  *  * The exception to the above is when a SYN with a valid TCP Fast Open (TFO)  * cookie is processed, V_tcp_fastopen_enabled set to true, and the  * TCP_FASTOPEN socket option is set.  In this case, a new socket is created  * and returned via lsop, the mbuf is not freed so that tcp_input() can  * queue its data to the socket, and 1 is returned to indicate the  * TFO-socket-creation path was taken.  */
+comment|/*  * Given a LISTEN socket and an inbound SYN request, add  * this to the syn cache, and send back a segment:  *<SEQ=ISS><ACK=RCV_NXT><CTL=SYN,ACK>  * to the source.  *  * IMPORTANT NOTE: We do _NOT_ ACK data that might accompany the SYN.  * Doing so would require that we hold onto the data and deliver it  * to the application.  However, if we are the target of a SYN-flood  * DoS attack, an attacker could send data which would eventually  * consume all available buffer space if it were ACKed.  By not ACKing  * the data, we avoid this DoS scenario.  *  * The exception to the above is when a SYN with a valid TCP Fast Open (TFO)  * cookie is processed and a new socket is created.  In this case, any data  * accompanying the SYN will be queued to the socket by tcp_input() and will  * be ACKed either when the application sends response data or the delayed  * ACK timer expires, whichever comes first.  */
 end_comment
 
 begin_function
@@ -5413,6 +5413,13 @@ directive|ifdef
 name|TCP_RFC7413
 name|uint64_t
 name|tfo_response_cookie
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|tfo_pending
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|tfo_cookie_valid
@@ -5640,15 +5647,12 @@ literal|0
 operator|)
 expr_stmt|;
 block|}
-else|else
-name|atomic_subtract_int
-argument_list|(
+comment|/* 		 * Remember the TFO pending counter as it will have to be 		 * decremented below if we don't make it to syncache_tfo_expand(). 		 */
+name|tfo_pending
+operator|=
 name|tp
 operator|->
 name|t_tfo_pending
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -6538,13 +6542,13 @@ argument_list|,
 name|tfo_response_cookie
 argument_list|)
 expr_stmt|;
-comment|/* INP_WUNLOCK(inp) will be performed by the called */
+comment|/* INP_WUNLOCK(inp) will be performed by the caller */
 name|rv
 operator|=
 literal|1
 expr_stmt|;
 goto|goto
-name|tfo_done
+name|tfo_expanded
 goto|;
 block|}
 endif|#
@@ -6650,7 +6654,19 @@ block|}
 ifdef|#
 directive|ifdef
 name|TCP_RFC7413
-name|tfo_done
+comment|/* 	 * If tfo_pending is not NULL here, then a TFO SYN that did not 	 * result in a new socket was processed and the associated pending 	 * counter has not yet been decremented.  All such TFO processing paths 	 * transit this point. 	 */
+if|if
+condition|(
+name|tfo_pending
+operator|!=
+name|NULL
+condition|)
+name|tcp_fastopen_decrement_counter
+argument_list|(
+name|tfo_pending
+argument_list|)
+expr_stmt|;
+name|tfo_expanded
 label|:
 endif|#
 directive|endif
