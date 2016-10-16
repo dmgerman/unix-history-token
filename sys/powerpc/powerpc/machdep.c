@@ -772,7 +772,7 @@ argument|bufinit(); 	vm_pager_bufferinit(); }  extern vm_offset_t	__startkernel
 argument_list|,
 argument|__endkernel; extern unsigned char	__bss_start[]; extern unsigned char	__sbss_start[]; extern unsigned char	__sbss_end[]; extern unsigned char	_end[];  void aim_cpu_init(vm_offset_t toc); void booke_cpu_init(void);  uintptr_t powerpc_init(vm_offset_t fdt, vm_offset_t toc, vm_offset_t ofentry, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	startkernel
 argument_list|,
-argument|endkernel; 	void		*kmdp;         char		*env;
+argument|endkernel; 	void		*kmdp;         char		*env;         bool		ofw_bootargs = false;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -819,7 +819,7 @@ comment|/* 		 * On BOOKE the BSS is already cleared and some variables 		 * init
 argument|bzero(__sbss_start, __sbss_end - __sbss_start); 		bzero(__bss_start, _end - __bss_start);
 endif|#
 directive|endif
-argument|init_static_kenv(init_kenv, sizeof(init_kenv)); 	}
+argument|init_static_kenv(init_kenv, sizeof(init_kenv)); 		ofw_bootargs = true; 	}
 comment|/* Store boot environment state */
 argument|OF_initial_setup((void *)fdt, NULL, (int (*)(void *))ofentry);
 comment|/* 	 * Init params/tunables that can be overridden by the loader 	 */
@@ -846,7 +846,7 @@ asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
 comment|/* 	 * Init mutexes, which we use heavily in PMAP 	 */
 argument|mutex_init();
 comment|/* 	 * Install the OF client interface 	 */
-argument|OF_bootstrap();  	ofw_parse_bootargs();
+argument|OF_bootstrap();  	if (ofw_bootargs) 		ofw_parse_bootargs();
 comment|/* 	 * Initialize the console before printing anything. 	 */
 argument|cninit();
 comment|/* 	 * Complain if there is no metadata. 	 */
