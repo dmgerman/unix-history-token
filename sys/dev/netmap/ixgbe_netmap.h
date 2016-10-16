@@ -42,7 +42,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * device-specific sysctl variables:  *  * ix_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ix_rx_miss, ix_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
+comment|/*  * device-specific sysctl variables:  *  * ix_crcstrip: 0: NIC keeps CRC in rx frames (default), 1: NIC strips it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ix_rx_miss, ix_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
 end_comment
 
 begin_expr_stmt
@@ -84,7 +84,7 @@ name|ix_crcstrip
 argument_list|,
 literal|0
 argument_list|,
-literal|"strip CRC on rx frames"
+literal|"NIC strips CRC on rx frames"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -265,6 +265,72 @@ argument_list|,
 name|IXGBE_RDRXCTL
 argument_list|,
 name|rxc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ixgbe_netmap_intr
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|int
+name|onoff
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|na
+operator|->
+name|ifp
+decl_stmt|;
+name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|IXGBE_CORE_LOCK
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|onoff
+condition|)
+block|{
+name|ixgbe_enable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|// XXX maybe ixgbe_stop ?
+block|}
+else|else
+block|{
+name|ixgbe_disable_intr
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+comment|// XXX maybe ixgbe_stop ?
+block|}
+name|IXGBE_CORE_UNLOCK
+argument_list|(
+name|adapter
 argument_list|)
 expr_stmt|;
 block|}
@@ -1777,6 +1843,12 @@ operator|=
 name|adapter
 operator|->
 name|num_queues
+expr_stmt|;
+name|na
+operator|.
+name|nm_intr
+operator|=
+name|ixgbe_netmap_intr
 expr_stmt|;
 name|netmap_attach
 argument_list|(

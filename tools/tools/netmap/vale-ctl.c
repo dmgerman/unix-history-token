@@ -7,6 +7,24 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETMAP_WITH_LIBS
+end_define
+
+begin_include
+include|#
+directive|include
+file|<net/netmap_user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/netmap.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -98,18 +116,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net/netmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netmap_user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<libgen.h>
 end_include
 
@@ -126,35 +132,6 @@ end_include
 begin_comment
 comment|/* atoi, free */
 end_comment
-
-begin_comment
-comment|/* debug support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ND
-parameter_list|(
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-value|do {} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|D
-parameter_list|(
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|fprintf(stderr, "%s [%d] " format "\n",		\ 	__FUNCTION__, __LINE__, ##__VA_ARGS__)
-end_define
 
 begin_comment
 comment|/* XXX cut and paste from pkt-gen.c because I'm not sure whether this  * program may include nm_util.h  */
@@ -544,6 +521,12 @@ case|:
 case|case
 name|NETMAP_BDG_DETACH
 case|:
+name|nmr
+operator|.
+name|nr_flags
+operator|=
+name|NR_REG_ALL_NIC
+expr_stmt|;
 if|if
 condition|(
 name|nr_arg
@@ -552,10 +535,18 @@ name|nr_arg
 operator|!=
 name|NETMAP_BDG_HOST
 condition|)
+block|{
+name|nmr
+operator|.
+name|nr_flags
+operator|=
+name|NR_REG_NIC_SW
+expr_stmt|;
 name|nr_arg
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|nmr
 operator|.
 name|nr_arg1
@@ -741,6 +732,112 @@ literal|'\0'
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|NETMAP_BDG_POLLING_ON
+case|:
+case|case
+name|NETMAP_BDG_POLLING_OFF
+case|:
+comment|/* We reuse nmreq fields as follows: 		 *   nr_tx_slots: 0 and non-zero indicate REG_ALL_NIC 		 *                REG_ONE_NIC, respectively. 		 *   nr_rx_slots: CPU core index. This also indicates the 		 *                first queue in the case of REG_ONE_NIC 		 *   nr_tx_rings: (REG_ONE_NIC only) indicates the 		 *                number of CPU cores or the last queue 		 */
+name|nmr
+operator|.
+name|nr_flags
+operator||=
+name|nmr
+operator|.
+name|nr_tx_slots
+condition|?
+name|NR_REG_ONE_NIC
+else|:
+name|NR_REG_ALL_NIC
+expr_stmt|;
+name|nmr
+operator|.
+name|nr_ringid
+operator|=
+name|nmr
+operator|.
+name|nr_rx_slots
+expr_stmt|;
+comment|/* number of cores/rings */
+if|if
+condition|(
+name|nmr
+operator|.
+name|nr_flags
+operator|==
+name|NR_REG_ALL_NIC
+condition|)
+name|nmr
+operator|.
+name|nr_arg1
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|nmr
+operator|.
+name|nr_arg1
+operator|=
+name|nmr
+operator|.
+name|nr_tx_rings
+expr_stmt|;
+name|error
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|NIOCREGIF
+argument_list|,
+operator|&
+name|nmr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|D
+argument_list|(
+literal|"polling on %s %s"
+argument_list|,
+name|nmr
+operator|.
+name|nr_name
+argument_list|,
+name|nr_cmd
+operator|==
+name|NETMAP_BDG_POLLING_ON
+condition|?
+literal|"started"
+else|:
+literal|"stopped"
+argument_list|)
+expr_stmt|;
+else|else
+name|D
+argument_list|(
+literal|"polling on %s %s (err %d)"
+argument_list|,
+name|nmr
+operator|.
+name|nr_name
+argument_list|,
+name|nr_cmd
+operator|==
+name|NETMAP_BDG_POLLING_ON
+condition|?
+literal|"couldn't start"
+else|:
+literal|"couldn't stop"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 comment|/* GINFO */
 name|nmr
@@ -864,7 +961,7 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|3
+literal|5
 condition|)
 block|{
 name|usage
@@ -883,6 +980,11 @@ literal|"\t-n interface	interface name to be created\n"
 literal|"\t-r interface	interface name to be deleted\n"
 literal|"\t-l list all or specified bridge's interfaces (default)\n"
 literal|"\t-C string ring/slot setting of an interface creating by -n\n"
+literal|"\t-p interface start polling. Additional -C x,y,z configures\n"
+literal|"\t\t x: 0 (REG_ALL_NIC) or 1 (REG_ONE_NIC),\n"
+literal|"\t\t y: CPU core id for ALL_NIC and core/ring for ONE_NIC\n"
+literal|"\t\t z: (ONE_NIC only) num of total cores/rings\n"
+literal|"\t-P interface stop polling\n"
 literal|""
 argument_list|,
 name|command
@@ -903,7 +1005,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:a:h:g:l:n:r:C:"
+literal|"d:a:h:g:l:n:r:C:p:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -911,6 +1013,12 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'C'
+condition|)
 name|name
 operator|=
 name|optarg
@@ -1027,6 +1135,23 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|nr_cmd
+operator|=
+name|NETMAP_BDG_POLLING_ON
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|nr_cmd
+operator|=
+name|NETMAP_BDG_POLLING_OFF
+expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -1039,7 +1164,6 @@ comment|// fprintf(stderr, "optind %d argc %d\n", optind, argc);
 goto|goto
 name|usage
 goto|;
-block|}
 block|}
 if|if
 condition|(
