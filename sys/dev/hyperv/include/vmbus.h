@@ -203,6 +203,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHANPKT_FLAG_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHANPKT_FLAG_RC
 value|0x0001
 end_define
