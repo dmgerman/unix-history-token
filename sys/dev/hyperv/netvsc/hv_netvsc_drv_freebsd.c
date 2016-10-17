@@ -356,20 +356,6 @@ name|NETVSC_DEVNAME
 value|"hn"
 end_define
 
-begin_define
-define|#
-directive|define
-name|HN_XACT_REQ_SIZE
-value|(2 * PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HN_XACT_RESP_SIZE
-value|(2 * PAGE_SIZE)
-end_define
-
 begin_comment
 comment|/*  * It looks like offset 0 of buf is reserved to hold the softc pointer.  * The sc pointer evidently not needed, and is not presently populated.  * The packet offset is where the netvsc_packet starts in the buffer.  */
 end_comment

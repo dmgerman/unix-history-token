@@ -597,6 +597,14 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|RNDIS_INIT_COMP_SIZE_MIN
+define|\
+value|__offsetof(struct rndis_init_comp, rm_aflistsz)
+end_define
+
 begin_comment
 comment|/* Halt the device.  No response sent. */
 end_comment
