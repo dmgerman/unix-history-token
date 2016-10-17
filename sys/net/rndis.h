@@ -821,6 +821,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Parameter used by OID_GEN_RNDIS_CONFIG_PARAMETER.  */
+end_comment
+
 begin_define
 define|#
 directive|define
