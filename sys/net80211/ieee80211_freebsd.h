@@ -2733,6 +2733,72 @@ begin_comment
 comment|/* This is another decap AMPDU frame in the batch */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_FAIL_FCSCRC
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Failed CRC/FCS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_FAIL_MIC
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Failed MIC check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_DECRYPTED
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Hardware decrypted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_IV_STRIP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Decrypted; IV stripped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_MMIC_STRIP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Decrypted; MMIC stripped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_SHORTGI
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* This is a short-GI frame */
+end_comment
+
 begin_comment
 comment|/* Channel width */
 end_comment
