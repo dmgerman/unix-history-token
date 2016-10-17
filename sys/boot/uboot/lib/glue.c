@@ -1636,7 +1636,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  cookie\t= 0x%p\n"
+literal|"  cookie\t= %p\n"
 argument_list|,
 name|di
 operator|->
