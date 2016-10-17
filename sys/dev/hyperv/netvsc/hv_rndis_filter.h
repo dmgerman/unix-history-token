@@ -207,9 +207,13 @@ name|hn_rx_ring
 modifier|*
 name|rxr
 parameter_list|,
-name|netvsc_packet
+specifier|const
+name|void
 modifier|*
-name|pkt
+name|data
+parameter_list|,
+name|int
+name|dlen
 parameter_list|)
 function_decl|;
 end_function_decl
