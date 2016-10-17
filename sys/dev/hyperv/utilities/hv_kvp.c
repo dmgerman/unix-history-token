@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/utilities/hv_utilreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
@@ -438,6 +444,9 @@ block|{
 name|struct
 name|hv_util_sc
 name|util_sc
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 comment|/* Unless specified the pending mutex should be 	 * used to alter the values of the following parameters: 	 * 1. req_in_progress 	 * 2. req_timed_out 	 */
 name|struct
@@ -1351,7 +1360,7 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|struct
-name|hv_vmbus_channel
+name|vmbus_channel
 modifier|*
 name|chan
 decl_stmt|;
@@ -1371,10 +1380,10 @@ argument_list|)
 expr_stmt|;
 name|hyperv_guid2str
 argument_list|(
-operator|&
+name|vmbus_chan_guid_inst
+argument_list|(
 name|chan
-operator|->
-name|ch_guid_inst
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -2677,11 +2686,12 @@ name|error
 operator|=
 name|vmbus_chan_send
 argument_list|(
+name|vmbus_get_channel
+argument_list|(
 name|sc
 operator|->
-name|util_sc
-operator|.
-name|channel
+name|dev
+argument_list|)
 argument_list|,
 name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
@@ -2799,7 +2809,8 @@ name|uint8_t
 modifier|*
 name|kvp_buf
 decl_stmt|;
-name|hv_vmbus_channel
+name|struct
+name|vmbus_channel
 modifier|*
 name|channel
 decl_stmt|;
@@ -2850,11 +2861,12 @@ name|receive_buffer
 expr_stmt|;
 name|channel
 operator|=
+name|vmbus_get_channel
+argument_list|(
 name|sc
 operator|->
-name|util_sc
-operator|.
-name|channel
+name|dev
+argument_list|)
 expr_stmt|;
 name|recvlen
 operator|=
@@ -3165,6 +3177,12 @@ specifier|static
 name|void
 name|hv_kvp_callback
 parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+name|__unused
+parameter_list|,
 name|void
 modifier|*
 name|context
@@ -3685,6 +3703,13 @@ name|true
 expr_stmt|;
 name|hv_kvp_callback
 argument_list|(
+name|vmbus_get_channel
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
 name|dev
 operator|->
 name|si_drv1
@@ -3979,6 +4004,12 @@ operator|.
 name|callback
 operator|=
 name|hv_kvp_callback
+expr_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
 expr_stmt|;
 name|sema_init
 argument_list|(

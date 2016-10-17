@@ -3727,7 +3727,13 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|hv_vmbus_channel
+name|hn_rx_ring
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hn_tx_ring
 struct_decl|;
 end_struct_decl
 
@@ -3736,9 +3742,9 @@ name|int
 name|netvsc_recv
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|hn_rx_ring
 modifier|*
-name|chan
+name|rxr
 parameter_list|,
 name|netvsc_packet
 modifier|*
@@ -3769,9 +3775,14 @@ name|void
 name|netvsc_channel_rollup
 parameter_list|(
 name|struct
-name|hv_vmbus_channel
+name|hn_rx_ring
 modifier|*
-name|chan
+name|rxr
+parameter_list|,
+name|struct
+name|hn_tx_ring
+modifier|*
+name|txr
 parameter_list|)
 function_decl|;
 end_function_decl

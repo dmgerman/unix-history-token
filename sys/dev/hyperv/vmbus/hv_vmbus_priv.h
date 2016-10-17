@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/include/hyperv.h>
+file|<dev/hyperv/vmbus/vmbus_chanvar.h>
 end_include
 
 begin_struct_decl
