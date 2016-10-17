@@ -318,6 +318,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/vmbus_xact.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_net_vsc.h"
 end_include
 
@@ -348,6 +354,20 @@ define|#
 directive|define
 name|NETVSC_DEVNAME
 value|"hn"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XACT_REQ_SIZE
+value|(2 * PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_XACT_RESP_SIZE
+value|(2 * PAGE_SIZE)
 end_define
 
 begin_comment
@@ -2620,6 +2640,35 @@ name|hn_csum_assist
 operator||
 name|CSUM_TSO
 expr_stmt|;
+name|sc
+operator|->
+name|hn_xact
+operator|=
+name|vmbus_xact_ctx_create
+argument_list|(
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|HN_XACT_REQ_SIZE
+argument_list|,
+name|HN_XACT_RESP_SIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_xact
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|failed
+goto|;
 name|error
 operator|=
 name|hv_rf_on_device_add
@@ -3016,6 +3065,13 @@ argument_list|(
 name|sc
 operator|->
 name|hn_tx_taskq
+argument_list|)
+expr_stmt|;
+name|vmbus_xact_ctx_destroy
+argument_list|(
+name|sc
+operator|->
+name|hn_xact
 argument_list|)
 expr_stmt|;
 return|return
@@ -3745,6 +3801,10 @@ name|struct
 name|nvsp_msg_
 modifier|*
 name|msg
+name|__unused
+parameter_list|,
+name|int
+name|dlen
 name|__unused
 parameter_list|)
 block|{

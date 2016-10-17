@@ -222,6 +222,21 @@ define|\
 value|(const void *)((const uint8_t *)(pkt) +	\ 	VMBUS_CHANPKT_GETLEN((pkt)->cph_hlen))
 end_define
 
+begin_comment
+comment|/* Include padding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANPKT_DATALEN
+parameter_list|(
+name|pkt
+parameter_list|)
+define|\
+value|(VMBUS_CHANPKT_GETLEN((pkt)->cph_tlen) -\ 	 VMBUS_CHANPKT_GETLEN((pkt)->cph_hlen))
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_rxbuf_desc
