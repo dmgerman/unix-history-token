@@ -27,6 +27,44 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_comment
+comment|/*  * NDIS protocol version numbers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_6_1
+value|0x00060001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_6_30
+value|0x0006001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_MAJOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((ver)& 0xffff0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_VERSION_MINOR
+parameter_list|(
+name|ver
+parameter_list|)
+value|((ver)& 0xffff)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -833,6 +871,21 @@ define|#
 directive|define
 name|HN_NDIS_PKTINFO_TYPE_HASHVAL
 value|NDIS_PKTINFO_TYPE_PKT_CANCELID
+end_define
+
+begin_comment
+comment|/* Per-packet-info size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_RNDIS_PKTINFO_SIZE
+parameter_list|(
+name|dlen
+parameter_list|)
+define|\
+value|__offsetof(struct rndis_pktinfo, rm_data[dlen])
 end_define
 
 begin_endif
