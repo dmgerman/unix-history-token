@@ -1215,6 +1215,17 @@ name|err_inject
 operator|=
 literal|0
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|ha
+operator|->
+name|pci_dev
+argument_list|,
+literal|"%s: taskqueue_enqueue(err_task) \n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|ha
@@ -2364,7 +2375,7 @@ name|ha
 operator|->
 name|tx_tq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"qla_txq"
 argument_list|,
@@ -2471,7 +2482,7 @@ name|ha
 operator|->
 name|err_tq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"qla_errq"
 argument_list|,
@@ -2524,7 +2535,7 @@ name|ha
 operator|->
 name|async_event_tq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"qla_asyncq"
 argument_list|,
