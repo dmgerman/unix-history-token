@@ -701,7 +701,8 @@ parameter_list|,
 name|uint32_t
 name|start_write_offset
 parameter_list|,
-name|char
+specifier|const
+name|uint8_t
 modifier|*
 name|src
 parameter_list|,
@@ -732,29 +733,6 @@ name|start_read_offset
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/**  * @brief Get the interrupt mask for the specified ring buffer.  */
-end_comment
-
-begin_function
-name|uint32_t
-name|hv_vmbus_get_ring_buffer_interrupt_mask
-parameter_list|(
-name|hv_vmbus_ring_buffer_info
-modifier|*
-name|rbi
-parameter_list|)
-block|{
-return|return
-name|rbi
-operator|->
-name|ring_buffer
-operator|->
-name|interrupt_mask
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/**  * @brief Initialize the ring buffer.  */
@@ -881,12 +859,14 @@ name|hv_vmbus_ring_buffer_info
 modifier|*
 name|out_ring_info
 parameter_list|,
-name|hv_vmbus_sg_buffer_list
-name|sg_buffers
+specifier|const
+name|struct
+name|iovec
+name|iov
 index|[]
 parameter_list|,
 name|uint32_t
-name|sg_buffer_count
+name|iovlen
 parameter_list|,
 name|boolean_t
 modifier|*
@@ -929,7 +909,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sg_buffer_count
+name|iovlen
 condition|;
 name|i
 operator|++
@@ -937,12 +917,12 @@ control|)
 block|{
 name|total_bytes_to_write
 operator|+=
-name|sg_buffers
+name|iov
 index|[
 name|i
 index|]
 operator|.
-name|length
+name|iov_len
 expr_stmt|;
 block|}
 name|total_bytes_to_write
@@ -1013,7 +993,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sg_buffer_count
+name|iovlen
 condition|;
 name|i
 operator|++
@@ -1027,23 +1007,19 @@ name|out_ring_info
 argument_list|,
 name|next_write_location
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|sg_buffers
+name|iov
 index|[
 name|i
 index|]
 operator|.
-name|data
+name|iov_base
 argument_list|,
-name|sg_buffers
+name|iov
 index|[
 name|i
 index|]
 operator|.
-name|length
+name|iov_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -1398,6 +1374,7 @@ comment|/**  * @brief Helper routine to copy from source to ring buffer.  *  * A
 end_comment
 
 begin_function
+specifier|static
 name|uint32_t
 name|copy_to_ring_buffer
 parameter_list|(
@@ -1408,7 +1385,8 @@ parameter_list|,
 name|uint32_t
 name|start_write_offset
 parameter_list|,
-name|char
+specifier|const
+name|uint8_t
 modifier|*
 name|src
 parameter_list|,
