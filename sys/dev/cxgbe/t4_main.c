@@ -34374,7 +34374,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Queue  Base  Size Thres RdPtr WrPtr  SOP  EOP Avail"
+literal|"  Queue  Base  Size Thres  RdPtr WrPtr  SOP  EOP Avail"
 argument_list|)
 expr_stmt|;
 for|for
