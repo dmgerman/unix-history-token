@@ -69,13 +69,13 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|sysctl_oid_list
+name|sysctl_oid
 struct_decl|;
 end_struct_decl
 
 begin_function_decl
 name|void
-name|hv_ring_buffer_stat
+name|vmbus_br_sysctl_create
 parameter_list|(
 name|struct
 name|sysctl_ctx_list
@@ -83,18 +83,18 @@ modifier|*
 name|ctx
 parameter_list|,
 name|struct
-name|sysctl_oid_list
+name|sysctl_oid
 modifier|*
-name|tree_node
+name|br_tree
 parameter_list|,
 name|hv_vmbus_ring_buffer_info
 modifier|*
-name|rbi
+name|br
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|desc
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
