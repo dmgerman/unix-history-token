@@ -512,7 +512,11 @@ name|receive_buffer
 expr_stmt|;
 name|recvlen
 operator|=
-name|PAGE_SIZE
+name|softc
+operator|->
+name|util_sc
+operator|.
+name|ic_buflen
 expr_stmt|;
 name|ret
 operator|=
@@ -583,8 +587,6 @@ block|{
 name|hv_negotiate_version
 argument_list|(
 name|icmsghdrp
-argument_list|,
-name|NULL
 argument_list|,
 name|time_buf
 argument_list|)
@@ -730,14 +732,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|softc
-operator|->
-name|util_sc
-operator|.
-name|callback
-operator|=
-name|hv_timesync_cb
-expr_stmt|;
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -756,6 +750,8 @@ return|return
 name|hv_util_attach
 argument_list|(
 name|dev
+argument_list|,
+name|hv_timesync_cb
 argument_list|)
 return|;
 block|}
