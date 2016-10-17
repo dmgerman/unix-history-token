@@ -2856,17 +2856,19 @@ name|util_sc
 operator|.
 name|channel
 expr_stmt|;
+name|recvlen
+operator|=
+literal|2
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_recv_packet
+name|vmbus_chan_recv
 argument_list|(
 name|channel
 argument_list|,
 name|kvp_buf
-argument_list|,
-literal|2
-operator|*
-name|PAGE_SIZE
 argument_list|,
 operator|&
 name|recvlen
@@ -2875,6 +2877,18 @@ operator|&
 name|requestid
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ret
+operator|!=
+name|ENOBUFS
+argument_list|,
+operator|(
+literal|"hvkvp recvbuf is not large enough"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX check recvlen to make sure that it contains enough data */
 while|while
 condition|(
 operator|(
@@ -3094,19 +3108,17 @@ expr_stmt|;
 comment|/* 		 * Try reading next buffer 		 */
 name|recvlen
 operator|=
-literal|0
+literal|2
+operator|*
+name|PAGE_SIZE
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_recv_packet
+name|vmbus_chan_recv
 argument_list|(
 name|channel
 argument_list|,
 name|kvp_buf
-argument_list|,
-literal|2
-operator|*
-name|PAGE_SIZE
 argument_list|,
 operator|&
 name|recvlen
@@ -3115,6 +3127,18 @@ operator|&
 name|requestid
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ret
+operator|!=
+name|ENOBUFS
+argument_list|,
+operator|(
+literal|"hvkvp recvbuf is not large enough"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX check recvlen to make sure that it contains enough data */
 name|hv_kvp_log_info
 argument_list|(
 literal|"%s: read: context %p, ret =%d, recvlen=%d\n"
