@@ -174,12 +174,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/hv_vmbus_priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
@@ -199,6 +193,12 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/vmbus/vmbus_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/vmbus/vmbus_chanvar.h>
 end_include
 
 begin_include

@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_vmbus_priv.h"
+file|<dev/hyperv/vmbus/vmbus_reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/vmbus/vmbus_reg.h>
+file|<dev/hyperv/vmbus/vmbus_brvar.h>
 end_include
 
 begin_comment
