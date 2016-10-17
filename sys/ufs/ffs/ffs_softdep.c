@@ -2925,6 +2925,8 @@ parameter_list|,
 name|struct
 name|buf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2990,6 +2992,8 @@ name|struct
 name|buf
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3006,6 +3010,8 @@ parameter_list|,
 name|struct
 name|buf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3045,6 +3051,8 @@ parameter_list|,
 name|struct
 name|buf
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -51637,6 +51645,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+comment|/* 	 * If this is a background write, we did this at the time that 	 * the copy was made, so do not need to do it again. 	 */
 if|if
 condition|(
 name|bmsafemap
@@ -51974,7 +51983,7 @@ name|buf
 modifier|*
 name|sbp
 decl_stmt|;
-comment|/* 	 * If an error occurred while doing the write, then the data 	 * has not hit the disk and the dependencies cannot be unrolled. 	 */
+comment|/* 	 * If an error occurred while doing the write, then the data 	 * has not hit the disk and the dependencies cannot be processed. 	 * But we do have to go through and roll forward any dependencies 	 * that were rolled back before the disk write. 	 */
 if|if
 condition|(
 operator|(
@@ -51997,7 +52006,97 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|LIST_FOREACH
+argument_list|(
+argument|wk
+argument_list|,
+argument|&bp->b_dep
+argument_list|,
+argument|wk_list
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|wk
+operator|->
+name|wk_type
+condition|)
+block|{
+case|case
+name|D_PAGEDEP
+case|:
+name|handle_written_filepage
+argument_list|(
+name|WK_PAGEDEP
+argument_list|(
+name|wk
+argument_list|)
+argument_list|,
+name|bp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
+name|D_INODEDEP
+case|:
+name|handle_written_inodeblock
+argument_list|(
+name|WK_INODEDEP
+argument_list|(
+name|wk
+argument_list|)
+argument_list|,
+name|bp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
+name|D_BMSAFEMAP
+case|:
+name|handle_written_bmsafemap
+argument_list|(
+name|WK_BMSAFEMAP
+argument_list|(
+name|wk
+argument_list|)
+argument_list|,
+name|bp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
+name|D_INDIRDEP
+case|:
+name|handle_written_indirdep
+argument_list|(
+name|WK_INDIRDEP
+argument_list|(
+name|wk
+argument_list|)
+argument_list|,
+name|bp
+argument_list|,
+operator|&
+name|sbp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+default|default:
+comment|/* nothing to roll forward */
+continue|continue;
+block|}
+block|}
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -52116,6 +52215,8 @@ name|wk
 argument_list|)
 argument_list|,
 name|bp
+argument_list|,
+name|WRITESUCCEEDED
 argument_list|)
 condition|)
 name|WORKLIST_INSERT
@@ -52140,6 +52241,8 @@ name|wk
 argument_list|)
 argument_list|,
 name|bp
+argument_list|,
+name|WRITESUCCEEDED
 argument_list|)
 condition|)
 name|WORKLIST_INSERT
@@ -52164,6 +52267,8 @@ name|wk
 argument_list|)
 argument_list|,
 name|bp
+argument_list|,
+name|WRITESUCCEEDED
 argument_list|)
 condition|)
 name|WORKLIST_INSERT
@@ -52243,6 +52348,8 @@ name|bp
 argument_list|,
 operator|&
 name|sbp
+argument_list|,
+name|WRITESUCCEEDED
 argument_list|)
 condition|)
 name|WORKLIST_INSERT
@@ -53292,7 +53399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from within softdep_disk_write_complete above to restore  * in-memory inode block contents to their most up-to-date state. Note  * that this routine is always called from interrupt level with further  * splbio interrupts blocked.  */
+comment|/*  * Called from within softdep_disk_write_complete above to restore  * in-memory inode block contents to their most up-to-date state. Note  * that this routine is always called from interrupt level with further  * interrupts from this device blocked.  *  * If the write did not succeed, we will do all the roll-forward  * operations, but we will not take the actions that will allow its  * dependencies to be processed.  */
 end_comment
 
 begin_function
@@ -53303,6 +53410,8 @@ parameter_list|(
 name|inodedep
 parameter_list|,
 name|bp
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|inodedep
@@ -53315,6 +53424,9 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* buffer containing the inode block */
+name|int
+name|flags
+decl_stmt|;
 block|{
 name|struct
 name|freefile
@@ -53488,6 +53600,12 @@ operator|)
 operator|)
 operator|==
 name|UNLINKED
+operator|&&
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
 condition|)
 block|{
 name|struct
@@ -53639,6 +53757,12 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+condition|)
 name|inodedep
 operator|->
 name|id_state
@@ -54333,6 +54457,22 @@ argument_list|)
 expr_stmt|;
 name|bufwait
 label|:
+comment|/* 	 * If the write did not succeed, we have done all the roll-forward 	 * operations, but we cannot take the actions that will allow its 	 * dependencies to be processed. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|hadchanges
+operator|)
+return|;
 comment|/* 	 * Process any allocdirects that completed during the update. 	 */
 if|if
 condition|(
@@ -54587,6 +54727,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Perform needed roll-forwards and kick off any dependencies that  * can now be processed.  *  * If the write did not succeed, we will do all the roll-forward  * operations, but we will not take the actions that will allow its  * dependencies to be processed.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -54597,6 +54741,8 @@ parameter_list|,
 name|bp
 parameter_list|,
 name|bpp
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|indirdep
@@ -54613,6 +54759,9 @@ name|buf
 modifier|*
 modifier|*
 name|bpp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -54734,6 +54883,32 @@ name|ir_state
 operator||=
 name|ATTACHED
 expr_stmt|;
+comment|/* 	 * If the write did not succeed, we have done all the roll-forward 	 * operations, but we cannot take the actions that will allow its 	 * dependencies to be processed. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|stat_indir_blk_ptrs
+operator|++
+expr_stmt|;
+name|bdirty
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Move allocindirs with written pointers to the completehd if 	 * the indirdep's pointer is not yet written.  Otherwise 	 * free them here. 	 */
 while|while
 condition|(
@@ -55402,7 +55577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete a write to a bmsafemap structure.  Roll forward any bitmap  * changes if it's not a background write.  Set all written dependencies   * to DEPCOMPLETE and free the structure if possible.  */
+comment|/*  * Complete a write to a bmsafemap structure.  Roll forward any bitmap  * changes if it's not a background write.  Set all written dependencies   * to DEPCOMPLETE and free the structure if possible.  *  * If the write did not succeed, we will do all the roll-forward  * operations, but we will not take the actions that will allow its  * dependencies to be processed.  */
 end_comment
 
 begin_function
@@ -55413,6 +55588,8 @@ parameter_list|(
 name|bmsafemap
 parameter_list|,
 name|bp
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|bmsafemap
@@ -55423,6 +55600,9 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -55497,7 +55677,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"initiate_write_bmsafemap: Not started\n"
+literal|"handle_written_bmsafemap: Not started\n"
 argument_list|)
 expr_stmt|;
 name|ump
@@ -55534,13 +55714,37 @@ operator|)
 operator|==
 literal|0
 expr_stmt|;
-comment|/* 	 * Release journal work that was waiting on the write. 	 */
+comment|/* 	 * If write was successful, release journal work that was waiting 	 * on the write. Otherwise move the work back. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+condition|)
 name|handle_jwork
 argument_list|(
 operator|&
 name|bmsafemap
 operator|->
 name|sm_freewr
+argument_list|)
+expr_stmt|;
+else|else
+name|LIST_CONCAT
+argument_list|(
+operator|&
+name|bmsafemap
+operator|->
+name|sm_freehd
+argument_list|,
+operator|&
+name|bmsafemap
+operator|->
+name|sm_freewr
+argument_list|,
+name|worklist
+argument_list|,
+name|wk_list
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore unwritten inode allocation pending jaddref writes. 	 */
@@ -55812,6 +56016,67 @@ name|jnewblk
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * If the write did not succeed, we have done all the roll-forward 	 * operations, but we cannot take the actions that will allow its 	 * dependencies to be processed. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|LIST_CONCAT
+argument_list|(
+operator|&
+name|bmsafemap
+operator|->
+name|sm_newblkhd
+argument_list|,
+operator|&
+name|bmsafemap
+operator|->
+name|sm_newblkwr
+argument_list|,
+name|newblk
+argument_list|,
+name|nb_deps
+argument_list|)
+expr_stmt|;
+name|LIST_CONCAT
+argument_list|(
+operator|&
+name|bmsafemap
+operator|->
+name|sm_freehd
+argument_list|,
+operator|&
+name|bmsafemap
+operator|->
+name|sm_freewr
+argument_list|,
+name|worklist
+argument_list|,
+name|wk_list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|foreground
+condition|)
+name|bdirty
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 while|while
 condition|(
@@ -56381,7 +56646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from within softdep_disk_write_complete above.  * A write operation was just completed. Removed inodes can  * now be freed and associated block pointers may be committed.  * Note that this routine is always called from interrupt level  * with further splbio interrupts blocked.  */
+comment|/*  * Called from within softdep_disk_write_complete above.  * A write operation was just completed. Removed inodes can  * now be freed and associated block pointers may be committed.  * Note that this routine is always called from interrupt level  * with further interrupts from this device blocked.  *  * If the write did not succeed, we will do all the roll-forward  * operations, but we will not take the actions that will allow its  * dependencies to be processed.  */
 end_comment
 
 begin_function
@@ -56392,6 +56657,8 @@ parameter_list|(
 name|pagedep
 parameter_list|,
 name|bp
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|pagedep
@@ -56404,6 +56671,9 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* buffer containing the written page */
+name|int
+name|flags
+decl_stmt|;
 block|{
 name|struct
 name|dirrem
@@ -56452,6 +56722,19 @@ operator|&=
 operator|~
 name|IOSTARTED
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|rollforward
+goto|;
 comment|/* 	 * Process any directory removals that have been committed. 	 */
 while|while
 condition|(
@@ -56553,6 +56836,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|rollforward
+label|:
 comment|/* 	 * Uncommitted directory entries must be restored. 	 */
 for|for
 control|(
@@ -56702,6 +56987,14 @@ comment|/* 	 * If there were any rollbacks in the directory, then it must be 	 *
 if|if
 condition|(
 name|chgs
+operator|||
+operator|(
+name|flags
+operator|&
+name|WRITESUCCEEDED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if

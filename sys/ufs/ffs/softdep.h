@@ -245,6 +245,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|WRITESUCCEEDED
+value|0x400000
+end_define
+
+begin_comment
+comment|/* the disk write completed successfully */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ALLCOMPLETE
 value|(ATTACHED | COMPLETE | DEPCOMPLETE)
 end_define
