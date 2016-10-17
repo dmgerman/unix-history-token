@@ -452,6 +452,24 @@ value|0x00000002
 end_define
 
 begin_comment
+comment|/*  * Common RNDIS message header.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rndis_msghdr
+block|{
+name|uint32_t
+name|rm_type
+decl_stmt|;
+name|uint32_t
+name|rm_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * RNDIS data message  */
 end_comment
 
@@ -639,6 +657,10 @@ end_define
 
 begin_comment
 comment|/*  * RNDIS control messages  */
+end_comment
+
+begin_comment
+comment|/*  * Common header for RNDIS completion messages.  *  * NOTE: It does not apply to REMOTE_NDIS_RESET_CMPLT.  */
 end_comment
 
 begin_struct
@@ -1213,12 +1235,8 @@ begin_define
 define|#
 directive|define
 name|RNDIS_HEADER_OFFSET
-value|8
+value|((uint32_t)sizeof(struct rndis_msghdr))
 end_define
-
-begin_comment
-comment|/* bytes */
-end_comment
 
 begin_define
 define|#
