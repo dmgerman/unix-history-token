@@ -4713,7 +4713,9 @@ literal|0
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-name|da_default_timeout
+literal|5
+operator|*
+literal|60
 operator|*
 literal|1000
 argument_list|)
