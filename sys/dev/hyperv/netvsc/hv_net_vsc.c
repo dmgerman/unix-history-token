@@ -652,11 +652,15 @@ expr_stmt|;
 comment|/* Send the gpadl notification request */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -672,10 +676,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1005,11 +1005,15 @@ expr_stmt|;
 comment|/* Send the gpadl notification request */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -1022,10 +1026,6 @@ operator|(
 name|uint64_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1225,13 +1225,17 @@ name|NETVSC_RECEIVE_BUFFER_ID
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|net_dev
 operator|->
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+literal|0
 argument_list|,
 name|revoke_pkt
 argument_list|,
@@ -1247,10 +1251,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|revoke_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we failed here, we might as well return and have a leak  		 * rather than continue and a bugchk 		 */
@@ -1450,13 +1450,17 @@ name|NETVSC_SEND_BUFFER_ID
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|net_dev
 operator|->
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+literal|0
 argument_list|,
 name|revoke_pkt
 argument_list|,
@@ -1472,10 +1476,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|revoke_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we failed here, we might as well return and have a leak  		 * rather than continue and a bugchk 		 */
@@ -1676,11 +1676,15 @@ expr_stmt|;
 comment|/* Send the init request */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -1696,10 +1700,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1857,11 +1857,15 @@ expr_stmt|;
 comment|/* Send the configuration packet */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+literal|0
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -1877,10 +1881,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2172,11 +2172,15 @@ expr_stmt|;
 comment|/* Send the init request */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+literal|0
 argument_list|,
 name|init_pkt
 argument_list|,
@@ -2192,10 +2196,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|init_pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3014,9 +3014,13 @@ else|else
 block|{
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|chan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_INBAND
+argument_list|,
+name|VMBUS_CHANPKT_FLAG_RC
 argument_list|,
 operator|&
 name|send_msg
@@ -3033,10 +3037,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|pkt
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_INBAND
-argument_list|,
-name|VMBUS_CHANPKT_FLAG_RC
 argument_list|)
 expr_stmt|;
 block|}
@@ -3384,9 +3384,13 @@ label|:
 comment|/* Send the completion */
 name|ret
 operator|=
-name|hv_vmbus_channel_send_packet
+name|vmbus_chan_send
 argument_list|(
 name|chan
+argument_list|,
+name|VMBUS_CHANPKT_TYPE_COMP
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|rx_comp_msg
@@ -3397,10 +3401,6 @@ name|nvsp_msg
 argument_list|)
 argument_list|,
 name|tid
-argument_list|,
-name|VMBUS_CHANPKT_TYPE_COMP
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
