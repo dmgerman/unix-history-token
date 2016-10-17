@@ -925,7 +925,7 @@ return|;
 block|}
 name|pwarn
 argument_list|(
-literal|"USING ALTERNATE SUPERBLOCK AT %d\n"
+literal|"USING ALTERNATE SUPERBLOCK AT %jd\n"
 argument_list|,
 name|bflag
 argument_list|)
@@ -1683,7 +1683,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d is not a file system superblock\n"
+literal|"%jd is not a file system superblock\n"
 argument_list|,
 name|bflag
 argument_list|)

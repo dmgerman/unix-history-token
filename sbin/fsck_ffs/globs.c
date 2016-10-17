@@ -424,7 +424,7 @@ comment|/* use a snapshot to run on an active system */
 end_comment
 
 begin_decl_stmt
-name|int
+name|ufs2_daddr_t
 name|bflag
 decl_stmt|;
 end_decl_stmt
