@@ -925,8 +925,9 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|hv_vmbus_channel
 argument_list|)
-name|ch_link
+name|ch_prilink
 expr_stmt|;
+comment|/* primary chan link */
 name|uint32_t
 name|ch_subidx
 decl_stmt|;

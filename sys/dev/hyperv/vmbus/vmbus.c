@@ -4692,9 +4692,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|,
-literal|"vmbus chlist"
+literal|"vmbus prichan"
 argument_list|,
 name|NULL
 argument_list|,
@@ -4706,7 +4706,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist
+name|vmbus_prichans
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5000,7 +5000,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -5157,7 +5157,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|hv_vmbus_release_unattached_channels
+name|vmbus_chan_destroy_all
 argument_list|(
 name|sc
 argument_list|)
@@ -5250,7 +5250,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 return|return

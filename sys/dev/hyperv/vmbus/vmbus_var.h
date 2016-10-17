@@ -248,16 +248,17 @@ value|0x80000000
 name|uint32_t
 name|vmbus_scan_devcnt
 decl_stmt|;
+comment|/* Primary channels */
 name|struct
 name|mtx
-name|vmbus_chlist_lock
+name|vmbus_prichan_lock
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|hv_vmbus_channel
 argument_list|)
-name|vmbus_chlist
+name|vmbus_prichans
 expr_stmt|;
 block|}
 struct|;
@@ -439,6 +440,17 @@ parameter_list|,
 specifier|const
 name|struct
 name|vmbus_message
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_chan_destroy_all
+parameter_list|(
+name|struct
+name|vmbus_softc
 modifier|*
 parameter_list|)
 function_decl|;
