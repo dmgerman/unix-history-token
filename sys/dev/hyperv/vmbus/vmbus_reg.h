@@ -27,6 +27,16 @@ directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/hyperv.h>
+end_include
+
+begin_comment
+comment|/* XXX for hyperv_guid */
+end_comment
+
 begin_comment
 comment|/*  * Hyper-V SynIC message format.  */
 end_comment
@@ -345,7 +355,29 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Channel messages  * - Embedded in vmbus_message.msg_data, e.g. response.  * - Embedded in hypercall_postmsg_in.hc_data, e.g. request.  */
+comment|/*  * Channel messages  * - Embedded in vmbus_message.msg_data, e.g. response and notification.  * - Embedded in hypercall_postmsg_in.hc_data, e.g. request.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_CHOFFER
+value|1
+end_define
+
+begin_comment
+comment|/* NOTE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_CHRESCIND
+value|2
+end_define
+
+begin_comment
+comment|/* NOTE */
 end_comment
 
 begin_define
@@ -357,6 +389,17 @@ end_define
 
 begin_comment
 comment|/* REQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_CHOFFER_DONE
+value|4
+end_define
+
+begin_comment
+comment|/* NOTE */
 end_comment
 
 begin_define
@@ -490,6 +533,13 @@ end_define
 begin_comment
 comment|/* REQ */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHANMSG_TYPE_MAX
+value|22
+end_define
 
 begin_struct
 struct|struct
@@ -863,6 +913,117 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/* VMBUS_CHANMSG_TYPE_CHRESCIND */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_chanmsg_chrescind
+block|{
+name|struct
+name|vmbus_chanmsg_hdr
+name|chm_hdr
+decl_stmt|;
+name|uint32_t
+name|chm_chanid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* VMBUS_CHANMSG_TYPE_CHOFFER */
+end_comment
+
+begin_struct
+struct|struct
+name|vmbus_chanmsg_choffer
+block|{
+name|struct
+name|vmbus_chanmsg_hdr
+name|chm_hdr
+decl_stmt|;
+name|struct
+name|hyperv_guid
+name|chm_chtype
+decl_stmt|;
+name|struct
+name|hyperv_guid
+name|chm_chinst
+decl_stmt|;
+name|uint64_t
+name|chm_chlat
+decl_stmt|;
+comment|/* unit: 100ns */
+name|uint32_t
+name|chm_chrev
+decl_stmt|;
+name|uint32_t
+name|chm_svrctx_sz
+decl_stmt|;
+name|uint16_t
+name|chm_chflags
+decl_stmt|;
+name|uint16_t
+name|chm_mmio_sz
+decl_stmt|;
+comment|/* unit: MB */
+name|uint8_t
+name|chm_udata
+index|[
+literal|120
+index|]
+decl_stmt|;
+name|uint16_t
+name|chm_subidx
+decl_stmt|;
+name|uint16_t
+name|chm_rsvd
+decl_stmt|;
+name|uint32_t
+name|chm_chanid
+decl_stmt|;
+name|uint8_t
+name|chm_montrig
+decl_stmt|;
+name|uint8_t
+name|chm_flags1
+decl_stmt|;
+comment|/* VMBUS_CHOFFER_FLAG1_ */
+name|uint16_t
+name|chm_flags2
+decl_stmt|;
+name|uint32_t
+name|chm_connid
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vmbus_chanmsg_choffer
+argument_list|)
+operator|<=
+name|VMBUS_MSG_DSIZE_MAX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHOFFER_FLAG1_HASMNF
+value|0x01
+end_define
 
 begin_endif
 endif|#
