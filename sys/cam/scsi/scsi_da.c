@@ -4713,9 +4713,7 @@ literal|0
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5
-operator|*
-literal|60
+name|da_default_timeout
 operator|*
 literal|1000
 argument_list|)
@@ -4743,12 +4741,6 @@ operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
 name|softc
 operator|->
 name|flags
