@@ -4685,10 +4685,8 @@ name|int
 modifier|*
 name|nchan0
 parameter_list|,
-name|struct
-name|hn_rx_ring
-modifier|*
-name|rxr
+name|int
+name|mtu
 parameter_list|)
 block|{
 name|int
@@ -4753,7 +4751,7 @@ name|hv_nv_on_device_add
 argument_list|(
 name|sc
 argument_list|,
-name|rxr
+name|mtu
 argument_list|)
 expr_stmt|;
 if|if
