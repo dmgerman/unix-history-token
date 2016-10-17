@@ -2563,21 +2563,6 @@ argument_list|)
 expr_stmt|;
 comment|/* At this point, no one should be accessing net_dev except in here */
 comment|/* Now, we can close the channel safely */
-if|if
-condition|(
-operator|!
-name|destroy_channel
-condition|)
-block|{
-name|sc
-operator|->
-name|hn_prichan
-operator|->
-name|state
-operator|=
-name|HV_CHANNEL_CLOSING_NONDESTRUCTIVE_STATE
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|sc
