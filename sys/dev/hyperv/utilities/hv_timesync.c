@@ -609,6 +609,7 @@ name|util_sc
 argument_list|,
 name|time_buf
 argument_list|,
+operator|&
 name|recvlen
 argument_list|)
 expr_stmt|;

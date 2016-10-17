@@ -300,6 +300,7 @@ name|softc
 argument_list|,
 name|buf
 argument_list|,
+operator|&
 name|recv_len
 argument_list|)
 expr_stmt|;
