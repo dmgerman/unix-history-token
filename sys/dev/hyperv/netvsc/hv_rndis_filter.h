@@ -99,9 +99,6 @@ comment|/* Simplify allocation by having a netvsc packet inline */
 name|netvsc_packet
 name|pkt
 decl_stmt|;
-name|hv_vmbus_page_buffer
-name|buffer
-decl_stmt|;
 comment|/* 	 * The max request size is sizeof(rndis_msg) + PAGE_SIZE. 	 * 	 * NOTE: 	 * This is required for the large request like RSS settings. 	 * 	 * XXX 	 * This is ugly and should be cleaned up once we busdma-fy 	 * RNDIS request bits. 	 */
 name|rndis_msg
 name|request_msg

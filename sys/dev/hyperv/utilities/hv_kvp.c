@@ -2695,7 +2695,7 @@ name|sc
 operator|->
 name|host_msg_id
 argument_list|,
-name|HV_VMBUS_PACKET_TYPE_DATA_IN_BAND
+name|VMBUS_CHANPKT_TYPE_INBAND
 argument_list|,
 literal|0
 argument_list|)
