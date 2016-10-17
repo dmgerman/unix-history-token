@@ -133,6 +133,12 @@ directive|include
 file|<dev/hyperv/include/vmbus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/ndis.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1301,6 +1307,10 @@ name|hn_rndis_rid
 decl_stmt|;
 name|uint32_t
 name|hn_ndis_ver
+decl_stmt|;
+name|struct
+name|ndis_rssprm_toeplitz
+name|hn_rss
 decl_stmt|;
 block|}
 name|hn_softc_t

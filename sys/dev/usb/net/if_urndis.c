@@ -1553,9 +1553,9 @@ name|sc
 operator|->
 name|sc_filter
 operator|=
-name|RNDIS_PACKET_TYPE_BROADCAST
+name|NDIS_PACKET_TYPE_BROADCAST
 operator||
-name|RNDIS_PACKET_TYPE_ALL_MULTICAST
+name|NDIS_PACKET_TYPE_ALL_MULTICAST
 expr_stmt|;
 name|msg
 operator|.
