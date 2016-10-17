@@ -516,9 +516,9 @@ block|{
 block|{
 literal|"coreboot"
 block|,
-literal|"Acer"
+name|NULL
 block|,
-literal|"Peppy"
+name|NULL
 block|,
 name|KBDC_QUIRK_KEEP_ACTIVATED
 operator||
