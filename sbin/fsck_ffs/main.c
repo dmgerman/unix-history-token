@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mntopts.h>
 end_include
 
@@ -199,8 +205,8 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
-name|argtoi
+name|intmax_t
+name|argtoimax
 parameter_list|(
 name|int
 name|flag
@@ -333,7 +339,7 @@ literal|0
 expr_stmt|;
 name|bflag
 operator|=
-name|argtoi
+name|argtoimax
 argument_list|(
 literal|'b'
 argument_list|,
@@ -346,7 +352,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Alternate super block location: %d\n"
+literal|"Alternate super block location: %jd\n"
 argument_list|,
 name|bflag
 argument_list|)
@@ -369,7 +375,7 @@ literal|0
 expr_stmt|;
 name|cvtlevel
 operator|=
-name|argtoi
+name|argtoimax
 argument_list|(
 literal|'c'
 argument_list|,
@@ -431,7 +437,7 @@ literal|'m'
 case|:
 name|lfmode
 operator|=
-name|argtoi
+name|argtoimax
 argument_list|(
 literal|'m'
 argument_list|,
@@ -728,8 +734,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|argtoi
+name|intmax_t
+name|argtoimax
 parameter_list|(
 name|int
 name|flag
@@ -752,15 +758,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|intmax_t
 name|ret
 decl_stmt|;
 name|ret
 operator|=
-operator|(
-name|int
-operator|)
-name|strtol
+name|strtoimax
 argument_list|(
 name|str
 argument_list|,
