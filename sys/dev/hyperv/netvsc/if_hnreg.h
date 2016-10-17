@@ -791,6 +791,50 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * RNDIS extension  */
+end_comment
+
+begin_comment
+comment|/* Per-packet hash info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_HASH_INFO_SIZE
+value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_PKTINFO_TYPE_HASHINF
+value|NDIS_PKTINFO_TYPE_ORIG_NBLIST
+end_define
+
+begin_comment
+comment|/* NDIS_HASH_ */
+end_comment
+
+begin_comment
+comment|/* Per-packet hash value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_HASH_VALUE_SIZE
+value|sizeof(uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NDIS_PKTINFO_TYPE_HASHVAL
+value|NDIS_PKTINFO_TYPE_PKT_CANCELID
+end_define
+
 begin_endif
 endif|#
 directive|endif
