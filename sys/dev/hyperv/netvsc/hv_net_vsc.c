@@ -1352,7 +1352,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|hv_vmbus_channel_teardown_gpdal
+name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|net_dev
 operator|->
@@ -1576,7 +1576,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|hv_vmbus_channel_teardown_gpdal
+name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|net_dev
 operator|->
@@ -2391,7 +2391,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|chan
 argument_list|,
@@ -2493,7 +2493,7 @@ expr_stmt|;
 comment|/* 	 * Open the channel 	 */
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|chan
 argument_list|,
@@ -2564,7 +2564,7 @@ argument_list|,
 name|M_NETVSC
 argument_list|)
 expr_stmt|;
-name|hv_vmbus_channel_close
+name|vmbus_chan_close
 argument_list|(
 name|chan
 argument_list|)
@@ -2646,7 +2646,7 @@ argument_list|,
 name|M_NETVSC
 argument_list|)
 expr_stmt|;
-name|hv_vmbus_channel_close
+name|vmbus_chan_close
 argument_list|(
 name|sc
 operator|->

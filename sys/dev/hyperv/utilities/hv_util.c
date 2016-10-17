@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hv_util.h"
 end_include
 
@@ -292,18 +298,18 @@ name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * These services are not performance critical and do not need 	 * batched reading. Furthermore, some services such as KVP can 	 * only handle one message from the host at a time. 	 * Turn off batched reading for all util drivers before we open the 	 * channel. 	 */
-name|hv_set_channel_read_state
+name|vmbus_chan_set_readbatch
 argument_list|(
 name|softc
 operator|->
 name|channel
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|hv_vmbus_channel_open
+name|vmbus_chan_open
 argument_list|(
 name|softc
 operator|->
@@ -377,7 +383,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|hv_vmbus_channel_close
+name|vmbus_chan_close
 argument_list|(
 name|sc
 operator|->

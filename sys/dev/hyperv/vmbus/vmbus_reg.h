@@ -747,7 +747,7 @@ name|uint32_t
 name|chm_vcpuid
 decl_stmt|;
 name|uint32_t
-name|chm_rxbr_pgofs
+name|chm_txbr_pgcnt
 decl_stmt|;
 define|#
 directive|define
