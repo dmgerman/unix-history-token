@@ -131,6 +131,8 @@ name|Utrace
 block|,
 name|IntArray
 block|,
+name|Pipe2
+block|,
 name|CloudABIAdvice
 block|,
 name|CloudABIClockID
