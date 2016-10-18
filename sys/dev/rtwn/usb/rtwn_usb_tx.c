@@ -865,7 +865,7 @@ comment|/* 		 * Note: this sc_tx_n_active currently tracks 		 * the number of pe
 comment|/* 		 * XXX TODO: just make this a callout timer schedule so we can 		 * flush the FF staging queue if we're approaching idle. 		 */
 name|rtwn_cmd_sleepable
 argument_list|(
-name|uc
+name|sc
 argument_list|,
 name|NULL
 argument_list|,

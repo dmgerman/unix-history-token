@@ -970,7 +970,7 @@ literal|1
 condition|)
 name|rtwn_cmd_sleepable
 argument_list|(
-name|uc
+name|sc
 argument_list|,
 name|NULL
 argument_list|,
@@ -1511,7 +1511,7 @@ operator|)
 condition|)
 name|rtwn_cmd_sleepable
 argument_list|(
-name|uc
+name|sc
 argument_list|,
 name|NULL
 argument_list|,
