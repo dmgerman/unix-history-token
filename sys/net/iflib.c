@@ -16667,13 +16667,6 @@ name|IFCAP_FLAGS
 value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING |	\ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IFCAP_REINIT
-value|IFCAP_FLAGS
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -17317,6 +17310,24 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|setmask
+operator|&
+operator|(
+name|IFCAP_RXCSUM
+operator||
+name|IFCAP_RXCSUM_IPV6
+operator|)
+condition|)
+name|setmask
+operator||=
+operator|(
+name|IFCAP_RXCSUM
+operator||
+name|IFCAP_RXCSUM_IPV6
+operator|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|mask
 operator|&
@@ -17371,9 +17382,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setmask
+name|bits
 operator|&
-name|IFCAP_REINIT
+name|IFF_DRV_RUNNING
 condition|)
 name|iflib_stop
 argument_list|(
@@ -17389,9 +17400,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setmask
+name|bits
 operator|&
-name|IFCAP_REINIT
+name|IFF_DRV_RUNNING
 condition|)
 name|iflib_init_locked
 argument_list|(
