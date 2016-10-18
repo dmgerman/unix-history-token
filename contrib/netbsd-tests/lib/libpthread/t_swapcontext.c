@@ -315,9 +315,17 @@ block|{
 name|pthread_t
 name|thread
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|__mips__
+argument_list|)
 comment|/* 	 * MIPS modifies TLS pointer in set_mcontext(), so 	 * swapping contexts obtained from different threads 	 * gives us different pthread_self() return value. 	 */
 name|atf_tc_skip
 argument_list|(
