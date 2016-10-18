@@ -1076,10 +1076,10 @@ begin_struct
 struct|struct
 name|nm_kth_ioctl
 block|{
-name|u_long
+name|uint64_t
 name|com
 decl_stmt|;
-comment|/* TODO: use union */
+comment|/* We use union to support more ioctl commands. */
 union|union
 block|{
 name|struct
@@ -1114,6 +1114,13 @@ name|nm_kth_ioctl
 name|ioctl
 decl_stmt|;
 comment|/* ioctl parameter to send irq (only used in bhyve/FreeBSD) */
+name|uint64_t
+name|reserved
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* reserved to support of more hypervisors */
 block|}
 struct|;
 end_struct

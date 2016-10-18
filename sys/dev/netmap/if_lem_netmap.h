@@ -22,31 +22,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_comment
-comment|/* vtophys ? */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_adaptive_io
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Register/unregister. We are already under netmap lock.  */

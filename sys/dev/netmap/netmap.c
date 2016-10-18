@@ -338,14 +338,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|netmap_adaptive_io
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|netmap_flags
 init|=
 literal|0
@@ -598,27 +590,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of txsync loops in bridge's flush."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|adaptive_io
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|netmap_adaptive_io
-argument_list|,
-literal|0
-argument_list|,
-literal|"Adaptive I/O on paravirt"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4720,7 +4691,11 @@ name|RD
 argument_list|(
 literal|5
 argument_list|,
-literal|"tail overwritten was %d need %d"
+literal|"%s tail overwritten was %d need %d"
+argument_list|,
+name|kring
+operator|->
+name|name
 argument_list|,
 name|ring
 operator|->

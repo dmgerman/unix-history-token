@@ -171,7 +171,7 @@ literal|1100000
 end_if
 
 begin_comment
-comment|/*  * For older versions of FreeBSD:  *   * We allocate EXT_PACKET mbuf+clusters, but need to set M_NOFREE  * so that the destructor, if invoked, will not free the packet.  * In principle we should set the destructor only on demand,  * but since there might be a race we better do it on allocation.  * As a consequence, we also need to set the destructor or we  * would leak buffers.  */
+comment|/*  * For older versions of FreeBSD:  *  * We allocate EXT_PACKET mbuf+clusters, but need to set M_NOFREE  * so that the destructor, if invoked, will not free the packet.  * In principle we should set the destructor only on demand,  * but since there might be a race we better do it on allocation.  * As a consequence, we also need to set the destructor or we  * would leak buffers.  */
 end_comment
 
 begin_comment
@@ -2415,13 +2415,6 @@ directive|endif
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_adaptive_io
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Record completed transmissions and update hwtail.  *  * The oldest tx buffer not yet completed is at nr_hwtail + 1,  * nr_hwcur is the first unsent buffer.  */
 end_comment
@@ -2654,15 +2647,6 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* rate adaptation */
-block|if (netmap_adaptive_io> 1) { 			if (n>= netmap_adaptive_io) 				break; 		} else if (netmap_adaptive_io) {
-comment|/* if hwcur - nm_i< lim/8 do an early break 			 * so we prevent the sender from stalling. See CVT. 			 */
-block|if (hwcur>= nm_i) { 				if (hwcur - nm_i< lim/2) 					break; 			} else { 				if (hwcur + lim + 1 - nm_i< lim/2) 					break; 			} 		}
-endif|#
-directive|endif
 block|}
 name|kring
 operator|->

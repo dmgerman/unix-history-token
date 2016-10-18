@@ -157,23 +157,13 @@ comment|//#define PTN_TX_BATCH_LIM(_n)	((_n>> 1))
 end_comment
 
 begin_comment
-comment|/* XXX: avoid nm_*sync_prologue(). XXX-vin: this should go away,  *      we should never trust the guest. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTN_AVOID_NM_PROLOGUE
-end_define
-
-begin_comment
 comment|//#define BUSY_WAIT
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|NETMAP_PT_DEBUG
 end_define
 
 begin_comment
@@ -183,7 +173,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NETMAP_PT_DEBUG
 end_ifdef
 
 begin_define
@@ -934,23 +924,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static inline void ptnetmap_ring_reinit(struct netmap_kring *kring, uint32_t g_head, uint32_t g_cur) {     struct netmap_ring *ring = kring->ring;
-comment|//XXX: trust guest?
-end_comment
-
-begin_endif
-unit|ring->head = g_head;     ring->cur = g_cur;     ring->tail = NM_ACCESS_ONCE(kring->nr_hwtail);      netmap_ring_reinit(kring);     ptnetmap_kring_dump("kring reinit", kring); }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * TX functions to set/get and to handle host/guest kick.  */
 end_comment
@@ -1108,9 +1081,9 @@ name|ptring
 decl_stmt|;
 name|struct
 name|netmap_ring
-name|g_ring
+name|shadow_ring
 decl_stmt|;
-comment|/* guest ring pointer, copied from CSB */
+comment|/* shadow copy of the netmap_ring */
 name|bool
 name|more_txspace
 init|=
@@ -1230,7 +1203,7 @@ name|kring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|=
@@ -1238,7 +1211,7 @@ name|kring
 operator|->
 name|rhead
 expr_stmt|;
-name|g_ring
+name|shadow_ring
 operator|.
 name|cur
 operator|=
@@ -1260,7 +1233,7 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
@@ -1274,7 +1247,7 @@ block|{
 comment|/* If guest moves ahead too fast, let's cut the move so 	 * that we don't exceed our batch limit. */
 name|batch
 operator|=
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|-
@@ -1335,14 +1308,14 @@ literal|"batch: %d head: %d head_lim: %d"
 argument_list|,
 name|batch
 argument_list|,
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 argument_list|,
 name|head_lim
 argument_list|)
 expr_stmt|;
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|=
@@ -1373,17 +1346,22 @@ literal|1
 operator|)
 condition|)
 block|{
-name|g_ring
+name|shadow_ring
 operator|.
 name|flags
 operator||=
 name|NAF_FORCE_RECLAIM
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|PTN_AVOID_NM_PROLOGUE
 comment|/* Netmap prologue */
+name|shadow_ring
+operator|.
+name|tail
+operator|=
+name|kring
+operator|->
+name|rtail
+expr_stmt|;
 if|if
 condition|(
 name|unlikely
@@ -1393,27 +1371,19 @@ argument_list|(
 name|kring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|)
 operator|>=
 name|num_slots
 argument_list|)
 condition|)
 block|{
-name|ptnetmap_ring_reinit
+comment|/* Reinit ring and enable notifications. */
+name|netmap_ring_reinit
 argument_list|(
 name|kring
-argument_list|,
-name|g_ring
-operator|.
-name|head
-argument_list|,
-name|g_ring
-operator|.
-name|cur
 argument_list|)
 expr_stmt|;
-comment|/* Reenable notifications. */
 name|ptring_kick_enable
 argument_list|(
 name|ptring
@@ -1423,28 +1393,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|#
-directive|else
-comment|/* PTN_AVOID_NM_PROLOGUE */
-name|kring
-operator|->
-name|rhead
-operator|=
-name|g_ring
-operator|.
-name|head
-expr_stmt|;
-name|kring
-operator|->
-name|rcur
-operator|=
-name|g_ring
-operator|.
-name|cur
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PTN_AVOID_NM_PROLOGUE */
 if|if
 condition|(
 name|unlikely
@@ -1482,7 +1430,7 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
-name|g_ring
+name|shadow_ring
 operator|.
 name|flags
 argument_list|)
@@ -1499,7 +1447,7 @@ argument_list|)
 expr_stmt|;
 name|D
 argument_list|(
-literal|"ERROR txsync"
+literal|"ERROR txsync()"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1636,7 +1584,7 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
@@ -1646,7 +1594,7 @@ directive|ifndef
 name|BUSY_WAIT
 if|if
 condition|(
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|==
@@ -1677,14 +1625,14 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|!=
@@ -1898,9 +1846,9 @@ name|ptring
 decl_stmt|;
 name|struct
 name|netmap_ring
-name|g_ring
+name|shadow_ring
 decl_stmt|;
-comment|/* guest ring pointer, copied from CSB */
+comment|/* shadow copy of the netmap_ring */
 name|struct
 name|nm_kthread
 modifier|*
@@ -2051,7 +1999,7 @@ name|kring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 operator|=
@@ -2059,7 +2007,7 @@ name|kring
 operator|->
 name|rhead
 expr_stmt|;
-name|g_ring
+name|shadow_ring
 operator|.
 name|cur
 operator|=
@@ -2081,7 +2029,7 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
@@ -2095,10 +2043,15 @@ block|{
 name|uint32_t
 name|hwtail
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|PTN_AVOID_NM_PROLOGUE
 comment|/* Netmap prologue */
+name|shadow_ring
+operator|.
+name|tail
+operator|=
+name|kring
+operator|->
+name|rtail
+expr_stmt|;
 if|if
 condition|(
 name|unlikely
@@ -2108,27 +2061,19 @@ argument_list|(
 name|kring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|)
 operator|>=
 name|num_slots
 argument_list|)
 condition|)
 block|{
-name|ptnetmap_ring_reinit
+comment|/* Reinit ring and enable notifications. */
+name|netmap_ring_reinit
 argument_list|(
 name|kring
-argument_list|,
-name|g_ring
-operator|.
-name|head
-argument_list|,
-name|g_ring
-operator|.
-name|cur
 argument_list|)
 expr_stmt|;
-comment|/* Reenable notifications. */
 name|ptring_kick_enable
 argument_list|(
 name|ptring
@@ -2138,28 +2083,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|#
-directive|else
-comment|/* PTN_AVOID_NM_PROLOGUE */
-name|kring
-operator|->
-name|rhead
-operator|=
-name|g_ring
-operator|.
-name|head
-expr_stmt|;
-name|kring
-operator|->
-name|rcur
-operator|=
-name|g_ring
-operator|.
-name|cur
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PTN_AVOID_NM_PROLOGUE */
 if|if
 condition|(
 name|unlikely
@@ -2169,6 +2092,7 @@ operator|&
 name|NM_VERB_RXSYNC
 argument_list|)
 condition|)
+block|{
 name|ptnetmap_kring_dump
 argument_list|(
 literal|"pre rxsync"
@@ -2176,6 +2100,7 @@ argument_list|,
 name|kring
 argument_list|)
 expr_stmt|;
+block|}
 name|IFRATE
 argument_list|(
 name|pre_tail
@@ -2195,7 +2120,7 @@ name|nm_sync
 argument_list|(
 name|kring
 argument_list|,
-name|g_ring
+name|shadow_ring
 operator|.
 name|flags
 argument_list|)
@@ -2300,6 +2225,7 @@ operator|&
 name|NM_VERB_RXSYNC
 argument_list|)
 condition|)
+block|{
 name|ptnetmap_kring_dump
 argument_list|(
 literal|"post rxsync"
@@ -2307,6 +2233,7 @@ argument_list|,
 name|kring
 argument_list|)
 expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|BUSY_WAIT
@@ -2359,7 +2286,7 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
@@ -2373,7 +2300,7 @@ name|ptnetmap_norxslots
 argument_list|(
 name|kring
 argument_list|,
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 argument_list|)
@@ -2401,7 +2328,7 @@ argument_list|(
 name|ptring
 argument_list|,
 operator|&
-name|g_ring
+name|shadow_ring
 argument_list|,
 name|num_slots
 argument_list|)
@@ -2413,7 +2340,7 @@ name|ptnetmap_norxslots
 argument_list|(
 name|kring
 argument_list|,
-name|g_ring
+name|shadow_ring
 operator|.
 name|head
 argument_list|)
@@ -2541,7 +2468,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NETMAP_PT_DEBUG
 end_ifdef
 
 begin_function
@@ -2639,6 +2566,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NETMAP_PT_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Copy actual state of the host ring into the CSB for the guest init */

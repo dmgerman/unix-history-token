@@ -5455,18 +5455,14 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
-name|netmap_mitigate
+name|netmap_no_pendintr
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// XXX not really used
-end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|netmap_no_pendintr
+name|netmap_mitigate
 decl_stmt|;
 end_decl_stmt
 
@@ -5478,7 +5474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// XXX debugging
+comment|/* for debugging */
 end_comment
 
 begin_enum
@@ -5529,13 +5525,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|netmap_txsync_retry
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_adaptive_io
 decl_stmt|;
 end_decl_stmt
 
