@@ -397,7 +397,7 @@ operator|.
 name|errIrq
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->

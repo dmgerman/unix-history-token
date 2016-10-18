@@ -157,10 +157,10 @@ decl_stmt|;
 name|uintptr_t
 name|mem_base_addr
 decl_stmt|;
-name|int
+name|uintptr_t
 name|irq_num
 decl_stmt|;
-name|int
+name|uintptr_t
 name|err_irq_num
 decl_stmt|;
 name|uint8_t
@@ -1008,7 +1008,7 @@ operator|.
 name|irq_num
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -1019,7 +1019,7 @@ operator|.
 name|err_irq_num
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->

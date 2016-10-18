@@ -644,7 +644,7 @@ operator|=
 name|XX_PreallocAndBindIntr
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
