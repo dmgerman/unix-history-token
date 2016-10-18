@@ -1144,7 +1144,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * list head containing all the netmap opened fd and their   * windows HANDLE counterparts  */
+comment|/*  * list head containing all the netmap opened fd and their  * windows HANDLE counterparts  */
 end_comment
 
 begin_decl_stmt
@@ -1380,7 +1380,7 @@ comment|/*  * we need to wrap ioctl and mmap, at least for the netmap file descr
 end_comment
 
 begin_comment
-comment|/*  * use this function only from netmap_user.h internal functions  * same as ioctl, returns 0 on success and -1 on error   */
+comment|/*  * use this function only from netmap_user.h internal functions  * same as ioctl, returns 0 on success and -1 on error  */
 end_comment
 
 begin_function
@@ -1563,7 +1563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * this function is what must be called from user-space programs  * same as ioctl, returns 0 on success and -1 on error   */
+comment|/*  * this function is what must be called from user-space programs  * same as ioctl, returns 0 on success and -1 on error  */
 end_comment
 
 begin_function

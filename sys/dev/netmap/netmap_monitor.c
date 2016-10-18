@@ -1542,7 +1542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************  * functions specific for zero-copy monitors                      ****************************************************************  */
+comment|/*  ****************************************************************  * functions specific for zero-copy monitors  ****************************************************************  */
 end_comment
 
 begin_comment
@@ -2176,7 +2176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************  * functions specific for copy monitors                      ****************************************************************  */
+comment|/*  ****************************************************************  * functions specific for copy monitors  ****************************************************************  */
 end_comment
 
 begin_function
@@ -3021,7 +3021,7 @@ operator|&
 name|NR_ZCOPY_MON
 condition|)
 block|{
-comment|/* the flag makes no sense unless you are  			 * creating a monitor 			 */
+comment|/* the flag makes no sense unless you are 			 * creating a monitor 			 */
 return|return
 name|EINVAL
 return|;
