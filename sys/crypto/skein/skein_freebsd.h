@@ -226,8 +226,10 @@ name|unsigned
 name|char
 name|digest
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SKEIN256_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SKEIN256_CTX
@@ -245,8 +247,10 @@ name|unsigned
 name|char
 name|digest
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SKEIN512_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SKEIN512_CTX
@@ -264,8 +268,10 @@ name|unsigned
 name|char
 name|digest
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SKEIN1024_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SKEIN1024_CTX
