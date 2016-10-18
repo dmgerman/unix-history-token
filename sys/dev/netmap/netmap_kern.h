@@ -256,6 +256,12 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
 begin_define
 define|#
 directive|define
