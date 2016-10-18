@@ -165,7 +165,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__mips__
-comment|/* MIPS has no shared page implemented yet. */
+comment|/* 	 * MIPS has different VM layout: the UVA map on mips ends the 	 * highest mapped entry at the VM_MAXUSER_ADDRESS - PAGE_SIZE, 	 * while all other arches map either stack or shared page up 	 * to the VM_MAXUSER_ADDRESS. 	 */
 name|atf_tc_skip
 argument_list|(
 literal|"Platform is not supported."
