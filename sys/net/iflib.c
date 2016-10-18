@@ -20388,6 +20388,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_CAPS
+value|(IFCAP_TXCSUM_IPV6 | IFCAP_RXCSUM_IPV6 | IFCAP_HWCSUM | IFCAP_LRO | \ 		     IFCAP_TSO4 | IFCAP_TSO6 | IFCAP_VLAN_HWTAGGING |	\ 		     IFCAP_VLAN_MTU | IFCAP_VLAN_HWFILTER | IFCAP_VLAN_HWTSO | IFCAP_HWSTATS)
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -20565,18 +20572,19 @@ operator||
 name|IFF_MULTICAST
 argument_list|)
 expr_stmt|;
+comment|/* XXX - move this in to the driver for non-default settings */
 name|if_setcapabilities
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+name|DEFAULT_CAPS
 argument_list|)
 expr_stmt|;
 name|if_setcapenable
 argument_list|(
 name|ifp
 argument_list|,
-literal|0
+name|DEFAULT_CAPS
 argument_list|)
 expr_stmt|;
 name|ctx
