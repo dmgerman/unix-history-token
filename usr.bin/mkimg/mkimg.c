@@ -270,6 +270,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uint32_t
+name|active_partition
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -606,6 +614,13 @@ argument_list|(
 literal|'\n'
 argument_list|,
 name|stderr
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-a<num>\t-  mark num'th partion as active\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2232,7 +2247,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:f:o:p:s:vyH:P:S:T:"
+literal|"a:b:c:f:o:p:s:vyH:P:S:T:"
 argument_list|,
 name|longopts
 argument_list|,
@@ -2249,6 +2264,38 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+comment|/* ACTIVE PARTITION, if supported */
+name|error
+operator|=
+name|parse_uint32
+argument_list|(
+operator|&
+name|active_partition
+argument_list|,
+literal|1
+argument_list|,
+literal|100
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errc
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+name|error
+argument_list|,
+literal|"Partition ordinal"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:

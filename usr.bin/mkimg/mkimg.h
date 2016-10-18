@@ -168,6 +168,13 @@ begin_comment
 comment|/* Physical block size. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|active_partition
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|inline
