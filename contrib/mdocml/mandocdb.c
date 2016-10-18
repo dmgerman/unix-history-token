@@ -5733,15 +5733,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|mpage
-operator|=
-name|mpage
-operator|->
-name|next
-expr_stmt|;
 continue|continue;
-block|}
 name|name_mask
 operator|=
 name|NAME_MASK
