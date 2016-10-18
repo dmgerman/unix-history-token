@@ -510,8 +510,18 @@ operator|.
 name|sc_io_res
 argument_list|)
 expr_stmt|;
+comment|/* 	 * brcm,bcm2708-usb FDT provides two interrupts, 	 * we need only second one (VC_USB) 	 */
 name|rid
 operator|=
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"brcm,bcm2708-usb"
+argument_list|)
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|sc

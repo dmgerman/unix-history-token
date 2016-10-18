@@ -275,24 +275,6 @@ block|}
 block|,
 comment|/* bank 1 interrupt */
 block|{
-name|SYS_RES_IRQ
-block|,
-literal|2
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-comment|/* bank 1 interrupt (mirrored) */
-block|{
-name|SYS_RES_IRQ
-block|,
-literal|3
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-comment|/* bank 0-1 interrupt (united) */
-block|{
 operator|-
 literal|1
 block|,
@@ -762,6 +744,35 @@ end_define
 begin_comment
 comment|/* Pin Pull up clock */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"broadcom,bcm2835-gpio"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"brcm,bcm2835-gpio"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3401,7 +3412,7 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-comment|/* Get read-only pins. */
+comment|/* Get read-only pins if they're provided */
 name|gpio
 operator|=
 name|ofw_bus_get_node
@@ -3428,8 +3439,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 comment|/* Traverse the GPIO subnodes to find the reserved pins node. */
@@ -3773,13 +3783,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"broadcom,bcm2835-gpio"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
