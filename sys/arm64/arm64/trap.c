@@ -1792,6 +1792,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|KASSERT
+argument_list|(
+operator|(
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_fpflags
+operator|&
+operator|~
+name|PCB_FP_USERMASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Kernel VFP flags set while entering userspace"
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
