@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk/vtoc.h>
+file|<vtoc.h>
 end_include
 
 begin_include

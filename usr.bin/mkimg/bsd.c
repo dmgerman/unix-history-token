@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk/bsd.h>
+file|<bsd.h>
 end_include
 
 begin_include

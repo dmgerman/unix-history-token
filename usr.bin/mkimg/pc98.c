@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk/pc98.h>
+file|<pc98.h>
 end_include
 
 begin_include

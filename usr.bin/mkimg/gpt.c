@@ -56,19 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<uuid.h>
+file|<gpt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/disk/gpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disk/mbr.h>
+file|<mbr.h>
 end_include
 
 begin_include
@@ -97,7 +91,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_efi
 init|=
 name|GPT_ENT_TYPE_EFI
@@ -106,7 +100,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd
 init|=
 name|GPT_ENT_TYPE_FREEBSD
@@ -115,7 +109,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_boot
 init|=
 name|GPT_ENT_TYPE_FREEBSD_BOOT
@@ -124,7 +118,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_nandfs
 init|=
 name|GPT_ENT_TYPE_FREEBSD_NANDFS
@@ -133,7 +127,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_swap
 init|=
 name|GPT_ENT_TYPE_FREEBSD_SWAP
@@ -142,7 +136,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_ufs
 init|=
 name|GPT_ENT_TYPE_FREEBSD_UFS
@@ -151,7 +145,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_vinum
 init|=
 name|GPT_ENT_TYPE_FREEBSD_VINUM
@@ -160,7 +154,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_freebsd_zfs
 init|=
 name|GPT_ENT_TYPE_FREEBSD_ZFS
@@ -169,7 +163,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_mbr
 init|=
 name|GPT_ENT_TYPE_MBR
@@ -178,7 +172,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uuid_t
+name|mkimg_uuid_t
 name|gpt_uuid_ms_basic_data
 init|=
 name|GPT_ENT_TYPE_MS_BASIC_DATA
@@ -891,109 +885,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|gpt_uuid_enc
-parameter_list|(
-name|void
-modifier|*
-name|buf
-parameter_list|,
-specifier|const
-name|uuid_t
-modifier|*
-name|uuid
-parameter_list|)
-block|{
-name|uint8_t
-modifier|*
-name|p
-init|=
-name|buf
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|le32enc
-argument_list|(
-name|p
-argument_list|,
-name|uuid
-operator|->
-name|time_low
-argument_list|)
-expr_stmt|;
-name|le16enc
-argument_list|(
-name|p
-operator|+
-literal|4
-argument_list|,
-name|uuid
-operator|->
-name|time_mid
-argument_list|)
-expr_stmt|;
-name|le16enc
-argument_list|(
-name|p
-operator|+
-literal|6
-argument_list|,
-name|uuid
-operator|->
-name|time_hi_and_version
-argument_list|)
-expr_stmt|;
-name|p
-index|[
-literal|8
-index|]
-operator|=
-name|uuid
-operator|->
-name|clock_seq_hi_and_reserved
-expr_stmt|;
-name|p
-index|[
-literal|9
-index|]
-operator|=
-name|uuid
-operator|->
-name|clock_seq_low
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|_UUID_NODE_LEN
-condition|;
-name|i
-operator|++
-control|)
-name|p
-index|[
-literal|10
-operator|+
-name|i
-index|]
-operator|=
-name|uuid
-operator|->
-name|node
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|u_int
 name|gpt_tblsz
 parameter_list|(
@@ -1288,7 +1179,7 @@ name|u_int
 name|tblsz
 parameter_list|)
 block|{
-name|uuid_t
+name|mkimg_uuid_t
 name|uuid
 decl_stmt|;
 name|struct
@@ -1346,7 +1237,7 @@ name|part
 operator|->
 name|index
 expr_stmt|;
-name|gpt_uuid_enc
+name|mkimg_uuid_enc
 argument_list|(
 operator|&
 name|ent
@@ -1367,7 +1258,7 @@ operator|&
 name|uuid
 argument_list|)
 expr_stmt|;
-name|gpt_uuid_enc
+name|mkimg_uuid_enc
 argument_list|(
 operator|&
 name|ent
@@ -1574,7 +1465,7 @@ modifier|*
 name|bootcode
 parameter_list|)
 block|{
-name|uuid_t
+name|mkimg_uuid_t
 name|uuid
 decl_stmt|;
 name|struct
@@ -1787,7 +1678,7 @@ operator|&
 name|uuid
 argument_list|)
 expr_stmt|;
-name|gpt_uuid_enc
+name|mkimg_uuid_enc
 argument_list|(
 operator|&
 name|hdr
