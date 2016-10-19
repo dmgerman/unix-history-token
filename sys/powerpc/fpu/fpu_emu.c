@@ -600,12 +600,10 @@ modifier|*
 name|fpf
 parameter_list|)
 block|{
-specifier|static
 name|union
 name|instr
 name|insn
 decl_stmt|;
-specifier|static
 name|struct
 name|fpemu
 name|fe
