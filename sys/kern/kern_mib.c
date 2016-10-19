@@ -707,6 +707,8 @@ argument_list|,
 name|bootfile
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|kernelname
 argument_list|,
@@ -1373,6 +1375,8 @@ argument_list|,
 name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -2090,6 +2094,8 @@ argument_list|,
 name|conftxt
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|kernconfstring
 argument_list|,
