@@ -9917,9 +9917,7 @@ name|ifnet_link_event
 argument_list|,
 name|ifp
 argument_list|,
-name|ifp
-operator|->
-name|if_link_state
+name|link_state
 argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE
