@@ -511,7 +511,7 @@ name|g_mirror_softc
 modifier|*
 name|sc
 parameter_list|,
-name|boolean_t
+name|bool
 name|force
 parameter_list|)
 function_decl|;
@@ -9209,7 +9209,7 @@ name|g_mirror_update_device
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -9257,7 +9257,7 @@ name|g_mirror_update_device
 argument_list|(
 name|sc
 argument_list|,
-literal|0
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -11295,7 +11295,7 @@ name|g_mirror_softc
 modifier|*
 name|sc
 parameter_list|,
-name|boolean_t
+name|bool
 name|force
 parameter_list|)
 block|{
