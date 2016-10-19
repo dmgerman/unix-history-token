@@ -7774,5 +7774,28 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|struct
+name|taskqueue
+modifier|*
+name|vmbus_chan_mgmt_tq
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{
+return|return
+operator|(
+name|chan
+operator|->
+name|ch_mgmt_tq
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
