@@ -1844,6 +1844,12 @@ operator|!=
 name|HN_NVS_STATUS_OK
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+comment|/* 			 * Caller may try another NVS version, and will log 			 * error if there are no more NVS versions to try, 			 * so don't bark out loud here. 			 */
 name|if_printf
 argument_list|(
 name|sc
@@ -1855,6 +1861,7 @@ argument_list|,
 name|nvs_ver
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|EINVAL
@@ -2103,6 +2110,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -2149,8 +2158,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|error
+operator|=
 name|hn_nvs_doinit
 argument_list|(
 name|sc
@@ -2159,6 +2168,32 @@ name|sc
 operator|->
 name|hn_nvs_ver
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"reinit NVS version 0x%x "
+literal|"failed: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|hn_nvs_ver
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -2180,9 +2215,6 @@ operator|++
 name|i
 control|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|error
 operator|=
 name|hn_nvs_doinit
