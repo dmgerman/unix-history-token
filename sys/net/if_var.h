@@ -1982,7 +1982,7 @@ value|rw_runlock(&ifnet_rwlock)
 end_define
 
 begin_comment
-comment|/*  * Look up an ifnet given its index; the _ref variant also acquires a  * reference that must be freed using if_rele().  It is almost always a bug  * to call ifnet_byindex() instead if ifnet_byindex_ref().  */
+comment|/*  * Look up an ifnet given its index; the _ref variant also acquires a  * reference that must be freed using if_rele().  It is almost always a bug  * to call ifnet_byindex() instead of ifnet_byindex_ref().  */
 end_comment
 
 begin_function_decl
