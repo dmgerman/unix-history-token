@@ -376,6 +376,15 @@ decl_stmt|;
 name|int
 name|hn_rx_flags
 decl_stmt|;
+name|void
+modifier|*
+name|hn_br
+decl_stmt|;
+comment|/* TX/RX bufring */
+name|struct
+name|hyperv_dma
+name|hn_br_dma
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
