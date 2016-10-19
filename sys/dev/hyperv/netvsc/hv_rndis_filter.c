@@ -4310,14 +4310,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter halt device  */
-end_comment
-
 begin_function
 specifier|static
 name|int
-name|hv_rf_halt_device
+name|hn_rndis_halt
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4511,13 +4507,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * RNDIS filter on device remove  */
-end_comment
-
 begin_function
-name|int
-name|hv_rf_on_device_remove
+name|void
+name|hn_rndis_detach
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4525,30 +4517,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-comment|/* Halt and release the rndis device */
-name|ret
-operator|=
-name|hv_rf_halt_device
+comment|/* Halt the RNDIS. */
+name|hn_rndis_halt
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Pass control to inner driver to remove the device */
-name|ret
-operator||=
-name|hv_nv_on_device_remove
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
