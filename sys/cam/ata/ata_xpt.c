@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -4080,6 +4086,11 @@ name|int16_t
 modifier|*
 name|ptr
 decl_stmt|;
+name|int
+name|veto
+init|=
+literal|0
+decl_stmt|;
 name|ident_buf
 operator|=
 operator|&
@@ -4126,6 +4137,28 @@ operator|*
 name|ptr
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 		 * Allow others to veto this ATA disk attachment.  This 		 * is mainly used by VMs, whose disk controllers may 		 * share the disks with the simulated ATA controllers. 		 */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ada_probe_veto
+argument_list|,
+name|path
+argument_list|,
+name|ident_buf
+argument_list|,
+operator|&
+name|veto
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|veto
+condition|)
+block|{
+goto|goto
+name|device_fail
+goto|;
 block|}
 if|if
 condition|(
