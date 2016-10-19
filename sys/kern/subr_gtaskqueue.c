@@ -3783,6 +3783,15 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Bind taskqueue threads to specific CPUs, if they have been assigned 	 * one. 	 */
+if|if
+condition|(
+name|qgroup
+operator|->
+name|tqg_cnt
+operator|==
+literal|1
+condition|)
+return|return;
 for|for
 control|(
 name|i
