@@ -4236,6 +4236,9 @@ operator|!=
 name|NULL
 operator|||
 name|dumping
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 return|return;
 name|m
