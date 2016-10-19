@@ -454,6 +454,8 @@ argument_list|(
 name|t
 argument_list|,
 name|B_MODIFIED
+operator||
+name|B_METADIRTY
 argument_list|)
 condition|)
 return|return
