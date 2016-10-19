@@ -4320,7 +4320,7 @@ name|bp
 operator|->
 name|b_npages
 operator|<=
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|bp
 operator|->
