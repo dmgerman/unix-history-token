@@ -268,10 +268,6 @@ name|len
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|*
-name|cp
-operator|||
 operator|*
 name|cp
 operator|==
@@ -285,14 +281,9 @@ name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-operator|*
-name|cp
-condition|?
 name|cp
 operator|+
 literal|1
-else|:
-name|cp
 argument_list|)
 expr_stmt|;
 name|exit
