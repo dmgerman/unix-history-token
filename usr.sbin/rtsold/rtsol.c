@@ -1794,7 +1794,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|__func__
 argument_list|,
