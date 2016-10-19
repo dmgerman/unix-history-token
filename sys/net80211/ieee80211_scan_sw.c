@@ -1621,6 +1621,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Taskqueue work to cancel a scan.  *  * Note: for offload scan devices, we may want to call into the  * driver to try and cancel scanning, however it may not be cancelable.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2011,6 +2015,16 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Full-offload scan devices don't require this. 	 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+condition|)
+return|return;
 comment|/* 	 * Send directed probe requests followed by any 	 * broadcast probe request. 	 * XXX remove dependence on ic/vap->iv_bss 	 */
 for|for
 control|(
@@ -2504,8 +2518,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Put the station into power save mode. 	 * 	 * This is only required if we're not a full-offload devices; 	 * those devices manage scan/traffic differently. 	 */
 if|if
 condition|(
+operator|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
 name|vap
 operator|->
 name|iv_opmode
@@ -3494,6 +3521,19 @@ condition|(
 name|scandone
 condition|)
 block|{
+comment|/* 		 * If we're not a scan offload device, come back out of 		 * station powersave.  Offload devices handle this themselves. 		 */
+if|if
+condition|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+operator|)
+operator|==
+literal|0
+condition|)
 name|vap
 operator|->
 name|iv_sta_ps
