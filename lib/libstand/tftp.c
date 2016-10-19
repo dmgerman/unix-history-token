@@ -1961,6 +1961,17 @@ name|extraslash
 decl_stmt|;
 if|if
 condition|(
+name|netproto
+operator|!=
+name|NET_TFTP
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|f

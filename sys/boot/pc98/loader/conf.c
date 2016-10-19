@@ -39,31 +39,6 @@ begin_comment
 comment|/*  * We could use linker sets for some or all of these, but  * then we would have to control what ended up linked into  * the bootstrap.  So it's easier to conditionalise things  * here.  *  * XXX rename these arrays to be consistent and less namespace-hostile  *  * XXX as libi386 and biosboot merge, some of these can become linker sets.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOADER_NFS_SUPPORT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LOADER_TFTP_SUPPORT
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Cannot have both tftp and nfs support yet."
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Exported for libstand */
 end_comment

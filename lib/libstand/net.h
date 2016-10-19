@@ -10,6 +10,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_STAND_NET_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_STAND_NET_H
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
 end_ifndef
 
@@ -50,6 +62,19 @@ directive|define
 name|BA
 value|{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }
 end_define
+
+begin_enum
+enum|enum
+name|net_proto
+block|{
+name|NET_NONE
+block|,
+name|NET_NFS
+block|,
+name|NET_TFTP
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* Returns true if n_long's on the same net */
@@ -212,6 +237,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|netproto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|ifname
 index|[
@@ -261,6 +293,14 @@ specifier|extern
 name|struct
 name|in_addr
 name|nameip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_addr
+name|tftpip
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +614,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! _STAND_NET_H */
+end_comment
 
 end_unit
 

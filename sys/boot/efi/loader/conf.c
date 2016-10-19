@@ -111,6 +111,9 @@ operator|&
 name|cd9660_fsops
 block|,
 operator|&
+name|tftp_fsops
+block|,
+operator|&
 name|nfs_fsops
 block|,
 operator|&

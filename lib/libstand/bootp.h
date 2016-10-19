@@ -400,6 +400,13 @@ name|TAG_CLIENTID
 value|((unsigned char)  61)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TAG_TFTP_SERVER
+value|((unsigned char) 150)
+end_define
+
 begin_endif
 endif|#
 directive|endif
