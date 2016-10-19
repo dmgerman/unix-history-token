@@ -1088,18 +1088,19 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* FIXME: Fix along with other BUS_SPACE_PHYSADDR instances */
 name|sc
 operator|->
 name|sc_sdhci_buffer_phys
 operator|=
-name|BUS_SPACE_PHYSADDR
+name|rman_get_start
 argument_list|(
 name|sc
 operator|->
 name|sc_mem_res
-argument_list|,
-name|SDHCI_BUFFER
 argument_list|)
+operator|+
+name|SDHCI_BUFFER
 expr_stmt|;
 name|bus_generic_probe
 argument_list|(
@@ -2637,7 +2638,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len = %d, not word-aligned"
+literal|"%s: len = %zu, not word-aligned"
 operator|,
 name|__func__
 operator|,
@@ -2789,7 +2790,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: len = %d, not word-aligned"
+literal|"%s: len = %zu, not word-aligned"
 operator|,
 name|__func__
 operator|,
