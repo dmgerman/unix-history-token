@@ -6937,6 +6937,8 @@ argument_list|(
 name|m
 argument_list|,
 literal|"mbncsh"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -16365,6 +16367,8 @@ argument_list|(
 name|m
 argument_list|,
 literal|"vbpage"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK

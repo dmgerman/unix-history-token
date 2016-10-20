@@ -4376,6 +4376,8 @@ argument_list|(
 name|m
 argument_list|,
 literal|"madvpo"
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -5026,6 +5028,8 @@ argument_list|(
 name|m
 argument_list|,
 literal|"spltwt"
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -5362,6 +5366,8 @@ argument_list|(
 name|p
 argument_list|,
 literal|"vmocol"
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -6637,6 +6643,8 @@ argument_list|(
 name|p
 argument_list|,
 literal|"vmopax"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -6717,6 +6725,8 @@ argument_list|(
 name|p
 argument_list|,
 literal|"vmopar"
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK

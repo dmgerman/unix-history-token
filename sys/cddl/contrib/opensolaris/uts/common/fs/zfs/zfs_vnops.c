@@ -1338,6 +1338,8 @@ argument_list|(
 name|pp
 argument_list|,
 literal|"zfsmwb"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|zfs_vmobject_wlock
@@ -1569,6 +1571,8 @@ argument_list|(
 name|pp
 argument_list|,
 literal|"zfsmwb"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|zfs_vmobject_wlock
