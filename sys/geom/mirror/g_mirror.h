@@ -574,6 +574,9 @@ name|g_provider
 modifier|*
 name|sc_provider
 decl_stmt|;
+name|int
+name|sc_provider_open
+decl_stmt|;
 name|uint32_t
 name|sc_id
 decl_stmt|;
