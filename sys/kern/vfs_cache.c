@@ -3778,6 +3778,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+operator|*
+name|ncpp
+operator|=
+name|ncp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
