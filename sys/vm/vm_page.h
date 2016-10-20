@@ -1444,6 +1444,9 @@ specifier|const
 name|char
 modifier|*
 name|msg
+parameter_list|,
+name|bool
+name|nonshared
 parameter_list|)
 function_decl|;
 end_function_decl

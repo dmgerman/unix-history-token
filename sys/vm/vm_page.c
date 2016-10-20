@@ -2992,7 +2992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_busy_sleep:  *  *	Sleep and release the page lock, using the page pointer as wchan.  *	This is used to implement the hard-path of busying mechanism.  *  *	The given page must be locked.  */
+comment|/*  *	vm_page_busy_sleep:  *  *	Sleep and release the page lock, using the page pointer as wchan.  *	This is used to implement the hard-path of busying mechanism.  *  *	The given page must be locked.  *  *	If nonshared is true, sleep only if the page is xbusy.  */
 end_comment
 
 begin_function
@@ -3006,16 +3006,17 @@ specifier|const
 name|char
 modifier|*
 name|wmesg
+parameter_list|,
+name|bool
+name|nonshared
 parameter_list|)
 block|{
 name|u_int
 name|x
 decl_stmt|;
-name|vm_page_lock_assert
+name|vm_page_assert_locked
 argument_list|(
 name|m
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|x
@@ -3029,17 +3030,20 @@ condition|(
 name|x
 operator|==
 name|VPB_UNBUSIED
-condition|)
-block|{
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
+operator|||
+operator|(
+name|nonshared
+operator|&&
+operator|(
+name|x
+operator|&
+name|VPB_BIT_SHARED
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
 operator|(
 name|x
 operator|&
@@ -3062,6 +3066,7 @@ name|x
 operator||
 name|VPB_BIT_WAITERS
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vm_page_unlock
@@ -4101,6 +4106,8 @@ argument_list|(
 name|m
 argument_list|,
 name|msg
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
@@ -12871,6 +12878,14 @@ argument_list|(
 name|m
 argument_list|,
 literal|"pgrbwt"
+argument_list|,
+operator|(
+name|allocflags
+operator|&
+name|VM_ALLOC_IGN_SBUSY
+operator|)
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WLOCK
