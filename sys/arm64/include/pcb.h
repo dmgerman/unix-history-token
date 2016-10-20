@@ -90,6 +90,10 @@ define|#
 directive|define
 name|PCB_FP_STARTED
 value|0x01
+define|#
+directive|define
+name|PCB_FP_KERN
+value|0x02
 comment|/* The bits passed to userspace in get_fpcontext */
 define|#
 directive|define
