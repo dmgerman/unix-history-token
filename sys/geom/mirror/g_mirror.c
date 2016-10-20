@@ -6422,13 +6422,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * wakeup() is not needed, because this function is called from 		 * the worker thread. 		 */
-block|wakeup(&sc->sc_queue);
-endif|#
-directive|endif
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -10518,6 +10511,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|g_mirror_regular_release
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|disk
