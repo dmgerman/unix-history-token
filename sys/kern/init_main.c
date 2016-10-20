@@ -814,7 +814,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sysinit
 modifier|*
@@ -822,7 +821,6 @@ modifier|*
 name|sipp
 decl_stmt|;
 comment|/* system initialization*/
-specifier|register
 name|struct
 name|sysinit
 modifier|*
@@ -830,7 +828,6 @@ modifier|*
 name|xipp
 decl_stmt|;
 comment|/* interior loop of sort*/
-specifier|register
 name|struct
 name|sysinit
 modifier|*
