@@ -15412,6 +15412,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+operator|&
+name|ccb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ccb
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus
@@ -15579,12 +15590,15 @@ operator|)
 return|;
 block|}
 comment|/* 	 * The right way to handle this is to modify the xpt so that it can 	 * handle a wildcarded bus in a rescan or reset CCB.  At the moment 	 * that isn't implemented, so instead we enumerate the busses and 	 * send the rescan or reset to those busses in the case where the 	 * given bus is -1 (wildcard).  We don't send a rescan or reset 	 * to the xpt bus; sending a rescan to the xpt bus is effectively a 	 * no-op, sending a rescan to the xpt bus would result in a status of 	 * CAM_REQ_INVALID. 	 */
-name|CCB_CLEAR_ALL_EXCEPT_HDR
+name|bzero
 argument_list|(
 operator|&
 name|matchccb
-operator|.
-name|cdm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|matchccb
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|matchccb
