@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0025:	BPF_ALU+BPF_SUB+BPF_X  *  * $FreeBSD$  */
+comment|/*-  * Test 0086:	BPF_ALU+BPF_XOR+BPF_X  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -30,14 +30,14 @@ name|BPF_LDX
 operator|+
 name|BPF_IMM
 argument_list|,
-literal|0x20000801
+literal|0xc0decafe
 argument_list|)
 block|,
 name|BPF_STMT
 argument_list|(
 name|BPF_ALU
 operator|+
-name|BPF_SUB
+name|BPF_XOR
 operator|+
 name|BPF_X
 argument_list|,
@@ -126,7 +126,7 @@ specifier|static
 name|u_int
 name|expect
 init|=
-literal|0xbeadb8dd
+literal|0x1e730a20
 decl_stmt|;
 end_decl_stmt
 
