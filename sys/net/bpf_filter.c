@@ -1997,6 +1997,29 @@ continue|continue;
 case|case
 name|BPF_ALU
 operator||
+name|BPF_MOD
+operator||
+name|BPF_X
+case|:
+if|if
+condition|(
+name|X
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|A
+operator|%=
+name|X
+expr_stmt|;
+continue|continue;
+case|case
+name|BPF_ALU
+operator||
 name|BPF_AND
 operator||
 name|BPF_X
@@ -2015,6 +2038,18 @@ name|BPF_X
 case|:
 name|A
 operator||=
+name|X
+expr_stmt|;
+continue|continue;
+case|case
+name|BPF_ALU
+operator||
+name|BPF_XOR
+operator||
+name|BPF_X
+case|:
+name|A
+operator|^=
 name|X
 expr_stmt|;
 continue|continue;
@@ -2101,6 +2136,20 @@ continue|continue;
 case|case
 name|BPF_ALU
 operator||
+name|BPF_MOD
+operator||
+name|BPF_K
+case|:
+name|A
+operator|%=
+name|pc
+operator|->
+name|k
+expr_stmt|;
+continue|continue;
+case|case
+name|BPF_ALU
+operator||
 name|BPF_AND
 operator||
 name|BPF_K
@@ -2121,6 +2170,20 @@ name|BPF_K
 case|:
 name|A
 operator||=
+name|pc
+operator|->
+name|k
+expr_stmt|;
+continue|continue;
+case|case
+name|BPF_ALU
+operator||
+name|BPF_XOR
+operator||
+name|BPF_K
+case|:
+name|A
+operator|^=
 name|pc
 operator|->
 name|k
@@ -2231,12 +2294,12 @@ comment|/* 0x70-0x7f: 0000100000001000 */
 literal|0x0093
 block|,
 comment|/* 0x80-0x8f: 1100100100000000 */
-literal|0x0000
+literal|0x1010
 block|,
-comment|/* 0x90-0x9f: 0000000000000000 */
-literal|0x0000
+comment|/* 0x90-0x9f: 0000100000001000 */
+literal|0x1010
 block|,
-comment|/* 0xa0-0xaf: 0000000000000000 */
+comment|/* 0xa0-0xaf: 0000100000001000 */
 literal|0x0002
 block|,
 comment|/* 0xb0-0xbf: 0100000000000000 */
@@ -2487,6 +2550,7 @@ block|}
 comment|/* 		 * Check for constant division by 0. 		 */
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|code
@@ -2497,6 +2561,19 @@ operator||
 name|BPF_DIV
 operator||
 name|BPF_K
+operator|)
+operator|||
+name|p
+operator|->
+name|code
+operator|==
+operator|(
+name|BPF_ALU
+operator||
+name|BPF_MOD
+operator||
+name|BPF_K
+operator|)
 operator|)
 operator|&&
 name|p
