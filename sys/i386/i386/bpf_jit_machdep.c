@@ -254,6 +254,10 @@ name|u_short
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|stream
 operator|->
 name|ibuf
@@ -283,6 +287,10 @@ operator|*
 operator|(
 operator|(
 name|u_int
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -3006,6 +3014,10 @@ return|return
 operator|(
 operator|(
 name|bpf_filter_func
+operator|)
+operator|(
+name|void
+operator|*
 operator|)
 name|stream
 operator|.
