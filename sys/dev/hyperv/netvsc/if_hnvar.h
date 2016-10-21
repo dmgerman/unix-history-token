@@ -483,7 +483,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hn_rndis_get_rsscaps
+name|hn_rndis_query_rsscaps
 parameter_list|(
 name|struct
 name|hn_softc

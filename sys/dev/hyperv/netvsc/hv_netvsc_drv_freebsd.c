@@ -16686,10 +16686,10 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Get RSS capabilities, e.g. # of RX rings, and # of indirect 	 * table entries. 	 */
+comment|/* 	 * Query RSS capabilities, e.g. # of RX rings, and # of indirect 	 * table entries. 	 */
 name|error
 operator|=
-name|hn_rndis_get_rsscaps
+name|hn_rndis_query_rsscaps
 argument_list|(
 name|sc
 argument_list|,
