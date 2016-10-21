@@ -464,6 +464,11 @@ block|{
 name|pw_fini
 argument_list|()
 expr_stmt|;
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -472,6 +477,11 @@ literal|"pw_copy()"
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * in case of deletion of a user, the whole database 	 * needs to be regenerated 	 */
 if|if
 condition|(
