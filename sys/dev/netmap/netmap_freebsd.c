@@ -4313,7 +4313,7 @@ condition|)
 block|{
 name|D
 argument_list|(
-literal|"kern_ioctl error: %d ioctl parameters: fd %d com %lu data %p"
+literal|"kern_ioctl error: %d ioctl parameters: fd %d com %ju data %p"
 argument_list|,
 name|err
 argument_list|,
@@ -4321,6 +4321,9 @@ name|ctx
 operator|->
 name|irq_fd
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ctx
 operator|->
 name|irq_ioctl
