@@ -264,7 +264,7 @@ condition|)
 block|{
 name|atf_tc_fail
 argument_list|(
-literal|"printf(\"%s\", %s) ==> [%s], expected [%s]\n"
+literal|"printf(\"%s\", %s) ==> [%s], expected [%s]"
 argument_list|,
 name|fmt
 argument_list|,
@@ -348,7 +348,7 @@ condition|)
 block|{
 name|atf_tc_fail
 argument_list|(
-literal|"wprintf(\"%ls\", %s) ==> [%ls], expected [%ls]\n"
+literal|"wprintf(\"%ls\", %s) ==> [%ls], expected [%ls]"
 argument_list|,
 name|wfmt
 argument_list|,
