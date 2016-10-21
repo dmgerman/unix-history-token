@@ -10556,6 +10556,7 @@ literal|"\006UDP4CS"
 literal|"\007UDP6CS"
 literal|"\010TSO4"
 literal|"\011TSO6"
+literal|"\012HASHVAL"
 argument_list|)
 expr_stmt|;
 return|return
@@ -14578,12 +14579,25 @@ if|if
 condition|(
 name|sc
 operator|->
-name|hn_ndis_ver
-operator|>=
-name|HN_NDIS_VERSION_6_30
+name|hn_caps
+operator|&
+name|HN_CAP_HASHVAL
 condition|)
 block|{
-comment|/* Support HASHVAL pktinfo on TX path. */
+comment|/* 		 * Support HASHVAL pktinfo on TX path. 		 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"support HASHVAL pktinfo\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

@@ -856,6 +856,13 @@ name|HN_CAP_TSO6
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|HN_CAP_HASHVAL
+value|0x0200
+end_define
+
 begin_comment
 comment|/*  * Externs  */
 end_comment
