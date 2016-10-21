@@ -15,6 +15,12 @@ directive|define
 name|FMAN_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<dev/fdt/simplebus.h>
+end_include
+
 begin_comment
 comment|/**  * FMan driver instance data.  */
 end_comment
@@ -23,8 +29,9 @@ begin_struct
 struct|struct
 name|fman_softc
 block|{
-name|device_t
-name|dev
+name|struct
+name|simplebus_softc
+name|sc_base
 decl_stmt|;
 name|struct
 name|resource
@@ -179,6 +186,17 @@ parameter_list|(
 name|vm_offset_t
 modifier|*
 name|fm_base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fman_get_dev
+parameter_list|(
+name|device_t
+modifier|*
+name|fmd
 parameter_list|)
 function_decl|;
 end_function_decl
