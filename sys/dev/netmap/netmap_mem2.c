@@ -2139,10 +2139,16 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSBEGIN(mem2_ ## name); \ 	SYSCTL_DECL(_dev_netmap);
-comment|/* leave it here, easier for porting */
-value|\ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_size, \ 	    CTLFLAG_RW,&netmap_params[id].size, 0, "Requested size of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_size, \ 	    CTLFLAG_RD,&nm_mem.pools[id]._objsize, 0, "Current size of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_num, \ 	    CTLFLAG_RW,&netmap_params[id].num, 0, "Requested number of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_num, \ 	    CTLFLAG_RD,&nm_mem.pools[id].objtotal, 0, "Current number of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, priv_##name##_size, \ 	    CTLFLAG_RW,&netmap_min_priv_params[id].size, 0, \ 	    "Default size of private netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, priv_##name##_num, \ 	    CTLFLAG_RW,&netmap_min_priv_params[id].num, 0, \ 	    "Default number of private netmap " STRINGIFY(name) "s");	\ 	SYSEND
+value|SYSBEGIN(mem2_ ## name); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_size, \ 	    CTLFLAG_RW,&netmap_params[id].size, 0, "Requested size of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_size, \ 	    CTLFLAG_RD,&nm_mem.pools[id]._objsize, 0, "Current size of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_num, \ 	    CTLFLAG_RW,&netmap_params[id].num, 0, "Requested number of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_num, \ 	    CTLFLAG_RD,&nm_mem.pools[id].objtotal, 0, "Current number of netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, priv_##name##_size, \ 	    CTLFLAG_RW,&netmap_min_priv_params[id].size, 0, \ 	    "Default size of private netmap " STRINGIFY(name) "s"); \ 	SYSCTL_INT(_dev_netmap, OID_AUTO, priv_##name##_num, \ 	    CTLFLAG_RW,&netmap_min_priv_params[id].num, 0, \ 	    "Default number of private netmap " STRINGIFY(name) "s");	\ 	SYSEND
 end_define
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_dev_netmap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|DECLARE_SYSCTLS
