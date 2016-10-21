@@ -3242,6 +3242,19 @@ name|rxr_cnt
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_ndis_ver
+operator|<
+name|HN_NDIS_VERSION_6_20
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|memset
 argument_list|(
 operator|&
@@ -3263,34 +3276,6 @@ name|ndis_type
 operator|=
 name|NDIS_OBJTYPE_RSS_CAPS
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|hn_ndis_ver
-operator|<
-name|HN_NDIS_VERSION_6_30
-condition|)
-block|{
-name|in
-operator|.
-name|ndis_hdr
-operator|.
-name|ndis_rev
-operator|=
-name|NDIS_RSS_CAPS_REV_1
-expr_stmt|;
-name|in
-operator|.
-name|ndis_hdr
-operator|.
-name|ndis_size
-operator|=
-name|NDIS_RSS_CAPS_SIZE_6_0
-expr_stmt|;
-block|}
-else|else
-block|{
 name|in
 operator|.
 name|ndis_hdr
@@ -3307,7 +3292,6 @@ name|ndis_size
 operator|=
 name|NDIS_RSS_CAPS_SIZE
 expr_stmt|;
-block|}
 name|caps_len
 operator|=
 name|NDIS_RSS_CAPS_SIZE
@@ -4684,17 +4668,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Only NDIS 6.30+ is supported. 	 */
+comment|/* 	 * Only NDIS 6.20+ is supported: 	 * We only support 4bytes element in indirect table, which has been 	 * adopted since NDIS 6.20. 	 */
 name|KASSERT
 argument_list|(
 name|sc
 operator|->
 name|hn_ndis_ver
 operator|>=
-name|HN_NDIS_VERSION_6_30
+name|HN_NDIS_VERSION_6_20
 argument_list|,
 operator|(
-literal|"NDIS 6.30+ is required, NDIS version 0x%08x"
+literal|"NDIS 6.20+ is required, NDIS version 0x%08x"
 operator|,
 name|sc
 operator|->

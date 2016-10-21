@@ -16420,18 +16420,12 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|hn_ndis_ver
-operator|<
-name|HN_NDIS_VERSION_6_30
-operator|||
 name|nchan
 operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * Either RSS is not supported, or multiple RX/TX rings 		 * are not requested. 		 */
+comment|/* 		 * Multiple RX/TX rings are not requested. 		 */
 operator|*
 name|nsubch
 operator|=
