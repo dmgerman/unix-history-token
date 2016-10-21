@@ -459,7 +459,7 @@ name|LDNS_RR_TYPE_OPENPGPKEY
 init|=
 literal|61
 block|,
-comment|/* draft-ietf-dane-openpgpkey */
+comment|/* RFC 7929 */
 name|LDNS_RR_TYPE_CSYNC
 init|=
 literal|62
@@ -956,7 +956,12 @@ comment|/* RFC6975 */
 name|LDNS_EDNS_CLIENT_SUBNET
 init|=
 literal|8
+block|,
 comment|/* draft-vandergaast-edns-client-subnet */
+name|LDNS_EDNS_PADDING
+init|=
+literal|12
+comment|/* RFC7830 */
 block|}
 enum|;
 typedef|typedef

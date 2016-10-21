@@ -236,6 +236,24 @@ directive|include
 file|<sys/vfs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_ANON
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_ANON
+value|MAP_ANONYMOUS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -468,11 +486,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_getrandom
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NR_getrandom
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -584,9 +610,17 @@ operator|-
 literal|1
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_getrandom
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NR_getrandom
+argument_list|)
 comment|/* 	 * Try descriptor-less getrandom() 	 */
 name|ret
 operator|=
@@ -781,11 +815,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_getrandom
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NR_getrandom
+argument_list|)
+end_if
 
 begin_function
 specifier|static

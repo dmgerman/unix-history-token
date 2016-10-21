@@ -75,7 +75,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|event_base
+name|ub_event_base
 struct_decl|;
 end_struct_decl
 
@@ -182,7 +182,7 @@ name|seed_rnd
 decl_stmt|;
 comment|/** event base for event oriented interface */
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|event_base
 decl_stmt|;

@@ -61,6 +61,12 @@ name|regional
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|edns_option
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/** number of buckets in parse rrset hash table. Must be power of 2. */
 end_comment
@@ -401,7 +407,7 @@ value|0x3fff
 end_define
 
 begin_comment
-comment|/**  * EDNS data storage  * EDNS rdata is ignored.  */
+comment|/**  * EDNS data storage  * rdata is parsed in a list (has accessor functions). allocated in a  * region.  */
 end_comment
 
 begin_struct
@@ -427,6 +433,43 @@ decl_stmt|;
 comment|/** UDP reassembly size. */
 name|uint16_t
 name|udp_size
+decl_stmt|;
+comment|/** rdata element list, or NULL if none */
+name|struct
+name|edns_option
+modifier|*
+name|opt_list
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * EDNS option  */
+end_comment
+
+begin_struct
+struct|struct
+name|edns_option
+block|{
+comment|/** next item in list */
+name|struct
+name|edns_option
+modifier|*
+name|next
+decl_stmt|;
+comment|/** type of this edns option */
+name|uint16_t
+name|opt_code
+decl_stmt|;
+comment|/** length of this edns option (cannot exceed uint16 in encoding) */
+name|size_t
+name|opt_len
+decl_stmt|;
+comment|/** data of this edns option; allocated in region, or NULL if len=0 */
+name|uint8_t
+modifier|*
+name|opt_data
 decl_stmt|;
 block|}
 struct|;
@@ -473,7 +516,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * After parsing the packet, extract EDNS data from packet.  * If not present this is noted in the data structure.  * If a parse error happens, an error code is returned.  *  * Quirks:  *	o ignores OPT rdata.  *	o ignores OPT owner name.  *	o ignores extra OPT records, except the last one in the packet.  *  * @param msg: parsed message structure. Modified on exit, if EDNS was present  * 	it is removed from the additional section.  * @param edns: the edns data is stored here. Does not have to be initialised.  * @return: 0 on success. or an RCODE on an error.  *	RCODE formerr if OPT in wrong section, and so on.  */
+comment|/**  * After parsing the packet, extract EDNS data from packet.  * If not present this is noted in the data structure.  * If a parse error happens, an error code is returned.  *  * Quirks:  *	o ignores OPT rdata.  *	o ignores OPT owner name.  *	o ignores extra OPT records, except the last one in the packet.  *  * @param msg: parsed message structure. Modified on exit, if EDNS was present  * 	it is removed from the additional section.  * @param edns: the edns data is stored here. Does not have to be initialised.  * @param region: region to alloc results in (edns option contents)  * @return: 0 on success. or an RCODE on an error.  *	RCODE formerr if OPT in wrong section, and so on.  */
 end_comment
 
 begin_function_decl
@@ -489,12 +532,17 @@ name|struct
 name|edns_data
 modifier|*
 name|edns
+parameter_list|,
+name|struct
+name|regional
+modifier|*
+name|region
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * If EDNS data follows a query section, extract it and initialize edns struct.  * @param pkt: the packet. position at start must be right after the query  *	section. At end, right after EDNS data or no movement if failed.  * @param edns: the edns data allocated by the caller. Does not have to be  *	initialised.  * @return: 0 on success, or an RCODE on error.  *	RCODE formerr if OPT is badly formatted and so on.  */
+comment|/**  * If EDNS data follows a query section, extract it and initialize edns struct.  * @param pkt: the packet. position at start must be right after the query  *	section. At end, right after EDNS data or no movement if failed.  * @param edns: the edns data allocated by the caller. Does not have to be  *	initialised.  * @param region: region to alloc results in (edns option contents)  * @return: 0 on success, or an RCODE on error.  *	RCODE formerr if OPT is badly formatted and so on.  */
 end_comment
 
 begin_function_decl
@@ -510,6 +558,11 @@ name|struct
 name|edns_data
 modifier|*
 name|edns
+parameter_list|,
+name|struct
+name|regional
+modifier|*
+name|region
 parameter_list|)
 function_decl|;
 end_function_decl

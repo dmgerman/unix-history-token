@@ -39,6 +39,18 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|config_str3list
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|config_strbytelist
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|module_qstate
 struct_decl|;
 end_struct_decl
@@ -52,6 +64,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|ub_packed_rrset_key
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|regional
 struct_decl|;
 end_struct_decl
 
@@ -94,6 +112,10 @@ decl_stmt|;
 comment|/** do ip6 query support. */
 name|int
 name|do_ip6
+decl_stmt|;
+comment|/** prefer ip6 upstream queries. */
+name|int
+name|prefer_ip6
 decl_stmt|;
 comment|/** do udp query support. */
 name|int
@@ -226,6 +248,10 @@ decl_stmt|;
 comment|/** IP_TRANSPARENT socket option requested on port 53 sockets */
 name|int
 name|ip_transparent
+decl_stmt|;
+comment|/** IP_FREEBIND socket option request on port 53 sockets */
+name|int
+name|ip_freebind
 decl_stmt|;
 comment|/** number of interfaces to open. If 0 default all interfaces. */
 name|int
@@ -546,6 +572,12 @@ name|config_strlist
 modifier|*
 name|local_data
 decl_stmt|;
+comment|/** local zone override types per netblock */
+name|struct
+name|config_str3list
+modifier|*
+name|local_zone_overrides
+decl_stmt|;
 comment|/** unblock lan zones (reverse lookups for AS112 zones) */
 name|int
 name|unblock_lan_zones
@@ -553,6 +585,40 @@ decl_stmt|;
 comment|/** insecure lan zones (don't validate AS112 zones) */
 name|int
 name|insecure_lan_zones
+decl_stmt|;
+comment|/** list of zonename, tagbitlist */
+name|struct
+name|config_strbytelist
+modifier|*
+name|local_zone_tags
+decl_stmt|;
+comment|/** list of aclname, tagbitlist */
+name|struct
+name|config_strbytelist
+modifier|*
+name|acl_tags
+decl_stmt|;
+comment|/** list of aclname, tagname, localzonetype */
+name|struct
+name|config_str3list
+modifier|*
+name|acl_tag_actions
+decl_stmt|;
+comment|/** list of aclname, tagname, redirectdata */
+name|struct
+name|config_str3list
+modifier|*
+name|acl_tag_datas
+decl_stmt|;
+comment|/** tag list, array with tagname[i] is malloced string */
+name|char
+modifier|*
+modifier|*
+name|tagname
+decl_stmt|;
+comment|/** number of items in the taglist */
+name|int
+name|num_tags
 decl_stmt|;
 comment|/** remote control section. enable toggle. */
 name|int
@@ -672,6 +738,10 @@ decl_stmt|;
 comment|/** true to log dnstap FORWARDER_RESPONSE message events */
 name|int
 name|dnstap_log_forwarder_response_messages
+decl_stmt|;
+comment|/** true to disable DNSSEC lameness check in iterator */
+name|int
+name|disable_dnssec_lame_check
 decl_stmt|;
 comment|/** ratelimit 0 is off, otherwise qps (unless overridden) */
 name|int
@@ -831,6 +901,70 @@ comment|/** second string */
 name|char
 modifier|*
 name|str2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * List of three strings for config options  */
+end_comment
+
+begin_struct
+struct|struct
+name|config_str3list
+block|{
+comment|/** next item in list */
+name|struct
+name|config_str3list
+modifier|*
+name|next
+decl_stmt|;
+comment|/** first string */
+name|char
+modifier|*
+name|str
+decl_stmt|;
+comment|/** second string */
+name|char
+modifier|*
+name|str2
+decl_stmt|;
+comment|/** third string */
+name|char
+modifier|*
+name|str3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * List of string, bytestring for config options  */
+end_comment
+
+begin_struct
+struct|struct
+name|config_strbytelist
+block|{
+comment|/** next item in list */
+name|struct
+name|config_strbytelist
+modifier|*
+name|next
+decl_stmt|;
+comment|/** first string */
+name|char
+modifier|*
+name|str
+decl_stmt|;
+comment|/** second bytestring */
+name|uint8_t
+modifier|*
+name|str2
+decl_stmt|;
+name|size_t
+name|str2len
 decl_stmt|;
 block|}
 struct|;
@@ -1178,6 +1312,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** insert with region for allocation. */
+end_comment
+
+begin_function_decl
+name|int
+name|cfg_region_strlist_insert
+parameter_list|(
+name|struct
+name|regional
+modifier|*
+name|region
+parameter_list|,
+name|struct
+name|config_strlist
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|char
+modifier|*
+name|item
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Insert string into str2list.  * @param head: pointer to str2list head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @return: true on success.  */
 end_comment
 
@@ -1198,6 +1358,63 @@ parameter_list|,
 name|char
 modifier|*
 name|i2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Insert string into str3list.  * @param head: pointer to str3list head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @param i3: 3rd string, malloced by caller. If NULL the insertion fails.  * @return: true on success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cfg_str3list_insert
+parameter_list|(
+name|struct
+name|config_str3list
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|char
+modifier|*
+name|item
+parameter_list|,
+name|char
+modifier|*
+name|i2
+parameter_list|,
+name|char
+modifier|*
+name|i3
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Insert string into strbytelist.  * @param head: pointer to strbytelist head variable.  * @param item: new item. malloced by caller. If NULL the insertion fails.  * @param i2: 2nd string, malloced by caller. If NULL the insertion fails.  * @param i2len: length of the i2 bytestring.  * @return: true on success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|cfg_strbytelist_insert
+parameter_list|(
+name|struct
+name|config_strbytelist
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|char
+modifier|*
+name|item
+parameter_list|,
+name|uint8_t
+modifier|*
+name|i2
+parameter_list|,
+name|size_t
+name|i2len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1253,6 +1470,38 @@ name|config_deldblstrlist
 parameter_list|(
 name|struct
 name|config_str2list
+modifier|*
+name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Delete items in config triple string list.  * @param list: list.  */
+end_comment
+
+begin_function_decl
+name|void
+name|config_deltrplstrlist
+parameter_list|(
+name|struct
+name|config_str3list
+modifier|*
+name|list
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** delete stringbytelist */
+end_comment
+
+begin_function_decl
+name|void
+name|config_del_strbytelist
+parameter_list|(
+name|struct
+name|config_strbytelist
 modifier|*
 name|list
 parameter_list|)
@@ -1339,6 +1588,122 @@ parameter_list|,
 name|size_t
 modifier|*
 name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Add a tag name to the config.  It is added at the end with a new ID value.  * @param cfg: the config structure.  * @param tag: string (which is copied) with the name.  * @return: false on alloc failure.  */
+end_comment
+
+begin_function_decl
+name|int
+name|config_add_tag
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|cfg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Find tag ID in the tag list.  * @param cfg: the config structure.  * @param tag: string with tag name to search for.  * @return: 0..(num_tags-1) with tag ID, or -1 if tagname is not found.  */
+end_comment
+
+begin_function_decl
+name|int
+name|find_tag_id
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|cfg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * parse taglist from string into bytestring with bitlist.  * @param cfg: the config structure (with tagnames)  * @param str: the string to parse.  Parse puts 0 bytes in string.   * @param listlen: returns length of in bytes.  * @return malloced bytes with a bitlist of the tags.  or NULL on parse error  * or malloc failure.  */
+end_comment
+
+begin_function_decl
+name|uint8_t
+modifier|*
+name|config_parse_taglist
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|cfg
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+modifier|*
+name|listlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * convert tag bitlist to a malloced string with tag names.  For debug output.  * @param cfg: the config structure (with tagnames)  * @param taglist: the tag bitlist.  * @param len: length of the tag bitlist.  * @return malloced string or NULL.  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|config_taglist2str
+parameter_list|(
+name|struct
+name|config_file
+modifier|*
+name|cfg
+parameter_list|,
+name|uint8_t
+modifier|*
+name|taglist
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * see if two taglists intersect (have tags in common).  * @param list1: first tag bitlist.  * @param list1len: length in bytes of first list.  * @param list2: second tag bitlist.  * @param list2len: length in bytes of second list.  * @return true if there are tags in common, 0 if not.  */
+end_comment
+
+begin_function_decl
+name|int
+name|taglist_intersect
+parameter_list|(
+name|uint8_t
+modifier|*
+name|list1
+parameter_list|,
+name|size_t
+name|list1len
+parameter_list|,
+name|uint8_t
+modifier|*
+name|list2
+parameter_list|,
+name|size_t
+name|list2len
 parameter_list|)
 function_decl|;
 end_function_decl

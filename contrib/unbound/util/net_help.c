@@ -4832,6 +4832,15 @@ name|defined
 argument_list|(
 name|THREADS_DISABLED
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
+argument_list|)
+operator|&&
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x10100000L
 end_if
 
 begin_comment
@@ -4965,6 +4974,15 @@ name|defined
 argument_list|(
 name|THREADS_DISABLED
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
+argument_list|)
+operator|&&
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x10100000L
 name|int
 name|i
 decl_stmt|;
@@ -5068,6 +5086,15 @@ name|defined
 argument_list|(
 name|THREADS_DISABLED
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CRYPTO_LOCK
+argument_list|)
+operator|&&
+name|OPENSSL_VERSION_NUMBER
+operator|<
+literal|0x10100000L
 name|int
 name|i
 decl_stmt|;

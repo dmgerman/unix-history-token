@@ -2435,7 +2435,7 @@ condition|(
 operator|!
 name|env
 operator|->
-name|log_resolver_query_messages
+name|log_resolver_response_messages
 condition|)
 return|return;
 name|dt_msg_init

@@ -420,6 +420,10 @@ name|int
 name|nocaps
 operator|,
 expr|struct
+name|edns_option
+operator|*
+operator|,
+expr|struct
 name|sockaddr_storage
 operator|*
 name|addr

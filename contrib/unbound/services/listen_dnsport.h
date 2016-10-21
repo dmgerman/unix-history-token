@@ -318,7 +318,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create and bind nonblocking UDP socket  * @param family: for socket call.  * @param socktype: for socket call.  * @param addr: for bind call.  * @param addrlen: for bind call.  * @param v6only: if enabled, IP6 sockets get IP6ONLY option set.  * 	if enabled with value 2 IP6ONLY option is disabled.  * @param inuse: on error, this is set true if the port was in use.  * @param noproto: on error, this is set true if cause is that the 	IPv6 proto (family) is not available.  * @param rcv: set size on rcvbuf with socket option, if 0 it is not set.  * @param snd: set size on sndbuf with socket option, if 0 it is not set.  * @param listen: if true, this is a listening UDP port, eg port 53, and   * 	set SO_REUSEADDR on it.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @return: the socket. -1 on error.  */
+comment|/**  * Create and bind nonblocking UDP socket  * @param family: for socket call.  * @param socktype: for socket call.  * @param addr: for bind call.  * @param addrlen: for bind call.  * @param v6only: if enabled, IP6 sockets get IP6ONLY option set.  * 	if enabled with value 2 IP6ONLY option is disabled.  * @param inuse: on error, this is set true if the port was in use.  * @param noproto: on error, this is set true if cause is that the 	IPv6 proto (family) is not available.  * @param rcv: set size on rcvbuf with socket option, if 0 it is not set.  * @param snd: set size on sndbuf with socket option, if 0 it is not set.  * @param listen: if true, this is a listening UDP port, eg port 53, and   * 	set SO_REUSEADDR on it.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @param freebind: set IP_FREEBIND socket option.  * @return: the socket. -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -365,12 +365,15 @@ name|reuseport
 parameter_list|,
 name|int
 name|transparent
+parameter_list|,
+name|int
+name|freebind
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @param mss: maximum segment size of the socket. if zero, leaves the default.   * @return: the socket. -1 on error.  */
+comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @param transparent: set IP_TRANSPARENT socket option.  * @param mss: maximum segment size of the socket. if zero, leaves the default.   * @param freebind: set IP_FREEBIND socket option.  * @return: the socket. -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -398,6 +401,9 @@ name|transparent
 parameter_list|,
 name|int
 name|mss
+parameter_list|,
+name|int
+name|freebind
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -379,6 +379,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * See if qname has DNSSEC needs in the forwarding case.  This is true if  * there is a trust anchor above it.  Whether there is an insecure delegation  * to the data is unknown, but CD-retry is needed.  * @param env: environment with anchors.  * @param qinfo: query name and class.  * @return true if trust anchor above qname, false if no anchor or insecure  * point above qname.  */
+end_comment
+
+begin_function_decl
+name|int
+name|iter_indicates_dnssec_fwd
+parameter_list|(
+name|struct
+name|module_env
+modifier|*
+name|env
+parameter_list|,
+name|struct
+name|query_info
+modifier|*
+name|qinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * See if delegation is expected to have DNSSEC information (RRSIGs) in   * its answers, or not. Inspects delegation point (name), trust anchors,  * and delegation message (DS RRset) to determine this.  * @param env: module env with trust anchors.  * @param dp: delegation point.  * @param msg: delegation message, with DS if a secure referral.  * @param dclass: class of query.  * @return 1 if dnssec is expected, 0 if not.  */
 end_comment
 

@@ -211,7 +211,7 @@ empty_stmt|;
 end_extern
 
 begin_comment
-comment|/**  * Convert wireformat packet to a string representation with user buffer  * It appends every RR with default comments.  * For more formatter options use the function: TBD(TODO)  * @param data: wireformat packet data (starting at ID bytes).  * @param data_len: length of packet.  * @param str: the string buffer for the output.  * 	If you pass NULL as the str the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert wireformat packet to a string representation with user buffer  * It appends every RR with default comments.  * For more formatter options use the function: TBD(TODO)  * @param data: wireformat packet data (starting at ID bytes).  * @param data_len: length of packet.  * @param str: the string buffer for the output.  * 	If you pass NULL as the str the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -741,7 +741,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert RR to string presentation format, on one line.  User buffer.  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert RR to string presentation format, on one line.  User buffer.  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -766,7 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * 3597 printout of an RR in unknown rr format.  * There are more format and comment options available for printout  * with the function: TBD(TODO)  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire rr.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * 3597 printout of an RR in unknown rr format.  * There are more format and comment options available for printout  * with the function: TBD(TODO)  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire rr.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -791,7 +791,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * This creates the comment to print after the RR. ; keytag=... , and other  * basic comments for RRs.  * There are more format and comment options available for printout  * with the function: TBD(TODO)  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param dname_len: length of the dname in front of the RR.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire comment.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * This creates the comment to print after the RR. ; keytag=... , and other  * basic comments for RRs.  * There are more format and comment options available for printout  * with the function: TBD(TODO)  * @param rr: wireformat RR data  * @param rr_len: length of the rr wire data.  * @param dname_len: length of the dname in front of the RR.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire comment.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -819,7 +819,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert RDATA to string presentation format, on one line.  User buffer.  * @param rdata: wireformat rdata part of an RR.  * @param rdata_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @param rrtype: rr type of the data  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert RDATA to string presentation format, on one line.  User buffer.  * @param rdata: wireformat rdata part of an RR.  * @param rdata_len: length of the rr wire data.  * @param str: the string buffer to write to.  * 	If you pass NULL as the str, the return value of the function is  * 	the str_len you need for the entire packet.  It does not include  * 	the 0 byte at the end.  * @param str_len: the size of the string buffer.  If more is needed, it'll  * 	silently truncate the output to fit in the buffer.  * @param rrtype: rr type of the data  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -847,7 +847,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert wire RR type to a string, 'MX', 'TYPE12'.  With user buffer.  * @param rrtype: the RR type in host order.  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert wire RR type to a string, 'MX', 'TYPE12'.  With user buffer.  * @param rrtype: the RR type in host order.  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -868,7 +868,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert wire RR class to a string, 'IN', 'CLASS12'.  With user buffer.  * @param rrclass: the RR class in host order.  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert wire RR class to a string, 'IN', 'CLASS12'.  With user buffer.  * @param rrclass: the RR class in host order.  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -889,7 +889,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert wire RR rcode to a string, 'NOERROR', 'NXDOMAIN'.  With user buffer.  * @param rcode: rcode as integer in host order  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert wire RR rcode to a string, 'NOERROR', 'NXDOMAIN'.  With user buffer.  * @param rcode: rcode as integer in host order  * @param str: the string to write to.  * @param len: length of str.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl
@@ -910,7 +910,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Convert wire dname to a string, "example.com.".  With user buffer.  * @param dname: the dname in uncompressed wireformat.  * @param dname_len: length of the dname.  * @param str: the string to write to.  * @param len: length of string.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger than str_len if output was truncated.  */
+comment|/**  * Convert wire dname to a string, "example.com.".  With user buffer.  * @param dname: the dname in uncompressed wireformat.  * @param dname_len: length of the dname.  * @param str: the string to write to.  * @param len: length of string.  * @return the number of characters for this element, excluding zerobyte.  * 	Is larger or equal than str_len if output was truncated.  */
 end_comment
 
 begin_function_decl

@@ -59,8 +59,14 @@ name|tube
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|edns_option
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/**  * Worker service routine to send serviced queries to authoritative servers.  * @param qname: query name. (host order)  * @param qnamelen: length in bytes of qname, including trailing 0.  * @param qtype: query type. (host order)  * @param qclass: query class. (host order)  * @param flags: host order flags word, with opcode and CD bit.  * @param dnssec: if set, EDNS record will have DO bit set.  * @param want_dnssec: signatures needed.  * @param nocaps: ignore capsforid(if in config), do not perturb qname.  * @param addr: where to.  * @param addrlen: length of addr.  * @param zone: delegation point name.  * @param zonelen: length of zone name wireformat dname.  * @param q: wich query state to reactivate upon return.  * @return: false on failure (memory or socket related). no query was  *      sent.  */
+comment|/**  * Worker service routine to send serviced queries to authoritative servers.  * @param qname: query name. (host order)  * @param qnamelen: length in bytes of qname, including trailing 0.  * @param qtype: query type. (host order)  * @param qclass: query class. (host order)  * @param flags: host order flags word, with opcode and CD bit.  * @param dnssec: if set, EDNS record will have DO bit set.  * @param want_dnssec: signatures needed.  * @param nocaps: ignore capsforid(if in config), do not perturb qname.  * @param opt_list: EDNS options on outgoing packet.  * @param addr: where to.  * @param addrlen: length of addr.  * @param zone: delegation point name.  * @param zonelen: length of zone name wireformat dname.  * @param q: wich query state to reactivate upon return.  * @return: false on failure (memory or socket related). no query was  *      sent.  */
 end_comment
 
 begin_function_decl
@@ -93,6 +99,11 @@ name|want_dnssec
 parameter_list|,
 name|int
 name|nocaps
+parameter_list|,
+name|struct
+name|edns_option
+modifier|*
+name|opt_list
 parameter_list|,
 name|struct
 name|sockaddr_storage
@@ -313,7 +324,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Worker service routine to send serviced queries to authoritative servers.  * @param qname: query name. (host order)  * @param qnamelen: length in bytes of qname, including trailing 0.  * @param qtype: query type. (host order)  * @param qclass: query class. (host order)  * @param flags: host order flags word, with opcode and CD bit.  * @param dnssec: if set, EDNS record will have DO bit set.  * @param want_dnssec: signatures needed.  * @param nocaps: ignore capsforid(if in config), do not perturb qname.  * @param addr: where to.  * @param addrlen: length of addr.  * @param zone: wireformat dname of the zone.  * @param zonelen: length of zone name.  * @param q: wich query state to reactivate upon return.  * @return: false on failure (memory or socket related). no query was  *      sent.  */
+comment|/**  * Worker service routine to send serviced queries to authoritative servers.  * @param qname: query name. (host order)  * @param qnamelen: length in bytes of qname, including trailing 0.  * @param qtype: query type. (host order)  * @param qclass: query class. (host order)  * @param flags: host order flags word, with opcode and CD bit.  * @param dnssec: if set, EDNS record will have DO bit set.  * @param want_dnssec: signatures needed.  * @param nocaps: ignore capsforid(if in config), do not perturb qname.  * @param opt_list: EDNS options on outgoing packet.  * @param addr: where to.  * @param addrlen: length of addr.  * @param zone: wireformat dname of the zone.  * @param zonelen: length of zone name.  * @param q: wich query state to reactivate upon return.  * @return: false on failure (memory or socket related). no query was  *      sent.  */
 end_comment
 
 begin_function_decl
@@ -346,6 +357,11 @@ name|want_dnssec
 parameter_list|,
 name|int
 name|nocaps
+parameter_list|,
+name|struct
+name|edns_option
+modifier|*
+name|opt_list
 parameter_list|,
 name|struct
 name|sockaddr_storage

@@ -1955,7 +1955,7 @@ name|int
 name|id
 parameter_list|)
 block|{
-comment|/*      * In many cases we have nothing special to do. From most to least common:      *      *   - An internal query.      *   - A query for a record type other than AAAA.      *   - CD FLAG was set on querier      *   - An AAAA query for which an error was returned.      *   - A successful AAAA query with an answer.      */
+comment|/*      * In many cases we have nothing special to do. From most to least common:      *      *   - An internal query.      *   - A query for a record type other than AAAA.      *   - CD FLAG was set on querier      *   - An AAAA query for which an error was returned.(qstate.return_rcode)      *     -> treated as servfail thus synthesize (sec 5.1.3 6147), thus      *        synthesize in (sec 5.1.2 of RFC6147).      *   - A successful AAAA query with an answer.      */
 if|if
 condition|(
 operator|(
@@ -1986,12 +1986,6 @@ name|query_flags
 operator|&
 name|BIT_CD
 operator|)
-operator|||
-name|qstate
-operator|->
-name|return_rcode
-operator|!=
-name|LDNS_RCODE_NOERROR
 operator|||
 operator|(
 name|qstate
@@ -3643,7 +3637,9 @@ name|struct
 name|module_func_block
 modifier|*
 name|dns64_get_funcblock
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|&

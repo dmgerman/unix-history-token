@@ -3452,10 +3452,7 @@ index|]
 operator|=
 name|pad64
 expr_stmt|;
-name|i
-operator|+=
-literal|2
-expr_stmt|;
+comment|/* i += 2; */
 name|o
 operator|+=
 literal|4
@@ -3521,10 +3518,7 @@ index|]
 operator|=
 name|pad64
 expr_stmt|;
-name|i
-operator|+=
-literal|1
-expr_stmt|;
+comment|/* i += 1; */
 name|o
 operator|+=
 literal|4

@@ -111,7 +111,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|event_base
+name|ub_event_base
 struct_decl|;
 end_struct_decl
 
@@ -227,7 +227,7 @@ modifier|*
 name|ctx
 parameter_list|,
 name|struct
-name|event_base
+name|ub_event_base
 modifier|*
 name|eb
 parameter_list|)

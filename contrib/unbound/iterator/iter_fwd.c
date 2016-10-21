@@ -1370,6 +1370,14 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|name
+condition|)
+continue|continue;
 name|dname
 operator|=
 name|sldns_str2wire_dname

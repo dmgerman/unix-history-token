@@ -124,6 +124,57 @@ value|32
 end_define
 
 begin_comment
+comment|/** max number of queries for which to perform dnsseclameness detection,  * (rrsigs misssing detection) after that, just pick up that response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNSSEC_LAME_DETECT_COUNT
+value|4
+end_define
+
+begin_comment
+comment|/**  * max number of QNAME minimisation iterations. Limits number of queries for  * QNAMEs with a lot of labels. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MINIMISE_COUNT
+value|10
+end_define
+
+begin_comment
+comment|/* max number of time-outs for minimised query. Prevents resolving failures  * when the QNAME minimisation QTYPE is blocked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MINIMISE_TIMEOUT_COUNT
+value|3
+end_define
+
+begin_comment
+comment|/**  * number of labels from QNAME that are always send individually when using  * QNAME minimisation, even when the number of labels of the QNAME is bigger  * tham MAX_MINIMISE_COUNT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINIMISE_ONE_LAB
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINIMISE_MULTIPLE_LABS
+value|(MAX_MINIMISE_COUNT - MINIMISE_ONE_LAB)
+end_define
+
+begin_comment
 comment|/** at what query-sent-count to stop target fetch policy */
 end_comment
 
@@ -477,7 +528,7 @@ name|struct
 name|outbound_list
 name|outlist
 decl_stmt|;
-comment|/** QNAME minimisation state */
+comment|/** QNAME minimisation state, RFC7816 */
 name|enum
 name|minimisation_state
 name|minimisation_state
@@ -486,6 +537,14 @@ comment|/** 	 * The query info that is sent upstream. Will be a subset of qchase
 name|struct
 name|query_info
 name|qinfo_out
+decl_stmt|;
+comment|/** 	 * Count number of QNAME minisation iterations. Used to limit number of 	 * outgoing queries when QNAME minimisation is enabled. 	 */
+name|int
+name|minimise_count
+decl_stmt|;
+comment|/** 	 * Count number of time-outs. Used to prevent resolving failures when 	 * the QNAME minimisation QTYPE is blocked. */
+name|int
+name|minimise_timeout_count
 decl_stmt|;
 block|}
 struct|;

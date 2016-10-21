@@ -79,14 +79,14 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/** number of seconds timeout on incoming remote control handshake */
+comment|/** number of milliseconds timeout on incoming remote control handshake */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REMOTE_CONTROL_TCP_TIMEOUT
-value|120
+value|120000
 end_define
 
 begin_comment
