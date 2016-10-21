@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -40,12 +40,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/jail.h>
 end_include
-
-begin_comment
-comment|/* defines used in kernel.h */
-end_comment
 
 begin_include
 include|#
@@ -5800,7 +5796,7 @@ name|CURVNET_SET
 argument_list|(
 name|TD_TO_VNET
 argument_list|(
-name|rd
+name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
