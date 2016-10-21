@@ -7878,11 +7878,13 @@ name|ip
 operator|=
 name|calloc
 argument_list|(
-sizeof|sizeof
-expr|*
-name|ip
-argument_list|,
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ip
