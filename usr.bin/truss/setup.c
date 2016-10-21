@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -2951,6 +2957,7 @@ name|threadinfo
 modifier|*
 name|t
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|signame
@@ -2978,12 +2985,22 @@ argument_list|)
 expr_stmt|;
 name|signame
 operator|=
-name|strsig
+name|sysdecode_signal
 argument_list|(
 name|si
 operator|->
 name|si_status
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|signame
+operator|==
+name|NULL
+condition|)
+name|signame
+operator|=
+literal|"?"
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2997,12 +3014,6 @@ name|si
 operator|->
 name|si_status
 argument_list|,
-name|signame
-operator|==
-name|NULL
-condition|?
-literal|"?"
-else|:
 name|signame
 argument_list|)
 expr_stmt|;

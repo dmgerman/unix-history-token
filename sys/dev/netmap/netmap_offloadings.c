@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2014 Vincenzo Maffione. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2014-2015 Vincenzo Maffione  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -51,16 +51,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_comment
-comment|/* types used in module initialization */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -72,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -191,7 +187,7 @@ file|<dev/netmap/netmap_kern.h>
 end_include
 
 begin_comment
-comment|/* This routine is called by bdg_mismatch_datapath() when it finishes  * accumulating bytes for a segment, in order to fix some fields in the  * segment headers (which still contain the same content as the header  * of the original GSO packet). 'buf' points to the beginning (e.g.  * the ethernet header) of the segment, and 'len' is its length.  */
+comment|/* This routine is called by bdg_mismatch_datapath() when it finishes  * accumulating bytes for a segment, in order to fix some fields in the  * segment headers (which still contain the same content as the header  * of the original GSO packet). 'pkt' points to the beginning of the IP  * header of the segment, while 'len' is the length of the IP packet.  */
 end_comment
 
 begin_function
@@ -201,10 +197,19 @@ name|gso_fix_segment
 parameter_list|(
 name|uint8_t
 modifier|*
-name|buf
+name|pkt
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|u_int
+name|ipv4
+parameter_list|,
+name|u_int
+name|iphlen
+parameter_list|,
+name|u_int
+name|tcp
 parameter_list|,
 name|u_int
 name|idx
@@ -214,12 +219,6 @@ name|segmented_bytes
 parameter_list|,
 name|u_int
 name|last_segment
-parameter_list|,
-name|u_int
-name|tcp
-parameter_list|,
-name|u_int
-name|iphlen
 parameter_list|)
 block|{
 name|struct
@@ -233,9 +232,7 @@ name|nm_iphdr
 operator|*
 operator|)
 operator|(
-name|buf
-operator|+
-literal|14
+name|pkt
 operator|)
 decl_stmt|;
 name|struct
@@ -249,9 +246,7 @@ name|nm_ipv6hdr
 operator|*
 operator|)
 operator|(
-name|buf
-operator|+
-literal|14
+name|pkt
 operator|)
 decl_stmt|;
 name|uint16_t
@@ -268,9 +263,7 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
-name|iphlen
-operator|==
-literal|20
+name|ipv4
 condition|)
 block|{
 comment|/* Set the IPv4 "Total Length" field. */
@@ -281,8 +274,6 @@ operator|=
 name|htobe16
 argument_list|(
 name|len
-operator|-
-literal|14
 argument_list|)
 expr_stmt|;
 name|ND
@@ -337,7 +328,7 @@ name|iph
 operator|->
 name|check
 operator|=
-name|nm_csum_ipv4
+name|nm_os_csum_ipv4
 argument_list|(
 name|iph
 argument_list|)
@@ -357,7 +348,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if (iphlen == 40) */
 comment|/* Set the IPv6 "Payload Len" field. */
 name|ip6h
 operator|->
@@ -366,8 +356,6 @@ operator|=
 name|htobe16
 argument_list|(
 name|len
-operator|-
-literal|14
 operator|-
 name|iphlen
 argument_list|)
@@ -389,9 +377,7 @@ name|nm_tcphdr
 operator|*
 operator|)
 operator|(
-name|buf
-operator|+
-literal|14
+name|pkt
 operator|+
 name|iphlen
 operator|)
@@ -479,9 +465,7 @@ name|nm_udphdr
 operator|*
 operator|)
 operator|(
-name|buf
-operator|+
-literal|14
+name|pkt
 operator|+
 name|iphlen
 operator|)
@@ -494,8 +478,6 @@ operator|=
 name|htobe16
 argument_list|(
 name|len
-operator|-
-literal|14
 operator|-
 name|iphlen
 argument_list|)
@@ -524,11 +506,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|iphlen
-operator|==
-literal|20
+name|ipv4
 condition|)
-name|nm_csum_tcpudp_ipv4
+name|nm_os_csum_tcpudp_ipv4
 argument_list|(
 name|iph
 argument_list|,
@@ -536,23 +516,19 @@ name|check_data
 argument_list|,
 name|len
 operator|-
-literal|14
-operator|-
 name|iphlen
 argument_list|,
 name|check
 argument_list|)
 expr_stmt|;
 else|else
-name|nm_csum_tcpudp_ipv6
+name|nm_os_csum_tcpudp_ipv6
 argument_list|(
 name|ip6h
 argument_list|,
 name|check_data
 argument_list|,
 name|len
-operator|-
-literal|14
 operator|-
 name|iphlen
 argument_list|,
@@ -570,6 +546,64 @@ name|check
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|vnet_hdr_is_bad
+parameter_list|(
+name|struct
+name|nm_vnet_hdr
+modifier|*
+name|vh
+parameter_list|)
+block|{
+name|uint8_t
+name|gso_type
+init|=
+name|vh
+operator|->
+name|gso_type
+operator|&
+operator|~
+name|VIRTIO_NET_HDR_GSO_ECN
+decl_stmt|;
+return|return
+operator|(
+operator|(
+name|gso_type
+operator|!=
+name|VIRTIO_NET_HDR_GSO_NONE
+operator|&&
+name|gso_type
+operator|!=
+name|VIRTIO_NET_HDR_GSO_TCPV4
+operator|&&
+name|gso_type
+operator|!=
+name|VIRTIO_NET_HDR_GSO_UDP
+operator|&&
+name|gso_type
+operator|!=
+name|VIRTIO_NET_HDR_GSO_TCPV6
+operator|)
+operator|||
+operator|(
+name|vh
+operator|->
+name|flags
+operator|&
+operator|~
+operator|(
+name|VIRTIO_NET_HDR_F_NEEDS_CSUM
+operator||
+name|VIRTIO_NET_HDR_F_DATA_VALID
+operator|)
+operator|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -591,6 +625,7 @@ name|netmap_vp_adapter
 modifier|*
 name|dst_na
 parameter_list|,
+specifier|const
 name|struct
 name|nm_bdg_fwd
 modifier|*
@@ -599,7 +634,7 @@ parameter_list|,
 name|struct
 name|netmap_ring
 modifier|*
-name|ring
+name|dst_ring
 parameter_list|,
 name|u_int
 modifier|*
@@ -616,7 +651,7 @@ block|{
 name|struct
 name|netmap_slot
 modifier|*
-name|slot
+name|dst_slot
 init|=
 name|NULL
 decl_stmt|;
@@ -627,14 +662,7 @@ name|vh
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Number of source slots to process. */
-name|u_int
-name|frags
-init|=
-name|ft_p
-operator|->
-name|ft_frags
-decl_stmt|;
+specifier|const
 name|struct
 name|nm_bdg_fwd
 modifier|*
@@ -642,7 +670,9 @@ name|ft_end
 init|=
 name|ft_p
 operator|+
-name|frags
+name|ft_p
+operator|->
+name|ft_frags
 decl_stmt|;
 comment|/* Source and destination pointers. */
 name|uint8_t
@@ -657,6 +687,7 @@ name|src_len
 decl_stmt|,
 name|dst_len
 decl_stmt|;
+comment|/* Indices and counters for the destination ring. */
 name|u_int
 name|j_start
 init|=
@@ -664,34 +695,33 @@ operator|*
 name|j
 decl_stmt|;
 name|u_int
+name|j_cur
+init|=
+name|j_start
+decl_stmt|;
+name|u_int
 name|dst_slots
 init|=
 literal|0
 decl_stmt|;
-comment|/* If the source port uses the offloadings, while destination doesn't, 	 * we grab the source virtio-net header and do the offloadings here. 	 */
 if|if
 condition|(
-name|na
-operator|->
-name|virt_hdr_len
-operator|&&
-operator|!
-name|dst_na
-operator|->
-name|virt_hdr_len
+name|unlikely
+argument_list|(
+name|ft_p
+operator|==
+name|ft_end
+argument_list|)
 condition|)
 block|{
-name|vh
-operator|=
-operator|(
-expr|struct
-name|nm_vnet_hdr
-operator|*
-operator|)
-name|ft_p
-operator|->
-name|ft_buf
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"No source slots to process"
+argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* Init source and dest pointers. */
 name|src
@@ -706,15 +736,14 @@ name|ft_p
 operator|->
 name|ft_len
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|=
 operator|&
-name|ring
+name|dst_ring
 operator|->
 name|slot
 index|[
-operator|*
-name|j
+name|j_cur
 index|]
 expr_stmt|;
 name|dst
@@ -726,13 +755,78 @@ name|dst_na
 operator|->
 name|up
 argument_list|,
-name|slot
+name|dst_slot
 argument_list|)
 expr_stmt|;
 name|dst_len
 operator|=
 name|src_len
 expr_stmt|;
+comment|/* If the source port uses the offloadings, while destination doesn't, 	 * we grab the source virtio-net header and do the offloadings here. 	 */
+if|if
+condition|(
+name|na
+operator|->
+name|up
+operator|.
+name|virt_hdr_len
+operator|&&
+operator|!
+name|dst_na
+operator|->
+name|up
+operator|.
+name|virt_hdr_len
+condition|)
+block|{
+name|vh
+operator|=
+operator|(
+expr|struct
+name|nm_vnet_hdr
+operator|*
+operator|)
+name|src
+expr_stmt|;
+comment|/* Initial sanity check on the source virtio-net header. If 		 * something seems wrong, just drop the packet. */
+if|if
+condition|(
+name|src_len
+operator|<
+name|na
+operator|->
+name|up
+operator|.
+name|virt_hdr_len
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short src vnet header, dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|vnet_hdr_is_bad
+argument_list|(
+name|vh
+argument_list|)
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Bad src vnet header, dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 comment|/* We are processing the first input slot and there is a mismatch 	 * between source and destination virt_hdr_len (SHL and DHL). 	 * When the a client is using virtio-net headers, the header length 	 * can be: 	 *    - 10: the header corresponds to the struct nm_vnet_hdr 	 *    - 12: the first 10 bytes correspond to the struct 	 *          virtio_net_hdr, and the last 2 bytes store the 	 *          "mergeable buffers" info, which is an optional 	 *	    hint that can be zeroed for compatibility 	 * 	 * The destination header is therefore built according to the 	 * following table: 	 * 	 * SHL | DHL | destination header 	 * ----------------------------- 	 *   0 |  10 | zero 	 *   0 |  12 | zero 	 *  10 |   0 | doesn't exist 	 *  10 |  12 | first 10 bytes are copied from source header, last 2 are zero 	 *  12 |   0 | doesn't exist 	 *  12 |  10 | copied from the first 10 bytes of source header 	 */
 name|bzero
 argument_list|(
@@ -740,6 +834,8 @@ name|dst
 argument_list|,
 name|dst_na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 argument_list|)
 expr_stmt|;
@@ -747,10 +843,14 @@ if|if
 condition|(
 name|na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 operator|&&
 name|dst_na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 condition|)
 name|memcpy
@@ -771,24 +871,32 @@ name|src
 operator|+=
 name|na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 expr_stmt|;
 name|src_len
 operator|-=
 name|na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 expr_stmt|;
 name|dst
 operator|+=
 name|dst_na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 expr_stmt|;
 name|dst_len
 operator|=
 name|dst_na
 operator|->
+name|up
+operator|.
 name|virt_hdr_len
 operator|+
 name|src_len
@@ -862,11 +970,23 @@ name|segmented_bytes
 init|=
 literal|0
 decl_stmt|;
+comment|/* Is this an IPv4 or IPv6 GSO packet? */
+name|u_int
+name|ipv4
+init|=
+literal|0
+decl_stmt|;
 comment|/* Length of the IP header (20 if IPv4, 40 if IPv6). */
 name|u_int
 name|iphlen
 init|=
 literal|0
+decl_stmt|;
+comment|/* Length of the Ethernet header (18 if 802.1q, otherwise 14). */
+name|u_int
+name|ethhlen
+init|=
+literal|14
 decl_stmt|;
 comment|/* Is this a TCP or an UDP GSO packet? */
 name|u_int
@@ -890,16 +1010,33 @@ else|:
 literal|1
 decl_stmt|;
 comment|/* Segment the GSO packet contained into the input slots (frags). */
-while|while
-condition|(
-name|ft_p
-operator|!=
-name|ft_end
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|size_t
 name|copy
 decl_stmt|;
+if|if
+condition|(
+name|dst_slots
+operator|>=
+operator|*
+name|howmany
+condition|)
+block|{
+comment|/* We still have work to do, but we've run out of 				 * dst slots, so we have to drop the packet. */
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Not enough slots, dropping GSO packet"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Grab the GSO header if we don't have it. */
 if|if
 condition|(
@@ -914,7 +1051,29 @@ name|gso_hdr
 operator|=
 name|src
 expr_stmt|;
-comment|/* Look at the 'Ethertype' field to see if this packet 				 * is IPv4 or IPv6. 				 */
+comment|/* Look at the 'Ethertype' field to see if this packet 				 * is IPv4 or IPv6, taking into account VLAN 				 * encapsulation. */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|src_len
+operator|<
+name|ethhlen
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short GSO fragment [eth], dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ethertype
 operator|=
 name|be16toh
@@ -928,7 +1087,9 @@ operator|)
 operator|(
 name|gso_hdr
 operator|+
-literal|12
+name|ethhlen
+operator|-
+literal|2
 operator|)
 operator|)
 argument_list|)
@@ -936,19 +1097,103 @@ expr_stmt|;
 if|if
 condition|(
 name|ethertype
-operator|==
-literal|0x0800
+operator|!=
+literal|0x8100
 condition|)
+comment|/* not 802.1q */
+break|break;
+name|ethhlen
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|ethertype
+condition|)
+block|{
+case|case
+literal|0x0800
+case|:
+comment|/* IPv4 */
+block|{
+name|struct
+name|nm_iphdr
+modifier|*
+name|iph
+init|=
+operator|(
+expr|struct
+name|nm_iphdr
+operator|*
+operator|)
+operator|(
+name|gso_hdr
+operator|+
+name|ethhlen
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|src_len
+operator|<
+name|ethhlen
+operator|+
+literal|20
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short GSO fragment "
+literal|"[IPv4], dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ipv4
+operator|=
+literal|1
+expr_stmt|;
 name|iphlen
 operator|=
-literal|20
+literal|4
+operator|*
+operator|(
+name|iph
+operator|->
+name|version_ihl
+operator|&
+literal|0x0F
+operator|)
 expr_stmt|;
-else|else
-comment|/* if (ethertype == 0x86DD) */
+break|break;
+block|}
+case|case
+literal|0x86DD
+case|:
+comment|/* IPv6 */
+name|ipv4
+operator|=
+literal|0
+expr_stmt|;
 name|iphlen
 operator|=
 literal|40
 expr_stmt|;
+break|break;
+default|default:
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Unsupported ethertype, "
+literal|"dropping GSO packet"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ND
 argument_list|(
 literal|3
@@ -958,6 +1203,24 @@ argument_list|,
 name|ethertype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|src_len
+operator|<
+name|ethhlen
+operator|+
+name|iphlen
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short GSO fragment [IP], dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Compute gso_hdr_len. For TCP we need to read the 				 * content of the 'Data Offset' field. 				 */
 if|if
 condition|(
@@ -974,17 +1237,38 @@ expr|struct
 name|nm_tcphdr
 operator|*
 operator|)
-operator|&
+operator|(
 name|gso_hdr
-index|[
-literal|14
+operator|+
+name|ethhlen
 operator|+
 name|iphlen
-index|]
+operator|)
 decl_stmt|;
+if|if
+condition|(
+name|src_len
+operator|<
+name|ethhlen
+operator|+
+name|iphlen
+operator|+
+literal|20
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short GSO fragment "
+literal|"[TCP], dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|gso_hdr_len
 operator|=
-literal|14
+name|ethhlen
 operator|+
 name|iphlen
 operator|+
@@ -1000,15 +1284,33 @@ operator|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|gso_hdr_len
 operator|=
-literal|14
+name|ethhlen
 operator|+
 name|iphlen
 operator|+
 literal|8
 expr_stmt|;
 comment|/* UDP */
+block|}
+if|if
+condition|(
+name|src_len
+operator|<
+name|gso_hdr_len
+condition|)
+block|{
+name|RD
+argument_list|(
+literal|3
+argument_list|,
+literal|"Short GSO fragment [TCP/UDP], dropping"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ND
 argument_list|(
 literal|3
@@ -1060,7 +1362,6 @@ name|ft_p
 operator|->
 name|ft_len
 expr_stmt|;
-continue|continue;
 block|}
 block|}
 comment|/* Fill in the header of the current segment. */
@@ -1157,8 +1458,18 @@ comment|/* After raw segmentation, we must fix some header 				 * fields and com
 name|gso_fix_segment
 argument_list|(
 name|dst
+operator|+
+name|ethhlen
 argument_list|,
 name|gso_bytes
+operator|-
+name|ethhlen
+argument_list|,
+name|ipv4
+argument_list|,
+name|iphlen
+argument_list|,
+name|tcp
 argument_list|,
 name|gso_idx
 argument_list|,
@@ -1173,10 +1484,6 @@ operator|+
 literal|1
 operator|==
 name|ft_end
-argument_list|,
-name|tcp
-argument_list|,
-name|iphlen
 argument_list|)
 expr_stmt|;
 name|ND
@@ -1191,17 +1498,20 @@ operator|)
 name|gso_bytes
 argument_list|)
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|->
 name|len
 operator|=
 name|gso_bytes
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|->
 name|flags
 operator|=
 literal|0
+expr_stmt|;
+name|dst_slots
+operator|++
 expr_stmt|;
 name|segmented_bytes
 operator|+=
@@ -1209,30 +1519,31 @@ name|gso_bytes
 operator|-
 name|gso_hdr_len
 expr_stmt|;
-name|dst_slots
+name|gso_bytes
+operator|=
+literal|0
+expr_stmt|;
+name|gso_idx
 operator|++
 expr_stmt|;
 comment|/* Next destination slot. */
-operator|*
-name|j
+name|j_cur
 operator|=
 name|nm_next
 argument_list|(
-operator|*
-name|j
+name|j_cur
 argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|=
 operator|&
-name|ring
+name|dst_ring
 operator|->
 name|slot
 index|[
-operator|*
-name|j
+name|j_cur
 index|]
 expr_stmt|;
 name|dst
@@ -1244,15 +1555,8 @@ name|dst_na
 operator|->
 name|up
 argument_list|,
-name|slot
+name|dst_slot
 argument_list|)
-expr_stmt|;
-name|gso_bytes
-operator|=
-literal|0
-expr_stmt|;
-name|gso_idx
-operator|++
 expr_stmt|;
 block|}
 comment|/* Next input slot. */
@@ -1395,7 +1699,7 @@ name|dst_slots
 condition|)
 name|csum
 operator|=
-name|nm_csum_raw
+name|nm_os_csum_raw
 argument_list|(
 name|src
 operator|+
@@ -1415,7 +1719,7 @@ expr_stmt|;
 else|else
 name|csum
 operator|=
-name|nm_csum_raw
+name|nm_os_csum_raw
 argument_list|(
 name|src
 argument_list|,
@@ -1480,7 +1784,7 @@ name|src_len
 argument_list|)
 expr_stmt|;
 block|}
-name|slot
+name|dst_slot
 operator|->
 name|len
 operator|=
@@ -1490,26 +1794,23 @@ name|dst_slots
 operator|++
 expr_stmt|;
 comment|/* Next destination slot. */
-operator|*
-name|j
+name|j_cur
 operator|=
 name|nm_next
 argument_list|(
-operator|*
-name|j
+name|j_cur
 argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|=
 operator|&
-name|ring
+name|dst_ring
 operator|->
 name|slot
 index|[
-operator|*
-name|j
+name|j_cur
 index|]
 expr_stmt|;
 name|dst
@@ -1521,7 +1822,7 @@ name|dst_na
 operator|->
 name|up
 argument_list|,
-name|slot
+name|dst_slot
 argument_list|)
 expr_stmt|;
 comment|/* Next source slot. */
@@ -1562,7 +1863,7 @@ block|{
 operator|*
 name|check
 operator|=
-name|nm_csum_fold
+name|nm_os_csum_fold
 argument_list|(
 name|csum
 argument_list|)
@@ -1577,26 +1878,25 @@ argument_list|,
 name|dst_slots
 argument_list|)
 expr_stmt|;
-comment|/* A second pass on the desitations slots to set the slot flags, 		 * using the right number of destination slots. 		 */
+comment|/* A second pass on the destination slots to set the slot flags, 		 * using the right number of destination slots. 		 */
 while|while
 condition|(
 name|j_start
 operator|!=
-operator|*
-name|j
+name|j_cur
 condition|)
 block|{
-name|slot
+name|dst_slot
 operator|=
 operator|&
-name|ring
+name|dst_ring
 operator|->
 name|slot
 index|[
 name|j_start
 index|]
 expr_stmt|;
-name|slot
+name|dst_slot
 operator|->
 name|flags
 operator|=
@@ -1619,7 +1919,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Clear NS_MOREFRAG flag on last entry. */
-name|slot
+name|dst_slot
 operator|->
 name|flags
 operator|=
@@ -1630,7 +1930,7 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
-comment|/* Update howmany. */
+comment|/* Update howmany and j. This is to commit the use of 	 * those slots in the destination ring. */
 if|if
 condition|(
 name|unlikely
@@ -1642,17 +1942,17 @@ name|howmany
 argument_list|)
 condition|)
 block|{
-name|dst_slots
-operator|=
-operator|*
-name|howmany
-expr_stmt|;
 name|D
 argument_list|(
-literal|"Slot allocation error: Should never happen"
+literal|"Slot allocation error: This is a bug"
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|j
+operator|=
+name|j_cur
+expr_stmt|;
 operator|*
 name|howmany
 operator|-=

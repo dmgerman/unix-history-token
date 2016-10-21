@@ -117,13 +117,6 @@ argument_list|)
 name|pi_next
 expr_stmt|;
 comment|/* hash link */
-name|TAILQ_ENTRY
-argument_list|(
-argument|pmcstat_image
-argument_list|)
-name|pi_lru
-expr_stmt|;
-comment|/* LRU list */
 name|pmcstat_interned_string
 name|pi_execpath
 decl_stmt|;

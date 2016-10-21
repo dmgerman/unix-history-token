@@ -557,6 +557,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -589,6 +591,8 @@ operator||
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -615,6 +619,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

@@ -3391,7 +3391,22 @@ decl_stmt|;
 name|device_t
 name|grandchild
 decl_stmt|;
-comment|/* remove children first */
+comment|/* detach parent before deleting children, if any */
+name|error
+operator|=
+name|device_detach
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|done
+goto|;
+comment|/* remove children second */
 while|while
 condition|(
 operator|(
@@ -3433,20 +3448,6 @@ name|done
 goto|;
 block|}
 block|}
-name|error
-operator|=
-name|device_detach
-argument_list|(
-name|child
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|done
-goto|;
 name|devclass_delete_device
 argument_list|(
 name|child

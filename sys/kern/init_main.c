@@ -814,7 +814,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sysinit
 modifier|*
@@ -822,7 +821,6 @@ modifier|*
 name|sipp
 decl_stmt|;
 comment|/* system initialization*/
-specifier|register
 name|struct
 name|sysinit
 modifier|*
@@ -830,7 +828,6 @@ modifier|*
 name|xipp
 decl_stmt|;
 comment|/* interior loop of sort*/
-specifier|register
 name|struct
 name|sysinit
 modifier|*
@@ -1325,10 +1322,6 @@ comment|/* NOTREACHED*/
 block|}
 end_function
 
-begin_comment
-comment|/*  ***************************************************************************  ****  **** The following SYSINIT's belong elsewhere, but have not yet  **** been moved.  ****  ***************************************************************************  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1791,7 +1784,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  ***************************************************************************  ****  **** The two following SYSINIT's are proc0 specific glue code.  I am not  **** convinced that they can not be safely combined, but their order of  **** operation has been maintained as the same as the original init_main.c  **** for right now.  ****  **** These probably belong in init_proc.c or kern_proc.c, since they  **** deal with proc0 (the fork template process).  ****  ***************************************************************************  */
+comment|/*  * The two following SYSINIT's are proc0 specific glue code.  I am not  * convinced that they can not be safely combined, but their order of  * operation has been maintained as the same as the original init_main.c  * for right now.  */
 end_comment
 
 begin_comment
@@ -2981,10 +2974,6 @@ end_expr_stmt
 
 begin_comment
 comment|/*  ***************************************************************************  ****  **** The following SYSINIT's and glue code should be moved to the  **** respective files on a per subsystem basis.  ****  ***************************************************************************  */
-end_comment
-
-begin_comment
-comment|/*  ***************************************************************************  ****  **** The following code probably belongs in another file, like  **** kern/init_init.c.  ****  ***************************************************************************  */
 end_comment
 
 begin_comment

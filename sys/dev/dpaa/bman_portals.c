@@ -333,7 +333,7 @@ block|{
 name|XX_DeallocIntr
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -456,7 +456,8 @@ decl_stmt|;
 name|unsigned
 name|int
 name|cpu
-decl_stmt|,
+decl_stmt|;
+name|uintptr_t
 name|p
 decl_stmt|;
 comment|/* Return NULL if we're not ready or while detach */
@@ -492,10 +493,10 @@ expr_stmt|;
 comment|/* Check if portal is ready */
 while|while
 condition|(
-name|atomic_cmpset_acq_32
+name|atomic_cmpset_acq_ptr
 argument_list|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|*
 operator|)
 operator|&
@@ -519,10 +520,10 @@ condition|)
 block|{
 name|p
 operator|=
-name|atomic_load_acq_32
+name|atomic_load_acq_ptr
 argument_list|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|*
 operator|)
 operator|&
@@ -634,7 +635,7 @@ operator|.
 name|irq
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -674,10 +675,10 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|atomic_store_rel_32
+name|atomic_store_rel_ptr
 argument_list|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|*
 operator|)
 operator|&
@@ -691,7 +692,7 @@ operator|.
 name|dp_ph
 argument_list|,
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|portal
 argument_list|)
@@ -717,10 +718,10 @@ argument_list|(
 name|portal
 argument_list|)
 expr_stmt|;
-name|atomic_store_rel_32
+name|atomic_store_rel_ptr
 argument_list|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|*
 operator|)
 operator|&

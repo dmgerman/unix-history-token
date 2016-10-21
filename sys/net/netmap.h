@@ -60,7 +60,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * --- Netmap data structures ---  *  * The userspace data structures used by netmap are shown below.  * They are allocated by the kernel and mmap()ed by userspace threads.  * Pointers are implemented as memory offsets or indexes,  * so that they can be easily dereferenced in kernel and userspace.     KERNEL (opaque, obviously)    ====================================================================                                          |    USERSPACE                             |      struct netmap_ring                                          +---->+---------------+                                              / | head,cur,tail |    struct netmap_if (nifp, 1 per fd)        /  | buf_ofs       |     +---------------+                      /   | other fields  |     | ni_tx_rings   |                     /    +===============+     | ni_rx_rings   |                    /     | buf_idx, len  | slot[0]     |               |                   /      | flags, ptr    |     |               |                  /       +---------------+     +===============+                 /        | buf_idx, len  | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | flags, ptr    |     | txring_ofs[1] |                          +---------------+      (tx+1 entries)                           (num_slots entries)     | txring_ofs[t] |                          | buf_idx, len  | slot[n-1]     +---------------+                          | flags, ptr    |     | rxring_ofs[0] |                          +---------------+     | rxring_ofs[1] |      (rx+1 entries)     | rxring_ofs[r] |     +---------------+   * For each "interface" (NIC, host stack, PIPE, VALE switch port) bound to  * a file descriptor, the mmap()ed region contains a (logically readonly)  * struct netmap_if pointing to struct netmap_ring's.  *  * There is one netmap_ring per physical NIC ring, plus one tx/rx ring  * pair attached to the host stack (this pair is unused for non-NIC ports).  *  * All physical/host stack ports share the same memory region,  * so that zero-copy can be implemented between them.  * VALE switch ports instead have separate memory regions.  *  * The netmap_ring is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer (MTU-sized and residing in the  * mmapped region), its length and some flags. An extra 64-bit pointer  * is provided for user-supplied buffers in the tx path.  *  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index * NETMAP_BUF_SIZE  *  * Added in NETMAP_API 11:  *  * + NIOCREGIF can request the allocation of extra spare buffers from  *   the same memory pool. The desired number of buffers must be in  *   nr_arg3. The ioctl may return fewer buffers, depending on memory  *   availability. nr_arg3 will return the actual value, and, once  *   mapped, nifp->ni_bufs_head will be the index of the first buffer.  *  *   The buffers are linked to each other using the first uint32_t  *   as the index. On close, ni_bufs_head must point to the list of  *   buffers to be released.  *  * + NIOCREGIF can request space for extra rings (and buffers)  *   allocated in the same memory space. The number of extra rings  *   is in nr_arg1, and is advisory. This is a no-op on NICs where  *   the size of the memory space is fixed.  *  * + NIOCREGIF can attach to PIPE rings sharing the same memory  *   space with a parent device. The ifname indicates the parent device,  *   which must already exist. Flags in nr_flags indicate if we want to  *   bind the master or slave side, the index (from nr_ringid)  *   is just a cookie and does not need to be sequential.  *  * + NIOCREGIF can also attach to 'monitor' rings that replicate  *   the content of specific rings, also from the same memory space.  *  *   Extra flags in nr_flags support the above functions.  *   Application libraries may use the following naming scheme:  *	netmap:foo			all NIC ring pairs  *	netmap:foo^			only host ring pair  *	netmap:foo+			all NIC ring + host ring pairs  *	netmap:foo-k			the k-th NIC ring pair  *	netmap:foo{k			PIPE ring pair k, master side  *	netmap:foo}k			PIPE ring pair k, slave side  */
+comment|/*  * --- Netmap data structures ---  *  * The userspace data structures used by netmap are shown below.  * They are allocated by the kernel and mmap()ed by userspace threads.  * Pointers are implemented as memory offsets or indexes,  * so that they can be easily dereferenced in kernel and userspace.     KERNEL (opaque, obviously)    ====================================================================                                          |    USERSPACE                             |      struct netmap_ring                                          +---->+---------------+                                              / | head,cur,tail |    struct netmap_if (nifp, 1 per fd)        /  | buf_ofs       |     +---------------+                      /   | other fields  |     | ni_tx_rings   |                     /    +===============+     | ni_rx_rings   |                    /     | buf_idx, len  | slot[0]     |               |                   /      | flags, ptr    |     |               |                  /       +---------------+     +===============+                 /        | buf_idx, len  | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | flags, ptr    |     | txring_ofs[1] |                          +---------------+      (tx+1 entries)                           (num_slots entries)     | txring_ofs[t] |                          | buf_idx, len  | slot[n-1]     +---------------+                          | flags, ptr    |     | rxring_ofs[0] |                          +---------------+     | rxring_ofs[1] |      (rx+1 entries)     | rxring_ofs[r] |     +---------------+   * For each "interface" (NIC, host stack, PIPE, VALE switch port) bound to  * a file descriptor, the mmap()ed region contains a (logically readonly)  * struct netmap_if pointing to struct netmap_ring's.  *  * There is one netmap_ring per physical NIC ring, plus one tx/rx ring  * pair attached to the host stack (this pair is unused for non-NIC ports).  *  * All physical/host stack ports share the same memory region,  * so that zero-copy can be implemented between them.  * VALE switch ports instead have separate memory regions.  *  * The netmap_ring is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer (MTU-sized and residing in the  * mmapped region), its length and some flags. An extra 64-bit pointer  * is provided for user-supplied buffers in the tx path.  *  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index * NETMAP_BUF_SIZE  *  * Added in NETMAP_API 11:  *  * + NIOCREGIF can request the allocation of extra spare buffers from  *   the same memory pool. The desired number of buffers must be in  *   nr_arg3. The ioctl may return fewer buffers, depending on memory  *   availability. nr_arg3 will return the actual value, and, once  *   mapped, nifp->ni_bufs_head will be the index of the first buffer.  *  *   The buffers are linked to each other using the first uint32_t  *   as the index. On close, ni_bufs_head must point to the list of  *   buffers to be released.  *  * + NIOCREGIF can request space for extra rings (and buffers)  *   allocated in the same memory space. The number of extra rings  *   is in nr_arg1, and is advisory. This is a no-op on NICs where  *   the size of the memory space is fixed.  *  * + NIOCREGIF can attach to PIPE rings sharing the same memory  *   space with a parent device. The ifname indicates the parent device,  *   which must already exist. Flags in nr_flags indicate if we want to  *   bind the master or slave side, the index (from nr_ringid)  *   is just a cookie and does not need to be sequential.  *  * + NIOCREGIF can also attach to 'monitor' rings that replicate  *   the content of specific rings, also from the same memory space.  *  *   Extra flags in nr_flags support the above functions.  *   Application libraries may use the following naming scheme:  *	netmap:foo			all NIC ring pairs  *	netmap:foo^			only host ring pair  *	netmap:foo+			all NIC ring + host ring pairs  *	netmap:foo-k			the k-th NIC ring pair  *	netmap:foo{k			PIPE ring pair k, master side  *	netmap:foo}k			PIPE ring pair k, slave side  *  * Some notes about host rings:  *  * + The RX host ring is used to store those packets that the host network  *   stack is trying to transmit through a NIC queue, but only if that queue  *   is currently in netmap mode. Netmap will not intercept host stack mbufs  *   designated to NIC queues that are not in netmap mode. As a consequence,  *   registering a netmap port with netmap:foo^ is not enough to intercept  *   mbufs in the RX host ring; the netmap port should be registered with  *   netmap:foo*, or another registration should be done to open at least a  *   NIC TX queue in netmap mode.  *  * + Netmap is not currently able to deal with intercepted trasmit mbufs which  *   require offloadings like TSO, UFO, checksumming offloadings, etc. It is  *   responsibility of the user to disable those offloadings (e.g. using  *   ifconfig on FreeBSD or ethtool -K on Linux) for an interface that is being  *   used in netmap mode. If the offloadings are not disabled, GSO and/or  *   unchecksummed packets may be dropped immediately or end up in the host RX  *   ring, and will be dropped as soon as the packet reaches another netmap  *   adapter.  */
 end_comment
 
 begin_comment
@@ -269,11 +269,19 @@ name|ts
 decl_stmt|;
 comment|/* (k) time of last *sync() */
 comment|/* opaque room for a mutex or similar object */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|uint8_t
-name|sem
-index|[
-literal|128
-index|]
 name|__attribute__
 argument_list|(
 operator|(
@@ -283,7 +291,28 @@ name|NM_CACHE_ALIGN
 argument_list|)
 operator|)
 argument_list|)
+name|sem
+index|[
+literal|128
+index|]
 decl_stmt|;
+else|#
+directive|else
+name|uint8_t
+name|__declspec
+argument_list|(
+name|align
+argument_list|(
+name|NM_CACHE_ALIGN
+argument_list|)
+argument_list|)
+name|sem
+index|[
+literal|128
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* the slots follow. This struct has variable size */
 name|struct
 name|netmap_slot
@@ -518,6 +547,31 @@ directive|define
 name|NETMAP_BDG_DELIF
 value|7
 comment|/* destroy a virtual port */
+define|#
+directive|define
+name|NETMAP_PT_HOST_CREATE
+value|8
+comment|/* create ptnetmap kthreads */
+define|#
+directive|define
+name|NETMAP_PT_HOST_DELETE
+value|9
+comment|/* delete ptnetmap kthreads */
+define|#
+directive|define
+name|NETMAP_BDG_POLLING_ON
+value|10
+comment|/* delete polling kthread */
+define|#
+directive|define
+name|NETMAP_BDG_POLLING_OFF
+value|11
+comment|/* delete polling kthread */
+define|#
+directive|define
+name|NETMAP_VNET_HDR_GET
+value|12
+comment|/* get the port virtio-net-hdr length */
 name|uint16_t
 name|nr_arg1
 decl_stmt|;
@@ -629,6 +683,235 @@ directive|define
 name|NR_EXCLUSIVE
 value|0x800
 end_define
+
+begin_comment
+comment|/* request ptnetmap host support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NR_PASSTHROUGH_HOST
+value|NR_PTNETMAP_HOST
+end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NR_PTNETMAP_HOST
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NR_RX_RINGS_ONLY
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NR_TX_RINGS_ONLY
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Applications set this flag if they are able to deal with virtio-net headers,  * that is send/receive frames that start with a virtio-net header.  * If not set, NIOCREGIF will fail with netmap ports that require applications  * to use those headers. If the flag is set, the application can use the  * NETMAP_VNET_HDR_GET command to figure out the header length. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NR_ACCEPT_VNET_HDR
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_BDG_NAME
+value|"vale"
+end_define
+
+begin_comment
+comment|/* prefix for bridge port name */
+end_comment
+
+begin_comment
+comment|/*  * Windows does not have _IOWR(). _IO(), _IOW() and _IOR() are defined  * in ws2def.h but not sure if they are in the form we need.  * XXX so we redefine them  * in a convenient way to use for DeviceIoControl signatures  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_IO
+end_undef
+
+begin_comment
+comment|// ws2def.h
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_WIN_NM_IOCTL_TYPE
+value|40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IO
+parameter_list|(
+name|_c
+parameter_list|,
+name|_n
+parameter_list|)
+value|CTL_CODE(_WIN_NM_IOCTL_TYPE, ((_n) + 0x800) , \ 		METHOD_BUFFERED, FILE_ANY_ACCESS  )
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IO_direct
+parameter_list|(
+name|_c
+parameter_list|,
+name|_n
+parameter_list|)
+value|CTL_CODE(_WIN_NM_IOCTL_TYPE, ((_n) + 0x800) , \ 		METHOD_OUT_DIRECT, FILE_ANY_ACCESS  )
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOWR
+parameter_list|(
+name|_c
+parameter_list|,
+name|_n
+parameter_list|,
+name|_s
+parameter_list|)
+value|_IO(_c, _n)
+end_define
+
+begin_comment
+comment|/* We havesome internal sysctl in addition to the externally visible ones */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_MMAP
+value|_IO_direct('i', 160)
+end_define
+
+begin_comment
+comment|// note METHOD_OUT_DIRECT
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_POLL
+value|_IO('i', 162)
+end_define
+
+begin_comment
+comment|/* and also two setsockopt for sysctl emulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_SETSOCKOPT
+value|_IO('i', 140)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_GETSOCKOPT
+value|_IO('i', 141)
+end_define
+
+begin_comment
+comment|//These linknames are for the Netmap Core Driver
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_NT_DEVICE_NAME
+value|L"\\Device\\NETMAP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_DOS_DEVICE_NAME
+value|L"\\DosDevices\\netmap"
+end_define
+
+begin_comment
+comment|//Definition of a structure used to pass a virtual address within an IOCTL
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MEMORY_ENTRY
+block|{
+name|PVOID
+name|pUsermodeVirtualAddress
+decl_stmt|;
+block|}
+name|MEMORY_ENTRY
+operator|,
+typedef|*
+name|PMEMORY_ENTRY
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_POLL_REQUEST_DATA
+block|{
+name|int
+name|events
+decl_stmt|;
+name|int
+name|timeout
+decl_stmt|;
+name|int
+name|revents
+decl_stmt|;
+block|}
+name|POLL_REQUEST_DATA
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WIN32 */
+end_comment
 
 begin_comment
 comment|/*  * FreeBSD uses the size value embedded in the _IOWR to determine  * how much to copy in/out. So we need it to match the actual  * data structure we pass. We put some spares in the structure  * to ease compatibility with other versions  */
@@ -759,6 +1042,85 @@ index|[
 name|NM_IFRDATA_LEN
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * netmap kernel thread configuration  */
+end_comment
+
+begin_comment
+comment|/* bhyve/vmm.ko MSIX parameters for IOCTL */
+end_comment
+
+begin_struct
+struct|struct
+name|ptn_vmm_ioctl_msix
+block|{
+name|uint64_t
+name|msg
+decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* IOCTL parameters */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_kth_ioctl
+block|{
+name|uint64_t
+name|com
+decl_stmt|;
+comment|/* We use union to support more ioctl commands. */
+union|union
+block|{
+name|struct
+name|ptn_vmm_ioctl_msix
+name|msix
+decl_stmt|;
+block|}
+name|data
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Configuration of a ptnetmap ring */
+end_comment
+
+begin_struct
+struct|struct
+name|ptnet_ring_cfg
+block|{
+name|uint64_t
+name|ioeventfd
+decl_stmt|;
+comment|/* eventfd in linux, tsleep() parameter in FreeBSD */
+name|uint64_t
+name|irqfd
+decl_stmt|;
+comment|/* eventfd in linux, ioctl fd in FreeBSD */
+name|struct
+name|nm_kth_ioctl
+name|ioctl
+decl_stmt|;
+comment|/* ioctl parameter to send irq (only used in bhyve/FreeBSD) */
+name|uint64_t
+name|reserved
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* reserved to support of more hypervisors */
 block|}
 struct|;
 end_struct

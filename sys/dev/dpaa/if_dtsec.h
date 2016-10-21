@@ -199,6 +199,9 @@ decl_stmt|;
 name|bool
 name|sc_hidden
 decl_stmt|;
+name|device_t
+name|sc_mdio
+decl_stmt|;
 comment|/* Params from fman_bus driver */
 name|vm_offset_t
 name|sc_fm_base

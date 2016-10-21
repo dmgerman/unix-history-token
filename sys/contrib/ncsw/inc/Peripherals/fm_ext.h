@@ -1186,11 +1186,11 @@ name|t_Handle
 name|h_App
 decl_stmt|;
 comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          A handle to an application layer object; This handle will                                                          be passed by the driver upon calling the above callbacks */
-name|int
+name|uintptr_t
 name|irq
 decl_stmt|;
 comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          FM interrupt source for normal events */
-name|int
+name|uintptr_t
 name|errIrq
 decl_stmt|;
 comment|/**< Relevant when guestId = NCSW_MASSTER_ID only.                                                          FM interrupt source for errors */

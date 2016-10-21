@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -919,6 +925,16 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|M_HASHTYPE_CLEAR
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* BPF writes need to be handled specially. */
 if|if
 condition|(

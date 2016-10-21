@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2014 Giuseppe Lettieri. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2014-2016 Giuseppe Lettieri  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -168,6 +168,21 @@ directive|include
 file|"osx_glue.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"win_glue.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -311,7 +326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* nm_krings_create callbacks for monitors.  * We could use the default netmap_hw_krings_zmon, but  * we don't need the mbq.  */
+comment|/* nm_krings_create callbacks for monitors.  */
 end_comment
 
 begin_function
@@ -325,13 +340,52 @@ modifier|*
 name|na
 parameter_list|)
 block|{
-return|return
+name|int
+name|error
+init|=
 name|netmap_krings_create
 argument_list|(
 name|na
 argument_list|,
 literal|0
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
+comment|/* override the host rings callbacks */
+name|na
+operator|->
+name|tx_rings
+index|[
+name|na
+operator|->
+name|num_tx_rings
+index|]
+operator|.
+name|nm_sync
+operator|=
+name|netmap_monitor_txsync
+expr_stmt|;
+name|na
+operator|->
+name|rx_rings
+index|[
+name|na
+operator|->
+name|num_rx_rings
+index|]
+operator|.
+name|nm_sync
+operator|=
+name|netmap_monitor_rxsync
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -433,6 +487,9 @@ argument_list|)
 operator|*
 name|n
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|nm
 operator|=
 name|realloc
@@ -450,6 +507,32 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|nm
+operator|=
+name|realloc
+argument_list|(
+name|kring
+operator|->
+name|monitors
+argument_list|,
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|netmap_kring
+operator|*
+argument_list|)
+operator|*
+name|kring
+operator|->
+name|max_monitors
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nm
@@ -653,12 +736,14 @@ block|{
 name|int
 name|error
 init|=
-literal|0
+name|NM_IRQ_COMPLETED
 decl_stmt|;
 comment|/* sinchronize with concurrently running nm_sync()s */
-name|nm_kr_get
+name|nm_kr_stop
 argument_list|(
 name|kring
+argument_list|,
+name|NM_KR_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* make sure the monitor array exists and is big enough */
@@ -716,7 +801,7 @@ literal|1
 condition|)
 block|{
 comment|/* this is the first monitor, intercept callbacks */
-name|D
+name|ND
 argument_list|(
 literal|"%s: intercept callbacks on %s"
 argument_list|,
@@ -808,7 +893,7 @@ block|}
 block|}
 name|out
 label|:
-name|nm_kr_put
+name|nm_kr_start
 argument_list|(
 name|kring
 argument_list|)
@@ -840,9 +925,11 @@ name|kring
 parameter_list|)
 block|{
 comment|/* sinchronize with concurrently running nm_sync()s */
-name|nm_kr_get
+name|nm_kr_stop
 argument_list|(
 name|kring
+argument_list|,
+name|NM_KR_LOCKED
 argument_list|)
 expr_stmt|;
 name|kring
@@ -916,7 +1003,7 @@ literal|0
 condition|)
 block|{
 comment|/* this was the last monitor, restore callbacks  and delete monitor array */
-name|D
+name|ND
 argument_list|(
 literal|"%s: restoring sync on %s: %p"
 argument_list|,
@@ -956,7 +1043,7 @@ operator|==
 name|NR_RX
 condition|)
 block|{
-name|D
+name|ND
 argument_list|(
 literal|"%s: restoring notify on %s: %p"
 argument_list|,
@@ -994,7 +1081,7 @@ name|kring
 argument_list|)
 expr_stmt|;
 block|}
-name|nm_kr_put
+name|nm_kr_start
 argument_list|(
 name|kring
 argument_list|)
@@ -1042,6 +1129,8 @@ name|na
 argument_list|,
 name|t
 argument_list|)
+operator|+
+literal|1
 condition|;
 name|i
 operator|++
@@ -1298,6 +1387,14 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|nm_kring_pending_on
+argument_list|(
+name|mkring
+argument_list|)
+condition|)
+block|{
 name|netmap_monitor_add
 argument_list|(
 name|mkring
@@ -1307,6 +1404,13 @@ argument_list|,
 name|zmon
 argument_list|)
 expr_stmt|;
+name|mkring
+operator|->
+name|nr_mode
+operator|=
+name|NKR_NETMAP_ON
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1321,24 +1425,12 @@ else|else
 block|{
 if|if
 condition|(
-name|pna
-operator|==
-name|NULL
-condition|)
-block|{
-name|D
-argument_list|(
-literal|"%s: parent left netmap mode, nothing to restore"
-argument_list|,
 name|na
 operator|->
-name|name
-argument_list|)
-expr_stmt|;
-return|return
+name|active_fds
+operator|==
 literal|0
-return|;
-block|}
+condition|)
 name|na
 operator|->
 name|na_flags
@@ -1387,6 +1479,36 @@ name|i
 operator|++
 control|)
 block|{
+name|mkring
+operator|=
+operator|&
+name|na
+operator|->
+name|rx_rings
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|nm_kring_pending_off
+argument_list|(
+name|mkring
+argument_list|)
+condition|)
+block|{
+name|mkring
+operator|->
+name|nr_mode
+operator|=
+name|NKR_NETMAP_OFF
+expr_stmt|;
+comment|/* we cannot access the parent krings if the parent 						 * has left netmap mode. This is signaled by a NULL 						 * pna pointer 						 */
+if|if
+condition|(
+name|pna
+condition|)
+block|{
 name|kring
 operator|=
 operator|&
@@ -1396,16 +1518,6 @@ name|pna
 argument_list|,
 name|t
 argument_list|)
-index|[
-name|i
-index|]
-expr_stmt|;
-name|mkring
-operator|=
-operator|&
-name|na
-operator|->
-name|rx_rings
 index|[
 name|i
 index|]
@@ -1421,6 +1533,8 @@ block|}
 block|}
 block|}
 block|}
+block|}
+block|}
 return|return
 literal|0
 return|;
@@ -1428,7 +1542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************  * functions specific for zero-copy monitors                      ****************************************************************  */
+comment|/*  ****************************************************************  * functions specific for zero-copy monitors  ****************************************************************  */
 end_comment
 
 begin_comment
@@ -2062,7 +2176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ****************************************************************  * functions specific for copy monitors                      ****************************************************************  */
+comment|/*  ****************************************************************  * functions specific for copy monitors  ****************************************************************  */
 end_comment
 
 begin_function
@@ -2637,6 +2751,19 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|int
+function_decl|(
+modifier|*
+name|notify
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|ND
 argument_list|(
 literal|5
@@ -2656,11 +2783,27 @@ condition|(
 name|nm_kr_tryget
 argument_list|(
 name|kring
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+block|{
+comment|/* in all cases, just skip the sync */
+return|return
+name|NM_IRQ_COMPLETED
+return|;
+block|}
+if|if
+condition|(
+name|kring
+operator|->
+name|n_monitors
+operator|>
+literal|0
+condition|)
+block|{
 name|netmap_monitor_parent_rxsync
 argument_list|(
 name|kring
@@ -2668,17 +2811,30 @@ argument_list|,
 name|NAF_FORCE_READ
 argument_list|)
 expr_stmt|;
+name|notify
+operator|=
+name|kring
+operator|->
+name|mon_notify
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* we are no longer monitoring this ring, so both 		 * mon_sync and mon_notify are NULL 		 */
+name|notify
+operator|=
+name|kring
+operator|->
+name|nm_notify
+expr_stmt|;
+block|}
 name|nm_kr_put
 argument_list|(
 name|kring
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|kring
-operator|->
-name|mon_notify
+name|notify
 argument_list|(
 name|kring
 argument_list|,
@@ -2804,6 +2960,13 @@ name|netmap_monitor_adapter
 modifier|*
 name|mna
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -2849,6 +3012,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|nmr
+operator|->
+name|nr_flags
+operator|&
+name|NR_ZCOPY_MON
+condition|)
+block|{
+comment|/* the flag makes no sense unless you are 			 * creating a monitor 			 */
+return|return
+name|EINVAL
+return|;
+block|}
 name|ND
 argument_list|(
 literal|"not a monitor"
@@ -2859,7 +3036,7 @@ literal|0
 return|;
 block|}
 comment|/* this is a request for a monitor adapter */
-name|D
+name|ND
 argument_list|(
 literal|"flags %x"
 argument_list|,
@@ -2924,6 +3101,8 @@ operator|(
 name|NR_MONITOR_TX
 operator||
 name|NR_MONITOR_RX
+operator||
+name|NR_ZCOPY_MON
 operator|)
 expr_stmt|;
 name|error
@@ -2935,6 +3114,9 @@ name|pnmr
 argument_list|,
 operator|&
 name|pna
+argument_list|,
+operator|&
+name|ifp
 argument_list|,
 name|create
 argument_list|)
@@ -2951,11 +3133,18 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|mna
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
 block|}
-name|D
+name|ND
 argument_list|(
 literal|"found parent: %s"
 argument_list|,
@@ -3609,51 +3798,20 @@ operator|*
 name|na
 argument_list|)
 expr_stmt|;
-comment|/* write the configuration back */
-name|nmr
-operator|->
-name|nr_tx_rings
-operator|=
-name|mna
-operator|->
-name|up
-operator|.
-name|num_tx_rings
-expr_stmt|;
-name|nmr
-operator|->
-name|nr_rx_rings
-operator|=
-name|mna
-operator|->
-name|up
-operator|.
-name|num_rx_rings
-expr_stmt|;
-name|nmr
-operator|->
-name|nr_tx_slots
-operator|=
-name|mna
-operator|->
-name|up
-operator|.
-name|num_tx_desc
-expr_stmt|;
-name|nmr
-operator|->
-name|nr_rx_slots
-operator|=
-name|mna
-operator|->
-name|up
-operator|.
-name|num_rx_desc
-expr_stmt|;
 comment|/* keep the reference to the parent */
-name|D
+name|ND
 argument_list|(
 literal|"monitor ok"
+argument_list|)
+expr_stmt|;
+comment|/* drop the reference to the ifp, if any */
+if|if
+condition|(
+name|ifp
+condition|)
+name|if_rele
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3661,9 +3819,11 @@ literal|0
 return|;
 name|put_out
 label|:
-name|netmap_adapter_put
+name|netmap_unget_na
 argument_list|(
 name|pna
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 name|free

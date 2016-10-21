@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/simplebus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -154,24 +160,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|driver_t
+begin_expr_stmt
+name|DEFINE_CLASS_1
+argument_list|(
+name|fman
+argument_list|,
 name|fman_driver
-init|=
-block|{
-literal|"fman"
-block|,
+argument_list|,
 name|fman_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|fman_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|simplebus_driver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -264,6 +271,8 @@ name|dev
 operator|=
 name|sc
 operator|->
+name|sc_base
+operator|.
 name|dev
 expr_stmt|;
 name|node

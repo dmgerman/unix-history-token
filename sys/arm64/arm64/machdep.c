@@ -1639,6 +1639,24 @@ literal|"Called get_fpcontext while the kernel is using the VFP"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|curpcb
+operator|->
+name|pcb_fpflags
+operator|&
+operator|~
+name|PCB_FP_USERMASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Non-userspace FPU flags set in get_fpcontext"
+operator|)
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|mcp
@@ -1832,6 +1850,8 @@ operator|->
 name|mc_fpregs
 operator|.
 name|fp_flags
+operator|&
+name|PCB_FP_USERMASK
 expr_stmt|;
 block|}
 name|critical_exit

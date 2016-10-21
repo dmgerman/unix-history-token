@@ -397,7 +397,7 @@ operator|.
 name|errIrq
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -414,18 +414,6 @@ operator|.
 name|partNumOfPools
 operator|=
 name|BM_MAX_NUM_OF_POOLS
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"base address: %llx\n"
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|bp
-operator|.
-name|baseAddress
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->

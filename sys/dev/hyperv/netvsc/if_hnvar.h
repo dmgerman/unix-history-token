@@ -483,7 +483,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hn_rndis_get_rsscaps
+name|hn_rndis_query_rsscaps
 parameter_list|(
 name|struct
 name|hn_softc
@@ -667,6 +667,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|hn_link_status_update
+parameter_list|(
+name|struct
+name|hn_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hn_network_change
 parameter_list|(
 name|struct
 name|hn_softc

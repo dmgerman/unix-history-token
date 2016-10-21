@@ -469,7 +469,7 @@ begin_function_decl
 name|t_Error
 name|XX_PreallocAndBindIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|,
 name|unsigned
@@ -495,7 +495,7 @@ begin_function_decl
 name|t_Error
 name|XX_DeallocIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 function_decl|;
@@ -517,7 +517,7 @@ begin_function_decl
 name|t_Error
 name|XX_SetIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|,
 name|t_Isr
@@ -546,7 +546,7 @@ begin_function_decl
 name|t_Error
 name|XX_FreeIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 function_decl|;
@@ -568,7 +568,7 @@ begin_function_decl
 name|t_Error
 name|XX_EnableIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 function_decl|;
@@ -590,7 +590,7 @@ begin_function_decl
 name|t_Error
 name|XX_DisableIntr
 parameter_list|(
-name|int
+name|uintptr_t
 name|irq
 parameter_list|)
 function_decl|;

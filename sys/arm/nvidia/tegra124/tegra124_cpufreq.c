@@ -784,9 +784,9 @@ block|{
 operator|.
 name|min_uvolt
 operator|=
-literal|900000
+literal|1000000
 block|,
-comment|/* 0.9 V */
+comment|/* XXX 0.9 V doesn't work on all boards */
 operator|.
 name|max_uvolt
 operator|=
@@ -868,8 +868,6 @@ block|,
 literal|2116000000ULL
 block|,
 literal|2218000000ULL
-block|,
-literal|2320000000ULL
 block|,
 literal|2320000000ULL
 block|,
@@ -2397,6 +2395,27 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
+name|phandle_t
+name|root
+decl_stmt|;
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"nvidia,tegra124"
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|device_get_unit

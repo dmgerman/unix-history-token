@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011-2014 Matteo Landi, Luigi Rizzo. All rights reserved.  * Copyright (C) 2013-2014 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2014 Matteo Landi, Luigi Rizzo  * Copyright (C) 2013-2016 Universita` di Pisa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -113,14 +113,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CONFIG_NETMAP_V1000
+name|CONFIG_NETMAP_PTNETMAP_GUEST
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|WITH_V1000
+name|WITH_PTNETMAP_GUEST
 end_define
 
 begin_endif
@@ -128,13 +128,70 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_NETMAP_PTNETMAP_HOST
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WITH_PTNETMAP_HOST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|WITH_VALE
+end_define
+
+begin_comment
+comment|// comment out to disable VALE support
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_PIPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|WITH_MONITOR
+end_define
+
+begin_define
+define|#
+directive|define
+name|WITH_GENERIC
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* not linux */
+comment|/* neither linux nor windows */
 end_comment
 
 begin_define
@@ -164,6 +221,26 @@ define|#
 directive|define
 name|WITH_GENERIC
 end_define
+
+begin_define
+define|#
+directive|define
+name|WITH_PTNETMAP_HOST
+end_define
+
+begin_comment
+comment|/* ptnetmap host support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WITH_PTNETMAP_GUEST
+end_define
+
+begin_comment
+comment|/* ptnetmap guest support */
+end_comment
 
 begin_endif
 endif|#
@@ -203,6 +280,12 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__builtin_expect((long)!!(x), 0L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__user
 end_define
 
 begin_define
@@ -287,6 +370,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NM_SELRECORD_T
+value|struct thread
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBUF_LEN
 parameter_list|(
 name|m
@@ -297,23 +387,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|MBUF_IFP
+name|MBUF_TXQ
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_pkthdr.rcvif)
+value|((m)->m_pkthdr.flowid)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NM_SEND_UP
+name|MBUF_TRANSMIT
 parameter_list|(
+name|na
+parameter_list|,
 name|ifp
 parameter_list|,
 name|m
 parameter_list|)
-value|((NA(ifp))->if_input)(ifp, m)
+value|((na)->if_transmit(ifp, m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN_TX_MBUF_IFP
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.rcvif)
 end_define
 
 begin_define
@@ -439,11 +541,11 @@ end_if
 begin_define
 define|#
 directive|define
-name|GET_MBUF_REFCNT
+name|MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_ext.ext_cnt ? *((m)->m_ext.ext_cnt) : -1)
+value|((m)->m_ext.ext_count)
 end_define
 
 begin_define
@@ -455,17 +557,7 @@ name|m
 parameter_list|,
 name|x
 parameter_list|)
-value|*((m)->m_ext.ext_cnt) = x
-end_define
-
-begin_define
-define|#
-directive|define
-name|PNT_MBUF_REFCNT
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_ext.ext_cnt)
+value|(m)->m_ext.ext_count = x
 end_define
 
 begin_else
@@ -476,7 +568,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|GET_MBUF_REFCNT
+name|MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
@@ -495,28 +587,20 @@ parameter_list|)
 value|*((m)->m_ext.ref_cnt) = x
 end_define
 
-begin_define
-define|#
-directive|define
-name|PNT_MBUF_REFCNT
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_ext.ref_cnt)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETMAP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|MBUF_QUEUED
+parameter_list|(
+name|m
+parameter_list|)
+value|1
+end_define
 
 begin_struct
 struct|struct
@@ -533,21 +617,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|freebsd_selwakeup
-parameter_list|(
-name|struct
-name|nm_selinfo
-modifier|*
-name|si
-parameter_list|,
-name|int
-name|pri
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|// XXX linux struct, not used in FreeBSD
@@ -632,24 +701,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|MBUF_IFP
+name|MBUF_TRANSMIT
 parameter_list|(
-name|m
-parameter_list|)
-value|((m)->dev)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NM_SEND_UP
-parameter_list|(
+name|na
+parameter_list|,
 name|ifp
 parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \                             m->priority = NM_MAGIC_PRIORITY_RX; \                             netif_rx(m); \                         } while (0)
+value|({										\
+comment|/* Avoid infinite recursion with generic. */
+value|\ 		m->priority = NM_MAGIC_PRIORITY_TX;					\ 		(((struct net_device_ops *)(na)->if_transmit)->ndo_start_xmit(m, ifp));	\ 		0;									\ 	})
+end_define
+
+begin_comment
+comment|/* See explanation in nm_os_generic_xmit_frame. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEN_TX_MBUF_IFP
+parameter_list|(
+name|m
+parameter_list|)
+value|((struct ifnet *)skb_shinfo(m)->destructor_arg)
 end_define
 
 begin_define
@@ -800,17 +877,265 @@ parameter_list|)
 value|((m)->m_pkthdr.len)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"../../../WINDOWS/win_glue.h"
+end_include
+
 begin_define
 define|#
 directive|define
-name|NM_SEND_UP
+name|NM_SELRECORD_T
+value|IO_STACK_LOCATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SELINFO_T
+value|win_SELINFO
+end_define
+
+begin_comment
+comment|// see win_glue.h
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_LOCK_T
+value|win_spinlock_t
+end_define
+
+begin_comment
+comment|// see win_glue.h
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_T
+value|KGUARDED_MUTEX
+end_define
+
+begin_comment
+comment|/* OS-specific mutex (sleepable) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_INIT
 parameter_list|(
-name|ifp
-parameter_list|,
 name|m
 parameter_list|)
-value|((ifp)->if_input)(ifp, m)
+value|KeInitializeGuardedMutex(&m);
 end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_DESTROY
+parameter_list|(
+name|m
+parameter_list|)
+value|do { (void)(m); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_LOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|KeAcquireGuardedMutex(&(m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_UNLOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|KeReleaseGuardedMutex(&(m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_ASSERT
+parameter_list|(
+name|m
+parameter_list|)
+value|assert(&m.Count>0)
+end_define
+
+begin_comment
+comment|//These linknames are for the NDIS driver
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_NDIS_LINKNAME_STRING
+value|L"\\DosDevices\\NMAPNDIS"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_NDIS_NTDEVICE_STRING
+value|L"\\Device\\NMAPNDIS"
+end_define
+
+begin_comment
+comment|//Definition of internal driver-to-driver ioctl codes
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_KERNEL_XCHANGE_POINTERS
+value|_IO('i', 180)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_KERNEL_SEND_SHUTDOWN_SIGNAL
+value|_IO_direct('i', 195)
+end_define
+
+begin_comment
+comment|//Empty data structures are not permitted by MSVC compiler
+end_comment
+
+begin_comment
+comment|//XXX_ale, try to solve this problem
+end_comment
+
+begin_struct
+struct|struct
+name|net_device_ops
+block|{
+name|char
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ethtool_ops
+block|{
+name|char
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+empty_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|hrtimer
+block|{
+name|KTIMER
+name|timer
+decl_stmt|;
+name|BOOLEAN
+name|active
+decl_stmt|;
+name|KDPC
+name|deferred_proc
+decl_stmt|;
+block|}
+empty_stmt|;
+end_typedef
+
+begin_comment
+comment|/* MSVC does not have likely/unlikely support */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|likely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect((long)!!(x), 1L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect((long)!!(x), 0L)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|//_MSC_VER
+end_comment
 
 begin_else
 else|#
@@ -831,6 +1156,50 @@ end_endif
 begin_comment
 comment|/* end - platform-specific code */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
+begin_comment
+comment|/* support for emulated sysctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSBEGIN
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSEND
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WIN32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_ACCESS_ONCE
+parameter_list|(
+name|x
+parameter_list|)
+value|(*(volatile __typeof__(x) *)&(x))
+end_define
 
 begin_define
 define|#
@@ -946,6 +1315,30 @@ name|netmap_priv_d
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* os-specific NM_SELINFO_T initialzation/destruction functions */
+end_comment
+
+begin_function_decl
+name|void
+name|nm_os_selinfo_init
+parameter_list|(
+name|NM_SELINFO_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_selinfo_uninit
+parameter_list|(
+name|NM_SELINFO_T
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|const
 name|char
@@ -965,6 +1358,146 @@ parameter_list|,
 name|char
 modifier|*
 name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_selwakeup
+parameter_list|(
+name|NM_SELINFO_T
+modifier|*
+name|si
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_selrecord
+parameter_list|(
+name|NM_SELRECORD_T
+modifier|*
+name|sr
+parameter_list|,
+name|NM_SELINFO_T
+modifier|*
+name|si
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nm_os_ifnet_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_ifnet_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_ifnet_lock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_ifnet_unlock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_get_module
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_put_module
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_make_zombie
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_undo_zombie
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* passes a packet up to the host stack.  * If the packet is sent (or dropped) immediately it returns NULL,  * otherwise it links the packet to prev and returns m.  * In this case, a final call with m=NULL and prev != NULL will send up  * the entire chain to the host stack.  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|nm_os_send_up
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|prev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nm_os_mbuf_has_offld
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1105,6 +1638,30 @@ directive|define
 name|NKR_EXCLUSIVE
 value|0x2
 comment|/* exclusive binding */
+define|#
+directive|define
+name|NKR_FORWARD
+value|0x4
+comment|/* (host ring only) there are 					   packets to forward 					 */
+define|#
+directive|define
+name|NKR_NEEDRING
+value|0x8
+comment|/* ring needed even if users==0 					 * (used internally by pipes and 					 *  by ptnetmap host ports) 					 */
+name|uint32_t
+name|nr_mode
+decl_stmt|;
+name|uint32_t
+name|nr_pending_mode
+decl_stmt|;
+define|#
+directive|define
+name|NKR_NETMAP_OFF
+value|0x0
+define|#
+directive|define
+name|NKR_NETMAP_ON
+value|0x1
 name|uint32_t
 name|nkr_num_slots
 decl_stmt|;
@@ -1170,7 +1727,16 @@ modifier|*
 modifier|*
 name|tx_pool
 decl_stmt|;
-comment|// u_int nr_ntc;		/* Emulation of a next-to-clean RX ring pointer. */
+name|struct
+name|mbuf
+modifier|*
+name|tx_event
+decl_stmt|;
+comment|/* TX event used as a notification */
+name|NM_LOCK_T
+name|tx_event_lock
+decl_stmt|;
+comment|/* protects the tx_event mbuf */
 name|struct
 name|mbq
 name|rx_queue
@@ -1183,7 +1749,7 @@ comment|/* existing bindings for this ring */
 name|uint32_t
 name|ring_id
 decl_stmt|;
-comment|/* debugging */
+comment|/* kring identifier */
 name|enum
 name|txrx
 name|tx
@@ -1236,12 +1802,6 @@ modifier|*
 name|pipe
 decl_stmt|;
 comment|/* if this is a pipe ring, 					 * pointer to the other end 					 */
-name|struct
-name|netmap_ring
-modifier|*
-name|save_ring
-decl_stmt|;
-comment|/* pointer to hidden rings        					 * (see netmap_pipe.c for details) 					 */
 endif|#
 directive|endif
 comment|/* WITH_PIPES */
@@ -1325,6 +1885,25 @@ comment|/* index of this ring in the monitored ring array */
 endif|#
 directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|_WIN32
+name|__declspec
+argument_list|(
+name|align
+argument_list|(
+literal|64
+argument_list|)
+argument_list|)
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
 name|__attribute__
 argument_list|(
 operator|(
@@ -1334,8 +1913,77 @@ literal|64
 argument_list|)
 operator|)
 argument_list|)
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* return 1 iff the kring needs to be turned on */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_kring_pending_on
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|)
+block|{
+return|return
+name|kring
+operator|->
+name|nr_pending_mode
+operator|==
+name|NKR_NETMAP_ON
+operator|&&
+name|kring
+operator|->
+name|nr_mode
+operator|==
+name|NKR_NETMAP_OFF
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* return 1 iff the kring needs to be turned off */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_kring_pending_off
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|)
+block|{
+return|return
+name|kring
+operator|->
+name|nr_pending_mode
+operator|==
+name|NKR_NETMAP_OFF
+operator|&&
+name|kring
+operator|->
+name|nr_mode
+operator|==
+name|NKR_NETMAP_ON
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* return the next index, with wraparound */
@@ -1498,6 +2146,16 @@ value|128
 comment|/* the adapter is always NATIVE */
 define|#
 directive|define
+name|NAF_PTNETMAP_HOST
+value|256
+comment|/* the adapter supports ptnetmap in the host */
+define|#
+directive|define
+name|NAF_ZOMBIE
+value|(1U<<30)
+comment|/* the nic driver has been unloaded */
+define|#
+directive|define
 name|NAF_BUSY
 value|(1U<<31)
 comment|/* the adapter is used internally and 				  * cannot be registered from userspace 				  */
@@ -1598,7 +2256,7 @@ name|ifp
 decl_stmt|;
 comment|/* adapter is ifp->if_softc */
 comment|/*---- callbacks for this netmap adapter -----*/
-comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 *	Called with NMG_LOCK held. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 *	Called with NNG_LOCK held. 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 *	Called with NMG_LOCK held. 	 * 	 * nm_krings_create() create and init the tx_rings and 	 * 	rx_rings arrays of kring structures. In particular, 	 * 	set the nm_sync callbacks for each ring. 	 * 	There is no need to also allocate the corresponding 	 * 	netmap_rings, since netmap_mem_rings_create() will always 	 * 	be called to provide the missing ones. 	 *	Called with NNG_LOCK held. 	 * 	 * nm_krings_delete() cleanup and delete the tx_rings and rx_rings 	 * 	arrays 	 *	Called with NMG_LOCK held. 	 * 	 * nm_notify() is used to act after data have become available 	 * 	(or the stopped state of the ring has changed) 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 */
+comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 *	Called with NMG_LOCK held. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 *	Called with NNG_LOCK held. 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 *	Called with NMG_LOCK held. 	 * 	 * nm_krings_create() create and init the tx_rings and 	 * 	rx_rings arrays of kring structures. In particular, 	 * 	set the nm_sync callbacks for each ring. 	 * 	There is no need to also allocate the corresponding 	 * 	netmap_rings, since netmap_mem_rings_create() will always 	 * 	be called to provide the missing ones. 	 *	Called with NNG_LOCK held. 	 * 	 * nm_krings_delete() cleanup and delete the tx_rings and rx_rings 	 * 	arrays 	 *	Called with NMG_LOCK held. 	 * 	 * nm_notify() is used to act after data have become available 	 * 	(or the stopped state of the ring has changed) 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 *      This callback pointer is actually used only to initialize 	 *      kring->nm_notify. 	 *      Return values are the same as for netmap_rx_irq(). 	 */
 name|void
 function_decl|(
 modifier|*
@@ -1614,6 +2272,20 @@ name|int
 function_decl|(
 modifier|*
 name|nm_register
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|int
+name|onoff
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|nm_intr
 function_decl|)
 parameter_list|(
 name|struct
@@ -1782,7 +2454,7 @@ comment|/* standard refcount to control the lifetime of the adapter 	 * (it shou
 name|int
 name|na_refcount
 decl_stmt|;
-comment|/* memory allocator (opaque) 	 * We also cache a pointer to the lut_entry for translating 	 * buffer addresses, and the total number of buffers. 	 */
+comment|/* memory allocator (opaque) 	 * We also cache a pointer to the lut_entry for translating 	 * buffer addresses, the total number of buffers and the buffer size. 	 */
 name|struct
 name|netmap_mem_d
 modifier|*
@@ -1792,7 +2464,7 @@ name|struct
 name|netmap_lut
 name|na_lut
 decl_stmt|;
-comment|/* additional information attached to this adapter 	 * by other netmap subsystems. Currently used by 	 * bwrap and LINUX/v1000. 	 */
+comment|/* additional information attached to this adapter 	 * by other netmap subsystems. Currently used by 	 * bwrap, LINUX/v1000 and ptnetmap 	 */
 name|void
 modifier|*
 name|na_private
@@ -1812,6 +2484,10 @@ name|int
 name|na_max_pipes
 decl_stmt|;
 comment|/* size of the array */
+comment|/* Offset of ethernet header for each packet. */
+name|u_int
+name|virt_hdr_len
+decl_stmt|;
 name|char
 name|name
 index|[
@@ -2053,10 +2729,6 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
-comment|/* Offset of ethernet header for each packet. */
-name|u_int
-name|virt_hdr_len
-decl_stmt|;
 comment|/* Maximum Frame Size, used in bdg_mismatch_datapath() */
 name|u_int
 name|mfs
@@ -2207,6 +2879,14 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* Is the adapter able to use multiple RX slots to scatter 	 * each packet pushed up by the driver? */
+name|int
+name|rxsg
+decl_stmt|;
+comment|/* Is the transmission path controlled by a netmap-aware 	 * device queue (i.e. qdisc on linux)? */
+name|int
+name|txqdisc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2263,6 +2943,12 @@ directive|ifdef
 name|WITH_VALE
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|nm_bdg_polling_state
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Bridge wrapper for non VALE ports attached to a VALE switch.  *  * The real device must already have its own netmap adapter (hwna).  * The bridge wrapper and the hwna adapter share the same set of  * netmap rings and buffers, but they have two separate sets of  * krings descriptors, with tx/rx meanings swapped:  *  *                                  netmap  *           bwrap     krings       rings      krings      hwna  *         +------+   +------+     +-----+    +------+   +------+  *         |tx_rings->|      |\   /|     |----|      |<-tx_rings|  *         |      |   +------+ \ / +-----+    +------+   |      |  *         |      |             X                        |      |  *         |      |            / \                       |      |  *         |      |   +------+/   \+-----+    +------+   |      |  *         |rx_rings->|      |     |     |----|      |<-rx_rings|  *         |      |   +------+     +-----+    +------+   |      |  *         +------+                                      +------+  *  * - packets coming from the bridge go to the brwap rx rings,  *   which are also the hwna tx rings.  The bwrap notify callback  *   will then complete the hwna tx (see netmap_bwrap_notify).  *  * - packets coming from the outside go to the hwna rx rings,  *   which are also the bwrap tx rings.  The (overwritten) hwna  *   notify method will then complete the bridge tx  *   (see netmap_bwrap_intr_notify).  *  *   The bridge wrapper may optionally connect the hwna 'host' rings  *   to the bridge. This is done by using a second port in the  *   bridge and connecting it to the 'host' netmap_vp_adapter  *   contained in the netmap_bwrap_adapter. The brwap host adapter  *   cross-links the hwna host rings in the same way as shown above.  *  * - packets coming from the bridge and directed to the host stack  *   are handled by the bwrap host notify callback  *   (see netmap_bwrap_host_notify)  *  * - packets coming from the host stack are still handled by the  *   overwritten hwna notify callback (netmap_bwrap_intr_notify),  *   but are diverted to the host adapter depending on the ring number.  *  */
 end_comment
@@ -2286,17 +2972,16 @@ modifier|*
 name|hwna
 decl_stmt|;
 comment|/* the underlying device */
-comment|/* backup of the hwna memory allocator */
-name|struct
-name|netmap_mem_d
-modifier|*
-name|save_nmd
-decl_stmt|;
 comment|/* 	 * When we attach a physical interface to the bridge, we 	 * allow the controlling process to terminate, so we need 	 * a place to store the n_detmap_priv_d data structure. 	 * This is only done when physical interfaces 	 * are attached to a bridge. 	 */
 name|struct
 name|netmap_priv_d
 modifier|*
 name|na_kpriv
+decl_stmt|;
+name|struct
+name|nm_bdg_polling_state
+modifier|*
+name|na_polling_state
 decl_stmt|;
 block|}
 struct|;
@@ -2454,7 +3139,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* True if no space in the tx ring. only valid after txsync_prologue */
+comment|/* return slots reserved to tx clients */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nm_kr_txspace
+parameter_list|(
+name|_k
+parameter_list|)
+value|nm_kr_rxspace(_k)
+end_define
+
+begin_comment
+comment|/* True if no space in the tx ring, only valid after txsync_prologue */
 end_comment
 
 begin_function
@@ -2482,7 +3181,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * protect against multiple threads using the same ring.  * also check that the ring has not been stopped.  * We only care for 0 or !=0 as a return code.  */
+comment|/* True if no more completed slots in the rx ring, only valid after  * rxsync_prologue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nm_kr_rxempty
+parameter_list|(
+name|_k
+parameter_list|)
+value|nm_kr_txempty(_k)
+end_define
+
+begin_comment
+comment|/*  * protect against multiple threads using the same ring.  * also check that the ring has not been stopped or locked  */
 end_comment
 
 begin_define
@@ -2492,12 +3205,35 @@ name|NM_KR_BUSY
 value|1
 end_define
 
+begin_comment
+comment|/* some other thread is syncing the ring */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NM_KR_STOPPED
 value|2
 end_define
+
+begin_comment
+comment|/* unbounded stop (ifconfig down or driver unload) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_KR_LOCKED
+value|3
+end_define
+
+begin_comment
+comment|/* bounded, brief stop for mutual exclusion */
+end_comment
+
+begin_comment
+comment|/* release the previously acquired right to use the *sync() methods of the ring */
+end_comment
 
 begin_function
 specifier|static
@@ -2522,6 +3258,28 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* true if the ifp that backed the adapter has disappeared (e.g., the  * driver has been unloaded)  */
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|nm_iszombie
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* try to obtain exclusive right to issue the *sync() operations on the ring.  * The right is obtained and must be later relinquished via nm_kr_put() if and  * only if nm_kr_tryget() returns 0.  * If can_sleep is 1 there are only two other possible outcomes:  * - the function returns NM_KR_BUSY  * - the function returns NM_KR_STOPPED and sets the POLLERR bit in *perr  *   (if non-null)  * In both cases the caller will typically skip the ring, possibly collecting  * errors along the way.  * If the calling context does not allow sleeping, the caller must pass 0 in can_sleep.  * In the latter case, the function may also return NM_KR_LOCKED and leave *perr  * untouched: ideally, the caller should try again at a later time.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2532,38 +3290,45 @@ name|struct
 name|netmap_kring
 modifier|*
 name|kr
+parameter_list|,
+name|int
+name|can_sleep
+parameter_list|,
+name|int
+modifier|*
+name|perr
 parameter_list|)
 block|{
+name|int
+name|busy
+init|=
+literal|1
+decl_stmt|,
+name|stopped
+decl_stmt|;
 comment|/* check a first time without taking the lock 	 * to avoid starvation for nm_kr_get() 	 */
+name|retry
+label|:
+name|stopped
+operator|=
+name|kr
+operator|->
+name|nkr_stopped
+expr_stmt|;
 if|if
 condition|(
 name|unlikely
 argument_list|(
-name|kr
-operator|->
-name|nkr_stopped
+name|stopped
 argument_list|)
 condition|)
 block|{
-name|ND
-argument_list|(
-literal|"ring %p stopped (%d)"
-argument_list|,
-name|kr
-argument_list|,
-name|kr
-operator|->
-name|nkr_stopped
-argument_list|)
-expr_stmt|;
-return|return
-name|NM_KR_STOPPED
-return|;
+goto|goto
+name|stop
+goto|;
 block|}
-if|if
-condition|(
-name|unlikely
-argument_list|(
+name|busy
+operator|=
 name|NM_ATOMIC_TEST_AND_SET
 argument_list|(
 operator|&
@@ -2571,60 +3336,158 @@ name|kr
 operator|->
 name|nr_busy
 argument_list|)
-argument_list|)
-condition|)
-return|return
-name|NM_KR_BUSY
-return|;
-comment|/* check a second time with lock held */
+expr_stmt|;
+comment|/* we should not return NM_KR_BUSY if the ring was 	 * actually stopped, so check another time after 	 * the barrier provided by the atomic operation 	 */
+name|stopped
+operator|=
+name|kr
+operator|->
+name|nkr_stopped
+expr_stmt|;
 if|if
 condition|(
 name|unlikely
 argument_list|(
-name|kr
-operator|->
-name|nkr_stopped
+name|stopped
 argument_list|)
 condition|)
 block|{
-name|ND
+goto|goto
+name|stop
+goto|;
+block|}
+if|if
+condition|(
+name|unlikely
 argument_list|(
-literal|"ring %p stopped (%d)"
-argument_list|,
-name|kr
-argument_list|,
+name|nm_iszombie
+argument_list|(
 name|kr
 operator|->
-name|nkr_stopped
+name|na
 argument_list|)
+argument_list|)
+condition|)
+block|{
+name|stopped
+operator|=
+name|NM_KR_STOPPED
 expr_stmt|;
+goto|goto
+name|stop
+goto|;
+block|}
+return|return
+name|unlikely
+argument_list|(
+name|busy
+argument_list|)
+condition|?
+name|NM_KR_BUSY
+else|:
+literal|0
+return|;
+name|stop
+label|:
+if|if
+condition|(
+operator|!
+name|busy
+condition|)
 name|nm_kr_put
 argument_list|(
 name|kr
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
+name|stopped
+operator|==
 name|NM_KR_STOPPED
-return|;
+condition|)
+block|{
+comment|/* if POLLERR is defined we want to use it to simplify netmap_poll().  * Otherwise, any non-zero value will do.  */
+ifdef|#
+directive|ifdef
+name|POLLERR
+define|#
+directive|define
+name|NM_POLLERR
+value|POLLERR
+else|#
+directive|else
+define|#
+directive|define
+name|NM_POLLERR
+value|1
+endif|#
+directive|endif
+comment|/* POLLERR */
+if|if
+condition|(
+name|perr
+condition|)
+operator|*
+name|perr
+operator||=
+name|NM_POLLERR
+expr_stmt|;
+undef|#
+directive|undef
+name|NM_POLLERR
+block|}
+elseif|else
+if|if
+condition|(
+name|can_sleep
+condition|)
+block|{
+name|tsleep
+argument_list|(
+name|kr
+argument_list|,
+literal|0
+argument_list|,
+literal|"NM_KR_TRYGET"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
 block|}
 return|return
-literal|0
+name|stopped
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* put the ring in the 'stopped' state and wait for the current user (if any) to  * notice. stopped must be either NM_KR_STOPPED or NM_KR_LOCKED  */
+end_comment
 
 begin_function
 specifier|static
 name|__inline
 name|void
-name|nm_kr_get
+name|nm_kr_stop
 parameter_list|(
 name|struct
 name|netmap_kring
 modifier|*
 name|kr
+parameter_list|,
+name|int
+name|stopped
 parameter_list|)
 block|{
+name|kr
+operator|->
+name|nkr_stopped
+operator|=
+name|stopped
+expr_stmt|;
 while|while
 condition|(
 name|NM_ATOMIC_TEST_AND_SET
@@ -2644,6 +3507,36 @@ argument_list|,
 literal|"NM_KR_GET"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* restart a ring after a stop */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|nm_kr_start
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kr
+parameter_list|)
+block|{
+name|kr
+operator|->
+name|nkr_stopped
+operator|=
+literal|0
+expr_stmt|;
+name|nm_kr_put
+argument_list|(
+name|kr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2726,6 +3619,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return codes for netmap_*x_irq. */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+comment|/* Driver should do normal interrupt processing, e.g. because 	 * the interface is not in netmap mode. */
+name|NM_IRQ_PASS
+init|=
+literal|0
+block|,
+comment|/* Port is in netmap mode, and the interrupt work has been 	 * completed. The driver does not have to notify netmap 	 * again before the next interrupt. */
+name|NM_IRQ_COMPLETED
+init|=
+operator|-
+literal|1
+block|,
+comment|/* Port is in netmap mode, but the interrupt work has not been 	 * completed. The driver has to make sure netmap will be 	 * notified again soon, even if no more interrupts come (e.g. 	 * on Linux the driver should not call napi_complete()). */
+name|NM_IRQ_RESCHED
+init|=
+operator|-
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/* default functions to handle rx/tx interrupts */
 end_comment
 
@@ -2758,11 +3678,11 @@ value|netmap_rx_irq(_n, _q, NULL)
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|netmap_common_irq
 parameter_list|(
 name|struct
-name|ifnet
+name|netmap_adapter
 modifier|*
 parameter_list|,
 name|u_int
@@ -2958,6 +3878,94 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_iszombie
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|==
+name|NULL
+operator|||
+operator|(
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_ZOMBIE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|nm_update_hostrings_mode
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+comment|/* Process nr_mode and nr_pending_mode for host rings. */
+name|na
+operator|->
+name|tx_rings
+index|[
+name|na
+operator|->
+name|num_tx_rings
+index|]
+operator|.
+name|nr_mode
+operator|=
+name|na
+operator|->
+name|tx_rings
+index|[
+name|na
+operator|->
+name|num_tx_rings
+index|]
+operator|.
+name|nr_pending_mode
+expr_stmt|;
+name|na
+operator|->
+name|rx_rings
+index|[
+name|na
+operator|->
+name|num_rx_rings
+index|]
+operator|.
+name|nr_mode
+operator|=
+name|na
+operator|->
+name|rx_rings
+index|[
+name|na
+operator|->
+name|num_rx_rings
+index|]
+operator|.
+name|nr_pending_mode
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* set/clear native flags and if_transmit/netdev_ops */
 end_comment
@@ -2983,6 +3991,18 @@ name|na
 operator|->
 name|ifp
 decl_stmt|;
+comment|/* We do the setup for intercepting packets only if we are the 	 * first user of this adapapter. */
+if|if
+condition|(
+name|na
+operator|->
+name|active_fds
+operator|>
+literal|0
+condition|)
+block|{
+return|return;
+block|}
 name|na
 operator|->
 name|na_flags
@@ -3001,9 +4021,12 @@ name|IFCAP_NETMAP
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|na
 operator|->
 name|if_transmit
@@ -3018,6 +4041,21 @@ name|if_transmit
 operator|=
 name|netmap_transmit
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|(
+name|void
+operator|)
+name|ifp
+expr_stmt|;
+comment|/* prevent a warning */
+comment|//XXX_ale can we just comment those?
+comment|//na->if_transmit = ifp->if_transmit;
+comment|//ifp->if_transmit = netmap_transmit;
 else|#
 directive|else
 name|na
@@ -3081,6 +4119,11 @@ name|nm_eto
 expr_stmt|;
 endif|#
 directive|endif
+name|nm_update_hostrings_mode
+argument_list|(
+name|na
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3105,9 +4148,29 @@ name|na
 operator|->
 name|ifp
 decl_stmt|;
-ifdef|#
-directive|ifdef
+comment|/* We undo the setup for intercepting packets only if we are the 	 * last user of this adapapter. */
+if|if
+condition|(
+name|na
+operator|->
+name|active_fds
+operator|>
+literal|0
+condition|)
+block|{
+return|return;
+block|}
+name|nm_update_hostrings_mode
+argument_list|(
+name|na
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|ifp
 operator|->
 name|if_transmit
@@ -3116,6 +4179,20 @@ name|na
 operator|->
 name|if_transmit
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|(
+name|void
+operator|)
+name|ifp
+expr_stmt|;
+comment|/* prevent a warning */
+comment|//XXX_ale can we just comment those?
+comment|//ifp->if_transmit = na->if_transmit;
 else|#
 directive|else
 name|ifp
@@ -3169,6 +4246,48 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*  * nm_*sync_prologue() functions are used in ioctl/poll and ptnetmap  * kthreads.  * We need netmap_ring* parameter, because in ptnetmap it is decoupled  * from host kring.  * The user-space ring pointers (head/cur/tail) are shared through  * CSB between host and guest.  */
+end_comment
+
+begin_comment
+comment|/*  * validates parameters in the ring/kring, returns a value for head  * If any error, returns ring_size to force a reinit.  */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|nm_txsync_prologue
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_ring
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * validates parameters in the ring/kring, returns a value for head  * If any error, returns ring_size lim to force a reinit.  */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|nm_rxsync_prologue
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_ring
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check/fix address and len in tx rings */
@@ -3337,6 +4456,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|netmap_hw_krings_create
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_hw_krings_delete
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* set the stopped/enabled status of ring  * When stopping, they also wait for all current activity on the ring to  * terminate. The status change is then notified using the na nm_notify  * callback.  */
 end_comment
@@ -3380,7 +4523,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* convenience wrappers for netmap_set_all_rings, used in drivers */
+comment|/* convenience wrappers for netmap_set_all_rings */
 end_comment
 
 begin_function_decl
@@ -3429,6 +4572,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|netmap_do_unregif
+parameter_list|(
+name|struct
+name|netmap_priv_d
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|nm_bound_var
 parameter_list|(
@@ -3468,8 +4623,31 @@ modifier|*
 modifier|*
 name|na
 parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+modifier|*
+name|ifp
+parameter_list|,
 name|int
 name|create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_unget_na
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3597,6 +4775,17 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|NM_BRIDGES
+value|8
+end_define
+
+begin_comment
+comment|/* number of bridges */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NM_BDG_MAXPORTS
 value|254
 end_define
@@ -3618,17 +4807,6 @@ directive|define
 name|NM_BDG_NOPORT
 value|(NM_BDG_MAXPORTS+1)
 end_define
-
-begin_define
-define|#
-directive|define
-name|NM_NAME
-value|"vale"
-end_define
-
-begin_comment
-comment|/* prefix for bridge port name */
-end_comment
 
 begin_comment
 comment|/* these are redefined in case of no VALE support */
@@ -4052,15 +5230,13 @@ name|int
 name|netmap_poll
 parameter_list|(
 name|struct
-name|cdev
+name|netmap_priv_d
 modifier|*
-name|dev
 parameter_list|,
 name|int
 name|events
 parameter_list|,
-name|struct
-name|thread
+name|NM_SELRECORD_T
 modifier|*
 name|td
 parameter_list|)
@@ -4110,24 +5286,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|netmap_dtor_locked
+name|netmap_ioctl
 parameter_list|(
 name|struct
 name|netmap_priv_d
 modifier|*
 name|priv
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|netmap_ioctl
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
 parameter_list|,
 name|u_long
 name|cmd
@@ -4135,13 +5299,9 @@ parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
-name|int
-name|fflag
-parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4277,9 +5437,9 @@ define|#
 directive|define
 name|NETMAP_BUF_BASE
 parameter_list|(
-name|na
+name|_na
 parameter_list|)
-value|((na)->na_lut.lut[0].vaddr)
+value|((_na)->na_lut.lut[0].vaddr)
 end_define
 
 begin_define
@@ -4287,21 +5447,10 @@ define|#
 directive|define
 name|NETMAP_BUF_SIZE
 parameter_list|(
-name|na
+name|_na
 parameter_list|)
-value|((na)->na_lut.objsize)
+value|((_na)->na_lut.objsize)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_mitigate
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// XXX not really used
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -4313,12 +5462,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|netmap_mitigate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|netmap_verbose
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// XXX debugging
+comment|/* for debugging */
 end_comment
 
 begin_enum
@@ -4375,6 +5531,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|netmap_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|netmap_generic_mit
 decl_stmt|;
 end_decl_stmt
@@ -4396,7 +5559,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|netmap_use_count
+name|netmap_generic_txqdisc
 decl_stmt|;
 end_decl_stmt
 
@@ -4415,51 +5578,7 @@ value|((struct netmap_adapter *)WNA(_ifp))
 end_define
 
 begin_comment
-comment|/*  * Macros to determine if an interface is netmap capable or netmap enabled.  * See the magic field in struct netmap_adapter.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_comment
-comment|/*  * on FreeBSD just use if_capabilities and if_capenable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_CAPABLE
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(NA(ifp)&&		\ 	(ifp)->if_capabilities& IFCAP_NETMAP )
-end_define
-
-begin_define
-define|#
-directive|define
-name|NETMAP_SET_CAPABLE
-parameter_list|(
-name|ifp
-parameter_list|)
-define|\
-value|(ifp)->if_capabilities |= IFCAP_NETMAP
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* linux */
-end_comment
-
-begin_comment
-comment|/*  * on linux:  * we check if NA(ifp) is set and its first element has a related  * magic value. The capenable is within the struct netmap_adapter.  */
+comment|/*  * On old versions of FreeBSD, NA(ifp) is a pspare. On linux we  * overload another pointer in the netdev.  *  * We check if NA(ifp) is set and its first element has a related  * magic value. The capenable is within the struct netmap_adapter.  */
 end_comment
 
 begin_define
@@ -4472,7 +5591,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NETMAP_CAPABLE
+name|NM_NA_VALID
 parameter_list|(
 name|ifp
 parameter_list|)
@@ -4482,28 +5601,33 @@ end_define
 begin_define
 define|#
 directive|define
-name|NETMAP_SET_CAPABLE
+name|NM_ATTACH_NA
+parameter_list|(
+name|ifp
+parameter_list|,
+name|na
+parameter_list|)
+value|do {					\ 	WNA(ifp) = na;							\ 	if (NA(ifp))							\ 		NA(ifp)->magic = 					\ 			((uint32_t)(uintptr_t)NA(ifp)) ^ NETMAP_MAGIC;	\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_IS_NATIVE
 parameter_list|(
 name|ifp
 parameter_list|)
-define|\
-value|NA(ifp)->magic = ((uint32_t)(uintptr_t)NA(ifp)) ^ NETMAP_MAGIC
+value|(NM_NA_VALID(ifp)&& NA(ifp)->nm_dtor == netmap_hw_dtor)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* linux */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Assigns the device IOMMU domain to an allocator.  * Returns -ENOMEM in case the domain is different */
@@ -4696,6 +5820,15 @@ block|}
 block|}
 end_function
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_elif
+
 begin_else
 else|#
 directive|else
@@ -4761,11 +5894,10 @@ name|pdev
 argument_list|,
 name|buf
 argument_list|,
+name|NETMAP_BUF_SIZE
+argument_list|(
 name|na
-operator|->
-name|na_lut
-operator|.
-name|objsize
+argument_list|)
 argument_list|,
 name|DMA_BIDIRECTIONAL
 argument_list|)
@@ -4795,11 +5927,10 @@ block|{
 name|u_int
 name|sz
 init|=
+name|NETMAP_BUF_SIZE
+argument_list|(
 name|na
-operator|->
-name|na_lut
-operator|.
-name|objsize
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -4850,11 +5981,10 @@ block|{
 name|u_int
 name|sz
 init|=
+name|NETMAP_BUF_SIZE
+argument_list|(
 name|na
-operator|->
-name|na_lut
-operator|.
-name|objsize
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -5251,6 +6381,9 @@ index|]
 operator|.
 name|vaddr
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_WIN32
 operator|*
 name|pp
 operator|=
@@ -5278,6 +6411,47 @@ index|]
 operator|.
 name|paddr
 expr_stmt|;
+else|#
+directive|else
+operator|*
+name|pp
+operator|=
+operator|(
+name|i
+operator|>=
+name|na
+operator|->
+name|na_lut
+operator|.
+name|objtotal
+operator|)
+condition|?
+operator|(
+name|uint64_t
+operator|)
+name|lut
+index|[
+literal|0
+index|]
+operator|.
+name|paddr
+operator|.
+name|QuadPart
+else|:
+operator|(
+name|uint64_t
+operator|)
+name|lut
+index|[
+name|i
+index|]
+operator|.
+name|paddr
+operator|.
+name|QuadPart
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ret
 return|;
@@ -5303,6 +6477,11 @@ name|struct
 name|netmap_adapter
 modifier|*
 name|np_na
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|np_ifp
 decl_stmt|;
 name|uint32_t
 name|np_flags
@@ -5345,6 +6524,124 @@ comment|/* kqueue, just debugging */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|struct
+name|netmap_priv_d
+modifier|*
+name|netmap_priv_new
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_priv_delete
+parameter_list|(
+name|struct
+name|netmap_priv_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_kring_pending
+parameter_list|(
+name|struct
+name|netmap_priv_d
+modifier|*
+name|np
+parameter_list|)
+block|{
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|np
+operator|->
+name|np_na
+decl_stmt|;
+name|enum
+name|txrx
+name|t
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|for_rx_tx
+argument_list|(
+argument|t
+argument_list|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+name|np
+operator|->
+name|np_qfirst
+index|[
+name|t
+index|]
+init|;
+name|i
+operator|<
+name|np
+operator|->
+name|np_qlast
+index|[
+name|t
+index|]
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+init|=
+operator|&
+name|NMR
+argument_list|(
+name|na
+argument_list|,
+name|t
+argument_list|)
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|kring
+operator|->
+name|nr_mode
+operator|!=
+name|kring
+operator|->
+name|nr_pending_mode
+condition|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+block|}
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -5404,21 +6701,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|netmap_catch_rx
-parameter_list|(
-name|struct
-name|netmap_generic_adapter
-modifier|*
-name|na
-parameter_list|,
-name|int
-name|intercept
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|generic_rx_handler
 parameter_list|(
 name|struct
@@ -5439,50 +6721,96 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|void
-name|netmap_catch_tx
+name|int
+name|nm_os_catch_rx
 parameter_list|(
 name|struct
 name|netmap_generic_adapter
 modifier|*
-name|na
+name|gna
 parameter_list|,
 name|int
-name|enable
+name|intercept
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|generic_xmit_frame
+name|nm_os_catch_tx
 parameter_list|(
+name|struct
+name|netmap_generic_adapter
+modifier|*
+name|gna
+parameter_list|,
+name|int
+name|intercept
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * the generic transmit routine is passed a structure to optionally  * build a queue of descriptors, in an OS-specific way.  * The payload is at addr, if non-null, and the routine should send or queue  * the packet, returning 0 if successful, 1 on failure.  *  * At the end, if head is non-null, there will be an additional call  * to the function with addr = NULL; this should tell the OS-specific  * routine to send the queue and free any resources. Failure is ignored.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_os_gen_arg
+block|{
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|struct
-name|mbuf
+decl_stmt|;
+name|void
 modifier|*
 name|m
-parameter_list|,
+decl_stmt|;
+comment|/* os-specific mbuf-like object */
+name|void
+modifier|*
+name|head
+decl_stmt|,
+modifier|*
+name|tail
+decl_stmt|;
+comment|/* tailq, if the OS-specific routine needs to build one */
 name|void
 modifier|*
 name|addr
-parameter_list|,
+decl_stmt|;
+comment|/* payload of current packet */
 name|u_int
 name|len
-parameter_list|,
+decl_stmt|;
+comment|/* packet length */
 name|u_int
 name|ring_nr
+decl_stmt|;
+comment|/* packet length */
+name|u_int
+name|qevent
+decl_stmt|;
+comment|/* in txqdisc mode, place an event on this mbuf */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|nm_os_generic_xmit_frame
+parameter_list|(
+name|struct
+name|nm_os_gen_arg
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|generic_find_num_desc
+name|nm_os_generic_find_num_desc
 parameter_list|(
 name|struct
 name|ifnet
@@ -5502,7 +6830,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|generic_find_num_queues
+name|nm_os_generic_find_num_queues
 parameter_list|(
 name|struct
 name|ifnet
@@ -5516,6 +6844,18 @@ parameter_list|,
 name|u_int
 modifier|*
 name|rxq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_generic_set_features
+parameter_list|(
+name|struct
+name|netmap_generic_adapter
+modifier|*
+name|gna
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5558,6 +6898,25 @@ name|ifp
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|void
+name|netmap_generic_irq
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|u_int
+name|q
+parameter_list|,
+name|u_int
+modifier|*
+name|work_done
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//#define RATE_GENERIC  /* Enables communication statistics for generic. */
@@ -5629,7 +6988,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|netmap_mitigation_init
+name|nm_os_mitigation_init
 parameter_list|(
 name|struct
 name|nm_generic_mit
@@ -5649,7 +7008,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netmap_mitigation_start
+name|nm_os_mitigation_start
 parameter_list|(
 name|struct
 name|nm_generic_mit
@@ -5661,7 +7020,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netmap_mitigation_restart
+name|nm_os_mitigation_restart
 parameter_list|(
 name|struct
 name|nm_generic_mit
@@ -5673,7 +7032,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|netmap_mitigation_active
+name|nm_os_mitigation_active
 parameter_list|(
 name|struct
 name|nm_generic_mit
@@ -5685,7 +7044,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|netmap_mitigation_cleanup
+name|nm_os_mitigation_cleanup
 parameter_list|(
 name|struct
 name|nm_generic_mit
@@ -5694,6 +7053,25 @@ name|mit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WITH_GENERIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|generic_netmap_attach
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(EOPNOTSUPP)
+end_define
 
 begin_endif
 endif|#
@@ -5972,7 +7350,7 @@ end_define
 
 begin_function_decl
 name|rawsum_t
-name|nm_csum_raw
+name|nm_os_csum_raw
 parameter_list|(
 name|uint8_t
 modifier|*
@@ -5989,7 +7367,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|nm_csum_ipv4
+name|nm_os_csum_ipv4
 parameter_list|(
 name|struct
 name|nm_iphdr
@@ -6001,7 +7379,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_csum_tcpudp_ipv4
+name|nm_os_csum_tcpudp_ipv4
 parameter_list|(
 name|struct
 name|nm_iphdr
@@ -6024,7 +7402,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_csum_tcpudp_ipv6
+name|nm_os_csum_tcpudp_ipv6
 parameter_list|(
 name|struct
 name|nm_ipv6hdr
@@ -6047,7 +7425,7 @@ end_function_decl
 
 begin_function_decl
 name|uint16_t
-name|nm_csum_fold
+name|nm_os_csum_fold
 parameter_list|(
 name|rawsum_t
 name|cur_sum
@@ -6069,6 +7447,7 @@ name|netmap_vp_adapter
 modifier|*
 name|dst_na
 parameter_list|,
+specifier|const
 name|struct
 name|nm_bdg_fwd
 modifier|*
@@ -6077,7 +7456,7 @@ parameter_list|,
 name|struct
 name|netmap_ring
 modifier|*
-name|ring
+name|dst_ring
 parameter_list|,
 name|u_int
 modifier|*
@@ -6099,7 +7478,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|nm_vi_persist
+name|nm_os_vi_persist
 parameter_list|(
 specifier|const
 name|char
@@ -6115,7 +7494,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_vi_detach
+name|nm_os_vi_detach
 parameter_list|(
 name|struct
 name|ifnet
@@ -6126,12 +7505,505 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nm_vi_init_index
+name|nm_os_vi_init_index
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * kernel thread routines  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|nm_kthread
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* OS-specific kthread - opaque */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|nm_kthread_worker_fn_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* kthread configuration */
+end_comment
+
+begin_struct
+struct|struct
+name|nm_kthread_cfg
+block|{
+name|long
+name|type
+decl_stmt|;
+comment|/* kthread type/identifier */
+name|struct
+name|ptnet_ring_cfg
+name|event
+decl_stmt|;
+comment|/* event/ioctl fd */
+name|nm_kthread_worker_fn_t
+name|worker_fn
+decl_stmt|;
+comment|/* worker function */
+name|void
+modifier|*
+name|worker_private
+decl_stmt|;
+comment|/* worker parameter */
+name|int
+name|attach_user
+decl_stmt|;
+comment|/* attach kthread to user process */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* kthread configuration */
+end_comment
+
+begin_function_decl
+name|struct
+name|nm_kthread
+modifier|*
+name|nm_os_kthread_create
+parameter_list|(
+name|struct
+name|nm_kthread_cfg
+modifier|*
+name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nm_os_kthread_start
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_kthread_stop
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_kthread_delete
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_kthread_wakeup_worker
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+name|nmk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_kthread_send_irq
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_os_kthread_set_affinity
+parameter_list|(
+name|struct
+name|nm_kthread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|nm_os_ncpus
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_PTNETMAP_HOST
+end_ifdef
+
+begin_comment
+comment|/*  * netmap adapter for host ptnetmap ports  */
+end_comment
+
+begin_struct
+struct|struct
+name|netmap_pt_host_adapter
+block|{
+name|struct
+name|netmap_adapter
+name|up
+decl_stmt|;
+name|struct
+name|netmap_adapter
+modifier|*
+name|parent
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|parent_nm_notify
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|ptns
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ptnetmap HOST routines */
+end_comment
+
+begin_function_decl
+name|int
+name|netmap_get_pt_host_na
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+modifier|*
+name|na
+parameter_list|,
+name|int
+name|create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ptnetmap_ctl
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_ptnetmap_host_on
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|&&
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_PTNETMAP_HOST
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WITH_PTNETMAP_HOST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_get_pt_host_na
+parameter_list|(
+name|nmr
+parameter_list|,
+name|_2
+parameter_list|,
+name|_3
+parameter_list|)
+define|\
+value|((nmr)->nr_flags& (NR_PTNETMAP_HOST) ? EOPNOTSUPP : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptnetmap_ctl
+parameter_list|(
+name|_1
+parameter_list|,
+name|_2
+parameter_list|)
+value|EINVAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|nm_ptnetmap_host_on
+parameter_list|(
+name|_1
+parameter_list|)
+value|EINVAL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !WITH_PTNETMAP_HOST */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_PTNETMAP_GUEST
+end_ifdef
+
+begin_comment
+comment|/* ptnetmap GUEST routines */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+function_decl|(
+modifier|*
+name|nm_pt_guest_ptctl_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * netmap adapter for guest ptnetmap ports  */
+end_comment
+
+begin_struct
+struct|struct
+name|netmap_pt_guest_adapter
+block|{
+comment|/* The netmap adapter to be used by netmap applications. 	 * This field must be the first, to allow upcast. */
+name|struct
+name|netmap_hw_adapter
+name|hwup
+decl_stmt|;
+comment|/* The netmap adapter to be used by the driver. */
+name|struct
+name|netmap_hw_adapter
+name|dr
+decl_stmt|;
+name|void
+modifier|*
+name|csb
+decl_stmt|;
+comment|/* Reference counter to track users of backend netmap port: the 	 * network stack and netmap clients. 	 * Used to decide when we need (de)allocate krings/rings and 	 * start (stop) ptnetmap kthreads. */
+name|int
+name|backend_regifs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|netmap_pt_guest_attach
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+name|nm_pt_guest_ptctl_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ptnet_ring
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|bool
+name|netmap_pt_guest_txsync
+parameter_list|(
+name|struct
+name|ptnet_ring
+modifier|*
+name|ptring
+parameter_list|,
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|netmap_pt_guest_rxsync
+parameter_list|(
+name|struct
+name|ptnet_ring
+modifier|*
+name|ptring
+parameter_list|,
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ptnet_nm_krings_create
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ptnet_nm_krings_delete
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ptnet_nm_dtor
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_PTNETMAP_GUEST */
+end_comment
 
 begin_endif
 endif|#

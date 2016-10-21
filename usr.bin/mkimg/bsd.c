@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
+file|<bsd.h>
 end_include
 
 begin_include
@@ -76,24 +76,6 @@ include|#
 directive|include
 file|"scheme.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FS_NANDFS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FS_NANDFS
-value|30
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -177,7 +159,7 @@ name|SCHEME_META_IMG_START
 condition|)
 name|blk
 operator|+=
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 operator|/
 name|secsz
 expr_stmt|;
@@ -260,7 +242,7 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -287,7 +269,7 @@ name|buf
 argument_list|,
 name|bootcode
 argument_list|,
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|memset
@@ -313,7 +295,7 @@ name|buf
 argument_list|,
 literal|0
 argument_list|,
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|bsdparts
@@ -327,11 +309,11 @@ if|if
 condition|(
 name|bsdparts
 operator|<
-name|MAXPARTITIONS
+name|BSD_NPARTS_MIN
 condition|)
 name|bsdparts
 operator|=
-name|MAXPARTITIONS
+name|BSD_NPARTS_MIN
 expr_stmt|;
 name|d
 operator|=
@@ -352,7 +334,7 @@ name|d
 operator|->
 name|d_magic
 argument_list|,
-name|DISKMAGIC
+name|BSD_MAGIC
 argument_list|)
 expr_stmt|;
 name|le32enc
@@ -434,7 +416,7 @@ name|d
 operator|->
 name|d_magic2
 argument_list|,
-name|DISKMAGIC
+name|BSD_MAGIC
 argument_list|)
 expr_stmt|;
 name|le16enc
@@ -454,7 +436,7 @@ name|d
 operator|->
 name|d_bbsize
 argument_list|,
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 argument_list|)
 expr_stmt|;
 name|dp
@@ -464,7 +446,7 @@ name|d
 operator|->
 name|d_partitions
 index|[
-name|RAW_PART
+name|BSD_PART_RAW
 index|]
 expr_stmt|;
 name|le32enc
@@ -498,7 +480,7 @@ name|part
 operator|->
 name|index
 operator|>=
-name|RAW_PART
+name|BSD_PART_RAW
 operator|)
 condition|?
 literal|1
@@ -639,7 +621,7 @@ literal|0
 argument_list|,
 name|buf
 argument_list|,
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 operator|/
 name|secsz
 argument_list|)
@@ -692,12 +674,14 @@ block|,
 operator|.
 name|nparts
 operator|=
-literal|19
+name|BSD_NPARTS_MAX
+operator|-
+literal|1
 block|,
 operator|.
 name|bootcode
 operator|=
-name|BBSIZE
+name|BSD_BOOTBLOCK_SIZE
 block|,
 operator|.
 name|maxsecsz

@@ -251,6 +251,8 @@ block|{
 literal|"allwinner,sun8i-h3"
 block|,
 name|CLOCK_CCU
+operator||
+name|CLOCK_PRCM
 block|}
 block|,
 block|{

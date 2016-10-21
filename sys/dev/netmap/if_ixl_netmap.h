@@ -77,7 +77,7 @@ name|NETMAP_IXL_MAIN
 end_ifdef
 
 begin_comment
-comment|/*  * device-specific sysctl variables:  *  * ixl_crcstrip: 0: keep CRC in rx frames (default), 1: strip it.  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ixl_rx_miss, ixl_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
+comment|/*  * device-specific sysctl variables:  *  * ixl_crcstrip: 0: NIC keeps CRC in rx frames, 1: NIC strips it (default).  *	During regular operations the CRC is stripped, but on some  *	hardware reception of frames not multiple of 64 is slower,  *	so using crcstrip=0 helps in benchmarks.  *  * ixl_rx_miss, ixl_rx_miss_bufs:  *	count packets that might be missed due to lost interrupts.  */
 end_comment
 
 begin_expr_stmt
@@ -99,7 +99,7 @@ literal|0
 end_if
 
 begin_endif
-unit|SYSCTL_INT(_dev_netmap, OID_AUTO, ixl_crcstrip,     CTLFLAG_RW,&ixl_crcstrip, 1, "strip CRC on rx frames");
+unit|SYSCTL_INT(_dev_netmap, OID_AUTO, ixl_crcstrip,     CTLFLAG_RW,&ixl_crcstrip, 1, "NIC strips CRC on rx frames");
 endif|#
 directive|endif
 end_endif

@@ -790,11 +790,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ERR_STRING
+name|_ERR_STRING
 parameter_list|(
 name|err
 parameter_list|)
 value|#err
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_STRING
+parameter_list|(
+name|err
+parameter_list|)
+value|_ERR_STRING(err)
 end_define
 
 begin_if

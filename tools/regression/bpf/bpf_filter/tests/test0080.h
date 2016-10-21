@@ -8,6 +8,7 @@ comment|/* BPF program */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bpf_insn
 name|pc
@@ -425,6 +426,7 @@ comment|/* Packet */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|pkt
 index|[]
@@ -440,6 +442,7 @@ comment|/* Packet length seen on wire */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|wirelen
 init|=
@@ -455,6 +458,7 @@ comment|/* Packet length passed on buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|buflen
 init|=
@@ -470,6 +474,7 @@ comment|/* Invalid instruction */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|invalid
 init|=
@@ -482,6 +487,7 @@ comment|/* Expected return value */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|expect
 init|=
@@ -494,6 +500,7 @@ comment|/* Expected signal */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|expect_signal
 init|=

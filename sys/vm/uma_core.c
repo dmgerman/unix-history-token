@@ -3594,9 +3594,8 @@ block|}
 decl_stmt|;
 name|uma_slab_t
 name|slab
-decl_stmt|;
-name|uma_slab_t
-name|n
+decl_stmt|,
+name|tmp
 decl_stmt|;
 comment|/* 	 * We don't want to take pages from statically allocated kegs at this 	 * time 	 */
 if|if
@@ -3648,31 +3647,18 @@ condition|)
 goto|goto
 name|finished
 goto|;
-name|slab
-operator|=
-name|LIST_FIRST
+name|LIST_FOREACH_SAFE
 argument_list|(
-operator|&
-name|keg
-operator|->
-name|uk_free_slab
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|slab
-condition|)
-block|{
-name|n
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|slab
+argument|slab
 argument_list|,
-name|us_link
+argument|&keg->uk_free_slab
+argument_list|,
+argument|us_link
+argument_list|,
+argument|tmp
 argument_list|)
-expr_stmt|;
-comment|/* We have no where to free these to */
+block|{
+comment|/* We have nowhere to free these to. */
 if|if
 condition|(
 name|slab
@@ -3681,13 +3667,7 @@ name|us_flags
 operator|&
 name|UMA_SLAB_BOOT
 condition|)
-block|{
-name|slab
-operator|=
-name|n
-expr_stmt|;
 continue|continue;
-block|}
 name|LIST_REMOVE
 argument_list|(
 name|slab
@@ -3742,10 +3722,6 @@ name|slab
 argument_list|,
 name|us_hlink
 argument_list|)
-expr_stmt|;
-name|slab
-operator|=
-name|n
 expr_stmt|;
 block|}
 name|finished

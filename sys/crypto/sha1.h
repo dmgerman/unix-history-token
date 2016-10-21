@@ -163,8 +163,10 @@ modifier|*
 parameter_list|,
 name|char
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SHA1_RESULTLEN
+argument_list|)
 index|]
 parameter_list|)
 function_decl|;

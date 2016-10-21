@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vtoc.h>
+file|<vtoc.h>
 end_include
 
 begin_include
@@ -82,24 +82,6 @@ include|#
 directive|include
 file|"scheme.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VTOC_TAG_FREEBSD_NANDFS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VTOC_TAG_FREEBSD_NANDFS
-value|0x0905
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static

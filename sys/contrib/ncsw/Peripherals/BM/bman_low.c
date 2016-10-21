@@ -61,28 +61,28 @@ begin_define
 define|#
 directive|define
 name|REG_RCR_PI_CINH
-value|(void *)0x0000
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_RCR_CI_CINH
-value|(void *)0x0004
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_RCR_ITR
-value|(void *)0x0008
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_CFG
-value|(void *)0x0100
+value|0x0100
 end_define
 
 begin_define
@@ -92,35 +92,35 @@ name|REG_SCN
 parameter_list|(
 name|n
 parameter_list|)
-value|((void *)(0x0200 + ((n)<< 2)))
+value|(0x0200 + ((n)<< 2))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_ISR
-value|(void *)0x0e00
+value|0x0e00
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_IER
-value|(void *)0x0e04
+value|0x0e04
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_ISDR
-value|(void *)0x0e08
+value|0x0e08
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_IIR
-value|(void *)0x0e0c
+value|0x0e0c
 end_define
 
 begin_comment
@@ -131,42 +131,42 @@ begin_define
 define|#
 directive|define
 name|CL_CR
-value|(void *)0x0000
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CL_RR0
-value|(void *)0x0100
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|CL_RR1
-value|(void *)0x0140
+value|0x0140
 end_define
 
 begin_define
 define|#
 directive|define
 name|CL_RCR
-value|(void *)0x1000
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CL_RCR_PI_CENA
-value|(void *)0x3000
+value|0x3000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CL_RCR_CI_CENA
-value|(void *)0x3100
+value|0x3100
 end_define
 
 begin_comment
@@ -184,8 +184,7 @@ name|void
 modifier|*
 name|a
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|b
 parameter_list|)
 block|{
@@ -200,9 +199,6 @@ name|uintptr_t
 operator|)
 name|a
 operator|+
-operator|(
-name|uintptr_t
-operator|)
 name|b
 operator|)
 return|;
@@ -224,8 +220,7 @@ name|void
 modifier|*
 name|a
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|b
 parameter_list|)
 block|{
@@ -240,9 +235,6 @@ name|uintptr_t
 operator|)
 name|a
 operator||
-operator|(
-name|uintptr_t
-operator|)
 name|b
 operator|)
 return|;
@@ -264,8 +256,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|)
 block|{
@@ -307,8 +298,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|,
 name|uint32_t
@@ -394,8 +384,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|)
 block|{
@@ -425,8 +414,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|)
 block|{
@@ -456,8 +444,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|)
 block|{
@@ -499,8 +486,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|,
 name|uint32_t
@@ -551,8 +537,7 @@ name|bm_addr
 modifier|*
 name|bm
 parameter_list|,
-name|void
-modifier|*
+name|uintptr_t
 name|offset
 parameter_list|)
 block|{
@@ -729,7 +714,7 @@ call|)
 argument_list|(
 operator|(
 operator|(
-name|uint32_t
+name|uintptr_t
 operator|)
 name|e
 operator|>>
@@ -2662,16 +2647,13 @@ name|portal
 operator|->
 name|addr
 argument_list|,
-name|PTR_MOVE
-argument_list|(
 name|REG_ISR
-argument_list|,
+operator|+
 operator|(
 name|n
 operator|<<
 literal|2
 operator|)
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -2701,16 +2683,13 @@ name|portal
 operator|->
 name|addr
 argument_list|,
-name|PTR_MOVE
-argument_list|(
 name|REG_ISR
-argument_list|,
+operator|+
 operator|(
 name|n
 operator|<<
 literal|2
 operator|)
-argument_list|)
 argument_list|,
 name|val
 argument_list|)

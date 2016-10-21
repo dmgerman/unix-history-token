@@ -129,8 +129,10 @@ parameter_list|,
 specifier|const
 name|uint8_t
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SIPHASH_KEY_LENGTH
+argument_list|)
 index|]
 parameter_list|)
 function_decl|;
@@ -158,8 +160,10 @@ name|SipHash_Final
 parameter_list|(
 name|uint8_t
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SIPHASH_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SIPHASH_CTX
@@ -224,8 +228,10 @@ parameter_list|,
 specifier|const
 name|uint8_t
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SIPHASH_KEY_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 specifier|const

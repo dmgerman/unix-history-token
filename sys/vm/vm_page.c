@@ -3191,7 +3191,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vm_page_xunbusy_maybelocked
 parameter_list|(

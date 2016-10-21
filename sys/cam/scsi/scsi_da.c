@@ -4743,12 +4743,6 @@ operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
 name|softc
 operator|->
 name|flags

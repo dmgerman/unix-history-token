@@ -691,7 +691,7 @@ operator|.
 name|errIrq
 operator|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -898,7 +898,7 @@ condition|)
 name|XX_DeallocIntr
 argument_list|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
