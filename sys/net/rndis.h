@@ -1171,6 +1171,21 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* stbuf offset from the beginning of rndis_status_msg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RNDIS_STBUFOFFSET_ABS
+parameter_list|(
+name|ofs
+parameter_list|)
+define|\
+value|((ofs) + __offsetof(struct rndis_status_msg, rm_status))
+end_define
+
+begin_comment
 comment|/*  * Immediately after rndis_status_msg.rm_stbufoffset, if a control  * message is malformatted, or a packet message contains inappropriate  * content.  */
 end_comment
 

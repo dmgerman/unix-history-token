@@ -619,9 +619,6 @@ name|device_t
 name|hn_dev
 decl_stmt|;
 name|int
-name|hn_carrier
-decl_stmt|;
-name|int
 name|hn_if_flags
 decl_stmt|;
 name|struct
@@ -712,6 +709,18 @@ name|struct
 name|task
 name|hn_link_task
 decl_stmt|;
+name|struct
+name|task
+name|hn_netchg_init
+decl_stmt|;
+name|struct
+name|timeout_task
+name|hn_netchg_status
+decl_stmt|;
+name|uint32_t
+name|hn_link_flags
+decl_stmt|;
+comment|/* HN_LINK_FLAG_ */
 name|uint32_t
 name|hn_caps
 decl_stmt|;
@@ -861,6 +870,20 @@ define|#
 directive|define
 name|HN_CAP_HASHVAL
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_LINK_FLAG_LINKUP
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_LINK_FLAG_NETCHG
+value|0x0002
 end_define
 
 begin_comment
