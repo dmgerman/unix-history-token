@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.c,v 1.29 2015/11/07 17:58:55 schwarze Exp $	*/
+comment|/*	$Id: manpath.c,v 1.30 2016/05/28 13:44:13 schwarze Exp $	*/
 end_comment
 
 begin_comment
@@ -1101,21 +1101,28 @@ operator|=
 name|cp
 operator|+
 name|linelen
-expr_stmt|;
-if|if
-condition|(
-name|ep
-index|[
 operator|-
 literal|1
-index|]
-operator|!=
-literal|'\n'
-condition|)
-break|break;
-operator|*
-operator|--
+expr_stmt|;
+while|while
+condition|(
 name|ep
+operator|>
+name|cp
+operator|&&
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|ep
+argument_list|)
+condition|)
+operator|*
+name|ep
+operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1136,6 +1143,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|cp
+operator|==
+name|ep
+operator|||
 operator|*
 name|cp
 operator|==

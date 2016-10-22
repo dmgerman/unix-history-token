@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ascii.c,v 1.52 2015/11/12 21:50:03 schwarze Exp $ */
+comment|/*	$Id: term_ascii.c,v 1.53 2016/07/08 22:29:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -803,7 +803,7 @@ end_function
 
 begin_function
 name|void
-name|ascii_sepline
+name|terminal_sepline
 parameter_list|(
 name|void
 modifier|*
@@ -827,15 +827,14 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+call|(
+modifier|*
 name|p
 operator|->
-name|line
-operator|+=
-literal|3
-expr_stmt|;
-name|putchar
+name|endline
+call|)
 argument_list|(
-literal|'\n'
+name|p
 argument_list|)
 expr_stmt|;
 for|for
@@ -853,19 +852,36 @@ condition|;
 name|i
 operator|++
 control|)
-name|putchar
+call|(
+modifier|*
+name|p
+operator|->
+name|letter
+call|)
 argument_list|(
+name|p
+argument_list|,
 literal|'-'
 argument_list|)
 expr_stmt|;
-name|putchar
+call|(
+modifier|*
+name|p
+operator|->
+name|endline
+call|)
 argument_list|(
-literal|'\n'
+name|p
 argument_list|)
 expr_stmt|;
-name|putchar
+call|(
+modifier|*
+name|p
+operator|->
+name|endline
+call|)
 argument_list|(
-literal|'\n'
+name|p
 argument_list|)
 expr_stmt|;
 block|}

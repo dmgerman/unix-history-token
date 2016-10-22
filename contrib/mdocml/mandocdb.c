@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandocdb.c,v 1.215 2016/01/08 17:48:09 schwarze Exp $ */
+comment|/*	$Id: mandocdb.c,v 1.218 2016/07/12 05:18:38 kristaps Exp $ */
 end_comment
 
 begin_comment
@@ -103,14 +103,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<getopt.h>
+file|<limits.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_SANDBOX_INIT
+end_if
 
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<sandbox.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2246,6 +2257,38 @@ return|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|HAVE_SANDBOX_INIT
+if|if
+condition|(
+name|sandbox_init
+argument_list|(
+name|kSBXProfileNoInternet
+argument_list|,
+name|SANDBOX_NAMED
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"sandbox_init"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_SYSERR
+return|;
+block|}
+endif|#
+directive|endif
 name|memset
 argument_list|(
 operator|&
@@ -3169,7 +3212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scan a directory tree rooted at "basedir" for manpages.  * We use fts(), scanning directory parts along the way for clues to our  * section and architecture.  *  * If use_all has been specified, grok all files.  * If not, sanitise paths to the following:  *  *   [./]man*[/<arch>]/<name>.<section>  *   or  *   [./]cat<section>[/<arch>]/<name>.0  *  * TODO: accomodate for multi-language directories.  */
+comment|/*  * Scan a directory tree rooted at "basedir" for manpages.  * We use fts(), scanning directory parts along the way for clues to our  * section and architecture.  *  * If use_all has been specified, grok all files.  * If not, sanitise paths to the following:  *  *   [./]man*[/<arch>]/<name>.<section>  *   or  *   [./]cat<section>[/<arch>]/<name>.0  *  * TODO: accommodate for multi-language directories.  */
 end_comment
 
 begin_function

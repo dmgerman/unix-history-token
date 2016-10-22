@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.c,v 1.256 2016/01/07 21:03:54 schwarze Exp $ */
+comment|/*	$Id: term.c,v 1.257 2016/04/12 15:30:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -566,7 +566,7 @@ name|j
 index|]
 condition|)
 break|break;
-comment|/* Back over the the last printed character. */
+comment|/* Back over the last printed character. */
 if|if
 condition|(
 literal|8

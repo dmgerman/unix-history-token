@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cgi.c,v 1.116 2016/01/04 12:36:26 schwarze Exp $ */
+comment|/*	$Id: cgi.c,v 1.135 2016/07/11 22:48:37 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@usta.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2011, 2012 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015, 2016 Ingo Schwarze<schwarze@usta.de>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -187,43 +193,26 @@ name|size_t
 name|psz
 decl_stmt|;
 comment|/* number of available manpaths */
+name|int
+name|isquery
+decl_stmt|;
+comment|/* QUERY_STRING used, not PATH_INFO */
 block|}
 struct|;
 end_struct
 
-begin_function_decl
-specifier|static
-name|void
-name|catman
-parameter_list|(
-specifier|const
-name|struct
-name|req
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|format
-parameter_list|(
-specifier|const
-name|struct
-name|req
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_enum
+enum|enum
+name|focus
+block|{
+name|FOCUS_NONE
+init|=
+literal|0
+block|,
+name|FOCUS_QUERY
+block|}
+enum|;
+end_enum
 
 begin_function_decl
 specifier|static
@@ -261,14 +250,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|http_parse
+name|parse_manpath_conf
 parameter_list|(
 name|struct
 name|req
-modifier|*
-parameter_list|,
-specifier|const
-name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -277,10 +262,32 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pathgen
+name|parse_path_info
 parameter_list|(
 name|struct
 name|req
+modifier|*
+name|req
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|parse_query_string
+parameter_list|(
+name|struct
+name|req
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -417,6 +424,23 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|resp_catman
+parameter_list|(
+specifier|const
+name|struct
+name|req
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|resp_copy
 parameter_list|(
 specifier|const
@@ -439,12 +463,32 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|resp_format
+parameter_list|(
+specifier|const
+name|struct
+name|req
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|resp_searchform
 parameter_list|(
 specifier|const
 name|struct
 name|req
 modifier|*
+parameter_list|,
+name|enum
+name|focus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,12 +573,10 @@ specifier|const
 name|char
 modifier|*
 name|scriptname
+init|=
+name|SCRIPT_NAME
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* CGI script name */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -672,15 +714,11 @@ literal|"armish"
 block|,
 literal|"armv7"
 block|,
-literal|"aviion"
-block|,
 literal|"hppa"
 block|,
 literal|"hppa64"
 block|,
 literal|"i386"
-block|,
-literal|"ia64"
 block|,
 literal|"landisk"
 block|,
@@ -698,13 +736,9 @@ literal|"sgi"
 block|,
 literal|"socppc"
 block|,
-literal|"solbourne"
-block|,
 literal|"sparc"
 block|,
 literal|"sparc64"
-block|,
-literal|"vax"
 block|,
 literal|"zaurus"
 block|,
@@ -716,11 +750,15 @@ literal|"arm32"
 block|,
 literal|"atari"
 block|,
+literal|"aviion"
+block|,
 literal|"beagle"
 block|,
 literal|"cats"
 block|,
 literal|"hp300"
+block|,
+literal|"ia64"
 block|,
 literal|"mac68k"
 block|,
@@ -740,7 +778,11 @@ literal|"pmax"
 block|,
 literal|"powerpc"
 block|,
+literal|"solbourne"
+block|,
 literal|"sun3"
+block|,
+literal|"vax"
 block|,
 literal|"wgrisc"
 block|,
@@ -953,7 +995,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|http_parse
+name|parse_query_string
 parameter_list|(
 name|struct
 name|req
@@ -978,6 +1020,12 @@ name|keysz
 decl_stmt|,
 name|valsz
 decl_stmt|;
+name|req
+operator|->
+name|isquery
+operator|=
+literal|1
+expr_stmt|;
 name|req
 operator|->
 name|q
@@ -1671,14 +1719,14 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"<!DOCTYPE html>\n"
-literal|"<HTML>\n"
-literal|"<HEAD>\n"
-literal|"<META CHARSET=\"UTF-8\" />\n"
-literal|"<LINK REL=\"stylesheet\" HREF=\"%s/mandoc.css\""
-literal|" TYPE=\"text/css\" media=\"all\">\n"
-literal|"<TITLE>%s</TITLE>\n"
-literal|"</HEAD>\n"
-literal|"<BODY>\n"
+literal|"<html>\n"
+literal|"<head>\n"
+literal|"<meta charset=\"UTF-8\"/>\n"
+literal|"<link rel=\"stylesheet\" href=\"%s/mandoc.css\""
+literal|" type=\"text/css\" media=\"all\">\n"
+literal|"<title>%s</title>\n"
+literal|"</head>\n"
+literal|"<body>\n"
 literal|"<!-- Begin page content. //-->\n"
 argument_list|,
 name|CSS_DIR
@@ -1711,8 +1759,8 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</BODY>\n"
-literal|"</HTML>"
+literal|"</body>\n"
+literal|"</html>"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1728,6 +1776,10 @@ name|struct
 name|req
 modifier|*
 name|req
+parameter_list|,
+name|enum
+name|focus
+name|focus
 parameter_list|)
 block|{
 name|int
@@ -1740,10 +1792,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<DIV ID=\"mancgi\">\n"
-literal|"<FORM ACTION=\"%s\" METHOD=\"get\">\n"
-literal|"<FIELDSET>\n"
-literal|"<LEGEND>Manual Page Search Parameters</LEGEND>\n"
+literal|"<div id=\"mancgi\">\n"
+literal|"<form action=\"/%s\" method=\"get\">\n"
+literal|"<fieldset>\n"
+literal|"<legend>Manual Page Search Parameters</legend>\n"
 argument_list|,
 name|scriptname
 argument_list|)
@@ -1751,19 +1803,18 @@ expr_stmt|;
 comment|/* Write query input box. */
 name|printf
 argument_list|(
-literal|"<TABLE><TR><TD>\n"
-literal|"<INPUT TYPE=\"text\" NAME=\"query\" VALUE=\""
+literal|"<input type=\"text\" name=\"query\" value=\""
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
 name|req
 operator|->
 name|q
 operator|.
 name|query
+operator|!=
+name|NULL
 condition|)
 name|html_print
 argument_list|(
@@ -1774,49 +1825,40 @@ operator|.
 name|query
 argument_list|)
 expr_stmt|;
-name|puts
-argument_list|(
-literal|"\" SIZE=\"40\">"
-argument_list|)
-expr_stmt|;
-comment|/* Write submission and reset buttons. */
 name|printf
 argument_list|(
-literal|"<INPUT TYPE=\"submit\" VALUE=\"Submit\">\n"
-literal|"<INPUT TYPE=\"reset\" VALUE=\"Reset\">\n"
-argument_list|)
-expr_stmt|;
-comment|/* Write show radio button */
-name|printf
-argument_list|(
-literal|"</TD><TD>\n"
-literal|"<INPUT TYPE=\"radio\" "
+literal|"\" size=\"40\""
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|req
-operator|->
-name|q
-operator|.
-name|equal
+name|focus
+operator|==
+name|FOCUS_QUERY
 condition|)
 name|printf
 argument_list|(
-literal|"CHECKED=\"checked\" "
+literal|" autofocus"
 argument_list|)
 expr_stmt|;
+name|puts
+argument_list|(
+literal|">"
+argument_list|)
+expr_stmt|;
+comment|/* Write submission buttons. */
 name|printf
 argument_list|(
-literal|"NAME=\"apropos\" ID=\"show\" VALUE=\"0\">\n"
-literal|"<LABEL FOR=\"show\">Show named manual page</LABEL>\n"
+literal|"<button type=\"submit\" name=\"apropos\" value=\"0\">"
+literal|"man</button>\n"
+literal|"<button type=\"submit\" name=\"apropos\" value=\"1\">"
+literal|"apropos</button>\n<br/>\n"
 argument_list|)
 expr_stmt|;
 comment|/* Write section selector. */
 name|puts
 argument_list|(
-literal|"</TD></TR><TR><TD>\n"
-literal|"<SELECT NAME=\"sec\">"
+literal|"<select name=\"sec\">"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1835,7 +1877,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"<OPTION VALUE=\"%s\""
+literal|"<option value=\"%s\""
 argument_list|,
 name|sec_numbers
 index|[
@@ -1871,12 +1913,12 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" SELECTED=\"selected\""
+literal|" selected=\"selected\""
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|">%s</OPTION>\n"
+literal|">%s</option>\n"
 argument_list|,
 name|sec_names
 index|[
@@ -1887,14 +1929,14 @@ expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"</SELECT>"
+literal|"</select>"
 argument_list|)
 expr_stmt|;
 comment|/* Write architecture selector. */
 name|printf
 argument_list|(
-literal|"<SELECT NAME=\"arch\">\n"
-literal|"<OPTION VALUE=\"default\""
+literal|"<select name=\"arch\">\n"
+literal|"<option value=\"default\""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1909,12 +1951,12 @@ name|arch
 condition|)
 name|printf
 argument_list|(
-literal|" SELECTED=\"selected\""
+literal|" selected=\"selected\""
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|">All Architectures</OPTION>"
+literal|">All Architectures</option>"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1933,7 +1975,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"<OPTION VALUE=\"%s\""
+literal|"<option value=\"%s\""
 argument_list|,
 name|arch_names
 index|[
@@ -1969,12 +2011,12 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" SELECTED=\"selected\""
+literal|" selected=\"selected\""
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|">%s</OPTION>\n"
+literal|">%s</option>\n"
 argument_list|,
 name|arch_names
 index|[
@@ -1985,7 +2027,7 @@ expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"</SELECT>"
+literal|"</select>"
 argument_list|)
 expr_stmt|;
 comment|/* Write manpath selector. */
@@ -2000,7 +2042,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"<SELECT NAME=\"manpath\">"
+literal|"<select name=\"manpath\">"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2024,7 +2066,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"<OPTION "
+literal|"<option "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2049,12 +2091,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"SELECTED=\"selected\" "
+literal|"selected=\"selected\" "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"VALUE=\""
+literal|"value=\""
 argument_list|)
 expr_stmt|;
 name|html_print
@@ -2084,50 +2126,21 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</OPTION>"
+literal|"</option>"
 argument_list|)
 expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"</SELECT>"
+literal|"</select>"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write search radio button */
-name|printf
-argument_list|(
-literal|"</TD><TD>\n"
-literal|"<INPUT TYPE=\"radio\" "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-literal|0
-operator|==
-name|req
-operator|->
-name|q
-operator|.
-name|equal
-condition|)
-name|printf
-argument_list|(
-literal|"CHECKED=\"checked\" "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"NAME=\"apropos\" ID=\"search\" VALUE=\"1\">\n"
-literal|"<LABEL FOR=\"search\">Search with apropos query</LABEL>\n"
-argument_list|)
-expr_stmt|;
 name|puts
 argument_list|(
-literal|"</TD></TR></TABLE>\n"
-literal|"</FIELDSET>\n"
-literal|"</FORM>\n"
-literal|"</DIV>"
+literal|"</fieldset>\n"
+literal|"</form>\n"
+literal|"</div>"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -2225,19 +2238,6 @@ block|{
 name|size_t
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|manpath
-argument_list|,
-literal|"mandoc"
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
 for|for
 control|(
 name|i
@@ -2371,21 +2371,41 @@ expr_stmt|;
 name|resp_searchform
 argument_list|(
 name|req
+argument_list|,
+name|FOCUS_QUERY
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<P>\n"
+literal|"<p>\n"
 literal|"This web interface is documented in the\n"
-literal|"<A HREF=\"%s/mandoc/man8/man.cgi.8\">man.cgi</A>\n"
+literal|"<a href=\"/%s%sman.cgi.8\">man.cgi(8)</a>\n"
 literal|"manual, and the\n"
-literal|"<A HREF=\"%s/mandoc/man1/apropos.1\">apropos</A>\n"
+literal|"<a href=\"/%s%sapropos.1\">apropos(1)</a>\n"
 literal|"manual explains the query syntax.\n"
-literal|"</P>\n"
+literal|"</p>\n"
 argument_list|,
 name|scriptname
 argument_list|,
+operator|*
 name|scriptname
+operator|==
+literal|'\0'
+condition|?
+literal|""
+else|:
+literal|"/"
+argument_list|,
+name|scriptname
+argument_list|,
+operator|*
+name|scriptname
+operator|==
+literal|'\0'
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|)
 expr_stmt|;
 name|resp_end_html
@@ -2421,11 +2441,13 @@ expr_stmt|;
 name|resp_searchform
 argument_list|(
 name|req
+argument_list|,
+name|FOCUS_QUERY
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"<P>"
+literal|"<p>"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -2435,7 +2457,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</P>"
+literal|"</p>"
 argument_list|)
 expr_stmt|;
 name|resp_end_html
@@ -2464,8 +2486,8 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"<H1>Bad Request</H1>\n"
-literal|"<P>\n"
+literal|"<h1>Bad Request</h1>\n"
+literal|"<p>\n"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -2476,8 +2498,8 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Try again from the\n"
-literal|"<A HREF=\"%s\">main page</A>.\n"
-literal|"</P>"
+literal|"<a href=\"/%s\">main page</a>.\n"
+literal|"</p>"
 argument_list|,
 name|scriptname
 argument_list|)
@@ -2505,7 +2527,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"<P>Internal Server Error</P>"
+literal|"<p>Internal Server Error</p>"
 argument_list|)
 expr_stmt|;
 name|resp_end_html
@@ -2541,12 +2563,15 @@ decl_stmt|,
 modifier|*
 name|archend
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sec
+decl_stmt|;
 name|size_t
 name|i
 decl_stmt|,
 name|iuse
-decl_stmt|,
-name|isec
 decl_stmt|;
 name|int
 name|archprio
@@ -2557,9 +2582,6 @@ name|int
 name|prio
 decl_stmt|,
 name|priouse
-decl_stmt|;
-name|char
-name|sec
 decl_stmt|;
 for|for
 control|(
@@ -2588,11 +2610,9 @@ name|file
 argument_list|)
 condition|)
 continue|continue;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"invalid filename %s in %s database\n"
+literal|"invalid filename %s in %s database"
 argument_list|,
 name|r
 index|[
@@ -2615,9 +2635,13 @@ return|return;
 block|}
 if|if
 condition|(
-literal|1
-operator|==
+name|req
+operator|->
+name|isquery
+operator|&&
 name|sz
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* 		 * If we have just one result, then jump there now 		 * without any delay. 		 */
@@ -2628,11 +2652,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Location: http://%s%s/%s/%s"
+literal|"Location: http://%s/%s%s%s/%s"
 argument_list|,
 name|HTTP_HOST
 argument_list|,
 name|scriptname
+argument_list|,
+operator|*
+name|scriptname
+operator|==
+literal|'\0'
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|,
 name|req
 operator|->
@@ -2667,16 +2700,37 @@ expr_stmt|;
 name|resp_searchform
 argument_list|(
 name|req
+argument_list|,
+name|req
+operator|->
+name|q
+operator|.
+name|equal
+operator|||
+name|sz
+operator|==
+literal|1
+condition|?
+name|FOCUS_NONE
+else|:
+name|FOCUS_QUERY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|>
+literal|1
+condition|)
+block|{
+name|puts
+argument_list|(
+literal|"<div class=\"results\">"
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"<DIV CLASS=\"results\">"
-argument_list|)
-expr_stmt|;
-name|puts
-argument_list|(
-literal|"<TABLE>"
+literal|"<table>"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2695,11 +2749,20 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"<TR>\n"
-literal|"<TD CLASS=\"title\">\n"
-literal|"<A HREF=\"%s/%s/%s"
+literal|"<tr>\n"
+literal|"<td class=\"title\">\n"
+literal|"<a href=\"/%s%s%s/%s"
 argument_list|,
 name|scriptname
+argument_list|,
+operator|*
+name|scriptname
+operator|==
+literal|'\0'
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|,
 name|req
 operator|->
@@ -2732,9 +2795,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"</A>\n"
-literal|"</TD>\n"
-literal|"<TD CLASS=\"desc\">"
+literal|"</a>\n"
+literal|"</td>\n"
+literal|"<td class=\"desc\">"
 argument_list|)
 expr_stmt|;
 name|html_print
@@ -2749,17 +2812,18 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</TD>\n"
-literal|"</TR>"
+literal|"</td>\n"
+literal|"</tr>"
 argument_list|)
 expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"</TABLE>\n"
-literal|"</DIV>"
+literal|"</table>\n"
+literal|"</div>"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * In man(1) mode, show one of the pages 	 * even if more than one is found. 	 */
 if|if
 condition|(
@@ -2768,11 +2832,15 @@ operator|->
 name|q
 operator|.
 name|equal
+operator|||
+name|sz
+operator|==
+literal|1
 condition|)
 block|{
 name|puts
 argument_list|(
-literal|"<HR>"
+literal|"<hr>"
 argument_list|)
 expr_stmt|;
 name|iuse
@@ -2781,7 +2849,7 @@ literal|0
 expr_stmt|;
 name|priouse
 operator|=
-literal|10
+literal|20
 expr_stmt|;
 name|archpriouse
 operator|=
@@ -2801,37 +2869,32 @@ name|i
 operator|++
 control|)
 block|{
-name|isec
+name|sec
 operator|=
-name|strcspn
-argument_list|(
 name|r
 index|[
 name|i
 index|]
 operator|.
 name|file
+expr_stmt|;
+name|sec
+operator|+=
+name|strcspn
+argument_list|(
+name|sec
 argument_list|,
 literal|"123456789"
 argument_list|)
 expr_stmt|;
-name|sec
-operator|=
-name|r
-index|[
-name|i
-index|]
-operator|.
-name|file
-index|[
-name|isec
-index|]
-expr_stmt|;
 if|if
 condition|(
-literal|'\0'
-operator|==
 name|sec
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 continue|continue;
 name|prio
@@ -2839,50 +2902,59 @@ operator|=
 name|sec_prios
 index|[
 name|sec
+index|[
+literal|0
+index|]
 operator|-
 literal|'1'
 index|]
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
+name|sec
+index|[
+literal|1
+index|]
+operator|!=
+literal|'/'
+condition|)
+name|prio
+operator|+=
+literal|10
+expr_stmt|;
+if|if
+condition|(
 name|req
 operator|->
 name|q
 operator|.
 name|arch
+operator|==
+name|NULL
 condition|)
 block|{
 name|archprio
 operator|=
 operator|(
-name|NULL
-operator|==
 operator|(
 name|arch
 operator|=
 name|strchr
 argument_list|(
-name|r
-index|[
-name|i
-index|]
-operator|.
-name|file
+name|sec
 operator|+
-name|isec
+literal|1
 argument_list|,
 literal|'/'
 argument_list|)
 operator|)
+operator|==
+name|NULL
 operator|)
 condition|?
 literal|3
 else|:
 operator|(
-name|NULL
-operator|==
 operator|(
 name|archend
 operator|=
@@ -2895,6 +2967,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 operator|)
+operator|==
+name|NULL
 operator|)
 condition|?
 literal|0
@@ -2981,7 +3055,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|catman
+name|resp_catman
 parameter_list|(
 specifier|const
 name|struct
@@ -3035,15 +3109,15 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"<P>You specified an invalid manual file.</P>"
+literal|"<p>You specified an invalid manual file.</p>"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|puts
 argument_list|(
-literal|"<DIV CLASS=\"catman\">\n"
-literal|"<PRE>"
+literal|"<div class=\"catman\">\n"
+literal|"<pre>"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3134,7 +3208,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"</I>"
+literal|"</i>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3143,7 +3217,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"</B>"
+literal|"</b>"
 argument_list|)
 expr_stmt|;
 name|italic
@@ -3189,7 +3263,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"</B>"
+literal|"</b>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3199,7 +3273,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"<I>"
+literal|"<i>"
 argument_list|)
 expr_stmt|;
 name|bold
@@ -3378,7 +3452,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"</I>"
+literal|"</i>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3387,7 +3461,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"</B>"
+literal|"</b>"
 argument_list|)
 expr_stmt|;
 name|italic
@@ -3525,7 +3599,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"</I>"
+literal|"</i>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3534,7 +3608,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"</B>"
+literal|"</b>"
 argument_list|)
 expr_stmt|;
 name|italic
@@ -3561,7 +3635,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"</I>"
+literal|"</i>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3571,7 +3645,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"<B>"
+literal|"<b>"
 argument_list|)
 expr_stmt|;
 name|bold
@@ -3602,7 +3676,7 @@ name|italic
 condition|)
 name|printf
 argument_list|(
-literal|"</I>"
+literal|"</i>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3611,7 +3685,7 @@ name|bold
 condition|)
 name|printf
 argument_list|(
-literal|"</B>"
+literal|"</b>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3650,8 +3724,8 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"</PRE>\n"
-literal|"</DIV>"
+literal|"</pre>\n"
+literal|"</div>"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -3665,7 +3739,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|format
+name|resp_format
 parameter_list|(
 specifier|const
 name|struct
@@ -3724,7 +3798,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"<P>You specified an invalid manual file.</P>"
+literal|"<p>You specified an invalid manual file.</p>"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3807,39 +3881,7 @@ name|conf
 operator|.
 name|man
 argument_list|,
-literal|"%s?query=%%N&sec=%%S%s%s%s%s"
-argument_list|,
-name|scriptname
-argument_list|,
-name|req
-operator|->
-name|q
-operator|.
-name|arch
-condition|?
-literal|"&arch="
-else|:
-literal|""
-argument_list|,
-name|req
-operator|->
-name|q
-operator|.
-name|arch
-condition|?
-name|req
-operator|->
-name|q
-operator|.
-name|arch
-else|:
-literal|""
-argument_list|,
-name|usepath
-condition|?
-literal|"&manpath="
-else|:
-literal|""
+literal|"/%s%s%%N.%%S"
 argument_list|,
 name|usepath
 condition|?
@@ -3848,6 +3890,12 @@ operator|->
 name|q
 operator|.
 name|manpath
+else|:
+literal|""
+argument_list|,
+name|usepath
+condition|?
+literal|"/"
 else|:
 literal|""
 argument_list|)
@@ -3869,11 +3917,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"fatal mandoc error: %s/%s\n"
+literal|"fatal mandoc error: %s/%s"
 argument_list|,
 name|req
 operator|->
@@ -4009,7 +4055,7 @@ operator|==
 operator|*
 name|file
 condition|)
-name|catman
+name|resp_catman
 argument_list|(
 name|req
 argument_list|,
@@ -4017,7 +4063,7 @@ name|file
 argument_list|)
 expr_stmt|;
 else|else
-name|format
+name|resp_format
 argument_list|(
 name|req
 argument_list|,
@@ -4124,18 +4170,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chdir %s: %s\n"
+literal|"chdir %s"
 argument_list|,
 name|manpath
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pg_error_internal
@@ -4148,35 +4187,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|manpath
-argument_list|,
-literal|"mandoc"
-argument_list|)
-condition|)
-block|{
-name|free
-argument_list|(
-name|req
-operator|->
-name|q
-operator|.
-name|manpath
-argument_list|)
-expr_stmt|;
-name|req
-operator|->
-name|q
-operator|.
-name|manpath
-operator|=
-name|manpath
-expr_stmt|;
-block|}
-else|else
 name|free
 argument_list|(
 name|manpath
@@ -4208,6 +4218,8 @@ expr_stmt|;
 name|resp_searchform
 argument_list|(
 name|req
+argument_list|,
+name|FOCUS_NONE
 argument_list|)
 expr_stmt|;
 name|resp_show
@@ -4272,10 +4284,6 @@ decl_stmt|;
 comment|/* 	 * Begin by chdir()ing into the root of the manpath. 	 * This way we can pick up the database files, which are 	 * relative to the manpath root. 	 */
 if|if
 condition|(
-operator|-
-literal|1
-operator|==
-operator|(
 name|chdir
 argument_list|(
 name|req
@@ -4284,25 +4292,20 @@ name|q
 operator|.
 name|manpath
 argument_list|)
-operator|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chdir %s: %s\n"
+literal|"chdir %s"
 argument_list|,
 name|req
 operator|->
 name|q
 operator|.
 name|manpath
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pg_error_internal
@@ -4704,59 +4707,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"setitimer: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pg_error_internal
-argument_list|()
-expr_stmt|;
-return|return
-name|EXIT_FAILURE
-return|;
-block|}
-comment|/* Scan our run-time environment. */
-if|if
-condition|(
-name|NULL
-operator|==
-operator|(
-name|scriptname
-operator|=
-name|getenv
-argument_list|(
-literal|"SCRIPT_NAME"
-argument_list|)
-operator|)
-condition|)
-name|scriptname
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|validate_urifrag
-argument_list|(
-name|scriptname
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unsafe SCRIPT_NAME \"%s\"\n"
-argument_list|,
-name|scriptname
+literal|"setitimer"
 argument_list|)
 expr_stmt|;
 name|pg_error_internal
@@ -4769,27 +4722,20 @@ block|}
 comment|/* 	 * First we change directory into the MAN_DIR so that 	 * subsequent scanning for manpath directories is rooted 	 * relative to the same position. 	 */
 if|if
 condition|(
-operator|-
-literal|1
-operator|==
 name|chdir
 argument_list|(
 name|MAN_DIR
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"MAN_DIR: %s: %s\n"
+literal|"MAN_DIR: %s"
 argument_list|,
 name|MAN_DIR
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pg_error_internal
@@ -4813,17 +4759,93 @@ name|req
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pathgen
+name|req
+operator|.
+name|q
+operator|.
+name|equal
+operator|=
+literal|1
+expr_stmt|;
+name|parse_manpath_conf
 argument_list|(
 operator|&
 name|req
 argument_list|)
 expr_stmt|;
-comment|/* Next parse out the query string. */
+comment|/* Parse the path info and the query string. */
 if|if
 condition|(
+operator|(
+name|path
+operator|=
+name|getenv
+argument_list|(
+literal|"PATH_INFO"
+argument_list|)
+operator|)
+operator|==
 name|NULL
+condition|)
+name|path
+operator|=
+literal|""
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|path
+operator|==
+literal|'/'
+condition|)
+name|path
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|path
 operator|!=
+literal|'\0'
+condition|)
+block|{
+name|parse_path_info
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|.
+name|q
+operator|.
+name|manpath
+operator|==
+name|NULL
+operator|||
+name|access
+argument_list|(
+name|path
+argument_list|,
+name|F_OK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|path
+operator|=
+literal|""
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|querystring
 operator|=
@@ -4832,8 +4854,10 @@ argument_list|(
 literal|"QUERY_STRING"
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
-name|http_parse
+name|parse_query_string
 argument_list|(
 operator|&
 name|req
@@ -4841,6 +4865,7 @@ argument_list|,
 name|querystring
 argument_list|)
 expr_stmt|;
+comment|/* Validate parsed data and add defaults. */
 if|if
 condition|(
 name|req
@@ -4926,34 +4951,6 @@ name|EXIT_FAILURE
 return|;
 block|}
 comment|/* Dispatch to the three different pages. */
-name|path
-operator|=
-name|getenv
-argument_list|(
-literal|"PATH_INFO"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|path
-condition|)
-name|path
-operator|=
-literal|""
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-literal|'/'
-operator|==
-operator|*
-name|path
-condition|)
-name|path
-operator|++
-expr_stmt|;
 if|if
 condition|(
 literal|'\0'
@@ -5071,13 +5068,498 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * If PATH_INFO is not a file name, translate it to a query.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|parse_path_info
+parameter_list|(
+name|struct
+name|req
+modifier|*
+name|req
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|dir
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|req
+operator|->
+name|isquery
+operator|=
+literal|0
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|equal
+operator|=
+literal|1
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|arch
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Mandatory manual page name. */
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|q
+operator|.
+name|query
+operator|=
+name|strrchr
+argument_list|(
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|req
+operator|->
+name|q
+operator|.
+name|query
+operator|=
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|req
+operator|->
+name|q
+operator|.
+name|query
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Optional trailing section. */
+if|if
+condition|(
+operator|(
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+operator|=
+name|strrchr
+argument_list|(
+name|req
+operator|->
+name|q
+operator|.
+name|query
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
+operator|*
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Handle the case of name[.section] only. */
+if|if
+condition|(
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|==
+name|NULL
+condition|)
+return|return;
+name|req
+operator|->
+name|q
+operator|.
+name|query
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|req
+operator|->
+name|q
+operator|.
+name|query
+argument_list|)
+expr_stmt|;
+comment|/* Split directory components. */
+name|dir
+index|[
+name|i
+operator|=
+literal|0
+index|]
+operator|=
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|dir
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|=
+name|strchr
+argument_list|(
+name|dir
+index|[
+name|i
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|++
+name|i
+operator|==
+literal|3
+condition|)
+block|{
+name|pg_error_badrequest
+argument_list|(
+literal|"You specified too many directory components."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|dir
+index|[
+name|i
+index|]
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+comment|/* Optional manpath. */
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|validate_manpath
+argument_list|(
+name|req
+argument_list|,
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dir
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* Optional section. */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|dir
+index|[
+name|i
+index|]
+argument_list|,
+literal|"man"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+argument_list|)
+expr_stmt|;
+name|req
+operator|->
+name|q
+operator|.
+name|sec
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|dir
+index|[
+name|i
+operator|++
+index|]
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dir
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|==
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|dir
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|dir
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pg_error_badrequest
+argument_list|(
+literal|"You specified an invalid directory component."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Optional architecture. */
+if|if
+condition|(
+name|i
+condition|)
+block|{
+name|req
+operator|->
+name|q
+operator|.
+name|arch
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|dir
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|->
+name|q
+operator|.
+name|manpath
+operator|==
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|dir
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|req
+operator|->
+name|q
+operator|.
+name|arch
+operator|=
+name|dir
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Scan for indexable paths.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|pathgen
+name|parse_manpath_conf
 parameter_list|(
 name|struct
 name|req
@@ -5101,8 +5583,6 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 operator|(
 name|fp
 operator|=
@@ -5113,20 +5593,15 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s/manpath.conf: %s\n"
+literal|"%s/manpath.conf"
 argument_list|,
 name|MAN_DIR
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pg_error_internal
@@ -5220,12 +5695,10 @@ name|dp
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s/manpath.conf contains "
-literal|"unsafe path \"%s\"\n"
+literal|"unsafe path \"%s\""
 argument_list|,
 name|MAN_DIR
 argument_list|,
@@ -5243,22 +5716,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|NULL
-operator|!=
 name|strchr
 argument_list|(
 name|dp
 argument_list|,
 literal|'/'
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s/manpath.conf contains "
-literal|"path with slash \"%s\"\n"
+literal|"path with slash \"%s\""
 argument_list|,
 name|MAN_DIR
 argument_list|,
@@ -5309,11 +5780,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s/manpath.conf is empty\n"
+literal|"%s/manpath.conf is empty"
 argument_list|,
 name|MAN_DIR
 argument_list|)

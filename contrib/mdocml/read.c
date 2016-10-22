@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: read.c,v 1.148 2016/01/08 02:53:13 schwarze Exp $ */
+comment|/*	$Id: read.c,v 1.149 2016/07/10 13:34:30 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3294,7 +3294,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|file
+name|cp
 argument_list|,
 name|O_RDONLY
 argument_list|)

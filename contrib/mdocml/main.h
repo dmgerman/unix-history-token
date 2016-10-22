@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.h,v 1.24 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: main.h,v 1.25 2016/07/08 22:29:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -197,16 +197,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ascii_sepline
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|pdf_alloc
 parameter_list|(
@@ -266,6 +256,16 @@ parameter_list|,
 specifier|const
 name|struct
 name|roff_man
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|terminal_sepline
+parameter_list|(
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

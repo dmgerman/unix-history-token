@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmandoc.h,v 1.62 2015/11/07 14:01:16 schwarze Exp $ */
+comment|/*	$Id: libmandoc.h,v 1.63 2016/07/07 19:19:01 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -80,12 +80,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|roff_man
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|roff_node
 struct_decl|;
 end_struct_decl
 
