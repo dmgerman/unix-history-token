@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -4010,6 +4016,16 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|evdev
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
