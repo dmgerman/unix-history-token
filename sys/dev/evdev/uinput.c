@@ -2534,12 +2534,6 @@ operator|->
 name|code
 operator|>
 name|ABS_MAX
-operator|||
-name|uabs
-operator|->
-name|code
-operator|<
-literal|0
 condition|)
 return|return
 operator|(
