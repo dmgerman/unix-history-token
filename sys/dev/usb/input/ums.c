@@ -775,6 +775,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|evdev_methods
 name|ums_evdev_methods

@@ -2084,6 +2084,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|evdev_methods
 name|ukbd_evdev_methods
