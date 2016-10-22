@@ -532,6 +532,16 @@ parameter_list|)
 value|(dsisr& 0x1f)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXC_ALI_SPE_REG
+parameter_list|(
+name|instr
+parameter_list|)
+value|((instr>> 21)& 0x1f)
+end_define
+
 begin_comment
 comment|/*  * SRR1 bits for program exception traps. These identify what caused  * the program exception. See section 6.5.9 of the Power ISA Version  * 2.05.  */
 end_comment

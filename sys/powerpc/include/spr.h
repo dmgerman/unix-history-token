@@ -1003,6 +1003,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPR_SPEFSCR
+value|0x200
+end_define
+
+begin_comment
+comment|/* ..8 Signal Processing Engine FSCR. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_IBAT0U
 value|0x210
 end_define

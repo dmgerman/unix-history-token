@@ -77,12 +77,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__SPE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH
+value|"powerpcspe"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
 value|"powerpc"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
