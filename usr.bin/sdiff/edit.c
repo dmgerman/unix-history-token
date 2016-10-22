@@ -90,31 +90,50 @@ end_include
 begin_include
 include|#
 directive|include
-file|"common.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extern.h"
 end_include
 
-begin_function_decl
-name|int
-name|editit
+begin_function
+specifier|static
+name|void
+name|cleanup
 parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|filename
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|filename
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"could not delete: %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Execute an editor on the specified pathname, which is interpreted  * from the shell.  This means flags may be included.  *  * Returns -1 on error, or the exit value on success.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|editit
 parameter_list|(
