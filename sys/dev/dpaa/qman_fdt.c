@@ -514,6 +514,8 @@ decl_stmt|;
 name|struct
 name|ofw_bus_devinfo
 name|ofw_di
+init|=
+block|{}
 decl_stmt|;
 name|cpus
 operator|=
