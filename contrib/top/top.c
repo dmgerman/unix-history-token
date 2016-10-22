@@ -802,7 +802,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajzPJo"
+literal|"\f qh?en#sdkriIutHmSCajzPJwo"
 decl_stmt|;
 else|#
 directive|else
@@ -811,7 +811,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajzPJ"
+literal|"\f qh?en#sdkriIutHmSCajzPJw"
 decl_stmt|;
 endif|#
 directive|endif
@@ -922,13 +922,17 @@ define|#
 directive|define
 name|CMD_jail
 value|24
+define|#
+directive|define
+name|CMD_swaptog
+value|25
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|25
+value|26
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1067,6 +1071,12 @@ name|No
 expr_stmt|;
 name|ps
 operator|.
+name|swap
+operator|=
+name|No
+expr_stmt|;
+name|ps
+operator|.
 name|kidle
 operator|=
 name|Yes
@@ -1153,7 +1163,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHPabijJ:nquvzs:d:U:m:o:t"
+literal|"CSIHPabijJ:nquvzs:d:U:m:o:tw"
 argument_list|)
 operator|)
 operator|!=
@@ -1618,6 +1628,16 @@ name|pcpu_stats
 operator|=
 operator|!
 name|pcpu_stats
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|ps
+operator|.
+name|swap
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -4151,6 +4171,51 @@ name|display_updatecpus
 argument_list|(
 operator|&
 name|statics
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_swaptog
+case|:
+name|ps
+operator|.
+name|swap
+operator|=
+operator|!
+name|ps
+operator|.
+name|swap
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying per-process swap usage."
+argument_list|,
+name|ps
+operator|.
+name|swap
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
+expr_stmt|;
+name|header_text
+operator|=
+name|format_header
+argument_list|(
+name|uname_field
 argument_list|)
 expr_stmt|;
 name|reset_display
