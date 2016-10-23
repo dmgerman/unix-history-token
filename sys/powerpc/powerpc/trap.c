@@ -3576,18 +3576,18 @@ expr_stmt|;
 comment|/* Juggle the SPE to ensure that we've initialized 		 * the registers, and that their current state is in 		 * the PCB. 		 */
 if|if
 condition|(
-name|vecthread
+name|fputhread
 operator|!=
 name|td
 condition|)
 block|{
 if|if
 condition|(
-name|vecthread
+name|fputhread
 condition|)
 name|save_vec
 argument_list|(
-name|vecthread
+name|fputhread
 argument_list|)
 expr_stmt|;
 name|enable_vec
