@@ -3573,21 +3573,21 @@ argument_list|(
 name|vecthread
 argument_list|)
 expr_stmt|;
-comment|/* Juggle the FPU to ensure that we've initialized 		 * the FPRs, and that their current state is in 		 * the PCB. 		 */
+comment|/* Juggle the SPE to ensure that we've initialized 		 * the registers, and that their current state is in 		 * the PCB. 		 */
 if|if
 condition|(
-name|fputhread
+name|vecthread
 operator|!=
 name|td
 condition|)
 block|{
 if|if
 condition|(
-name|fputhread
+name|vecthread
 condition|)
 name|save_vec
 argument_list|(
-name|fputhread
+name|vecthread
 argument_list|)
 expr_stmt|;
 name|enable_vec
