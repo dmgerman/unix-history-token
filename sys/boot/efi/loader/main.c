@@ -144,6 +144,27 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Force a reference to bring in EFI support from the library */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|efi_variable_support
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|dummy1
+init|=
+operator|&
+name|efi_variable_support
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|arch_switch
@@ -4506,13 +4527,15 @@ block|}
 if|if
 condition|(
 name|argc
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many args\n"
+literal|"Too many args %d\n"
+argument_list|,
+name|argc
 argument_list|)
 expr_stmt|;
 name|pager_close
