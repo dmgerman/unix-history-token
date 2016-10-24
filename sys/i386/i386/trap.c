@@ -1667,58 +1667,13 @@ goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-comment|/* machine/parity/power fail/"kitchen sink" faults */
-if|if
-condition|(
-name|isa_nmi
-argument_list|(
-name|frame
-operator|->
-name|tf_err
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|KDB
-comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
-if|if
-condition|(
-name|kdb_on_nmi
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"NMI ... going to debugger\n"
-argument_list|)
-expr_stmt|;
-name|kdb_trap
+name|nmi_handle_intr
 argument_list|(
 name|type
 argument_list|,
-literal|0
-argument_list|,
 name|frame
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* KDB */
-goto|goto
-name|userout
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|panic_on_nmi
-condition|)
-name|panic
-argument_list|(
-literal|"NMI indicates hardware failure"
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2451,56 +2406,19 @@ goto|;
 else|#
 directive|else
 comment|/* !POWERFAIL_NMI */
-comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
-name|isa_nmi
-argument_list|(
-name|frame
-operator|->
-name|tf_err
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|KDB
-comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
-if|if
-condition|(
-name|kdb_on_nmi
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"NMI ... going to debugger\n"
-argument_list|)
-expr_stmt|;
-name|kdb_trap
+name|nmi_handle_intr
 argument_list|(
 name|type
 argument_list|,
-literal|0
-argument_list|,
 name|frame
+argument_list|,
+name|false
 argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* KDB */
-goto|goto
-name|out
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|||
+operator|!
 name|panic_on_nmi
-operator|==
-literal|0
 condition|)
 goto|goto
 name|out
