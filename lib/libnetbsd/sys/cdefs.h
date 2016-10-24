@@ -23,6 +23,12 @@ begin_empty
 empty|#include_next<sys/cdefs.h>
 end_empty
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__dead
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -51,6 +57,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__dead */
+end_comment
 
 begin_comment
 comment|/*  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.  * The __CONCAT macro is a bit tricky -- make sure you don't put spaces  * in between its arguments.  __CONCAT can also concatenate double-quoted  * strings produced by the __STRING macro, but this only works with ANSI C.  */
