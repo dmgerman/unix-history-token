@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|3002001
+value|3002002
 end_define
 
 begin_comment

@@ -8048,6 +8048,18 @@ argument_list|,
 literal|"assertFileMode not yet implemented for Windows"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mode
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|r
+expr_stmt|;
+comment|/* UNUSED */
 else|#
 directive|else
 block|{

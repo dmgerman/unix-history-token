@@ -34,6 +34,21 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+if|if
+condition|(
+name|archive_bzlib_version
+argument_list|()
+operator|==
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"This test requires bzlib"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|extract_reference_file
 argument_list|(
 name|reffile
