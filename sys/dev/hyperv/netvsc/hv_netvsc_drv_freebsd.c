@@ -18376,7 +18376,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* 	 * Kick off network change detection, which will 	 * do link status check too. 	 */
 name|sc
 operator|->
 name|hn_mgmt_taskq
@@ -18385,7 +18384,22 @@ name|sc
 operator|->
 name|hn_mgmt_taskq0
 expr_stmt|;
+comment|/* 	 * Kick off network change detection, if it was pending. 	 * If no network change was pending, start link status 	 * checks, which is more lightweight than network change 	 * detection. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_link_flags
+operator|&
+name|HN_LINK_FLAG_NETCHG
+condition|)
 name|hn_network_change
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|else
+name|hn_link_status_update
 argument_list|(
 name|sc
 argument_list|)
