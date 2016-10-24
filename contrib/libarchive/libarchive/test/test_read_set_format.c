@@ -999,8 +999,13 @@ expr_stmt|;
 if|if
 condition|(
 name|r
+operator|!=
+name|ARCHIVE_OK
+operator|&&
+name|archive_zlib_version
+argument_list|()
 operator|==
-name|ARCHIVE_WARN
+name|NULL
 operator|&&
 operator|!
 name|canGzip
@@ -1009,7 +1014,7 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"gzip reading not fully supported on this platform"
+literal|"gzip tests require zlib or working gzip command"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -1024,6 +1029,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|assertEqualIntA
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
@@ -1446,12 +1460,30 @@ name|archive
 modifier|*
 name|a
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
 name|fpos_t
 name|pos
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*    * If we have "bunzip2 -q", try using that.    */
 if|if
 condition|(
@@ -1469,6 +1501,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 comment|/* bunzip2 will write to stderr, redirect it to a file */
 name|fflush
 argument_list|(
@@ -1493,6 +1537,8 @@ name|stderr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fp
+operator|=
 name|freopen
 argument_list|(
 literal|"stderr1"
@@ -1502,6 +1548,8 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|assert
 argument_list|(
 operator|(
@@ -1596,7 +1644,26 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* restore stderr */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+comment|/* restore stderr and verify results */
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fflush
 argument_list|(
 name|stderr
@@ -1630,6 +1697,7 @@ operator|&
 name|pos
 argument_list|)
 expr_stmt|;
+block|}
 name|assertTextFileContents
 argument_list|(
 literal|"bunzip2: (stdin) is not a bzip2 file.\n"
@@ -1637,6 +1705,8 @@ argument_list|,
 literal|"stderr1"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
