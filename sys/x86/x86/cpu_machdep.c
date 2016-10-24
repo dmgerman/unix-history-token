@@ -1990,6 +1990,36 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|panic_on_nmi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|panic_on_nmi
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|panic_on_nmi
+argument_list|,
+literal|0
+argument_list|,
+literal|"Panic on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|int
 name|nmi_is_broadcast
 init|=
@@ -2065,7 +2095,7 @@ name|DEV_ISA
 end_ifdef
 
 begin_function
-name|bool
+name|void
 name|nmi_call_kdb
 parameter_list|(
 name|u_int
@@ -2078,9 +2108,6 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|do_panic
 parameter_list|)
 block|{
 comment|/* machine/parity/power fail/"kitchen sink" faults */
@@ -2121,31 +2148,23 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|true
-operator|)
-return|;
 block|}
-block|}
-elseif|else
 endif|#
 directive|endif
 comment|/* KDB */
+block|}
+elseif|else
 if|if
 condition|(
-name|do_panic
+name|panic_on_nmi
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"NMI indicates hardware failure"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|false
-operator|)
-return|;
+block|}
 block|}
 end_function
 
@@ -2155,7 +2174,7 @@ directive|endif
 end_endif
 
 begin_function
-name|int
+name|void
 name|nmi_handle_intr
 parameter_list|(
 name|u_int
@@ -2165,9 +2184,6 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|panic
 parameter_list|)
 block|{
 ifdef|#
@@ -2180,23 +2196,18 @@ if|if
 condition|(
 name|nmi_is_broadcast
 condition|)
-return|return
-operator|(
+block|{
 name|nmi_call_kdb_smp
 argument_list|(
 name|type
 argument_list|,
 name|frame
-argument_list|,
-name|panic
 argument_list|)
-operator|)
-return|;
-else|else
+expr_stmt|;
+return|return;
+block|}
 endif|#
 directive|endif
-return|return
-operator|(
 name|nmi_call_kdb
 argument_list|(
 literal|0
@@ -2204,11 +2215,8 @@ argument_list|,
 name|type
 argument_list|,
 name|frame
-argument_list|,
-name|panic
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 block|}

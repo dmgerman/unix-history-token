@@ -4802,7 +4802,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|bool
+name|void
 name|nmi_call_kdb_smp
 parameter_list|(
 name|u_int
@@ -4812,9 +4812,6 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|do_panic
 parameter_list|)
 block|{
 name|int
@@ -4822,8 +4819,6 @@ name|cpu
 decl_stmt|;
 name|bool
 name|call_post
-decl_stmt|,
-name|ret
 decl_stmt|;
 name|cpu
 operator|=
@@ -4845,8 +4840,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|ret
-operator|=
 name|nmi_call_kdb
 argument_list|(
 name|cpu
@@ -4854,8 +4847,6 @@ argument_list|,
 name|type
 argument_list|,
 name|frame
-argument_list|,
-name|do_panic
 argument_list|)
 expr_stmt|;
 name|call_post
@@ -4865,10 +4856,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ret
-operator|=
-name|true
-expr_stmt|;
 name|savectx
 argument_list|(
 operator|&
@@ -4924,11 +4911,6 @@ argument_list|(
 name|cpu
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 

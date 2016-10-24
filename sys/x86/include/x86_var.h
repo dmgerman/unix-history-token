@@ -514,7 +514,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|void
 name|nmi_call_kdb
 parameter_list|(
 name|u_int
@@ -527,15 +527,12 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|panic
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|void
 name|nmi_call_kdb_smp
 parameter_list|(
 name|u_int
@@ -545,15 +542,12 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|panic
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|nmi_handle_intr
 parameter_list|(
 name|u_int
@@ -563,9 +557,6 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|bool
-name|panic
 parameter_list|)
 function_decl|;
 end_function_decl
