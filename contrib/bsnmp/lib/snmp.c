@@ -1281,6 +1281,8 @@ literal|256
 expr_stmt|;
 name|u_int
 name|len
+init|=
+literal|256
 decl_stmt|;
 if|if
 condition|(
