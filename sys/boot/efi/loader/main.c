@@ -151,7 +151,7 @@ name|BOOT_FORTH
 end_ifdef
 
 begin_comment
-comment|/* Force a reference to bring in EFI support from the library */
+comment|/*  * Normally, efi.o from libefi.a would be brought in due to a function we call  * there that's defined there.  However, none of its functions are callable from  * here since it just adds words to the FORTH environment or implement those  * words. So, add a reference to a symbol in efi.o to force it to be be brought  * in so the init function there gets added to the "compile" linker set happens  * correctly.  *  * This assumes there's no global analysys that notices dummy1 isn't used  * anywhere and tries to eliminate it.  */
 end_comment
 
 begin_decl_stmt
