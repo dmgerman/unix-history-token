@@ -3970,7 +3970,7 @@ name|CAPMASK
 parameter_list|(
 name|right
 parameter_list|)
-value|((right)&& (((uint64_t)1<< 57) - 1))
+value|((right)& (((uint64_t)1<< 57) - 1))
 end_define
 
 begin_function
