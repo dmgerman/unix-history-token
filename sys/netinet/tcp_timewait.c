@@ -980,6 +980,25 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+comment|/* A dropped inp should never transition to TIME_WAIT state. */
+name|KASSERT
+argument_list|(
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|INP_DROPPED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"tcp_twstart: "
+literal|"(inp->inp_flags& INP_DROPPED) != 0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_nolocaltimewait
