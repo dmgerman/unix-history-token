@@ -8816,7 +8816,7 @@ name|m
 operator|=
 name|m_getcl
 argument_list|(
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|,
