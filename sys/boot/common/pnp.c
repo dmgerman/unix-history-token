@@ -39,11 +39,22 @@ directive|include
 file|<bootstrap.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"ficl.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -834,6 +845,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+end_ifdef
+
 begin_function
 name|void
 name|ficlPnpdevices
@@ -993,6 +1010,11 @@ name|ficlCompilePnp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

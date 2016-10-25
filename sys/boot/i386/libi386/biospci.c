@@ -57,11 +57,22 @@ directive|include
 file|"libi386.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"ficl.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Stupid PCI BIOS interface doesn't let you simply enumerate everything  * that's there, instead you have to ask it if it has something.  *  * So we have to scan by class code, subclass code and sometimes programming  * interface.  */
@@ -2118,6 +2129,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+end_ifdef
+
 begin_comment
 comment|/*  * pcibios-device-count (devid -- count)  *  * Returns the PCI BIOS' count of how many devices matching devid are in the system.  * devid is the 32-bit vendor + device.  */
 end_comment
@@ -2632,6 +2649,11 @@ name|ficlCompilePciBios
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
