@@ -1246,15 +1246,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|armadaxp_idcache_wbinv_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|cortexa_setup
 parameter_list|(
 name|void
