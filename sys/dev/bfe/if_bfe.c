@@ -4067,6 +4067,17 @@ argument_list|,
 name|M_PKTHDR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|m
 operator|->
 name|m_len
