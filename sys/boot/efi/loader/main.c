@@ -144,6 +144,12 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+end_ifdef
+
 begin_comment
 comment|/* Force a reference to bring in EFI support from the library */
 end_comment
@@ -164,6 +170,11 @@ operator|&
 name|efi_variable_support
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
