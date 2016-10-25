@@ -140,6 +140,12 @@ directive|include
 file|<sys/jail.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -774,28 +780,61 @@ operator|&
 name|INP_DROPPED
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|tp
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"tcp_detach: INP_TIMEWAIT&& "
-literal|"INP_DROPPED&& tp != NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+name|tp
+operator|==
+name|NULL
+argument_list|)
+condition|)
+block|{
 name|in_pcbfree
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * This case should not happen as in TIMEWAIT 				 * state the inp should not be destroyed before 				 * its tcptw.  If INVARIANTS is defined, panic. 				 */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|panic
+argument_list|(
+literal|"%s: Panic before an inp double-free: "
+literal|"INP_TIMEWAIT&& INP_DROPPED&& tp != NULL"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Avoid an inp double-free: "
+literal|"INP_TIMEWAIT&& INP_DROPPED&& tp != NULL"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|INP_WUNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
