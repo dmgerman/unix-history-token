@@ -47,24 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ffs/ufs_bswap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -79,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -113,6 +101,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ffs/ufs_bswap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
 
 begin_define
 define|#

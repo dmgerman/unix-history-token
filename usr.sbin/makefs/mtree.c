@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -136,6 +142,24 @@ include|#
 directive|include
 file|"makefs.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENOATTR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENOATTR
+value|ENOMSG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

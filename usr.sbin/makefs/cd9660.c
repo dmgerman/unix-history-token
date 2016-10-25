@@ -32,7 +32,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -44,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<string.h>
 end_include
 
 begin_include
