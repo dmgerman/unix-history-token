@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_lapic.h"
 end_include
 
@@ -2310,7 +2316,7 @@ name|M_ZERO
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|VM_MAX_ADDRESS
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
