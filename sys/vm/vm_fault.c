@@ -888,6 +888,8 @@ decl_stmt|,
 name|result
 decl_stmt|;
 name|boolean_t
+name|dead
+decl_stmt|,
 name|growstack
 decl_stmt|,
 name|is_first_object_locked
@@ -1612,9 +1614,10 @@ condition|(
 name|TRUE
 condition|)
 block|{
-comment|/* 		 * If the object is dead, we stop here 		 */
+comment|/* 		 * If the object is marked for imminent termination, 		 * we retry here, since the collapse pass has raced 		 * with us.  Otherwise, if we see terminally dead 		 * object, return fail. 		 */
 if|if
 condition|(
+operator|(
 name|fs
 operator|.
 name|object
@@ -1622,19 +1625,46 @@ operator|->
 name|flags
 operator|&
 name|OBJ_DEAD
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
+name|dead
+operator|=
+name|fs
+operator|.
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEAD
+expr_stmt|;
 name|unlock_and_deallocate
 argument_list|(
 operator|&
 name|fs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dead
+condition|)
 return|return
 operator|(
 name|KERN_PROTECTION_FAILURE
 operator|)
 return|;
+name|pause
+argument_list|(
+literal|"vmf_de"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+goto|goto
+name|RetryFault
+goto|;
 block|}
 comment|/* 		 * See if page is resident 		 */
 name|fs
