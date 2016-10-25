@@ -367,7 +367,7 @@ expr_stmt|;
 if|if
 condition|(
 name|guid
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|vmThrowErr
@@ -500,7 +500,7 @@ expr_stmt|;
 if|if
 condition|(
 name|value
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|vmThrowErr
@@ -672,8 +672,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|name
+operator|==
+name|NULL
 condition|)
 name|vmThrowErr
 argument_list|(
@@ -837,8 +838,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|name
+operator|==
+name|NULL
 condition|)
 name|vmThrowErr
 argument_list|(
