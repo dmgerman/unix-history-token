@@ -232,7 +232,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|O_NONBLOCK
+name|SOCK_NONBLOCK
 argument_list|)
 expr_stmt|;
 if|if
