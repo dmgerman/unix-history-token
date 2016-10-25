@@ -24498,9 +24498,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_OACTIVE
 condition|)
@@ -24670,9 +24671,10 @@ name|link_up
 operator|||
 operator|!
 operator|(
+name|if_getdrvflags
+argument_list|(
 name|ifp
-operator|->
-name|if_drv_flags
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 operator|)
