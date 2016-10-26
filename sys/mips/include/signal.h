@@ -87,6 +87,10 @@ index|]
 decl_stmt|;
 comment|/* processor regs 0 to 31 */
 name|__register_t
+name|sr
+decl_stmt|;
+comment|/* status register */
+name|__register_t
 name|mullo
 decl_stmt|,
 name|mulhi
@@ -107,8 +111,13 @@ name|__register_t
 name|sc_fpc_eir
 decl_stmt|;
 comment|/* fp exception instruction reg */
+name|void
+modifier|*
+name|sc_tls
+decl_stmt|;
+comment|/* pointer to TLS area */
 name|int
-name|xxx
+name|__spare__
 index|[
 literal|8
 index|]
