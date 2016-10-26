@@ -865,6 +865,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* Only release CPUs if they exist */
+if|if
+condition|(
+name|mp_ncpus
+operator|==
+literal|1
+condition|)
+return|return;
 name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_AST
