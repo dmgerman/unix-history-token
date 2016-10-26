@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dt-bindings/clock/sun4i-a10-pll2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/allwinner/aw_machdep.h>
 end_include
 
@@ -104,6 +98,34 @@ include|#
 directive|include
 file|"clkdev_if.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|SUN4I_A10_PLL2_1X
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUN4I_A10_PLL2_2X
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUN4I_A10_PLL2_4X
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUN4I_A10_PLL2_8X
+value|3
+end_define
 
 begin_define
 define|#
