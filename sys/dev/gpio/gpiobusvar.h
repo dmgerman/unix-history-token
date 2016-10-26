@@ -51,12 +51,6 @@ directive|include
 file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<gnu/dts/include/dt-bindings/gpio/gpio.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
