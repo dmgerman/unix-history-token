@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -52,19 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
+file|<net/if_media.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
+file|<netinet/tcp_lro.h>
 end_include
 
 begin_include
@@ -76,19 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/hyperv_busdma.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/vmbus_xact.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/netvsc/hv_net_vsc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/netvsc/hv_rndis_filter.h>
+file|<dev/hyperv/netvsc/ndis.h>
 end_include
 
 begin_include
@@ -101,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/netvsc/if_hnvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/hv_net_vsc.h>
 end_include
 
 begin_comment
@@ -164,7 +182,7 @@ name|void
 name|hn_nvs_sent_none
 parameter_list|(
 name|struct
-name|hn_send_ctx
+name|hn_nvs_sendctx
 modifier|*
 name|sndc
 parameter_list|,
@@ -188,10 +206,10 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|hn_send_ctx
-name|hn_send_ctx_none
+name|hn_nvs_sendctx
+name|hn_nvs_sendctx_none
 init|=
-name|HN_SEND_CTX_INITIALIZER
+name|HN_NVS_SENDCTX_INITIALIZER
 argument_list|(
 name|hn_nvs_sent_none
 argument_list|,
@@ -252,7 +270,7 @@ name|type
 parameter_list|)
 block|{
 name|struct
-name|hn_send_ctx
+name|hn_nvs_sendctx
 name|sndc
 decl_stmt|;
 name|size_t
@@ -290,7 +308,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Execute the xact setup by the caller. 	 */
-name|hn_send_ctx_init
+name|hn_nvs_sendctx_init
 argument_list|(
 operator|&
 name|sndc
@@ -453,7 +471,7 @@ argument_list|,
 name|reqlen
 argument_list|,
 operator|&
-name|hn_send_ctx_none
+name|hn_nvs_sendctx_none
 argument_list|)
 operator|)
 return|;
@@ -2421,7 +2439,7 @@ name|void
 name|hn_nvs_sent_xact
 parameter_list|(
 name|struct
-name|hn_send_ctx
+name|hn_nvs_sendctx
 modifier|*
 name|sndc
 parameter_list|,
@@ -2466,7 +2484,7 @@ name|void
 name|hn_nvs_sent_none
 parameter_list|(
 name|struct
-name|hn_send_ctx
+name|hn_nvs_sendctx
 modifier|*
 name|sndc
 name|__unused
@@ -2755,6 +2773,46 @@ return|return
 operator|(
 name|error
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|hn_nvs_send_rndis_ctrl
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|struct
+name|hn_nvs_sendctx
+modifier|*
+name|sndc
+parameter_list|,
+name|struct
+name|vmbus_gpa
+modifier|*
+name|gpa
+parameter_list|,
+name|int
+name|gpa_cnt
+parameter_list|)
+block|{
+return|return
+name|hn_nvs_send_rndis_sglist
+argument_list|(
+name|chan
+argument_list|,
+name|HN_NVS_RNDIS_MTYPE_CTRL
+argument_list|,
+name|sndc
+argument_list|,
+name|gpa
+argument_list|,
+name|gpa_cnt
+argument_list|)
 return|;
 block|}
 end_function
