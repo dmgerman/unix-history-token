@@ -1425,6 +1425,24 @@ specifier|extern
 name|int
 name|zfsfstype
 decl_stmt|;
+specifier|extern
+name|int
+name|zfs_znode_parent_and_name
+parameter_list|(
+name|znode_t
+modifier|*
+name|zp
+parameter_list|,
+name|znode_t
+modifier|*
+modifier|*
+name|dzpp
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* _KERNEL */
