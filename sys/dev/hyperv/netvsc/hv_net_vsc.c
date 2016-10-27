@@ -511,12 +511,12 @@ name|HN_NVS_VERSION_2
 condition|)
 name|rxbuf_size
 operator|=
-name|NETVSC_RECEIVE_BUFFER_SIZE_LEGACY
+name|HN_RXBUF_SIZE_COMPAT
 expr_stmt|;
 else|else
 name|rxbuf_size
 operator|=
-name|NETVSC_RECEIVE_BUFFER_SIZE
+name|HN_RXBUF_SIZE
 expr_stmt|;
 comment|/* 	 * Connect the RXBUF GPADL to the primary channel. 	 * 	 * NOTE: 	 * Only primary channel has RXBUF connected to it.  Sub-channels 	 * just share this RXBUF. 	 */
 name|error
@@ -815,7 +815,7 @@ name|hn_chim_dma
 operator|.
 name|hv_paddr
 argument_list|,
-name|NETVSC_SEND_BUFFER_SIZE
+name|HN_CHIM_SIZE
 argument_list|,
 operator|&
 name|sc
@@ -1044,7 +1044,7 @@ name|sc
 operator|->
 name|hn_chim_cnt
 operator|=
-name|NETVSC_SEND_BUFFER_SIZE
+name|HN_CHIM_SIZE
 operator|/
 name|sc
 operator|->
@@ -1052,7 +1052,7 @@ name|hn_chim_szmax
 expr_stmt|;
 if|if
 condition|(
-name|NETVSC_SEND_BUFFER_SIZE
+name|HN_CHIM_SIZE
 operator|%
 name|sc
 operator|->

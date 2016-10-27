@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -211,6 +217,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_lro.h>
 end_include
 
 begin_include
@@ -330,7 +342,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/vmbus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/vmbus_xact.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/ndis.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/if_hnreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/hyperv/netvsc/if_hnvar.h>
 end_include
 
 begin_include
@@ -343,12 +379,6 @@ begin_include
 include|#
 directive|include
 file|<dev/hyperv/netvsc/hv_rndis_filter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/hyperv/netvsc/ndis.h>
 end_include
 
 begin_include
@@ -462,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|HN_TX_DATA_SEGCNT_MAX
-value|(NETVSC_PACKET_MAXPAGE - 1)
+value|(HN_GPACNT_MAX - 1)
 end_define
 
 begin_define
@@ -9038,7 +9068,7 @@ name|ifr
 operator|->
 name|ifr_mtu
 operator|>
-name|NETVSC_MAX_CONFIGURABLE_MTU
+name|HN_MTU_MAX
 condition|)
 block|{
 name|error
@@ -12550,7 +12580,7 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|NETVSC_RECEIVE_BUFFER_SIZE
+name|HN_RXBUF_SIZE
 argument_list|,
 operator|&
 name|sc
@@ -12756,9 +12786,9 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|NETVSC_DEVICE_RING_BUFFER_SIZE
+name|HN_TXBR_SIZE
 operator|+
-name|NETVSC_DEVICE_RING_BUFFER_SIZE
+name|HN_RXBR_SIZE
 argument_list|,
 operator|&
 name|rxr
@@ -12850,11 +12880,11 @@ index|]
 expr_stmt|;
 name|rxr
 operator|->
-name|hn_rdbuf
+name|hn_pktbuf
 operator|=
 name|malloc
 argument_list|(
-name|NETVSC_PACKET_SIZE
+name|HN_PKTBUF_LEN
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -13695,7 +13725,7 @@ name|free
 argument_list|(
 name|rxr
 operator|->
-name|hn_rdbuf
+name|hn_pktbuf
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -14911,7 +14941,7 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-name|NETVSC_SEND_BUFFER_SIZE
+name|HN_CHIM_SIZE
 argument_list|,
 operator|&
 name|sc
@@ -17072,13 +17102,13 @@ name|cbr
 operator|.
 name|cbr_txsz
 operator|=
-name|NETVSC_DEVICE_RING_BUFFER_SIZE
+name|HN_TXBR_SIZE
 expr_stmt|;
 name|cbr
 operator|.
 name|cbr_rxsz
 operator|=
-name|NETVSC_DEVICE_RING_BUFFER_SIZE
+name|HN_RXBR_SIZE
 expr_stmt|;
 name|error
 operator|=
@@ -19498,7 +19528,7 @@ name|ofs
 operator|+
 name|len
 operator|>
-name|NETVSC_RECEIVE_BUFFER_SIZE
+name|HN_RXBUF_SIZE
 argument_list|)
 condition|)
 block|{
@@ -19701,13 +19731,13 @@ decl_stmt|;
 name|int
 name|bufferlen
 init|=
-name|NETVSC_PACKET_SIZE
+name|HN_PKTBUF_LEN
 decl_stmt|;
 name|buffer
 operator|=
 name|rxr
 operator|->
-name|hn_rdbuf
+name|hn_pktbuf
 expr_stmt|;
 do|do
 block|{
@@ -19823,7 +19853,7 @@ if|if
 condition|(
 name|bufferlen
 operator|>
-name|NETVSC_PACKET_SIZE
+name|HN_PKTBUF_LEN
 condition|)
 block|{
 name|free
@@ -19894,7 +19924,7 @@ if|if
 condition|(
 name|bufferlen
 operator|>
-name|NETVSC_PACKET_SIZE
+name|HN_PKTBUF_LEN
 condition|)
 name|free
 argument_list|(
