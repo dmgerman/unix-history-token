@@ -7553,11 +7553,6 @@ name|long
 name|type
 decl_stmt|;
 comment|/* kthread type/identifier */
-name|struct
-name|ptnet_ring_cfg
-name|event
-decl_stmt|;
-comment|/* event/ioctl fd */
 name|nm_kthread_worker_fn_t
 name|worker_fn
 decl_stmt|;
@@ -7589,6 +7584,14 @@ name|struct
 name|nm_kthread_cfg
 modifier|*
 name|cfg
+parameter_list|,
+name|unsigned
+name|int
+name|cfgtype
+parameter_list|,
+name|void
+modifier|*
+name|opaque
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7848,23 +7851,6 @@ begin_comment
 comment|/* ptnetmap GUEST routines */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|uint32_t
-function_decl|(
-modifier|*
-name|nm_pt_guest_ptctl_t
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_comment
 comment|/*  * netmap adapter for guest ptnetmap ports  */
 end_comment
@@ -7902,14 +7888,19 @@ parameter_list|(
 name|struct
 name|netmap_adapter
 modifier|*
+name|na
 parameter_list|,
 name|void
 modifier|*
+name|csb
 parameter_list|,
 name|unsigned
 name|int
+name|nifp_offset
 parameter_list|,
-name|nm_pt_guest_ptctl_t
+name|unsigned
+name|int
+name|memid
 parameter_list|)
 function_decl|;
 end_function_decl
