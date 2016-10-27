@@ -103,18 +103,6 @@ directive|include
 file|<dev/hyperv/netvsc/if_hnvar.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NETVSC
-argument_list|,
-literal|"netvsc"
-argument_list|,
-literal|"Hyper-V netvsc driver"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Forward declarations  */
 end_comment
@@ -1260,7 +1248,7 @@ argument_list|(
 name|u_long
 argument_list|)
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 operator||
@@ -1717,7 +1705,7 @@ name|sc
 operator|->
 name|hn_chim_bmap
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|sc

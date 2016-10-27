@@ -145,14 +145,6 @@ directive|define
 name|HN_USE_TXDESC_BUFRING
 end_define
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETVSC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * The following arguably belongs in a separate header file  */
 end_comment

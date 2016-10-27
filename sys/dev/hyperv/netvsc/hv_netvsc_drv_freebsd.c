@@ -12396,7 +12396,7 @@ name|sc
 operator|->
 name|hn_rx_ring_cnt
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 operator||
@@ -12636,7 +12636,7 @@ name|malloc
 argument_list|(
 name|NETVSC_PACKET_SIZE
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -13477,7 +13477,7 @@ name|rxr
 operator|->
 name|hn_rdbuf
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
@@ -13487,7 +13487,7 @@ name|sc
 operator|->
 name|hn_rx_ring
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|sc
@@ -13620,7 +13620,7 @@ name|txr
 operator|->
 name|hn_txdesc_cnt
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 operator||
@@ -13650,7 +13650,7 @@ name|txr
 operator|->
 name|hn_txdesc_cnt
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|,
@@ -13764,7 +13764,7 @@ name|buf_ring_alloc
 argument_list|(
 name|br_depth
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|,
@@ -14585,7 +14585,7 @@ name|txr
 operator|->
 name|hn_txdesc_br
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14596,7 +14596,7 @@ name|txr
 operator|->
 name|hn_txdesc
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|txr
@@ -14619,7 +14619,7 @@ name|txr
 operator|->
 name|hn_mbuf_br
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -14757,7 +14757,7 @@ name|sc
 operator|->
 name|hn_tx_ring_cnt
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 operator||
@@ -15717,7 +15717,7 @@ name|sc
 operator|->
 name|hn_tx_ring
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|sc
@@ -19608,7 +19608,7 @@ name|free
 argument_list|(
 name|buffer
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|buffer
@@ -19623,7 +19623,7 @@ name|malloc
 argument_list|(
 name|bytes_rxed
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -19678,7 +19678,7 @@ name|free
 argument_list|(
 name|buffer
 argument_list|,
-name|M_NETVSC
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|hv_rf_channel_rollup
