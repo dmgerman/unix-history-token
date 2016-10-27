@@ -447,7 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* filter: NDIS_PACKET_TYPE_ or 0. */
+comment|/* filter: NDIS_PACKET_TYPE_. */
 end_comment
 
 begin_function_decl

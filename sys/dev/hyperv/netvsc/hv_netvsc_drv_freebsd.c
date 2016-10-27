@@ -18323,18 +18323,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Disable RX by clearing RX filter. 	 */
-name|hn_rndis_set_rxfilter
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|hn_rx_filter
 operator|=
-literal|0
+name|NDIS_PACKET_TYPE_NONE
+expr_stmt|;
+name|hn_rndis_set_rxfilter
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|hn_rx_filter
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Give RNDIS enough time to flush all pending data packets. 	 */
 name|pause
