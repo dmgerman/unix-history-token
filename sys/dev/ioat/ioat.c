@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioccom.h>
 end_include
 
@@ -4812,11 +4818,11 @@ argument_list|(
 name|dmaengine
 argument_list|)
 expr_stmt|;
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_IOAT
 argument_list|,
-literal|"%s channel=%u dispatch hw_head=%u"
+literal|"%s channel=%u dispatch1 hw_head=%u head=%u"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4829,6 +4835,42 @@ operator|->
 name|hw_head
 operator|&
 name|UINT16_MAX
+argument_list|,
+name|ioat
+operator|->
+name|head
+argument_list|)
+expr_stmt|;
+name|KFAIL_POINT_CODE
+argument_list|(
+name|DEBUG_FP
+argument_list|,
+name|ioat_release
+argument_list|,
+comment|/* do nothing */
+argument_list|)
+expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_IOAT
+argument_list|,
+literal|"%s channel=%u dispatch2 hw_head=%u head=%u"
+argument_list|,
+name|__func__
+argument_list|,
+name|ioat
+operator|->
+name|chan_idx
+argument_list|,
+name|ioat
+operator|->
+name|hw_head
+operator|&
+name|UINT16_MAX
+argument_list|,
+name|ioat
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 name|ioat_write_2
