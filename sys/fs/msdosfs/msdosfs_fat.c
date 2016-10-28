@@ -4096,7 +4096,7 @@ if|if
 condition|(
 name|readcn
 operator|==
-literal|0
+name|CLUST_FREE
 condition|)
 name|usemap_free
 argument_list|(
