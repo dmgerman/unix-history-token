@@ -6265,30 +6265,5 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|hv_rf_channel_rollup
-parameter_list|(
-name|struct
-name|hn_rx_ring
-modifier|*
-name|rxr
-parameter_list|,
-name|struct
-name|hn_tx_ring
-modifier|*
-name|txr
-parameter_list|)
-block|{
-name|hn_chan_rollup
-argument_list|(
-name|rxr
-argument_list|,
-name|txr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 end_unit
 

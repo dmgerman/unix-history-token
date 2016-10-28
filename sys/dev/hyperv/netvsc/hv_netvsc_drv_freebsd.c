@@ -1929,6 +1929,22 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|hn_chan_rollup
+parameter_list|(
+name|struct
+name|hn_rx_ring
+modifier|*
+parameter_list|,
+name|struct
+name|hn_tx_ring
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|hn_set_ring_inuse
 parameter_list|(
 name|struct
@@ -6050,6 +6066,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|hn_chan_rollup
 parameter_list|(
@@ -19812,7 +19829,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|hv_rf_channel_rollup
+name|hn_chan_rollup
 argument_list|(
 name|rxr
 argument_list|,

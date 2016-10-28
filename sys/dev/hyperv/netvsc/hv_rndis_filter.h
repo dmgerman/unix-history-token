@@ -68,23 +68,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|hv_rf_channel_rollup
-parameter_list|(
-name|struct
-name|hn_rx_ring
-modifier|*
-name|rxr
-parameter_list|,
-name|struct
-name|hn_tx_ring
-modifier|*
-name|txr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
