@@ -3533,10 +3533,10 @@ literal|0
 expr_stmt|;
 name|comp_update
 operator|=
-name|ioat_get_chansts
-argument_list|(
+operator|*
 name|ioat
-argument_list|)
+operator|->
+name|comp_update
 expr_stmt|;
 name|status
 operator|=
@@ -3597,13 +3597,6 @@ operator|->
 name|hw_desc_bus_addr
 operator|!=
 name|status
-operator|&&
-name|ioat_get_active
-argument_list|(
-name|ioat
-argument_list|)
-operator|>
-literal|0
 condition|)
 block|{
 name|desc
