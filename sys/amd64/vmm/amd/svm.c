@@ -2288,6 +2288,7 @@ decl_stmt|,
 name|iopm_pa
 decl_stmt|,
 name|pml4_pa
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
