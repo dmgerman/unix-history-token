@@ -23366,6 +23366,36 @@ literal|"DPIO module"
 block|}
 block|,
 block|{
+name|PCIC_DASP
+block|,
+name|PCIS_DASP_PERFCNTRS
+block|,
+literal|1
+block|,
+literal|"performance counters"
+block|}
+block|,
+block|{
+name|PCIC_DASP
+block|,
+name|PCIS_DASP_COMM_SYNC
+block|,
+literal|1
+block|,
+literal|"communication synchronizer"
+block|}
+block|,
+block|{
+name|PCIC_DASP
+block|,
+name|PCIS_DASP_MGMT_CARD
+block|,
+literal|1
+block|,
+literal|"signal processing management"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
