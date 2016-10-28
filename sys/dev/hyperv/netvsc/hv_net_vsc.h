@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__HV_NET_VSC_H__
+name|_HN_NVS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__HV_NET_VSC_H__
+name|_HN_NVS_H_
 end_define
 
 begin_struct_decl
@@ -430,7 +430,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __HV_NET_VSC_H__ */
+comment|/* !_HN_NVS_H_ */
 end_comment
 
 end_unit
