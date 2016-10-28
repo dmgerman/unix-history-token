@@ -4024,8 +4024,40 @@ comment|/* Instead of going single user, let's reboot the machine */
 name|sync
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|reboot
 argument_list|(
+name|howto
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|emergency
+argument_list|(
+literal|"reboot(%#x) failed, %s"
+argument_list|,
+name|howto
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* panic and reboot */
+block|}
+name|warning
+argument_list|(
+literal|"reboot(%#x) returned"
+argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
@@ -4034,6 +4066,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* panic as well */
 block|}
 name|shell
 operator|=
