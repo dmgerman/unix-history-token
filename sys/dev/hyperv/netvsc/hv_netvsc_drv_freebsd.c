@@ -378,7 +378,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/netvsc/hv_rndis_filter.h>
+file|<dev/hyperv/netvsc/hn_rndis.h>
 end_include
 
 begin_include
