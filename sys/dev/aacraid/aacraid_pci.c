@@ -357,22 +357,6 @@ literal|"Adaptec RAID Controller"
 block|}
 block|,
 block|{
-literal|0x9005
-block|,
-literal|0x028f
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|AAC_HWIF_SRCV
-block|,
-literal|0
-block|,
-literal|"Adaptec RAID Controller"
-block|}
-block|,
-block|{
 literal|0
 block|,
 literal|0
