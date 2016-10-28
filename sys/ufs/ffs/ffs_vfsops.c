@@ -2719,9 +2719,10 @@ name|i
 decl_stmt|,
 name|blks
 decl_stmt|,
-name|size
-decl_stmt|,
 name|error
+decl_stmt|;
+name|u_long
+name|size
 decl_stmt|;
 name|int32_t
 modifier|*
@@ -3128,9 +3129,6 @@ name|space
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|,
 name|M_UFSMNT
@@ -3639,9 +3637,12 @@ name|i
 decl_stmt|,
 name|blks
 decl_stmt|,
-name|size
+name|len
 decl_stmt|,
 name|ronly
+decl_stmt|;
+name|u_long
+name|size
 decl_stmt|;
 name|int32_t
 modifier|*
@@ -4299,7 +4300,7 @@ ifdef|#
 directive|ifdef
 name|UFS_GJOURNAL
 comment|/* 		 * Get journal provider name. 		 */
-name|size
+name|len
 operator|=
 literal|1024
 expr_stmt|;
@@ -4309,7 +4310,10 @@ name|mnt_gjprovider
 operator|=
 name|malloc
 argument_list|(
-name|size
+operator|(
+name|u_long
+operator|)
+name|len
 argument_list|,
 name|M_UFSMNT
 argument_list|,
@@ -4325,7 +4329,7 @@ argument_list|,
 name|cp
 argument_list|,
 operator|&
-name|size
+name|len
 argument_list|,
 name|mp
 operator|->
@@ -4345,7 +4349,7 @@ name|mp
 operator|->
 name|mnt_gjprovider
 argument_list|,
-name|size
+name|len
 argument_list|,
 name|M_UFSMNT
 argument_list|,
@@ -4687,9 +4691,6 @@ name|space
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_long
-operator|)
 name|size
 argument_list|,
 name|M_UFSMNT
@@ -5241,7 +5242,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|size
+name|len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -5257,7 +5258,7 @@ argument_list|,
 name|cp
 argument_list|,
 operator|&
-name|size
+name|len
 argument_list|,
 operator|&
 name|ump
