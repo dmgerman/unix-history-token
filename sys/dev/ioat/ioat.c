@@ -9157,6 +9157,16 @@ modifier|*
 name|ioat
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|ioat
+operator|->
+name|submit_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ioat_get
 argument_list|(
 name|ioat
