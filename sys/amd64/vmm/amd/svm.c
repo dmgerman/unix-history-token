@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_lapic.h"
 end_include
 
@@ -2294,7 +2288,6 @@ decl_stmt|,
 name|iopm_pa
 decl_stmt|,
 name|pml4_pa
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2316,7 +2309,11 @@ name|M_ZERO
 argument_list|,
 literal|0
 argument_list|,
-name|VM_MAX_ADDRESS
+operator|~
+operator|(
+name|vm_paddr_t
+operator|)
+literal|0
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
