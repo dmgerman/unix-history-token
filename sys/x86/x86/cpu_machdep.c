@@ -2210,7 +2210,10 @@ endif|#
 directive|endif
 name|nmi_call_kdb
 argument_list|(
-literal|0
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|,
 name|type
 argument_list|,
