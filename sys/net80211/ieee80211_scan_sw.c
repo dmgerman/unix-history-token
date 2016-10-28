@@ -1859,6 +1859,16 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
+comment|/* XXX for now - just don't do this per packet. */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+condition|)
+return|return;
 name|cancel_scan
 argument_list|(
 name|vap
