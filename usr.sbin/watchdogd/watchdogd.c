@@ -367,6 +367,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_int
+name|nap
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|passive
 init|=
 literal|0
@@ -420,15 +429,6 @@ name|fd
 init|=
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nap
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -3221,6 +3221,20 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+if|if
+condition|(
+name|nap
+operator|>
+name|timeout_sec
+operator|/
+literal|2
+condition|)
+name|nap
+operator|=
+name|timeout_sec
+operator|/
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|carp_thresh_seconds
