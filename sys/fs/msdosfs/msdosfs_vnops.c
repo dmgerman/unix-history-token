@@ -2796,7 +2796,7 @@ name|diff
 expr_stmt|;
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 name|bp
 operator|->
@@ -3426,6 +3426,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 			 * This call to vfs_bio_clrbuf() ensures that 			 * even if vn_io_fault_uiomove() below faults, 			 * garbage from the newly instantiated buffer 			 * is not exposed to the userspace via mmap(). 			 */
 name|vfs_bio_clrbuf
 argument_list|(
 name|bp
@@ -3546,7 +3547,7 @@ comment|/* 		 * Should these vnode_pager_* functions be done on dir 		 * files? 
 comment|/* 		 * Copy the data from user space into the buf header. 		 */
 name|error
 operator|=
-name|uiomove
+name|vn_io_fault_uiomove
 argument_list|(
 name|bp
 operator|->
