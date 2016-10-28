@@ -438,6 +438,13 @@ name|zfs_allow_log_key
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint_t
+name|zfs_geom_probe_vdev_key
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|int
@@ -28976,6 +28983,14 @@ operator|&
 name|zfs_allow_log_key
 argument_list|,
 name|zfs_allow_log_destroy
+argument_list|)
+expr_stmt|;
+name|tsd_create
+argument_list|(
+operator|&
+name|zfs_geom_probe_vdev_key
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf

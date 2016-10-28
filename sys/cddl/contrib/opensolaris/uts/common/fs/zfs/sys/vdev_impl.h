@@ -1211,6 +1211,10 @@ specifier|extern
 name|int
 name|zfs_vdev_cache_size
 decl_stmt|;
+specifier|extern
+name|uint_t
+name|zfs_geom_probe_vdev_key
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|illumos

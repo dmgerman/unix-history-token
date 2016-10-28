@@ -222,6 +222,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Thread local storage used to indicate when a thread is probing geoms  * for their guids.  If NULL, this thread is not tasting geoms.  If non NULL,  * it is looking for a replacement for the vdev_t* that is its value.  */
+end_comment
+
+begin_decl_stmt
+name|uint_t
+name|zfs_geom_probe_vdev_key
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1450,23 +1460,17 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|KASSERT
+name|ZFS_LOG
 argument_list|(
-literal|1
-operator|==
 literal|0
 argument_list|,
-operator|(
-literal|"%s called while tasting %s."
-operator|,
-name|__func__
-operator|,
+literal|"WARNING: Orphan %s while tasting its VDev GUID."
+argument_list|,
 name|cp
 operator|->
 name|provider
 operator|->
 name|name
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2722,7 +2726,6 @@ argument_list|,
 literal|"zfs::vdev::taste"
 argument_list|)
 expr_stmt|;
-comment|/* This orphan function should be never called. */
 name|zgp
 operator|->
 name|orphan
@@ -3352,6 +3355,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Set the TLS to indicate downstack that we should not access zvols*/
+name|VERIFY
+argument_list|(
+name|tsd_set
+argument_list|(
+name|zfs_geom_probe_vdev_key
+argument_list|,
+name|vd
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We must have a pathname, and it must be absolute. 	 */
 if|if
 condition|(
@@ -3474,6 +3490,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Clear the TLS now that tasting is done */
+name|VERIFY
+argument_list|(
+name|tsd_set
+argument_list|(
+name|zfs_geom_probe_vdev_key
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp
