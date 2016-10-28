@@ -15351,7 +15351,15 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
+name|pde
+operator|=
+name|pmap_pde
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|va
@@ -15359,6 +15367,7 @@ operator|<
 name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
+comment|/* 		 * va is for UVA. 		 * In the case that a page table page is not resident, 		 * we are creating it here.  pmap_allocpte() handles 		 * demotion. 		 */
 name|mpte
 operator|=
 name|pmap_allocpte
@@ -15413,13 +15422,39 @@ operator|)
 return|;
 block|}
 block|}
-name|pde
-operator|=
-name|pmap_pde
+else|else
+block|{
+comment|/* 		 * va is for KVA, so pmap_demote_pde() will never fail 		 * to install a page table page.  PG_V is also 		 * asserted by pmap_demote_pde(). 		 */
+name|KASSERT
 argument_list|(
-name|pmap
+name|pde
+operator|!=
+name|NULL
+operator|&&
+operator|(
+operator|*
+name|pde
+operator|&
+name|PG_V
+operator|)
+operator|!=
+literal|0
 argument_list|,
+operator|(
+literal|"KVA %#x invalid pde pdir %#jx"
+operator|,
 name|va
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|pmap
+operator|->
+name|pm_pdir
+index|[
+name|PTDPTDI
+index|]
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -15433,11 +15468,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|panic
+name|pmap_demote_pde
 argument_list|(
-literal|"pmap_enter: attempted pmap_enter on 4MB page"
+name|pmap
+argument_list|,
+name|pde
+argument_list|,
+name|va
 argument_list|)
 expr_stmt|;
+block|}
 name|pte
 operator|=
 name|pmap_pte_quick
@@ -15447,7 +15487,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
+comment|/* 	 * Page Directory table entry is not valid, which should not 	 * happen.  We should have either allocated the page table 	 * page or demoted the existing mapping above. 	 */
 if|if
 condition|(
 name|pte
