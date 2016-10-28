@@ -9910,6 +9910,14 @@ literal|' '
 expr_stmt|;
 block|}
 block|}
+name|psinfo
+operator|->
+name|pr_pid
+operator|=
+name|p
+operator|->
+name|p_pid
+expr_stmt|;
 name|sbuf_bcat
 argument_list|(
 name|sb

@@ -3334,6 +3334,12 @@ name|pr_psargs
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|psinfo
+operator|->
+name|pr_pid
+operator|=
+name|pid
+expr_stmt|;
 operator|*
 name|sizep
 operator|=

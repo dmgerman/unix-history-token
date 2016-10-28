@@ -48,7 +48,7 @@ comment|/*  * These structures define an interface between core files and the de
 end_comment
 
 begin_comment
-comment|/*  * The parenthsized numbers like (1) indicate the minimum version number  * for which each element exists in the structure.  */
+comment|/*  * The parenthsized numbers like (1) indicate the minimum version number  * for which each element exists in the structure.  The version number is  * not bumped when adding new fields to the end, only if the meaning of  * an existing field changes.  Additional fields are annotated as (1a),  * (1b), etc. to indicate the groupings of additions.  */
 end_comment
 
 begin_define
@@ -94,7 +94,7 @@ comment|/* Current signal (1) */
 name|pid_t
 name|pr_pid
 decl_stmt|;
-comment|/* Process ID (1) */
+comment|/* LWP (Thread) ID (1) */
 name|gregset_t
 name|pr_reg
 decl_stmt|;
@@ -185,6 +185,10 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* Arguments, null terminated (1) */
+name|pid_t
+name|pr_pid
+decl_stmt|;
+comment|/* Process ID (1a) */
 block|}
 name|prpsinfo_t
 typedef|;
@@ -291,6 +295,9 @@ name|PRARGSZ
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|int32_t
+name|pr_pid
 decl_stmt|;
 block|}
 name|prpsinfo32_t
