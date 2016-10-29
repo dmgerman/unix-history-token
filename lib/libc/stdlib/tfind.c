@@ -4,7 +4,7 @@ comment|/*	$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Tree search generalized from Knuth (6.2.2) Algorithm T just like  * the AT&T man page says.  *  * The node_t structure is for internal use only, lint doesn't grok it.  *  * Written by reading the System V Interface Definition, not the code.  *  * Totally public domain.  */
+comment|/*  * Tree search generalized from Knuth (6.2.2) Algorithm T just like  * the AT&T man page says.  *  * Written by reading the System V Interface Definition, not the code.  *  * Totally public domain.  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ comment|/*   * find a node, or return 0  *  * vkey   - key to be found   * vroot
 end_comment
 
 begin_function
-name|void
+name|posix_tnode
 modifier|*
 name|tfind
 parameter_list|(
@@ -89,11 +89,11 @@ name|void
 modifier|*
 name|vkey
 parameter_list|,
-name|void
+name|posix_tnode
 modifier|*
 specifier|const
 modifier|*
-name|vrootp
+name|rootp
 parameter_list|,
 name|int
 function_decl|(
@@ -111,18 +111,6 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-name|node_t
-modifier|*
-modifier|*
-name|rootp
-init|=
-operator|(
-name|node_t
-operator|*
-operator|*
-operator|)
-name|vrootp
-decl_stmt|;
 if|if
 condition|(
 name|rootp
