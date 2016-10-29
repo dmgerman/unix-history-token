@@ -2726,7 +2726,7 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue"
+literal|"vm pagequeue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -2775,7 +2775,7 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"vm page queue"
+literal|"vm pagequeue"
 block|,
 operator|&
 name|lock_class_mtx_sleep
