@@ -251,7 +251,7 @@ decl_stmt|;
 name|vm_map_entry_t
 name|entry
 decl_stmt|;
-name|int
+name|bool
 name|lookup_still_valid
 decl_stmt|;
 name|struct
@@ -389,7 +389,7 @@ name|fs
 operator|->
 name|lookup_still_valid
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 block|}
@@ -880,15 +880,6 @@ name|nera
 decl_stmt|,
 name|result
 decl_stmt|;
-name|boolean_t
-name|dead
-decl_stmt|,
-name|growstack
-decl_stmt|,
-name|is_first_object_locked
-decl_stmt|,
-name|wired
-decl_stmt|;
 name|int
 name|map_generation
 decl_stmt|;
@@ -928,13 +919,19 @@ decl_stmt|;
 name|u_char
 name|behavior
 decl_stmt|;
-name|bool
-name|hardfault
+name|boolean_t
+name|wired
 decl_stmt|;
+comment|/* Passed by reference. */
+name|bool
+name|dead
+decl_stmt|,
 name|growstack
-operator|=
-name|TRUE
-expr_stmt|;
+decl_stmt|,
+name|hardfault
+decl_stmt|,
+name|is_first_object_locked
+decl_stmt|;
 name|PCPU_INC
 argument_list|(
 name|cnt
@@ -956,6 +953,10 @@ name|nera
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|growstack
+operator|=
+name|true
 expr_stmt|;
 name|hardfault
 operator|=
@@ -1048,7 +1049,7 @@ operator|)
 return|;
 name|growstack
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 goto|goto
 name|RetryFault
@@ -1580,7 +1581,7 @@ name|fs
 operator|.
 name|lookup_still_valid
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|fs
 operator|.
@@ -3031,7 +3032,7 @@ block|{
 comment|/* 			 * This allows pages to be virtually copied from a  			 * backing_object into the first_object, where the  			 * backing object has no other refs to it, and cannot 			 * gain any more refs.  Instead of a bcopy, we just  			 * move the page from the backing object to the  			 * first object.  Note that we must mark the page  			 * dirty in the first object so that it will go out  			 * to swap when needed. 			 */
 name|is_first_object_locked
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -3455,7 +3456,7 @@ name|fs
 operator|.
 name|lookup_still_valid
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
