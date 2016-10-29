@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2126,6 +2126,18 @@ name|ds
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|rrw_enter
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_bp_rwlock
+argument_list|,
+name|RW_READER
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 name|os
 operator|=
 name|dmu_objset_create_impl
@@ -2144,6 +2156,16 @@ argument_list|,
 name|DMU_OST_ZFS
 argument_list|,
 name|tx
+argument_list|)
+expr_stmt|;
+name|rrw_exit
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_bp_rwlock
+argument_list|,
+name|FTAG
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3579,6 +3601,18 @@ operator|->
 name|dp_origin_snap
 expr_stmt|;
 comment|/* 		 * The $ORIGIN can't have any data, or the accounting 		 * will be wrong. 		 */
+name|rrw_enter
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_bp_rwlock
+argument_list|,
+name|RW_READER
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 name|ASSERT0
 argument_list|(
 name|dsl_dataset_phys
@@ -3589,6 +3623,16 @@ operator|->
 name|ds_bp
 operator|.
 name|blk_birth
+argument_list|)
+expr_stmt|;
+name|rrw_exit
+argument_list|(
+operator|&
+name|ds
+operator|->
+name|ds_bp_rwlock
+argument_list|,
+name|FTAG
 argument_list|)
 expr_stmt|;
 comment|/* The origin doesn't get attached to itself */
