@@ -826,6 +826,10 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_BOOKE
+operator||
+name|PPC_FEATURE_HAS_SPE
+operator||
+name|PPC_FEATURE_HAS_EFP_SINGLE
 block|,
 literal|0
 block|,
@@ -840,6 +844,12 @@ block|,
 name|REVFMT_MAJMIN
 block|,
 name|PPC_FEATURE_BOOKE
+operator||
+name|PPC_FEATURE_HAS_SPE
+operator||
+name|PPC_FEATURE_HAS_EFP_SINGLE
+operator||
+name|PPC_FEATURE_HAS_EFP_DOUBLE
 block|,
 literal|0
 block|,

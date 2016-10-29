@@ -104,6 +104,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PPC_FEATURE_HAS_SPE
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_FEATURE_HAS_EFP_SINGLE
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_FEATURE_HAS_EFP_DOUBLE
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPC_FEATURE_BOOKE
 value|0x00008000
 end_define
@@ -169,7 +190,7 @@ define|#
 directive|define
 name|PPC_FEATURE_BITMASK
 define|\
-value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"	\ 	"\020BOOKE\017SMT\015ARCH205\013DFP\011ARCH206\010VSX"
+value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"	\ 	"\030SPE\027SPESFP\026DPESFP\020BOOKE\017SMT\015ARCH205\013DFP"	\ 	"\011ARCH206\010VSX"
 end_define
 
 begin_define
