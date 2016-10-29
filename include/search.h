@@ -143,6 +143,18 @@ block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|void
+name|posix_tnode
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
