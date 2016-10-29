@@ -3337,7 +3337,6 @@ argument_list|,
 literal|"Synchronize cache failed\n"
 argument_list|)
 expr_stmt|;
-else|else
 name|softc
 operator|->
 name|flags
