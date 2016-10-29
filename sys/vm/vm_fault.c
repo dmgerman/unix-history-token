@@ -895,9 +895,6 @@ decl_stmt|;
 name|vm_object_t
 name|next_object
 decl_stmt|;
-name|int
-name|hardfault
-decl_stmt|;
 name|struct
 name|faultstate
 name|fs
@@ -931,10 +928,9 @@ decl_stmt|;
 name|u_char
 name|behavior
 decl_stmt|;
+name|bool
 name|hardfault
-operator|=
-literal|0
-expr_stmt|;
+decl_stmt|;
 name|growstack
 operator|=
 name|TRUE
@@ -960,6 +956,10 @@ name|nera
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|hardfault
+operator|=
+name|false
 expr_stmt|;
 name|RetryFault
 label|:
@@ -2603,7 +2603,8 @@ operator|+
 name|ahead
 expr_stmt|;
 name|hardfault
-operator|++
+operator|=
+name|true
 expr_stmt|;
 break|break;
 comment|/* break to PAGE HAS BEEN FOUND */
