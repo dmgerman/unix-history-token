@@ -484,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|H3_TEMP_BASE
-value|2794000
+value|1794000
 end_define
 
 begin_define
@@ -498,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|H3_TEMP_DIV
-value|-14882
+value|-8253
 end_define
 
 begin_define
