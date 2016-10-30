@@ -498,10 +498,6 @@ name|boolean_t
 name|vmd_oom
 decl_stmt|;
 name|int
-name|vmd_pass
-decl_stmt|;
-comment|/* local pagedaemon pass */
-name|int
 name|vmd_oom_seq
 decl_stmt|;
 name|int
