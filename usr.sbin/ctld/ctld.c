@@ -1013,7 +1013,7 @@ name|log_warnx
 argument_list|(
 literal|"mutual secret for user \"%s\", "
 literal|"target \"%s\", is too short; it should be "
-literal|"at least 16 characters long"
+literal|"at least 12 characters long"
 argument_list|,
 name|auth
 operator|->
