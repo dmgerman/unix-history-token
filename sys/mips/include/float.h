@@ -48,12 +48,6 @@ begin_comment
 comment|/* b */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_HAVEFPU
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -64,23 +58,6 @@ end_define
 begin_comment
 comment|/* FP addition rounds to nearest */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FLT_ROUNDS
-value|(-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
