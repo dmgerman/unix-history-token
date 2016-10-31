@@ -4430,7 +4430,7 @@ condition|)
 block|{
 name|i
 operator|=
-name|SIGILL
+name|SIGFPE
 expr_stmt|;
 name|addr
 operator|=
