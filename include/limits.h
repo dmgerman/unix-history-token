@@ -586,7 +586,7 @@ begin_define
 define|#
 directive|define
 name|NL_ARGMAX
-value|99
+value|65536
 end_define
 
 begin_comment

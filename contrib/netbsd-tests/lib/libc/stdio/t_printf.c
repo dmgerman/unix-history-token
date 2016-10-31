@@ -493,19 +493,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-name|atf_tc_expect_signal
-argument_list|(
-name|SIGSEGV
-argument_list|,
-literal|"some non-NetBSD platforms including FreeBSD don't validate "
-literal|"negative size; testcase blows up with SIGSEGV"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|snprintf
 argument_list|(
 name|fmt
