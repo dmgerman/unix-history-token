@@ -58,7 +58,7 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"Platform doesn't have cat"
+literal|"This test requires a `cat` program"
 argument_list|)
 expr_stmt|;
 return|return;
