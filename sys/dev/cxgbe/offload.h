@@ -318,12 +318,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
-end_ifdef
-
 begin_enum
 enum|enum
 block|{
@@ -421,6 +415,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
 
 begin_function_decl
 name|int

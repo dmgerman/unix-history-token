@@ -752,6 +752,15 @@ literal|9
 operator|)
 block|,
 comment|/* port flags */
+name|HAS_TRACEQ
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+comment|/* VI flags */
 name|DOOMED
 init|=
 operator|(
@@ -760,7 +769,7 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|PORT_INIT_DONE
+name|VI_INIT_DONE
 init|=
 operator|(
 literal|1
@@ -768,20 +777,12 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|PORT_SYSCTL_CTX
+name|VI_SYSCTL_CTX
 init|=
 operator|(
 literal|1
 operator|<<
 literal|2
-operator|)
-block|,
-name|HAS_TRACEQ
-init|=
-operator|(
-literal|1
-operator|<<
-literal|3
 operator|)
 block|,
 name|INTR_RXQ
@@ -802,23 +803,12 @@ literal|5
 operator|)
 block|,
 comment|/* All TOE rxq's take interrupts */
-name|INTR_NM_RXQ
-init|=
-operator|(
-literal|1
-operator|<<
-literal|6
-operator|)
-block|,
-comment|/* All netmap rxq's take interrupts */
 name|INTR_ALL
 init|=
 operator|(
 name|INTR_RXQ
 operator||
 name|INTR_OFLD_RXQ
-operator||
-name|INTR_NM_RXQ
 operator|)
 block|,
 comment|/* adapter debug_flags */
@@ -838,9 +828,9 @@ define|#
 directive|define
 name|IS_DOOMED
 parameter_list|(
-name|pi
+name|vi
 parameter_list|)
-value|((pi)->flags& DOOMED)
+value|((vi)->flags& DOOMED)
 end_define
 
 begin_define
@@ -848,9 +838,9 @@ define|#
 directive|define
 name|SET_DOOMED
 parameter_list|(
-name|pi
+name|vi
 parameter_list|)
-value|do {(pi)->flags |= DOOMED;} while (0)
+value|do {(vi)->flags |= DOOMED;} while (0)
 end_define
 
 begin_define
@@ -885,15 +875,15 @@ end_define
 
 begin_struct
 struct|struct
-name|port_info
+name|vi_info
 block|{
 name|device_t
 name|dev
 decl_stmt|;
 name|struct
-name|adapter
+name|port_info
 modifier|*
-name|adapter
+name|pi
 decl_stmt|;
 name|struct
 name|ifnet
@@ -903,16 +893,6 @@ decl_stmt|;
 name|struct
 name|ifmedia
 name|media
-decl_stmt|;
-name|struct
-name|mtx
-name|pi_lock
-decl_stmt|;
-name|char
-name|lockname
-index|[
-literal|16
-index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -924,6 +904,9 @@ decl_stmt|;
 name|uint16_t
 modifier|*
 name|rss
+decl_stmt|,
+modifier|*
+name|nm_rss
 decl_stmt|;
 name|uint16_t
 name|viid
@@ -940,6 +923,144 @@ name|uint16_t
 name|rss_base
 decl_stmt|;
 comment|/* start of VI's RSS table slice */
+name|eventhandler_tag
+name|vlan_c
+decl_stmt|;
+name|int
+name|nintr
+decl_stmt|;
+name|int
+name|first_intr
+decl_stmt|;
+comment|/* These need to be int as they are used in sysctl */
+name|int
+name|ntxq
+decl_stmt|;
+comment|/* # of tx queues */
+name|int
+name|first_txq
+decl_stmt|;
+comment|/* index of first tx queue */
+name|int
+name|rsrv_noflowq
+decl_stmt|;
+comment|/* Reserve queue 0 for non-flowid packets */
+name|int
+name|nrxq
+decl_stmt|;
+comment|/* # of rx queues */
+name|int
+name|first_rxq
+decl_stmt|;
+comment|/* index of first rx queue */
+name|int
+name|nofldtxq
+decl_stmt|;
+comment|/* # of offload tx queues */
+name|int
+name|first_ofld_txq
+decl_stmt|;
+comment|/* index of first offload tx queue */
+name|int
+name|nofldrxq
+decl_stmt|;
+comment|/* # of offload rx queues */
+name|int
+name|first_ofld_rxq
+decl_stmt|;
+comment|/* index of first offload rx queue */
+name|int
+name|nnmtxq
+decl_stmt|;
+name|int
+name|first_nm_txq
+decl_stmt|;
+name|int
+name|nnmrxq
+decl_stmt|;
+name|int
+name|first_nm_rxq
+decl_stmt|;
+name|int
+name|tmr_idx
+decl_stmt|;
+name|int
+name|pktc_idx
+decl_stmt|;
+name|int
+name|qsize_rxq
+decl_stmt|;
+name|int
+name|qsize_txq
+decl_stmt|;
+name|struct
+name|timeval
+name|last_refreshed
+decl_stmt|;
+name|struct
+name|fw_vi_stats_vf
+name|stats
+decl_stmt|;
+name|struct
+name|callout
+name|tick
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|ctx
+decl_stmt|;
+comment|/* from ifconfig up to driver detach */
+name|uint8_t
+name|hw_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* factory MAC address, won't change */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|port_info
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+name|struct
+name|vi_info
+modifier|*
+name|vi
+decl_stmt|;
+name|int
+name|nvi
+decl_stmt|;
+name|int
+name|up_vis
+decl_stmt|;
+name|int
+name|uld_vis
+decl_stmt|;
+name|struct
+name|mtx
+name|pi_lock
+decl_stmt|;
+name|char
+name|lockname
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
 name|uint8_t
 name|lport
 decl_stmt|;
@@ -963,103 +1084,6 @@ name|uint8_t
 name|rx_chan_map
 decl_stmt|;
 comment|/* rx MPS channel bitmap */
-comment|/* These need to be int as they are used in sysctl */
-name|int
-name|ntxq
-decl_stmt|;
-comment|/* # of tx queues */
-name|int
-name|first_txq
-decl_stmt|;
-comment|/* index of first tx queue */
-name|int
-name|rsrv_noflowq
-decl_stmt|;
-comment|/* Reserve queue 0 for non-flowid packets */
-name|int
-name|nrxq
-decl_stmt|;
-comment|/* # of rx queues */
-name|int
-name|first_rxq
-decl_stmt|;
-comment|/* index of first rx queue */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
-name|int
-name|nofldtxq
-decl_stmt|;
-comment|/* # of offload tx queues */
-name|int
-name|first_ofld_txq
-decl_stmt|;
-comment|/* index of first offload tx queue */
-name|int
-name|nofldrxq
-decl_stmt|;
-comment|/* # of offload rx queues */
-name|int
-name|first_ofld_rxq
-decl_stmt|;
-comment|/* index of first offload rx queue */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|int
-name|nnmtxq
-decl_stmt|;
-comment|/* # of netmap tx queues */
-name|int
-name|first_nm_txq
-decl_stmt|;
-comment|/* index of first netmap tx queue */
-name|int
-name|nnmrxq
-decl_stmt|;
-comment|/* # of netmap rx queues */
-name|int
-name|first_nm_rxq
-decl_stmt|;
-comment|/* index of first netmap rx queue */
-name|struct
-name|ifnet
-modifier|*
-name|nm_ifp
-decl_stmt|;
-name|struct
-name|ifmedia
-name|nm_media
-decl_stmt|;
-name|int
-name|nmif_flags
-decl_stmt|;
-name|uint16_t
-name|nm_viid
-decl_stmt|;
-name|int16_t
-name|nm_xact_addr_filt
-decl_stmt|;
-name|uint16_t
-name|nm_rss_size
-decl_stmt|;
-comment|/* size of netmap VI's RSS table slice */
-endif|#
-directive|endif
-name|int
-name|tmr_idx
-decl_stmt|;
-name|int
-name|pktc_idx
-decl_stmt|;
-name|int
-name|qsize_rxq
-decl_stmt|;
-name|int
-name|qsize_txq
-decl_stmt|;
 name|int
 name|linkdnrc
 decl_stmt|;
@@ -1078,28 +1102,23 @@ decl_stmt|;
 name|u_int
 name|tx_parse_error
 decl_stmt|;
-name|eventhandler_tag
-name|vlan_c
-decl_stmt|;
 name|struct
 name|callout
 name|tick
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|ctx
-decl_stmt|;
-comment|/* from ifconfig up to driver detach */
-name|uint8_t
-name|hw_addr
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-comment|/* factory MAC address, won't change */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IS_MAIN_VI
+parameter_list|(
+name|vi
+parameter_list|)
+value|((vi) ==&((vi)->pi->vi[0]))
+end_define
 
 begin_comment
 comment|/* Where the cluster came from, how it has been carved up. */
@@ -1135,17 +1154,12 @@ block|{
 name|u_int
 name|refcount
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|struct
 name|fl_sdesc
 modifier|*
 name|sd
 decl_stmt|;
 comment|/* For debug only.  Could easily be stale */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1300,6 +1314,19 @@ init|=
 literal|1
 block|,
 name|IQS_IDLE
+init|=
+literal|2
+block|,
+comment|/* netmap related flags */
+name|NM_OFF
+init|=
+literal|0
+block|,
+name|NM_ON
+init|=
+literal|1
+block|,
+name|NM_BUSY
 init|=
 literal|2
 block|, }
@@ -1986,12 +2013,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
-end_ifdef
-
 begin_comment
 comment|/* ofld_rxq: SGE ingress queue + SGE free list + miscellaneous items */
 end_comment
@@ -2047,11 +2068,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -2183,20 +2199,14 @@ argument_list|)
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-end_ifdef
-
 begin_struct
 struct|struct
 name|sge_nm_rxq
 block|{
 name|struct
-name|port_info
+name|vi_info
 modifier|*
-name|pi
+name|vi
 decl_stmt|;
 name|struct
 name|iq_desc
@@ -2349,11 +2359,6 @@ argument_list|)
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|sge
@@ -2390,9 +2395,6 @@ name|int
 name|ntxq
 decl_stmt|;
 comment|/* total # of Ethernet tx tx queues */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|int
 name|nofldrxq
 decl_stmt|;
@@ -2401,11 +2403,6 @@ name|int
 name|nofldtxq
 decl_stmt|;
 comment|/* total # of TOE tx queues */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
 name|int
 name|nnmrxq
 decl_stmt|;
@@ -2414,8 +2411,6 @@ name|int
 name|nnmtxq
 decl_stmt|;
 comment|/* total # of netmap tx queues */
-endif|#
-directive|endif
 name|int
 name|niq
 decl_stmt|;
@@ -2452,9 +2447,6 @@ modifier|*
 name|rxq
 decl_stmt|;
 comment|/* NIC rx queues */
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|struct
 name|sge_wrq
 modifier|*
@@ -2467,11 +2459,6 @@ modifier|*
 name|ofld_rxq
 decl_stmt|;
 comment|/* TOE rx queues */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
 name|struct
 name|sge_nm_txq
 modifier|*
@@ -2484,8 +2471,6 @@ modifier|*
 name|nm_rxq
 decl_stmt|;
 comment|/* netmap rx queues */
-endif|#
-directive|endif
 name|uint16_t
 name|iq_start
 decl_stmt|;
@@ -2690,11 +2675,30 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+specifier|volatile
+name|int
+name|nm_state
+decl_stmt|;
+comment|/* NM_OFF, NM_ON, or NM_BUSY */
 name|void
 modifier|*
 name|tag
 decl_stmt|;
+name|struct
+name|sge_rxq
+modifier|*
+name|rxq
+decl_stmt|;
+name|struct
+name|sge_nm_rxq
+modifier|*
+name|nm_rxq
+decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 modifier|*
 name|irq
 struct|;
@@ -2732,9 +2736,6 @@ index|[
 name|NCHAN
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
 name|void
 modifier|*
 name|tom_softc
@@ -2753,8 +2754,6 @@ name|void
 modifier|*
 name|iscsi_softc
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|l2t_data
 modifier|*
@@ -2769,12 +2768,6 @@ name|uint16_t
 name|doorbells
 decl_stmt|;
 name|int
-name|open_device_map
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_OFFLOAD
-name|int
 name|offload_map
 decl_stmt|;
 comment|/* ports with IFCAP_TOE enabled */
@@ -2782,8 +2775,6 @@ name|int
 name|active_ulds
 decl_stmt|;
 comment|/* ULDs activated on this adapter */
-endif|#
-directive|endif
 name|int
 name|flags
 decl_stmt|;
@@ -2921,9 +2912,6 @@ literal|0xef
 index|]
 decl_stmt|;
 comment|/* NUM_CPL_CMDS */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 specifier|const
 name|char
 modifier|*
@@ -2937,8 +2925,6 @@ decl_stmt|;
 name|int
 name|last_op_flags
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|sc_do_rxcopy
 decl_stmt|;
@@ -3247,14 +3233,14 @@ define|#
 directive|define
 name|for_each_txq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.txq[pi->first_txq], iter = 0; \ 	    iter< pi->ntxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.txq[vi->first_txq], iter = 0; \ 	    iter< vi->ntxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3262,14 +3248,14 @@ define|#
 directive|define
 name|for_each_rxq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.rxq[pi->first_rxq], iter = 0; \ 	    iter< pi->nrxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.rxq[vi->first_rxq], iter = 0; \ 	    iter< vi->nrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3277,14 +3263,14 @@ define|#
 directive|define
 name|for_each_ofld_txq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.ofld_txq[pi->first_ofld_txq], iter = 0; \ 	    iter< pi->nofldtxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.ofld_txq[vi->first_ofld_txq], iter = 0; \ 	    iter< vi->nofldtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3292,14 +3278,14 @@ define|#
 directive|define
 name|for_each_ofld_rxq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq], iter = 0; \ 	    iter< pi->nofldrxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.ofld_rxq[vi->first_ofld_rxq], iter = 0; \ 	    iter< vi->nofldrxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3307,14 +3293,14 @@ define|#
 directive|define
 name|for_each_nm_txq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.nm_txq[pi->first_nm_txq], iter = 0; \ 	    iter< pi->nnmtxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.nm_txq[vi->first_nm_txq], iter = 0; \ 	    iter< vi->nnmtxq; ++iter, ++q)
 end_define
 
 begin_define
@@ -3322,14 +3308,29 @@ define|#
 directive|define
 name|for_each_nm_rxq
 parameter_list|(
-name|pi
+name|vi
 parameter_list|,
 name|iter
 parameter_list|,
 name|q
 parameter_list|)
 define|\
-value|for (q =&pi->adapter->sge.nm_rxq[pi->first_nm_rxq], iter = 0; \ 	    iter< pi->nnmrxq; ++iter, ++q)
+value|for (q =&vi->pi->adapter->sge.nm_rxq[vi->first_nm_rxq], iter = 0; \ 	    iter< vi->nnmrxq; ++iter, ++q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_vi
+parameter_list|(
+name|_pi
+parameter_list|,
+name|_iter
+parameter_list|,
+name|_vi
+parameter_list|)
+define|\
+value|for ((_vi) = (_pi)->vi, (_iter) = 0; (_iter)< (_pi)->nvi; \ 	     ++(_iter), ++(_vi))
 end_define
 
 begin_define
@@ -3778,6 +3779,11 @@ index|[
 name|idx
 index|]
 operator|->
+name|vi
+index|[
+literal|0
+index|]
+operator|.
 name|hw_addr
 argument_list|,
 name|ETHER_ADDR_LEN
@@ -4038,12 +4044,27 @@ name|adapter
 modifier|*
 parameter_list|,
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|doom_vi
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4098,11 +4119,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|port_full_init
+name|uint64_t
+name|cxgbe_get_counter
 parameter_list|(
 name|struct
-name|port_info
+name|ifnet
+modifier|*
+parameter_list|,
+name|ift_counter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vi_full_init
+parameter_list|(
+name|struct
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4110,10 +4144,31 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|port_full_uninit
+name|vi_full_uninit
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vi_sysctls
+parameter_list|(
+name|struct
+name|vi_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vi_tick
+parameter_list|(
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4130,22 +4185,22 @@ comment|/* t4_netmap.c */
 end_comment
 
 begin_function_decl
-name|int
-name|create_netmap_ifnet
+name|void
+name|cxgbe_nm_attach
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|destroy_netmap_ifnet
+name|void
+name|cxgbe_nm_detach
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4295,10 +4350,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_setup_port_queues
+name|t4_setup_vi_queues
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4306,10 +4361,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_teardown_port_queues
+name|t4_teardown_vi_queues
 parameter_list|(
 name|struct
-name|port_info
+name|vi_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4328,6 +4383,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|t4_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_vi_intr
 parameter_list|(
 name|void
 modifier|*
