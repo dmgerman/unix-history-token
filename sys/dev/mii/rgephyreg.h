@@ -1381,6 +1381,21 @@ begin_comment
 comment|/* link partner 100baseTX EEE capable */
 end_comment
 
+begin_comment
+comment|/* RTL8153 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|URE_GMEDIASTAT
+value|0xe908
+end_define
+
+begin_comment
+comment|/* media status register */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
