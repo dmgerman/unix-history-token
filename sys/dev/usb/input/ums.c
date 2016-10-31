@@ -1441,6 +1441,7 @@ operator|->
 name|sc_iid_t
 operator|)
 condition|)
+block|{
 name|dt
 operator|-=
 name|hid_get_data
@@ -1455,6 +1456,22 @@ operator|->
 name|sc_loc_t
 argument_list|)
 expr_stmt|;
+comment|/* T-axis is translated into button presses */
+name|buttons_found
+operator||=
+operator|(
+literal|1UL
+operator|<<
+literal|5
+operator|)
+operator||
+operator|(
+literal|1UL
+operator|<<
+literal|6
+operator|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
