@@ -884,7 +884,7 @@ else|else
 name|log_warnx
 argument_list|(
 literal|"secret for user \"%s\", target \"%s\", "
-literal|"is too short; it should be at least 16 characters "
+literal|"is too short; it should be at least 12 characters "
 literal|"long"
 argument_list|,
 name|auth
