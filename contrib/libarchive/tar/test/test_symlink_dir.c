@@ -183,7 +183,7 @@ else|else
 block|{
 name|skipping
 argument_list|(
-literal|"some symlink checks"
+literal|"Symlinks are not supported on this platform"
 argument_list|)
 expr_stmt|;
 block|}

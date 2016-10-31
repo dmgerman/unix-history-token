@@ -75,6 +75,21 @@ decl_stmt|;
 name|int64_t
 name|o
 decl_stmt|;
+if|if
+condition|(
+name|archive_zlib_version
+argument_list|()
+operator|==
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Zip compression test requires zlib"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|extract_reference_file
 argument_list|(
 name|refname
@@ -294,6 +309,21 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
+name|archive_zlib_version
+argument_list|()
+operator|==
+name|NULL
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Zip compression test requires zlib"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|assert
 argument_list|(
 operator|(
