@@ -3460,6 +3460,13 @@ literal|"Consumer with zero access count in g_dev_strategy"
 operator|)
 argument_list|)
 expr_stmt|;
+name|biotrack
+argument_list|(
+name|bp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS

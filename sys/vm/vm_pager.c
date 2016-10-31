@@ -1460,6 +1460,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|buf_track
+argument_list|(
+name|bp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1771,6 +1778,13 @@ argument_list|,
 operator|(
 literal|"relpbuf with bufobj"
 operator|)
+argument_list|)
+expr_stmt|;
+name|buf_track
+argument_list|(
+name|bp
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BUF_UNLOCK

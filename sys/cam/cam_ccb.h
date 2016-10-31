@@ -2480,6 +2480,25 @@ name|u_int
 name|init_id
 decl_stmt|;
 comment|/* initiator id of who selected */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BUF_TRACKING
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FULL_BUF_TRACKING
+argument_list|)
+name|struct
+name|bio
+modifier|*
+name|bio
+decl_stmt|;
+comment|/* Associated bio */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -4692,6 +4711,25 @@ name|tag_action
 operator|=
 name|tag_action
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BUF_TRACKING
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FULL_BUF_TRACKING
+argument_list|)
+name|csio
+operator|->
+name|bio
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
