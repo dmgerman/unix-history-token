@@ -8633,6 +8633,7 @@ name|hn_csum_udp
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * XXX 		 * As of this write (Oct 28th, 2016), host side will turn 		 * on only TCPCS_OK and IPCS_OK even for UDP datagrams, so 		 * the do_lro setting here is actually _not_ accurate.  We 		 * depend on the RSS hash type check to reset do_lro. 		 */
 if|if
 condition|(
 operator|(
@@ -9028,6 +9029,7 @@ operator|&
 name|NDIS_HASH_TYPE_MASK
 operator|)
 decl_stmt|;
+comment|/* 			 * NOTE: 			 * do_lro is resetted, if the hash types are not TCP 			 * related.  See the comment in the above csum_flags 			 * setup section. 			 */
 switch|switch
 condition|(
 name|type
@@ -9039,6 +9041,10 @@ case|:
 name|hash_type
 operator|=
 name|M_HASHTYPE_RSS_IPV4
+expr_stmt|;
+name|do_lro
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -9056,6 +9062,10 @@ name|hash_type
 operator|=
 name|M_HASHTYPE_RSS_IPV6
 expr_stmt|;
+name|do_lro
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|NDIS_HASH_IPV6_EX
@@ -9063,6 +9073,10 @@ case|:
 name|hash_type
 operator|=
 name|M_HASHTYPE_RSS_IPV6_EX
+expr_stmt|;
+name|do_lro
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
