@@ -1343,16 +1343,6 @@ comment|/* bad buf */
 goto|goto
 name|ring_reset
 goto|;
-if|if
-condition|(
-name|slot
-operator|->
-name|flags
-operator|&
-name|NS_BUF_CHANGED
-condition|)
-block|{
-comment|/* buffer has changed, reload map */
 name|curr
 operator|->
 name|read
@@ -1364,6 +1354,16 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|flags
+operator|&
+name|NS_BUF_CHANGED
+condition|)
+block|{
+comment|/* buffer has changed, reload map */
 name|netmap_reload_map
 argument_list|(
 name|na
