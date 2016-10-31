@@ -2406,12 +2406,14 @@ name|void
 name|hn_nvs_ack_rxbuf
 parameter_list|(
 name|struct
+name|hn_rx_ring
+modifier|*
+parameter_list|,
+name|struct
 name|vmbus_channel
 modifier|*
-name|chan
 parameter_list|,
 name|uint64_t
-name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13776,6 +13778,39 @@ argument_list|,
 literal|"# of small packets received"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"rx_ack_failed"
+argument_list|,
+name|CTLTYPE_ULONG
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|sc
+argument_list|,
+name|__offsetof
+argument_list|(
+expr|struct
+name|hn_rx_ring
+argument_list|,
+name|hn_ack_failed
+argument_list|)
+argument_list|,
+name|hn_rx_stat_ulong_sysctl
+argument_list|,
+literal|"LU"
+argument_list|,
+literal|"# of RXBUF ack failures"
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -21206,9 +21241,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Moved completion call back here so that all received  	 * messages (not just data messages) will trigger a response 	 * message back to the host. 	 */
+comment|/* 	 * Ack the consumed RXBUF associated w/ this channel packet, 	 * so that this RXBUF can be recycled by the hypervisor. 	 */
 name|hn_nvs_ack_rxbuf
 argument_list|(
+name|rxr
+argument_list|,
 name|chan
 argument_list|,
 name|pkt
@@ -21221,15 +21258,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Net VSC on receive completion  *  * Send a receive completion packet to RNDIS device (ie NetVsp)  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|hn_nvs_ack_rxbuf
 parameter_list|(
+name|struct
+name|hn_rx_ring
+modifier|*
+name|rxr
+parameter_list|,
 name|struct
 name|vmbus_channel
 modifier|*
@@ -21245,13 +21283,8 @@ name|ack
 decl_stmt|;
 name|int
 name|retries
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|ret
-init|=
-literal|0
+decl_stmt|,
+name|error
 decl_stmt|;
 name|ack
 operator|.
@@ -21265,10 +21298,13 @@ name|nvs_status
 operator|=
 name|HN_NVS_STATUS_OK
 expr_stmt|;
-name|retry_send_cmplt
+name|retries
+operator|=
+literal|0
+expr_stmt|;
+name|again
 label|:
-comment|/* Send the completion */
-name|ret
+name|error
 operator|=
 name|vmbus_chan_send
 argument_list|(
@@ -21291,23 +21327,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|__predict_false
+argument_list|(
+name|error
+operator|==
+name|EAGAIN
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * NOTE: 		 * This should _not_ happen in real world, since the 		 * consumption of the TX bufring from the TX path is 		 * controlled. 		 */
+if|if
+condition|(
+name|rxr
+operator|->
+name|hn_ack_failed
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* success */
-comment|/* no-op */
-block|}
-elseif|else
-if|if
-condition|(
-name|ret
-operator|==
-name|EAGAIN
-condition|)
-block|{
-comment|/* no more room... wait a bit and attempt to retry 3 times */
+name|if_printf
+argument_list|(
+name|rxr
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"RXBUF ack retry\n"
+argument_list|)
+expr_stmt|;
+name|rxr
+operator|->
+name|hn_ack_failed
+operator|++
+expr_stmt|;
 name|retries
 operator|++
 expr_stmt|;
@@ -21315,7 +21365,7 @@ if|if
 condition|(
 name|retries
 operator|<
-literal|4
+literal|10
 condition|)
 block|{
 name|DELAY
@@ -21324,9 +21374,19 @@ literal|100
 argument_list|)
 expr_stmt|;
 goto|goto
-name|retry_send_cmplt
+name|again
 goto|;
 block|}
+comment|/* RXBUF leaks! */
+name|if_printf
+argument_list|(
+name|rxr
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"RXBUF ack failed\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
