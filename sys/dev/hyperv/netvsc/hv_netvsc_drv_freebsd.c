@@ -21674,6 +21674,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|vm_guest
+operator|!=
+name|VM_GUEST_HV
+condition|)
+return|return;
+if|if
+condition|(
 operator|!
 name|hn_share_tx_taskq
 condition|)
@@ -21770,7 +21777,7 @@ name|hn_txtq_create
 argument_list|,
 name|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|hn_tx_taskq_create
 argument_list|,
@@ -21811,7 +21818,7 @@ name|hn_txtq_destroy
 argument_list|,
 name|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|hn_tx_taskq_destroy
 argument_list|,
