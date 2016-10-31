@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pwupd.h"
 end_include
 
@@ -257,6 +263,11 @@ block|{
 name|gr_fini
 argument_list|()
 expr_stmt|;
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -265,6 +276,11 @@ literal|"gr_copy()"
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gr_mkdb

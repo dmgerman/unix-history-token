@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pw.h"
 end_include
 
@@ -219,6 +225,11 @@ block|{
 name|pw_fini
 argument_list|()
 expr_stmt|;
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -227,6 +238,11 @@ literal|"pw_copy()"
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chmod

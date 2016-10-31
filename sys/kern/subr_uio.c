@@ -2412,7 +2412,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|int32_t
+name|int64_t
 name|res
 decl_stmt|;
 name|res

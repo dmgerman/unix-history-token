@@ -415,7 +415,9 @@ name|unsigned
 name|int
 name|nifp_offset
 parameter_list|,
-name|nm_pt_guest_ptctl_t
+name|unsigned
+name|int
+name|memid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -464,6 +466,21 @@ end_endif
 begin_comment
 comment|/* WITH_PTNETMAP_GUEST */
 end_comment
+
+begin_function_decl
+name|int
+name|netmap_mem_pools_info_get
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

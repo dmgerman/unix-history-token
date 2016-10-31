@@ -1729,15 +1729,8 @@ operator|<<
 literal|63
 operator|)
 operator|)
-operator|!=
-operator|(
-operator|(
-name|uint64_t
-operator|)
-literal|1
-operator|<<
-literal|63
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|HWPSTATE_DEBUG
@@ -1767,6 +1760,7 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
+comment|/* Convert fid/did to frequency. */
 switch|switch
 condition|(
 name|family
@@ -1775,7 +1769,6 @@ block|{
 case|case
 literal|0x11
 case|:
-comment|/* fid/did to frequency */
 name|hwpstate_set
 index|[
 name|i
@@ -1783,6 +1776,7 @@ index|]
 operator|.
 name|freq
 operator|=
+operator|(
 literal|100
 operator|*
 operator|(
@@ -1790,18 +1784,23 @@ name|fid
 operator|+
 literal|0x08
 operator|)
-operator|/
-operator|(
-literal|1
-operator|<<
-name|did
 operator|)
+operator|>>
+name|did
 expr_stmt|;
 break|break;
 case|case
 literal|0x10
 case|:
-comment|/* fid/did to frequency */
+case|case
+literal|0x12
+case|:
+case|case
+literal|0x15
+case|:
+case|case
+literal|0x16
+case|:
 name|hwpstate_set
 index|[
 name|i
@@ -1809,6 +1808,7 @@ index|]
 operator|.
 name|freq
 operator|=
+operator|(
 literal|100
 operator|*
 operator|(
@@ -1816,12 +1816,9 @@ name|fid
 operator|+
 literal|0x10
 operator|)
-operator|/
-operator|(
-literal|1
-operator|<<
-name|did
 operator|)
+operator|>>
+name|did
 expr_stmt|;
 break|break;
 default|default:
@@ -1829,7 +1826,7 @@ name|HWPSTATE_DEBUG
 argument_list|(
 name|dev
 argument_list|,
-literal|"get_info_from_msr: AMD family %d CPU's are not implemented yet. sorry.\n"
+literal|"get_info_from_msr: AMD family 0x%02x CPU's are not implemented yet. sorry.\n"
 argument_list|,
 name|family
 argument_list|)
@@ -1839,7 +1836,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-break|break;
 block|}
 name|hwpstate_set
 index|[

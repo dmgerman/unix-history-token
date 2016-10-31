@@ -572,6 +572,11 @@ directive|define
 name|NETMAP_VNET_HDR_GET
 value|12
 comment|/* get the port virtio-net-hdr length */
+define|#
+directive|define
+name|NETMAP_POOLS_INFO_GET
+value|13
+comment|/* get memory allocator pools info */
 name|uint16_t
 name|nr_arg1
 decl_stmt|;
@@ -1042,85 +1047,6 @@ index|[
 name|NM_IFRDATA_LEN
 index|]
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * netmap kernel thread configuration  */
-end_comment
-
-begin_comment
-comment|/* bhyve/vmm.ko MSIX parameters for IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|ptn_vmm_ioctl_msix
-block|{
-name|uint64_t
-name|msg
-decl_stmt|;
-name|uint64_t
-name|addr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* IOCTL parameters */
-end_comment
-
-begin_struct
-struct|struct
-name|nm_kth_ioctl
-block|{
-name|uint64_t
-name|com
-decl_stmt|;
-comment|/* We use union to support more ioctl commands. */
-union|union
-block|{
-name|struct
-name|ptn_vmm_ioctl_msix
-name|msix
-decl_stmt|;
-block|}
-name|data
-union|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Configuration of a ptnetmap ring */
-end_comment
-
-begin_struct
-struct|struct
-name|ptnet_ring_cfg
-block|{
-name|uint64_t
-name|ioeventfd
-decl_stmt|;
-comment|/* eventfd in linux, tsleep() parameter in FreeBSD */
-name|uint64_t
-name|irqfd
-decl_stmt|;
-comment|/* eventfd in linux, ioctl fd in FreeBSD */
-name|struct
-name|nm_kth_ioctl
-name|ioctl
-decl_stmt|;
-comment|/* ioctl parameter to send irq (only used in bhyve/FreeBSD) */
-name|uint64_t
-name|reserved
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* reserved to support of more hypervisors */
 block|}
 struct|;
 end_struct

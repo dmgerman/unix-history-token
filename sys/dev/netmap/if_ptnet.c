@@ -1455,7 +1455,7 @@ block|{
 name|uint32_t
 name|ptfeatures
 init|=
-name|PTNETMAP_F_BASE
+literal|0
 decl_stmt|;
 name|unsigned
 name|int
@@ -1554,7 +1554,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Check if we are supported by the hypervisor. If not, 	 * bail out immediately. */
+comment|/* Negotiate features with the hypervisor. */
 if|if
 condition|(
 name|ptnet_vnet_hdr
@@ -1589,32 +1589,6 @@ name|PTNET_IO_PTFEAT
 argument_list|)
 expr_stmt|;
 comment|/* acked */
-if|if
-condition|(
-operator|!
-operator|(
-name|ptfeatures
-operator|&
-name|PTNETMAP_F_BASE
-operator|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Hypervisor does not support netmap "
-literal|"passthorugh\n"
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|err_path
-goto|;
-block|}
 name|sc
 operator|->
 name|ptfeatures
@@ -2484,7 +2458,14 @@ name|csb
 argument_list|,
 name|nifp_offset
 argument_list|,
-name|ptnet_nm_ptctl
+name|bus_read_4
+argument_list|(
+name|sc
+operator|->
+name|iomem
+argument_list|,
+name|PTNET_IO_HOSTMEMID
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Now a netmap adapter for this ifp has been allocated, and it 	 * can be accessed through NA(ifp). We also have to initialize the CSB 	 * pointer. */
@@ -5370,9 +5351,7 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
+comment|/* 	 * Write a command and read back error status, 	 * with zero meaning success. 	 */
 name|bus_write_4
 argument_list|(
 name|sc
@@ -5384,32 +5363,15 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
 name|bus_read_4
 argument_list|(
 name|sc
 operator|->
 name|iomem
 argument_list|,
-name|PTNET_IO_PTSTS
+name|PTNET_IO_PTCTL
 argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"PTCTL %u, ret %u\n"
-argument_list|,
-name|cmd
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_function
@@ -6027,7 +5989,7 @@ name|ptnet_nm_ptctl
 argument_list|(
 name|ifp
 argument_list|,
-name|PTNETMAP_PTCTL_REGIF
+name|PTNETMAP_PTCTL_CREATE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6252,7 +6214,7 @@ name|ptnet_nm_ptctl
 argument_list|(
 name|ifp
 argument_list|,
-name|PTNETMAP_PTCTL_UNREGIF
+name|PTNETMAP_PTCTL_DELETE
 argument_list|)
 expr_stmt|;
 block|}

@@ -163,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
@@ -4121,7 +4127,7 @@ operator|||
 operator|(
 name|tripol
 operator|&
-literal|0x0a
+name|FDT_INTR_LOW_MASK
 operator|&&
 name|cells
 index|[
@@ -4156,7 +4162,7 @@ name|trigp
 operator|=
 name|tripol
 operator|&
-literal|0x03
+name|FDT_INTR_EDGE_MASK
 condition|?
 name|INTR_TRIGGER_EDGE
 else|:

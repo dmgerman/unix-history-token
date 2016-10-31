@@ -15,42 +15,6 @@ directive|define
 name|NETMAP_VIRT_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|NETMAP_VIRT_CSB_SIZE
-value|4096
-end_define
-
-begin_comment
-comment|/* ptnetmap features */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_F_BASE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_F_FULL
-value|2
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_F_VNET_HDR
-value|4
-end_define
-
 begin_comment
 comment|/*  * ptnetmap_memdev: device used to expose memory into the guest VM  *  * These macros are used in the hypervisor frontend (QEMU, bhyve) and in the  * guest device driver.  */
 end_comment
@@ -70,18 +34,18 @@ begin_define
 define|#
 directive|define
 name|PTNETMAP_PCI_VENDOR_ID
-value|0x3333
+value|0x1b36
 end_define
 
 begin_comment
-comment|/* TODO change vendor_id */
+comment|/* QEMU virtual devices */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PTNETMAP_PCI_DEVICE_ID
-value|0x0001
+value|0x000c
 end_define
 
 begin_comment
@@ -92,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|PTNETMAP_PCI_NETIF_ID
-value|0x0002
+value|0x000d
 end_define
 
 begin_comment
@@ -124,45 +88,111 @@ begin_comment
 comment|/* Registers for the ptnetmap memdev */
 end_comment
 
-begin_comment
-comment|/* 32 bit r/o */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PTNETMAP_IO_PCI_MEMSIZE
+name|PTNET_MDEV_IO_MEMSIZE_LO
 value|0
 end_define
 
 begin_comment
-comment|/* size of the netmap memory shared 						 * between guest and host */
-end_comment
-
-begin_comment
-comment|/* 16 bit r/o */
+comment|/* netmap memory size (low) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTNETMAP_IO_PCI_HOSTID
+name|PTNET_MDEV_IO_MEMSIZE_HI
 value|4
 end_define
 
 begin_comment
-comment|/* memory allocator ID in netmap host */
+comment|/* netmap_memory_size (high) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTNETMAP_IO_SIZE
-value|6
+name|PTNET_MDEV_IO_MEMID
+value|8
 end_define
 
 begin_comment
-comment|/*  * ptnetmap configuration  *  * The hypervisor (QEMU or bhyve) sends this struct to the host netmap  * module through an ioctl() command when it wants to start the ptnetmap  * kthreads.  */
+comment|/* memory allocator ID in the host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_IF_POOL_OFS
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_IF_POOL_OBJNUM
+value|68
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_IF_POOL_OBJSZ
+value|72
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_RING_POOL_OFS
+value|76
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_RING_POOL_OBJNUM
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_RING_POOL_OBJSZ
+value|84
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_BUF_POOL_OFS
+value|88
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_BUF_POOL_OBJNUM
+value|92
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_BUF_POOL_OBJSZ
+value|96
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNET_MDEV_IO_END
+value|100
+end_define
+
+begin_comment
+comment|/*  * ptnetmap configuration  *  * The ptnet kthreads (running in host kernel-space) need to be configured  * in order to know how to intercept guest kicks (I/O register writes) and  * how to inject MSI-X interrupts to the guest. The configuration may vary  * depending on the hypervisor. Currently, we support QEMU/KVM on Linux and  * and bhyve on FreeBSD.  * The configuration is passed by the hypervisor to the host netmap module  * by means of an ioctl() with nr_cmd=NETMAP_PT_HOST_CREATE, and it is  * specified by the ptnetmap_cfg struct. This struct contains an header  * with general informations and an array of entries whose size depends  * on the hypervisor. The NETMAP_PT_HOST_CREATE command is issued every  * time the kthreads are started.  */
 end_comment
 
 begin_struct
@@ -171,64 +201,160 @@ name|ptnetmap_cfg
 block|{
 define|#
 directive|define
-name|PTNETMAP_CFG_FEAT_CSB
-value|0x0001
+name|PTNETMAP_CFGTYPE_QEMU
+value|0x1
 define|#
 directive|define
-name|PTNETMAP_CFG_FEAT_EVENTFD
-value|0x0002
-define|#
-directive|define
-name|PTNETMAP_CFG_FEAT_IOCTL
-value|0x0004
-name|uint32_t
-name|features
+name|PTNETMAP_CFGTYPE_BHYVE
+value|0x2
+name|uint16_t
+name|cfgtype
 decl_stmt|;
+comment|/* how to interpret the cfg entries */
+name|uint16_t
+name|entry_size
+decl_stmt|;
+comment|/* size of a config entry */
+name|uint32_t
+name|num_rings
+decl_stmt|;
+comment|/* number of config entries */
 name|void
 modifier|*
 name|ptrings
 decl_stmt|;
 comment|/* ptrings inside CSB */
-name|uint32_t
-name|num_rings
-decl_stmt|;
-comment|/* number of entries */
-name|struct
-name|ptnet_ring_cfg
-name|entries
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* per-ptring configuration */
+comment|/* Configuration entries are allocated right after the struct. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Functions used to write ptnetmap_cfg from/to the nmreq.  * The user-space application writes the pointer of ptnetmap_cfg  * (user-space buffer) starting from nr_arg1 field, so that the kernel  * can read it with copyin (copy_from_user).  */
+comment|/* Configuration of a ptnetmap ring for QEMU. */
+end_comment
+
+begin_struct
+struct|struct
+name|ptnetmap_cfgentry_qemu
+block|{
+name|uint32_t
+name|ioeventfd
+decl_stmt|;
+comment|/* to intercept guest register access */
+name|uint32_t
+name|irqfd
+decl_stmt|;
+comment|/* to inject guest interrupts */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Configuration of a ptnetmap ring for bhyve. */
+end_comment
+
+begin_struct
+struct|struct
+name|ptnetmap_cfgentry_bhyve
+block|{
+name|uint64_t
+name|wchan
+decl_stmt|;
+comment|/* tsleep() parameter, to wake up kthread */
+name|uint32_t
+name|ioctl_fd
+decl_stmt|;
+comment|/* ioctl fd */
+comment|/* ioctl parameters to send irq */
+name|uint32_t
+name|ioctl_cmd
+decl_stmt|;
+comment|/* vmm.ko MSIX parameters for IOCTL */
+struct|struct
+block|{
+name|uint64_t
+name|msg_data
+decl_stmt|;
+name|uint64_t
+name|addr
+decl_stmt|;
+block|}
+name|ioctl_data
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure filled-in by the kernel when asked for allocator info  * through NETMAP_POOLS_INFO_GET. Used by hypervisors supporting  * ptnetmap.  */
+end_comment
+
+begin_struct
+struct|struct
+name|netmap_pools_info
+block|{
+name|uint64_t
+name|memsize
+decl_stmt|;
+comment|/* same as nmr->nr_memsize */
+name|uint32_t
+name|memid
+decl_stmt|;
+comment|/* same as nmr->nr_arg2 */
+name|uint32_t
+name|if_pool_offset
+decl_stmt|;
+name|uint32_t
+name|if_pool_objtotal
+decl_stmt|;
+name|uint32_t
+name|if_pool_objsize
+decl_stmt|;
+name|uint32_t
+name|ring_pool_offset
+decl_stmt|;
+name|uint32_t
+name|ring_pool_objtotal
+decl_stmt|;
+name|uint32_t
+name|ring_pool_objsize
+decl_stmt|;
+name|uint32_t
+name|buf_pool_offset
+decl_stmt|;
+name|uint32_t
+name|buf_pool_objtotal
+decl_stmt|;
+name|uint32_t
+name|buf_pool_objsize
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Pass a pointer to a userspace buffer to be passed to kernelspace for write  * or read. Used by NETMAP_PT_HOST_CREATE and NETMAP_POOLS_INFO_GET.  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|void
-name|ptnetmap_write_cfg
+name|nmreq_pointer_put
 parameter_list|(
 name|struct
 name|nmreq
 modifier|*
 name|nmr
 parameter_list|,
-name|struct
-name|ptnetmap_cfg
+name|void
 modifier|*
-name|cfg
+name|userptr
 parameter_list|)
 block|{
 name|uintptr_t
 modifier|*
-name|nmr_ptncfg
+name|pp
 init|=
 operator|(
 name|uintptr_t
@@ -240,102 +366,25 @@ operator|->
 name|nr_arg1
 decl_stmt|;
 operator|*
-name|nmr_ptncfg
+name|pp
 operator|=
 operator|(
 name|uintptr_t
 operator|)
-name|cfg
+name|userptr
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* ptnetmap control commands */
+comment|/* ptnetmap features */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTNETMAP_PTCTL_CONFIG
+name|PTNETMAP_F_VNET_HDR
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_FINALIZE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_IFNEW
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_IFDELETE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_RINGSCREATE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_RINGSDELETE
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_DEREF
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_TXSYNC
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_RXSYNC
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_REGIF
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_UNREGIF
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTNETMAP_PTCTL_HOSTMEMID
-value|12
 end_define
 
 begin_comment
@@ -359,77 +408,77 @@ end_define
 begin_define
 define|#
 directive|define
-name|PTNET_IO_PTSTS
+name|PTNET_IO_MAC_LO
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_MAC_LO
+name|PTNET_IO_MAC_HI
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_MAC_HI
+name|PTNET_IO_CSBBAH
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_CSBBAH
+name|PTNET_IO_CSBBAL
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_CSBBAL
+name|PTNET_IO_NIFP_OFS
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_NIFP_OFS
+name|PTNET_IO_NUM_TX_RINGS
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_NUM_TX_RINGS
+name|PTNET_IO_NUM_RX_RINGS
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_NUM_RX_RINGS
+name|PTNET_IO_NUM_TX_SLOTS
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_NUM_TX_SLOTS
+name|PTNET_IO_NUM_RX_SLOTS
 value|40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_NUM_RX_SLOTS
+name|PTNET_IO_VNET_HDR_LEN
 value|44
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTNET_IO_VNET_HDR_LEN
+name|PTNET_IO_HOSTMEMID
 value|48
 end_define
 
@@ -452,6 +501,24 @@ define|#
 directive|define
 name|PTNET_IO_MASK
 value|0xff
+end_define
+
+begin_comment
+comment|/* ptnetmap control commands (values for PTCTL register) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTNETMAP_PTCTL_CREATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNETMAP_PTCTL_DELETE
+value|2
 end_define
 
 begin_comment
@@ -519,6 +586,10 @@ begin_struct
 struct|struct
 name|ptnet_csb
 block|{
+define|#
+directive|define
+name|NETMAP_VIRT_CSB_SIZE
+value|4096
 name|struct
 name|ptnet_ring
 name|rings
@@ -535,79 +606,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WITH_PTNETMAP_HOST
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|WITH_PTNETMAP_GUEST
-argument_list|)
-end_if
-
-begin_comment
-comment|/* return l_elem - r_elem with wraparound */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|uint32_t
-name|ptn_sub
-parameter_list|(
-name|uint32_t
-name|l_elem
-parameter_list|,
-name|uint32_t
-name|r_elem
-parameter_list|,
-name|uint32_t
-name|num_slots
-parameter_list|)
-block|{
-name|int64_t
-name|res
-decl_stmt|;
-name|res
-operator|=
-call|(
-name|int64_t
-call|)
-argument_list|(
-name|l_elem
-argument_list|)
-operator|-
-name|r_elem
-expr_stmt|;
-return|return
-operator|(
-name|res
-operator|<
-literal|0
-operator|)
-condition|?
-name|res
-operator|+
-name|num_slots
-else|:
-name|res
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WITH_PTNETMAP_HOST || WITH_PTNETMAP_GUEST */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -639,6 +637,9 @@ parameter_list|,
 name|void
 modifier|*
 modifier|*
+parameter_list|,
+name|uint64_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -650,6 +651,20 @@ parameter_list|(
 name|struct
 name|ptnetmap_memdev
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|nm_os_pt_memdev_ioread
+parameter_list|(
+name|struct
+name|ptnetmap_memdev
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

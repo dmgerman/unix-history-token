@@ -3022,6 +3022,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|ieee80211_get_rx_params_ptr
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|ieee80211_toa_params

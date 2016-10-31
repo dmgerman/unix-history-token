@@ -39,6 +39,12 @@ directive|include
 file|"smbus_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"iicbus_if.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -78,7 +84,7 @@ name|intr_config_hook
 name|enum_hook
 decl_stmt|;
 name|device_t
-name|smb
+name|iicbus
 decl_stmt|;
 name|struct
 name|resource
@@ -285,6 +291,20 @@ begin_decl_stmt
 specifier|extern
 name|smbus_trans_t
 name|ig4iic_smb_trans
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|iicbus_transfer_t
+name|ig4iic_transfer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|iicbus_reset_t
+name|ig4iic_reset
 decl_stmt|;
 end_decl_stmt
 

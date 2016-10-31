@@ -71,6 +71,13 @@ directive|include
 file|"gpiobus_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GPIO_ACTIVE_LOW
+value|1
+end_define
+
 begin_function_decl
 specifier|static
 name|struct

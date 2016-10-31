@@ -1210,15 +1210,6 @@ end_if
 
 begin_function_decl
 name|void
-name|armv7_setttb
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|armv7_idcache_wbinv_all
 parameter_list|(
 name|void
@@ -1247,15 +1238,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|armv7_drain_writebuf
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|armadaxp_idcache_wbinv_all
 parameter_list|(
 name|void
 parameter_list|)
@@ -1322,15 +1304,6 @@ name|void
 name|arm11_drain_writebuf
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|arm11x6_setttb
-parameter_list|(
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

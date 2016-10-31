@@ -865,6 +865,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* Only release CPUs if they exist */
+if|if
+condition|(
+name|mp_ncpus
+operator|==
+literal|1
+condition|)
+return|return;
 name|intr_pic_ipi_setup
 argument_list|(
 name|IPI_AST
@@ -1922,10 +1930,12 @@ operator|!=
 name|PSCI_RETVAL_SUCCESS
 condition|)
 block|{
-comment|/* Panic here if INVARIANTS are enabled */
+comment|/* 		 * Panic here if INVARIANTS are enabled and PSCI failed to 		 * start the requested CPU. If psci_cpu_on returns PSCI_MISSING 		 * to indicate we are unable to use it to start the given CPU. 		 */
 name|KASSERT
 argument_list|(
-literal|0
+name|err
+operator|==
+name|PSCI_MISSING
 argument_list|,
 operator|(
 literal|"Failed to start CPU %u (%lx)\n"

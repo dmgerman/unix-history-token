@@ -3571,6 +3571,8 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_USES_BCACHE
+operator||
+name|MNTK_NO_IOPF
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -3636,12 +3638,6 @@ operator|->
 name|pm_fatlock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmp
-operator|->
-name|pm_inusemap
-condition|)
 name|free
 argument_list|(
 name|pmp

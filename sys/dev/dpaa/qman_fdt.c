@@ -282,7 +282,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|bm_portals_methods
+name|qm_portals_methods
 index|[]
 init|=
 block|{
@@ -320,12 +320,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|bm_portals_driver
+name|qm_portals_driver
 init|=
 block|{
 literal|"qman-portals"
 block|,
-name|bm_portals_methods
+name|qm_portals_methods
 block|,
 sizeof|sizeof
 argument_list|(
@@ -339,7 +339,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|bm_portals_devclass
+name|qm_portals_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -350,9 +350,9 @@ name|qman_portals
 argument_list|,
 name|ofwbus
 argument_list|,
-name|bm_portals_driver
+name|qm_portals_driver
 argument_list|,
-name|bm_portals_devclass
+name|qm_portals_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -514,6 +514,8 @@ decl_stmt|;
 name|struct
 name|ofw_bus_devinfo
 name|ofw_di
+init|=
+block|{}
 decl_stmt|;
 name|cpus
 operator|=

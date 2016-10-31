@@ -394,6 +394,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Get a reference to an event channel port  *  * \param port	    Event channel port to which we get a reference.  * \param handlep   Pointer to an opaque handle used to manage this  *                  registration.  *  * \returns  0 on success, otherwise an errno.  */
+end_comment
+
+begin_function_decl
+name|int
+name|xen_intr_get_evtchn_from_port
+parameter_list|(
+name|evtchn_port_t
+name|port
+parameter_list|,
+name|xen_intr_handle_t
+modifier|*
+name|handlep
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

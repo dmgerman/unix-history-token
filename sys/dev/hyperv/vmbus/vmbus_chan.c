@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_include
@@ -464,6 +476,34 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vmbus_chan_printf
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * Vmbus channel message processing.  */
@@ -1484,11 +1524,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
 name|chan
-operator|->
-name|ch_dev
 argument_list|,
 literal|"bufring allocation failed\n"
 argument_list|)
@@ -1666,11 +1704,9 @@ operator|>
 name|VMBUS_CHANMSG_CHOPEN_UDATA_SIZE
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"invalid udata len %d for chan%u\n"
 argument_list|,
@@ -1910,11 +1946,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"failed to connect bufring GPADL to chan%u\n"
 argument_list|,
@@ -1954,11 +1988,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"can not get msg hypercall for chopen(chan%u)\n"
 argument_list|,
@@ -2061,11 +2093,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"chopen(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
@@ -2133,11 +2163,9 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"chan%u opened\n"
 argument_list|,
@@ -2151,11 +2179,9 @@ return|return
 literal|0
 return|;
 block|}
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"failed to open chan%u\n"
 argument_list|,
@@ -2352,11 +2378,9 @@ operator|>
 name|UINT16_MAX
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"GPA too large, %d pages\n"
 argument_list|,
@@ -2431,13 +2455,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"can not get msg hypercall for gpadl->chan%u\n"
+literal|"can not get msg hypercall for gpadl_conn(chan%u)\n"
 argument_list|,
 name|chan
 operator|->
@@ -2544,13 +2566,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"gpadl->chan%u msg hypercall exec failed: %d\n"
+literal|"gpadl_conn(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
 name|chan
 operator|->
@@ -2723,14 +2743,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"gpadl->chan%u failed: "
-literal|"status %u\n"
+literal|"gpadl_conn(chan%u) failed: %u\n"
 argument_list|,
 name|chan
 operator|->
@@ -2750,14 +2767,11 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"gpadl->chan%u "
-literal|"succeeded\n"
+literal|"gpadl_conn(chan%u) succeeded\n"
 argument_list|,
 name|chan
 operator|->
@@ -2831,13 +2845,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"can not get msg hypercall for gpa x->chan%u\n"
+literal|"can not get msg hypercall for gpadl_disconn(chan%u)\n"
 argument_list|,
 name|chan
 operator|->
@@ -2891,13 +2903,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"gpa x->chan%u msg hypercall exec failed: %d\n"
+literal|"gpadl_disconn(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
 name|chan
 operator|->
@@ -3159,11 +3169,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"can not get msg hypercall for chclose(chan%u)\n"
 argument_list|,
@@ -3216,11 +3224,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"chclose(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
@@ -3239,11 +3245,9 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"close chan%u\n"
 argument_list|,
@@ -4303,11 +4307,9 @@ name|VMBUS_CHANPKT_HLEN_MIN
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
 name|chan
-operator|->
-name|ch_dev
 argument_list|,
 literal|"invalid hlen %u\n"
 argument_list|,
@@ -4337,11 +4339,9 @@ name|cph_tlen
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
 name|chan
-operator|->
-name|ch_dev
 argument_list|,
 literal|"invalid hlen %u and tlen %u\n"
 argument_list|,
@@ -4515,11 +4515,9 @@ name|VMBUS_CHANPKT_HLEN_MIN
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
 name|chan
-operator|->
-name|ch_dev
 argument_list|,
 literal|"invalid hlen %u\n"
 argument_list|,
@@ -4549,11 +4547,9 @@ name|cph_tlen
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
 name|chan
-operator|->
-name|ch_dev
 argument_list|,
 literal|"invalid hlen %u and tlen %u\n"
 argument_list|,
@@ -5134,13 +5130,11 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"channel%u update cpu%d flag_cnt to %d\n"
+literal|"chan%u update cpu%d flag_cnt to %d\n"
 argument_list|,
 name|chan
 operator|->
@@ -5485,29 +5479,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
-argument_list|,
-literal|"chan%u subidx%u offer\n"
-argument_list|,
-name|newchan
-operator|->
-name|ch_id
-argument_list|,
-name|newchan
-operator|->
-name|ch_subidx
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5623,8 +5594,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"duplicated primary "
-literal|"chan%u\n"
+literal|"duplicated primary chan%u\n"
 argument_list|,
 name|newchan
 operator|->
@@ -5660,8 +5630,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"no primary chan for "
-literal|"chan%u\n"
+literal|"no primary chan for chan%u\n"
 argument_list|,
 name|newchan
 operator|->
@@ -5776,6 +5745,33 @@ operator|->
 name|vmbus_chan_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|vmbus_chan_printf
+argument_list|(
+name|newchan
+argument_list|,
+literal|"chan%u subidx%u offer\n"
+argument_list|,
+name|newchan
+operator|->
+name|ch_id
+argument_list|,
+name|newchan
+operator|->
+name|ch_subidx
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Select default cpu for this channel. */
+name|vmbus_chan_cpu_default
+argument_list|(
+name|newchan
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5863,9 +5859,11 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|vmbus_chan_printf
 argument_list|(
-literal|"vmbus_chan%u: assigned to cpu%u [vcpu%u]\n"
+name|chan
+argument_list|,
+literal|"chan%u assigned to cpu%u [vcpu%u]\n"
 argument_list|,
 name|chan
 operator|->
@@ -6266,12 +6264,6 @@ argument_list|,
 name|chan
 argument_list|)
 expr_stmt|;
-comment|/* Select default cpu for this channel. */
-name|vmbus_chan_cpu_default
-argument_list|(
-name|chan
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vmbus_chan_add
@@ -6385,25 +6377,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
-argument_list|,
-literal|"chan%u rescinded\n"
-argument_list|,
-name|note
-operator|->
-name|chm_chanid
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Find and remove the target channel from the channel list. 	 */
 name|mtx_lock
 argument_list|(
@@ -6512,6 +6485,21 @@ name|vmbus_prichan_lock
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|vmbus_chan_printf
+argument_list|(
+name|chan
+argument_list|,
+literal|"chan%u rescinded\n"
+argument_list|,
+name|note
+operator|->
+name|chm_chanid
+argument_list|)
+expr_stmt|;
 comment|/* Detach the target channel. */
 name|taskqueue_enqueue
 argument_list|(
@@ -6581,14 +6569,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"can not get msg hypercall for "
-literal|"chfree(chan%u)\n"
+literal|"can not get msg hypercall for chfree(chan%u)\n"
 argument_list|,
 name|chan
 operator|->
@@ -6643,13 +6628,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
-literal|"chfree(chan%u) failed: %d"
+literal|"chfree(chan%u) msg hypercall exec failed: %d\n"
 argument_list|,
 name|chan
 operator|->
@@ -6665,12 +6648,9 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
-name|device_printf
+name|vmbus_chan_printf
 argument_list|(
-name|sc
-operator|->
-name|vmbus_dev
+name|chan
 argument_list|,
 literal|"chan%u freed\n"
 argument_list|,
@@ -6679,7 +6659,6 @@ operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -7733,6 +7712,101 @@ name|chan
 operator|->
 name|ch_rxbr
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|vmbus_chan_printf
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+if|if
+condition|(
+name|chan
+operator|->
+name|ch_dev
+operator|==
+name|NULL
+operator|||
+operator|!
+name|device_is_alive
+argument_list|(
+name|chan
+operator|->
+name|ch_dev
+argument_list|)
+condition|)
+name|dev
+operator|=
+name|chan
+operator|->
+name|ch_vmbus
+operator|->
+name|vmbus_dev
+expr_stmt|;
+else|else
+name|dev
+operator|=
+name|chan
+operator|->
+name|ch_dev
+expr_stmt|;
+name|retval
+operator|=
+name|device_print_prettyname
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}

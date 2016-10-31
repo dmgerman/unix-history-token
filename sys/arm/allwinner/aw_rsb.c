@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2016 Jared McNeill<jmcneill@invisible.ca>  * All ri
 end_comment
 
 begin_comment
-comment|/*  * Allwinner RSB (Reduced Serial Bus)  */
+comment|/*  * Allwinner RSB (Reduced Serial Bus) and P2WI (Push-Pull Two Wire Interface)  */
 end_comment
 
 begin_include
@@ -367,6 +367,20 @@ name|RSB_ADDR_PERIPH_IC
 value|0xe89
 end_define
 
+begin_define
+define|#
+directive|define
+name|A31_P2WI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|A23_RSB
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -376,9 +390,15 @@ index|[]
 init|=
 block|{
 block|{
+literal|"allwinner,sun6i-a31-p2wi"
+block|,
+name|A31_P2WI
+block|}
+block|,
+block|{
 literal|"allwinner,sun8i-a23-rsb"
 block|,
-literal|1
+name|A23_RSB
 block|}
 block|,
 block|{
@@ -517,6 +537,9 @@ name|status
 decl_stmt|;
 name|uint16_t
 name|cur_addr
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|struct
 name|iic_msg
@@ -1212,7 +1235,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * RSB is not really an I2C or SMBus controller, so there are some 	 * restrictions imposed by the driver. 	 * 	 * Transfers must contain exactly two messages. The first is always 	 * a write, containing a single data byte offset. Data will either 	 * be read from or written to the corresponding data byte in the 	 * second message. The slave address in both messages must be the 	 * same. 	 */
+comment|/* 	 * P2WI and RSB are not really I2C or SMBus controllers, so there are 	 * some restrictions imposed by the driver. 	 * 	 * Transfers must contain exactly two messages. The first is always 	 * a write, containing a single data byte offset. Data will either 	 * be read from or written to the corresponding data byte in the 	 * second message. The slave address in both messages must be the 	 * same. 	 */
 if|if
 condition|(
 name|nmsgs
@@ -1277,7 +1300,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* The controller can read or write 1, 2, or 4 bytes at a time. */
+comment|/* The RSB controller can read or write 1, 2, or 4 bytes at a time. */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|==
+name|A23_RSB
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1380,6 +1412,7 @@ operator|)
 return|;
 block|}
 block|}
+block|}
 name|RSB_LOCK
 argument_list|(
 name|sc
@@ -1420,6 +1453,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Select current run-time address if necessary */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|==
+name|A23_RSB
+condition|)
+block|{
 name|device_addr
 operator|=
 name|msgs
@@ -1470,6 +1512,7 @@ name|status
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* Clear interrupt status */
 name|RSB_WRITE
@@ -1577,7 +1620,15 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set command type */
+comment|/* Set command type for RSB */
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|==
+name|A23_RSB
+condition|)
 name|RSB_WRITE
 argument_list|(
 name|sc
@@ -1752,7 +1803,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-if|if
+switch|switch
 condition|(
 name|ofw_bus_search_compatible
 argument_list|(
@@ -1762,14 +1813,11 @@ name|compat_data
 argument_list|)
 operator|->
 name|ocd_data
-operator|==
-literal|0
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
+case|case
+name|A23_RSB
+case|:
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1777,6 +1825,25 @@ argument_list|,
 literal|"Allwinner RSB"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|A31_P2WI
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Allwinner P2WI"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
@@ -1825,6 +1892,19 @@ literal|"rsb"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|type
+operator|=
+name|ofw_bus_search_compatible
+argument_list|(
+name|dev
+argument_list|,
+name|compat_data
+argument_list|)
+operator|->
+name|ocd_data
 expr_stmt|;
 if|if
 condition|(

@@ -184,6 +184,17 @@ value|-8
 end_define
 
 begin_comment
+comment|/*  * Used to signal PSCI is not available, e.g. to start a CPU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSCI_MISSING
+value|1
+end_define
+
+begin_comment
 comment|/*  * PSCI function codes (as per PSCI v0.2).  */
 end_comment
 

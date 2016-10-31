@@ -1081,7 +1081,12 @@ literal|0
 init|;
 name|reg
 operator|<
-literal|31
+name|nitems
+argument_list|(
+name|frame
+operator|->
+name|tf_x
+argument_list|)
 condition|;
 name|reg
 operator|++

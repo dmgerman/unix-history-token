@@ -1692,6 +1692,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * XXX DO NOT USE this routine for obtaining the current completed descriptor.  *  * The double_4 read on ioat<3.3 appears to result in torn reads.  And v3.2  * hardware is still commonplace (Broadwell Xeon has it).  Instead, use the  * device-pushed *comp_update.  *  * It is safe to use ioat_get_chansts() for the low status bits.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline

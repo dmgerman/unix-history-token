@@ -2393,8 +2393,6 @@ name|OID_AUTO
 argument_list|,
 name|allow_llz_overlap
 argument_list|,
-name|CTLFLAG_VNET
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET

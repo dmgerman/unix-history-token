@@ -745,6 +745,27 @@ name|tp
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|un_pager
+operator|.
+name|devp
+operator|.
+name|ops
+operator|==
+name|ops
+argument_list|,
+operator|(
+literal|"Inconsistent devops %p %p"
+operator|,
+name|object
+operator|,
+name|ops
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

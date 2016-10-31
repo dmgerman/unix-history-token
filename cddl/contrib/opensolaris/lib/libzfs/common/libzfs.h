@@ -692,6 +692,22 @@ name|libzfs_handle_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
+name|int
+name|zpool_nextboot
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*  * Iterate over all active pools in the system.  */
 typedef|typedef
 name|int

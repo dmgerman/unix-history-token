@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -120,6 +126,36 @@ include|#
 directive|include
 file|"printflocal.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NL_ARGMAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_POSARG
+value|NL_ARGMAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAX_POSARG
+value|65536
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Type ids for argument type table.  */
@@ -205,15 +241,15 @@ index|[
 name|STATIC_ARG_TBL_SIZE
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|tablesize
 decl_stmt|;
 comment|/* current size of type table */
-name|int
+name|u_int
 name|tablemax
 decl_stmt|;
 comment|/* largest used index in table */
-name|int
+name|u_int
 name|nextarg
 decl_stmt|;
 comment|/* 1-based argument index */
@@ -268,7 +304,7 @@ modifier|*
 name|types
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|n
 decl_stmt|;
 name|types
@@ -789,7 +825,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|u_int
 name|n2
 decl_stmt|;
 name|n2
@@ -834,7 +870,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|int
+name|u_int
 name|hold
 init|=
 name|types
@@ -922,7 +958,7 @@ name|wchar_t
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|u_int
 name|n2
 decl_stmt|;
 name|n2
@@ -967,7 +1003,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-name|int
+name|u_int
 name|hold
 init|=
 name|types
@@ -1066,7 +1102,7 @@ name|int
 name|ch
 decl_stmt|;
 comment|/* character from fmt */
-name|int
+name|u_int
 name|n
 decl_stmt|;
 comment|/* handy integer (short term usage) */
@@ -1308,6 +1344,23 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* Detect overflow */
+if|if
+condition|(
+name|n
+operator|>
+name|MAX_POSARG
+condition|)
+block|{
+name|error
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 name|ch
 operator|=
 operator|*
@@ -1919,7 +1972,7 @@ name|wchar_t
 name|ch
 decl_stmt|;
 comment|/* character from fmt */
-name|int
+name|u_int
 name|n
 decl_stmt|;
 comment|/* handy integer (short term usage) */
@@ -2161,6 +2214,23 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* Detect overflow */
+if|if
+condition|(
+name|n
+operator|>
+name|MAX_POSARG
+condition|)
+block|{
+name|error
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 name|ch
 operator|=
 operator|*
@@ -2778,7 +2848,7 @@ name|typeid
 modifier|*
 name|newtable
 decl_stmt|;
-name|int
+name|u_int
 name|n
 decl_stmt|,
 name|newsize
@@ -2787,6 +2857,21 @@ name|oldsize
 operator|*
 literal|2
 decl_stmt|;
+comment|/* Detect overflow */
+if|if
+condition|(
+name|types
+operator|->
+name|nextarg
+operator|>
+name|NL_ARGMAX
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|newsize
@@ -2947,7 +3032,7 @@ modifier|*
 name|argtable
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|n
 decl_stmt|;
 if|if

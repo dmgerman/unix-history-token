@@ -7187,7 +7187,7 @@ break|break;
 case|case
 name|NIOCREGIF
 case|:
-comment|/* possibly attach/detach NIC and VALE switch */
+comment|/* 		 * If nmr->nr_cmd is not zero, this NIOCREGIF is not really 		 * a regif operation, but a different one, specified by the 		 * value of nmr->nr_cmd. 		 */
 name|i
 operator|=
 name|nmr
@@ -7225,6 +7225,7 @@ operator|==
 name|NETMAP_BDG_POLLING_OFF
 condition|)
 block|{
+comment|/* possibly attach/detach NIC and VALE switch */
 name|error
 operator|=
 name|netmap_bdg_ctl
@@ -7248,6 +7249,7 @@ operator|==
 name|NETMAP_PT_HOST_DELETE
 condition|)
 block|{
+comment|/* forward the command to the ptnetmap subsystem */
 name|error
 operator|=
 name|ptnetmap_ctl
@@ -7269,6 +7271,7 @@ operator|==
 name|NETMAP_VNET_HDR_GET
 condition|)
 block|{
+comment|/* get vnet-header length for this netmap port */
 name|struct
 name|ifnet
 modifier|*
@@ -7318,6 +7321,28 @@ argument_list|)
 expr_stmt|;
 name|NMG_UNLOCK
 argument_list|()
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+name|NETMAP_POOLS_INFO_GET
+condition|)
+block|{
+comment|/* get information from the memory allocator */
+name|error
+operator|=
+name|netmap_mem_pools_info_get
+argument_list|(
+name|nmr
+argument_list|,
+name|priv
+operator|->
+name|np_na
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -10082,8 +10107,9 @@ name|unsigned
 name|int
 name|nifp_offset
 parameter_list|,
-name|nm_pt_guest_ptctl_t
-name|ptctl
+name|unsigned
+name|int
+name|memid
 parameter_list|)
 block|{
 name|struct
@@ -10118,7 +10144,7 @@ name|ifp
 argument_list|,
 name|nifp_offset
 argument_list|,
-name|ptctl
+name|memid
 argument_list|)
 expr_stmt|;
 if|if

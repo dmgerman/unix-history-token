@@ -175,7 +175,6 @@ name|FDT_PLATFORM_CTASSERT
 parameter_list|(
 name|delay
 parameter_list|)
-value|CTASSERT(delay == 0)
 end_define
 
 begin_endif

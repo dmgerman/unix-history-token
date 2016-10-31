@@ -711,6 +711,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_IS_MGMT
+parameter_list|(
+name|wh
+parameter_list|)
+define|\
+value|(!! (((wh)->i_fc[0]& IEEE80211_FC0_TYPE_MASK)		\ 	    == IEEE80211_FC0_TYPE_MGT))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_QOSDATA
 define|\
 value|(IEEE80211_FC0_TYPE_DATA|IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_VERSION_0)

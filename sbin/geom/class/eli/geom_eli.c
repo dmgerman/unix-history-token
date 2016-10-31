@@ -3555,6 +3555,10 @@ expr|struct
 name|g_eli_metadata
 argument_list|)
 index|]
+name|__aligned
+argument_list|(
+literal|4
+argument_list|)
 decl_stmt|;
 name|unsigned
 name|char

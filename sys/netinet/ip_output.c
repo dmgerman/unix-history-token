@@ -1698,6 +1698,12 @@ literal|1
 expr_stmt|;
 name|isbroadcast
 operator|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+condition|?
 name|in_ifaddr_broadcast
 argument_list|(
 name|dst
@@ -1706,6 +1712,8 @@ name|sin_addr
 argument_list|,
 name|ia
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -1948,7 +1956,15 @@ operator|&
 name|RTF_BROADCAST
 operator|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+condition|)
 name|isbroadcast
 operator|=
 name|in_ifaddr_broadcast
@@ -1959,6 +1975,11 @@ name|sin_addr
 argument_list|,
 name|ia
 argument_list|)
+expr_stmt|;
+else|else
+name|isbroadcast
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Calculate MTU.  If we have a route that is up, use that, 	 * otherwise use the interface's MTU. 	 */

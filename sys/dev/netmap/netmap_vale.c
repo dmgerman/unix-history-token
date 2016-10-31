@@ -3760,6 +3760,10 @@ name|nm_os_kthread_create
 argument_list|(
 operator|&
 name|kcfg
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

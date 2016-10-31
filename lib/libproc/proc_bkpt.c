@@ -284,6 +284,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Use 4-bytes holder for breakpoint instruction on all the platforms.  * Works for x86 as well until it is endian-little platform.  * (We are coping one byte only on x86 from this 4-bytes piece of  * memory).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|instr_t
+typedef|;
+end_typedef
+
 begin_function
 specifier|static
 name|int
@@ -424,8 +435,6 @@ name|piod
 decl_stmt|;
 name|unsigned
 name|long
-name|paddr
-decl_stmt|,
 name|caddr
 decl_stmt|;
 name|int
@@ -434,6 +443,9 @@ init|=
 literal|0
 decl_stmt|,
 name|stopped
+decl_stmt|;
+name|instr_t
+name|instr
 decl_stmt|;
 operator|*
 name|saved
@@ -517,7 +529,7 @@ name|caddr
 operator|=
 name|address
 expr_stmt|;
-name|paddr
+name|instr
 operator|=
 literal|0
 expr_stmt|;
@@ -542,7 +554,7 @@ operator|.
 name|piod_addr
 operator|=
 operator|&
-name|paddr
+name|instr
 expr_stmt|;
 name|piod
 operator|.
@@ -593,14 +605,14 @@ block|}
 operator|*
 name|saved
 operator|=
-name|paddr
+name|instr
 expr_stmt|;
 comment|/* 	 * Write a breakpoint instruction to that address. 	 */
 name|caddr
 operator|=
 name|address
 expr_stmt|;
-name|paddr
+name|instr
 operator|=
 name|BREAKPOINT_INSTR
 expr_stmt|;
@@ -625,7 +637,7 @@ operator|.
 name|piod_addr
 operator|=
 operator|&
-name|paddr
+name|instr
 expr_stmt|;
 name|piod
 operator|.
@@ -716,8 +728,6 @@ name|piod
 decl_stmt|;
 name|unsigned
 name|long
-name|paddr
-decl_stmt|,
 name|caddr
 decl_stmt|;
 name|int
@@ -726,6 +736,9 @@ init|=
 literal|0
 decl_stmt|,
 name|stopped
+decl_stmt|;
+name|instr_t
+name|instr
 decl_stmt|;
 if|if
 condition|(
@@ -804,7 +817,7 @@ name|caddr
 operator|=
 name|address
 expr_stmt|;
-name|paddr
+name|instr
 operator|=
 name|saved
 expr_stmt|;
@@ -829,7 +842,7 @@ operator|.
 name|piod_addr
 operator|=
 operator|&
-name|paddr
+name|instr
 expr_stmt|;
 name|piod
 operator|.

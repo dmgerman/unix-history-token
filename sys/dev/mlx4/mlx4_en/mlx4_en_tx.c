@@ -3969,13 +3969,6 @@ name|blocked
 operator|=
 literal|1
 expr_stmt|;
-name|priv
-operator|->
-name|port_stats
-operator|.
-name|queue_stopped
-operator|++
-expr_stmt|;
 name|ring
 operator|->
 name|queue_stopped

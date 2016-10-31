@@ -1804,7 +1804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancel any scan currently going on.  */
+comment|/*  * Cancel any scan currently going on.  *  * This is called during normal 802.11 data path to cancel  * a scan so a newly arrived normal data packet can be sent.  */
 end_comment
 
 begin_function

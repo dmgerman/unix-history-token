@@ -39,20 +39,6 @@ directive|include
 file|<x86/x86_smp.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pmap_pcid_enabled
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|invpcid_works
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* global symbols in mpboot.S */
 end_comment

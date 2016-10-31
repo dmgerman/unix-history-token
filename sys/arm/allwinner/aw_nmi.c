@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_bus_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dt-bindings/interrupt-controller/irq.h>
 end_include
 
 begin_include
@@ -620,7 +620,7 @@ name|tripol
 condition|)
 block|{
 case|case
-name|IRQ_TYPE_EDGE_RISING
+name|FDT_INTR_EDGE_RISING
 case|:
 name|trig
 operator|=
@@ -632,7 +632,7 @@ name|INTR_POLARITY_HIGH
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_TYPE_EDGE_FALLING
+name|FDT_INTR_EDGE_FALLING
 case|:
 name|trig
 operator|=
@@ -644,7 +644,7 @@ name|INTR_POLARITY_LOW
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_TYPE_LEVEL_HIGH
+name|FDT_INTR_LEVEL_HIGH
 case|:
 name|trig
 operator|=
@@ -656,7 +656,7 @@ name|INTR_POLARITY_HIGH
 expr_stmt|;
 break|break;
 case|case
-name|IRQ_TYPE_LEVEL_LOW
+name|FDT_INTR_LEVEL_LOW
 case|:
 name|trig
 operator|=

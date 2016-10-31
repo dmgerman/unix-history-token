@@ -704,7 +704,7 @@ condition|)
 comment|/* TODO: Handle psci 0.1 */
 return|return
 operator|(
-name|PSCI_RETVAL_INTERNAL_FAILURE
+name|PSCI_MISSING
 operator|)
 return|;
 name|fnid
@@ -726,7 +726,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|PSCI_RETVAL_INTERNAL_FAILURE
+name|PSCI_MISSING
 operator|)
 return|;
 block|}

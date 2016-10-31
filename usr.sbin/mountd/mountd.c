@@ -2592,7 +2592,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"vfs.nfsrv.nfs_privport"
+literal|"vfs.nfsd.nfs_privport"
 argument_list|,
 name|NULL
 argument_list|,

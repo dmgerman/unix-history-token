@@ -226,6 +226,20 @@ name|ipi_range_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nmi_kdb_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nmi_is_broadcast
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|cpu_info

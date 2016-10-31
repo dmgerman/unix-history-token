@@ -134,7 +134,7 @@ directive|if
 name|_LIBUNWIND_ARM_EHABI
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_Resume_or_Rethrow(ex_obj=%p), private_1=%ld\n"
+literal|"_Unwind_Resume_or_Rethrow(ex_obj=%p), private_1=%ld"
 argument_list|,
 operator|(
 name|void
@@ -156,7 +156,7 @@ else|#
 directive|else
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_Resume_or_Rethrow(ex_obj=%p), private_1=%ld\n"
+literal|"_Unwind_Resume_or_Rethrow(ex_obj=%p), private_1=%ld"
 argument_list|,
 operator|(
 name|void
@@ -252,7 +252,7 @@ name|context
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_GetDataRelBase(context=%p)\n"
+literal|"_Unwind_GetDataRelBase(context=%p)"
 argument_list|,
 operator|(
 name|void
@@ -295,7 +295,7 @@ name|context
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_GetTextRelBase(context=%p)\n"
+literal|"_Unwind_GetTextRelBase(context=%p)"
 argument_list|,
 operator|(
 name|void
@@ -333,7 +333,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_FindEnclosingFunction(pc=%p)\n"
+literal|"_Unwind_FindEnclosingFunction(pc=%p)"
 argument_list|,
 name|pc
 argument_list|)
@@ -456,7 +456,7 @@ argument_list|)
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_Backtrace(callback=%p)\n"
+literal|"_Unwind_Backtrace(callback=%p)"
 argument_list|,
 operator|(
 name|void
@@ -510,7 +510,7 @@ if|#
 directive|if
 operator|!
 name|_LIBUNWIND_ARM_EHABI
-comment|// ask libuwind to get next frame (skip over first frame which is
+comment|// ask libunwind to get next frame (skip over first frame which is
 comment|// _Unwind_Backtrace())
 if|if
 condition|(
@@ -526,7 +526,7 @@ block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
 literal|" _backtrace: ended because cursor reached "
-literal|"bottom of stack, returning %d\n"
+literal|"bottom of stack, returning %d"
 argument_list|,
 name|_URC_END_OF_STACK
 argument_list|)
@@ -706,7 +706,7 @@ argument_list|)
 expr_stmt|;
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|" _backtrace: start_ip=0x%llX, func=%s, lsda=0x%llX, context=%p\n"
+literal|" _backtrace: start_ip=0x%llX, func=%s, lsda=0x%llX, context=%p"
 argument_list|,
 operator|(
 name|long
@@ -765,7 +765,7 @@ condition|)
 block|{
 name|_LIBUNWIND_TRACE_UNWINDING
 argument_list|(
-literal|" _backtrace: ended because callback returned %d\n"
+literal|" _backtrace: ended because callback returned %d"
 argument_list|,
 name|result
 argument_list|)
@@ -882,7 +882,7 @@ name|start_ip
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_Find_FDE(pc=%p) => %p\n"
+literal|"_Unwind_Find_FDE(pc=%p) => %p"
 argument_list|,
 name|pc
 argument_list|,
@@ -959,7 +959,6 @@ name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"_Unwind_GetCFA(context=%p) => 0x%"
 name|PRIx64
-literal|"\n"
 argument_list|,
 operator|(
 name|void
@@ -1011,7 +1010,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"_Unwind_GetIPInfo(context=%p)\n"
+literal|"_Unwind_GetIPInfo(context=%p)"
 argument_list|,
 operator|(
 name|void
@@ -1069,7 +1068,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__register_frame(%p)\n"
+literal|"__register_frame(%p)"
 argument_list|,
 name|fde
 argument_list|)
@@ -1117,7 +1116,7 @@ parameter_list|)
 block|{
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__deregister_frame(%p)\n"
+literal|"__deregister_frame(%p)"
 argument_list|,
 name|fde
 argument_list|)
@@ -1215,7 +1214,7 @@ name|db
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__register_frame_info_bases(%p,%p, %p, %p)\n"
+literal|"__register_frame_info_bases(%p,%p, %p, %p)"
 argument_list|,
 name|fde
 argument_list|,
@@ -1257,7 +1256,7 @@ name|ob
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__register_frame_info(%p, %p)\n"
+literal|"__register_frame_info(%p, %p)"
 argument_list|,
 name|fde
 argument_list|,
@@ -1314,7 +1313,7 @@ expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
 literal|"__register_frame_info_table_bases"
-literal|"(%p,%p, %p, %p)\n"
+literal|"(%p,%p, %p, %p)"
 argument_list|,
 name|fde
 argument_list|,
@@ -1356,7 +1355,7 @@ name|ob
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__register_frame_info_table(%p, %p)\n"
+literal|"__register_frame_info_table(%p, %p)"
 argument_list|,
 name|fde
 argument_list|,
@@ -1385,7 +1384,7 @@ name|fde
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__register_frame_table(%p)\n"
+literal|"__register_frame_table(%p)"
 argument_list|,
 name|fde
 argument_list|)
@@ -1413,7 +1412,7 @@ name|fde
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__deregister_frame_info(%p)\n"
+literal|"__deregister_frame_info(%p)"
 argument_list|,
 name|fde
 argument_list|)
@@ -1444,7 +1443,7 @@ name|fde
 expr_stmt|;
 name|_LIBUNWIND_TRACE_API
 argument_list|(
-literal|"__deregister_frame_info_bases(%p)\n"
+literal|"__deregister_frame_info_bases(%p)"
 argument_list|,
 name|fde
 argument_list|)

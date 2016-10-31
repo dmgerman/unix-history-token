@@ -152,6 +152,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
@@ -2083,11 +2089,11 @@ index|[
 literal|2
 index|]
 operator|&
-literal|0xf
+name|FDT_INTR_MASK
 condition|)
 block|{
 case|case
-literal|1
+name|FDT_INTR_EDGE_RISING
 case|:
 operator|*
 name|trigp
@@ -2101,7 +2107,7 @@ name|INTR_POLARITY_HIGH
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|FDT_INTR_EDGE_FALLING
 case|:
 operator|*
 name|trigp
@@ -2115,7 +2121,7 @@ name|INTR_POLARITY_LOW
 expr_stmt|;
 break|break;
 case|case
-literal|4
+name|FDT_INTR_LEVEL_HIGH
 case|:
 operator|*
 name|trigp
@@ -2129,7 +2135,7 @@ name|INTR_POLARITY_HIGH
 expr_stmt|;
 break|break;
 case|case
-literal|8
+name|FDT_INTR_LEVEL_LOW
 case|:
 operator|*
 name|trigp

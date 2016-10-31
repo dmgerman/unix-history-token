@@ -922,11 +922,11 @@ name|device_address
 argument_list|,
 name|devinfo
 operator|.
-name|udi_product
+name|udi_vendor
 argument_list|,
 name|devinfo
 operator|.
-name|udi_vendor
+name|udi_product
 argument_list|,
 name|pdev
 operator|->

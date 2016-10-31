@@ -6605,7 +6605,7 @@ name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable ASPM L0S/L1. */
+comment|/* Disable ASPM L0S/L1 and CLKREQ. */
 if|if
 condition|(
 name|sc
@@ -6661,7 +6661,11 @@ condition|(
 operator|(
 name|ctl
 operator|&
+operator|(
+name|PCIEM_LINK_CTL_ECPM
+operator||
 name|PCIEM_LINK_CTL_ASPMC
+operator|)
 operator|)
 operator|!=
 literal|0
@@ -6670,7 +6674,11 @@ block|{
 name|ctl
 operator|&=
 operator|~
+operator|(
+name|PCIEM_LINK_CTL_ECPM
+operator||
 name|PCIEM_LINK_CTL_ASPMC
+operator|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(

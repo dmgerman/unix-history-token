@@ -46,6 +46,14 @@ decl_stmt|;
 name|int
 name|ic_buflen
 decl_stmt|;
+name|uint32_t
+name|ic_fwver
+decl_stmt|;
+comment|/* framework version */
+name|uint32_t
+name|ic_msgver
+decl_stmt|;
+comment|/* message version */
 block|}
 name|hv_util_sc
 typedef|;
@@ -122,6 +130,7 @@ parameter_list|(
 name|struct
 name|hv_util_sc
 modifier|*
+name|sc
 parameter_list|,
 name|void
 modifier|*
@@ -130,6 +139,12 @@ parameter_list|,
 name|int
 modifier|*
 name|dlen
+parameter_list|,
+name|uint32_t
+name|fw_ver
+parameter_list|,
+name|uint32_t
+name|msg_ver
 parameter_list|)
 function_decl|;
 end_function_decl
