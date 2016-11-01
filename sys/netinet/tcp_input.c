@@ -15373,11 +15373,17 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Sanity check: make sure that maxseg will be large 	 * enough to allow some data on segments even if the 	 * all the option space is used (40bytes).  Otherwise 	 * funny things may happen in tcp_output. 	 * 	 * XXXGL: shouldn't we reserve space for IP/IPv6 options? 	 */
 name|tp
 operator|->
 name|t_maxseg
 operator|=
+name|max
+argument_list|(
 name|mss
+argument_list|,
+literal|64
+argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
