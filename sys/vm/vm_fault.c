@@ -1559,7 +1559,7 @@ name|first_object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 */
+comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O. 	 */
 name|vm_object_reference_locked
 argument_list|(
 name|fs
@@ -2353,7 +2353,7 @@ name|locked
 operator|=
 name|LK_SHARED
 expr_stmt|;
-comment|/* Do not sleep for vnode lock while fs.m is busy */
+comment|/* 				 * We must not sleep acquiring the vnode lock 				 * while we have the page exclusive busied or 				 * the object's paging-in-progress count 				 * incremented.  Otherwise, we could deadlock. 				 */
 name|error
 operator|=
 name|vget
