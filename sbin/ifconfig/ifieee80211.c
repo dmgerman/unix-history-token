@@ -13600,18 +13600,6 @@ name|int
 name|maxlen
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MATCHOUI
-parameter_list|(
-name|field
-parameter_list|,
-name|oui
-parameter_list|,
-name|string
-parameter_list|)
-define|\
-value|do {									\ 	if (memcmp(field, oui, 4) == 0)					\ 		printf("%s", string);					\ } while (0)
 name|printf
 argument_list|(
 literal|"%s"
@@ -13772,9 +13760,6 @@ name|conf_cap
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|MATCHOUI
 block|}
 end_function
 
