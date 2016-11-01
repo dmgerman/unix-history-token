@@ -27794,6 +27794,13 @@ name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
 comment|//	    IEEE80211_C_BGSCAN		/* capable of bg scanning */
 expr_stmt|;
+comment|/* Advertise full-offload scanning */
+name|ic
+operator|->
+name|ic_flags_ext
+operator|=
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+expr_stmt|;
 for|for
 control|(
 name|i
