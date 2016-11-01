@@ -1583,9 +1583,6 @@ name|boolean_t
 name|is_submitter_processing
 decl_stmt|;
 name|boolean_t
-name|is_resize_pending
-decl_stmt|;
-name|boolean_t
 name|is_completion_pending
 decl_stmt|;
 comment|/* submit_lock */
