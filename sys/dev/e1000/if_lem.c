@@ -3575,13 +3575,18 @@ block|}
 endif|#
 directive|endif
 comment|/* NIC_PARAVIRT */
+comment|/* 	 * It seems that the descriptor DMA engine on some PCI cards 	 * fetches memory past the end of the last descriptor in the 	 * ring.  These reads are problematic when VT-d (DMAR) busdma 	 * is used.  Allocate the scratch space to avoid getting 	 * faults from DMAR, by requesting scratch memory for one more 	 * descriptor. 	 */
 name|tsize
 operator|=
 name|roundup2
 argument_list|(
+operator|(
 name|adapter
 operator|->
 name|num_tx_desc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3640,13 +3645,18 @@ name|txdma
 operator|.
 name|dma_vaddr
 expr_stmt|;
+comment|/* 	 * See comment above txdma allocation for rationale behind +1. 	 */
 name|rsize
 operator|=
 name|roundup2
 argument_list|(
+operator|(
 name|adapter
 operator|->
 name|num_rx_desc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
