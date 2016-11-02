@@ -541,23 +541,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|vmbus_channel
-modifier|*
-name|vmbus_chan_cpu2chan
-parameter_list|(
-name|struct
-name|vmbus_channel
-modifier|*
-name|chan
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vmbus_chan_set_readbatch
 parameter_list|(
