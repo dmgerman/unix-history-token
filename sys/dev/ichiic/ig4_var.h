@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BUS_SMBUS_INTELGEN4_IG4_VAR_H_
+name|_ICHIIC_IG4_VAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BUS_SMBUS_INTELGEN4_IG4_VAR_H_
+name|_ICHIIC_IG4_VAR_H_
 end_define
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"pci_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"smbus_if.h"
 end_include
 
 begin_include
@@ -159,7 +153,7 @@ name|write_started
 range|:
 literal|1
 decl_stmt|;
-comment|/* 	 * Locking semantics: 	 * 	 * Functions implementing the smbus interface that interact 	 * with the controller acquire an exclusive lock on call_lock 	 * to prevent interleaving of calls to the interface and a lock on 	 * io_lock right afterwards, to synchronize controller I/O activity. 	 *  	 * The interrupt handler can only read data while no ig4iic_smb_* call 	 * is in progress or while io_lock is dropped during mtx_sleep in 	 * wait_status and set_controller. It is safe to drop io_lock in those 	 * places, because the interrupt handler only accesses those registers: 	 * 	 * - IG4_REG_I2C_STA  (I2C Status) 	 * - IG4_REG_DATA_CMD (Data Buffer and Command) 	 * - IG4_REG_CLR_INTR (Clear Interrupt) 	 * 	 * Locking outside of those places is required to make the content 	 * of rpos/rnext predictable (e.g. whenever data_read is called and in 	 * smb_transaction). 	 */
+comment|/* 	 * Locking semantics: 	 * 	 * Functions implementing the icbus interface that interact 	 * with the controller acquire an exclusive lock on call_lock 	 * to prevent interleaving of calls to the interface and a lock on 	 * io_lock right afterwards, to synchronize controller I/O activity. 	 * 	 * The interrupt handler can only read data while no iicbus call 	 * is in progress or while io_lock is dropped during mtx_sleep in 	 * wait_status and set_controller. It is safe to drop io_lock in those 	 * places, because the interrupt handler only accesses those registers: 	 * 	 * - IG4_REG_I2C_STA  (I2C Status) 	 * - IG4_REG_DATA_CMD (Data Buffer and Command) 	 * - IG4_REG_CLR_INTR (Clear Interrupt) 	 * 	 * Locking outside of those places is required to make the content 	 * of rpos/rnext predictable (e.g. whenever data_read is called and in 	 * ig4iic_transfer). 	 */
 name|struct
 name|sx
 name|call_lock
@@ -207,92 +201,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* SMBus methods */
+comment|/* iicbus methods */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|smbus_callback_t
-name|ig4iic_smb_callback
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_quick_t
-name|ig4iic_smb_quick
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_sendb_t
-name|ig4iic_smb_sendb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_recvb_t
-name|ig4iic_smb_recvb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_writeb_t
-name|ig4iic_smb_writeb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_writew_t
-name|ig4iic_smb_writew
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_readb_t
-name|ig4iic_smb_readb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_readw_t
-name|ig4iic_smb_readw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_pcall_t
-name|ig4iic_smb_pcall
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_bwrite_t
-name|ig4iic_smb_bwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_bread_t
-name|ig4iic_smb_bread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|smbus_trans_t
-name|ig4iic_smb_trans
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -312,6 +222,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _ICHIIC_IG4_VAR_H_ */
+end_comment
 
 end_unit
 

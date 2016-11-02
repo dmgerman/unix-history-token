@@ -301,6 +301,7 @@ index|]
 init|=
 block|{
 comment|/* 	 * ln2_hi and each F_hi(i) are rounded to a number of bits that 	 * makes F_hi(i) + dk*ln2_hi exact for all i and all dk. 	 * 	 * The last entry (for X just below 2) is used to define ln2_hi 	 * and ln2_lo, to ensure that F_hi(i) and F_lo(i) cancel exactly 	 * with dk*ln2_hi and dk*ln2_lo, respectively, when dk = -1. 	 * This is needed for accuracy when x is just below 1.  (To avoid 	 * special cases, such x are "reduced" strangely to X just below 	 * 2 and dk = -1, and then the exact cancellation is needed 	 * because any the error from any non-exactness would be too 	 * large). 	 * 	 * We want to share this table between double precision and ld80, 	 * so the relevant range of dk is the larger one of ld80 	 * ([-16445, 16383]) and the relevant exactness requirement is 	 * the stricter one of double precision.  The maximum number of 	 * bits in F_hi(i) that works is very dependent on i but has 	 * a minimum of 33.  We only need about 12 bits in F_hi(i) for 	 * it to provide enough extra precision in double precision (11 	 * more than that are required for ld80). 	 * 	 * We round F_hi(i) to 24 bits so that it can have type float, 	 * mainly to minimize the size of the table.  Using all 24 bits 	 * in a float for it automatically satisfies the above constraints. 	 */
+block|{
 literal|0x800000
 literal|.0p
 operator|-
@@ -309,7 +310,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|0xfe0000
 literal|.0p
 operator|-
@@ -325,7 +328,9 @@ literal|0x14ee431dae6675
 literal|.0p
 operator|-
 literal|84
+block|}
 block|,
+block|{
 literal|0xfc0000
 literal|.0p
 operator|-
@@ -341,7 +346,9 @@ literal|0x1db29ee2d83718
 literal|.0p
 operator|-
 literal|84
+block|}
 block|,
+block|{
 literal|0xfa0000
 literal|.0p
 operator|-
@@ -356,7 +363,9 @@ literal|0x1191957d173698
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xf80000
 literal|.0p
 operator|-
@@ -371,7 +380,9 @@ literal|0x13ce8888e02e79
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xf60000
 literal|.0p
 operator|-
@@ -387,7 +398,9 @@ literal|0x17a4382ce6eb7c
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xf48000
 literal|.0p
 operator|-
@@ -403,7 +416,9 @@ literal|0x172a21161a1076
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xf30000
 literal|.0p
 operator|-
@@ -419,7 +434,9 @@ literal|0x1e09de07cb9589
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xf10000
 literal|.0p
 operator|-
@@ -434,7 +451,9 @@ literal|0x1ae1eec1b036c5
 literal|.0p
 operator|-
 literal|91
+block|}
 block|,
+block|{
 literal|0xef0000
 literal|.0p
 operator|-
@@ -450,7 +469,9 @@ literal|0x1d7355325d560e
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xed8000
 literal|.0p
 operator|-
@@ -466,7 +487,9 @@ literal|0x1f9f02d256d503
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xec0000
 literal|.0p
 operator|-
@@ -482,7 +505,9 @@ literal|0x16fc0a9d12c17a
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xea0000
 literal|.0p
 operator|-
@@ -497,7 +522,9 @@ literal|0x15d581c1e8da9a
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xe80000
 literal|.0p
 operator|-
@@ -513,7 +540,9 @@ literal|0x1535b3ba8f150b
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xe70000
 literal|.0p
 operator|-
@@ -528,7 +557,9 @@ literal|0x163786f5251af0
 literal|.0p
 operator|-
 literal|85
+block|}
 block|,
+block|{
 literal|0xe50000
 literal|.0p
 operator|-
@@ -543,7 +574,9 @@ literal|0x1bc4b2368e32d5
 literal|.0p
 operator|-
 literal|84
+block|}
 block|,
+block|{
 literal|0xe38000
 literal|.0p
 operator|-
@@ -558,7 +591,9 @@ literal|0x1c6090f684e676
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xe20000
 literal|.0p
 operator|-
@@ -574,7 +609,9 @@ literal|0x1890aa69ac9f42
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xe08000
 literal|.0p
 operator|-
@@ -589,7 +626,9 @@ literal|0x1b9985194b6b00
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xdf0000
 literal|.0p
 operator|-
@@ -605,7 +644,9 @@ literal|0x1dc08d61c6ef1e
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xdd8000
 literal|.0p
 operator|-
@@ -621,7 +662,9 @@ literal|0x1f72a2dac729b4
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xdc0000
 literal|.0p
 operator|-
@@ -637,7 +680,9 @@ literal|0x1fd4dfd3a0afb9
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xda8000
 literal|.0p
 operator|-
@@ -653,7 +698,9 @@ literal|0x11b26121629c47
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xd90000
 literal|.0p
 operator|-
@@ -668,7 +715,9 @@ literal|0x1286d633e8e569
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xd78000
 literal|.0p
 operator|-
@@ -683,7 +732,9 @@ literal|0x16128eba936770
 literal|.0p
 operator|-
 literal|84
+block|}
 block|,
+block|{
 literal|0xd60000
 literal|.0p
 operator|-
@@ -698,7 +749,9 @@ literal|0x16ead577390d32
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xd50000
 literal|.0p
 operator|-
@@ -713,7 +766,9 @@ literal|0x151131ccf7c7b7
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xd38000
 literal|.0p
 operator|-
@@ -729,7 +784,9 @@ literal|0x115e2cd714bd06
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xd20000
 literal|.0p
 operator|-
@@ -745,7 +802,9 @@ literal|0x1847f406ebd3b0
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xd10000
 literal|.0p
 operator|-
@@ -760,7 +819,9 @@ literal|0x1c2259904d6866
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xcf8000
 literal|.0p
 operator|-
@@ -775,7 +836,9 @@ literal|0x1ece57a8d5ae55
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xce0000
 literal|.0p
 operator|-
@@ -791,7 +854,9 @@ literal|0x1f109d4bc45954
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xcd0000
 literal|.0p
 operator|-
@@ -806,7 +871,9 @@ literal|0x1bc03dc271a74d
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xcb8000
 literal|.0p
 operator|-
@@ -822,7 +889,9 @@ literal|0x1bf2badc0df842
 literal|.0p
 operator|-
 literal|85
+block|}
 block|,
+block|{
 literal|0xca0000
 literal|.0p
 operator|-
@@ -838,7 +907,9 @@ literal|0x18efededd89fbe
 literal|.0p
 operator|-
 literal|87
+block|}
 block|,
+block|{
 literal|0xc90000
 literal|.0p
 operator|-
@@ -853,7 +924,9 @@ literal|0x1373ff977baa69
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xc80000
 literal|.0p
 operator|-
@@ -868,7 +941,9 @@ literal|0x196766f2fb3283
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xc68000
 literal|.0p
 operator|-
@@ -883,7 +958,9 @@ literal|0x19bd076f7c434e
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xc58000
 literal|.0p
 operator|-
@@ -899,7 +976,9 @@ literal|0x1a327257af0f46
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xc40000
 literal|.0p
 operator|-
@@ -914,7 +993,9 @@ literal|0x113f23def19c5a
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xc30000
 literal|.0p
 operator|-
@@ -929,7 +1010,9 @@ literal|0x1759f6e6b37de9
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xc20000
 literal|.0p
 operator|-
@@ -944,7 +1027,9 @@ literal|0x1ad35ca6ed5148
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xc10000
 literal|.0p
 operator|-
@@ -959,7 +1044,9 @@ literal|0x1a1d71a87deba4
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xbf8000
 literal|.0p
 operator|-
@@ -975,7 +1062,9 @@ literal|0x139e5210c2b731
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xbe8000
 literal|.0p
 operator|-
@@ -991,7 +1080,9 @@ literal|0x18f6ebcff3ed73
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xbd8000
 literal|.0p
 operator|-
@@ -1007,7 +1098,9 @@ literal|0x1aa268be39aab7
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xbc8000
 literal|.0p
 operator|-
@@ -1023,7 +1116,9 @@ literal|0x14c8815839c566
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xbb0000
 literal|.0p
 operator|-
@@ -1038,7 +1133,9 @@ literal|0x1eaf46390dbb24
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xba0000
 literal|.0p
 operator|-
@@ -1053,7 +1150,9 @@ literal|0x138e20d831f698
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xb90000
 literal|.0p
 operator|-
@@ -1069,7 +1168,9 @@ literal|0x1e8d3c41123616
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xb80000
 literal|.0p
 operator|-
@@ -1084,7 +1185,9 @@ literal|0x1ce28f5f3840b2
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xb70000
 literal|.0p
 operator|-
@@ -1100,7 +1203,9 @@ literal|0x186e5c0a424234
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xb60000
 literal|.0p
 operator|-
@@ -1116,7 +1221,9 @@ literal|0x14d41a0b2a08a4
 literal|.0p
 operator|-
 literal|83
+block|}
 block|,
+block|{
 literal|0xb50000
 literal|.0p
 operator|-
@@ -1131,7 +1238,9 @@ literal|0x16755892770634
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xb40000
 literal|.0p
 operator|-
@@ -1147,7 +1256,9 @@ literal|0x16395ebe59b152
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xb30000
 literal|.0p
 operator|-
@@ -1162,7 +1273,9 @@ literal|0x1abc65c8595f09
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xb20000
 literal|.0p
 operator|-
@@ -1178,7 +1291,9 @@ literal|0x1273089d3dad89
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xb10000
 literal|.0p
 operator|-
@@ -1193,7 +1308,9 @@ literal|0x10f9f67b1f4bbf
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xb00000
 literal|.0p
 operator|-
@@ -1209,7 +1326,9 @@ literal|0x109fab90486409
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xaf0000
 literal|.0p
 operator|-
@@ -1225,7 +1344,9 @@ literal|0x1124680aa43333
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xae8000
 literal|.0p
 operator|-
@@ -1241,7 +1362,9 @@ literal|0x1f360cc4710fc0
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xad8000
 literal|.0p
 operator|-
@@ -1257,7 +1380,9 @@ literal|0x132d91f21d89c9
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xac8000
 literal|.0p
 operator|-
@@ -1273,7 +1398,9 @@ literal|0x16bf9b4d1f8da8
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xab8000
 literal|.0p
 operator|-
@@ -1288,7 +1415,9 @@ literal|0x19deb5ce6a6a87
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xaa8000
 literal|.0p
 operator|-
@@ -1303,7 +1432,9 @@ literal|0x1a29fb48f7d3cb
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xaa0000
 literal|.0p
 operator|-
@@ -1318,7 +1449,9 @@ literal|0x1127d3c6457f9d
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xa90000
 literal|.0p
 operator|-
@@ -1334,7 +1467,9 @@ literal|0x1ba930e486a0ac
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0xa80000
 literal|.0p
 operator|-
@@ -1350,7 +1485,9 @@ literal|0x1b6e645f31549e
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xa70000
 literal|.0p
 operator|-
@@ -1365,7 +1502,9 @@ literal|0x1118a425494b61
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa68000
 literal|.0p
 operator|-
@@ -1380,7 +1519,9 @@ literal|0x1966f24d29d3a3
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa58000
 literal|.0p
 operator|-
@@ -1396,7 +1537,9 @@ literal|0x1d8e52eb2248f1
 literal|.0p
 operator|-
 literal|82
+block|}
 block|,
+block|{
 literal|0xa48000
 literal|.0p
 operator|-
@@ -1412,7 +1555,9 @@ literal|0x1ee370f96e6b68
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa40000
 literal|.0p
 operator|-
@@ -1427,7 +1572,9 @@ literal|0x1d155324911f57
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa30000
 literal|.0p
 operator|-
@@ -1443,7 +1590,9 @@ literal|0x1fe6e2f2f867d9
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa20000
 literal|.0p
 operator|-
@@ -1458,7 +1607,9 @@ literal|0x1b7be9add7f4d4
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0xa18000
 literal|.0p
 operator|-
@@ -1473,7 +1624,9 @@ literal|0x1b3cfb3f7511dd
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xa08000
 literal|.0p
 operator|-
@@ -1489,7 +1642,9 @@ literal|0x1220de1f730190
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0xa00000
 literal|.0p
 operator|-
@@ -1505,7 +1660,9 @@ literal|0x176364c9ac81cd
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x9f0000
 literal|.0p
 operator|-
@@ -1520,7 +1677,9 @@ literal|0x1eed6b9aafac8d
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0x9e8000
 literal|.0p
 operator|-
@@ -1535,7 +1694,9 @@ literal|0x1d593218675af2
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x9d8000
 literal|.0p
 operator|-
@@ -1551,7 +1712,9 @@ literal|0x13e8eb7da053e0
 literal|.0p
 operator|-
 literal|84
+block|}
 block|,
+block|{
 literal|0x9d0000
 literal|.0p
 operator|-
@@ -1566,7 +1729,9 @@ literal|0x1c063259bcade0
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x9c0000
 literal|.0p
 operator|-
@@ -1581,7 +1746,9 @@ literal|0x1ef491085fa3c1
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x9b8000
 literal|.0p
 operator|-
@@ -1596,7 +1763,9 @@ literal|0x1d607a7c2b8c53
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x9a8000
 literal|.0p
 operator|-
@@ -1612,7 +1781,9 @@ literal|0x12ad3817004f3f
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x9a0000
 literal|.0p
 operator|-
@@ -1628,7 +1799,9 @@ literal|0x189fc53117f9e5
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0x990000
 literal|.0p
 operator|-
@@ -1643,7 +1816,9 @@ literal|0x14cf15a048907b
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x988000
 literal|.0p
 operator|-
@@ -1658,7 +1833,9 @@ literal|0x1cbb1d35fb8287
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x978000
 literal|.0p
 operator|-
@@ -1673,7 +1850,9 @@ literal|0x1128639b814f9c
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x970000
 literal|.0p
 operator|-
@@ -1688,7 +1867,9 @@ literal|0x184733853300f0
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x968000
 literal|.0p
 operator|-
@@ -1703,7 +1884,9 @@ literal|0x109d23aef77dd6
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x958000
 literal|.0p
 operator|-
@@ -1719,7 +1902,9 @@ literal|0x1a81ef367a59de
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x950000
 literal|.0p
 operator|-
@@ -1735,7 +1920,9 @@ literal|0x121ad3dbb2f452
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x948000
 literal|.0p
 operator|-
@@ -1751,7 +1938,9 @@ literal|0x1cfb981628af72
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x938000
 literal|.0p
 operator|-
@@ -1767,7 +1956,9 @@ literal|0x1d21730ea76cfe
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x930000
 literal|.0p
 operator|-
@@ -1782,7 +1973,9 @@ literal|0x135cc00e566f77
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x928000
 literal|.0p
 operator|-
@@ -1798,7 +1991,9 @@ literal|0x10fcb5df257a26
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x918000
 literal|.0p
 operator|-
@@ -1814,7 +2009,9 @@ literal|0x16e171b15433d7
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x910000
 literal|.0p
 operator|-
@@ -1830,7 +2027,9 @@ literal|0x1d050da07f3237
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x908000
 literal|.0p
 operator|-
@@ -1845,7 +2044,9 @@ literal|0x1be03669a5268d
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x8f8000
 literal|.0p
 operator|-
@@ -1860,7 +2061,9 @@ literal|0x10b28e0e26c337
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x8f0000
 literal|.0p
 operator|-
@@ -1875,7 +2078,9 @@ literal|0x1a1d820da57cf3
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8e8000
 literal|.0p
 operator|-
@@ -1891,7 +2096,9 @@ literal|0x19ef8f13ae3cf1
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x8e0000
 literal|.0p
 operator|-
@@ -1907,7 +2114,9 @@ literal|0x109e417a6e507c
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8d0000
 literal|.0p
 operator|-
@@ -1922,7 +2131,9 @@ literal|0x10d01a2c5b0e98
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x8c8000
 literal|.0p
 operator|-
@@ -1938,7 +2149,9 @@ literal|0x1d6a50d4b61ea7
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8c0000
 literal|.0p
 operator|-
@@ -1953,7 +2166,9 @@ literal|0x1b3b190b83f952
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8b8000
 literal|.0p
 operator|-
@@ -1968,7 +2183,9 @@ literal|0x13a69fad7e7abe
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8b0000
 literal|.0p
 operator|-
@@ -1984,7 +2201,9 @@ literal|0x11cd12316f576b
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x8a8000
 literal|.0p
 operator|-
@@ -1999,7 +2218,9 @@ literal|0x1c95c444b807a2
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x898000
 literal|.0p
 operator|-
@@ -2015,7 +2236,9 @@ literal|0x1b9c224ea698c3
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x890000
 literal|.0p
 operator|-
@@ -2030,7 +2253,9 @@ literal|0x125ca93186cf0f
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0x888000
 literal|.0p
 operator|-
@@ -2046,7 +2271,9 @@ literal|0x1ee38a7bc228b3
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x880000
 literal|.0p
 operator|-
@@ -2062,7 +2289,9 @@ literal|0x1a0db876613d20
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x878000
 literal|.0p
 operator|-
@@ -2077,7 +2306,9 @@ literal|0x193224e8516c01
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x870000
 literal|.0p
 operator|-
@@ -2092,7 +2323,9 @@ literal|0x1fa28b4d2541ad
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x868000
 literal|.0p
 operator|-
@@ -2107,7 +2340,9 @@ literal|0x1c1b5760fb4572
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x858000
 literal|.0p
 operator|-
@@ -2122,7 +2357,9 @@ literal|0x1fed5d0f65949c
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x850000
 literal|.0p
 operator|-
@@ -2137,7 +2374,9 @@ literal|0x1ad270c9d74936
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x848000
 literal|.0p
 operator|-
@@ -2152,7 +2391,9 @@ literal|0x199ff15ce53266
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x840000
 literal|.0p
 operator|-
@@ -2167,7 +2408,9 @@ literal|0x1a19e15ccc45d2
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x838000
 literal|.0p
 operator|-
@@ -2183,7 +2426,9 @@ literal|0x121a14ec532b36
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x830000
 literal|.0p
 operator|-
@@ -2198,7 +2443,9 @@ literal|0x1aee319980bff3
 literal|.0p
 operator|-
 literal|79
+block|}
 block|,
+block|{
 literal|0x828000
 literal|.0p
 operator|-
@@ -2214,7 +2461,9 @@ literal|0x18ffd9e3900346
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x820000
 literal|.0p
 operator|-
@@ -2230,7 +2479,9 @@ literal|0x1e4db102ce29f8
 literal|.0p
 operator|-
 literal|80
+block|}
 block|,
+block|{
 literal|0x818000
 literal|.0p
 operator|-
@@ -2245,7 +2496,9 @@ literal|0x17c35c55a04a83
 literal|.0p
 operator|-
 literal|81
+block|}
 block|,
+block|{
 literal|0x810000
 literal|.0p
 operator|-
@@ -2260,7 +2513,9 @@ literal|0x1448324047019b
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x808000
 literal|.0p
 operator|-
@@ -2276,7 +2531,9 @@ literal|0x1750ee3915a198
 literal|.0p
 operator|-
 literal|78
+block|}
 block|,
+block|{
 literal|0x800000
 literal|.0p
 operator|-
@@ -2292,6 +2549,7 @@ literal|0x105c610ca86c39
 literal|.0p
 operator|-
 literal|81
+block|}
 block|, }
 struct|;
 end_struct
@@ -2322,13 +2580,16 @@ name|TSIZE
 index|]
 init|=
 block|{
+block|{
 literal|0x800000
 literal|.0p
 operator|-
 literal|23
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|0x810000
 literal|.0p
 operator|-
@@ -2339,7 +2600,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|37
+block|}
 block|,
+block|{
 literal|0x820000
 literal|.0p
 operator|-
@@ -2350,7 +2613,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x830000
 literal|.0p
 operator|-
@@ -2361,7 +2626,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0x840000
 literal|.0p
 operator|-
@@ -2372,7 +2639,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x850000
 literal|.0p
 operator|-
@@ -2383,7 +2652,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x860000
 literal|.0p
 operator|-
@@ -2394,7 +2665,9 @@ literal|0xa00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0x870000
 literal|.0p
 operator|-
@@ -2404,7 +2677,9 @@ literal|0x940000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x880000
 literal|.0p
 operator|-
@@ -2414,7 +2689,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x890000
 literal|.0p
 operator|-
@@ -2425,7 +2702,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0x8a0000
 literal|.0p
 operator|-
@@ -2435,7 +2714,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0x8b0000
 literal|.0p
 operator|-
@@ -2445,7 +2726,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x8c0000
 literal|.0p
 operator|-
@@ -2456,7 +2739,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x8d0000
 literal|.0p
 operator|-
@@ -2467,7 +2752,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x8e0000
 literal|.0p
 operator|-
@@ -2477,7 +2764,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x8f0000
 literal|.0p
 operator|-
@@ -2488,7 +2777,9 @@ literal|0xa80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0x900000
 literal|.0p
 operator|-
@@ -2499,7 +2790,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x910000
 literal|.0p
 operator|-
@@ -2509,7 +2802,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|37
+block|}
 block|,
+block|{
 literal|0x920000
 literal|.0p
 operator|-
@@ -2519,7 +2814,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x930000
 literal|.0p
 operator|-
@@ -2529,7 +2826,9 @@ literal|0xd00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x940000
 literal|.0p
 operator|-
@@ -2539,7 +2838,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x950000
 literal|.0p
 operator|-
@@ -2549,7 +2850,9 @@ literal|0xc00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x960000
 literal|.0p
 operator|-
@@ -2559,7 +2862,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0x970000
 literal|.0p
 operator|-
@@ -2570,7 +2875,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|38
+block|}
 block|,
+block|{
 literal|0x980000
 literal|.0p
 operator|-
@@ -2581,7 +2888,9 @@ literal|0xc00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x990000
 literal|.0p
 operator|-
@@ -2592,7 +2901,9 @@ literal|0xd00000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0x9a0000
 literal|.0p
 operator|-
@@ -2602,7 +2913,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x9b0000
 literal|.0p
 operator|-
@@ -2612,7 +2925,9 @@ literal|0xe80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x9c0000
 literal|.0p
 operator|-
@@ -2623,7 +2938,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0x9d0000
 literal|.0p
 operator|-
@@ -2633,7 +2950,9 @@ literal|0xb40000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0x9e0000
 literal|.0p
 operator|-
@@ -2643,7 +2962,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0x9f0000
 literal|.0p
 operator|-
@@ -2654,7 +2975,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xa00000
 literal|.0p
 operator|-
@@ -2664,7 +2987,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xa10000
 literal|.0p
 operator|-
@@ -2675,7 +3000,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xa20000
 literal|.0p
 operator|-
@@ -2686,7 +3013,9 @@ literal|0xb00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xa30000
 literal|.0p
 operator|-
@@ -2697,7 +3026,9 @@ literal|0xa00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xa40000
 literal|.0p
 operator|-
@@ -2707,7 +3038,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xa50000
 literal|.0p
 operator|-
@@ -2718,7 +3051,9 @@ literal|0xf80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xa60000
 literal|.0p
 operator|-
@@ -2728,7 +3063,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xa70000
 literal|.0p
 operator|-
@@ -2739,7 +3076,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xa80000
 literal|.0p
 operator|-
@@ -2750,7 +3089,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xa90000
 literal|.0p
 operator|-
@@ -2760,7 +3101,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xaa0000
 literal|.0p
 operator|-
@@ -2770,7 +3113,9 @@ literal|0xa80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xab0000
 literal|.0p
 operator|-
@@ -2781,7 +3126,9 @@ literal|0xac0000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xac0000
 literal|.0p
 operator|-
@@ -2792,7 +3139,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|37
+block|}
 block|,
+block|{
 literal|0xad0000
 literal|.0p
 operator|-
@@ -2802,7 +3151,9 @@ literal|0xf80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xae0000
 literal|.0p
 operator|-
@@ -2812,7 +3163,9 @@ literal|0xf80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xaf0000
 literal|.0p
 operator|-
@@ -2823,7 +3176,9 @@ literal|0xac0000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xb00000
 literal|.0p
 operator|-
@@ -2834,7 +3189,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xb10000
 literal|.0p
 operator|-
@@ -2845,7 +3202,9 @@ literal|0xb80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xb20000
 literal|.0p
 operator|-
@@ -2856,7 +3215,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xb30000
 literal|.0p
 operator|-
@@ -2867,7 +3228,9 @@ literal|0xb00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xb40000
 literal|.0p
 operator|-
@@ -2878,7 +3241,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xb50000
 literal|.0p
 operator|-
@@ -2889,7 +3254,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xb60000
 literal|.0p
 operator|-
@@ -2900,7 +3267,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xb70000
 literal|.0p
 operator|-
@@ -2911,7 +3280,9 @@ literal|0xb00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xb80000
 literal|.0p
 operator|-
@@ -2922,7 +3293,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xb90000
 literal|.0p
 operator|-
@@ -2933,7 +3306,9 @@ literal|0xb80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xba0000
 literal|.0p
 operator|-
@@ -2944,7 +3319,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xbb0000
 literal|.0p
 operator|-
@@ -2955,7 +3332,9 @@ literal|0xac0000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xbc0000
 literal|.0p
 operator|-
@@ -2965,7 +3344,9 @@ literal|0x980000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xbd0000
 literal|.0p
 operator|-
@@ -2975,7 +3356,9 @@ literal|0xbc0000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xbe0000
 literal|.0p
 operator|-
@@ -2985,7 +3368,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xbf0000
 literal|.0p
 operator|-
@@ -2996,7 +3381,9 @@ literal|0xb80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xc00000
 literal|.0p
 operator|-
@@ -3007,7 +3394,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc10000
 literal|.0p
 operator|-
@@ -3017,7 +3406,9 @@ literal|0xa80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc20000
 literal|.0p
 operator|-
@@ -3027,7 +3418,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xc30000
 literal|.0p
 operator|-
@@ -3038,7 +3431,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xc40000
 literal|.0p
 operator|-
@@ -3049,7 +3444,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc50000
 literal|.0p
 operator|-
@@ -3059,7 +3456,9 @@ literal|0x820000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc60000
 literal|.0p
 operator|-
@@ -3069,7 +3468,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|38
+block|}
 block|,
+block|{
 literal|0xc70000
 literal|.0p
 operator|-
@@ -3080,7 +3481,9 @@ literal|0x820000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc80000
 literal|.0p
 operator|-
@@ -3090,7 +3493,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xc90000
 literal|.0p
 operator|-
@@ -3101,7 +3506,9 @@ literal|0xa00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xca0000
 literal|.0p
 operator|-
@@ -3112,7 +3519,9 @@ literal|0xb00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xcb0000
 literal|.0p
 operator|-
@@ -3122,7 +3531,9 @@ literal|0x840000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xcc0000
 literal|.0p
 operator|-
@@ -3133,7 +3544,9 @@ literal|0xd00000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xcd0000
 literal|.0p
 operator|-
@@ -3143,7 +3556,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xce0000
 literal|.0p
 operator|-
@@ -3154,7 +3569,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xcf0000
 literal|.0p
 operator|-
@@ -3164,7 +3581,9 @@ literal|0xa60000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xd00000
 literal|.0p
 operator|-
@@ -3175,7 +3594,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xd10000
 literal|.0p
 operator|-
@@ -3185,7 +3606,9 @@ literal|0xb40000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xd20000
 literal|.0p
 operator|-
@@ -3196,7 +3619,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xd30000
 literal|.0p
 operator|-
@@ -3206,7 +3631,9 @@ literal|0xaa0000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xd40000
 literal|.0p
 operator|-
@@ -3217,7 +3644,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xd50000
 literal|.0p
 operator|-
@@ -3227,7 +3656,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xd60000
 literal|.0p
 operator|-
@@ -3238,7 +3669,9 @@ literal|0xd00000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xd70000
 literal|.0p
 operator|-
@@ -3248,7 +3681,9 @@ literal|0x9c0000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xd80000
 literal|.0p
 operator|-
@@ -3259,7 +3694,9 @@ literal|0xb00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xd90000
 literal|.0p
 operator|-
@@ -3270,7 +3707,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|38
+block|}
 block|,
+block|{
 literal|0xda0000
 literal|.0p
 operator|-
@@ -3280,7 +3719,9 @@ literal|0xa40000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xdb0000
 literal|.0p
 operator|-
@@ -3291,7 +3732,9 @@ literal|0xdc0000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xdc0000
 literal|.0p
 operator|-
@@ -3301,7 +3744,9 @@ literal|0xc00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xdd0000
 literal|.0p
 operator|-
@@ -3311,7 +3756,9 @@ literal|0xca0000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xde0000
 literal|.0p
 operator|-
@@ -3322,7 +3769,9 @@ literal|0xb80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xdf0000
 literal|.0p
 operator|-
@@ -3332,7 +3781,9 @@ literal|0xd00000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xe00000
 literal|.0p
 operator|-
@@ -3342,7 +3793,9 @@ literal|0xc00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xe10000
 literal|.0p
 operator|-
@@ -3353,7 +3806,9 @@ literal|0xf40000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xe20000
 literal|.0p
 operator|-
@@ -3363,7 +3818,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|37
+block|}
 block|,
+block|{
 literal|0xe30000
 literal|.0p
 operator|-
@@ -3373,7 +3830,9 @@ literal|0x860000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xe40000
 literal|.0p
 operator|-
@@ -3384,7 +3843,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xe50000
 literal|.0p
 operator|-
@@ -3395,7 +3856,9 @@ literal|0xa80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xe60000
 literal|.0p
 operator|-
@@ -3405,7 +3868,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xe70000
 literal|.0p
 operator|-
@@ -3415,7 +3880,9 @@ literal|0x880000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xe80000
 literal|.0p
 operator|-
@@ -3426,7 +3893,9 @@ literal|0xe00000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xe90000
 literal|.0p
 operator|-
@@ -3437,7 +3906,9 @@ literal|0xfc0000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xea0000
 literal|.0p
 operator|-
@@ -3448,7 +3919,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xeb0000
 literal|.0p
 operator|-
@@ -3458,7 +3931,9 @@ literal|0xe80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xec0000
 literal|.0p
 operator|-
@@ -3468,7 +3943,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xed0000
 literal|.0p
 operator|-
@@ -3478,7 +3955,9 @@ literal|0xe20000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xee0000
 literal|.0p
 operator|-
@@ -3489,7 +3968,9 @@ literal|0xac0000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xef0000
 literal|.0p
 operator|-
@@ -3500,7 +3981,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xf00000
 literal|.0p
 operator|-
@@ -3511,7 +3994,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xf10000
 literal|.0p
 operator|-
@@ -3521,7 +4006,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xf20000
 literal|.0p
 operator|-
@@ -3531,7 +4018,9 @@ literal|0xb80000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xf30000
 literal|.0p
 operator|-
@@ -3541,7 +4030,9 @@ literal|0x940000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf40000
 literal|.0p
 operator|-
@@ -3551,7 +4042,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf50000
 literal|.0p
 operator|-
@@ -3562,7 +4055,9 @@ literal|0xf20000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf60000
 literal|.0p
 operator|-
@@ -3573,7 +4068,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf70000
 literal|.0p
 operator|-
@@ -3584,7 +4081,9 @@ literal|0xa20000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf80000
 literal|.0p
 operator|-
@@ -3595,7 +4094,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|33
+block|}
 block|,
+block|{
 literal|0xf90000
 literal|.0p
 operator|-
@@ -3606,7 +4107,9 @@ literal|0xc40000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xfa0000
 literal|.0p
 operator|-
@@ -3617,7 +4120,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|34
+block|}
 block|,
+block|{
 literal|0xfb0000
 literal|.0p
 operator|-
@@ -3628,7 +4133,9 @@ literal|0xc80000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xfc0000
 literal|.0p
 operator|-
@@ -3639,7 +4146,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|35
+block|}
 block|,
+block|{
 literal|0xfd0000
 literal|.0p
 operator|-
@@ -3650,7 +4159,9 @@ literal|0x900000
 literal|.0p
 operator|-
 literal|36
+block|}
 block|,
+block|{
 literal|0xfe0000
 literal|.0p
 operator|-
@@ -3661,7 +4172,9 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|37
+block|}
 block|,
+block|{
 literal|0xff0000
 literal|.0p
 operator|-
@@ -3672,13 +4185,16 @@ literal|0x800000
 literal|.0p
 operator|-
 literal|39
+block|}
 block|,
+block|{
 literal|0x800000
 literal|.0p
 operator|-
 literal|22
 block|,
 literal|0
+block|}
 block|, }
 struct|;
 end_struct

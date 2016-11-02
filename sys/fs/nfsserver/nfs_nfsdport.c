@@ -1684,7 +1684,7 @@ name|cn_pnbuf
 expr_stmt|;
 name|ndp
 operator|->
-name|ni_strictrelative
+name|ni_lcf
 operator|=
 literal|0
 expr_stmt|;

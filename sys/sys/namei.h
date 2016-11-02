@@ -87,6 +87,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|nameicap_tracker
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|nameicap_tracker_head
+argument_list|,
+name|nameicap_tracker
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Encapsulation of namei parameters.  */
 end_comment
@@ -135,9 +151,9 @@ name|ni_dirfd
 decl_stmt|;
 comment|/* starting directory for *at functions */
 name|int
-name|ni_strictrelative
+name|ni_lcf
 decl_stmt|;
-comment|/* relative lookup only; no '..' */
+comment|/* local call flags */
 comment|/* 	 * Results: returned from namei 	 */
 name|struct
 name|filecaps
@@ -175,6 +191,10 @@ comment|/* 	 * Lookup parameters: this structure describes the subset of 	 * inf
 name|struct
 name|componentname
 name|ni_cnd
+decl_stmt|;
+name|struct
+name|nameicap_tracker_head
+name|ni_cap_tracker
 decl_stmt|;
 block|}
 struct|;
@@ -559,6 +579,32 @@ end_define
 
 begin_comment
 comment|/* mask of parameter descriptors */
+end_comment
+
+begin_comment
+comment|/*  * Flags in ni_lcf, valid for the duration of the namei call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NI_LCF_STRICTRELATIVE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* relative lookup only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NI_LCF_CAP_DOTDOT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* ".." in strictrelative case */
 end_comment
 
 begin_comment

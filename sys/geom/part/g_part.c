@@ -11554,6 +11554,13 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|biotrack
+argument_list|(
+name|bp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|pp
 operator|=
 name|bp

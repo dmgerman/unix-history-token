@@ -2644,13 +2644,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_TSO_LEN
-value|66
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_INTS_PER_SEC
 value|8000
 end_define

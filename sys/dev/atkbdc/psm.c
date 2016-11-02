@@ -4623,7 +4623,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * Enable tap& drag gestures. We use a Mode Byte 			 * and clear the DisGest bit (see Â§2.5 of Synaptics 			 * TouchPad Interfacing Guide). 			 */
 name|VLOG
 argument_list|(
 literal|2
@@ -4639,22 +4638,14 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
-name|mouse_ext_command
+name|synaptics_set_mode
 argument_list|(
 name|sc
-operator|->
-name|kbdc
 argument_list|,
-literal|0x00
+name|synaptics_preferred_mode
+argument_list|(
+name|sc
 argument_list|)
-expr_stmt|;
-name|set_mouse_sampling_rate
-argument_list|(
-name|sc
-operator|->
-name|kbdc
-argument_list|,
-literal|20
 argument_list|)
 expr_stmt|;
 block|}
@@ -4666,7 +4657,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Disable tap& drag gestures. We use a Mode Byte 			 * and set the DisGest bit (see Â§2.5 of Synaptics 			 * TouchPad Interfacing Guide). 			 */
 name|VLOG
 argument_list|(
 literal|2
@@ -4682,22 +4672,14 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
-name|mouse_ext_command
+name|synaptics_set_mode
 argument_list|(
 name|sc
-operator|->
-name|kbdc
 argument_list|,
-literal|0x04
+name|synaptics_preferred_mode
+argument_list|(
+name|sc
 argument_list|)
-expr_stmt|;
-name|set_mouse_sampling_rate
-argument_list|(
-name|sc
-operator|->
-name|kbdc
-argument_list|,
-literal|20
 argument_list|)
 expr_stmt|;
 block|}
@@ -25401,6 +25383,38 @@ block|{
 name|int
 name|mode_byte
 decl_stmt|;
+comment|/* Check if we are in relative mode */
+if|if
+condition|(
+name|sc
+operator|->
+name|hw
+operator|.
+name|model
+operator|!=
+name|MOUSE_MODEL_SYNAPTICS
+condition|)
+block|{
+if|if
+condition|(
+name|tap_enabled
+operator|==
+literal|0
+condition|)
+comment|/* 			 * Disable tap& drag gestures. We use a Mode Byte 			 * and set the DisGest bit (see Â§2.5 of Synaptics 			 * TouchPad Interfacing Guide). 			 */
+return|return
+operator|(
+literal|0x04
+operator|)
+return|;
+else|else
+comment|/* 			 * Enable tap& drag gestures. We use a Mode Byte 			 * and clear the DisGest bit (see Â§2.5 of Synaptics 			 * TouchPad Interfacing Guide). 			 */
+return|return
+operator|(
+literal|0x00
+operator|)
+return|;
+block|}
 name|mode_byte
 operator|=
 literal|0xc4
@@ -25457,7 +25471,7 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable advanced gestures mode if supported and we are not entering 	 * passthrough mode. 	 */
+comment|/* 	 * Enable advanced gestures mode if supported and we are not entering 	 * passthrough or relative mode. 	 */
 if|if
 condition|(
 operator|(
@@ -25473,6 +25487,14 @@ name|synhw
 operator|.
 name|capReportsV
 operator|)
+operator|&&
+name|sc
+operator|->
+name|hw
+operator|.
+name|model
+operator|==
+name|MOUSE_MODEL_SYNAPTICS
 operator|&&
 operator|!
 operator|(
@@ -27392,6 +27414,15 @@ operator|(
 name|FALSE
 operator|)
 return|;
+comment|/* Set mouse type just now for synaptics_set_mode() */
+name|sc
+operator|->
+name|hw
+operator|.
+name|model
+operator|=
+name|MOUSE_MODEL_SYNAPTICS
+expr_stmt|;
 name|synaptics_set_mode
 argument_list|(
 name|sc

@@ -1358,7 +1358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipfw processing for ethernet packets (in and out).  * Inteface is NULL from ether_demux, and ifp from  * ether_output_frame.  */
+comment|/*  * ipfw processing for ethernet packets (in and out).  */
 end_comment
 
 begin_function
@@ -1378,7 +1378,7 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-name|dst
+name|ifp
 parameter_list|,
 name|int
 name|dir
@@ -1593,7 +1593,7 @@ name|dir
 operator|==
 name|PFIL_OUT
 condition|?
-name|dst
+name|ifp
 else|:
 name|NULL
 expr_stmt|;
@@ -1742,9 +1742,6 @@ name|ret
 operator|=
 name|EACCES
 expr_stmt|;
-name|int
-name|dir
-decl_stmt|;
 if|if
 condition|(
 name|ip_dn_io_ptr
@@ -1760,15 +1757,15 @@ name|NULL
 expr_stmt|;
 name|dir
 operator|=
-name|PROTO_LAYER2
-operator||
 operator|(
-name|dst
-condition|?
-name|DIR_OUT
-else|:
-name|DIR_IN
+name|dir
+operator|==
+name|PFIL_IN
 operator|)
+condition|?
+name|DIR_IN
+else|:
+name|DIR_OUT
 expr_stmt|;
 name|ip_dn_io_ptr
 argument_list|(
@@ -1776,6 +1773,8 @@ operator|&
 name|m
 argument_list|,
 name|dir
+operator||
+name|PROTO_LAYER2
 argument_list|,
 operator|&
 name|args

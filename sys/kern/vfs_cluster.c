@@ -4442,6 +4442,13 @@ argument_list|(
 name|tbp
 argument_list|)
 expr_stmt|;
+name|buf_track
+argument_list|(
+name|tbp
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&

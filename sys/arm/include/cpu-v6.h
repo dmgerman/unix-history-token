@@ -86,6 +86,111 @@ name|CPU_ASID_KERNEL
 value|0
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+end_if
+
+begin_comment
+comment|/* No SMP so no need to use the MP extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_USE_MP_EXTENSIONS
+value|0
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_CORTEXA8
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|CPU_CORTEXA_MP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+operator|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARM_USE_MP_EXTENSIONS
+value|(cpuinfo.mp_ext != 0)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_CORTEXA8
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ARM_USE_MP_EXTENSIONS
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARM_USE_MP_EXTENSIONS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ARM_ARCH>= 7 */
+end_comment
+
 begin_function_decl
 name|void
 name|dcache_wbinv_poc_all
@@ -297,9 +402,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
 
 begin_macro
@@ -341,9 +443,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
 
 begin_macro
@@ -387,9 +486,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
 
 begin_macro
@@ -461,9 +557,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
 
 begin_macro
@@ -636,9 +729,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
 
 begin_macro
@@ -2192,43 +2282,7 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_CORTEXA8
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ARM_HAVE_MP_EXTENSIONS
-value|(cpuinfo.mp_ext != 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ARM_HAVE_MP_EXTENSIONS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2244,7 +2298,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_TLBIALLIS
 argument_list|()
@@ -2273,7 +2327,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_TLBIASIDIS
 argument_list|(
@@ -2326,7 +2380,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_TLBIMVAAIS
 argument_list|(
@@ -2410,7 +2464,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 block|{
 for|for
@@ -2463,7 +2517,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SMP */
+comment|/* __ARM_ARCH< 7 */
 end_comment
 
 begin_define
@@ -2510,7 +2564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP */
+comment|/* __ARM_ARCH< 7 */
 end_comment
 
 begin_comment
@@ -2556,12 +2610,9 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 block|{
 for|for
@@ -2614,12 +2665,9 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_ICIALLUIS
 argument_list|()
@@ -2657,12 +2705,9 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_ICIALLUIS
 argument_list|()
@@ -2700,12 +2745,9 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 name|_CP15_BPIALLIS
 argument_list|()
@@ -2764,12 +2806,9 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-name|SMP
 if|if
 condition|(
-name|ARM_HAVE_MP_EXTENSIONS
+name|ARM_USE_MP_EXTENSIONS
 condition|)
 block|{
 for|for
