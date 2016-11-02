@@ -8711,6 +8711,10 @@ name|SSL_R_TLS_INVALID_ECPOINTFORMAT_LIST
 value|227
 define|#
 directive|define
+name|SSL_R_TOO_MANY_WARN_ALERTS
+value|409
+define|#
+directive|define
 name|SSL_R_TLS_PEER_DID_NOT_RESPOND_WITH_CERTIFICATE_LIST
 value|233
 define|#
