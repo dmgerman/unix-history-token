@@ -6376,6 +6376,12 @@ name|spinup_wait_time
 operator|=
 name|DEFAULT_SPINUP_WAIT
 expr_stmt|;
+name|sc
+operator|->
+name|use_phynum
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Grab the global variables. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -6445,6 +6451,16 @@ operator|&
 name|sc
 operator|->
 name|spinup_wait_time
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.mpr.use_phy_num"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|use_phynum
 argument_list|)
 expr_stmt|;
 comment|/* Grab the unit-instance variables */
@@ -6698,6 +6714,35 @@ operator|&
 name|sc
 operator|->
 name|spinup_wait_time
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tmpstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpstr
+argument_list|)
+argument_list|,
+literal|"dev.mpr.%d.use_phy_num"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|mpr_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+name|tmpstr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|use_phynum
 argument_list|)
 expr_stmt|;
 block|}
@@ -7219,6 +7264,31 @@ name|DEFAULT_SPINUP_WAIT
 argument_list|,
 literal|"seconds to wait for "
 literal|"spinup after SATA ID error"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"use_phy_num"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|use_phynum
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use the phy number for enumeration"
 argument_list|)
 expr_stmt|;
 block|}

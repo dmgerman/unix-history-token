@@ -856,6 +856,9 @@ decl_stmt|;
 name|int
 name|spinup_wait_time
 decl_stmt|;
+name|int
+name|use_phynum
+decl_stmt|;
 name|uint64_t
 name|chain_alloc_fail
 decl_stmt|;
