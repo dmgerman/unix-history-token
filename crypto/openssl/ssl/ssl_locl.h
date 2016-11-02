@@ -423,6 +423,13 @@ begin_comment
 comment|/* up from 16 for SSLv3 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_WARN_ALERT_COUNT
+value|5
+end_define
+
 begin_comment
 comment|/*  * Define the Bitmasks for SSL_CIPHER.algorithms.  * This bits are used packed as dense as possible. If new methods/ciphers  * etc will be added, the bits a likely to change, so this information  * is for internal library use only, even though SSL_CIPHER.algorithms  * can be publicly accessed.  * Use the according functions for cipher management instead.  *  * The bit mask handling in the selection and sorting scheme in  * ssl_create_cipher_list() has only limited capabilities, reflecting  * that the different entities within are mutually exclusive:  * ONLY ONE BIT PER MASK CAN BE SET AT A TIME.  */
 end_comment

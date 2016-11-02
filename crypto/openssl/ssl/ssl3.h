@@ -1116,6 +1116,11 @@ comment|/* !OPENSSL_NO_EC */
 endif|#
 directive|endif
 comment|/* !OPENSSL_NO_TLSEXT */
+comment|/* Count of the number of consecutive warning alerts received */
+name|unsigned
+name|int
+name|alert_count
+decl_stmt|;
 block|}
 name|SSL3_STATE
 typedef|;
