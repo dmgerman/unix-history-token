@@ -5452,6 +5452,12 @@ operator|||
 operator|(
 name|type
 operator|==
+name|DATA_TYPE_INT8_ARRAY
+operator|)
+operator|||
+operator|(
+name|type
+operator|==
 name|DATA_TYPE_UINT8_ARRAY
 operator|)
 operator|||
