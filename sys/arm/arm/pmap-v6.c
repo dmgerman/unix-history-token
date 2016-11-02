@@ -1922,6 +1922,10 @@ comment|/* Add shareable bits for normal memory in SMP case. */
 ifdef|#
 directive|ifdef
 name|SMP
+if|if
+condition|(
+name|ARM_USE_MP_EXTENSIONS
+condition|)
 name|prrr
 operator||=
 name|PRRR_NS1

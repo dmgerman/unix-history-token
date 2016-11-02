@@ -807,11 +807,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
 end_if
 
 begin_comment
@@ -1322,11 +1317,6 @@ directive|if
 name|__ARM_ARCH
 operator|>=
 literal|7
-operator|&&
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
 end_if
 
 begin_comment
