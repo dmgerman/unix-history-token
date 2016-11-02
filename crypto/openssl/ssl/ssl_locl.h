@@ -962,6 +962,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_WARN_ALERT_COUNT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|TLS1_PRF_DGST_MASK
 value|(0xff<< TLS1_PRF_DGST_SHIFT)
 end_define
