@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Intel fourth generation mobile cpus integrated I2C deviceer.  *  * See ig4_reg.h for datasheet reference and notes.  * See ig4_var.h for locking semantics.  */
+comment|/*  * Intel fourth generation mobile cpus integrated I2C device.  *  * See ig4_reg.h for datasheet reference and notes.  * See ig4_var.h for locking semantics.  */
 end_comment
 
 begin_include
