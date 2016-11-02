@@ -185,7 +185,7 @@ end_include
 
 begin_struct
 struct|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 block|{
 name|device_t
 name|dev
@@ -292,7 +292,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* imx5x and earlier. */
+comment|/* fsl5x and earlier. */
 end_comment
 
 begin_define
@@ -303,7 +303,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* imx6. */
+comment|/* fsl6. */
 end_comment
 
 begin_comment
@@ -762,10 +762,10 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|uint16_t
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -775,10 +775,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -791,7 +791,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 parameter_list|(
 name|void
 modifier|*
@@ -807,7 +807,7 @@ name|uint32_t
 name|RD4
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -837,7 +837,7 @@ name|void
 name|WR4
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -865,7 +865,7 @@ end_function
 begin_function
 specifier|static
 name|uint8_t
-name|imx_sdhci_read_1
+name|fsl_sdhci_read_1
 parameter_list|(
 name|device_t
 name|dev
@@ -880,7 +880,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1037,7 +1037,7 @@ end_function
 begin_function
 specifier|static
 name|uint16_t
-name|imx_sdhci_read_2
+name|fsl_sdhci_read_2
 parameter_list|(
 name|device_t
 name|dev
@@ -1052,7 +1052,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1202,7 +1202,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 argument_list|(
 name|sc
 argument_list|)
@@ -1240,7 +1240,7 @@ end_function
 begin_function
 specifier|static
 name|uint32_t
-name|imx_sdhci_read_4
+name|fsl_sdhci_read_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1255,7 +1255,7 @@ name|off
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1358,7 +1358,7 @@ name|val32
 operator|)
 return|;
 block|}
-comment|/* 	 * imx_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
+comment|/* 	 * fsl_sdhci_intr() can synthesize a DATA_END interrupt following a 	 * command with an R1B response, mix it into the hardware status. 	 */
 if|if
 condition|(
 name|off
@@ -1385,7 +1385,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_read_multi_4
+name|fsl_sdhci_read_multi_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1407,7 +1407,7 @@ name|count
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1435,7 +1435,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_1
+name|fsl_sdhci_write_1
 parameter_list|(
 name|device_t
 name|dev
@@ -1453,7 +1453,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1630,7 +1630,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_2
+name|fsl_sdhci_write_2
 parameter_list|(
 name|device_t
 name|dev
@@ -1648,7 +1648,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -1668,7 +1668,7 @@ operator|==
 name|SDHCI_CLOCK_CONTROL
 condition|)
 block|{
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 argument_list|(
 name|sc
 argument_list|,
@@ -1677,7 +1677,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Figure out whether we need to check the DAT0 line for busy status at 	 * interrupt time.  The controller should be doing this, but for some 	 * reason it doesn't.  There are two cases: 	 *  - R1B response with no data transfer should generate a DATA_END (aka 	 *    TRANSFER_COMPLETE) interrupt after waiting for busy, but if 	 *    there's no data transfer there's no DATA_END interrupt.  This is 	 *    documented; they seem to think it's a feature. 	 *  - R1B response after Auto-CMD12 appears to not work, even though 	 *    there's a control bit for it (bit 3) in the vendor register. 	 * When we're starting a command that needs a manual DAT0 line check at 	 * interrupt time, we leave ourselves a note in r1bfix_type so that we 	 * can do the extra work in imx_sdhci_intr(). 	 */
+comment|/* 	 * Figure out whether we need to check the DAT0 line for busy status at 	 * interrupt time.  The controller should be doing this, but for some 	 * reason it doesn't.  There are two cases: 	 *  - R1B response with no data transfer should generate a DATA_END (aka 	 *    TRANSFER_COMPLETE) interrupt after waiting for busy, but if 	 *    there's no data transfer there's no DATA_END interrupt.  This is 	 *    documented; they seem to think it's a feature. 	 *  - R1B response after Auto-CMD12 appears to not work, even though 	 *    there's a control bit for it (bit 3) in the vendor register. 	 * When we're starting a command that needs a manual DAT0 line check at 	 * interrupt time, we leave ourselves a note in r1bfix_type so that we 	 * can do the extra work in fsl_sdhci_intr(). 	 */
 if|if
 condition|(
 name|off
@@ -1960,7 +1960,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_4
+name|fsl_sdhci_write_4
 parameter_list|(
 name|device_t
 name|dev
@@ -1978,7 +1978,7 @@ name|val
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2018,7 +2018,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_write_multi_4
+name|fsl_sdhci_write_multi_4
 parameter_list|(
 name|device_t
 name|dev
@@ -2040,7 +2040,7 @@ name|count
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2068,10 +2068,10 @@ end_function
 begin_function
 specifier|static
 name|uint16_t
-name|imx_sdhc_get_clock
+name|fsl_sdhc_get_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2150,10 +2150,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhc_set_clock
+name|fsl_sdhc_set_clock
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -2434,10 +2434,10 @@ end_function
 begin_function
 specifier|static
 name|boolean_t
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 parameter_list|(
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2496,7 +2496,7 @@ name|SBT_1MS
 argument_list|,
 literal|0
 argument_list|,
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 argument_list|,
 name|sc
 argument_list|,
@@ -2560,7 +2560,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_r1bfix_func
+name|fsl_sdhci_r1bfix_func
 parameter_list|(
 name|void
 modifier|*
@@ -2568,7 +2568,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2589,7 +2589,7 @@ argument_list|)
 expr_stmt|;
 name|r1bwait_done
 operator|=
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 argument_list|(
 name|sc
 argument_list|)
@@ -2622,7 +2622,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|imx_sdhci_intr
+name|fsl_sdhci_intr
 parameter_list|(
 name|void
 modifier|*
@@ -2630,7 +2630,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2713,7 +2713,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|imx_sdhci_r1bfix_is_wait_done
+name|fsl_sdhci_r1bfix_is_wait_done
 argument_list|(
 name|sc
 argument_list|)
@@ -2767,7 +2767,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_get_ro
+name|fsl_sdhci_get_ro
 parameter_list|(
 name|device_t
 name|bus
@@ -2787,7 +2787,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_detach
+name|fsl_sdhci_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -2804,14 +2804,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_attach
+name|fsl_sdhci_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 modifier|*
 name|sc
 init|=
@@ -2857,7 +2857,7 @@ name|HWTYPE_NONE
 condition|)
 name|panic
 argument_list|(
-literal|"Impossible: not compatible in imx_sdhci_attach()"
+literal|"Impossible: not compatible in fsl_sdhci_attach()"
 argument_list|)
 expr_stmt|;
 name|rid
@@ -2962,7 +2962,7 @@ name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
-name|imx_sdhci_intr
+name|fsl_sdhci_intr
 argument_list|,
 name|sc
 argument_list|,
@@ -3189,7 +3189,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|imx_sdhci_probe
+name|fsl_sdhci_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -3264,7 +3264,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|imx_sdhci_methods
+name|fsl_sdhci_methods
 index|[]
 init|=
 block|{
@@ -3273,21 +3273,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|imx_sdhci_probe
+name|fsl_sdhci_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|imx_sdhci_attach
+name|fsl_sdhci_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|imx_sdhci_detach
+name|fsl_sdhci_detach
 argument_list|)
 block|,
 comment|/* Bus interface */
@@ -3331,7 +3331,7 @@ name|DEVMETHOD
 argument_list|(
 name|mmcbr_get_ro
 argument_list|,
-name|imx_sdhci_get_ro
+name|fsl_sdhci_get_ro
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -3353,56 +3353,56 @@ name|DEVMETHOD
 argument_list|(
 name|sdhci_read_1
 argument_list|,
-name|imx_sdhci_read_1
+name|fsl_sdhci_read_1
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_2
 argument_list|,
-name|imx_sdhci_read_2
+name|fsl_sdhci_read_2
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_4
 argument_list|,
-name|imx_sdhci_read_4
+name|fsl_sdhci_read_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_read_multi_4
 argument_list|,
-name|imx_sdhci_read_multi_4
+name|fsl_sdhci_read_multi_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_1
 argument_list|,
-name|imx_sdhci_write_1
+name|fsl_sdhci_write_1
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_2
 argument_list|,
-name|imx_sdhci_write_2
+name|fsl_sdhci_write_2
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_4
 argument_list|,
-name|imx_sdhci_write_4
+name|fsl_sdhci_write_4
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|sdhci_write_multi_4
 argument_list|,
-name|imx_sdhci_write_multi_4
+name|fsl_sdhci_write_multi_4
 argument_list|)
 block|,
 block|{
@@ -3417,24 +3417,24 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|imx_sdhci_devclass
+name|fsl_sdhci_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|imx_sdhci_driver
+name|fsl_sdhci_driver
 init|=
 block|{
-literal|"sdhci_imx"
+literal|"sdhci_fsl"
 block|,
-name|imx_sdhci_methods
+name|fsl_sdhci_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|imx_sdhci_softc
+name|fsl_sdhci_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -3443,13 +3443,13 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|simplebus
 argument_list|,
-name|imx_sdhci_driver
+name|fsl_sdhci_driver
 argument_list|,
-name|imx_sdhci_devclass
+name|fsl_sdhci_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -3461,7 +3461,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|sdhci
 argument_list|,
@@ -3479,7 +3479,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|mmc
 argument_list|,
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|mmc_driver
 argument_list|,
@@ -3495,7 +3495,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|sdhci_imx
+name|sdhci_fsl
 argument_list|,
 name|mmc
 argument_list|,
