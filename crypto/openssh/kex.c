@@ -2456,6 +2456,15 @@ condition|)
 return|return
 name|SSH_ERR_INVALID_ARGUMENT
 return|;
+name|ssh_dispatch_set
+argument_list|(
+name|ssh
+argument_list|,
+name|SSH2_MSG_KEXINIT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 name|sshpkt_ptr
