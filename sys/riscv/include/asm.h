@@ -92,7 +92,7 @@ parameter_list|(
 name|sym
 parameter_list|)
 define|\
-value|.text; .globl sym; .type sym,@function; .align 2; sym:
+value|.text; .globl sym; .type sym,@function; .align 4; sym:
 end_define
 
 begin_define
