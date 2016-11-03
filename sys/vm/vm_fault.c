@@ -2089,6 +2089,7 @@ break|break;
 block|}
 name|readrest
 label|:
+comment|/* 		 * At this point, we have either allocated a new page or found 		 * an existing page that is only partially valid. 		 * 		 * We hold a reference on the current object and the page is 		 * exclusive busied. 		 */
 comment|/* 		 * If the pager for the current object might have the page, 		 * then determine the number of additional pages to read and 		 * potentially reprioritize previously read pages for earlier 		 * reclamation.  These operations should only be performed 		 * once per page fault.  Even if the current pager doesn't 		 * have the page, the number of additional pages to read will 		 * apply to subsequent objects in the shadow chain. 		 */
 if|if
 condition|(
@@ -2298,7 +2299,7 @@ operator|!=
 name|OBJT_DEFAULT
 condition|)
 block|{
-comment|/* 			 * We have either allocated a new page or found an 			 * existing page that is only partially valid.  We 			 * hold a reference on fs.object and the page is 			 * exclusive busied. 			 */
+comment|/* 			 * Release the map lock before locking the vnode or 			 * sleeping in the pager.  (If the current object has 			 * a shadow, then an earlier iteration of this loop 			 * may have already unlocked the map.) 			 */
 name|unlock_map
 argument_list|(
 operator|&
@@ -2330,6 +2331,7 @@ operator|.
 name|vp
 condition|)
 block|{
+comment|/* 				 * Perform an unlock in case the desired vnode 				 * changed while the map was unlocked during a 				 * retry. 				 */
 name|unlock_vp
 argument_list|(
 operator|&
