@@ -14129,6 +14129,7 @@ name|void
 modifier|*
 name|user_addr
 parameter_list|,
+name|unsigned
 name|int
 name|len
 parameter_list|,
@@ -14391,6 +14392,34 @@ name|uint8_t
 modifier|*
 name|tmpptr
 decl_stmt|;
+if|if
+condition|(
+name|args
+index|[
+name|i
+index|]
+operator|.
+name|namelen
+operator|==
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|error_str
+argument_list|,
+name|error_str_len
+argument_list|,
+literal|"Argument %d "
+literal|"name length is zero"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
 name|args
 index|[
 name|i
@@ -14483,6 +14512,34 @@ operator|&
 name|CTL_BEARG_RD
 condition|)
 block|{
+if|if
+condition|(
+name|args
+index|[
+name|i
+index|]
+operator|.
+name|vallen
+operator|==
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|error_str
+argument_list|,
+name|error_str_len
+argument_list|,
+literal|"Argument %d "
+literal|"value length is zero"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
 name|tmpptr
 operator|=
 name|ctl_copyin_alloc

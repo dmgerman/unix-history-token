@@ -736,13 +736,14 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*  * Backend Argument:  *  * namelen:	Length of the name field, including the terminating NUL.  *  * name:	Name of the parameter.  This must be NUL-terminated.  *  * flags:	Flags for the parameter, see above for values.  *  * vallen:	Length of the value in bytes.  *  * value:	Value to be set/fetched.  *  * kname:	For kernel use only.  *  * kvalue:	For kernel use only.  */
+comment|/*  * Backend Argument:  *  * namelen:	Length of the name field, including the terminating NUL.  *  * name:	Name of the parameter.  This must be NUL-terminated.  *  * flags:	Flags for the parameter, see above for values.  *  * vallen:	Length of the value in bytes, including the terminating NUL.  *  * value:	Value to be set/fetched. This must be NUL-terminated.  *  * kname:	For kernel use only.  *  * kvalue:	For kernel use only.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ctl_be_arg
 block|{
+name|unsigned
 name|int
 name|namelen
 decl_stmt|;
@@ -753,6 +754,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|unsigned
 name|int
 name|vallen
 decl_stmt|;
