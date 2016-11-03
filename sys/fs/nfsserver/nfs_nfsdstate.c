@@ -262,6 +262,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfsrv_writedelegifpos
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|writedelegifpos
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfsrv_writedelegifpos
+argument_list|,
+literal|0
+argument_list|,
+literal|"Issue a write delegation for read opens if possible"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Hash lists for nfs V4.  */
 end_comment
@@ -316,15 +346,6 @@ begin_decl_stmt
 specifier|static
 name|time_t
 name|nfsrvboottime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nfsrv_writedelegifpos
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
