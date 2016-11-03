@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2014, 2015 by Delphix. All rights reserved.  * Copyright 2016 The MathWorks, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -153,6 +153,12 @@ modifier|*
 name|zc
 parameter_list|)
 block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|uint32_t
 name|n
 init|=
@@ -289,39 +295,6 @@ name|zr_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|ASSERT3S
-argument_list|(
-name|zrl
-operator|->
-name|zr_refcount
-argument_list|,
-operator|>=
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|zrl
-operator|->
-name|zr_refcount
-operator|++
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZFS_DEBUG
-name|zrl
-operator|->
-name|zr_owner
-operator|=
-name|curthread
-expr_stmt|;
-name|zrl
-operator|->
-name|zr_caller
-operator|=
-name|zc
-expr_stmt|;
-endif|#
-directive|endif
 name|mutex_exit
 argument_list|(
 operator|&
@@ -330,6 +303,7 @@ operator|->
 name|zr_mtx
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
