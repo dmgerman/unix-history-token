@@ -6438,8 +6438,8 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"setting up USB template failed maybe the USB "
-literal|"template module has not been loaded\n"
+literal|"setting up USB template failed - "
+literal|"usb_template(4) not loaded?\n"
 argument_list|)
 expr_stmt|;
 goto|goto
