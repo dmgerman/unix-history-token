@@ -1656,6 +1656,10 @@ name|clk_gate
 operator|=
 name|NULL
 expr_stmt|;
+name|rst_abp
+operator|=
+name|NULL
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
