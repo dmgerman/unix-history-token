@@ -11458,7 +11458,7 @@ literal|0x44
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EIO
 argument_list|,
 literal|"Internal target failure"
 argument_list|)
