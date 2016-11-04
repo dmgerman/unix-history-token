@@ -10410,6 +10410,20 @@ else|else
 block|{
 if|if
 condition|(
+name|__predict_false
+argument_list|(
+name|pageproc
+operator|==
+name|NULL
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"vm_wait in early boot"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|vm_pageout_wanted
 condition|)
