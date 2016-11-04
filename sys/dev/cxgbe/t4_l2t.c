@@ -1425,7 +1425,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX: e->ifp may not be around. 		 * XXX: IPv6 addresses may not align properly in the output. 		 */
+comment|/* 		 * XXX: IPv6 addresses may not align properly in the output. 		 */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -1512,8 +1512,14 @@ argument_list|,
 name|e
 operator|->
 name|ifp
+condition|?
+name|e
+operator|->
+name|ifp
 operator|->
 name|if_xname
+else|:
+literal|"-"
 argument_list|)
 expr_stmt|;
 name|skip
