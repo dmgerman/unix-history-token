@@ -14936,14 +14936,14 @@ name|maxrate
 argument_list|,
 literal|1
 argument_list|,
-literal|10000000
+literal|100000000
 argument_list|)
 condition|)
 block|{
 name|warnx
 argument_list|(
 literal|"sched params \"max-rate\" takes "
-literal|"value(1-10000000) for rate-mode absolute"
+literal|"value(1-100000000) for rate-mode absolute"
 argument_list|)
 expr_stmt|;
 name|errs

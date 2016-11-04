@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"t4_ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common/t4_msg.h"
 end_include
 
@@ -1021,6 +1027,41 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+block|{
+comment|/* tx_sched_class flags */
+name|TX_SC_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/* Set up in hardware, active. */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|tx_sched_class
+block|{
+name|int
+name|refcount
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|t4_sched_class_params
+name|params
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|port_info
@@ -1047,6 +1088,12 @@ decl_stmt|;
 name|int
 name|uld_vis
 decl_stmt|;
+name|struct
+name|tx_sched_class
+modifier|*
+name|tc
+decl_stmt|;
+comment|/* traffic classes for this channel */
 name|struct
 name|mtx
 name|pi_lock
@@ -1941,6 +1988,10 @@ name|__be32
 name|cpl_ctrl0
 decl_stmt|;
 comment|/* for convenience */
+name|int
+name|tc_idx
+decl_stmt|;
+comment|/* traffic class */
 name|struct
 name|task
 name|tx_reclaim_task
