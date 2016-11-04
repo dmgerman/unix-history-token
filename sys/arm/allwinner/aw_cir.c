@@ -1656,7 +1656,7 @@ name|clk_gate
 operator|=
 name|NULL
 expr_stmt|;
-name|rst_abp
+name|rst_apb
 operator|=
 name|NULL
 expr_stmt|;
