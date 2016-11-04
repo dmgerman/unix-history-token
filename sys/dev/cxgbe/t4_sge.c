@@ -12793,6 +12793,13 @@ expr_stmt|;
 name|remaining
 operator|--
 expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|ifp
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|write_txpkt_wr
@@ -12808,13 +12815,6 @@ argument_list|,
 name|m0
 argument_list|,
 name|available
-argument_list|)
-expr_stmt|;
-name|ETHER_BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m0
 argument_list|)
 expr_stmt|;
 block|}
