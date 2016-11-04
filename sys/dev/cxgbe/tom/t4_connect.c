@@ -688,39 +688,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|act_open_has_tid
-parameter_list|(
-name|unsigned
-name|int
-name|status
-parameter_list|)
-block|{
-return|return
-operator|(
-name|status
-operator|!=
-name|CPL_ERR_TCAM_FULL
-operator|&&
-name|status
-operator|!=
-name|CPL_ERR_TCAM_PARITY
-operator|&&
-name|status
-operator|!=
-name|CPL_ERR_CONN_EXIST
-operator|&&
-name|status
-operator|!=
-name|CPL_ERR_ARP_MISS
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Convert an ACT_OPEN_RPL status to an errno.  */
 end_comment
@@ -1248,9 +1215,8 @@ name|F_T5_OPT_2_VALID
 expr_stmt|;
 name|opt2
 operator||=
-name|F_CONG_CNTRL_VALID
+name|F_T5_ISS
 expr_stmt|;
-comment|/* OPT_2_ISS really, for T5 */
 block|}
 if|if
 condition|(
