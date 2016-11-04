@@ -11579,13 +11579,20 @@ name|cm
 argument_list|,
 name|MPR_INFO
 argument_list|,
-literal|"terminated ioc %x scsi %x state %x xfer %u\n"
+literal|"terminated ioc %x loginfo %x scsi %x state %x xfer %u\n"
 argument_list|,
 name|le16toh
 argument_list|(
 name|rep
 operator|->
 name|IOCStatus
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|rep
+operator|->
+name|IOCLogInfo
 argument_list|)
 argument_list|,
 name|rep
@@ -11642,13 +11649,20 @@ name|cm
 argument_list|,
 name|MPR_XINFO
 argument_list|,
-literal|"completed ioc %x scsi %x state %x xfer %u\n"
+literal|"completed ioc %x loginfo %x scsi %x state %x xfer %u\n"
 argument_list|,
 name|le16toh
 argument_list|(
 name|rep
 operator|->
 name|IOCStatus
+argument_list|)
+argument_list|,
+name|le32toh
+argument_list|(
+name|rep
+operator|->
+name|IOCLogInfo
 argument_list|)
 argument_list|,
 name|rep
