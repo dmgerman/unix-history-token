@@ -863,6 +863,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 comment|/* 	 * Later chips use a different FIFO offset. Unfortunately the FDT 	 * uses the same compatible string for old and new implementations. 	 */
 switch|switch
 condition|(
@@ -895,6 +901,17 @@ name|A31_MMC_FIFO
 expr_stmt|;
 break|break;
 block|}
+else|#
+directive|else
+comment|/* __aarch64__ */
+name|sc
+operator|->
+name|a10_fifo_reg
+operator|=
+name|A31_MMC_FIFO
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* De-assert reset */
 if|if
 condition|(
@@ -1228,7 +1245,7 @@ literal|0
 condition|)
 name|bus_width
 operator|=
-literal|1
+literal|4
 expr_stmt|;
 name|sc
 operator|->
@@ -1532,7 +1549,7 @@ operator|->
 name|a10_dev
 argument_list|)
 argument_list|,
-literal|1
+name|A10_MMC_DMA_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -1662,7 +1679,7 @@ operator|->
 name|a10_dev
 argument_list|)
 argument_list|,
-literal|1
+name|A10_MMC_DMA_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -1784,6 +1801,11 @@ name|a10_dma_map_err
 operator|=
 name|err
 expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return;
 name|dma_desc
 operator|=
 name|sc

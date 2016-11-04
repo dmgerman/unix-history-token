@@ -1090,6 +1090,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* DMA descriptors and data buffers must be aligned to 32-bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A10_MMC_DMA_ALIGN
+value|4
+end_define
+
 begin_endif
 endif|#
 directive|endif
