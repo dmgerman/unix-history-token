@@ -784,9 +784,9 @@ block|{
 operator|.
 name|min_uvolt
 operator|=
-literal|900000
+literal|1000000
 block|,
-comment|/* 0.9 V */
+comment|/* XXX 0.9 V doesn't work on all boards */
 operator|.
 name|max_uvolt
 operator|=
@@ -868,8 +868,6 @@ block|,
 literal|2116000000ULL
 block|,
 literal|2218000000ULL
-block|,
-literal|2320000000ULL
 block|,
 literal|2320000000ULL
 block|,
