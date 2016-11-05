@@ -2655,28 +2655,6 @@ name|DEFAULT_ITR
 value|(1000000000/(MAX_INTS_PER_SEC * 256))
 end_define
 
-begin_comment
-comment|/* Allow common code without TSO */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CSUM_TSO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -7039,7 +7017,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	** There have proven to be problems with TSO when not 	** at full gigabit speed, so disable the assist automatically 	** when at lower speeds.  -jfv 	*/
 if|if
 condition|(
 name|if_getcapenable
@@ -7048,15 +7025,6 @@ name|ifp
 argument_list|)
 operator|&
 name|IFCAP_TSO4
-condition|)
-block|{
-if|if
-condition|(
-name|adapter
-operator|->
-name|link_speed
-operator|==
-name|SPEED_1000
 condition|)
 name|if_sethwassistbits
 argument_list|(
@@ -7067,7 +7035,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Configure for OS presence */
 name|em_init_manageability
 argument_list|(
@@ -11604,6 +11571,44 @@ operator|->
 name|link_duplex
 argument_list|)
 expr_stmt|;
+comment|/*  		** There have proven to be problems with TSO when not 		** at full gigabit speed, so disable the assist automatically 		** when at lower speeds.  -jfv 		*/
+if|if
+condition|(
+name|adapter
+operator|->
+name|link_speed
+operator|!=
+name|SPEED_1000
+condition|)
+block|{
+name|if_sethwassistbits
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|,
+name|CSUM_TSO
+argument_list|)
+expr_stmt|;
+name|if_setcapenablebit
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|,
+name|IFCAP_TSO4
+argument_list|)
+expr_stmt|;
+name|if_setcapabilitiesbit
+argument_list|(
+name|ifp
+argument_list|,
+literal|0
+argument_list|,
+name|IFCAP_TSO4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Check if we must disable SPEED_MODE bit on PCI-E */
 if|if
 condition|(
