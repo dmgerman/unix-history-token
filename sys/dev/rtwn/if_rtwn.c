@@ -7432,6 +7432,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Pause beaconing. */
+name|rtwn_setbits_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_TXPAUSE
+argument_list|,
+literal|0
+argument_list|,
+name|R92C_TX_QUEUE_BCN
+argument_list|)
+expr_stmt|;
 comment|/* Receive beacons / probe responses from any BSSID. */
 if|if
 condition|(
@@ -7584,6 +7596,18 @@ comment|/* Restore basic rates mask. */
 name|rtwn_calc_basicrates
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Resume beaconing. */
+name|rtwn_setbits_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_TXPAUSE
+argument_list|,
+name|R92C_TX_QUEUE_BCN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|RTWN_UNLOCK
