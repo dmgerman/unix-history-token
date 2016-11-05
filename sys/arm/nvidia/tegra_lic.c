@@ -350,7 +350,7 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|tegra_lic_alloc_intr
+name|tegra_lic_activate_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -383,7 +383,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|PIC_ALLOC_INTR
+name|PIC_ACTIVATE_INTR
 argument_list|(
 name|sc
 operator|->
@@ -522,7 +522,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tegra_lic_release_intr
+name|tegra_lic_deactivate_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -555,7 +555,7 @@ argument_list|)
 decl_stmt|;
 return|return
 operator|(
-name|PIC_RELEASE_INTR
+name|PIC_DEACTIVATE_INTR
 argument_list|(
 name|sc
 operator|->
@@ -1232,9 +1232,9 @@ block|,
 comment|/* Interrupt controller interface */
 name|DEVMETHOD
 argument_list|(
-name|pic_alloc_intr
+name|pic_activate_intr
 argument_list|,
-name|tegra_lic_alloc_intr
+name|tegra_lic_activate_intr
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1260,9 +1260,9 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|pic_release_intr
+name|pic_deactivate_intr
 argument_list|,
-name|tegra_lic_release_intr
+name|tegra_lic_deactivate_intr
 argument_list|)
 block|,
 name|DEVMETHOD

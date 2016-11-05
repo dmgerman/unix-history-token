@@ -749,9 +749,6 @@ operator|.
 name|rl
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INTRNG
 name|ofw_bus_intr_to_rl
 argument_list|(
 name|childdev
@@ -768,8 +765,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|device_set_ivars
 argument_list|(
 name|childdev

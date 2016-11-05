@@ -1461,9 +1461,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INTRNG
 comment|/* Parse the interrupt resources. */
 if|if
 condition|(
@@ -1499,8 +1496,6 @@ name|NULL
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|device_set_ivars
 argument_list|(
 name|child
