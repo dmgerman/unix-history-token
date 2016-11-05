@@ -8339,6 +8339,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|pcib_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
@@ -8359,12 +8366,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|devclass_t
-name|pcib_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -8376,9 +8377,9 @@ name|tegra_pcib_driver
 argument_list|,
 name|pcib_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

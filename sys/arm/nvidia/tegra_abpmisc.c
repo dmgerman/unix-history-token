@@ -709,10 +709,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|tegra_abpmisc_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|tegra_abpmisc
+name|abpmisc
 argument_list|,
 name|tegra_abpmisc_driver
 argument_list|,
@@ -727,13 +735,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|tegra_abpmisc_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
 argument_list|(
@@ -745,9 +746,9 @@ name|tegra_abpmisc_driver
 argument_list|,
 name|tegra_abpmisc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|BUS_PASS_TIMER
 argument_list|)

@@ -2915,24 +2915,24 @@ name|tegra124_cpufreq_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|driver_t
+name|DEFINE_CLASS_0
+argument_list|(
+name|cpufreq
+argument_list|,
 name|tegra124_cpufreq_driver
-init|=
-block|{
-literal|"tegra124_cpufreq"
-block|,
+argument_list|,
 name|tegra124_cpufreq_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tegra124_cpufreq_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -2945,9 +2945,9 @@ name|tegra124_cpufreq_driver
 argument_list|,
 name|tegra124_cpufreq_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

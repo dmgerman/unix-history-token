@@ -1854,6 +1854,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
 name|gpio
@@ -1882,9 +1883,9 @@ name|as3722_driver
 argument_list|,
 name|as3722_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|74
 argument_list|)

@@ -2530,29 +2530,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|driver_t
+name|devclass_t
+name|tegra124_pmc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|DEFINE_CLASS_0
+argument_list|(
+name|pmc
+argument_list|,
 name|tegra124_pmc_driver
-init|=
-block|{
-literal|"tegra124_pmc"
-block|,
+argument_list|,
 name|tegra124_pmc_methods
-block|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tegra124_pmc_softc
 argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|tegra124_pmc_devclass
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
@@ -2565,9 +2565,9 @@ name|tegra124_pmc_driver
 argument_list|,
 name|tegra124_pmc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|70
 argument_list|)
