@@ -648,6 +648,9 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|char
 modifier|*
 name|name

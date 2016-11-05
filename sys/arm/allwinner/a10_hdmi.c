@@ -1577,6 +1577,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"ahb"
 argument_list|,
 operator|&
@@ -1611,6 +1613,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"hdmi"
 argument_list|,
 operator|&
@@ -1644,6 +1648,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"lcd"
 argument_list|,

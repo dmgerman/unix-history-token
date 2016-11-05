@@ -828,6 +828,9 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
 name|int
 name|idx
 parameter_list|,
@@ -844,6 +847,9 @@ name|clk_get_by_ofw_name
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|phandle_t
+name|node
 parameter_list|,
 specifier|const
 name|char

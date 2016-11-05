@@ -1834,6 +1834,8 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -1876,6 +1878,8 @@ condition|(
 name|hwreset_get_by_ofw_idx
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

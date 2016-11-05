@@ -922,6 +922,8 @@ name|self
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|aw_sc
 operator|->
@@ -965,6 +967,8 @@ operator|=
 name|clk_get_by_ofw_index
 argument_list|(
 name|self
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1025,6 +1029,8 @@ operator|=
 name|phy_get_by_ofw_name
 argument_list|(
 name|self
+argument_list|,
+literal|0
 argument_list|,
 literal|"usb"
 argument_list|,

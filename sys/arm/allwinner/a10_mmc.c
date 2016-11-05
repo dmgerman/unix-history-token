@@ -772,6 +772,8 @@ name|hwreset_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"ahb"
 argument_list|,
 operator|&
@@ -817,6 +819,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"ahb"
 argument_list|,
@@ -876,6 +880,8 @@ operator|=
 name|clk_get_by_ofw_name
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"mmc"
 argument_list|,

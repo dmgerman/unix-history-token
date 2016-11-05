@@ -3900,6 +3900,9 @@ parameter_list|(
 name|device_t
 name|cdev
 parameter_list|,
+name|phandle_t
+name|cnode
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -3910,8 +3913,6 @@ name|reg
 parameter_list|)
 block|{
 name|phandle_t
-name|cnode
-decl_stmt|,
 modifier|*
 name|cells
 decl_stmt|;
@@ -3931,6 +3932,12 @@ name|reg
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|cnode
+operator|<=
+literal|0
+condition|)
 name|cnode
 operator|=
 name|ofw_bus_get_node

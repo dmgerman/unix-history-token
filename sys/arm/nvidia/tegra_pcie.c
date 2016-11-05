@@ -5715,6 +5715,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"avddio-pex-supply"
 argument_list|,
 operator|&
@@ -5752,6 +5754,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"dvddio-pex-supply"
 argument_list|,
@@ -5791,6 +5795,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"avdd-pex-pll-supply"
 argument_list|,
 operator|&
@@ -5828,6 +5834,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"hvdd-pex-supply"
 argument_list|,
@@ -5867,6 +5875,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"hvdd-pex-pll-e-supply"
 argument_list|,
 operator|&
@@ -5905,6 +5915,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"vddio-pex-ctl-supply"
 argument_list|,
 operator|&
@@ -5942,6 +5954,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"avdd-pll-erefe-supply"
 argument_list|,
@@ -5982,6 +5996,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"pex"
 argument_list|,
 operator|&
@@ -6020,6 +6036,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"afi"
 argument_list|,
 operator|&
@@ -6057,6 +6075,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"pcie_x"
 argument_list|,
@@ -6097,6 +6117,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"pex"
 argument_list|,
 operator|&
@@ -6134,6 +6156,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"afi"
 argument_list|,
@@ -6173,6 +6197,8 @@ name|sc
 operator|->
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"pll_e"
 argument_list|,
 operator|&
@@ -6210,6 +6236,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"cml"
 argument_list|,
@@ -6249,6 +6277,8 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"pcie"
 argument_list|,

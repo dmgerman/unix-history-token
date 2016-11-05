@@ -259,6 +259,8 @@ name|clk_get_by_ofw_index
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 name|off
 argument_list|,
 operator|&
@@ -314,6 +316,8 @@ init|;
 name|hwreset_get_by_ofw_idx
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 name|off
 argument_list|,
@@ -391,6 +395,8 @@ condition|(
 name|regulator_get_by_ofw_property
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 name|pname
 argument_list|,

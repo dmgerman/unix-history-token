@@ -417,6 +417,8 @@ name|clk_get_by_ofw_name
 argument_list|(
 name|dev
 argument_list|,
+literal|0
+argument_list|,
 literal|"baudclk"
 argument_list|,
 name|baudclk
@@ -427,6 +429,8 @@ operator|&&
 name|clk_get_by_ofw_index
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -447,6 +451,8 @@ operator|)
 name|clk_get_by_ofw_name
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"apb_pclk"
 argument_list|,
@@ -634,6 +640,8 @@ condition|(
 name|hwreset_get_by_ofw_idx
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

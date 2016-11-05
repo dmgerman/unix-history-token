@@ -4904,6 +4904,9 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|phandle_t
+name|cnode
+parameter_list|,
 name|int
 name|idx
 parameter_list|,
@@ -4913,8 +4916,6 @@ name|clk
 parameter_list|)
 block|{
 name|phandle_t
-name|cnode
-decl_stmt|,
 name|parent
 decl_stmt|,
 modifier|*
@@ -4943,6 +4944,12 @@ name|clk
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|cnode
+operator|<=
+literal|0
+condition|)
 name|cnode
 operator|=
 name|ofw_bus_get_node
@@ -5122,6 +5129,9 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+name|phandle_t
+name|cnode
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -5137,9 +5147,12 @@ name|rv
 decl_stmt|,
 name|idx
 decl_stmt|;
-name|phandle_t
+if|if
+condition|(
 name|cnode
-decl_stmt|;
+operator|<=
+literal|0
+condition|)
 name|cnode
 operator|=
 name|ofw_bus_get_node
@@ -5199,6 +5212,8 @@ operator|(
 name|clk_get_by_ofw_index
 argument_list|(
 name|dev
+argument_list|,
+name|cnode
 argument_list|,
 name|idx
 argument_list|,
