@@ -1572,11 +1572,15 @@ name|RP_LINK_CONTROL_STATUS_LINKSTAT_MASK
 value|0x3fff0000
 end_define
 
+begin_comment
+comment|/* Wait 50 ms (per port) for link. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TEGRA_PCIE_LINKUP_TIMEOUT
-value|200
+value|50000
 end_define
 
 begin_define
@@ -6766,6 +6770,11 @@ operator|&
 name|RP_VEND_XP_DL_UP
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6820,6 +6829,11 @@ operator|&
 name|RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
