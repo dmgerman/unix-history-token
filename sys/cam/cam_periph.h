@@ -655,18 +655,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cam_periph_ccbwait
-parameter_list|(
-name|union
-name|ccb
-modifier|*
-name|ccb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|cam_periph_runccb
 parameter_list|(
