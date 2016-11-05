@@ -148,6 +148,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rtwn_rxfilter_set
+parameter_list|(
+name|struct
+name|rtwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rtwn_set_rx_bssid_all
 parameter_list|(
 name|struct

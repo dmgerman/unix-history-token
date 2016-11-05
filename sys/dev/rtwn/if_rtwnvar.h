@@ -552,6 +552,10 @@ name|RTWN_TEMP_MEASURED
 value|0x40
 define|#
 directive|define
+name|RTWN_RCR_LOCKED
+value|0x80
+define|#
+directive|define
 name|RTWN_CHIP_HAS_BCNQ1
 parameter_list|(
 name|_sc
