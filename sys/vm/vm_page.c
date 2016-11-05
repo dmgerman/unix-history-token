@@ -5619,7 +5619,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|vm_page_sbusied
+name|vm_page_busied
 argument_list|(
 name|m
 argument_list|)
@@ -7070,7 +7070,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
-name|vm_page_sbusied
+name|vm_page_busied
 argument_list|(
 name|m
 argument_list|)
