@@ -3545,12 +3545,15 @@ name|irq
 operator|=
 literal|0
 init|;
+operator|(
 name|irq
+operator|+
+name|count
+operator|-
+literal|1
+operator|)
 operator|<
 name|TEGRA_PCIB_MAX_MSI
-operator|&&
-operator|!
-name|found
 condition|;
 name|irq
 operator|++
@@ -3585,35 +3588,15 @@ operator|=
 name|irq
 init|;
 name|end_irq
-operator|!=
+operator|<
 name|irq
 operator|+
 name|count
-operator|-
-literal|1
 condition|;
 name|end_irq
 operator|++
 control|)
 block|{
-comment|/* No free interrupts */
-if|if
-condition|(
-name|end_irq
-operator|==
-operator|(
-name|TEGRA_PCIB_MAX_MSI
-operator|-
-literal|1
-operator|)
-condition|)
-block|{
-name|found
-operator|=
-name|false
-expr_stmt|;
-break|break;
-block|}
 comment|/* This is already used */
 if|if
 condition|(
@@ -3622,7 +3605,7 @@ name|sc
 operator|->
 name|isrcs
 index|[
-name|irq
+name|end_irq
 index|]
 operator|.
 name|flags
@@ -3640,6 +3623,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|found
+condition|)
+break|break;
 block|}
 comment|/* Not enough interrupts were found */
 if|if
@@ -3827,6 +3815,9 @@ name|tegra_pcib_irqsrc
 operator|*
 operator|)
 name|isrc
+index|[
+name|i
+index|]
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3854,6 +3845,7 @@ operator|&=
 operator|~
 name|TEGRA_FLAG_MSI_USED
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3862,7 +3854,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
