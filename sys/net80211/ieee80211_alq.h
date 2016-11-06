@@ -18,19 +18,30 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_ALQ_PAYLOAD_SIZE
-value|24
+name|IEEE80211_ALQ_MAX_PAYLOAD
+value|1024
 end_define
 
 begin_comment
 comment|/*  * timestamp  * wlan interface  * operation  * sub-operation  * rest of structure - operation specific  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_ALQ_SRC_NET80211
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Drivers define their own numbers above 0xff */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_alq_rec
 block|{
-name|uint32_t
+name|uint64_t
 name|r_timestamp
 decl_stmt|;
 comment|/* XXX may wrap! */
@@ -42,21 +53,23 @@ name|uint16_t
 name|r_wlan
 decl_stmt|;
 comment|/* wlan interface number */
-name|uint8_t
-name|r_version
+name|uint16_t
+name|r_src
 decl_stmt|;
-comment|/* version */
-name|uint8_t
+comment|/* source - driver, net80211 */
+name|uint32_t
+name|r_flags
+decl_stmt|;
+comment|/* flags */
+name|uint32_t
 name|r_op
 decl_stmt|;
 comment|/* top-level operation id */
-name|u_char
-name|r_payload
-index|[
-name|IEEE80211_ALQ_PAYLOAD_SIZE
-index|]
+name|uint32_t
+name|r_len
 decl_stmt|;
-comment|/* operation-specific payload */
+comment|/* length of hdr + payload */
+comment|/* Operation payload follows here */
 block|}
 struct|;
 end_struct
@@ -67,23 +80,35 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ieee80211_alq_log
 parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
 name|struct
 name|ieee80211vap
 modifier|*
 name|vap
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|op
 parameter_list|,
-name|u_char
-modifier|*
-name|p
+name|uint32_t
+name|flags
 parameter_list|,
-name|int
-name|l
+name|uint16_t
+name|srcid
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
