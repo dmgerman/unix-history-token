@@ -389,25 +389,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|__inline
-name|boolean_t
-name|vm_pager_has_page
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vm_pager_init
 parameter_list|(
