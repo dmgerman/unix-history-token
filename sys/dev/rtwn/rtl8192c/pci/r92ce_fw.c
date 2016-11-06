@@ -205,6 +205,12 @@ name|reason
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We must sleep for one second to let the firmware settle. 	 * Accessing registers too early will hang the whole system. 	 */
+if|if
+condition|(
+name|reason
+operator|==
+name|RTWN_FW_RESET_DOWNLOAD
+condition|)
 name|rtwn_delay
 argument_list|(
 name|sc
