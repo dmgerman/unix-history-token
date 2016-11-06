@@ -12847,6 +12847,17 @@ operator|>>
 literal|4
 operator|)
 case|:
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
 name|in6
 operator|=
 name|ip6
