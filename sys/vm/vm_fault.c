@@ -576,11 +576,11 @@ parameter_list|,
 name|int
 name|fault_flags
 parameter_list|,
-name|boolean_t
+name|bool
 name|set_wd
 parameter_list|)
 block|{
-name|boolean_t
+name|bool
 name|need_dirty
 decl_stmt|;
 if|if
@@ -1483,7 +1483,7 @@ name|fault_type
 argument_list|,
 name|fault_flags
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_RUNLOCK
@@ -3567,7 +3567,7 @@ name|fault_type
 argument_list|,
 name|fault_flags
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|vm_page_assert_xbusied
