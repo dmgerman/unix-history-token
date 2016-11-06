@@ -1400,6 +1400,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* abort any pending transfers */
+name|RTWN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1413,7 +1418,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|usbd_transfer_stop
+name|usbd_transfer_drain
 argument_list|(
 name|uc
 operator|->
@@ -1421,6 +1426,11 @@ name|uc_xfer
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|RTWN_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
