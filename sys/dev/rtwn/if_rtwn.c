@@ -9558,6 +9558,12 @@ operator|->
 name|sc_watchdog_to
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_timer
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 name|sc
