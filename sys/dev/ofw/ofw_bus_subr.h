@@ -461,6 +461,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ofw_bus_node_is_compatible
+parameter_list|(
+name|phandle_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*   * Helper routine to search a list of compat properties.  The table is  * terminated by an entry with a NULL compat-string pointer; a pointer to that  * table entry is returned if none of the compat strings match for the device,  * giving you control over the not-found value.  Will not return NULL unless the  * provided table pointer is NULL.  */
 end_comment
