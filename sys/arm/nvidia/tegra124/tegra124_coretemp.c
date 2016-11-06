@@ -616,6 +616,27 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
+name|phandle_t
+name|root
+decl_stmt|;
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"nvidia,tegra124"
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|device_find_child
@@ -670,7 +691,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"CPU Frequency Control"
+literal|"CPU Thermal Sensor"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1009,7 +1030,7 @@ begin_expr_stmt
 specifier|static
 name|DEFINE_CLASS_0
 argument_list|(
-name|coretemp
+name|tegra124_coretemp
 argument_list|,
 name|tegra124_coretemp_driver
 argument_list|,
