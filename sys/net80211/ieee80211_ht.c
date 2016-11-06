@@ -3440,6 +3440,49 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Public function; manually stop the RX AMPDU state.  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_ampdu_rx_stop_ext
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|tid
+parameter_list|)
+block|{
+name|struct
+name|ieee80211_rx_ampdu
+modifier|*
+name|rap
+decl_stmt|;
+comment|/* XXX TODO: sanity check tid, seq, baw */
+name|rap
+operator|=
+operator|&
+name|ni
+operator|->
+name|ni_rx_ampdu
+index|[
+name|tid
+index|]
+expr_stmt|;
+name|ampdu_rx_stop
+argument_list|(
+name|ni
+argument_list|,
+name|rap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Stop A-MPDU rx processing for the specified TID.  */
 end_comment
 

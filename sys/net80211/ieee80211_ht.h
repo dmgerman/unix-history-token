@@ -1011,6 +1011,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ieee80211_ampdu_rx_stop_ext
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ieee80211_ampdu_tx_request_ext
 parameter_list|(
