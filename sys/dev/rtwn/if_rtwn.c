@@ -3291,6 +3291,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Cancel any unfinished Tx. */
+name|rtwn_reset_lists
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uvp
@@ -3304,14 +3312,6 @@ argument_list|(
 name|uvp
 operator|->
 name|bcn_mbuf
-argument_list|)
-expr_stmt|;
-comment|/* Cancel any unfinished Tx. */
-name|rtwn_reset_lists
-argument_list|(
-name|sc
-argument_list|,
-name|vap
 argument_list|)
 expr_stmt|;
 name|rtwn_vap_decrement_counters
@@ -4299,6 +4299,16 @@ name|bcn_mbuf
 operator|!=
 name|NULL
 condition|)
+block|{
+name|rtwn_beacon_unload
+argument_list|(
+name|sc
+argument_list|,
+name|uvp
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|uvp
@@ -4306,6 +4316,7 @@ operator|->
 name|bcn_mbuf
 argument_list|)
 expr_stmt|;
+block|}
 name|m
 operator|->
 name|m_pkthdr
@@ -6254,6 +6265,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Enable TSF synchronization. */
+name|rtwn_tsf_sync_enable
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -6306,14 +6325,6 @@ comment|/* Set ACK preamble type. */
 name|rtwn_set_ack_preamble
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Enable TSF synchronization. */
-name|rtwn_tsf_sync_enable
-argument_list|(
-name|sc
-argument_list|,
-name|vap
 argument_list|)
 expr_stmt|;
 comment|/* Set basic rates mask. */

@@ -113,9 +113,6 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
-name|uint8_t
-name|id
-decl_stmt|;
 block|}
 struct|;
 end_struct
