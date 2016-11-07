@@ -28,7 +28,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: der.c,v 1.7 2016/06/01 22:01:15 christos Exp $"
+literal|"@(#)$File: der.c,v 1.10 2016/10/24 18:02:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -46,18 +46,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
 end_include
 
 begin_include
@@ -112,6 +100,18 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -817,6 +817,18 @@ operator|)
 operator|++
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|+
+name|len
+operator|>=
+name|l
+condition|)
+return|return
+name|DER_BAD
+return|;
 return|return
 name|len
 return|;
@@ -912,7 +924,14 @@ name|uint8_t
 modifier|*
 name|d
 init|=
+name|CAST
+argument_list|(
+specifier|const
+name|uint8_t
+operator|*
+argument_list|,
 name|q
+argument_list|)
 decl_stmt|;
 switch|switch
 condition|(
@@ -1033,10 +1052,10 @@ name|uint8_t
 modifier|*
 name|b
 init|=
-name|CAST
+name|RCAST
 argument_list|(
 specifier|const
-name|void
+name|uint8_t
 operator|*
 argument_list|,
 name|ms
@@ -1298,10 +1317,10 @@ name|uint8_t
 modifier|*
 name|b
 init|=
-name|CAST
+name|RCAST
 argument_list|(
 specifier|const
-name|void
+name|uint8_t
 operator|*
 argument_list|,
 name|ms
