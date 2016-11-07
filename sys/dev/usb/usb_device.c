@@ -4128,19 +4128,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|device_detach
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|error
-goto|;
 block|}
-block|}
+comment|/* detach and delete child */
 if|if
 condition|(
 name|device_delete_child
