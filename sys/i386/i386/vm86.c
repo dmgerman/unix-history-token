@@ -732,7 +732,7 @@ name|inc_ip
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retcode
 operator|)
 return|;
 case|case
@@ -807,7 +807,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|retcode
 operator|)
 return|;
 block|}
@@ -858,7 +858,7 @@ case|case
 name|INTn
 case|:
 break|break;
-comment|/* VME if trying to set PSL_TF, or PSL_I when VIP is set */
+comment|/* VME if trying to set PSL_T, or PSL_I when VIP is set */
 case|case
 name|POPF
 case|:
@@ -934,7 +934,7 @@ operator|(
 name|retcode
 operator|)
 return|;
-comment|/* VME if trying to set PSL_TF, or PSL_I when VIP is set */
+comment|/* VME if trying to set PSL_T, or PSL_I when VIP is set */
 case|case
 name|IRET
 case|:

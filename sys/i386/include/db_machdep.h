@@ -54,7 +54,7 @@ define|#
 directive|define
 name|PC_REGS
 parameter_list|()
-value|((db_addr_t)kdb_thrctx->pcb_eip)
+value|((db_addr_t)(kdb_frame->tf_eflags& PSL_VM ?	\ 			    (kdb_frame->tf_eip& 0xffff) +		\ 			    ((kdb_frame->tf_cs& 0xffff)<< 4) :	\ 			    kdb_frame->tf_eip))
 end_define
 
 begin_define
@@ -119,6 +119,10 @@ name|db_set_single_step
 value|kdb_cpu_set_singlestep
 end_define
 
+begin_comment
+comment|/*  * The debug exception type is copied from %dr6 to 'code' and used to  * disambiguate single step traps.  Watchpoints have no special support.  * Our hardware breakpoints are not well integrated with ddb and are too  * different from watchpoints.  ddb treats them as unknown traps with  * unknown addresses and doesn't turn them off while it is running.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -131,9 +135,17 @@ parameter_list|)
 value|((type) == T_BPTFLT)
 end_define
 
-begin_comment
-comment|/*  * Watchpoints are not supported.  The debug exception type is in %dr6  * and not yet in the args to this macro.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|IS_SSTEP_TRAP
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
+value|((type) == T_TRCTRAP&& (code)& 0x4000)
+end_define
 
 begin_define
 define|#
@@ -242,6 +254,18 @@ directive|define
 name|DB_SMALL_VALUE_MIN
 value|(-0x400001)
 end_define
+
+begin_function_decl
+name|int
+name|db_segsize
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tfp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
