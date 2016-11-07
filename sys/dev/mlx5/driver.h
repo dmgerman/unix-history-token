@@ -384,6 +384,10 @@ name|MLX5_REG_QTCT
 init|=
 literal|0x400A
 block|,
+name|MLX5_REG_QHLL
+init|=
+literal|0x4016
+block|,
 name|MLX5_REG_DCBX_PARAM
 init|=
 literal|0x4020
@@ -4707,7 +4711,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlx5_set_diagnostics
+name|mlx5_set_diagnostic_params
 parameter_list|(
 name|struct
 name|mlx5_core_dev
@@ -4726,7 +4730,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlx5_query_diagnostics
+name|mlx5_query_diagnostic_counters
 parameter_list|(
 name|struct
 name|mlx5_core_dev
