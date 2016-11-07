@@ -9266,8 +9266,12 @@ name|ses_elm_addlstatus_base_hdr
 name|base
 decl_stmt|;
 name|uint8_t
-name|reserved
+name|byte2
 decl_stmt|;
+define|#
+directive|define
+name|SES_ADDL_EIP_EIIOE
+value|1
 name|uint8_t
 name|element_index
 decl_stmt|;
