@@ -201,11 +201,25 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LINUX_BOOT_ABI
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/boot.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
