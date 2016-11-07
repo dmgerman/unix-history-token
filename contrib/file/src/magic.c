@@ -41,7 +41,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: magic.c,v 1.99 2016/05/03 16:09:38 christos Exp $"
+literal|"@(#)$File: magic.c,v 1.100 2016/07/18 11:43:05 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2268,6 +2268,8 @@ condition|(
 name|nbytes
 operator|==
 literal|0
+operator|&&
+name|inname
 condition|)
 block|{
 comment|/* We can not read it, but we were able to stat it. */
