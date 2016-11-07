@@ -7199,7 +7199,26 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* remove children first */
+comment|/* detach parent before deleting children, if any */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|device_detach
+argument_list|(
+name|child
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* remove children second */
 while|while
 condition|(
 operator|(
@@ -7236,24 +7255,6 @@ name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|device_detach
-argument_list|(
-name|child
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 if|if
 condition|(
 name|child
