@@ -11589,9 +11589,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* XXX Lame Locking! */
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|mpt_dma_buf_alloc
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|MPT_LOCK
 argument_list|(
 name|mpt
 argument_list|)
@@ -11848,6 +11859,11 @@ name|mpt_map_info
 name|mi
 decl_stmt|;
 comment|/* 		 * In some configurations, the IOC's firmware is 		 * stored in a shared piece of system NVRAM that 		 * is only accessible via the BIOS.  In this 		 * case, the firmware keeps a copy of firmware in 		 * RAM until the OS driver retrieves it.  Once 		 * retrieved, we are responsible for re-downloading 		 * the firmware after any hard-reset. 		 */
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|mpt
 operator|->
 name|fw_image_size
@@ -11912,6 +11928,11 @@ argument_list|,
 literal|"cannot create firmware dma tag\n"
 argument_list|)
 expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -11967,6 +11988,11 @@ operator|->
 name|fw_dmat
 argument_list|)
 expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -12018,6 +12044,11 @@ operator|=
 name|mi
 operator|.
 name|phys
+expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
