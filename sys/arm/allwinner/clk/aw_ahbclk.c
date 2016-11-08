@@ -1556,6 +1556,10 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|error
+operator|!=
+name|ENOENT
 condition|)
 block|{
 name|device_printf
