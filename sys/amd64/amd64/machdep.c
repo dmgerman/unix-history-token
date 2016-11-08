@@ -1177,9 +1177,6 @@ expr_stmt|;
 name|printcpuinfo
 argument_list|()
 expr_stmt|;
-name|panicifcpuunsupported
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PERFMON
