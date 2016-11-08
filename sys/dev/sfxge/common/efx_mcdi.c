@@ -4343,7 +4343,7 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-comment|/* 	 * Before we attempt to chat to the MC, we should verify that the MC 	 * isn't in it's assertion handler, either due to a previous reboot, 	 * or because we're reinitializing due to an eec_exception(). 	 * 	 * Use GET_ASSERTS to read any assertion state that may be present. 	 * Retry this command twice. Once because a boot-time assertion failure 	 * might cause the 1st MCDI request to fail. And once again because 	 * we might race with efx_mcdi_exit_assertion_handler() running on 	 * partner port(s) on the same NIC. 	 */
+comment|/* 	 * Before we attempt to chat to the MC, we should verify that the MC 	 * isn't in its assertion handler, either due to a previous reboot, 	 * or because we're reinitializing due to an eec_exception(). 	 * 	 * Use GET_ASSERTS to read any assertion state that may be present. 	 * Retry this command twice. Once because a boot-time assertion failure 	 * might cause the 1st MCDI request to fail. And once again because 	 * we might race with efx_mcdi_exit_assertion_handler() running on 	 * partner port(s) on the same NIC. 	 */
 name|retry
 operator|=
 literal|2

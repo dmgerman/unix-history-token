@@ -6524,7 +6524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Defragment an mbuf chain, returning at most maxfrags separate  * mbufs+clusters.  If this is not possible NULL is returned and  * the original mbuf chain is left in it's present (potentially  * modified) state.  We use two techniques: collapsing consecutive  * mbufs and replacing consecutive mbufs by a cluster.  *  * NB: this should really be named m_defrag but that name is taken  */
+comment|/*  * Defragment an mbuf chain, returning at most maxfrags separate  * mbufs+clusters.  If this is not possible NULL is returned and  * the original mbuf chain is left in its present (potentially  * modified) state.  We use two techniques: collapsing consecutive  * mbufs and replacing consecutive mbufs by a cluster.  *  * NB: this should really be named m_defrag but that name is taken  */
 end_comment
 
 begin_function

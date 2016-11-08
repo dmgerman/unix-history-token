@@ -2190,7 +2190,7 @@ name|olddisk
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Find disk position in metadata by it's serial. */
+comment|/* Find disk position in metadata by its serial. */
 if|if
 condition|(
 name|pd

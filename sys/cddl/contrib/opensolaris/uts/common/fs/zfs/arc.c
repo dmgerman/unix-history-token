@@ -12413,7 +12413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evict the arc_buf_hdr that is provided as a parameter. The resultant  * state of the header is dependent on it's state prior to entering this  * function. The following transitions are possible:  *  *    - arc_mru -> arc_mru_ghost  *    - arc_mfu -> arc_mfu_ghost  *    - arc_mru_ghost -> arc_l2c_only  *    - arc_mru_ghost -> deleted  *    - arc_mfu_ghost -> arc_l2c_only  *    - arc_mfu_ghost -> deleted  */
+comment|/*  * Evict the arc_buf_hdr that is provided as a parameter. The resultant  * state of the header is dependent on its state prior to entering this  * function. The following transitions are possible:  *  *    - arc_mru -> arc_mru_ghost  *    - arc_mfu -> arc_mfu_ghost  *    - arc_mru_ghost -> arc_l2c_only  *    - arc_mru_ghost -> deleted  *    - arc_mfu_ghost -> arc_l2c_only  *    - arc_mfu_ghost -> deleted  */
 end_comment
 
 begin_function

@@ -11459,7 +11459,7 @@ name|mdi
 operator|->
 name|mdio_meta
 expr_stmt|;
-comment|/* Find disk position in metadata by it's reference. */
+comment|/* Find disk position in metadata by its reference. */
 name|disk_pos
 operator|=
 name|ddf_meta_find_disk

@@ -543,7 +543,7 @@ name|CAM_RELEASE_SIMQ
 init|=
 literal|0x100
 block|,
-comment|/* SIM has this command in it's queue */
+comment|/* SIM has this command in its queue */
 name|CAM_SIM_QUEUED
 init|=
 literal|0x200

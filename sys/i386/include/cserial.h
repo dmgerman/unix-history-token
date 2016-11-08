@@ -528,7 +528,7 @@ value|_IOR ('x', 0, char[16])
 end_define
 
 begin_comment
-comment|/*  * Attach/detach the protocol to the channel.  * The protocol is given by it's name, char[8].  * For example "async", "hdlc", "cisco", "fr", "ppp".  */
+comment|/*  * Attach/detach the protocol to the channel.  * The protocol is given by its name, char[8].  * For example "async", "hdlc", "cisco", "fr", "ppp".  */
 end_comment
 
 begin_define

@@ -4279,7 +4279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search a type by it's type string.  */
+comment|/*  * Search a type by its type string.  */
 end_comment
 
 begin_function

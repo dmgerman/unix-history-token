@@ -18617,7 +18617,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*          * At this point, mptr points to the eeprom data structure          * in it's "default" state.  If this is big endian, swap the          * data structures back to "little endian" form.          */
+comment|/*          * At this point, mptr points to the eeprom data structure          * in its "default" state.  If this is big endian, swap the          * data structures back to "little endian" form.          */
 if|if
 condition|(
 name|ar9300_eeprom_restore_internal

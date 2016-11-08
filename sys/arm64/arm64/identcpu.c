@@ -705,7 +705,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * There is a hardware errata where, if one CPU is performing a TLB 	 * invalidation while another is performing a store-exclusive the 	 * store-exclusive may return the wrong status. A workaround seems 	 * to be to use an IPI to invalidate on each CPU, however given the 	 * limited number of affected units (pass 1.1 is the evaluation 	 * hardware revision), and the lack of information from Cavium 	 * this has not been implemented. 	 * 	 * At the time of writing this the only information is from: 	 * https://lkml.org/lkml/2016/8/4/722 	 */
-comment|/* 	 * XXX: CPU_MATCH_ERRATA_CAVIUM_THUNDER_1_1 on it's own also 	 * triggers on pass 2.0+. 	 */
+comment|/* 	 * XXX: CPU_MATCH_ERRATA_CAVIUM_THUNDER_1_1 on its own also 	 * triggers on pass 2.0+. 	 */
 if|if
 condition|(
 name|cpu

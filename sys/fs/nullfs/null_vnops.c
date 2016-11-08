@@ -1973,7 +1973,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're still active we must ask the lower layer to 	 * lock as ffs has special lock considerations in it's 	 * vop lock. 	 */
+comment|/* 	 * If we're still active we must ask the lower layer to 	 * lock as ffs has special lock considerations in its 	 * vop lock. 	 */
 if|if
 condition|(
 name|nn
@@ -2004,7 +2004,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We have to hold the vnode here to solve a potential 		 * reclaim race.  If we're forcibly vgone'd while we 		 * still have refs, a thread could be sleeping inside 		 * the lowervp's vop_lock routine.  When we vgone we will 		 * drop our last ref to the lowervp, which would allow it 		 * to be reclaimed.  The lowervp could then be recycled, 		 * in which case it is not legal to be sleeping in it's VOP. 		 * We prevent it from being recycled by holding the vnode 		 * here. 		 */
+comment|/* 		 * We have to hold the vnode here to solve a potential 		 * reclaim race.  If we're forcibly vgone'd while we 		 * still have refs, a thread could be sleeping inside 		 * the lowervp's vop_lock routine.  When we vgone we will 		 * drop our last ref to the lowervp, which would allow it 		 * to be reclaimed.  The lowervp could then be recycled, 		 * in which case it is not legal to be sleeping in its VOP. 		 * We prevent it from being recycled by holding the vnode 		 * here. 		 */
 name|vholdl
 argument_list|(
 name|lvp

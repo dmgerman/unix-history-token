@@ -3503,7 +3503,7 @@ operator|*
 operator|)
 name|base_isrc
 expr_stmt|;
-comment|/* 	 * NB: checking if the event channel is already masked is 	 * needed because the event channel user-space device 	 * masks event channels on it's filter as part of it's 	 * normal operation, and those shouldn't be automatically 	 * unmasked by the generic interrupt code. The event channel 	 * device will unmask them when needed. 	 */
+comment|/* 	 * NB: checking if the event channel is already masked is 	 * needed because the event channel user-space device 	 * masks event channels on its filter as part of its 	 * normal operation, and those shouldn't be automatically 	 * unmasked by the generic interrupt code. The event channel 	 * device will unmask them when needed. 	 */
 name|isrc
 operator|->
 name|xi_masked
