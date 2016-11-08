@@ -101,22 +101,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRNG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/sched.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -154,22 +143,11 @@ directive|include
 file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRNG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"pic_if.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * Interrupt controller registers  *  */
@@ -372,12 +350,6 @@ parameter_list|)
 value|(0x50 + ((_b) * 4))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRNG
-end_ifdef
-
 begin_struct
 struct|struct
 name|a10_intr_irqsrc
@@ -392,11 +364,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -420,9 +387,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INTRNG
 name|struct
 name|a10_intr_irqsrc
 name|isrcs
@@ -430,8 +394,6 @@ index|[
 name|A10_INTR_MAX_NIRQS
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -858,94 +820,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INTRNG
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|a10_aintc_softc
-modifier|*
-name|a10_aintc_sc
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|arm_get_next_irq
-parameter_list|(
-name|int
-name|last_irq
-parameter_list|)
-block|{
-return|return
-operator|(
-name|a10_pending_irq
-argument_list|(
-name|a10_aintc_sc
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|arm_mask_irq
-parameter_list|(
-name|uintptr_t
-name|irq
-parameter_list|)
-block|{
-name|a10_intr_mask
-argument_list|(
-name|a10_aintc_sc
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|arm_unmask_irq
-parameter_list|(
-name|uintptr_t
-name|irq
-parameter_list|)
-block|{
-name|a10_intr_unmask
-argument_list|(
-name|a10_aintc_sc
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
-name|a10_intr_eoi
-argument_list|(
-name|a10_aintc_sc
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* INTRNG */
-end_comment
 
 begin_function
 specifier|static
@@ -1601,15 +1475,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INTRNG */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1695,22 +1560,6 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INTRNG
-if|if
-condition|(
-name|a10_aintc_sc
-condition|)
-goto|goto
-name|error
-goto|;
-name|a10_aintc_sc
-operator|=
-name|sc
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|aintc_res
@@ -1842,9 +1691,6 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INTRNG
 if|if
 condition|(
 name|a10_intr_pic_attach
@@ -1868,8 +1714,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1919,9 +1763,6 @@ argument_list|,
 name|a10_aintc_attach
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|INTRNG
 comment|/* Interrupt controller interface */
 name|DEVMETHOD
 argument_list|(
@@ -1965,8 +1806,6 @@ argument_list|,
 name|a10_intr_pre_ithread
 argument_list|)
 block|,
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
