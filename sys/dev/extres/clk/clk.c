@@ -4941,6 +4941,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|!=
+name|ENOENT
+condition|)
 name|device_printf
 argument_list|(
 name|dev
