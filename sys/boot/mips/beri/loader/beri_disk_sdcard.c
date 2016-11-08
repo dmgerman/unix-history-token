@@ -126,7 +126,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|beri_sdcard_disk_print
 parameter_list|(
 name|int
@@ -475,20 +475,41 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|sprintf
+name|int
+name|ret
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    sdcard%d   Altera SD card drive\n"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 name|dev
 operator|.
 name|d_dev
@@ -535,15 +556,22 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    sdcard%d"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|disk_print
 argument_list|(
 operator|&
@@ -561,6 +589,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

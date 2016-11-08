@@ -298,7 +298,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|stor_print
 parameter_list|(
 name|int
@@ -1075,7 +1075,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|stor_print
 parameter_list|(
 name|int
@@ -1095,10 +1095,11 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
-name|pager_open
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1140,9 +1141,14 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"\tdisk%d (%s)\n"
 argument_list|,
@@ -1162,10 +1168,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 if|if
@@ -1188,6 +1200,8 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|disk_print
 argument_list|(
 operator|&
@@ -1204,11 +1218,20 @@ operator|&
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 block|}
-name|pager_close
-argument_list|()
-expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

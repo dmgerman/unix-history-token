@@ -2551,7 +2551,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|zfs_dev_print
 parameter_list|(
 name|int
@@ -2568,15 +2568,22 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|verbose
 condition|)
 block|{
+return|return
+operator|(
 name|spa_all_status
 argument_list|()
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 name|STAILQ_FOREACH
 argument_list|(
@@ -2587,9 +2594,14 @@ argument_list|,
 argument|spa_link
 argument_list|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    zfs:%s\n"
 argument_list|,
@@ -2598,12 +2610,26 @@ operator|->
 name|spa_name
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

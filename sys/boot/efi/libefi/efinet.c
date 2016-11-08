@@ -1220,7 +1220,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|efinet_dev_print
 parameter_list|(
 name|int
@@ -1721,7 +1721,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|efinet_dev_print
 parameter_list|(
 name|int
@@ -1737,10 +1737,11 @@ name|h
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
-name|pager_open
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|unit
@@ -1822,16 +1823,24 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 literal|"\n"
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
-name|pager_close
-argument_list|()
-expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

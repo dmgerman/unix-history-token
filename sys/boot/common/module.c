@@ -1134,6 +1134,10 @@ name|int
 name|ch
 decl_stmt|,
 name|verbose
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|verbose
 operator|=
@@ -1209,9 +1213,14 @@ operator|->
 name|f_next
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|" %p: "
 argument_list|,
@@ -1236,9 +1245,14 @@ operator|->
 name|f_name
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|" (%s, 0x%lx)\n"
 argument_list|,
@@ -1254,11 +1268,14 @@ operator|->
 name|f_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pager_output
 argument_list|(
 name|lbuf
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 if|if
 condition|(
 name|fp
@@ -1318,9 +1335,14 @@ operator|->
 name|m_next
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|"%s.%d "
 argument_list|,
@@ -1373,9 +1395,14 @@ operator|->
 name|md_next
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
 argument_list|,
 literal|"      0x%04x, 0x%lx\n"
 argument_list|,
@@ -1401,6 +1428,11 @@ condition|)
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|ret
+condition|)
+break|break;
 block|}
 name|pager_close
 argument_list|()

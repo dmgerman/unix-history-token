@@ -233,7 +233,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|fw_print
 parameter_list|(
 name|int
@@ -536,15 +536,25 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|fw_print
 parameter_list|(
 name|int
 name|verbose
 parameter_list|)
 block|{
+name|char
+name|line
+index|[
+literal|80
+index|]
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|fwohci_softc
@@ -582,8 +592,15 @@ operator|==
 name|FWOHCI_STATE_DEAD
 condition|)
 break|break;
-name|printf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
 literal|"%d: locator=0x%04x devid=0x%08x"
 literal|" base_addr=0x%08x handle=0x%08x bus_id=0x%08x\n"
 argument_list|,
@@ -610,7 +627,26 @@ operator|->
 name|bus_id
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|pager_output
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

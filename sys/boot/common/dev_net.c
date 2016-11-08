@@ -209,7 +209,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|net_print
 parameter_list|(
 name|int
@@ -1087,7 +1087,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|net_print
 parameter_list|(
 name|int
@@ -1105,6 +1105,11 @@ decl_stmt|,
 name|d
 decl_stmt|,
 name|cnt
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|cnt
 operator|=
@@ -1162,6 +1167,7 @@ if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|" (%s%d)"
@@ -1181,12 +1187,31 @@ name|dif_unit
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|printf
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|pager_output
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

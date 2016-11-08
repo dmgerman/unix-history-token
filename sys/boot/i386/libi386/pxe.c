@@ -325,7 +325,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pxe_print
 parameter_list|(
 name|int
@@ -1890,22 +1890,44 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pxe_print
 parameter_list|(
 name|int
 name|verbose
 parameter_list|)
 block|{
+name|char
+name|line
+index|[
+literal|255
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|pxe_call
 operator|==
 name|NULL
 condition|)
-return|return;
-name|printf
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
 literal|"    pxe0:    %s:%s\n"
 argument_list|,
 name|inet_ntoa
@@ -1916,6 +1938,30 @@ argument_list|,
 name|rootpath
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|snprintf
+argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+literal|"    pxe0:\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|pager_output
+argument_list|(
+name|line
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
