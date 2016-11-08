@@ -52,6 +52,13 @@ name|blstate
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_blacklist
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|blacklist_init
@@ -59,6 +66,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|use_blacklist
+condition|)
 name|blstate
 operator|=
 name|blacklist_open

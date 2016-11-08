@@ -704,6 +704,14 @@ comment|/* anon users may not modify existing files. */
 end_comment
 
 begin_decl_stmt
+name|int
+name|use_blacklist
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|off_t
 name|file_size
 decl_stmt|;
@@ -1694,7 +1702,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468a:AdDEhlmMoOp:P:rRSt:T:u:UvW"
+literal|"468a:ABdDEhlmMoOp:P:rRSt:T:u:UvW"
 argument_list|)
 operator|)
 operator|!=
@@ -1762,6 +1770,28 @@ name|anon_only
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+ifdef|#
+directive|ifdef
+name|USE_BLACKLIST
+name|use_blacklist
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"not compiled with USE_BLACKLIST support"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'d'
@@ -3270,14 +3300,9 @@ argument_list|,
 literal|"FTP server ready."
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_init
+name|BLACKLIST_INIT
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 init|;
@@ -6961,20 +6986,15 @@ argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-name|blacklist_notify
+name|BLACKLIST_NOTIFY
 argument_list|(
-literal|1
+name|BLACKLIST_AUTH_FAIL
 argument_list|,
 name|STDIN_FILENO
 argument_list|,
 literal|"Login incorrect"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|logging
@@ -7032,14 +7052,11 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
 else|else
 block|{
-name|blacklist_notify
+name|BLACKLIST_NOTIFY
 argument_list|(
-literal|0
+name|BLACKLIST_AUTH_OK
 argument_list|,
 name|STDIN_FILENO
 argument_list|,
@@ -7047,8 +7064,6 @@ literal|"Login successful"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 name|login_attempts
 operator|=
