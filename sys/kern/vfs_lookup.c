@@ -223,7 +223,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Allocation zone for namei  */
+comment|/* Allocation zone for namei. */
 end_comment
 
 begin_decl_stmt
@@ -233,7 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Placeholder vnode for mp traversal  */
+comment|/* Placeholder vnode for mp traversal. */
 end_comment
 
 begin_decl_stmt
@@ -353,7 +353,7 @@ name|lookup_shared
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enables/Disables shared locks for path name translation"
+literal|"enables shared locks for path name translation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -546,6 +546,24 @@ name|aiov
 decl_stmt|;
 comment|/* uio for reading symbolic links */
 name|struct
+name|componentname
+modifier|*
+name|cnp
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
+name|struct
 name|uio
 name|auio
 decl_stmt|;
@@ -556,34 +574,25 @@ name|linklen
 decl_stmt|,
 name|startdir_used
 decl_stmt|;
-name|struct
-name|componentname
-modifier|*
 name|cnp
-init|=
+operator|=
 operator|&
 name|ndp
 operator|->
 name|ni_cnd
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
+expr_stmt|;
 name|td
-init|=
+operator|=
 name|cnp
 operator|->
 name|cn_thread
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
+expr_stmt|;
 name|p
-init|=
+operator|=
 name|td
 operator|->
 name|td_proc
-decl_stmt|;
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_cnd
@@ -1093,9 +1102,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cap_rights_t
-name|rights
-decl_stmt|;
 name|rights
 operator|=
 name|ndp
