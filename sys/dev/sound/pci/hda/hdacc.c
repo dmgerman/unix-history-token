@@ -2192,7 +2192,7 @@ name|HDA_CODEC_INTELSKLK
 block|,
 literal|0
 block|,
-literal|"Intel Kabylake"
+literal|"Intel Skylake"
 block|}
 block|,
 block|{
