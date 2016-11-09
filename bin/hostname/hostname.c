@@ -364,7 +364,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: hostname [-f] [s|d] [name-of-host]\n"
+literal|"usage: hostname [-f] [-s | -d] [name-of-host]\n"
 argument_list|)
 expr_stmt|;
 name|exit
