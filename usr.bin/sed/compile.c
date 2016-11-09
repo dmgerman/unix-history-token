@@ -4166,6 +4166,14 @@ name|p
 operator|=
 name|lbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LEGACY_BSDSED_COMPAT
+name|EATSPACE
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|esc_nl
