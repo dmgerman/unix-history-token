@@ -607,10 +607,23 @@ name|RTREE_NODE_INITIALIZING
 argument_list|)
 condition|)
 block|{
+name|spin_t
+name|spinner
+decl_stmt|;
 comment|/* 		 * Another thread is already in the process of initializing. 		 * Spin-wait until initialization is complete. 		 */
+name|spin_init
+argument_list|(
+operator|&
+name|spinner
+argument_list|)
+expr_stmt|;
 do|do
 block|{
-name|CPU_SPINWAIT
+name|spin_adaptive
+argument_list|(
+operator|&
+name|spinner
+argument_list|)
 expr_stmt|;
 name|node
 operator|=
@@ -748,6 +761,8 @@ argument_list|(
 name|rtree
 argument_list|,
 name|level
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|elm

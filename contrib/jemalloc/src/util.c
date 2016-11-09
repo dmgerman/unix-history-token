@@ -215,9 +215,17 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|JEMALLOC_HAVE_SYSCALL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|SYS_write
+argument_list|)
 comment|/* 	 * Use syscall(2) rather than write(2) when possible in order to avoid 	 * the possibility of memory allocation within libc.  This is necessary 	 * on FreeBSD; most operating systems do not have this problem though. 	 * 	 * syscall() returns long or int, depending on platform, so capture the 	 * unused result in the widest plausible type to avoid compiler 	 * warnings. 	 */
 name|UNUSED
 name|long

@@ -905,9 +905,9 @@ name|prof_tdata_t
 modifier|*
 name|prof_tdata_init
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -932,9 +932,9 @@ begin_function_decl
 name|void
 name|prof_reset
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|size_t
 name|lg_sample
@@ -1104,9 +1104,9 @@ begin_function_decl
 name|bool
 name|prof_boot2
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1530,10 +1530,7 @@ name|tdata
 operator|=
 name|prof_tdata_init
 argument_list|(
-name|tsd_tsdn
-argument_list|(
 name|tsd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|tsd_prof_tdata_set

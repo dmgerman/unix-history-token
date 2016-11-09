@@ -170,9 +170,6 @@ function_decl|(
 name|huge_dalloc_junk_t
 function_decl|)
 parameter_list|(
-name|tsdn_t
-modifier|*
-parameter_list|,
 name|void
 modifier|*
 parameter_list|,

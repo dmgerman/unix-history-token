@@ -164,6 +164,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|arena_decay_s
+name|arena_decay_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|arena_bin_s
 name|arena_bin_t
 typedef|;
@@ -455,6 +463,45 @@ end_struct
 
 begin_struct
 struct|struct
+name|arena_decay_s
+block|{
+comment|/* 	 * Approximate time in seconds from the creation of a set of unused 	 * dirty pages until an equivalent set of unused dirty pages is purged 	 * and/or reused. 	 */
+name|ssize_t
+name|time
+decl_stmt|;
+comment|/* time / SMOOTHSTEP_NSTEPS. */
+name|nstime_t
+name|interval
+decl_stmt|;
+comment|/* 	 * Time at which the current decay interval logically started.  We do 	 * not actually advance to a new epoch until sometime after it starts 	 * because of scheduling and computation delays, and it is even possible 	 * to completely skip epochs.  In all cases, during epoch advancement we 	 * merge all relevant activity into the most recently recorded epoch. 	 */
+name|nstime_t
+name|epoch
+decl_stmt|;
+comment|/* Deadline randomness generator. */
+name|uint64_t
+name|jitter_state
+decl_stmt|;
+comment|/* 	 * Deadline for current epoch.  This is the sum of interval and per 	 * epoch jitter which is a uniform random variable in [0..interval). 	 * Epochs always advance by precise multiples of interval, but we 	 * randomize the deadline to reduce the likelihood of arenas purging in 	 * lockstep. 	 */
+name|nstime_t
+name|deadline
+decl_stmt|;
+comment|/* 	 * Number of dirty pages at beginning of current epoch.  During epoch 	 * advancement we use the delta between arena->decay.ndirty and 	 * arena->ndirty to determine how many dirty pages, if any, were 	 * generated. 	 */
+name|size_t
+name|ndirty
+decl_stmt|;
+comment|/* 	 * Trailing log of how many unused dirty pages were generated during 	 * each of the past SMOOTHSTEP_NSTEPS decay epochs, where the last 	 * element is the most recent epoch.  Corresponding epoch times are 	 * relative to epoch. 	 */
+name|size_t
+name|backlog
+index|[
+name|SMOOTHSTEP_NSTEPS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|arena_bin_s
 block|{
 comment|/* 	 * All operations on runcur, runs, and stats require that lock be 	 * locked.  Run allocation/deallocation are protected by the arena lock, 	 * which may be acquired while holding one or more bin locks, but not 	 * vise versa. 	 */
@@ -511,7 +558,7 @@ name|uint64_t
 name|prof_accumbytes
 decl_stmt|;
 comment|/* 	 * PRNG state for cache index randomization of large allocation base 	 * pointers. 	 */
-name|uint64_t
+name|size_t
 name|offset_state
 decl_stmt|;
 name|dss_prec_t
@@ -552,40 +599,9 @@ decl_stmt|;
 name|extent_node_t
 name|chunks_cache
 decl_stmt|;
-comment|/* 	 * Approximate time in seconds from the creation of a set of unused 	 * dirty pages until an equivalent set of unused dirty pages is purged 	 * and/or reused. 	 */
-name|ssize_t
-name|decay_time
-decl_stmt|;
-comment|/* decay_time / SMOOTHSTEP_NSTEPS. */
-name|nstime_t
-name|decay_interval
-decl_stmt|;
-comment|/* 	 * Time at which the current decay interval logically started.  We do 	 * not actually advance to a new epoch until sometime after it starts 	 * because of scheduling and computation delays, and it is even possible 	 * to completely skip epochs.  In all cases, during epoch advancement we 	 * merge all relevant activity into the most recently recorded epoch. 	 */
-name|nstime_t
-name|decay_epoch
-decl_stmt|;
-comment|/* decay_deadline randomness generator. */
-name|uint64_t
-name|decay_jitter_state
-decl_stmt|;
-comment|/* 	 * Deadline for current epoch.  This is the sum of decay_interval and 	 * per epoch jitter which is a uniform random variable in 	 * [0..decay_interval).  Epochs always advance by precise multiples of 	 * decay_interval, but we randomize the deadline to reduce the 	 * likelihood of arenas purging in lockstep. 	 */
-name|nstime_t
-name|decay_deadline
-decl_stmt|;
-comment|/* 	 * Number of dirty pages at beginning of current epoch.  During epoch 	 * advancement we use the delta between decay_ndirty and ndirty to 	 * determine how many dirty pages, if any, were generated, and record 	 * the result in decay_backlog. 	 */
-name|size_t
-name|decay_ndirty
-decl_stmt|;
-comment|/* 	 * Memoized result of arena_decay_backlog_npages_limit() corresponding 	 * to the current contents of decay_backlog, i.e. the limit on how many 	 * pages are allowed to exist for the decay epochs. 	 */
-name|size_t
-name|decay_backlog_npages_limit
-decl_stmt|;
-comment|/* 	 * Trailing log of how many unused dirty pages were generated during 	 * each of the past SMOOTHSTEP_NSTEPS decay epochs, where the last 	 * element is the most recent epoch.  Corresponding epoch times are 	 * relative to decay_epoch. 	 */
-name|size_t
-name|decay_backlog
-index|[
-name|SMOOTHSTEP_NSTEPS
-index|]
+comment|/* Decay-based purging state. */
+name|arena_decay_t
+name|decay
 decl_stmt|;
 comment|/* Extant huge allocations. */
 name|ql_head
@@ -635,14 +651,13 @@ index|[
 name|NBINS
 index|]
 decl_stmt|;
-comment|/* 	 * Quantized address-ordered heaps of this arena's available runs.  The 	 * heaps are used for first-best-fit run allocation. 	 */
+comment|/* 	 * Size-segregated address-ordered heaps of this arena's available runs, 	 * used for first-best-fit run allocation.  Runs are quantized, i.e. 	 * they reside in the last heap which corresponds to a size class less 	 * than or equal to the run size. 	 */
 name|arena_run_heap_t
 name|runs_avail
 index|[
-literal|1
+name|NPSIZES
 index|]
 decl_stmt|;
-comment|/* Dynamically sized. */
 block|}
 struct|;
 end_struct
@@ -787,17 +802,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Max large size class. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|run_quantize_max
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Max run_quantize_*() input. */
 end_comment
 
 begin_decl_stmt
@@ -1917,7 +1921,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bool
+name|void
 name|arena_boot
 parameter_list|(
 name|void
