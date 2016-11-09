@@ -624,10 +624,6 @@ name|cn_pnbuf
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-operator|(
-name|size_t
-operator|*
-operator|)
 operator|&
 name|ndp
 operator|->
@@ -649,10 +645,6 @@ name|cn_pnbuf
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-operator|(
-name|size_t
-operator|*
-operator|)
 operator|&
 name|ndp
 operator|->
