@@ -84,6 +84,11 @@ directive|define
 name|IEEE80211_AGGR_BARPEND
 value|0x0020
 comment|/* BAR response pending */
+define|#
+directive|define
+name|IEEE80211_AGGR_WAITRX
+value|0x0040
+comment|/* Wait for first RX frame to define BAW */
 name|uint8_t
 name|txa_tid
 decl_stmt|;
