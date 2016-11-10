@@ -270,7 +270,7 @@ enum|enum
 block|{
 name|BARRIER
 block|,
-comment|/* the presence of the field puts the rule in it's own block */
+comment|/* the presence of the field puts the rule in its own block */
 name|BREAK
 block|,
 comment|/* the field may not differ between rules in a superblock */
@@ -326,7 +326,7 @@ name|ty
 parameter_list|)
 define|\
 value|{#field,				\     ty,					\     offsetof(struct pf_rule, field),	\     sizeof(((struct pf_rule *)0)->field)}
-comment|/*      * The presence of these fields in a rule put the rule in it's own      * superblock.  Thus it will not be optimized.  It also prevents the      * rule from being re-ordered at all.      */
+comment|/*      * The presence of these fields in a rule put the rule in its own      * superblock.  Thus it will not be optimized.  It also prevents the      * rule from being re-ordered at all.      */
 name|PF_RULE_FIELD
 argument_list|(
 name|label

@@ -568,9 +568,9 @@ begin_function_decl
 name|bool
 name|tcaches_create
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|unsigned
 modifier|*

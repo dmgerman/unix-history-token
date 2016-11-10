@@ -656,7 +656,7 @@ decl_stmt|;
 comment|/* Check whether this thread has already inserted into the list. */
 name|malloc_mutex_lock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|head
@@ -684,7 +684,7 @@ condition|)
 block|{
 name|malloc_mutex_unlock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|head
@@ -729,7 +729,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|head
@@ -760,7 +760,7 @@ parameter_list|)
 block|{
 name|malloc_mutex_lock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|head
@@ -782,7 +782,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|head

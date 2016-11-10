@@ -971,7 +971,7 @@ operator|.
 name|sh_size
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate memory to buffer the CTF data in it's decompressed 	 * form. 	 */
+comment|/* 	 * Allocate memory to buffer the CTF data in its decompressed 	 * form. 	 */
 name|ctftab
 operator|=
 name|malloc

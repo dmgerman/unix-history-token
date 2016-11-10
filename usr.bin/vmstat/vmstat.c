@@ -2876,7 +2876,7 @@ name|GET_VM_STATS
 argument_list|(
 name|vm
 argument_list|,
-name|v_tcached
+name|v_pdshortfalls
 argument_list|)
 expr_stmt|;
 name|GET_VM_STATS
@@ -2974,7 +2974,7 @@ name|GET_VM_STATS
 argument_list|(
 name|vm
 argument_list|,
-name|v_cache_count
+name|v_laundry_count
 argument_list|)
 expr_stmt|;
 name|GET_VM_STATS
@@ -5381,7 +5381,16 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:reactivated/%9u} {N:pages reactivated}\n"
+literal|"{:page-reclamation-shortfalls/%9u} {N:clean page reclamation shortfalls}\n"
+argument_list|,
+name|sum
+operator|.
+name|v_pdshortfalls
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:reactivated/%9u} {N:pages reactivated by the page daemon}\n"
 argument_list|,
 name|sum
 operator|.
@@ -5543,11 +5552,11 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:vm-cache/%9u} {N:pages in VM cache}\n"
+literal|"{:laundry-pages/%9u} {N:pages in the laundry queue}\n"
 argument_list|,
 name|sum
 operator|.
-name|v_cache_count
+name|v_laundry_count
 argument_list|)
 expr_stmt|;
 name|xo_emit

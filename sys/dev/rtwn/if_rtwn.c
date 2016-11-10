@@ -3291,6 +3291,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Cancel any unfinished Tx. */
+name|rtwn_reset_lists
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uvp
@@ -3304,14 +3312,6 @@ argument_list|(
 name|uvp
 operator|->
 name|bcn_mbuf
-argument_list|)
-expr_stmt|;
-comment|/* Cancel any unfinished Tx. */
-name|rtwn_reset_lists
-argument_list|(
-name|sc
-argument_list|,
-name|vap
 argument_list|)
 expr_stmt|;
 name|rtwn_vap_decrement_counters
@@ -4299,6 +4299,16 @@ name|bcn_mbuf
 operator|!=
 name|NULL
 condition|)
+block|{
+name|rtwn_beacon_unload
+argument_list|(
+name|sc
+argument_list|,
+name|uvp
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|uvp
@@ -4306,6 +4316,7 @@ operator|->
 name|bcn_mbuf
 argument_list|)
 expr_stmt|;
+block|}
 name|m
 operator|->
 name|m_pkthdr
@@ -4719,6 +4730,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Deny RCR updates. */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|RTWN_RCR_LOCKED
+expr_stmt|;
 comment|/* Enable synchronization. */
 name|rtwn_setbits_1
 argument_list|(
@@ -4768,6 +4786,13 @@ name|R92C_BCN_CTRL_DIS_TSF_UDT0
 argument_list|)
 expr_stmt|;
 comment|/* Accept all beacons. */
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|RTWN_RCR_LOCKED
+expr_stmt|;
 name|rtwn_set_rx_bssid_all
 argument_list|(
 name|sc
@@ -5980,9 +6005,6 @@ name|ieee80211_node
 modifier|*
 name|ni
 decl_stmt|;
-name|uint32_t
-name|reg
-decl_stmt|;
 name|uint8_t
 name|mode
 decl_stmt|;
@@ -6174,59 +6196,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Allow Rx from our BSSID only. */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_promisc
-operator|==
-literal|0
-condition|)
-block|{
-name|reg
-operator|=
-name|rtwn_read_4
-argument_list|(
-name|sc
-argument_list|,
-name|R92C_RCR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bcn_vaps
-operator|==
-literal|0
-condition|)
-name|reg
-operator||=
-name|R92C_RCR_CBSSID_BCN
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ap_vaps
-operator|==
-literal|0
-condition|)
-name|reg
-operator||=
-name|R92C_RCR_CBSSID_DATA
-expr_stmt|;
-name|rtwn_write_4
-argument_list|(
-name|sc
-argument_list|,
-name|R92C_RCR
-argument_list|,
-name|reg
-argument_list|)
-expr_stmt|;
-block|}
 ifndef|#
 directive|ifndef
 name|RTWN_WITHOUT_UCODE
@@ -6296,6 +6265,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Enable TSF synchronization. */
+name|rtwn_tsf_sync_enable
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -6348,14 +6325,6 @@ comment|/* Set ACK preamble type. */
 name|rtwn_set_ack_preamble
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Enable TSF synchronization. */
-name|rtwn_tsf_sync_enable
-argument_list|(
-name|sc
-argument_list|,
-name|vap
 argument_list|)
 expr_stmt|;
 comment|/* Set basic rates mask. */
@@ -7432,6 +7401,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Pause beaconing. */
+name|rtwn_setbits_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_TXPAUSE
+argument_list|,
+literal|0
+argument_list|,
+name|R92C_TX_QUEUE_BCN
+argument_list|)
+expr_stmt|;
 comment|/* Receive beacons / probe responses from any BSSID. */
 if|if
 condition|(
@@ -7584,6 +7565,18 @@ comment|/* Restore basic rates mask. */
 name|rtwn_calc_basicrates
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Resume beaconing. */
+name|rtwn_setbits_1
+argument_list|(
+name|sc
+argument_list|,
+name|R92C_TXPAUSE
+argument_list|,
+name|R92C_TX_QUEUE_BCN
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|RTWN_UNLOCK
@@ -9575,6 +9568,12 @@ name|sc
 operator|->
 name|sc_watchdog_to
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_tx_timer
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif

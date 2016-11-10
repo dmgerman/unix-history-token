@@ -1002,7 +1002,7 @@ name|iv_bss
 operator|->
 name|ni_txparms
 expr_stmt|;
-comment|/* 	 * Calculate the guard time for each slot.  This is the 	 * time to send a maximal-size frame according to the 	 * fixed/lowest transmit rate.  Note that the interface 	 * mtu does not include the 802.11 overhead so we must 	 * tack that on (ath_hal_computetxtime includes the 	 * preamble and plcp in it's calculation). 	 */
+comment|/* 	 * Calculate the guard time for each slot.  This is the 	 * time to send a maximal-size frame according to the 	 * fixed/lowest transmit rate.  Note that the interface 	 * mtu does not include the 802.11 overhead so we must 	 * tack that on (ath_hal_computetxtime includes the 	 * preamble and plcp in its calculation). 	 */
 name|tdma
 operator|=
 name|vap

@@ -3925,6 +3925,16 @@ name|tail
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * The device doesn't seem to reliably push suspend/halt statuses to 	 * the channel completion memory address, so poll the device register 	 * here. 	 */
+name|comp_update
+operator|=
+name|ioat_get_chansts
+argument_list|(
+name|ioat
+argument_list|)
+operator|&
+name|IOAT_CHANSTS_STATUS
+expr_stmt|;
 if|if
 condition|(
 operator|!

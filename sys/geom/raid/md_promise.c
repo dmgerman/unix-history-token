@@ -3569,7 +3569,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* Find disk position in metadata by it's serial. */
+comment|/* Find disk position in metadata by its serial. */
 name|md_disk_pos
 operator|=
 name|promise_meta_find_disk

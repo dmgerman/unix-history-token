@@ -133,7 +133,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|hostdisk_print
 parameter_list|(
 name|int
@@ -454,13 +454,19 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|hostdisk_print
 parameter_list|(
 name|int
 name|verbose
 parameter_list|)
-block|{  }
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_function
 
 end_unit

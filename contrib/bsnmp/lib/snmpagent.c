@@ -688,6 +688,22 @@ name|pdu
 operator|->
 name|version
 expr_stmt|;
+if|if
+condition|(
+name|pdu
+operator|->
+name|flags
+operator|&
+name|SNMP_MSG_AUTODISCOVER
+condition|)
+name|resp
+operator|->
+name|type
+operator|=
+name|SNMP_PDU_REPORT
+expr_stmt|;
+comment|/* RFC 3414.4 */
+else|else
 name|resp
 operator|->
 name|type

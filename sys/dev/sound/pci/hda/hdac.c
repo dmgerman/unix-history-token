@@ -410,9 +410,29 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_KBLKLP
+block|,
+literal|"Intel Kabylake-LP"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_SRPT
 block|,
 literal|"Intel Sunrise Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_KBLK
+block|,
+literal|"Intel Kabylake"
 block|,
 literal|0
 block|,
@@ -2650,7 +2670,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Wait for codecs to finish their own reset sequence. The delay here 	 * should be of 250us but for some reasons, on it's not enough on my 	 * computer. Let's use twice as much as necessary to make sure that 	 * it's reset properly. 	 */
+comment|/* 	 * Wait for codecs to finish their own reset sequence. The delay here 	 * should be of 250us but for some reasons, it's not enough on my 	 * computer. Let's use twice as much as necessary to make sure that 	 * it's reset properly. 	 */
 name|DELAY
 argument_list|(
 literal|1000

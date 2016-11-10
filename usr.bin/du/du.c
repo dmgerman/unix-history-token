@@ -1791,7 +1791,7 @@ operator|->
 name|st_ino
 condition|)
 block|{
-comment|/* 			 * Save memory by releasing an entry when we've seen 			 * all of it's links. 			 */
+comment|/* 			 * Save memory by releasing an entry when we've seen 			 * all of its links. 			 */
 if|if
 condition|(
 operator|--

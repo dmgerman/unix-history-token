@@ -123,64 +123,91 @@ comment|/* key length in bytes */
 name|uint8_t
 name|wk_pad
 decl_stmt|;
-name|uint16_t
+comment|/* .. some drivers use this. Fix that. */
+name|uint8_t
+name|wk_pad1
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint32_t
 name|wk_flags
 decl_stmt|;
 define|#
 directive|define
 name|IEEE80211_KEY_XMIT
-value|0x0001
+value|0x00000001
 comment|/* key used for xmit */
 define|#
 directive|define
 name|IEEE80211_KEY_RECV
-value|0x0002
+value|0x00000002
 comment|/* key used for recv */
 define|#
 directive|define
 name|IEEE80211_KEY_GROUP
-value|0x0004
+value|0x00000004
 comment|/* key used for WPA group operation */
 define|#
 directive|define
 name|IEEE80211_KEY_NOREPLAY
-value|0x0008
+value|0x00000008
 comment|/* ignore replay failures */
 define|#
 directive|define
 name|IEEE80211_KEY_SWENCRYPT
-value|0x0010
+value|0x00000010
 comment|/* host-based encrypt */
 define|#
 directive|define
 name|IEEE80211_KEY_SWDECRYPT
-value|0x0020
+value|0x00000020
 comment|/* host-based decrypt */
 define|#
 directive|define
 name|IEEE80211_KEY_SWENMIC
-value|0x0040
+value|0x00000040
 comment|/* host-based enmic */
 define|#
 directive|define
 name|IEEE80211_KEY_SWDEMIC
-value|0x0080
+value|0x00000080
 comment|/* host-based demic */
 define|#
 directive|define
 name|IEEE80211_KEY_DEVKEY
-value|0x0100
+value|0x00000100
 comment|/* device key request completed */
 define|#
 directive|define
 name|IEEE80211_KEY_CIPHER0
-value|0x1000
+value|0x00001000
 comment|/* cipher-specific action 0 */
 define|#
 directive|define
 name|IEEE80211_KEY_CIPHER1
-value|0x2000
+value|0x00002000
 comment|/* cipher-specific action 1 */
+define|#
+directive|define
+name|IEEE80211_KEY_NOIV
+value|0x00004000
+comment|/* don't insert IV/MIC for !mgmt */
+define|#
+directive|define
+name|IEEE80211_KEY_NOIVMGT
+value|0x00008000
+comment|/* don't insert IV/MIC for mgmt */
+define|#
+directive|define
+name|IEEE80211_KEY_NOMIC
+value|0x00010000
+comment|/* don't insert MIC for !mgmt */
+define|#
+directive|define
+name|IEEE80211_KEY_NOMICMGT
+value|0x00020000
+comment|/* don't insert MIC for mgmt */
 name|ieee80211_keyix
 name|wk_keyix
 decl_stmt|;
@@ -848,13 +875,7 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Check and remove any MIC.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|int
 name|ieee80211_crypto_demic
 parameter_list|(
@@ -871,46 +892,11 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m
 parameter_list|,
 name|int
-name|force
 parameter_list|)
-block|{
-specifier|const
-name|struct
-name|ieee80211_cipher
-modifier|*
-name|cip
-init|=
-name|k
-operator|->
-name|wk_cipher
-decl_stmt|;
-return|return
-operator|(
-name|cip
-operator|->
-name|ic_miclen
-operator|>
-literal|0
-condition|?
-name|cip
-operator|->
-name|ic_demic
-argument_list|(
-name|k
-argument_list|,
-name|m
-argument_list|,
-name|force
-argument_list|)
-else|:
-literal|1
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Add any MIC.  */

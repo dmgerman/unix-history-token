@@ -2013,8 +2013,6 @@ argument_list|,
 name|ar
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|taskqueue_enqueue_timeout
 argument_list|(
 name|taskqueue_thread
@@ -2029,22 +2027,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|AUTOFS_WARN
-argument_list|(
-literal|"taskqueue_enqueue_timeout() failed "
-literal|"with error %d"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-block|}
 name|refcount_init
 argument_list|(
 operator|&

@@ -36,7 +36,7 @@ comment|/* for aggregation state */
 end_comment
 
 begin_comment
-comment|/*  * Each ieee80211com instance has a single timer that fires every  * IEEE80211_INACT_WAIT seconds to handle "inactivity processing".  * This is used to do node inactivity processing when operating  * as an AP, adhoc or mesh mode.  For inactivity processing each node  * has a timeout set in it's ni_inact field that is decremented  * on each timeout and the node is reclaimed when the counter goes  * to zero.  We use different inactivity timeout values depending  * on whether the node is associated and authorized (either by  * 802.1x or open/shared key authentication) or associated but yet  * to be authorized.  The latter timeout is shorter to more aggressively  * reclaim nodes that leave part way through the 802.1x exchange.  */
+comment|/*  * Each ieee80211com instance has a single timer that fires every  * IEEE80211_INACT_WAIT seconds to handle "inactivity processing".  * This is used to do node inactivity processing when operating  * as an AP, adhoc or mesh mode.  For inactivity processing each node  * has a timeout set in its ni_inact field that is decremented  * on each timeout and the node is reclaimed when the counter goes  * to zero.  We use different inactivity timeout values depending  * on whether the node is associated and authorized (either by  * 802.1x or open/shared key authentication) or associated but yet  * to be authorized.  The latter timeout is shorter to more aggressively  * reclaim nodes that leave part way through the 802.1x exchange.  */
 end_comment
 
 begin_define

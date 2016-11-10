@@ -535,7 +535,7 @@ name|mux_xusb_hs
 argument_list|)
 operator|=
 block|{
-literal|"pc_xusb_ss"
+literal|"xusb_ss_div2"
 block|,
 literal|"pllU_60"
 block|}
@@ -568,7 +568,7 @@ name|fixed_clk_m
 init|=
 name|FRATE
 argument_list|(
-literal|0
+name|TEGRA124_CLK_CLK_M
 argument_list|,
 literal|"clk_m"
 argument_list|,
@@ -800,7 +800,21 @@ literal|"ext_vimclk"
 argument_list|,
 literal|10000000
 argument_list|)
-block|, }
+block|,
+comment|/* XUSB */
+name|FACT
+argument_list|(
+name|TEGRA124_CLK_XUSB_SS_DIV2
+argument_list|,
+literal|"xusb_ss_div2"
+argument_list|,
+literal|"xusb_ss"
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -937,7 +951,7 @@ block|,
 comment|/* USB. */
 name|MUX
 argument_list|(
-literal|0
+name|TEGRA124_CLK_XUSB_HS_SRC
 argument_list|,
 literal|"xusb_hs"
 argument_list|,
@@ -1005,7 +1019,7 @@ argument_list|)
 block|,
 name|GATE_PLL
 argument_list|(
-literal|0
+name|TEGRA124_CLK_PLL_U_480M
 argument_list|,
 literal|"pllU_480"
 argument_list|,

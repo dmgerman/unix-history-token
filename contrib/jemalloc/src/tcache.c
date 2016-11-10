@@ -2517,9 +2517,9 @@ begin_function
 name|bool
 name|tcaches_create
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|unsigned
 modifier|*
@@ -2549,7 +2549,10 @@ name|tcaches
 operator|=
 name|base_alloc
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2595,7 +2598,7 @@ name|arena
 operator|=
 name|arena_ichoose
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|NULL
 argument_list|)
@@ -2618,7 +2621,10 @@ name|tcache
 operator|=
 name|tcache_create
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|arena
 argument_list|)

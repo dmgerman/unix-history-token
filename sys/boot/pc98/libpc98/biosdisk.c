@@ -536,7 +536,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bd_print
 parameter_list|(
 name|int
@@ -1235,7 +1235,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bd_print
 parameter_list|(
 name|int
@@ -1247,7 +1247,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|done
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|line
@@ -1269,13 +1271,6 @@ name|pc98_partition
 modifier|*
 name|dptr
 decl_stmt|;
-name|pager_open
-argument_list|()
-expr_stmt|;
-name|done
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1285,17 +1280,19 @@ init|;
 name|i
 operator|<
 name|nbdinfo
-operator|&&
-operator|!
-name|done
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    disk%d:   BIOS drive %c:\n"
 argument_list|,
@@ -1308,10 +1305,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 comment|/* try to open the whole disk */
@@ -1393,9 +1396,14 @@ name|j
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"      disk%ds%d"
 argument_list|,
@@ -1408,6 +1416,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|bd_printslice
 argument_list|(
 name|od
@@ -1422,14 +1433,11 @@ name|line
 argument_list|,
 name|verbose
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-block|{
-name|done
-operator|=
-literal|1
-expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 name|bd_closedisk
@@ -1437,11 +1445,20 @@ argument_list|(
 name|od
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 block|}
-name|pager_close
-argument_list|()
-expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

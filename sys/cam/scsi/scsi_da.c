@@ -16921,7 +16921,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 				 * Attach to anything that claims to be a 				 * direct access or optical disk device, 				 * as long as it doesn't return a "Logical 				 * unit not supported" (0x25) error. 				 */
+comment|/* 				 * Attach to anything that claims to be a 				 * direct access or optical disk device, 				 * as long as it doesn't return a "Logical 				 * unit not supported" (0x25) error. 				 * "Internal Target Failure" (0x44) is also 				 * special and typically means that the 				 * device is a SATA drive behind a SATL 				 * translation that's fallen into a 				 * terminally fatal state. 				 */
 if|if
 condition|(
 operator|(
@@ -16932,6 +16932,12 @@ operator|(
 name|asc
 operator|!=
 literal|0x25
+operator|)
+operator|&&
+operator|(
+name|asc
+operator|!=
+literal|0x44
 operator|)
 operator|&&
 operator|(

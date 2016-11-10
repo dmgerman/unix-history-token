@@ -3489,7 +3489,7 @@ operator|&
 literal|0xf
 expr_stmt|;
 block|}
-comment|/* 		 * Logical mode: match each APIC that has a bit set 		 * in it's LDR that matches a bit in the ldest. 		 */
+comment|/* 		 * Logical mode: match each APIC that has a bit set 		 * in its LDR that matches a bit in the ldest. 		 */
 name|CPU_ZERO
 argument_list|(
 name|dmask

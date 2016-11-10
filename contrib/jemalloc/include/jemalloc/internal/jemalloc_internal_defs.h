@@ -113,12 +113,30 @@ name|JEMALLOC_HAVE_MADVISE
 end_define
 
 begin_comment
+comment|/*  * Defined if os_unfair_lock_*() functions are available, as provided by Darwin.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_OS_UNFAIR_LOCK */
+end_comment
+
+begin_comment
 comment|/*  * Defined if OSSpin*() functions are available, as provided by Darwin, and  * documented in the spinlock(3) manual page.  */
 end_comment
 
 begin_comment
 comment|/* #undef JEMALLOC_OSSPIN */
 end_comment
+
+begin_comment
+comment|/* Defined if syscall(2) is available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_SYSCALL
+end_define
 
 begin_comment
 comment|/*  * Defined if secure_getenv(3) is available.  */
@@ -137,6 +155,33 @@ define|#
 directive|define
 name|JEMALLOC_HAVE_ISSETUGID
 end_define
+
+begin_comment
+comment|/*  * Defined if clock_gettime(CLOCK_MONOTONIC_COARSE, ...) is available.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_CLOCK_MONOTONIC_COARSE */
+end_comment
+
+begin_comment
+comment|/*  * Defined if clock_gettime(CLOCK_MONOTONIC, ...) is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_CLOCK_MONOTONIC
+value|1
+end_define
+
+begin_comment
+comment|/*  * Defined if mach_absolute_time() is available.  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_HAVE_MACH_ABSOLUTE_TIME */
+end_comment
 
 begin_comment
 comment|/*  * Defined if _malloc_thread_cleanup() exists.  At least in the case of  * FreeBSD, pthread_key_create() allocates, which if used during malloc  * bootstrapping will cause recursion into the pthreads library.  Therefore, if  * _malloc_thread_cleanup() exists, use it as the basis for thread cleanup in  * malloc_tsd.  */
@@ -372,6 +417,17 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_TLS
+end_define
+
+begin_comment
+comment|/*  * Used to mark unreachable code to quiet "end of non-void" compiler warnings.  * Don't use this directly; instead use unreachable() from util.h  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_INTERNAL_UNREACHABLE
+value|abort
 end_define
 
 begin_comment

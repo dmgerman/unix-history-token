@@ -4655,7 +4655,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
 argument_list|,
 name|NULL
 argument_list|,

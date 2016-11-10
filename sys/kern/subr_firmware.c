@@ -661,7 +661,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * It is ok for the lookup to fail; this can happen 		 * when a module is unloaded on last reference and the 		 * module unload handler unregister's each of it's 		 * firmware images. 		 */
+comment|/* 		 * It is ok for the lookup to fail; this can happen 		 * when a module is unloaded on last reference and the 		 * module unload handler unregister's each of its 		 * firmware images. 		 */
 name|err
 operator|=
 literal|0

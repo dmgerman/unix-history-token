@@ -69,7 +69,7 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * In FreeBSD 12, the prototype of dirname() was modified to comply to  * POSIX. This function may now modify its input. Unfortunately, our  * copy of xinstall(8) shipped with previous versions of FreeBSD is  * built using the host headers and libc during the bootstrapping phase  * and depends on the old behavior.  *  * Apply a workaround where we explicitly link against dirname@FBSD_1.0  * in case this function is called on constant strings, instead of  * making the program crash at runtime.  */
+comment|/*  * In FreeBSD 12, the prototypes of basename() and dirname() were  * modified to comply to POSIX. These functions may now modify their  * input. Unfortunately, our copy of xinstall(8) shipped with previous  * versions of FreeBSD is built using the host headers and libc during  * the bootstrapping phase and depends on the old behavior.  *  * Apply a workaround where we explicitly link against basename@FBSD_1.0  * and dirname@FBSD_1.0 in case these functions are called on constant  * strings, instead of making the program crash at runtime.  */
 if|#
 directive|if
 name|defined
@@ -85,6 +85,17 @@ argument_list|)
 name|__BEGIN_DECLS
 name|char
 modifier|*
+name|__old_basename
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
 name|__old_dirname
 parameter_list|(
 name|char
@@ -97,6 +108,19 @@ begin_decl_stmt
 name|__END_DECLS
 name|__sym_compat
 argument_list|(
+name|basename
+argument_list|,
+name|__old_basename
+argument_list|,
+name|FBSD_1
+literal|.0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|__sym_compat
+argument_list|(
 name|dirname
 argument_list|,
 name|__old_dirname
@@ -104,8 +128,18 @@ argument_list|,
 name|FBSD_1
 literal|.0
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|basename
+parameter_list|(
+name|x
+parameter_list|)
+value|__generic(x, const char *, __old_basename, basename)(x)
+end_define
 
 begin_define
 define|#

@@ -297,7 +297,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_lock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|mtx
@@ -305,7 +305,7 @@ argument_list|)
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
-name|NULL
+name|TSDN_NULL
 argument_list|,
 operator|&
 name|mtx

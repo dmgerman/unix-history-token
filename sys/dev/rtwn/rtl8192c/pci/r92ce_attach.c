@@ -578,12 +578,6 @@ name|ic_caps
 operator|&=
 operator|~
 operator|(
-name|IEEE80211_C_IBSS
-comment|/* check beaconing / tsf */
-operator||
-name|IEEE80211_C_HOSTAP
-comment|/* the same */
-operator||
 name|IEEE80211_C_PMGT
 comment|/* check null frame / device usability */
 operator||
@@ -1179,6 +1173,7 @@ index|]
 operator|=
 name|R92C_TDECTRL
 expr_stmt|;
+comment|/* 	 * TODO: some additional setup is required 	 * to maintain few beacons at the same time. 	 * 	 * XXX BCNQ1 mechanism is not needed here; move it to the USB module. 	 */
 name|sc
 operator|->
 name|bcn_status_reg

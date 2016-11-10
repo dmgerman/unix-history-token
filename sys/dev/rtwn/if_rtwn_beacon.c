@@ -180,6 +180,7 @@ name|id
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX cannot be cleared on RTL8188CE */
 name|rtwn_setbits_1_shift
 argument_list|(
 name|sc
@@ -299,7 +300,9 @@ name|rtwn_delay
 argument_list|(
 name|sc
 argument_list|,
-literal|100
+name|sc
+operator|->
+name|bcn_check_interval
 argument_list|)
 expr_stmt|;
 block|}
@@ -479,6 +482,16 @@ name|bcn_mbuf
 operator|!=
 name|NULL
 condition|)
+block|{
+name|rtwn_beacon_unload
+argument_list|(
+name|sc
+argument_list|,
+name|uvp
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|uvp
@@ -486,6 +499,7 @@ operator|->
 name|bcn_mbuf
 argument_list|)
 expr_stmt|;
+block|}
 name|uvp
 operator|->
 name|bcn_mbuf
@@ -716,6 +730,13 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|rtwn_beacon_update_begin
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 name|RTWN_UNLOCK
 argument_list|(
 name|sc
@@ -762,6 +783,13 @@ argument_list|(
 name|sc
 argument_list|,
 name|uvp
+argument_list|)
+expr_stmt|;
+name|rtwn_beacon_update_end
+argument_list|(
+name|sc
+argument_list|,
+name|vap
 argument_list|)
 expr_stmt|;
 name|RTWN_UNLOCK

@@ -367,7 +367,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bc_print
 parameter_list|(
 name|int
@@ -674,7 +674,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bc_print
 parameter_list|(
 name|int
@@ -689,10 +689,11 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
-name|pager_open
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -707,9 +708,14 @@ name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    cd%d: Device 0x%x\n"
 argument_list|,
@@ -727,16 +733,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
-name|pager_close
-argument_list|()
-expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

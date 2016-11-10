@@ -5770,6 +5770,12 @@ expr_stmt|;
 comment|/* 		 * If this PMC is associated with this process, 		 * save the reading. 		 */
 if|if
 condition|(
+name|pm
+operator|->
+name|pm_state
+operator|!=
+name|PMC_STATE_DELETED
+operator|&&
 name|pp
 operator|!=
 name|NULL

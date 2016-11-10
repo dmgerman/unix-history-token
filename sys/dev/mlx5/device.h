@@ -4638,6 +4638,10 @@ name|MLX5_ETHERNET_EXTENDED_COUNTERS_GROUP
 init|=
 literal|0x5
 block|,
+name|MLX5_ETHERNET_DISCARD_COUNTERS_GROUP
+init|=
+literal|0x6
+block|,
 name|MLX5_PER_PRIORITY_COUNTERS_GROUP
 init|=
 literal|0x10
@@ -4649,6 +4653,10 @@ block|,
 name|MLX5_PHYSICAL_LAYER_COUNTERS_GROUP
 init|=
 literal|0x12
+block|,
+name|MLX5_INFINIBAND_PORT_COUNTERS_GROUP
+init|=
+literal|0x20
 block|, }
 enum|;
 end_enum
@@ -4929,15 +4937,18 @@ name|mlx5_mini_cqe8
 block|{
 union|union
 block|{
-name|u32
+name|__be32
 name|rx_hash_result
 decl_stmt|;
-name|u32
+name|__be16
 name|checksum
+decl_stmt|;
+name|__be16
+name|rsvd
 decl_stmt|;
 struct|struct
 block|{
-name|u16
+name|__be16
 name|wqe_counter
 decl_stmt|;
 name|u8
@@ -4951,7 +4962,7 @@ name|s_wqe_info
 struct|;
 block|}
 union|;
-name|u32
+name|__be32
 name|byte_cnt
 decl_stmt|;
 block|}

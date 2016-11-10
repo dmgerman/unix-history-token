@@ -123,13 +123,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLK_SRC_SEL_MAX
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLK_RATIO_N
 value|(0x3<< 16)
 end_define
@@ -201,6 +194,9 @@ name|clkdev
 decl_stmt|;
 name|bus_addr_t
 name|reg
+decl_stmt|;
+name|u_int
+name|parent_cnt
 decl_stmt|;
 block|}
 struct|;
@@ -360,8 +356,10 @@ operator|<
 literal|0
 operator|||
 name|index
-operator|>
-name|CLK_SRC_SEL_MAX
+operator|>=
+name|sc
+operator|->
+name|parent_cnt
 condition|)
 return|return
 operator|(
@@ -677,7 +675,9 @@ literal|0
 init|;
 name|src
 operator|<
-name|CLK_SRC_SEL_MAX
+name|sc
+operator|->
+name|parent_cnt
 condition|;
 name|src
 operator|++
@@ -1394,6 +1394,14 @@ name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|parent_cnt
+operator|=
+name|def
+operator|.
+name|parent_cnt
 expr_stmt|;
 name|clknode_register
 argument_list|(

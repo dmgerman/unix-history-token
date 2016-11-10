@@ -14822,7 +14822,7 @@ name|right
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If widget has own ossdev - not traverse it. 	   It will be traversed on it's own. */
+comment|/* If widget has own ossdev - not traverse it. 	   It will be traversed on its own. */
 if|if
 condition|(
 name|w
@@ -26245,7 +26245,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* If widget has own ossdev - not traverse it. 	   It will be traversed on it's own. */
+comment|/* If widget has own ossdev - not traverse it. 	   It will be traversed on its own. */
 if|if
 condition|(
 name|w

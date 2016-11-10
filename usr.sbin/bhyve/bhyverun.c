@@ -3987,7 +3987,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Exit if a device emulation finds an error in it's initilization 	 */
+comment|/* 	 * Exit if a device emulation finds an error in its initilization 	 */
 if|if
 condition|(
 name|init_pci

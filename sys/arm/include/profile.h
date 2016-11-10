@@ -77,7 +77,7 @@ comment|/*								\ 	 * Call the real mcount code					\ 	 */
 value|\ 	__asm__("bl	mcount");					\
 comment|/*								\ 	 * Restore registers that were trashed during mcount		\ 	 */
 value|\ 	__asm__("ldmfd	sp!, {r0-r3, lr}");				\
-comment|/*								\ 	 * Return to the caller. Loading lr and pc in one instruction	\ 	 * is deprecated on ARMv7 so we need this on it's own.		\ 	 */
+comment|/*								\ 	 * Return to the caller. Loading lr and pc in one instruction	\ 	 * is deprecated on ARMv7 so we need this on its own.		\ 	 */
 value|\ 	__asm__("ldmfd	sp!, {pc}");
 end_define
 

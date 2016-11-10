@@ -8805,7 +8805,11 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
-name|path
+name|r
+operator|->
+name|anchor
+operator|->
+name|name
 expr_stmt|;
 block|}
 else|else

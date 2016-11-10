@@ -8554,10 +8554,7 @@ if|if
 condition|(
 name|tcaches_create
 argument_list|(
-name|tsd_tsdn
-argument_list|(
 name|tsd
-argument_list|)
 argument_list|,
 operator|&
 name|tcache_ind
@@ -9534,11 +9531,6 @@ name|dss_prec_limit
 operator|&&
 name|chunk_dss_prec_set
 argument_list|(
-name|tsd_tsdn
-argument_list|(
-name|tsd
-argument_list|)
-argument_list|,
 name|dss_prec
 argument_list|)
 condition|)
@@ -9554,12 +9546,7 @@ block|}
 name|dss_prec_old
 operator|=
 name|chunk_dss_prec_get
-argument_list|(
-name|tsd_tsdn
-argument_list|(
-name|tsd
-argument_list|)
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|dss
@@ -11706,10 +11693,7 @@ literal|1
 expr_stmt|;
 name|prof_reset
 argument_list|(
-name|tsd_tsdn
-argument_list|(
 name|tsd
-argument_list|)
 argument_list|,
 name|lg_sample
 argument_list|)

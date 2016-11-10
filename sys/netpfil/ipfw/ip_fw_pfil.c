@@ -1417,7 +1417,7 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
-comment|/* fetch start point from rule, if any */
+comment|/* fetch start point from rule, if any.  remove the tag if present. */
 name|mtag
 operator|=
 name|m_tag_locate
@@ -1450,21 +1450,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* dummynet packet, already partially processed */
-name|struct
-name|ipfw_rule_ref
-modifier|*
-name|r
-decl_stmt|;
-comment|/* XXX can we free it after use ? */
-name|mtag
-operator|->
-name|m_tag_id
+name|args
+operator|.
+name|rule
 operator|=
-name|PACKET_TAG_NONE
-expr_stmt|;
-name|r
-operator|=
+operator|*
+operator|(
 operator|(
 expr|struct
 name|ipfw_rule_ref
@@ -1475,11 +1466,22 @@ name|mtag
 operator|+
 literal|1
 operator|)
+operator|)
+expr_stmt|;
+name|m_tag_delete
+argument_list|(
+operator|*
+name|m0
+argument_list|,
+name|mtag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|->
+name|args
+operator|.
+name|rule
+operator|.
 name|info
 operator|&
 name|IPFW_ONEPASS
@@ -1489,13 +1491,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|args
-operator|.
-name|rule
-operator|=
-operator|*
-name|r
-expr_stmt|;
 block|}
 comment|/* I need some amt of data to be contiguous */
 name|m

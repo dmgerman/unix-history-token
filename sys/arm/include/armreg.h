@@ -19,6 +19,23 @@ directive|define
 name|MACHINE_ARMREG_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|Please include sys/cdefs.h before including machine/armreg.h
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

@@ -8224,11 +8224,10 @@ block|{
 comment|/* 			 * A page may belong to the object but be 			 * dequeued and set to PQ_NONE while the 			 * object lock is not held.  This makes the 			 * reads of m->queue below racy, and we do not 			 * count pages set to PQ_NONE.  However, this 			 * sysctl is only meant to give an 			 * approximation of the system anyway. 			 */
 if|if
 condition|(
+name|vm_page_active
+argument_list|(
 name|m
-operator|->
-name|queue
-operator|==
-name|PQ_ACTIVE
+argument_list|)
 condition|)
 name|kvo
 operator|.
@@ -8238,11 +8237,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|vm_page_inactive
+argument_list|(
 name|m
-operator|->
-name|queue
-operator|==
-name|PQ_INACTIVE
+argument_list|)
 condition|)
 name|kvo
 operator|.

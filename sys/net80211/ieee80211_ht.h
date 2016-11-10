@@ -84,6 +84,11 @@ directive|define
 name|IEEE80211_AGGR_BARPEND
 value|0x0020
 comment|/* BAR response pending */
+define|#
+directive|define
+name|IEEE80211_AGGR_WAITRX
+value|0x0040
+comment|/* Wait for first RX frame to define BAW */
 name|uint8_t
 name|txa_tid
 decl_stmt|;
@@ -1006,6 +1011,21 @@ name|seq
 parameter_list|,
 name|int
 name|baw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee80211_ampdu_rx_stop_ext
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|tid
 parameter_list|)
 function_decl|;
 end_function_decl

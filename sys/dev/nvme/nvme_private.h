@@ -534,16 +534,11 @@ name|uint16_t
 name|cid
 decl_stmt|;
 name|uint64_t
+modifier|*
 name|prp
-index|[
-name|NVME_MAX_PRP_LIST_ENTRIES
-index|]
 decl_stmt|;
 name|bus_addr_t
 name|prp_bus_addr
-decl_stmt|;
-name|bus_dmamap_t
-name|prp_dma_map
 decl_stmt|;
 block|}
 struct|;
@@ -623,13 +618,10 @@ name|bus_dma_tag_t
 name|dma_tag_payload
 decl_stmt|;
 name|bus_dmamap_t
-name|cmd_dma_map
+name|queuemem_map
 decl_stmt|;
 name|uint64_t
 name|cmd_bus_addr
-decl_stmt|;
-name|bus_dmamap_t
-name|cpl_dma_map
 decl_stmt|;
 name|uint64_t
 name|cpl_bus_addr
@@ -1505,7 +1497,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|nvme_qpair_construct
 parameter_list|(
 name|struct

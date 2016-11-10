@@ -9641,7 +9641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Save information on any process we need to signal.  Any single  * process may need to be sent different signal-values for different  * log files, but usually a single signal-value will cause the process  * to close and re-open all of it's log files.  */
+comment|/*  * Save information on any process we need to signal.  Any single  * process may need to be sent different signal-values for different  * log files, but usually a single signal-value will cause the process  * to close and re-open all of its log files.  */
 end_comment
 
 begin_function

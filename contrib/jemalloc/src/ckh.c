@@ -28,9 +28,9 @@ specifier|static
 name|bool
 name|ckh_grow
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -44,9 +44,9 @@ specifier|static
 name|void
 name|ckh_shrink
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -334,7 +334,7 @@ operator|=
 operator|(
 name|unsigned
 operator|)
-name|prng_lg_range
+name|prng_lg_range_u64
 argument_list|(
 operator|&
 name|ckh
@@ -526,7 +526,7 @@ operator|=
 operator|(
 name|unsigned
 operator|)
-name|prng_lg_range
+name|prng_lg_range_u64
 argument_list|(
 operator|&
 name|ckh
@@ -1010,9 +1010,9 @@ specifier|static
 name|bool
 name|ckh_grow
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -1114,7 +1114,10 @@ operator|*
 operator|)
 name|ipallocztm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|usize
 argument_list|,
@@ -1128,7 +1131,7 @@ name|true
 argument_list|,
 name|arena_ichoose
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|NULL
 argument_list|)
@@ -1187,7 +1190,10 @@ condition|)
 block|{
 name|idalloctm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|tab
 argument_list|,
@@ -1203,7 +1209,10 @@ block|}
 comment|/* Rebuilding failed, so back out partially rebuilt table. */
 name|idalloctm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|ckh
 operator|->
@@ -1248,9 +1257,9 @@ specifier|static
 name|void
 name|ckh_shrink
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -1325,7 +1334,10 @@ operator|*
 operator|)
 name|ipallocztm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|usize
 argument_list|,
@@ -1339,7 +1351,7 @@ name|true
 argument_list|,
 name|arena_ichoose
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|NULL
 argument_list|)
@@ -1393,7 +1405,10 @@ condition|)
 block|{
 name|idalloctm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|tab
 argument_list|,
@@ -1419,7 +1434,10 @@ block|}
 comment|/* Rebuilding failed, so back out partially rebuilt table. */
 name|idalloctm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|ckh
 operator|->
@@ -1461,9 +1479,9 @@ begin_function
 name|bool
 name|ckh_new
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -1687,7 +1705,10 @@ operator|*
 operator|)
 name|ipallocztm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|usize
 argument_list|,
@@ -1701,7 +1722,7 @@ name|true
 argument_list|,
 name|arena_ichoose
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|NULL
 argument_list|)
@@ -1742,9 +1763,9 @@ begin_function
 name|void
 name|ckh_delete
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -1831,7 +1852,10 @@ endif|#
 directive|endif
 name|idalloctm
 argument_list|(
-name|tsdn
+name|tsd_tsdn
+argument_list|(
+name|tsd
+argument_list|)
 argument_list|,
 name|ckh
 operator|->
@@ -2033,9 +2057,9 @@ begin_function
 name|bool
 name|ckh_insert
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -2104,7 +2128,7 @@ if|if
 condition|(
 name|ckh_grow
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|ckh
 argument_list|)
@@ -2137,9 +2161,9 @@ begin_function
 name|bool
 name|ckh_remove
 parameter_list|(
-name|tsdn_t
+name|tsd_t
 modifier|*
-name|tsdn
+name|tsd
 parameter_list|,
 name|ckh_t
 modifier|*
@@ -2295,7 +2319,7 @@ block|{
 comment|/* Ignore error due to OOM. */
 name|ckh_shrink
 argument_list|(
-name|tsdn
+name|tsd
 argument_list|,
 name|ckh
 argument_list|)

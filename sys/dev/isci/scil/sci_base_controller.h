@@ -66,7 +66,7 @@ name|SCI_BASE_CONTROLLER_STATE_INITIAL
 init|=
 literal|0
 block|,
-comment|/**     * This state indicates that the controller is reset.  The memory for     * the controller is in it's initial state, but the controller requires     * initialization.     * This state is entered from the INITIAL state.     * This state is entered from the RESETTING state.     */
+comment|/**     * This state indicates that the controller is reset.  The memory for     * the controller is in its initial state, but the controller requires     * initialization.     * This state is entered from the INITIAL state.     * This state is entered from the RESETTING state.     */
 name|SCI_BASE_CONTROLLER_STATE_RESET
 block|,
 comment|/**     * This state is typically an action state that indicates the controller     * is in the process of initialization.  In this state no new IO operations     * are permitted.     * This state is entered from the RESET state.     */

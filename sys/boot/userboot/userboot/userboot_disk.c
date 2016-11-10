@@ -240,7 +240,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|userdisk_print
 parameter_list|(
 name|int
@@ -466,7 +466,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|userdisk_print
 parameter_list|(
 name|int
@@ -485,6 +485,10 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -500,20 +504,34 @@ name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    disk%d:   Guest drive image\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 name|dev
 operator|.
 name|d_dev
@@ -568,15 +586,22 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    disk%d"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|disk_print
 argument_list|(
 operator|&
@@ -593,8 +618,20 @@ operator|&
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 

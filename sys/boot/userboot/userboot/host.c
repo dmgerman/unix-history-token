@@ -462,7 +462,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|host_dev_print
 parameter_list|(
 name|int
@@ -475,20 +475,28 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"    host%d:   Host filesystem\n"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|pager_output
 argument_list|(
 name|line
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

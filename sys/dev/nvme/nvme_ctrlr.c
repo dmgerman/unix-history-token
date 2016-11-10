@@ -263,7 +263,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|nvme_ctrlr_construct_admin_qpair
 parameter_list|(
 name|struct
@@ -279,6 +279,9 @@ name|qpair
 decl_stmt|;
 name|uint32_t
 name|num_entries
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|qpair
 operator|=
@@ -327,6 +330,8 @@ name|NVME_ADMIN_ENTRIES
 expr_stmt|;
 block|}
 comment|/* 	 * The admin queue's max xfer size is treated differently than the 	 *  max I/O xfer size.  16KB is sufficient here - maybe even less? 	 */
+name|error
+operator|=
 name|nvme_qpair_construct
 argument_list|(
 name|qpair
@@ -344,6 +349,11 @@ argument_list|,
 name|ctrlr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -369,6 +379,8 @@ name|cap_lo
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|error
 decl_stmt|,
 name|num_entries
 decl_stmt|,
@@ -521,6 +533,8 @@ name|i
 index|]
 expr_stmt|;
 comment|/* 		 * Admin queue has ID=0. IO queues start at ID=1 - 		 *  hence the 'i+1' here. 		 * 		 * For I/O queues, use the controller-wide max_xfer_size 		 *  calculated in nvme_attach(). 		 */
+name|error
+operator|=
 name|nvme_qpair_construct
 argument_list|(
 name|qpair
@@ -548,6 +562,15 @@ argument_list|,
 name|ctrlr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 		 * Do not bother binding interrupts if we only have one I/O 		 *  interrupt thread for this controller. 		 */
 if|if
 condition|(
@@ -4549,11 +4572,20 @@ name|max_xfer_size
 operator|=
 name|NVME_MAX_XFER_SIZE
 expr_stmt|;
+if|if
+condition|(
 name|nvme_ctrlr_construct_admin_qpair
 argument_list|(
 name|ctrlr
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|ctrlr
 operator|->
 name|cdev

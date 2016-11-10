@@ -588,7 +588,7 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|dv_print

@@ -3056,9 +3056,14 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc__
 name|uint32_t
 name|protctl
 decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|dev
@@ -3237,25 +3242,15 @@ operator||=
 name|SDHCI_QUIRK_BROKEN_DMA
 expr_stmt|;
 comment|/* 	 * Set the buffer watermark level to 128 words (512 bytes) for both read 	 * and write.  The hardware has a restriction that when the read or 	 * write ready status is asserted, that means you can read exactly the 	 * number of words set in the watermark register before you have to 	 * re-check the status and potentially wait for more data.  The main 	 * sdhci driver provides no hook for doing status checking on less than 	 * a full block boundary, so we set the watermark level to be a full 	 * block.  Reads and writes where the block size is less than the 	 * watermark size will work correctly too, no need to change the 	 * watermark for different size blocks.  However, 128 is the maximum 	 * allowed for the watermark, so PIO is limitted to 512 byte blocks 	 * (which works fine for SD cards, may be a problem for SDIO some day). 	 * 	 * XXX need named constants for this stuff. 	 */
-ifdef|#
-directive|ifdef
-name|__powerpc__
 comment|/* P1022 has the '*_BRST_LEN' fields as reserved, always reading 0x10 */
 if|if
 condition|(
-operator|(
-name|SVR_VER
+name|ofw_bus_is_compatible
 argument_list|(
-name|mfspr
-argument_list|(
-name|SPR_SVR
+name|dev
+argument_list|,
+literal|"fsl,p1022-esdhc"
 argument_list|)
-argument_list|)
-operator|&
-literal|0xfff6
-operator|)
-operator|==
-name|SVR_P1022
 condition|)
 name|WR4
 argument_list|(
@@ -3267,8 +3262,6 @@ literal|0x10801080
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|WR4
 argument_list|(
 name|sc
