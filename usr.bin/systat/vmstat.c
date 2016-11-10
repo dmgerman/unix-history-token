@@ -290,7 +290,7 @@ comment|/* intransit blocking page faults */
 name|u_int
 name|v_reactivated
 decl_stmt|;
-comment|/* number of pages reactivated from free list */
+comment|/* number of pages reactivated by pagedaemon */
 name|u_int
 name|v_pdwakeups
 decl_stmt|;
@@ -333,9 +333,9 @@ name|v_inactive_count
 decl_stmt|;
 comment|/* number of pages inactive */
 name|u_int
-name|v_cache_count
+name|v_laundry_count
 decl_stmt|;
-comment|/* number of pages on buffer cache queue */
+comment|/* number of pages in laundry queue */
 name|u_long
 name|v_kmem_map_size
 decl_stmt|;
@@ -1942,7 +1942,7 @@ name|VMSTATCOL
 operator|+
 literal|9
 argument_list|,
-literal|"cache"
+literal|"laund"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3512,7 +3512,7 @@ name|pgtokb
 argument_list|(
 name|s
 operator|.
-name|v_cache_count
+name|v_laundry_count
 argument_list|)
 argument_list|,
 name|VMSTATROW
@@ -5405,11 +5405,11 @@ argument_list|)
 expr_stmt|;
 name|GETSYSCTL
 argument_list|(
-literal|"vm.stats.vm.v_cache_count"
+literal|"vm.stats.vm.v_laundry_count"
 argument_list|,
 name|ls
 operator|->
-name|v_cache_count
+name|v_laundry_count
 argument_list|)
 expr_stmt|;
 name|GETSYSCTL
