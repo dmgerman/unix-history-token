@@ -173,7 +173,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|CPUCTL_DEBUG
 end_ifdef
 
 begin_define
