@@ -1094,6 +1094,10 @@ argument_list|)
 operator|)
 end_if
 
+begin_comment
+comment|/*  * QMD_LIST_CHECK_HEAD(LIST_HEAD *head, LIST_ENTRY NAME)  *  * If the list is non-empty, validates that the first element of the list  * points back at 'head.'  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1106,6 +1110,10 @@ parameter_list|)
 value|do {				\ 	if (LIST_FIRST((head)) != NULL&&				\ 	    LIST_FIRST((head))->field.le_prev !=			\&LIST_FIRST((head)))					\ 		panic("Bad list head %p first->prev != head", (head));	\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * QMD_LIST_CHECK_NEXT(TYPE *elm, LIST_ENTRY NAME)  *  * If an element follows 'elm' in the list, validates that the next element  * points back at 'elm.'  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1117,6 +1125,10 @@ name|field
 parameter_list|)
 value|do {				\ 	if (LIST_NEXT((elm), field) != NULL&&				\ 	    LIST_NEXT((elm), field)->field.le_prev !=			\&((elm)->field.le_next))					\ 	     	panic("Bad link elm %p next->prev != elm", (elm));	\ } while (0)
 end_define
+
+begin_comment
+comment|/*  * QMD_LIST_CHECK_PREV(TYPE *elm, LIST_ENTRY NAME)  *  * Validates that the previous element (or head of the list) points to 'elm.'  */
+end_comment
 
 begin_define
 define|#
@@ -1485,6 +1497,10 @@ argument_list|)
 operator|)
 end_if
 
+begin_comment
+comment|/*  * QMD_TAILQ_CHECK_HEAD(TAILQ_HEAD *head, TAILQ_ENTRY NAME)  *  * If the tailq is non-empty, validates that the first element of the tailq  * points back at 'head.'  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1496,6 +1512,10 @@ name|field
 parameter_list|)
 value|do {				\ 	if (!TAILQ_EMPTY(head)&&					\ 	    TAILQ_FIRST((head))->field.tqe_prev !=			\&TAILQ_FIRST((head)))					\ 		panic("Bad tailq head %p first->prev != head", (head));	\ } while (0)
 end_define
+
+begin_comment
+comment|/*  * QMD_TAILQ_CHECK_TAIL(TAILQ_HEAD *head, TAILQ_ENTRY NAME)  *  * Validates that the tail of the tailq is a pointer to pointer to NULL.  */
+end_comment
 
 begin_define
 define|#
@@ -1509,6 +1529,10 @@ parameter_list|)
 value|do {				\ 	if (*(head)->tqh_last != NULL)					\ 	    	panic("Bad tailq NEXT(%p->tqh_last) != NULL", (head)); 	\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * QMD_TAILQ_CHECK_NEXT(TYPE *elm, TAILQ_ENTRY NAME)  *  * If an element follows 'elm' in the tailq, validates that the next element  * points back at 'elm.'  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1520,6 +1544,10 @@ name|field
 parameter_list|)
 value|do {				\ 	if (TAILQ_NEXT((elm), field) != NULL&&				\ 	    TAILQ_NEXT((elm), field)->field.tqe_prev !=			\&((elm)->field.tqe_next))					\ 		panic("Bad link elm %p next->prev != elm", (elm));	\ } while (0)
 end_define
+
+begin_comment
+comment|/*  * QMD_TAILQ_CHECK_PREV(TYPE *elm, TAILQ_ENTRY NAME)  *  * Validates that the previous element (or head of the tailq) points to 'elm.'  */
+end_comment
 
 begin_define
 define|#
