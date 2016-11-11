@@ -1248,6 +1248,8 @@ argument_list|(
 name|s
 argument_list|,
 literal|"mfs_root"
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 name|NULL
