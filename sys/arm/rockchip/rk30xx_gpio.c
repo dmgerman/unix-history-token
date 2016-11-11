@@ -2847,7 +2847,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|ctrl
 argument_list|,

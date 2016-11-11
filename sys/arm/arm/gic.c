@@ -1660,7 +1660,7 @@ control|)
 block|{
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|iparent
 argument_list|,

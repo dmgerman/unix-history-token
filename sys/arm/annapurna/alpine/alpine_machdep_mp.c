@@ -318,7 +318,7 @@ name|reg
 parameter_list|)
 block|{
 return|return
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|child
 argument_list|,
