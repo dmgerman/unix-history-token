@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -125,7 +131,7 @@ name|fdt_compatible
 expr_stmt|;
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|root
 argument_list|,
