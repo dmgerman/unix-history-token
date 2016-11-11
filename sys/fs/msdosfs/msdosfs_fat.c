@@ -75,6 +75,13 @@ directive|include
 file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|FULL_RUN
+value|((u_int)0xffffffff)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -3293,11 +3300,7 @@ if|if
 condition|(
 name|map
 operator|!=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|FULL_RUN
 condition|)
 block|{
 name|cn
@@ -3310,11 +3313,7 @@ name|ffs
 argument_list|(
 name|map
 operator|^
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|FULL_RUN
 argument_list|)
 operator|-
 literal|1
@@ -3432,11 +3431,7 @@ if|if
 condition|(
 name|map
 operator|!=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|FULL_RUN
 condition|)
 block|{
 name|cn
@@ -3449,11 +3444,7 @@ name|ffs
 argument_list|(
 name|map
 operator|^
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|FULL_RUN
 argument_list|)
 operator|-
 literal|1
@@ -4018,11 +4009,7 @@ index|[
 name|cn
 index|]
 operator|=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+name|FULL_RUN
 expr_stmt|;
 comment|/* 	 * Figure how many free clusters are in the filesystem by ripping 	 * through the fat counting the number of entries whose content is 	 * zero.  These represent free clusters. 	 */
 name|pmp
