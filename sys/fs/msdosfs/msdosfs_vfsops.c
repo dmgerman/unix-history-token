@@ -3571,6 +3571,8 @@ operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_USES_BCACHE
+operator||
+name|MNTK_NO_IOPF
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
