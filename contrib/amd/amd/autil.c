@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/autil.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/autil.c  *  */
 end_comment
 
 begin_comment
@@ -429,7 +429,9 @@ name|mf
 init|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 decl_stmt|;
 comment|/*    * Arrange to timeout this node    */
 if|if
@@ -459,6 +461,7 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/*      * We aren't going to schedule a timeout, so we need to notify the      * child here unless we are already unmounting, in which case that      * process is responsible for notifying the child.      */
 if|if
 condition|(
 name|mf
@@ -479,6 +482,7 @@ name|am_path
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|plog
 argument_list|(
 name|XLOG_WARNING
@@ -490,6 +494,18 @@ operator|->
 name|am_path
 argument_list|)
 expr_stmt|;
+name|notify_child
+argument_list|(
+name|mp
+argument_list|,
+name|AMQ_UMNT_FAILED
+argument_list|,
+name|EBUSY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -601,52 +617,7 @@ argument_list|(
 name|mf
 argument_list|)
 expr_stmt|;
-comment|/*      * Be careful when calling free_ops and XFREE here.  Some pseudo file      * systems like nfsx call this function (mf_mounted), even though it      * would be called by the lower-level amd file system functions.  nfsx      * needs to call this function because of the other actions it takes.      * So we pass a boolean from the caller (yes, not so clean workaround)      * to determine if we should free or not.  If we're not freeing (often      * because we're called from a callback function), then just to be sure,      * we'll zero out the am_opts structure and set the pointer to NULL.      * The parent mntfs node owns this memory and is going to free it with a      * call to mf_mounted(mntfs,TRUE) (see comment in the am_mounted code).      */
-if|if
-condition|(
-name|call_free_opts
-condition|)
-block|{
-name|free_opts
-argument_list|(
-name|mf
-operator|->
-name|mf_fo
-argument_list|)
-expr_stmt|;
-comment|/* this free is needed to prevent leaks */
-name|XFREE
-argument_list|(
-name|mf
-operator|->
-name|mf_fo
-argument_list|)
-expr_stmt|;
-comment|/* (also this one) */
-block|}
-else|else
-block|{
-name|memset
-argument_list|(
-name|mf
-operator|->
-name|mf_fo
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|am_opts
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mf
-operator|->
-name|mf_fo
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+comment|/*      * We used to free the mf_mo (options) here, however they're now stored      * and managed with the mntfs and do not need to be free'd here (this ensures      * that we use the same options to monitor/unmount the system as we used      * to mount it).      */
 block|}
 if|if
 condition|(
@@ -755,7 +726,9 @@ name|mf
 init|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 decl_stmt|;
 comment|/*    * This is the parent mntfs which does the mf->mf_fo (am_opts type), and    * we're passing TRUE here to tell mf_mounted to actually free the    * am_opts.  See a related comment in mf_mounted().    */
 name|mf_mounted
@@ -795,7 +768,9 @@ name|mp
 operator|->
 name|am_parent
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_fsflags
 operator|&
@@ -1074,7 +1049,9 @@ name|mp
 operator|->
 name|am_parent
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 condition|)
 name|mp
 operator|->
@@ -1171,6 +1148,26 @@ argument_list|(
 literal|"assign_error_mntfs"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|am_al
+operator|==
+name|NULL
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"%s: Can't assign error"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/*    * Save the old error code    */
 name|error
 operator|=
@@ -1188,22 +1185,33 @@ name|error
 operator|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_error
 expr_stmt|;
 comment|/*    * Allocate a new error reference    */
+name|free_loc
+argument_list|(
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|am_al
 operator|=
-name|new_mntfs
+name|new_loc
 argument_list|()
 expr_stmt|;
 comment|/*    * Put back the error code    */
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_error
 operator|=
@@ -1211,7 +1219,9 @@ name|error
 expr_stmt|;
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|->
 name|mf_flags
 operator||=
@@ -1297,6 +1307,10 @@ name|opt_maptype
 else|:
 name|NULL
 operator|)
+argument_list|,
+name|mf
+operator|->
+name|mf_mount
 argument_list|)
 expr_stmt|;
 name|mf
@@ -1338,7 +1352,9 @@ name|mf
 operator|=
 name|xp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 operator|)
 operator|||
 comment|/* No mounted filesystem */
@@ -1459,11 +1475,16 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* are we using forced unmounts? */
+name|u_long
+name|nfs_version
+init|=
+name|get_nfs_dispatcher_version
+argument_list|(
+name|nfs_dispatcher
+argument_list|)
+decl_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|voidp
-operator|)
 operator|&
 name|mnt
 argument_list|,
@@ -1695,11 +1716,10 @@ block|{
 name|nfs_args_t
 name|nfs_args
 decl_stmt|;
-name|am_nfs_fh
+name|am_nfs_handle_t
 modifier|*
 name|fhp
-decl_stmt|;
-name|am_nfs_handle_t
+decl_stmt|,
 name|anh
 decl_stmt|;
 ifndef|#
@@ -1721,6 +1741,9 @@ operator|=
 name|get_root_nfs_fh
 argument_list|(
 name|dir
+argument_list|,
+operator|&
+name|anh
 argument_list|)
 expr_stmt|;
 if|if
@@ -1748,9 +1771,6 @@ name|HAVE_TRANSPORT_TYPE_TLI
 comment|/*      * Create sockaddr to point to the local machine.      */
 name|memset
 argument_list|(
-operator|(
-name|voidp
-operator|)
 operator|&
 name|sin
 argument_list|,
@@ -1819,22 +1839,6 @@ endif|#
 directive|endif
 comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 comment|/* setup the many fields and flags within nfs_args */
-name|memmove
-argument_list|(
-operator|&
-name|anh
-operator|.
-name|v2
-argument_list|,
-name|fhp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|fhp
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_TRANSPORT_TYPE_TLI
@@ -1853,13 +1857,11 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* remote host IP addr is set below */
-name|NFS_VERSION
+name|nfs_version
 argument_list|,
-comment|/* version 2 */
 literal|"udp"
 argument_list|,
-operator|&
-name|anh
+name|fhp
 argument_list|,
 name|fs_hostname
 argument_list|,
@@ -1894,13 +1896,11 @@ argument_list|,
 operator|&
 name|sin
 argument_list|,
-name|NFS_VERSION
+name|nfs_version
 argument_list|,
-comment|/* version 2 */
 literal|"udp"
 argument_list|,
-operator|&
-name|anh
+name|fhp
 argument_list|,
 name|fs_hostname
 argument_list|,
@@ -2143,15 +2143,43 @@ name|mf
 init|=
 name|mp
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|foreground
 condition|)
+block|{
 comment|/* firewall - should never happen */
+comment|/*      * This is a coding error.  Make sure we hear about it!      */
+name|plog
+argument_list|(
+name|XLOG_FATAL
+argument_list|,
+literal|"am_unmounted: illegal use in background (%s)"
+argument_list|,
+name|mp
+operator|->
+name|am_name
+argument_list|)
+expr_stmt|;
+name|notify_child
+argument_list|(
+name|mp
+argument_list|,
+name|AMQ_UMNT_OK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX - be safe? */
 return|return;
+block|}
 comment|/*    * Do unmounted callback    */
 if|if
 condition|(
@@ -2311,7 +2339,9 @@ name|mp
 operator|->
 name|am_parent
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
 condition|)
 name|clocktime
 argument_list|(
@@ -2344,7 +2374,7 @@ name|char
 modifier|*
 name|fname
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|mp
 operator|->
@@ -2365,13 +2395,43 @@ name|mf_parent
 init|=
 name|mp_parent
 operator|->
-name|am_mnt
+name|am_al
+operator|->
+name|al_mnt
+decl_stmt|;
+name|am_node
+name|fake_mp
 decl_stmt|;
 name|int
 name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/*      * We need to use notify_child() after free_map(), so save enough      * to do that in fake_mp.      */
+name|fake_mp
+operator|.
+name|am_fd
+index|[
+literal|1
+index|]
+operator|=
+name|mp
+operator|->
+name|am_fd
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|mp
+operator|->
+name|am_fd
+index|[
+literal|1
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|free_map
 argument_list|(
 name|mp
@@ -2412,8 +2472,9 @@ name|error
 operator|<
 literal|0
 condition|)
-name|mp
-operator|=
+operator|(
+name|void
+operator|)
 name|mf_parent
 operator|->
 name|mf_ops
@@ -2446,6 +2507,33 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|notify_child
+argument_list|(
+operator|&
+name|fake_mp
+argument_list|,
+name|AMQ_UMNT_OK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|notify_child
+argument_list|(
+operator|&
+name|fake_mp
+argument_list|,
+name|AMQ_UMNT_FAILED
+argument_list|,
+name|EBUSY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|XFREE
 argument_list|(
@@ -2453,20 +2541,34 @@ name|fname
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-comment|/*      * We have a race here.      * If this node has a pending mount and amd is going down (unmounting      * everything in the process), then we could potentially free it here      * while a struct continuation still has a reference to it. So when      * amfs_cont is called, it blows up.      * We avoid the race by refusing to free any nodes that have      * pending mounts (defined as having a non-NULL am_mfarray).      */
+else|else
+block|{
+comment|/*      * We have a race here.      * If this node has a pending mount and amd is going down (unmounting      * everything in the process), then we could potentially free it here      * while a struct continuation still has a reference to it. So when      * amfs_cont is called, it blows up.      * We avoid the race by refusing to free any nodes that have      * pending mounts (defined as having a non-NULL am_alarray).      */
+name|notify_child
+argument_list|(
+name|mp
+argument_list|,
+name|AMQ_UMNT_OK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* do this regardless */
 if|if
 condition|(
 operator|!
 name|mp
 operator|->
-name|am_mfarray
+name|am_alarray
 condition|)
 name|free_map
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

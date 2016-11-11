@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/srvr_nfs.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/srvr_nfs.c  *  */
 end_comment
 
 begin_comment
@@ -112,6 +112,7 @@ name|char
 name|np_mountd_inval
 decl_stmt|;
 comment|/* Port *may* be invalid */
+comment|/* 'Y' invalid, 'N' valid, 'P' permanent */
 name|int
 name|np_ping
 decl_stmt|;
@@ -174,11 +175,30 @@ parameter_list|()
 value|(++global_xid)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FS_NFS4
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NUM_NFS_VERS
+value|3
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_FS_NFS3
-end_ifdef
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -353,13 +373,19 @@ decl_stmt|;
 if|if
 condition|(
 name|np
+operator|&&
+name|np
+operator|->
+name|np_mountd_inval
+operator|!=
+literal|'P'
 condition|)
 block|{
 name|np
 operator|->
 name|np_mountd_inval
 operator|=
-name|TRUE
+literal|'Y'
 expr_stmt|;
 name|np
 operator|->
@@ -410,7 +436,9 @@ name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"create_ping_payload: nfs_version = 0, changed to 2"
+literal|"%s: nfs_version = 0, changed to 2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -419,7 +447,9 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"create_ping_payload: nfs_version: %d"
+literal|"%s: nfs_version: %d"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|int
@@ -489,6 +519,7 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/*    * Find out how long it is    */
 name|ping_len
@@ -560,7 +591,7 @@ name|fserver
 modifier|*
 name|fs
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 comment|/*    * Find which fileserver we are talking about    */
 name|ITER
@@ -668,7 +699,7 @@ name|np
 operator|->
 name|np_mountd_inval
 operator|=
-name|FALSE
+literal|'N'
 expr_stmt|;
 name|np
 operator|->
@@ -1021,14 +1052,18 @@ name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"recompute_portmap: nfs_version = 0 fixed"
+literal|"%s: nfs_version = 0 fixed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"recompute_portmap: NFS version %d on %s"
+literal|"%s: NFS version %d on %s"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|int
@@ -1179,24 +1214,41 @@ name|np_error
 expr_stmt|;
 block|}
 comment|/*      * Now go get the port mapping again in case it changed.      * Note that it is used even if (np_mountd_inval)      * is True.  The flag is used simply as an      * indication that the mountd may be invalid, not      * that it is known to be invalid.      */
-if|if
+switch|switch
 condition|(
 name|np
 operator|->
 name|np_mountd_inval
 condition|)
+block|{
+case|case
+literal|'Y'
+case|:
 name|recompute_portmap
 argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+literal|'N'
+case|:
 name|np
 operator|->
 name|np_mountd_inval
 operator|=
-name|TRUE
+literal|'Y'
 expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1526,6 +1578,8 @@ condition|(
 name|np
 operator|->
 name|np_mountd_inval
+operator|==
+literal|'Y'
 condition|)
 name|recompute_portmap
 argument_list|(
@@ -1651,7 +1705,7 @@ return|return;
 comment|/* if got here: downed server changed IP address */
 name|old_ipaddr
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|inet_ntoa
 argument_list|(
@@ -1784,6 +1838,7 @@ comment|/* done in caller: nfs_keepalive_timeout */
 comment|/* XXX: need to purge nfs_private so that somehow it will get re-initialized? */
 endif|#
 directive|endif
+comment|/* 0 */
 block|}
 end_function
 
@@ -2069,13 +2124,37 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|int
+name|fs_version
+init|=
+name|nfs_valid_version
+argument_list|(
+name|gopt
+operator|.
+name|nfs_vers_ping
+argument_list|)
+operator|&&
+name|gopt
+operator|.
+name|nfs_vers_ping
+operator|<
+name|fs
+operator|->
+name|fs_version
+condition|?
+name|gopt
+operator|.
+name|nfs_vers_ping
+else|:
+name|fs
+operator|->
+name|fs_version
+decl_stmt|;
 comment|/*    * Send an NFS ping to this node    */
 if|if
 condition|(
 name|ping_len
 index|[
-name|fs
-operator|->
 name|fs_version
 operator|-
 name|NFS_VERSION
@@ -2085,8 +2164,6 @@ literal|0
 condition|)
 name|create_ping_payload
 argument_list|(
-name|fs
-operator|->
 name|fs_version
 argument_list|)
 expr_stmt|;
@@ -2106,8 +2183,6 @@ argument_list|)
 argument_list|,
 name|ping_buf
 index|[
-name|fs
-operator|->
 name|fs_version
 operator|-
 name|NFS_VERSION
@@ -2115,8 +2190,6 @@ index|]
 argument_list|,
 name|ping_len
 index|[
-name|fs
-operator|->
 name|fs_version
 operator|-
 name|NFS_VERSION
@@ -2131,7 +2204,7 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 call|(
 name|voidp
@@ -2489,12 +2562,6 @@ block|{
 name|char
 modifier|*
 name|host
-init|=
-name|mf
-operator|->
-name|mf_fo
-operator|->
-name|opt_rhost
 decl_stmt|;
 name|fserver
 modifier|*
@@ -2557,6 +2624,36 @@ name|fserver_is_down
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_fo
+operator|==
+name|NULL
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"%s: NULL mf_fo"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|host
+operator|=
+name|mf
+operator|->
+name|mf_fo
+operator|->
+name|opt_rhost
+expr_stmt|;
 comment|/*    * Get ping interval from mount options.    * Current only used to decide whether pings    * are required or not.< 0 = no pings.    */
 name|mnt
 operator|.
@@ -2598,7 +2695,9 @@ name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"find_nfs_srvr: NFS mount failed, trying again with NFSv2/UDP"
+literal|"%s: NFS mount failed, trying again with NFSv2/UDP"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|mf
@@ -2773,7 +2872,9 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"find_nfs_srvr: force NFS version to %d"
+literal|"%s: force NFS version to %d"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|int
@@ -2799,7 +2900,9 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"find_nfs_srvr: force NFS protocol transport to %s"
+literal|"%s: force NFS protocol transport to %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|nfs_proto
 argument_list|)
@@ -2855,7 +2958,7 @@ name|AF_INET
 case|:
 name|ip
 operator|=
-name|ALLOC
+name|CALLOC
 argument_list|(
 expr|struct
 name|sockaddr_in
@@ -2981,10 +3084,6 @@ operator|->
 name|fs_refc
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
 name|XFREE
 argument_list|(
 name|ip
@@ -3046,16 +3145,29 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-comment|/*      * Prefer NFSv3/tcp if the client supports it (cf. RFC 2054, 7).      */
+comment|/*      * Prefer NFSv4/tcp if the client supports it (cf. RFC 2054, 7).      */
 if|if
 condition|(
 operator|!
 name|nfs_version
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FS_NFS4
+argument_list|)
+name|nfs_version
+operator|=
+name|NFS_VERSION4
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_FS_NFS3
+argument_list|)
 name|nfs_version
 operator|=
 name|NFS_VERSION3
@@ -3100,20 +3212,25 @@ name|defined
 argument_list|(
 name|HAVE_FS_NFS3
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_FS_NFS4
+argument_list|)
 name|nfs_proto
 operator|=
 literal|"tcp"
 expr_stmt|;
 else|#
 directive|else
-comment|/* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
+comment|/* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) || defined(HAVE_FS_NFS4) */
 name|nfs_proto
 operator|=
 literal|"udp"
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) */
+comment|/* not defined(MNTTAB_OPT_PROTO) || defined(HAVE_FS_NFS3) || defined(HAVE_FS_NFS4) */
 name|plog
 argument_list|(
 name|XLOG_INFO
@@ -3154,6 +3271,10 @@ argument_list|,
 name|nfs_version
 argument_list|,
 name|nfs_proto
+argument_list|,
+name|gopt
+operator|.
+name|nfs_vers
 argument_list|)
 expr_stmt|;
 name|nfs_port
@@ -3201,6 +3322,10 @@ name|nfs_version
 argument_list|,
 operator|*
 name|p
+argument_list|,
+name|gopt
+operator|.
+name|nfs_vers
 argument_list|)
 expr_stmt|;
 if|if
@@ -3350,7 +3475,9 @@ argument_list|)
 expr_stmt|;
 name|dlog
 argument_list|(
-literal|"find_nfs_srvr: using port %d for nfs on %s"
+literal|"%s: using port %d for nfs on %s"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|int
@@ -3462,7 +3589,7 @@ name|new_ipaddr
 decl_stmt|;
 name|old_ipaddr
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|inet_ntoa
 argument_list|(
@@ -3609,6 +3736,15 @@ name|fs
 operator|->
 name|fs_private
 expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|np_mountd_inval
+operator|!=
+literal|'P'
+condition|)
+block|{
 name|np
 operator|->
 name|np_mountd_inval
@@ -3635,7 +3771,7 @@ name|np_ping
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Initially the server will be deemed dead 	 * after MAX_ALLOWED_PINGS of the fast variety 	 * have failed. 	 */
+comment|/* 	   * Initially the server will be deemed dead 	   * after MAX_ALLOWED_PINGS of the fast variety 	   * have failed. 	   */
 name|np
 operator|->
 name|np_ttl
@@ -3671,15 +3807,21 @@ operator||
 name|FSF_DOWN
 expr_stmt|;
 block|}
+else|else
+block|{
+name|fs
+operator|->
+name|fs_flags
+operator|=
+name|FSF_VALID
+expr_stmt|;
+block|}
+block|}
 name|fs
 operator|->
 name|fs_refc
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
 name|XFREE
 argument_list|(
 name|ip
@@ -3710,7 +3852,7 @@ name|fs
 operator|->
 name|fs_host
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|hp
 condition|?
@@ -3856,9 +3998,33 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|->
+name|np_mountd
+operator|=
+name|htons
+argument_list|(
+name|hasmntval
+argument_list|(
+operator|&
+name|mnt
+argument_list|,
+literal|"mountport"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|np_mountd
+operator|==
+literal|0
+condition|)
+block|{
+name|np
+operator|->
 name|np_mountd_inval
 operator|=
-name|TRUE
+literal|'Y'
 expr_stmt|;
 name|np
 operator|->
@@ -3874,6 +4040,47 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"%s: using mountport: %d"
+argument_list|,
+name|__func__
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ntohs
+argument_list|(
+name|np
+operator|->
+name|np_mountd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|np_mountd_inval
+operator|=
+literal|'P'
+expr_stmt|;
+name|np
+operator|->
+name|np_xid
+operator|=
+literal|0
+expr_stmt|;
+name|np
+operator|->
+name|np_error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/*    * Initially the server will be deemed dead after    * MAX_ALLOWED_PINGS of the fast variety have failed.    */
 name|np
 operator|->

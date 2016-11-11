@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/am_ops.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/am_ops.c  *  */
 end_comment
 
 begin_ifdef
@@ -152,6 +152,24 @@ directive|endif
 comment|/* HAVE_FS_XFS */
 ifdef|#
 directive|ifdef
+name|HAVE_FS_EXT
+operator|&
+name|ext2_ops
+block|,
+comment|/* Unix (linux) F/S */
+operator|&
+name|ext3_ops
+block|,
+comment|/* Unix (linux) F/S */
+operator|&
+name|ext4_ops
+block|,
+comment|/* Unix (linux) F/S */
+endif|#
+directive|endif
+comment|/* HAVE_FS_EXT */
+ifdef|#
+directive|ifdef
 name|HAVE_FS_EFS
 operator|&
 name|efs_ops
@@ -202,6 +220,16 @@ directive|endif
 comment|/* HAVE_FS_CACHEFS */
 ifdef|#
 directive|ifdef
+name|HAVE_FS_TMPFS
+operator|&
+name|tmpfs_ops
+block|,
+comment|/* /tmp (in memory) F/S */
+endif|#
+directive|endif
+comment|/* HAVE_FS_TMPFS */
+ifdef|#
+directive|ifdef
 name|HAVE_FS_NULLFS
 comment|/* FILL IN */
 comment|/* null (loopback) F/S */
@@ -224,6 +252,26 @@ comment|/* uid/gid mapping F/S */
 endif|#
 directive|endif
 comment|/* HAVE_FS_UMAPFS */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_UDF
+operator|&
+name|udf_ops
+block|,
+comment|/* UDF F/S */
+endif|#
+directive|endif
+comment|/* HAVE_FS_UDF */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_LUSTRE
+operator|&
+name|lustre_ops
+block|,
+comment|/* Lustre */
+endif|#
+directive|endif
+comment|/* HAVE_FS_LUSTRE */
 comment|/*    * These 4 should be last, in the order:    *	(1) amfs_auto    *	(2) amfs_direct    *	(3) amfs_toplvl    *	(4) amfs_error    */
 ifdef|#
 directive|ifdef
@@ -1083,7 +1131,7 @@ name|char
 modifier|*
 name|s1
 init|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|opts1
 argument_list|)
@@ -1144,7 +1192,10 @@ name|oneopt
 argument_list|,
 name|tmpstr
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|oneopt
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* if option has a value such as rsize=1024, chop the value part */
@@ -1153,9 +1204,11 @@ condition|(
 operator|(
 name|eq
 operator|=
-name|haseq
+name|strchr
 argument_list|(
 name|oneopt
+argument_list|,
+literal|'='
 argument_list|)
 operator|)
 condition|)
@@ -1172,7 +1225,7 @@ argument_list|(
 name|oneopt
 argument_list|)
 expr_stmt|;
-comment|/* if option orits reverse exist in opts2, ignore it */
+comment|/* if option or its reverse exist in opts2, ignore it */
 if|if
 condition|(
 name|amu_hasmntopt
@@ -1303,7 +1356,7 @@ name|am_ops
 modifier|*
 name|rop
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 for|for
 control|(
@@ -1373,7 +1426,7 @@ name|am_ops
 modifier|*
 name|rop
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -1481,7 +1534,7 @@ name|fo
 operator|->
 name|opt_opts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 literal|"rw,defaults"
 argument_list|)
@@ -1510,7 +1563,7 @@ name|fo
 operator|->
 name|opt_opts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|old
 operator|+
@@ -1604,7 +1657,7 @@ name|fo
 operator|->
 name|opt_remopts
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|mergedstr
 argument_list|)
@@ -1753,7 +1806,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|fo
 operator|->
@@ -1784,12 +1837,6 @@ name|link_dir
 expr_stmt|;
 block|}
 comment|/*    * Check the filesystem is happy    */
-if|if
-condition|(
-name|fo
-operator|->
-name|fs_mtab
-condition|)
 name|XFREE
 argument_list|(
 name|fo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $FreeBSD$  *  * portions derived from  *      $NetBSD: config.h,v 1.11 1998/08/08 22:33:37 christos Exp $  */
+comment|/*  * $FreeBSD$  *  * portions derived from  *      $NetBSD: config.h,v 1.11 1998/08/08 22:33:37 christos Exp $  *  * Additional portions derived from ports/sysutils/am-utils r416941  * make configure config.h output.  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,14 @@ include|#
 directive|include
 file|"config_local.h"
 end_include
+
+begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
 
 begin_comment
 comment|/* define name of am-utils' NFS protocol header */
@@ -52,7 +60,7 @@ comment|/* Define configuration date */
 end_comment
 
 begin_comment
-comment|/* #define CONFIG_DATE "Tue Dec 4 21:39:00 PST 2007" */
+comment|/* #define CONFIG_DATE "Mon Oct  3 21:58:39 PDT 2016" */
 end_comment
 
 begin_comment
@@ -566,11 +574,27 @@ comment|/* #undef HAVE_EFS_ARGS_T_FLAGS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if `version' is member of `efs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EFS_ARGS_T_VERSION */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if `fspec' is member of `efs_args_t'. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_EFS_ARGS_T_FSPEC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `version' is member of `efs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EFS_ARGS_T_VERSION */
 end_comment
 
 begin_comment
@@ -1061,6 +1085,22 @@ comment|/* #undef HAVE_FS_EFS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<fs/efs/efs_mount.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FS_EFS_EFS_MOUNT_H */
+end_comment
+
+begin_comment
+comment|/* Define if have EXT{2,3,4} filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FS_EXT */
+end_comment
+
+begin_comment
 comment|/* Define if have FFS filesystem */
 end_comment
 
@@ -1085,11 +1125,30 @@ comment|/* #undef HAVE_FS_LOFS */
 end_comment
 
 begin_comment
-comment|/* Define if have MFS filesystem */
+comment|/* Define if have LUSTRE filesystem */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_FS_MFS */
+comment|/* #undef HAVE_FS_LUSTRE */
+end_comment
+
+begin_comment
+comment|/* Define if have MFS filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FS_MFS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<fs/msdosfs/msdosfsmount.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
 end_comment
 
 begin_comment
@@ -1113,6 +1172,14 @@ directive|define
 name|HAVE_FS_NFS3
 value|1
 end_define
+
+begin_comment
+comment|/* Define if have NFS4 filesystem */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FS_NFS4 */
+end_comment
 
 begin_comment
 comment|/* Define if have NULLFS (loopback on bsd44) filesystem */
@@ -1148,9 +1215,42 @@ begin_comment
 comment|/* Define if have TMPFS filesystem */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_FS_TMPFS
+value|1
+end_define
+
 begin_comment
-comment|/* #undef HAVE_FS_TMPFS */
+comment|/* Define to 1 if you have the<fs/tmpfs/tmpfs_args.h> header file. */
 end_comment
+
+begin_comment
+comment|/* #undef HAVE_FS_TMPFS_TMPFS_ARGS_H */
+end_comment
+
+begin_comment
+comment|/* Define if have UDF filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FS_UDF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<fs/udf/udf_mount.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FS_UDF_UDF_MOUNT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if have UFS filesystem */
@@ -1706,6 +1806,14 @@ comment|/* #undef HAVE_LINUX_NFS2_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<linux/nfs4.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LINUX_NFS4_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<linux/nfs.h> header file. */
 end_comment
 
@@ -1887,6 +1995,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MAP_PASSWD
+value|1
+end_define
+
+begin_comment
+comment|/* Define if have Sun-syntax maps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MAP_SUN
 value|1
 end_define
 
@@ -2190,6 +2309,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<net/if_var.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NET_IF_VAR_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<net/route.h> header file. */
 end_comment
 
@@ -2275,6 +2402,14 @@ comment|/* #undef HAVE_NFS_ARGS_T_BSIZE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if `context' is member of `nfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_ARGS_T_CONTEXT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if `fhsize' is member of `nfs_args_t'. */
 end_comment
 
@@ -2318,6 +2453,14 @@ comment|/* #undef HAVE_NFS_ARGS_T_OPTSTR */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if `pathconf' is member of `nfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_ARGS_T_PATHCONF */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if `proto' is member of `nfs_args_t'. */
 end_comment
 
@@ -2327,6 +2470,14 @@ directive|define
 name|HAVE_NFS_ARGS_T_PROTO
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if `pseudoflavor' is member of `nfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_ARGS_T_PSEUDOFLAVOR */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if `sotype' is member of `nfs_args_t'. */
@@ -2714,6 +2865,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_RPC_AUTH_DES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<rpc/auth.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RPC_AUTH_H
 value|1
 end_define
 
@@ -3803,6 +3965,54 @@ comment|/* #undef HAVE_TIUSER_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if `ta_nodes_max' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_NODES_MAX */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ta_root_gid' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_ROOT_GID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ta_root_mode' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_ROOT_MODE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ta_root_uid' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_ROOT_UID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ta_size_max' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_SIZE_MAX */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ta_version' is member of `tmpfs_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPFS_ARGS_T_TA_VERSION */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<tmpfs/tmp.h> header file. */
 end_comment
 
@@ -3828,6 +4038,86 @@ directive|define
 name|HAVE_UALARM
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if `anon_gid' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_ANON_GID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `anon_uid' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_ANON_UID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `fspec' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_FSPEC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `gmtoff' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_GMTOFF */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `nobody_gid' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_NOBODY_GID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `nobody_uid' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_NOBODY_UID */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `sector_size' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_SECTOR_SIZE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `sessionnr' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_SESSIONNR */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `udfmflags' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_UDFMFLAGS */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `version' is member of `udf_args_t'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UDF_ARGS_T_VERSION */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if `flags' is member of `ufs_args_t'. */
@@ -4479,6 +4769,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `xdr_u_int64_t' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_XDR_U_INT64_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `xdr_writeargs' function. */
 end_comment
 
@@ -4602,7 +4903,7 @@ comment|/* Define name and version of host machine (eg. solaris2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS "freebsd8.0" */
+comment|/* #define HOST_OS "freebsd12.0" */
 end_comment
 
 begin_comment
@@ -4610,7 +4911,7 @@ comment|/* Define only name of host machine OS (eg. solaris2) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS_NAME "freebsd8" */
+comment|/* #define HOST_OS_NAME "freebsd12" */
 end_comment
 
 begin_comment
@@ -4618,7 +4919,7 @@ comment|/* Define only version of host machine (eg. 2.5.1) */
 end_comment
 
 begin_comment
-comment|/* #define HOST_OS_VERSION "8.0" */
+comment|/* #define HOST_OS_VERSION "12.0" */
 end_comment
 
 begin_comment
@@ -4633,11 +4934,52 @@ value|"undermydesk"
 end_define
 
 begin_comment
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
+
+begin_comment
 comment|/* Ignore permission bits */
 end_comment
 
 begin_comment
 comment|/* #undef MNT2_CDFS_OPT_DEFPERM */
+end_comment
+
+begin_comment
+comment|/* Enable external attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_CDFS_OPT_EXTATT
+value|0x4
+end_define
+
+begin_comment
+comment|/* Show file generations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_CDFS_OPT_GENS
+value|0x2
+end_define
+
+begin_comment
+comment|/* Disable filename case translation */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_CDFS_OPT_NOCASETRANS */
 end_comment
 
 begin_comment
@@ -4649,11 +4991,41 @@ comment|/* #undef MNT2_CDFS_OPT_NODEFPERM */
 end_comment
 
 begin_comment
+comment|/* Disable Joliet extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_CDFS_OPT_NOJOLIET
+value|0x8
+end_define
+
+begin_comment
+comment|/* Disable Rock Ridge Interchange Protocol (RRIP) extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_CDFS_OPT_NORRIP
+value|0x1
+end_define
+
+begin_comment
 comment|/* Strip off extension from version string */
 end_comment
 
 begin_comment
 comment|/* #undef MNT2_CDFS_OPT_NOVERSION */
+end_comment
+
+begin_comment
+comment|/* Enable Rock Ridge Interchange Protocol (RRIP) case insensitive filename    extensions */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_CDFS_OPT_RRCASEINS */
 end_comment
 
 begin_comment
@@ -4770,6 +5142,14 @@ comment|/* #undef MNT2_GEN_OPT_JFS */
 end_comment
 
 begin_comment
+comment|/* honor mandatory locking requests */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_MANDLOCK */
+end_comment
+
+begin_comment
 comment|/* do multi-component lookup on files */
 end_comment
 
@@ -4794,6 +5174,17 @@ comment|/* #undef MNT2_GEN_OPT_NFS */
 end_comment
 
 begin_comment
+comment|/* don't update access times */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT2_GEN_OPT_NOATIME
+value|0x10000000
+end_define
+
+begin_comment
 comment|/* nocache (what?) */
 end_comment
 
@@ -4811,6 +5202,14 @@ directive|define
 name|MNT2_GEN_OPT_NODEV
 value|0x0
 end_define
+
+begin_comment
+comment|/* don't update directory access times */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_NODIRATIME */
+end_comment
 
 begin_comment
 comment|/* no exec calls allowed */
@@ -4943,9 +5342,12 @@ begin_comment
 comment|/* Union mount */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_GEN_OPT_UNION */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_GEN_OPT_UNION
+value|0x20
+end_define
 
 begin_comment
 comment|/* set max secs for dir attr cache */
@@ -5005,6 +5407,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_NFS_OPT_AUTO */
+end_comment
+
+begin_comment
+comment|/* Linux broken setuid */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_BROKEN_SUID */
 end_comment
 
 begin_comment
@@ -5199,6 +5609,14 @@ comment|/* #undef MNT2_NFS_OPT_NOAC */
 end_comment
 
 begin_comment
+comment|/* does not support Access Control Lists */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_NOACL */
+end_comment
+
+begin_comment
 comment|/* Don't Connect the socket */
 end_comment
 
@@ -5213,9 +5631,12 @@ begin_comment
 comment|/* no close-to-open consistency */
 end_comment
 
-begin_comment
-comment|/* #undef MNT2_NFS_OPT_NOCTO */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNT2_NFS_OPT_NOCTO
+value|0x20000000
+end_define
 
 begin_comment
 comment|/* disallow interrupts on hard mounts */
@@ -5231,6 +5652,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNT2_NFS_OPT_NONLM */
+end_comment
+
+begin_comment
+comment|/* does not support readdir+ */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_NORDIRPLUS */
 end_comment
 
 begin_comment
@@ -5415,6 +5844,14 @@ comment|/* #undef MNT2_NFS_OPT_SPONGY */
 end_comment
 
 begin_comment
+comment|/* Reserved for nfsv4 */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_STRICTLOCK */
+end_comment
+
+begin_comment
 comment|/* set symlink cache time-to-live */
 end_comment
 
@@ -5440,6 +5877,14 @@ directive|define
 name|MNT2_NFS_OPT_TIMEO
 value|0x8
 end_define
+
+begin_comment
+comment|/* do not use shared cache for all mountpoints */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_NFS_OPT_UNSHARED */
+end_comment
 
 begin_comment
 comment|/* linux NFSv3 */
@@ -5723,6 +6168,14 @@ end_comment
 
 begin_comment
 comment|/* #undef MNTTAB_OPT_NOAC */
+end_comment
+
+begin_comment
+comment|/* Access Control Lists are not supported */
+end_comment
+
+begin_comment
+comment|/* #undef MNTTAB_OPT_NOACL */
 end_comment
 
 begin_comment
@@ -6049,6 +6502,30 @@ comment|/* #undef MNTTAB_TYPE_EFS */
 end_comment
 
 begin_comment
+comment|/* Mount-table entry name for EXT2 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MNTTAB_TYPE_EXT2 */
+end_comment
+
+begin_comment
+comment|/* Mount-table entry name for EXT3 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MNTTAB_TYPE_EXT3 */
+end_comment
+
+begin_comment
+comment|/* Mount-table entry name for EXT4 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MNTTAB_TYPE_EXT4 */
+end_comment
+
+begin_comment
 comment|/* Mount-table entry name for FFS filesystem */
 end_comment
 
@@ -6065,12 +6542,23 @@ comment|/* #undef MNTTAB_TYPE_LOFS */
 end_comment
 
 begin_comment
-comment|/* Mount-table entry name for MFS filesystem */
+comment|/* Mount-table entry name for LUSTRE filesystem */
 end_comment
 
 begin_comment
-comment|/* #undef MNTTAB_TYPE_MFS */
+comment|/* #undef MNTTAB_TYPE_LUSTRE */
 end_comment
+
+begin_comment
+comment|/* Mount-table entry name for MFS filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_TYPE_MFS
+value|"mfs"
+end_define
 
 begin_comment
 comment|/* Mount-table entry name for NFS filesystem */
@@ -6091,7 +6579,18 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_NFS3
-value|"nfs3"
+value|"nfs"
+end_define
+
+begin_comment
+comment|/* Mount-table entry name for NFS4 filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_TYPE_NFS4
+value|"nfs"
 end_define
 
 begin_comment
@@ -6125,12 +6624,26 @@ comment|/* #undef MNTTAB_TYPE_TFS */
 end_comment
 
 begin_comment
-comment|/* Mount-table entry name for TMPFS filesystem */
+comment|/* Mount(2) type/name for TMPFS filesystem */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNTTAB_TYPE_TMPFS
+value|"tmpfs"
+end_define
+
 begin_comment
-comment|/* #undef MNTTAB_TYPE_TMPFS */
+comment|/* Mount(2) type/name for UDF filesystem */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_TYPE_UDF
+value|"udf"
+end_define
 
 begin_comment
 comment|/* Mount-table entry name for UFS filesystem */
@@ -6222,6 +6735,30 @@ comment|/* #undef MOUNT_TYPE_EFS */
 end_comment
 
 begin_comment
+comment|/* Mount(2) type/name for EXT2 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MOUNT_TYPE_EXT2 */
+end_comment
+
+begin_comment
+comment|/* Mount(2) type/name for EXT3 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MOUNT_TYPE_EXT3 */
+end_comment
+
+begin_comment
+comment|/* Mount(2) type/name for EXT4 filesystem (linux) */
+end_comment
+
+begin_comment
+comment|/* #undef MOUNT_TYPE_EXT4 */
+end_comment
+
+begin_comment
 comment|/* Mount(2) type/name for FFS filesystem */
 end_comment
 
@@ -6252,9 +6789,12 @@ begin_comment
 comment|/* Mount(2) type/name for MFS filesystem */
 end_comment
 
-begin_comment
-comment|/* #undef MOUNT_TYPE_MFS */
-end_comment
+begin_define
+define|#
+directive|define
+name|MOUNT_TYPE_MFS
+value|"mfs"
+end_define
 
 begin_comment
 comment|/* Mount(2) type/name for NFS filesystem */
@@ -6277,6 +6817,14 @@ directive|define
 name|MOUNT_TYPE_NFS3
 value|MOUNT_NFS3
 end_define
+
+begin_comment
+comment|/* Mount(2) type/name for NFS4 filesystem */
+end_comment
+
+begin_comment
+comment|/* #undef MOUNT_TYPE_NFS4 */
+end_comment
 
 begin_comment
 comment|/* Mount(2) type/name for NULLFS (loopback on bsd44) filesystem */
@@ -6304,9 +6852,23 @@ begin_comment
 comment|/* Mount(2) type/name for TFS filesystem */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MOUNT_TYPE_TMPFS
+value|"tmpfs"
+end_define
+
 begin_comment
-comment|/* #undef MOUNT_TYPE_TFS */
+comment|/* Mount(2) type/name for UDF filesystem */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUNT_TYPE_UDF
+value|"udf"
+end_define
 
 begin_comment
 comment|/* Mount(2) type/name for TMPFS filesystem */
@@ -6455,7 +7017,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"am-utils 6.1.5"
+value|"am-utils 6.2"
 end_define
 
 begin_comment
@@ -6470,6 +7032,17 @@ value|"am-utils"
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -6477,7 +7050,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"6.1.5"
+value|"6.2"
 end_define
 
 begin_comment
@@ -6488,7 +7061,7 @@ begin_define
 define|#
 directive|define
 name|RECVFROM_FROMLEN_TYPE
-value|int
+value|socklen_t
 end_define
 
 begin_comment
@@ -6572,7 +7145,7 @@ comment|/* Define user name */
 end_comment
 
 begin_comment
-comment|/* #define USER_NAME "obrien" */
+comment|/* #define USER_NAME "cy" */
 end_comment
 
 begin_comment
@@ -6585,6 +7158,116 @@ directive|define
 name|USE_CONNECTED_NFS_SOCKETS
 value|1
 end_define
+
+begin_comment
+comment|/* Enable extensions on AIX 3, Interix.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ALL_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_ALL_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable GNU extensions on systems that have them.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GNU_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable threading extensions on Solaris.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_PTHREAD_SEMANTICS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_PTHREAD_SEMANTICS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable extensions on HP NonStop.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TANDEM_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TANDEM_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable general extensions on Solaris.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTENSIONS__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__EXTENSIONS__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* define if must use NFS "noconn" option */
@@ -6602,16 +7285,63 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.1.5"
+value|"6.2"
 end_define
 
 begin_comment
-comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|AC_APPLE_UNIVERSAL_BUILD
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORDS_BIGENDIAN
+end_ifndef
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* #  undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to the type of xdr procedure type */
@@ -6647,23 +7377,66 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
+comment|/* Enable large inode numbers on Mac OS X 10.5.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ALL_SOURCE
+name|_DARWIN_USE_64_BIT_INODE
 end_ifndef
 
-begin_comment
-comment|/* # undef _ALL_SOURCE */
-end_comment
+begin_define
+define|#
+directive|define
+name|_DARWIN_USE_64_BIT_INODE
+value|1
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
+
+begin_comment
+comment|/* Define for large files, on AIX-style hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGE_FILES */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if on MINIX. */
+end_comment
+
+begin_comment
+comment|/* #undef _MINIX */
+end_comment
+
+begin_comment
+comment|/* Define to 2 if the system does not provide POSIX.1 features except with    this defined. */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_1_SOURCE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you need to in order for `stat' and other things to work. */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_SOURCE */
+end_comment
 
 begin_comment
 comment|/* Define a type/structure for an NFS V2 filehandle */
@@ -6836,7 +7609,7 @@ comment|/* #undef rpcvers_t */
 end_comment
 
 begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
+comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -6857,6 +7630,14 @@ end_comment
 
 begin_comment
 comment|/* #undef tmpfs_args_t */
+end_comment
+
+begin_comment
+comment|/* Define a type for the udf_args structure */
+end_comment
+
+begin_comment
+comment|/* #undef udf_args_t */
 end_comment
 
 begin_comment
