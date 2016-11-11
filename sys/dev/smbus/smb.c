@@ -78,8 +78,22 @@ end_include
 begin_define
 define|#
 directive|define
-name|BUFSIZE
-value|1024
+name|SMB_OLD_READB
+value|_IOW('i', 7, struct smbcmd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_OLD_READW
+value|_IOW('i', 8, struct smbcmd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_OLD_PCALL
+value|_IOW('i', 9, struct smbcmd)
 end_define
 
 begin_struct
@@ -965,8 +979,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SMB_OLD_READB
+case|:
+case|case
 name|SMB_READB
 case|:
+comment|/* NB: for SMB_OLD_READB the read data goes to rbuf only. */
 name|error
 operator|=
 name|smbus_error
@@ -1037,8 +1055,12 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|SMB_OLD_READW
+case|:
+case|case
 name|SMB_READW
 case|:
+comment|/* NB: for SMB_OLD_READW the read data goes to rbuf only. */
 name|error
 operator|=
 name|smbus_error
@@ -1136,8 +1158,12 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|SMB_OLD_PCALL
+case|:
+case|case
 name|SMB_PCALL
 case|:
+comment|/* NB: for SMB_OLD_PCALL the read data goes to rbuf only. */
 name|error
 operator|=
 name|smbus_error
