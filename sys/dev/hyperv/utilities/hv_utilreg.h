@@ -15,6 +15,10 @@ directive|define
 name|_HV_UTILREG_H_
 end_define
 
+begin_comment
+comment|/*  * Some Hyper-V status codes.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -32,6 +36,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HV_S_CONT
+value|0x80070103
+end_define
+
+begin_define
+define|#
+directive|define
 name|HV_ERROR_NOT_SUPPORTED
 value|0x80070032
 end_define
@@ -41,6 +52,27 @@ define|#
 directive|define
 name|HV_ERROR_MACHINE_LOCKED
 value|0x800704F7
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_ERROR_DEVICE_NOT_CONNECTED
+value|0x8007048F
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_INVALIDARG
+value|0x80070057
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_GUID_NOTFOUND
+value|0x80041002
 end_define
 
 begin_comment
