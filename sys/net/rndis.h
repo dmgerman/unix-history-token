@@ -1259,7 +1259,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* packet filter bits used by OID_GEN_CURRENT_PACKET_FILTER */
+comment|/* Packet filter bits used by OID_GEN_CURRENT_PACKET_FILTER */
 end_comment
 
 begin_define
@@ -1344,6 +1344,18 @@ define|#
 directive|define
 name|NDIS_PACKET_TYPE_MAC_FRAME
 value|0x00008000
+end_define
+
+begin_comment
+comment|/*  * Packet filter description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_PACKET_TYPES
+define|\
+value|"\20\1DIRECT\2MULTICAST\3ALLMULTI\4BROADCAST"	\ 	"\5SRCROUTE\6PROMISC\7SMT\10ALLLOCAL"		\ 	"\11GROUP\12ALLFUNC\13FUNC\14MACFRAME"
 end_define
 
 begin_comment

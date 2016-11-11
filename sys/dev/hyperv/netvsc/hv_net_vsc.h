@@ -714,6 +714,9 @@ decl_stmt|;
 name|uint32_t
 name|hn_nvs_ver
 decl_stmt|;
+name|uint32_t
+name|hn_rx_filter
+decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
