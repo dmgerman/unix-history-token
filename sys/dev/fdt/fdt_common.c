@@ -1828,7 +1828,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1842,24 +1842,22 @@ argument_list|)
 operator|<
 name|cell_size
 condition|)
-name|cell
+operator|*
+name|addr_cells
 operator|=
 literal|2
 expr_stmt|;
 operator|*
 name|addr_cells
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 operator|(
 name|int
 operator|)
 name|cell
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1880,13 +1878,10 @@ expr_stmt|;
 operator|*
 name|size_cells
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 operator|(
 name|int
 operator|)
 name|cell
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2488,7 +2483,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|phy_node
 argument_list|,
@@ -2517,10 +2512,7 @@ return|;
 operator|*
 name|phy_addr
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|phy_reg
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Search for softc used to communicate with phy. 	 */
 comment|/* 	 * Step 1: Search for ancestor of the phy-node with a "phy-handle" 	 * property set. 	 */
