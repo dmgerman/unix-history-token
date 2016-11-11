@@ -781,6 +781,13 @@ decl_stmt|;
 name|int
 name|hn_ndis_tso_sgmin
 decl_stmt|;
+name|int
+name|hn_rss_ind_size
+decl_stmt|;
+name|uint32_t
+name|hn_rss_hash
+decl_stmt|;
+comment|/* NDIS_HASH_ */
 name|struct
 name|ndis_rssprm_toeplitz
 name|hn_rss
