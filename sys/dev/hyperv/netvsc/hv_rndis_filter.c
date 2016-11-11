@@ -2490,13 +2490,11 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|hv_nv_on_send
+name|hn_nvs_send_rndis_ctrl
 argument_list|(
 name|sc
 operator|->
 name|hn_prichan
-argument_list|,
-name|HN_NVS_RNDIS_MTYPE_CTRL
 argument_list|,
 name|sndc
 argument_list|,
@@ -5377,7 +5375,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* No RNDIS completion; rely on NVS message send completion */
-name|hn_send_ctx_init_simple
+name|hn_send_ctx_init
 argument_list|(
 operator|&
 name|sndc
