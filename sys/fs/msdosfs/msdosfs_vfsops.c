@@ -3621,12 +3621,6 @@ operator|->
 name|pm_fatlock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmp
-operator|->
-name|pm_inusemap
-condition|)
 name|free
 argument_list|(
 name|pmp
