@@ -4555,6 +4555,9 @@ operator|->
 name|ifm_media
 expr_stmt|;
 comment|/* 	 * Setup the ifnet for this interface. 	 */
+ifdef|#
+directive|ifdef
+name|__LP64__
 name|ifp
 operator|->
 name|if_baudrate
@@ -4564,6 +4567,20 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* if_baudrate is 32bits on 32bit system. */
+name|ifp
+operator|->
+name|if_baudrate
+operator|=
+name|IF_Gbps
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_flags
