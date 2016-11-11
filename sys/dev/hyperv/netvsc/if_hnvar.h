@@ -309,33 +309,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|uint32_t
-name|hn_chim_alloc
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hn_chim_free
-parameter_list|(
-name|struct
-name|hn_softc
-modifier|*
-name|sc
-parameter_list|,
-name|uint32_t
-name|chim_idx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|hn_rndis_attach
 parameter_list|(
@@ -447,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* filter: NDIS_PACKET_TYPE_ or 0. */
+comment|/* filter: NDIS_PACKET_TYPE_. */
 end_comment
 
 begin_function_decl
