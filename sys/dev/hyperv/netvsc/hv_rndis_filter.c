@@ -164,7 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/netvsc/hv_net_vsc.h>
+file|<dev/hyperv/netvsc/hn_nvs.h>
 end_include
 
 begin_include
