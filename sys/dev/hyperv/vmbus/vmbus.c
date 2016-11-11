@@ -4459,6 +4459,12 @@ operator|->
 name|ch_dev
 argument_list|)
 expr_stmt|;
+name|chan
+operator|->
+name|ch_dev
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
