@@ -331,6 +331,12 @@ name|task
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|taskqueue
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
@@ -838,6 +844,21 @@ end_function_decl
 begin_function_decl
 name|bool
 name|vmbus_chan_tx_empty
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|taskqueue
+modifier|*
+name|vmbus_chan_mgmt_tq
 parameter_list|(
 specifier|const
 name|struct
