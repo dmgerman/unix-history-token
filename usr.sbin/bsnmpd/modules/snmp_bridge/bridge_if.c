@@ -1375,7 +1375,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"bridge get time since last TC:"
-literal|"getttimeofday failed: %s"
+literal|"gettimeofday failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
