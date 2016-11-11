@@ -89,6 +89,36 @@ directive|include
 file|"vmbus_if.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|VMBUS_TIMESYNC_FWVER_MAJOR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_TIMESYNC_FWVER
+define|\
+value|VMBUS_IC_VERSION(VMBUS_TIMESYNC_FWVER_MAJOR, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_TIMESYNC_MSGVER_MAJOR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_TIMESYNC_MSGVER
+define|\
+value|VMBUS_IC_VERSION(VMBUS_TIMESYNC_MSGVER_MAJOR, 0)
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -666,6 +696,10 @@ name|data
 argument_list|,
 operator|&
 name|dlen
+argument_list|,
+name|VMBUS_TIMESYNC_FWVER
+argument_list|,
+name|VMBUS_TIMESYNC_MSGVER
 argument_list|)
 expr_stmt|;
 if|if

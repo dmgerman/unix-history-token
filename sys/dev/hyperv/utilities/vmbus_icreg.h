@@ -103,6 +103,43 @@ parameter_list|)
 value|(((ver)& 0xffff0000)>> 16)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_ICVER_SWAP
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|((VMBUS_ICVER_MAJOR((ver))<< 16) | VMBUS_ICVER_MINOR((ver)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_ICVER_LE
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|(VMBUS_ICVER_SWAP((v1))<= VMBUS_ICVER_SWAP((v2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_ICVER_GT
+parameter_list|(
+name|v1
+parameter_list|,
+name|v2
+parameter_list|)
+define|\
+value|(VMBUS_ICVER_SWAP((v1))> VMBUS_ICVER_SWAP((v2)))
+end_define
+
 begin_struct
 struct|struct
 name|vmbus_pipe_hdr
