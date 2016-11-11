@@ -41,6 +41,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HN_NDIS_VERSION_6_20
+value|0x00060014
+end_define
+
+begin_define
+define|#
+directive|define
 name|HN_NDIS_VERSION_6_30
 value|0x0006001e
 end_define
