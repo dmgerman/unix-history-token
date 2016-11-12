@@ -1315,6 +1315,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"NULL rx pool  somehow\n"
+argument_list|)
+expr_stmt|;
 name|dtsec_rm_pool_rx_free
 argument_list|(
 name|sc
