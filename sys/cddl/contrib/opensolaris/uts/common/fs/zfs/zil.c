@@ -212,21 +212,6 @@ name|zil_lwb_cache
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|zil_async_to_sync
-parameter_list|(
-name|zilog_t
-modifier|*
-name|zilog
-parameter_list|,
-name|uint64_t
-name|foid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -6704,7 +6689,6 @@ comment|/*  * Move the async itxs for a specified object to commit into sync lis
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|zil_async_to_sync
 parameter_list|(
