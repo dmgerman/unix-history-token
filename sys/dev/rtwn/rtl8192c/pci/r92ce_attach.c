@@ -570,27 +570,13 @@ name|sc
 operator|->
 name|sc_ic
 decl_stmt|;
-comment|/* XXX TODO: test everything that removed here before enabling. */
-comment|/* XX do NOT enable PMGT until RSVD_PAGE command will not be fixed. */
+comment|/* 	 * XXX do NOT enable PMGT until RSVD_PAGE command 	 * will not be tested / fixed + HRPWM register must be set too. 	 */
 name|ic
 operator|->
 name|ic_caps
 operator|&=
 operator|~
-operator|(
 name|IEEE80211_C_PMGT
-comment|/* check null frame / device usability */
-operator||
-name|IEEE80211_C_SWAMSDUTX
-operator||
-name|IEEE80211_C_FF
-operator|)
-expr_stmt|;
-name|ic
-operator|->
-name|ic_htcaps
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
