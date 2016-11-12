@@ -1787,11 +1787,6 @@ directive|define
 name|DT_ACT_PRINTM
 value|DT_ACT(30)
 comment|/* printm() action */
-define|#
-directive|define
-name|DT_ACT_PRINTT
-value|DT_ACT(31)
-comment|/* printt() action */
 comment|/*  * Sentinel to tell freopen() to restore the saved stdout.  This must not  * be ever valid for opening for write access via freopen(3C), which of  * course, "." never is.  */
 define|#
 directive|define

@@ -702,11 +702,6 @@ comment|/* printm() memref bad type */
 name|D_PRINTM_SIZE
 block|,
 comment|/* printm() size bad type */
-name|D_PRINTT_ADDR
-block|,
-comment|/* printt() typeref bad type */
-name|D_PRINTT_SIZE
-comment|/* printt() size bad type */
 block|}
 name|dt_errtag_t
 typedef|;
