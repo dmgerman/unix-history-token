@@ -29284,6 +29284,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|do_net80211
+condition|)
 name|ieee80211_draintask
 argument_list|(
 operator|&
