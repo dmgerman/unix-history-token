@@ -10399,7 +10399,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|boolean_t
+name|bool
 name|pte1_is_managed
 parameter_list|(
 name|pt1_entry_t
@@ -10423,7 +10423,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|boolean_t
+name|bool
 name|pte2_is_managed
 parameter_list|(
 name|pt2_entry_t
@@ -25183,7 +25183,7 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|boolean_t
+name|bool
 name|managed
 decl_stmt|;
 name|int
@@ -25353,7 +25353,7 @@ else|else
 block|{
 name|managed
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|val
 operator|=
