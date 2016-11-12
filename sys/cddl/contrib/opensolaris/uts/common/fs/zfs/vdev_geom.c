@@ -851,7 +851,7 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s(%d): g_access failed: %d\n"
+literal|"%s(%d): g_access failed: %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1163,7 +1163,7 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Detaching consumer. Provider %s."
+literal|"Detaching from %s."
 argument_list|,
 name|cp
 operator|->
@@ -1270,7 +1270,7 @@ name|ZFS_LOG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Destroying consumer to %s."
+literal|"Destroying consumer for %s."
 argument_list|,
 name|cp
 operator|->
