@@ -2845,6 +2845,8 @@ argument_list|(
 expr|struct
 name|virtio_console_control
 argument_list|)
+operator|+
+name|VTCON_BULK_BUFSZ
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2989,6 +2991,8 @@ argument_list|(
 expr|struct
 name|virtio_console_control
 argument_list|)
+operator|+
+name|VTCON_BULK_BUFSZ
 argument_list|)
 expr_stmt|;
 name|error
