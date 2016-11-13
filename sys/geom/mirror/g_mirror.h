@@ -654,6 +654,10 @@ decl_stmt|;
 name|u_int
 name|sc_writes
 decl_stmt|;
+name|u_int
+name|sc_refcnt
+decl_stmt|;
+comment|/* Number of softc references */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
