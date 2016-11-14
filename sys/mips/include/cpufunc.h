@@ -608,6 +608,17 @@ name|defined
 argument_list|(
 name|CPU_MIPS1004K
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_MIPS74K
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|CPU_MIPS24K
+argument_list|)
 end_if
 
 begin_expr_stmt
