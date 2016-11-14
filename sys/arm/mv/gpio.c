@@ -534,6 +534,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|mv_handle_gpios_prop
 parameter_list|(
@@ -2312,6 +2313,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mv_handle_gpios_prop
 parameter_list|(
@@ -2378,7 +2380,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|ctrl
 argument_list|,
@@ -2400,13 +2402,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|gpio_cells
-operator|=
-name|fdt32_to_cpu
-argument_list|(
-name|gpio_cells
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|gpio_cells
@@ -2458,7 +2453,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|ctrl
 argument_list|,
@@ -2484,10 +2479,7 @@ name|sc
 operator|.
 name|pin_num
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|pincnt
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Skip controller reference, since controller's phandle is given 	 * explicitly (in a function argument). 	 */
 name|inc
@@ -2522,33 +2514,24 @@ control|)
 block|{
 name|pin
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|gpios
 index|[
 literal|0
 index|]
-argument_list|)
 expr_stmt|;
 name|dir
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|gpios
 index|[
 literal|1
 index|]
-argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|gpios
 index|[
 literal|2
 index|]
-argument_list|)
 expr_stmt|;
 name|mv_gpio_configure
 argument_list|(
@@ -2758,13 +2741,12 @@ name|ENXIO
 operator|)
 return|;
 comment|/* Get 'gpios' property. */
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
 literal|"gpios"
 argument_list|,
-operator|&
 name|gpios
 argument_list|,
 name|len
@@ -2797,13 +2779,10 @@ name|ctrl
 operator|=
 name|OF_node_from_xref
 argument_list|(
-name|fdt32_to_cpu
-argument_list|(
 name|gpios
 index|[
 literal|0
 index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

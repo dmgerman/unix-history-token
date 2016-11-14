@@ -2462,7 +2462,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|display
 argument_list|,
@@ -2484,13 +2484,7 @@ name|sc
 operator|->
 name|width
 operator|=
-operator|(
-name|int
-operator|)
-name|fdt32_to_cpu
-argument_list|(
 name|cell
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2527,13 +2521,7 @@ name|sc
 operator|->
 name|height
 operator|=
-operator|(
-name|int
-operator|)
-name|fdt32_to_cpu
-argument_list|(
 name|cell
-argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -950,7 +944,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -973,10 +967,7 @@ name|sc
 operator|->
 name|sysclk_freq
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|clock
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Setup and enable the timer */
