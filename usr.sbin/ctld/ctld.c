@@ -878,7 +878,7 @@ else|else
 name|log_warnx
 argument_list|(
 literal|"secret for user \"%s\", target \"%s\", "
-literal|"is too short; it should be at least 16 characters "
+literal|"is too short; it should be at least 12 characters "
 literal|"long"
 argument_list|,
 name|auth
@@ -1007,7 +1007,7 @@ name|log_warnx
 argument_list|(
 literal|"mutual secret for user \"%s\", "
 literal|"target \"%s\", is too short; it should be "
-literal|"at least 16 characters long"
+literal|"at least 12 characters long"
 argument_list|,
 name|auth
 operator|->
