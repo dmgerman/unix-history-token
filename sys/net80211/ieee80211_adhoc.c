@@ -498,16 +498,12 @@ name|ieee80211vap
 modifier|*
 name|vap
 init|=
-name|arg
-decl_stmt|;
-if|if
-condition|(
 name|ni
 operator|->
 name|ni_vap
-operator|==
-name|vap
-operator|&&
+decl_stmt|;
+if|if
+condition|(
 name|ni
 operator|!=
 name|vap
@@ -677,16 +673,18 @@ name|IEEE80211_S_RUN
 case|:
 comment|/* beacon miss */
 comment|/* purge station table; entries are stale */
-name|ieee80211_iterate_nodes
+name|ieee80211_iterate_nodes_vap
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_sta
 argument_list|,
+name|vap
+argument_list|,
 name|sta_leave
 argument_list|,
-name|vap
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* fall thru... */

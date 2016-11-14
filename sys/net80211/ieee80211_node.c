@@ -11754,11 +11754,6 @@ begin_struct
 struct|struct
 name|rssiinfo
 block|{
-name|struct
-name|ieee80211vap
-modifier|*
-name|vap
-decl_stmt|;
 name|int
 name|rssi_samples
 decl_stmt|;
@@ -11803,15 +11798,6 @@ decl_stmt|;
 name|int8_t
 name|rssi
 decl_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|vap
-operator|!=
-name|vap
-condition|)
-return|return;
 comment|/* only associated stations */
 if|if
 condition|(
@@ -11889,15 +11875,6 @@ decl_stmt|;
 name|int8_t
 name|rssi
 decl_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|vap
-operator|!=
-name|vap
-condition|)
-return|return;
 comment|/* only neighbors */
 comment|/* XXX check bssid */
 if|if
@@ -11986,15 +11963,6 @@ decl_stmt|;
 name|int8_t
 name|rssi
 decl_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|vap
-operator|!=
-name|vap
-condition|)
-return|return;
 comment|/* only neighbors that peered successfully */
 if|if
 condition|(
@@ -12089,12 +12057,6 @@ name|rssi_samples
 operator|=
 literal|0
 expr_stmt|;
-name|info
-operator|.
-name|vap
-operator|=
-name|vap
-expr_stmt|;
 switch|switch
 condition|(
 name|vap
@@ -12110,12 +12072,14 @@ case|case
 name|IEEE80211_M_AHDEMO
 case|:
 comment|/* average of all neighbors */
-name|ieee80211_iterate_nodes
+name|ieee80211_iterate_nodes_vap
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_sta
+argument_list|,
+name|vap
 argument_list|,
 name|get_adhoc_rssi
 argument_list|,
@@ -12128,12 +12092,14 @@ case|case
 name|IEEE80211_M_HOSTAP
 case|:
 comment|/* average of all associated stations */
-name|ieee80211_iterate_nodes
+name|ieee80211_iterate_nodes_vap
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_sta
+argument_list|,
+name|vap
 argument_list|,
 name|get_hostap_rssi
 argument_list|,
@@ -12149,12 +12115,14 @@ case|case
 name|IEEE80211_M_MBSS
 case|:
 comment|/* average of all mesh neighbors */
-name|ieee80211_iterate_nodes
+name|ieee80211_iterate_nodes_vap
 argument_list|(
 operator|&
 name|ic
 operator|->
 name|ic_sta
+argument_list|,
+name|vap
 argument_list|,
 name|get_mesh_rssi
 argument_list|,
