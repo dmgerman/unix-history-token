@@ -161,6 +161,18 @@ name|NDIS_HASH_TCP_IPV6_EX
 value|0x00002000
 end_define
 
+begin_comment
+comment|/* Hash description for use with printf(9) %b identifier. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDIS_HASH_BITS
+define|\
+value|"\20\1TOEPLITZ\11IP4\12TCP4\13IP6\14IP6EX\15TCP6\16TCP6EX"
+end_define
+
 begin_define
 define|#
 directive|define
@@ -520,7 +532,7 @@ name|ndis_object_hdr
 name|ndis_hdr
 decl_stmt|;
 name|uint32_t
-name|ndis_flags
+name|ndis_caps
 decl_stmt|;
 comment|/* NDIS_RSS_CAP_ */
 name|uint32_t
@@ -634,7 +646,14 @@ begin_define
 define|#
 directive|define
 name|NDIS_RSS_CAP_HASH_TOEPLITZ
-value|0x00000001
+value|NDIS_HASH_FUNCTION_TOEPLITZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSS_CAP_HASHFUNC_MASK
+value|NDIS_HASH_FUNCTION_MASK
 end_define
 
 begin_comment
@@ -797,6 +816,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NDIS_RSSPRM_TOEPLITZ_SIZE
+parameter_list|(
+name|nind
+parameter_list|)
+define|\
+value|__offsetof(struct ndis_rssprm_toeplitz, rss_ind[nind])
+end_define
 
 begin_comment
 comment|/*  * OID_TCP_OFFLOAD_HARDWARE_CAPABILITIES  * ndis_type: NDIS_OBJTYPE_OFFLOAD  */
