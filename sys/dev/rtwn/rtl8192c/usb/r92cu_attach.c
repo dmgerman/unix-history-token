@@ -168,12 +168,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/rtwn/rtl8192c/r92c_rom_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/rtwn/rtl8192c/usb/r92cu.h>
 end_include
 

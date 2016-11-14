@@ -176,12 +176,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/rtwn/rtl8812a/r12a_rom_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/rtwn/rtl8812a/usb/r12au.h>
 end_include
 
