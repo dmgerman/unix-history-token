@@ -4460,22 +4460,28 @@ parameter_list|,
 name|struct
 name|vmbus_chanpkt_hdr
 modifier|*
-name|pkt0
+name|pkt
 parameter_list|,
 name|int
 modifier|*
 name|pktlen0
 parameter_list|)
 block|{
-name|struct
-name|vmbus_chanpkt_hdr
-name|pkt
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|pktlen
+decl_stmt|,
+name|pkt_hlen
 decl_stmt|;
+name|pkt_hlen
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pkt
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vmbus_rxbr_peek
@@ -4485,13 +4491,9 @@ name|chan
 operator|->
 name|ch_rxbr
 argument_list|,
-operator|&
 name|pkt
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pkt
-argument_list|)
+name|pkt_hlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -4508,7 +4510,7 @@ condition|(
 name|__predict_false
 argument_list|(
 name|pkt
-operator|.
+operator|->
 name|cph_hlen
 operator|<
 name|VMBUS_CHANPKT_HLEN_MIN
@@ -4522,7 +4524,7 @@ argument_list|,
 literal|"invalid hlen %u\n"
 argument_list|,
 name|pkt
-operator|.
+operator|->
 name|cph_hlen
 argument_list|)
 expr_stmt|;
@@ -4538,11 +4540,11 @@ condition|(
 name|__predict_false
 argument_list|(
 name|pkt
-operator|.
+operator|->
 name|cph_hlen
 operator|>
 name|pkt
-operator|.
+operator|->
 name|cph_tlen
 argument_list|)
 condition|)
@@ -4554,11 +4556,11 @@ argument_list|,
 literal|"invalid hlen %u and tlen %u\n"
 argument_list|,
 name|pkt
-operator|.
+operator|->
 name|cph_hlen
 argument_list|,
 name|pkt
-operator|.
+operator|->
 name|cph_tlen
 argument_list|)
 expr_stmt|;
@@ -4574,7 +4576,7 @@ operator|=
 name|VMBUS_CHANPKT_GETLEN
 argument_list|(
 name|pkt
-operator|.
+operator|->
 name|cph_tlen
 argument_list|)
 expr_stmt|;
@@ -4603,7 +4605,7 @@ name|pktlen0
 operator|=
 name|pktlen
 expr_stmt|;
-comment|/* Include packet header */
+comment|/* 	 * Skip the fixed-size packet header, which has been filled 	 * by the above vmbus_rxbr_peek(). 	 */
 name|error
 operator|=
 name|vmbus_rxbr_read
@@ -4613,11 +4615,15 @@ name|chan
 operator|->
 name|ch_rxbr
 argument_list|,
-name|pkt0
+name|pkt
+operator|+
+literal|1
 argument_list|,
 name|pktlen
+operator|-
+name|pkt_hlen
 argument_list|,
-literal|0
+name|pkt_hlen
 argument_list|)
 expr_stmt|;
 name|KASSERT
