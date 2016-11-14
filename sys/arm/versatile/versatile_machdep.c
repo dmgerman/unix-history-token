@@ -83,12 +83,6 @@ directive|include
 file|<machine/platform.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
 begin_comment
 comment|/* Start of address space used for bootstrap map */
 end_comment
