@@ -56,13 +56,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HN_PKTBUF_LEN
-value|4096
-end_define
-
-begin_define
-define|#
-directive|define
 name|HN_TXBR_SIZE
 value|(128 * PAGE_SIZE)
 end_define
@@ -171,6 +164,9 @@ name|void
 modifier|*
 name|hn_pktbuf
 decl_stmt|;
+name|int
+name|hn_pktbuf_len
+decl_stmt|;
 name|uint8_t
 modifier|*
 name|hn_rxbuf
@@ -211,6 +207,9 @@ name|hn_pkts
 decl_stmt|;
 name|u_long
 name|hn_rss_pkts
+decl_stmt|;
+name|u_long
+name|hn_ack_failed
 decl_stmt|;
 comment|/* Rarely used stuffs */
 name|struct
