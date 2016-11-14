@@ -4106,6 +4106,15 @@ expr_stmt|;
 comment|/* 	 * Setup the ifnet for this interface. 	 */
 name|ifp
 operator|->
+name|if_baudrate
+operator|=
+name|IF_Gbps
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
