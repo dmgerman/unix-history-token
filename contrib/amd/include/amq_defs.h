@@ -167,7 +167,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|time_t
 modifier|*
 name|time_type
 typedef|;

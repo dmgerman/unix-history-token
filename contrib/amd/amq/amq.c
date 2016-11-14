@@ -229,6 +229,7 @@ init|=
 operator|(
 name|time_t
 operator|)
+operator|*
 name|tt
 decl_stmt|;
 name|struct
