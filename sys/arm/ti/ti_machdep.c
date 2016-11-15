@@ -401,7 +401,7 @@ literal|"am335x"
 argument_list|,
 literal|0
 argument_list|,
-literal|"ti,am335x"
+literal|"ti,am33xx"
 argument_list|,
 literal|200
 argument_list|)
