@@ -319,22 +319,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_BLACKLIST
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"blacklist_client.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
