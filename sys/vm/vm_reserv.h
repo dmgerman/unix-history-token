@@ -142,16 +142,6 @@ end_function_decl
 
 begin_function_decl
 name|boolean_t
-name|vm_reserv_reactivate_page
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|boolean_t
 name|vm_reserv_reclaim_contig
 parameter_list|(
 name|u_long

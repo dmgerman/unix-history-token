@@ -260,7 +260,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|((vp)->v_object != NULL&& \ 	 ((vp)->v_object->resident_page_count> 0 || \ 	  !vm_object_cache_is_empty((vp)->v_object)))
+value|((vp)->v_object != NULL&& \ 	 (vp)->v_object->resident_page_count> 0)
 end_define
 
 begin_define
