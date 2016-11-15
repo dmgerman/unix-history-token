@@ -1358,7 +1358,7 @@ name|driver_t
 name|ti_aintc_driver
 init|=
 block|{
-literal|"aintc"
+literal|"ti_aintc"
 block|,
 name|ti_aintc_methods
 block|,
@@ -1381,7 +1381,7 @@ end_decl_stmt
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
 argument_list|(
-name|aintc
+name|ti_aintc
 argument_list|,
 name|simplebus
 argument_list|,
