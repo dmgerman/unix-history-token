@@ -1228,11 +1228,6 @@ name|s
 init|=
 name|arg
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"sema_sysinit\n"
-argument_list|)
-expr_stmt|;
 name|_sema_init
 argument_list|(
 name|s
