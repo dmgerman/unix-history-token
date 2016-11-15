@@ -2935,7 +2935,7 @@ name|strcmp
 argument_list|(
 name|pname
 argument_list|,
-literal|"pll3-1x"
+literal|"pll3"
 argument_list|)
 operator|==
 literal|0
@@ -2944,7 +2944,7 @@ name|strcmp
 argument_list|(
 name|pname
 argument_list|,
-literal|"pll7-1x"
+literal|"pll7"
 argument_list|)
 operator|==
 literal|0
