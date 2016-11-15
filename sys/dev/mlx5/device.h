@@ -4638,6 +4638,10 @@ name|MLX5_ETHERNET_EXTENDED_COUNTERS_GROUP
 init|=
 literal|0x5
 block|,
+name|MLX5_ETHERNET_DISCARD_COUNTERS_GROUP
+init|=
+literal|0x6
+block|,
 name|MLX5_PER_PRIORITY_COUNTERS_GROUP
 init|=
 literal|0x10
@@ -4649,6 +4653,10 @@ block|,
 name|MLX5_PHYSICAL_LAYER_COUNTERS_GROUP
 init|=
 literal|0x12
+block|,
+name|MLX5_INFINIBAND_PORT_COUNTERS_GROUP
+init|=
+literal|0x20
 block|, }
 enum|;
 end_enum
