@@ -2017,7 +2017,7 @@ literal|"  Config3=0x%b\n"
 argument_list|,
 name|cfg3
 argument_list|,
-literal|"\20\14ULRI\2SmartMIPS\1TraceLogic"
+literal|"\20\16ULRI\2SmartMIPS\1TraceLogic"
 argument_list|)
 expr_stmt|;
 if|#
