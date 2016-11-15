@@ -3882,9 +3882,6 @@ name|ncp
 decl_stmt|,
 modifier|*
 name|ncp2
-decl_stmt|,
-modifier|*
-name|ncpc
 decl_stmt|;
 name|struct
 name|neglist
@@ -3911,10 +3908,6 @@ name|ncneg_shrink_lock
 argument_list|)
 condition|)
 return|return;
-name|ncpc
-operator|=
-name|NULL
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
