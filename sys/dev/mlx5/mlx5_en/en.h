@@ -1339,6 +1339,10 @@ name|mlx5e_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
+name|callout
+name|watchdog
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
