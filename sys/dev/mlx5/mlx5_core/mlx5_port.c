@@ -4815,7 +4815,7 @@ end_function
 
 begin_function
 name|int
-name|mlx5_set_diagnostics
+name|mlx5_set_diagnostic_params
 parameter_list|(
 name|struct
 name|mlx5_core_dev
@@ -4835,7 +4835,7 @@ name|out
 index|[
 name|MLX5_ST_SZ_DW
 argument_list|(
-name|set_diagnostics_out
+name|set_diagnostic_params_out
 argument_list|)
 index|]
 decl_stmt|;
@@ -4853,7 +4853,7 @@ argument_list|)
 expr_stmt|;
 name|MLX5_SET
 argument_list|(
-name|set_diagnostics_in
+name|set_diagnostic_params_in
 argument_list|,
 name|in
 argument_list|,
@@ -4884,7 +4884,7 @@ end_function
 
 begin_function
 name|int
-name|mlx5_query_diagnostics
+name|mlx5_query_diagnostic_counters
 parameter_list|(
 name|struct
 name|mlx5_core_dev
@@ -4910,7 +4910,7 @@ name|in
 index|[
 name|MLX5_ST_SZ_DW
 argument_list|(
-name|query_diagnostics_in
+name|query_diagnostic_counters_in
 argument_list|)
 index|]
 decl_stmt|;
@@ -4928,7 +4928,7 @@ argument_list|)
 expr_stmt|;
 name|MLX5_SET
 argument_list|(
-name|query_diagnostics_in
+name|query_diagnostic_counters_in
 argument_list|,
 name|in
 argument_list|,
@@ -4939,7 +4939,7 @@ argument_list|)
 expr_stmt|;
 name|MLX5_SET
 argument_list|(
-name|query_diagnostics_in
+name|query_diagnostic_counters_in
 argument_list|,
 name|in
 argument_list|,
@@ -4950,7 +4950,7 @@ argument_list|)
 expr_stmt|;
 name|MLX5_SET
 argument_list|(
-name|query_diagnostics_in
+name|query_diagnostic_counters_in
 argument_list|,
 name|in
 argument_list|,
