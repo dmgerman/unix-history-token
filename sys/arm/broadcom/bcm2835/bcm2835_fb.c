@@ -2499,7 +2499,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|display
 argument_list|,
