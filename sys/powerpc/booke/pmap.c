@@ -4375,15 +4375,6 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-comment|/* Handle managed entry. */
-if|if
-condition|(
-name|PTE_ISMANAGED
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-block|{
 comment|/* Get vm_page_t for mapped pte. */
 name|m
 operator|=
@@ -4395,6 +4386,15 @@ name|pte
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Handle managed entry. */
+if|if
+condition|(
+name|PTE_ISMANAGED
+argument_list|(
+name|pte
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|PTE_ISMODIFIED
@@ -4429,6 +4429,47 @@ name|va
 argument_list|,
 name|m
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|md
+operator|.
+name|pv_tracked
+condition|)
+block|{
+comment|/* 		 * Always pv_insert()/pv_remove() on MPC85XX, in case DPAA is 		 * used.  This is needed by the NCSW support code for fast 		 * VA<->PA translation. 		 */
+name|pv_remove
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|m
+operator|->
+name|md
+operator|.
+name|pv_list
+argument_list|)
+condition|)
+name|m
+operator|->
+name|md
+operator|.
+name|pv_tracked
+operator|=
+name|false
 expr_stmt|;
 block|}
 name|mtx_lock_spin
@@ -14942,7 +14983,7 @@ argument|<< (ilog2(size)& ~
 literal|1
 argument|); 		tlb1_set_entry(tlb1_map_base, pa_base, sz, 		    _TLB_ENTRY_SHARED | _TLB_ENTRY_IO); 		size -= sz; 		pa_base += sz; 		tlb1_map_base += sz; 	} while (size>
 literal|0
-argument|);  	return (va); }
+argument|);  	return (va); }  void pmap_track_page(pmap_t pmap, vm_offset_t va) { 	vm_paddr_t pa; 	vm_page_t page; 	struct pv_entry *pve;  	va&= ~PAGE_MASK; 	pa = pmap_kextract(va);  	rw_wlock(&pvh_global_lock); 	PMAP_LOCK(pmap); 	page = PHYS_TO_VM_PAGE(pa);  	TAILQ_FOREACH(pve,&page->md.pv_list, pv_link) { 		if ((pmap == pve->pv_pmap)&& (va == pve->pv_va)) { 			goto out; 		} 	} 	page->md.pv_tracked = true; 	pv_insert(pmap, va, page); out: 	PMAP_UNLOCK(pmap); 	rw_wunlock(&pvh_global_lock); }
 comment|/*  * Setup MAS4 defaults.  * These values are loaded to MAS0-2 on a TLB miss.  */
 argument|static void set_mas4_defaults(void) { 	uint32_t mas4;
 comment|/* Defaults: TLB0, PID0, TSIZED=4K */

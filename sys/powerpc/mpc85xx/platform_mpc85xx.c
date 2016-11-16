@@ -269,8 +269,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vm_paddr_t
+name|ccsrbar_pa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|ccsrbar_va
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_size_t
+name|ccsrbar_size
 decl_stmt|;
 end_decl_stmt
 
@@ -967,6 +979,14 @@ name|ccsrbar
 argument_list|,
 name|ccsrsize
 argument_list|)
+expr_stmt|;
+name|ccsrbar_pa
+operator|=
+name|ccsrbar
+expr_stmt|;
+name|ccsrbar_size
+operator|=
+name|ccsrsize
 expr_stmt|;
 if|#
 directive|if

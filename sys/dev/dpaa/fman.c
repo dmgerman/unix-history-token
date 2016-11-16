@@ -979,9 +979,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|XX_TrackInit
-argument_list|()
-expr_stmt|;
 name|node
 operator|=
 name|ofw_bus_get_node

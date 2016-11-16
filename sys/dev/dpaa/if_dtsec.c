@@ -2201,9 +2201,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|XX_TrackInit
-argument_list|()
-expr_stmt|;
 comment|/* Init locks */
 name|mtx_init
 argument_list|(

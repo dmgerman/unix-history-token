@@ -32,6 +32,20 @@ name|ccsrbar_va
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|ccsrbar_pa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_size_t
+name|ccsrbar_size
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
