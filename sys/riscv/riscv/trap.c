@@ -1361,6 +1361,11 @@ decl_stmt|;
 name|uint64_t
 name|sstatus
 decl_stmt|;
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1370,6 +1375,12 @@ operator|->
 name|td_frame
 operator|=
 name|frame
+expr_stmt|;
+name|pcb
+operator|=
+name|td
+operator|->
+name|td_pcb
 expr_stmt|;
 comment|/* Ensure we came from usermode, interrupts disabled */
 asm|__asm __volatile("csrr %0, sstatus" : "=&r" (sstatus));
@@ -1475,6 +1486,39 @@ break|break;
 case|case
 name|EXCP_ILLEGAL_INSTRUCTION
 case|:
+ifdef|#
+directive|ifdef
+name|FPE
+if|if
+condition|(
+operator|(
+name|pcb
+operator|->
+name|pcb_fpflags
+operator|&
+name|PCB_FP_STARTED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * May be a FPE trap. Enable FPE usage 			 * for this thread and try again. 			 */
+name|frame
+operator|->
+name|tf_sstatus
+operator||=
+name|SSTATUS_FS_INITIAL
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_fpflags
+operator||=
+name|PCB_FP_STARTED
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 name|call_trapsignal
 argument_list|(
 name|td
