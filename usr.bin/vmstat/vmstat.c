@@ -5498,15 +5498,6 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:pages-total-cached/%9u} {N:pages cached}\n"
-argument_list|,
-name|sum
-operator|.
-name|v_tcached
-argument_list|)
-expr_stmt|;
-name|xo_emit
-argument_list|(
 literal|"{:pages-freed/%9u} {N:pages freed}\n"
 argument_list|,
 name|sum
