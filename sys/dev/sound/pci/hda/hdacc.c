@@ -316,6 +316,14 @@ literal|"Realtek ALC292"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC295
+block|,
+literal|0
+block|,
+literal|"Realtek ALC295"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC660
 block|,
 literal|0
@@ -2177,6 +2185,22 @@ block|,
 literal|0
 block|,
 literal|"Intel Broadwell"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELSKLK
+block|,
+literal|0
+block|,
+literal|"Intel Skylake"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELKBLK
+block|,
+literal|0
+block|,
+literal|"Intel Kabylake"
 block|}
 block|,
 block|{

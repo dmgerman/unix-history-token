@@ -472,6 +472,14 @@ literal|"Broadwell Integrated PCH-LP chipset USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x9d2f8086
+case|:
+return|return
+operator|(
+literal|"Intel Sunrise Point-LP USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0xa12f8086
 case|:
 return|return

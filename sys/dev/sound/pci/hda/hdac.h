@@ -259,8 +259,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_KBLKLP
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x9d71)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_SRPT
 value|HDA_MODEL_CONSTRUCT(INTEL, 0xa170)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_KBLK
+value|HDA_MODEL_CONSTRUCT(INTEL, 0xa171)
 end_define
 
 begin_define
@@ -1854,6 +1868,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC292
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0292)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC295
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0295)
 end_define
 
 begin_define
@@ -3702,6 +3723,20 @@ define|#
 directive|define
 name|HDA_CODEC_INTELBDW
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2808)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELSKLK
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2809)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELKBLK
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x280b)
 end_define
 
 begin_define
