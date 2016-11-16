@@ -4832,9 +4832,13 @@ goto|;
 comment|/* 		 * Handle special fdopen() case. bleh. 		 * 		 * Don't do this for relative (capability) lookups; we don't 		 * understand exactly what would happen, and we don't think 		 * that it ever should. 		 */
 if|if
 condition|(
+operator|(
 name|nd
 operator|.
-name|ni_strictrelative
+name|ni_lcf
+operator|&
+name|NI_LCF_STRICTRELATIVE
+operator|)
 operator|==
 literal|0
 operator|&&
@@ -5033,11 +5037,15 @@ directive|ifdef
 name|CAPABILITIES
 if|if
 condition|(
+operator|(
 name|nd
 operator|.
-name|ni_strictrelative
-operator|==
-literal|1
+name|ni_lcf
+operator|&
+name|NI_LCF_STRICTRELATIVE
+operator|)
+operator|!=
+literal|0
 condition|)
 name|fcaps
 operator|=
