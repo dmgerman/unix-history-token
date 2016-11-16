@@ -30,7 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/include/hyperv_busdma.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcib_private.h>
 end_include
 
 begin_comment
@@ -194,6 +212,26 @@ argument_list|)
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1100000
+end_if
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|rman_res_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|vmbus_softc
@@ -327,6 +365,11 @@ argument|vmbus_channel
 argument_list|)
 name|vmbus_chans
 expr_stmt|;
+comment|/* The list of usable MMIO ranges for PCIe pass-through */
+name|struct
+name|pcib_host_resources
+name|vmbus_mmio_res
+decl_stmt|;
 block|}
 struct|;
 end_struct
