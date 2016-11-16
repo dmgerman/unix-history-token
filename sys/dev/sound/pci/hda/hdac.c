@@ -410,9 +410,29 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_KBLKLP
+block|,
+literal|"Intel Kabylake-LP"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_SRPT
 block|,
 literal|"Intel Sunrise Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_KBLK
+block|,
+literal|"Intel Kabylake"
 block|,
 literal|0
 block|,
