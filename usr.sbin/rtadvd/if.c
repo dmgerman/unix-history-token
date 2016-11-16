@@ -461,6 +461,12 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
+case|case
+name|IFT_BRIDGE
+case|:
 return|return
 operator|(
 name|ROUNDUP8
@@ -516,6 +522,12 @@ condition|)
 block|{
 case|case
 name|IFT_ETHER
+case|:
+case|case
+name|IFT_L2VLAN
+case|:
+case|case
+name|IFT_BRIDGE
 case|:
 name|ndopt
 operator|->
