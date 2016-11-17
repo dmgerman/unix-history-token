@@ -7139,6 +7139,36 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* 		 * The below requires 12 contiguous bytes for the L2TP header 		 * to be written into. 		 */
+name|m
+operator|=
+name|m_pullup
+argument_list|(
+name|m
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|priv
+operator|->
+name|stats
+operator|.
+name|memoryFailures
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
+block|}
 block|}
 comment|/* Fill in L2TP header */
 name|p
