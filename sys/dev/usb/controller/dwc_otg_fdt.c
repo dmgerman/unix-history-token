@@ -162,13 +162,6 @@ name|dwc_otg_probe
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|device_detach_t
-name|dwc_otg_detach
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -714,7 +707,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|dwc_otg_detach
 parameter_list|(

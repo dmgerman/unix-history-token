@@ -41,6 +41,12 @@ name|dwc_otg_attach
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|device_attach_t
+name|dwc_otg_detach
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
