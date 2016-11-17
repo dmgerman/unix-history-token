@@ -458,7 +458,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|beri_sdcard_disk_print
 parameter_list|(
 name|int
