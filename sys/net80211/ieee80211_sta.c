@@ -4985,7 +4985,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return non-zero if a background scan may be continued:  * o bg scan is active  * o no channel switch is pending  * o there has not been any traffic recently  *  * Note we do not check if there is an administrative enable;  * this is only done to start the scan.  We assume that any  * change in state will be accompanied by a request to cancel  * active scans which will otherwise cause this test to fail.  */
+comment|/*  * Return non-zero if a background scan may be continued:  * o bg scan is active  * o no channel switch is pending  * o there has not been any traffic recently  * o no full-offload scan support (no need for explicitly continuing scan then)  *  * Note we do not check if there is an administrative enable;  * this is only done to start the scan.  We assume that any  * change in state will be accompanied by a request to cancel  * active scans which will otherwise cause this test to fail.  */
 end_comment
 
 begin_function
@@ -5029,6 +5029,15 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|!
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+operator|)
+operator|&&
 name|vap
 operator|->
 name|iv_state
@@ -5054,7 +5063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return non-zero if a backgrond scan may be started:  * o bg scanning is administratively enabled  * o no channel switch is pending  * o we are not boosted on a dynamic turbo channel  * o there has not been a scan recently  * o there has not been any traffic recently  */
+comment|/*  * Return non-zero if a backgrond scan may be started:  * o bg scanning is administratively enabled  * o no channel switch is pending  * o we are not boosted on a dynamic turbo channel  * o there has not been a scan recently  * o there has not been any traffic recently (don't check if full-offload scan)  */
 end_comment
 
 begin_function
@@ -5124,6 +5133,15 @@ operator|->
 name|iv_bgscanintvl
 argument_list|)
 operator|&&
+operator|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+operator|)
+operator|||
 name|ieee80211_time_after
 argument_list|(
 name|ticks
@@ -5136,6 +5154,7 @@ name|vap
 operator|->
 name|iv_bgscanidle
 argument_list|)
+operator|)
 operator|)
 return|;
 block|}
