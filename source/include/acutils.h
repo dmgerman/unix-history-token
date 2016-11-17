@@ -1037,6 +1037,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|AcpiUtGetArgumentTypeName
+parameter_list|(
+name|UINT32
+name|ArgType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 name|AcpiUtHexToAsciiChar
 parameter_list|(

@@ -1005,7 +1005,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* For each word, 1st byte must be ascii (1-0x7F), 2nd byte must be zero */
+comment|/*      * For each word, 1st byte must be printable ascii, and the      * 2nd byte must be zero. This does not allow for escape      * sequences, but it is the most secure way to detect a      * unicode string.      */
 for|for
 control|(
 name|i
@@ -1036,13 +1036,15 @@ operator|==
 literal|0
 operator|)
 operator|||
+operator|!
 operator|(
+name|isprint
+argument_list|(
 name|ByteData
 index|[
 name|i
 index|]
-operator|>
-literal|0x7F
+argument_list|)
 operator|)
 operator|||
 operator|(
@@ -1201,6 +1203,32 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/*      * Check for a possible standalone resource EndTag, ignore it      * here. However, this sequence is also the string "Y", but      * this seems rare enough to be acceptable.      */
+if|if
+condition|(
+operator|(
+name|ByteCount
+operator|==
+literal|2
+operator|)
+operator|&&
+operator|(
+name|ByteData
+index|[
+literal|0
+index|]
+operator|==
+literal|0x79
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+comment|/* Check all bytes for ASCII */
 for|for
 control|(
 name|i
@@ -1219,7 +1247,8 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* TBD: allow some escapes (non-ascii chars).          * they will be handled in the string output routine          */
+comment|/*          * TBD: allow some escapes (non-ascii chars).          * they will be handled in the string output routine          */
+comment|/* Not a string if not printable ascii */
 if|if
 condition|(
 operator|!

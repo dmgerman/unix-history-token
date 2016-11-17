@@ -393,9 +393,6 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
-parameter_list|,
-name|BOOLEAN
-name|AcpiNsLocked
 parameter_list|)
 block|{
 return|return

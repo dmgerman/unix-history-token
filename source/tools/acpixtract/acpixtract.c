@@ -116,7 +116,7 @@ name|fopen
 argument_list|(
 name|InputPathname
 argument_list|,
-literal|"rt"
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -604,7 +604,7 @@ name|fopen
 argument_list|(
 name|InputPathname
 argument_list|,
-literal|"rt"
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -914,7 +914,7 @@ name|fopen
 argument_list|(
 name|InputPathname
 argument_list|,
-literal|"rt"
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if

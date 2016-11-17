@@ -142,8 +142,6 @@ operator|=
 name|AcpiEvInitializeRegion
 argument_list|(
 name|ObjDesc
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 return|return

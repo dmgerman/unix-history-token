@@ -265,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_COND_REF_OF_OP
-value|ARGP_LIST2 (ARGP_NAME_OR_REF,ARGP_TARGET)
+value|ARGP_LIST2 (ARGP_SIMPLENAME, ARGP_TARGET)
 end_define
 
 begin_define
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_DEREF_OF_OP
-value|ARGP_LIST1 (ARGP_TERMARG)
+value|ARGP_LIST1 (ARGP_SUPERNAME)
 end_define
 
 begin_define
@@ -685,7 +685,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_OBJECT_TYPE_OP
-value|ARGP_LIST1 (ARGP_NAME_OR_REF)
+value|ARGP_LIST1 (ARGP_SIMPLENAME)
 end_define
 
 begin_define
@@ -734,7 +734,7 @@ begin_define
 define|#
 directive|define
 name|ARGP_REF_OF_OP
-value|ARGP_LIST1 (ARGP_NAME_OR_REF)
+value|ARGP_LIST1 (ARGP_SIMPLENAME)
 end_define
 
 begin_define
@@ -1312,7 +1312,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_FROM_BCD_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1760,42 +1760,42 @@ begin_define
 define|#
 directive|define
 name|ARGI_TO_BCD_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_BUFFER_OP
-value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_DEC_STR_OP
-value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_HEX_STR_OP
-value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_INTEGER_OP
-value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_FIXED_TARGET)
+value|ARGI_LIST2 (ARGI_COMPUTEDATA,ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARGI_TO_STRING_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_FIXED_TARGET)
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define

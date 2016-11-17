@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|AB_SUPPORTED_OPTIONS
-value|"c:d:h:s:tv"
+value|"a:c:d:h:o:s:tv"
 end_define
 
 begin_comment
@@ -81,9 +81,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-a<File1><File2>"
+argument_list|,
+literal|"Compare two binary AML files, dump all mismatches"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-c<File1><File2>"
 argument_list|,
-literal|"Compare two binary AML files"
+literal|"Compare two binary AML files, dump first 100 mismatches"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -98,6 +105,13 @@ argument_list|(
 literal|"-e<Sig><In><Out>"
 argument_list|,
 literal|"Extract binary AML table from acpidump file"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-o<Value>"
+argument_list|,
+literal|"Start comparison at this offset into second file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -222,6 +236,15 @@ name|j
 condition|)
 block|{
 case|case
+literal|'a'
+case|:
+comment|/* Compare Files, display all differences */
+name|AbGbl_DisplayAllMiscompares
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* Fallthrough */
+case|case
 literal|'c'
 case|:
 comment|/* Compare Files */
@@ -326,6 +349,17 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+literal|'o'
+case|:
+name|AbGbl_CompareOffset
+operator|=
+name|atoi
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+continue|continue;
 case|case
 literal|'s'
 case|:

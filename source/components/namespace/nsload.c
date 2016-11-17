@@ -246,6 +246,9 @@ literal|"**** Begin Table Object Initialization\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiDsInitializeObjects
@@ -254,6 +257,9 @@ name|TableIndex
 argument_list|,
 name|Node
 argument_list|)
+expr_stmt|;
+name|AcpiExExitInterpreter
+argument_list|()
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(

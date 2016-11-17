@@ -1194,6 +1194,15 @@ name|Gbl_TerseMode
 condition|)
 block|{
 comment|/* Display header information */
+name|printf
+argument_list|(
+literal|"Comparing %s to %s\n"
+argument_list|,
+name|File1Path
+argument_list|,
+name|File2Path
+argument_list|)
+expr_stmt|;
 name|AbPrintHeadersInfo
 argument_list|(
 operator|&
@@ -1232,6 +1241,28 @@ name|TRUE
 expr_stmt|;
 block|}
 comment|/* Do the byte-by-byte compare */
+name|printf
+argument_list|(
+literal|"Compare offset: %u\n"
+argument_list|,
+name|AbGbl_CompareOffset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|AbGbl_CompareOffset
+condition|)
+block|{
+name|fseek
+argument_list|(
+name|File2
+argument_list|,
+name|AbGbl_CompareOffset
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+expr_stmt|;
+block|}
 name|Actual1
 operator|=
 name|fread
@@ -1305,9 +1336,16 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|Mismatches
 operator|>
 literal|100
+operator|)
+operator|&&
+operator|(
+operator|!
+name|AbGbl_DisplayAllMiscompares
+operator|)
 condition|)
 block|{
 name|printf

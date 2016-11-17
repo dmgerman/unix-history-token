@@ -105,13 +105,22 @@ name|Buffer
 operator|++
 expr_stmt|;
 block|}
-comment|/* If end-of-line, this line is empty */
+comment|/* Line is empty when a Unix or DOS-style line terminator is found. */
 if|if
 condition|(
+operator|(
+operator|*
+name|Buffer
+operator|==
+literal|'\r'
+operator|)
+operator|||
+operator|(
 operator|*
 name|Buffer
 operator|==
 literal|'\n'
+operator|)
 condition|)
 block|{
 return|return
@@ -512,7 +521,7 @@ name|fopen
 argument_list|(
 name|InputPathname
 argument_list|,
-literal|"rt"
+literal|"r"
 argument_list|)
 expr_stmt|;
 if|if

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20160930
+value|0x20161117
 end_define
 
 begin_include
@@ -1233,6 +1233,13 @@ begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
 argument|ACPI_STATUS AcpiGetTable (     ACPI_STRING             Signature,     UINT32                  Instance,     ACPI_TABLE_HEADER       **OutTable)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_EXTERNAL_RETURN_VOID
+argument_list|(
+argument|void AcpiPutTable (     ACPI_TABLE_HEADER       *Table)
 argument_list|)
 end_macro
 

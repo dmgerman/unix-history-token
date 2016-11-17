@@ -112,6 +112,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|EXTERN
+name|BOOLEAN
+name|INIT_GLOBAL
+parameter_list|(
+name|AbGbl_DisplayAllMiscompares
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|EXTERN
+name|UINT32
+name|INIT_GLOBAL
+argument_list|(
+name|AbGbl_CompareOffset
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Prototypes */
 end_comment

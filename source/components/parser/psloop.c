@@ -152,6 +152,21 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Get arguments for opcode [%s]\n"
+operator|,
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpName
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Op

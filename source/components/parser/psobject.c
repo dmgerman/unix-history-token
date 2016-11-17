@@ -996,9 +996,11 @@ name|ACPI_PARSEOP_TARGET
 expr_stmt|;
 block|}
 block|}
+comment|/*          * Special case for both Increment() and Decrement(), where          * the lone argument is both a source and a target.          */
 elseif|else
 if|if
 condition|(
+operator|(
 name|ParentScope
 operator|->
 name|Common
@@ -1006,6 +1008,17 @@ operator|.
 name|AmlOpcode
 operator|==
 name|AML_INCREMENT_OP
+operator|)
+operator|||
+operator|(
+name|ParentScope
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_DECREMENT_OP
+operator|)
 condition|)
 block|{
 name|Op

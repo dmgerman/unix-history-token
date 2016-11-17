@@ -1046,11 +1046,11 @@ argument_list|(
 name|UtWalkAmlResources
 argument_list|)
 expr_stmt|;
-comment|/* The absolute minimum resource template is one EndTag descriptor */
+comment|/*      * The absolute minimum resource template is one EndTag descriptor.      * However, we will treat a lone EndTag as just a simple buffer.      */
 if|if
 condition|(
 name|AmlLength
-operator|<
+operator|<=
 sizeof|sizeof
 argument_list|(
 name|AML_RESOURCE_END_TAG
@@ -1190,6 +1190,24 @@ operator|*
 name|Context
 operator|=
 name|Aml
+expr_stmt|;
+block|}
+comment|/* Check if buffer is defined to be longer than the resource length */
+if|if
+condition|(
+name|AmlLength
+operator|>
+operator|(
+name|Offset
+operator|+
+name|Length
+operator|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_NO_RESOURCE_END_TAG
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Normal exit */

@@ -1341,9 +1341,6 @@ case|case
 name|ARGI_SIMPLE_TARGET
 case|:
 case|case
-name|ARGI_FIXED_TARGET
-case|:
-case|case
 name|ARGI_INTEGER_REF
 case|:
 comment|/* Handles Increment, Decrement cases */
