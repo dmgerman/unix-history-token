@@ -2985,6 +2985,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SF_USER_READAHEAD
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|SF_NOCACHE
 value|0x00000010
 end_define

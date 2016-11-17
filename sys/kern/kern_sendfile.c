@@ -3006,7 +3006,24 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Calculate maximum allowed number of pages for readahead 		 * at this iteration.  First, we allow readahead up to "rem". 		 * If application wants more, let it be, but there is no 		 * reason to go above MAXPHYS.  Also check against "obj_size", 		 * since vm_pager_has_page() can hint beyond EOF. 		 */
+comment|/* 		 * Calculate maximum allowed number of pages for readahead 		 * at this iteration.  If SF_USER_READAHEAD was set, we don't 		 * do any heuristics and use exactly the value supplied by 		 * application.  Otherwise, we allow readahead up to "rem". 		 * If application wants more, let it be, but there is no 		 * reason to go above MAXPHYS.  Also check against "obj_size", 		 * since vm_pager_has_page() can hint beyond EOF. 		 */
+if|if
+condition|(
+name|flags
+operator|&
+name|SF_USER_READAHEAD
+condition|)
+block|{
+name|rhpages
+operator|=
+name|SF_READAHEAD
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|rhpages
 operator|=
 name|howmany
@@ -3031,6 +3048,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 name|rhpages
 operator|=
 name|min
