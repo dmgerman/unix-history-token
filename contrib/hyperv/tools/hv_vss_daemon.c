@@ -713,17 +713,10 @@ name|ch
 decl_stmt|,
 name|r
 decl_stmt|,
-name|len
-decl_stmt|,
 name|error
 decl_stmt|;
 name|int
 name|hv_vss_dev_fd
-decl_stmt|;
-name|int
-name|freeze_thaw
-init|=
-name|UNDEF_FREEZE_THAW
 decl_stmt|;
 while|while
 condition|(
