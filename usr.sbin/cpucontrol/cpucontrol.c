@@ -304,6 +304,12 @@ name|intel_update
 block|}
 block|,
 block|{
+name|amd10h_probe
+block|,
+name|amd10h_update
+block|}
+block|,
+block|{
 name|amd_probe
 block|,
 name|amd_update
