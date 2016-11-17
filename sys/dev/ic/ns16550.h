@@ -804,6 +804,24 @@ name|FIFO_DMA_MODE
 value|FCR_DMA
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XBURST
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FCR_UART_ON
+value|0x10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
