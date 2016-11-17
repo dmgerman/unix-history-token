@@ -2292,7 +2292,7 @@ name|softc
 operator|->
 name|dev
 argument_list|,
-literal|"Invalid ethernet address, generating random locally administered address"
+literal|"Invalid ethernet address, generating random locally administered address\n"
 argument_list|)
 expr_stmt|;
 name|get_random_ether_addr
