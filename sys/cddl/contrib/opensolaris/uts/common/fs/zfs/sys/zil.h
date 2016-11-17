@@ -696,10 +696,6 @@ name|itx_sync
 decl_stmt|;
 comment|/* synchronous transaction */
 name|uint64_t
-name|itx_sod
-decl_stmt|;
-comment|/* record size on disk */
-name|uint64_t
 name|itx_oid
 decl_stmt|;
 comment|/* object id */
