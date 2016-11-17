@@ -8162,19 +8162,19 @@ begin_comment
 comment|/* load nvm chunk response */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|IWM_READ_NVM_CHUNK_SUCCEED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWM_READ_NVM_CHUNK_INVALID_ADDRESS
-value|1
-end_define
+init|=
+literal|0
+block|,
+name|IWM_READ_NVM_CHUNK_NOT_VALID_ADDRESS
+init|=
+literal|1
+block|}
+enum|;
+end_enum
 
 begin_function
 specifier|static
@@ -8266,8 +8266,6 @@ block|,
 operator|.
 name|flags
 operator|=
-name|IWM_CMD_SYNC
-operator||
 name|IWM_CMD_WANT_SKB
 operator||
 name|IWM_CMD_SEND_IN_RFKILL
@@ -8284,10 +8282,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|,
-name|offset_read
-decl_stmt|;
-name|size_t
 name|bytes_read
+decl_stmt|,
+name|offset_read
 decl_stmt|;
 name|uint8_t
 modifier|*
@@ -8425,10 +8422,53 @@ condition|(
 name|ret
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|offset
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|ret
+operator|==
+name|IWM_READ_NVM_CHUNK_NOT_VALID_ADDRESS
+operator|)
+condition|)
+block|{
+comment|/* 			 * meaning of NOT_VALID_ADDRESS: 			 * driver try to read chunk from address that is 			 * multiple of 2K and got an error since addr is empty. 			 * meaning of (offset != 0): driver already 			 * read valid data from another chunk so this case 			 * is not an error. 			 */
 name|IWM_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
+name|IWM_DEBUG_EEPROM
+operator||
+name|IWM_DEBUG_RESET
+argument_list|,
+literal|"NVM access command failed on offset 0x%x since that section size is multiple 2K\n"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+operator|*
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|IWM_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWM_DEBUG_EEPROM
+operator||
 name|IWM_DEBUG_RESET
 argument_list|,
 literal|"NVM access command failed with status %d\n"
@@ -8438,8 +8478,9 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|EINVAL
+name|EIO
 expr_stmt|;
+block|}
 goto|goto
 name|exit
 goto|;
@@ -8484,7 +8525,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"NVM ACCESS response with too much data "
-literal|"(%d bytes requested, %zd bytes received)\n"
+literal|"(%d bytes requested, %d bytes received)\n"
 argument_list|,
 name|length
 argument_list|,
