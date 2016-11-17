@@ -60,6 +60,10 @@ name|uint64_t
 name|sf_allocwait
 decl_stmt|;
 comment|/* times sfbuf allocation had to wait */
+name|uint64_t
+name|sf_pages_bogus
+decl_stmt|;
+comment|/* times bogus page was used */
 block|}
 struct|;
 end_struct
