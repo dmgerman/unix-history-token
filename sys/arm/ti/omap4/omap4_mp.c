@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/ti_smc.h>
 end_include
 
@@ -101,13 +107,27 @@ directive|include
 file|<arm/ti/omap4/omap4_smc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/ti/omap4/omap4_mp.h>
+end_include
+
 begin_function
 name|void
-name|platform_mp_setmaxid
+name|omap4_mp_setmaxid
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mp_ncpus
+operator|!=
+literal|0
+condition|)
+return|return;
 name|mp_maxid
 operator|=
 literal|1
@@ -121,9 +141,10 @@ end_function
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|omap4_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|bus_addr_t
