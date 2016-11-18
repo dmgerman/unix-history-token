@@ -1879,6 +1879,10 @@ block|{
 if|if
 condition|(
 name|prt_keywords
+operator|||
+name|argc
+operator|>
+literal|0
 condition|)
 name|setlocale
 argument_list|(
