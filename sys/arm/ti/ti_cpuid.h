@@ -250,6 +250,13 @@ name|CHIP_AM335X
 value|1
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_ti_chip
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -259,31 +266,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
+name|KASSERT
 argument_list|(
-name|SOC_OMAP4
+name|_ti_chip
+operator|!=
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"Can't determine TI Chip"
+operator|)
 argument_list|)
+expr_stmt|;
 return|return
-name|CHIP_OMAP_4
+name|_ti_chip
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_TI_AM335X
-argument_list|)
-return|return
-name|CHIP_AM335X
-return|;
-else|#
-directive|else
-error|#
-directive|error
-error|Chip type not defined, ensure SOC_xxxx is defined
-endif|#
-directive|endif
 block|}
 end_function
 
