@@ -4781,6 +4781,10 @@ argument_list|(
 name|ctx
 argument_list|)
 decl_stmt|;
+name|struct
+name|ifmediareq
+name|ifmr
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -5673,6 +5677,16 @@ operator|&
 name|softc
 operator|->
 name|def_cp_ring
+argument_list|)
+expr_stmt|;
+name|bnxt_media_status
+argument_list|(
+name|softc
+operator|->
+name|ctx
+argument_list|,
+operator|&
+name|ifmr
 argument_list|)
 expr_stmt|;
 return|return;
