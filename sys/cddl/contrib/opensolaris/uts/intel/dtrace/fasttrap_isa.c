@@ -7483,9 +7483,6 @@ operator|->
 name|r_cs
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|illumos
 case|case
 name|REG_RFL
 case|:
@@ -7493,11 +7490,9 @@ return|return
 operator|(
 name|rp
 operator|->
-name|r_rfl
+name|r_rflags
 operator|)
 return|;
-endif|#
-directive|endif
 case|case
 name|REG_RSP
 case|:
