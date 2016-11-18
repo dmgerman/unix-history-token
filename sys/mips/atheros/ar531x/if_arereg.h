@@ -387,6 +387,10 @@ decl_stmt|;
 name|int
 name|are_detach
 decl_stmt|;
+name|int
+name|are_if_flags
+decl_stmt|;
+comment|/* last if flags */
 block|}
 struct|;
 end_struct
