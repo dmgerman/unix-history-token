@@ -658,10 +658,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+end_elif
 
 begin_struct
 struct|struct
@@ -757,7 +761,7 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
-name|bool
+name|int
 name|pv_tracked
 decl_stmt|;
 block|}
