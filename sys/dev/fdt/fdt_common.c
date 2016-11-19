@@ -205,6 +205,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|fdt_is_compatible
+parameter_list|(
+name|phandle_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -1060,6 +1074,7 @@ comment|/*  * This routine is an early-usage version of the ofw_bus_is_compatibl
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fdt_is_compatible
 parameter_list|(
