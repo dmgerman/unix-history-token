@@ -242,7 +242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 128-bit integer augments to standard values  */
+comment|/*  * 128-bit integer augments to standard values. On i386 this  * doesn't exist, so we use 64-bit values. The 128-bit counters  * are crazy anyway, since for this purpose, you'd need a  * billion IOPs for billions of seconds to overflow them.  * So, on 32-bit i386, you'll get truncated values.  */
 end_comment
 
 begin_define
@@ -252,12 +252,35 @@ name|UINT128_DIG
 value|39
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|uint128_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|__uint128_t
 name|uint128_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
