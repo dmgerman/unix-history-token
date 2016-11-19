@@ -1760,8 +1760,29 @@ comment|/* 0x80-0xBF - I/O command set specific */
 name|NVME_LOG_RES_NOTIFICATION
 init|=
 literal|0x80
+block|,
 comment|/* 0xC0-0xFF - vendor specific */
-block|}
+comment|/*  * The following are Intel Specific log pages, but they seem to   * be widely implemented.  */
+name|INTEL_LOG_READ_LAT_LOG
+init|=
+literal|0xc1
+block|,
+name|INTEL_LOG_WRITE_LAT_LOG
+init|=
+literal|0xc2
+block|,
+name|INTEL_LOG_TEMP_STATS
+init|=
+literal|0xc5
+block|,
+name|INTEL_LOG_ADD_SMART
+init|=
+literal|0xca
+block|,
+name|INTEL_LOG_DRIVE_MKT_NAME
+init|=
+literal|0xdd
+block|,  }
 enum|;
 end_enum
 
