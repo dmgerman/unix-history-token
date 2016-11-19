@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
@@ -153,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<arm/ti/usb/omap_usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/ti/omap4/pandaboard/pandaboard.h>
 end_include
 
 begin_comment
@@ -877,6 +889,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|phandle_t
+name|root
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -905,6 +920,31 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|SOC_OMAP4
+comment|/*  	 * If we're running a Pandaboard, run Pandaboard-specific  	 * init code. 	 */
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fdt_is_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"ti,omap4-panda"
+argument_list|)
+condition|)
+name|pandaboard_usb_hub_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|device_set_desc
 argument_list|(
 name|dev
