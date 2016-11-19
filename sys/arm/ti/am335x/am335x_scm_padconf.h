@@ -108,6 +108,15 @@ name|PADCONF_INPUT_PULLUP_SLOW
 value|(PADCONF_INPUT_PULLUP | SLEWCTRL)
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ti_pinmux_device
+name|ti_am335x_pinmux_dev
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

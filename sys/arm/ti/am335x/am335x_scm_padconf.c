@@ -3590,7 +3590,7 @@ begin_decl_stmt
 specifier|const
 name|struct
 name|ti_pinmux_device
-name|ti_pinmux_dev
+name|ti_am335x_pinmux_dev
 init|=
 block|{
 operator|.

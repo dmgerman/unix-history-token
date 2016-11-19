@@ -177,6 +177,15 @@ name|PADCONF_PIN_OFF_WAKEUPENABLE
 value|CONTROL_PADCONF_WAKEUP_ENABLE
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ti_pinmux_device
+name|omap4_pinmux_dev
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

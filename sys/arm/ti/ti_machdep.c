@@ -457,7 +457,7 @@ literal|0
 argument_list|,
 literal|"ti,omap4430"
 argument_list|,
-literal|0
+literal|200
 argument_list|)
 expr_stmt|;
 end_expr_stmt
