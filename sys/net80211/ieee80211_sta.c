@@ -1978,6 +1978,37 @@ name|uint8_t
 modifier|*
 name|bssid
 decl_stmt|;
+name|int
+name|is_hw_decrypted
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|has_decrypted
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Some devices do hardware decryption all the way through 	 * to pretending the frame wasn't encrypted in the first place. 	 * So, tag it appropriately so it isn't discarded inappropriately. 	 */
+if|if
+condition|(
+operator|(
+name|rxs
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|rxs
+operator|->
+name|c_pktflags
+operator|&
+name|IEEE80211_RX_F_DECRYPTED
+operator|)
+condition|)
+name|is_hw_decrypted
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2737,9 +2768,12 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 		 * Handle privacy requirements for hardware decryption 		 * devices. 		 * 		 * For those devices, a handful of things happen. 		 * 		 * + If IV has been stripped, then we can't run 		 *   ieee80211_crypto_decap() - none of the key 		 * + If MIC has been stripped, we can't validate 		 *   MIC here. 		 * + If MIC fails, then we need to communicate a 		 *   MIC failure up to the stack - but we don't know 		 *   which key was used. 		 */
 comment|/* 		 * Handle privacy requirements.  Note that we 		 * must not be preempted from here until after 		 * we (potentially) call ieee80211_crypto_demic; 		 * otherwise we may violate assumptions in the 		 * crypto cipher modules used to do delayed update 		 * of replay sequence numbers. 		 */
 if|if
 condition|(
+name|is_hw_decrypted
+operator|||
 name|wh
 operator|->
 name|i_fc
@@ -2797,8 +2831,8 @@ goto|goto
 name|out
 goto|;
 block|}
-name|key
-operator|=
+if|if
+condition|(
 name|ieee80211_crypto_decap
 argument_list|(
 name|ni
@@ -2806,13 +2840,12 @@ argument_list|,
 name|m
 argument_list|,
 name|hdrspace
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|key
+argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* NB: stats+msgs handled in crypto_decap */
@@ -2847,6 +2880,10 @@ index|]
 operator|&=
 operator|~
 name|IEEE80211_FC1_PROTECTED
+expr_stmt|;
+name|has_decrypted
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -2948,13 +2985,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* no longer valid, catch any uses */
-comment|/* 		 * Next strip any MSDU crypto bits. 		 */
+comment|/* 		 * Next strip any MSDU crypto bits. 		 * 		 * Note: we can't do MIC stripping/verification if the 		 * upper layer has stripped it.  We have to check MIC 		 * ourselves.  So, key may be NULL, but we have to check 		 * the RX status. 		 */
 if|if
 condition|(
-name|key
-operator|!=
-name|NULL
-operator|&&
 operator|!
 name|ieee80211_crypto_demic
 argument_list|(
@@ -3182,9 +3215,11 @@ name|IEEE80211_F_DROPUNENC
 operator|)
 operator|&&
 operator|(
-name|key
+operator|(
+name|has_decrypted
 operator|==
-name|NULL
+literal|0
+operator|)
 operator|&&
 operator|(
 name|m
@@ -3193,6 +3228,12 @@ name|m_flags
 operator|&
 name|M_WEP
 operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|is_hw_decrypted
 operator|==
 literal|0
 operator|)
@@ -3440,6 +3481,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 		 * Note: See above for hardware offload privacy requirements. 		 *       It also applies here. 		 */
+comment|/* 		 * Again, having encrypted flag set check would be good, but 		 * then we have to also handle crypto_decap() like above. 		 */
 if|if
 condition|(
 name|wh
@@ -3539,8 +3582,9 @@ argument_list|,
 name|wh
 argument_list|)
 expr_stmt|;
-name|key
-operator|=
+comment|/* 			 * Again, if IV/MIC was stripped, then this whole 			 * setup will fail.  That's going to need some poking. 			 */
+if|if
+condition|(
 name|ieee80211_crypto_decap
 argument_list|(
 name|ni
@@ -3548,13 +3592,12 @@ argument_list|,
 name|m
 argument_list|,
 name|hdrspace
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|key
+argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* NB: stats+msgs handled in crypto_decap */
@@ -3562,6 +3605,10 @@ goto|goto
 name|out
 goto|;
 block|}
+name|has_decrypted
+operator|=
+literal|1
+expr_stmt|;
 name|wh
 operator|=
 name|mtod

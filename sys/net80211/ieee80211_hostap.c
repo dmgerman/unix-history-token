@@ -1751,6 +1751,37 @@ name|uint8_t
 modifier|*
 name|bssid
 decl_stmt|;
+name|int
+name|is_hw_decrypted
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|has_decrypted
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Some devices do hardware decryption all the way through 	 * to pretending the frame wasn't encrypted in the first place. 	 * So, tag it appropriately so it isn't discarded inappropriately. 	 */
+if|if
+condition|(
+operator|(
+name|rxs
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|rxs
+operator|->
+name|c_pktflags
+operator|&
+name|IEEE80211_RX_F_DECRYPTED
+operator|)
+condition|)
+name|is_hw_decrypted
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2589,6 +2620,8 @@ label|:
 comment|/* 		 * Handle privacy requirements.  Note that we 		 * must not be preempted from here until after 		 * we (potentially) call ieee80211_crypto_demic; 		 * otherwise we may violate assumptions in the 		 * crypto cipher modules used to do delayed update 		 * of replay sequence numbers. 		 */
 if|if
 condition|(
+name|is_hw_decrypted
+operator|||
 name|wh
 operator|->
 name|i_fc
@@ -2646,8 +2679,8 @@ goto|goto
 name|out
 goto|;
 block|}
-name|key
-operator|=
+if|if
+condition|(
 name|ieee80211_crypto_decap
 argument_list|(
 name|ni
@@ -2655,13 +2688,12 @@ argument_list|,
 name|m
 argument_list|,
 name|hdrspace
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|key
+argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* NB: stats+msgs handled in crypto_decap */
@@ -2696,6 +2728,10 @@ index|]
 operator|&=
 operator|~
 name|IEEE80211_FC1_PROTECTED
+expr_stmt|;
+name|has_decrypted
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -3031,9 +3067,11 @@ name|IEEE80211_F_DROPUNENC
 operator|)
 operator|&&
 operator|(
-name|key
+operator|(
+name|has_decrypted
 operator|==
-name|NULL
+literal|0
+operator|)
 operator|&&
 operator|(
 name|m
@@ -3042,6 +3080,12 @@ name|m_flags
 operator|&
 name|M_WEP
 operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|is_hw_decrypted
 operator|==
 literal|0
 operator|)
@@ -3452,8 +3496,8 @@ argument_list|,
 name|wh
 argument_list|)
 expr_stmt|;
-name|key
-operator|=
+if|if
+condition|(
 name|ieee80211_crypto_decap
 argument_list|(
 name|ni
@@ -3461,13 +3505,12 @@ argument_list|,
 name|m
 argument_list|,
 name|hdrspace
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|key
+argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* NB: stats+msgs handled in crypto_decap */
@@ -3495,6 +3538,10 @@ index|]
 operator|&=
 operator|~
 name|IEEE80211_FC1_PROTECTED
+expr_stmt|;
+name|has_decrypted
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* 		 * Pass the packet to radiotap before calling iv_recv_mgmt(). 		 * Otherwise iv_recv_mgmt() might pass another packet to 		 * radiotap, resulting in out of order packet captures. 		 */
