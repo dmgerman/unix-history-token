@@ -134,7 +134,7 @@ index|[
 name|R12A_GROUP_5G
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|cck_tx_pwr_diff_2g
 index|[
 name|R12A_MAX_RF_PATH
@@ -143,7 +143,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|ofdm_tx_pwr_diff_2g
 index|[
 name|R12A_MAX_RF_PATH
@@ -152,7 +152,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw20_tx_pwr_diff_2g
 index|[
 name|R12A_MAX_RF_PATH
@@ -161,7 +161,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw40_tx_pwr_diff_2g
 index|[
 name|R12A_MAX_RF_PATH
@@ -170,7 +170,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|ofdm_tx_pwr_diff_5g
 index|[
 name|R12A_MAX_RF_PATH
@@ -179,7 +179,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw20_tx_pwr_diff_5g
 index|[
 name|R12A_MAX_RF_PATH
@@ -188,7 +188,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw40_tx_pwr_diff_5g
 index|[
 name|R12A_MAX_RF_PATH
@@ -197,7 +197,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw80_tx_pwr_diff_5g
 index|[
 name|R12A_MAX_RF_PATH
@@ -206,7 +206,7 @@ index|[
 name|R12A_MAX_TX_COUNT
 index|]
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bw160_tx_pwr_diff_5g
 index|[
 name|R12A_MAX_RF_PATH

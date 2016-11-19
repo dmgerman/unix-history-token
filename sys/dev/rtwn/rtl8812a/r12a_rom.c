@@ -206,6 +206,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|k
 decl_stmt|;
 name|sc
 operator|->
@@ -486,8 +488,12 @@ control|(
 name|j
 operator|=
 literal|1
+operator|,
+name|k
+operator|=
+literal|0
 init|;
-name|j
+name|k
 operator|<
 name|nitems
 argument_list|(
@@ -497,6 +503,9 @@ name|diff123
 argument_list|)
 condition|;
 name|j
+operator|++
+operator|,
+name|k
 operator|++
 control|)
 block|{
@@ -518,7 +527,7 @@ name|pwr_diff_2g
 operator|->
 name|diff123
 index|[
-name|j
+name|k
 index|]
 operator|.
 name|ofdm_cck
@@ -545,7 +554,7 @@ name|pwr_diff_2g
 operator|->
 name|diff123
 index|[
-name|j
+name|k
 index|]
 operator|.
 name|ofdm_cck
@@ -572,7 +581,7 @@ name|pwr_diff_2g
 operator|->
 name|diff123
 index|[
-name|j
+name|k
 index|]
 operator|.
 name|ht40_ht20
@@ -599,7 +608,7 @@ name|pwr_diff_2g
 operator|->
 name|diff123
 index|[
-name|j
+name|k
 index|]
 operator|.
 name|ht40_ht20
@@ -782,8 +791,12 @@ control|(
 name|j
 operator|=
 literal|1
+operator|,
+name|k
+operator|=
+literal|0
 init|;
-name|j
+name|k
 operator|<
 name|nitems
 argument_list|(
@@ -793,6 +806,9 @@ name|ht40_ht20
 argument_list|)
 condition|;
 name|j
+operator|++
+operator|,
+name|k
 operator|++
 control|)
 block|{
@@ -814,7 +830,7 @@ name|pwr_diff_5g
 operator|->
 name|ht40_ht20
 index|[
-name|j
+name|k
 index|]
 argument_list|,
 name|LOW_PART
@@ -839,7 +855,7 @@ name|pwr_diff_5g
 operator|->
 name|ht40_ht20
 index|[
-name|j
+name|k
 index|]
 argument_list|,
 name|HIGH_PART
