@@ -296,7 +296,7 @@ directive|define
 name|IEEE80211_KEY_DEVICE
 comment|/* flags owned by device driver */
 define|\
-value|(IEEE80211_KEY_DEVKEY|IEEE80211_KEY_CIPHER0|IEEE80211_KEY_CIPHER1| \ 	 IEEE80211_KEY_SWCRYPT|IEEE80211_KEY_SWMIC)
+value|(IEEE80211_KEY_DEVKEY|IEEE80211_KEY_CIPHER0|IEEE80211_KEY_CIPHER1| \ 	 IEEE80211_KEY_SWCRYPT|IEEE80211_KEY_SWMIC|IEEE80211_KEY_NOIV | \ 	 IEEE80211_KEY_NOIVMGT|IEEE80211_KEY_NOMIC|IEEE80211_KEY_NOMICMGT)
 end_define
 
 begin_define
@@ -857,9 +857,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ieee80211_key
-modifier|*
+name|int
 name|ieee80211_crypto_decap
 parameter_list|(
 name|struct
@@ -871,6 +869,11 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|ieee80211_key
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -458,7 +458,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|beri_sdcard_disk_print
 parameter_list|(
 name|int
@@ -478,6 +478,33 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s devices:"
+argument_list|,
+name|beri_sdcard_disk
+operator|.
+name|dv_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|pager_output
+argument_list|(
+literal|"\n"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 name|snprintf
 argument_list|(
 name|line

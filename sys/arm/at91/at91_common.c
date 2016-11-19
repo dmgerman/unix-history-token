@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fdt.h>
 end_include
 
@@ -153,7 +159,7 @@ name|offset
 decl_stmt|;
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|node
 argument_list|,

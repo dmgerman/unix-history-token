@@ -1089,7 +1089,7 @@ name|DIF_SUBR_MEMREF
 value|46
 define|#
 directive|define
-name|DIF_SUBR_TYPEREF
+name|DIF_SUBR_UNUSED
 value|47
 define|#
 directive|define
@@ -1584,11 +1584,6 @@ directive|define
 name|DTRACEACT_PRINTM
 value|8
 comment|/* printm() action (BSD) */
-define|#
-directive|define
-name|DTRACEACT_PRINTT
-value|9
-comment|/* printt() action (BSD) */
 define|#
 directive|define
 name|DTRACEACT_PROC

@@ -6131,15 +6131,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-elseif|else
-if|if
-condition|(
-name|m
-operator|->
-name|valid
-operator|!=
-name|VM_PAGE_BITS_ALL
-condition|)
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -6155,12 +6146,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-else|else
-comment|/* A cached page was reactivated. */
-name|rv
-operator|=
-name|VM_PAGER_OK
 expr_stmt|;
 name|vm_page_lock
 argument_list|(

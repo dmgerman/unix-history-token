@@ -1793,7 +1793,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1830,10 +1830,7 @@ block|}
 operator|*
 name|val
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|cell
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -2563,7 +2563,23 @@ expr_stmt|;
 comment|/* Error used if we have no valid consumers. */
 name|error
 operator|=
+operator|(
+name|dr
+operator|>
+literal|0
+operator|||
+name|dw
+operator|>
+literal|0
+operator|||
+name|de
+operator|>
+literal|0
+operator|)
+condition|?
 name|ENXIO
+else|:
+literal|0
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(

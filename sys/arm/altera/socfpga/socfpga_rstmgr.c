@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -236,8 +230,6 @@ name|enable
 parameter_list|)
 block|{
 name|uint32_t
-name|addr
-decl_stmt|,
 name|paddr
 decl_stmt|;
 name|bus_addr_t
@@ -305,7 +297,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -324,20 +316,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|addr
-operator|=
-name|fdt32_to_cpu
-argument_list|(
-name|paddr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bus_space_map
 argument_list|(
 name|fdtbus_bs_tag
 argument_list|,
-name|addr
+name|paddr
 argument_list|,
 literal|0x4
 argument_list|,

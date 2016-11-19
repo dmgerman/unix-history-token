@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -1036,7 +1030,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -1061,10 +1055,7 @@ expr_stmt|;
 else|else
 name|base
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|reg
-argument_list|)
 operator|-
 name|IPU_CM_BASE
 argument_list|(

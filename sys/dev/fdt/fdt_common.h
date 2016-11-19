@@ -453,19 +453,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fdt_is_compatible
-parameter_list|(
-name|phandle_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|fdt_is_compatible_strict
 parameter_list|(
 name|phandle_t

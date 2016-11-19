@@ -4197,8 +4197,6 @@ operator|-
 name|i
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_IFNOTCACHED
 argument_list|)
 expr_stmt|;
 if|if
@@ -4339,8 +4337,6 @@ operator|+
 literal|1
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_IFNOTCACHED
 argument_list|)
 expr_stmt|;
 if|if

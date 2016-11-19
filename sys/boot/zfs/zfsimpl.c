@@ -4810,6 +4810,13 @@ name|pool_vdev
 operator|&&
 name|top_vdev
 condition|)
+block|{
+name|top_vdev
+operator|->
+name|spa
+operator|=
+name|spa
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4822,6 +4829,7 @@ argument_list|,
 name|v_childlink
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * We should already have created an incomplete vdev for this 	 * vdev. Find it and initialise it with our read proc. 	 */
 name|vdev
 operator|=

@@ -75,11 +75,22 @@ name|IER_EMSC
 value|0x8
 end_define
 
+begin_comment
+comment|/*  * Receive timeout interrupt enable.  * Implemented in Intel XScale, Ingenic XBurst.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IER_RXTMOUT
+value|0x10
+end_define
+
 begin_define
 define|#
 directive|define
 name|IER_BITS
-value|"\20\1ERXRDY\2ETXRDY\3ERLS\4EMSC"
+value|"\20\1ERXRDY\2ETXRDY\3ERLS\4EMSC\5RXTMOUT"
 end_define
 
 begin_define
@@ -803,6 +814,24 @@ directive|define
 name|FIFO_DMA_MODE
 value|FCR_DMA
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_XBURST
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FCR_UART_ON
+value|0x10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

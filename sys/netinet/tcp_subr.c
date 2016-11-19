@@ -6842,6 +6842,13 @@ literal|0
 condition|)
 block|{
 comment|/* We own the last reference on tcpcb, let's free it. */
+name|TCPSTATES_DEC
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -7020,6 +7027,13 @@ literal|0
 condition|)
 block|{
 comment|/* We own the last reference on this tcpcb, let's free it. */
+name|TCPSTATES_DEC
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -7198,11 +7212,19 @@ argument_list|(
 name|tcps_closed
 argument_list|)
 expr_stmt|;
-name|TCPSTATES_DEC
-argument_list|(
+if|if
+condition|(
 name|tp
 operator|->
 name|t_state
+operator|!=
+name|TCPS_CLOSED
+condition|)
+name|tcp_state_change
+argument_list|(
+name|tp
+argument_list|,
+name|TCPS_CLOSED
 argument_list|)
 expr_stmt|;
 name|KASSERT

@@ -148,21 +148,21 @@ begin_define
 define|#
 directive|define
 name|SMB_READB
-value|_IOW('i', 7, struct smbcmd)
+value|_IOWR('i', 7, struct smbcmd)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMB_READW
-value|_IOW('i', 8, struct smbcmd)
+value|_IOWR('i', 8, struct smbcmd)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SMB_PCALL
-value|_IOW('i', 9, struct smbcmd)
+value|_IOWR('i', 9, struct smbcmd)
 end_define
 
 begin_define
@@ -170,13 +170,6 @@ define|#
 directive|define
 name|SMB_BWRITE
 value|_IOW('i', 10, struct smbcmd)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SMB_OLD_BREAD
-value|_IOW('i', 11, struct smbcmd)
 end_define
 
 begin_define

@@ -157,12 +157,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fdt/fdt_intr.h>
 end_include
 
@@ -1660,7 +1654,7 @@ control|)
 block|{
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|iparent
 argument_list|,

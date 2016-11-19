@@ -1315,6 +1315,19 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
+literal|"{:sendfile-pages-bogus/%ju} "
+literal|"{N:pages were valid and substituted to bogus page}\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
+operator|.
+name|sf_pages_bogus
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
 literal|"{:sendfile-requested-readahead/%ju} "
 literal|"{N:pages were requested for read ahead by applications}\n"
 argument_list|,

@@ -1508,6 +1508,12 @@ name|sc_flags
 operator|&
 name|RTWN_FW_LOADED
 operator|)
+operator|||
+name|sc
+operator|->
+name|sc_ratectl
+operator|!=
+name|RTWN_RATECTL_NET80211
 condition|)
 name|rtwn_cmd_sleepable
 argument_list|(

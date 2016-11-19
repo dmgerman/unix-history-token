@@ -8099,6 +8099,16 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|pmap_load
+argument_list|(
+name|l2
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|pmap_load
 argument_list|(

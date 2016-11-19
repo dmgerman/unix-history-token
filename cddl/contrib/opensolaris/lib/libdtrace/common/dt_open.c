@@ -2623,31 +2623,6 @@ end_operator
 
 begin_block
 block|{
-literal|"printt"
-operator|,
-name|DT_IDENT_ACTFUNC
-operator|,
-literal|0
-operator|,
-name|DT_ACT_PRINTT
-operator|,
-name|DT_ATTR_STABCMN
-operator|,
-name|DT_VERS_1_0
-operator|,
-operator|&
-name|dt_idops_func
-operator|,
-literal|"void(size_t, uintptr_t *)"
-block|}
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_block
-block|{
 literal|"probefunc"
 operator|,
 name|DT_IDENT_SCALAR
@@ -3791,31 +3766,6 @@ operator|&
 name|dt_idops_func
 operator|,
 literal|"void(...)"
-block|}
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_block
-block|{
-literal|"typeref"
-operator|,
-name|DT_IDENT_FUNC
-operator|,
-literal|0
-operator|,
-name|DIF_SUBR_TYPEREF
-operator|,
-name|DT_ATTR_STABCMN
-operator|,
-name|DT_VERS_1_1
-operator|,
-operator|&
-name|dt_idops_func
-operator|,
-literal|"uintptr_t *(void *, size_t, string, size_t)"
 block|}
 end_block
 

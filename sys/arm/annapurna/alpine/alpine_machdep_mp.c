@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_cpu.h>
 end_include
 
@@ -318,7 +324,7 @@ name|reg
 parameter_list|)
 block|{
 return|return
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|child
 argument_list|,

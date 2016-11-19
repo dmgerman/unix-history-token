@@ -658,10 +658,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BOOKE
+argument_list|)
+end_elif
 
 begin_struct
 struct|struct
@@ -757,6 +761,9 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|int
+name|pv_tracked
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1139,6 +1146,19 @@ name|va
 parameter_list|,
 name|vm_size_t
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_track_page
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
 parameter_list|)
 function_decl|;
 end_function_decl

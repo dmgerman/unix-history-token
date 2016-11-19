@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * AR231x Ethernet interface driver  * copy from mips/idt/if_kr.c and netbsd code  */
+comment|/*  * AR531x Ethernet interface driver  * copy from mips/idt/if_kr.c and netbsd code  */
 end_comment
 
 begin_include
@@ -302,10 +302,6 @@ include|#
 directive|include
 file|<mips/atheros/ar531x/if_arereg.h>
 end_include
-
-begin_comment
-comment|//#define ARE_DEBUG
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1166,7 +1162,7 @@ name|are_dev
 operator|=
 name|dev
 expr_stmt|;
-comment|// hardcode macaddress
+comment|/* hardcode macaddress */
 name|sc
 operator|->
 name|are_eaddr
@@ -1221,7 +1217,7 @@ index|]
 operator|=
 literal|0x6B
 expr_stmt|;
-comment|// try to get from hints
+comment|/* try to get from hints */
 if|if
 condition|(
 operator|!
@@ -1602,6 +1598,14 @@ name|if_init
 operator|=
 name|are_init
 expr_stmt|;
+name|sc
+operator|->
+name|are_if_flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
 comment|/* XXX: add real size */
 name|IFQ_SET_MAXLEN
 argument_list|(
@@ -1629,6 +1633,13 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+comment|/* Tell the upper layer(s) we support long frames. */
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
@@ -1655,8 +1666,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* TODO: calculate prescale */
-comment|/* 	CSR_WRITE_4(sc, ARE_ETHMCP, (165000000 / (1250000 + 1))& ~1);  	CSR_WRITE_4(sc, ARE_MIIMCFG, ARE_MIIMCFG_R); 	DELAY(1000); 	CSR_WRITE_4(sc, ARE_MIIMCFG, 0); */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2280,7 +2289,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|//	AE_BARRIER(sc);
 for|for
 control|(
 name|i
@@ -2397,7 +2405,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|//	AE_BARRIER(sc);
 for|for
 control|(
 name|i
@@ -2842,7 +2849,6 @@ argument_list|,
 name|CSR_BUSMODE
 argument_list|,
 comment|/* XXX: not sure if this is a good thing or not... */
-comment|//BUSMODE_ALIGN_16B |
 name|BUSMODE_BAR
 operator||
 name|BUSMODE_BLE
@@ -3036,20 +3042,28 @@ name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|CSR_MACCTL
+name|CSR_FLOWC
 argument_list|,
-name|CSR_READ_4
+name|FLOWC_FCE
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|CSR_MACCTL
-argument_list|)
-operator||
-operator|(
+argument_list|,
 name|MACCTL_RE
 operator||
 name|MACCTL_TE
-operator|)
+operator||
+name|MACCTL_PM
+operator||
+name|MACCTL_FDX
+operator||
+name|MACCTL_HBD
+operator||
+name|MACCTL_RA
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Write out the opmode. 	 */
@@ -3063,7 +3077,8 @@ name|OPMODE_SR
 operator||
 name|OPMODE_ST
 operator||
-comment|//	    ae_txthresh[sc->sc_txthresh].txth_opmode);
+name|OPMODE_SF
+operator||
 name|OPMODE_TR_64
 argument_list|)
 expr_stmt|;
@@ -3466,7 +3481,6 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
-comment|//		desc->are_link = 0;
 comment|/* link with previous descriptor */
 if|if
 condition|(
@@ -3905,6 +3919,128 @@ end_function
 begin_function
 specifier|static
 name|int
+name|are_set_filter
+parameter_list|(
+name|struct
+name|are_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|int
+name|mchash
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|macctl
+decl_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|are_ifp
+expr_stmt|;
+name|macctl
+operator|=
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|CSR_MACCTL
+argument_list|)
+expr_stmt|;
+name|macctl
+operator|&=
+operator|~
+operator|(
+name|MACCTL_PR
+operator||
+name|MACCTL_PM
+operator|)
+expr_stmt|;
+name|macctl
+operator||=
+name|MACCTL_HBD
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+condition|)
+name|macctl
+operator||=
+name|MACCTL_PR
+expr_stmt|;
+comment|/* Todo: hash table set.  	 * But I don't know how to use multicast hash table at this soc. 	 */
+comment|/* this is allmulti */
+name|mchash
+index|[
+literal|0
+index|]
+operator|=
+name|mchash
+index|[
+literal|1
+index|]
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|macctl
+operator||=
+name|MACCTL_PM
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|CSR_HTLO
+argument_list|,
+name|mchash
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|CSR_HTHI
+argument_list|,
+name|mchash
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|CSR_MACCTL
+argument_list|,
+name|macctl
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|are_ioctl
 parameter_list|(
 name|struct
@@ -3961,12 +4097,99 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-if|#
-directive|if
+name|ARE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|^
+name|sc
+operator|->
+name|are_if_flags
+operator|)
+operator|&
+operator|(
+name|IFF_PROMISC
+operator||
+name|IFF_ALLMULTI
+operator|)
+condition|)
+name|are_set_filter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|are_detach
+operator|==
 literal|0
-block|ARE_LOCK(sc); 		if (ifp->if_flags& IFF_UP) { 			if (ifp->if_drv_flags& IFF_DRV_RUNNING) { 				if ((ifp->if_flags ^ sc->are_if_flags)& 				    (IFF_PROMISC | IFF_ALLMULTI)) 					are_set_filter(sc); 			} else { 				if (sc->are_detach == 0) 					are_init_locked(sc); 			} 		} else { 			if (ifp->if_drv_flags& IFF_DRV_RUNNING) 				are_stop(sc); 		} 		sc->are_if_flags = ifp->if_flags; 		ARE_UNLOCK(sc);
-endif|#
-directive|endif
+condition|)
+name|are_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+name|are_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|are_if_flags
+operator|=
+name|ifp
+operator|->
+name|if_flags
+expr_stmt|;
+name|ARE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -3978,12 +4201,21 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-if|#
-directive|if
-literal|0
-block|ARE_LOCK(sc); 		are_set_filter(sc); 		ARE_UNLOCK(sc);
-endif|#
-directive|endif
+name|ARE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|are_set_filter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ARE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -4051,12 +4283,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mask = ifr->ifr_reqcap ^ ifp->if_capenable; 		if ((mask& IFCAP_HWCSUM) != 0) { 			ifp->if_capenable ^= IFCAP_HWCSUM; 			if ((IFCAP_HWCSUM& ifp->if_capenable)&& 			    (IFCAP_HWCSUM& ifp->if_capabilities)) 				ifp->if_hwassist = ARE_CSUM_FEATURES; 			else 				ifp->if_hwassist = 0; 		} 		if ((mask& IFCAP_VLAN_HWTAGGING) != 0) { 			ifp->if_capenable ^= IFCAP_VLAN_HWTAGGING; 			if (IFCAP_VLAN_HWTAGGING& ifp->if_capenable&& 			    IFCAP_VLAN_HWTAGGING& ifp->if_capabilities&& 			    ifp->if_drv_flags& IFF_DRV_RUNNING) { 				ARE_LOCK(sc); 				are_vlan_setup(sc); 				ARE_UNLOCK(sc); 			} 		} 		VLAN_CAPABILITIES(ifp);
-endif|#
-directive|endif
 break|break;
 default|default:
 name|error
@@ -6169,7 +6395,7 @@ name|len
 operator|=
 name|MCLBYTES
 expr_stmt|;
-comment|// tcp header boundary margin
+comment|/* tcp header boundary margin */
 name|m_adj
 argument_list|(
 name|m
@@ -6253,9 +6479,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|// This code make bug. Make scranble on buffer data.
-comment|//		bus_dmamap_sync(sc->are_cdata.are_rx_tag, rxd->rx_dmamap,
-comment|//		    BUS_DMASYNC_POSTREAD);
+comment|/* 		 * THis is if_kr.c original code but make bug. Make scranble on buffer data. 		 * bus_dmamap_sync(sc->are_cdata.are_rx_tag, rxd->rx_dmamap, 		 *    BUS_DMASYNC_POSTREAD); 		 */
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -7210,7 +7434,6 @@ name|sc
 operator|->
 name|are_ifp
 decl_stmt|;
-comment|//kdb_break();
 name|ARE_LOCK
 argument_list|(
 name|sc

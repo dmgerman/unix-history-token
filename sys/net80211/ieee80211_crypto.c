@@ -2151,9 +2151,7 @@ comment|/*  * Validate and strip privacy headers (and trailer) for a  * received
 end_comment
 
 begin_function
-name|struct
-name|ieee80211_key
-modifier|*
+name|int
 name|ieee80211_crypto_decap
 parameter_list|(
 name|struct
@@ -2168,6 +2166,12 @@ name|m
 parameter_list|,
 name|int
 name|hdrlen
+parameter_list|,
+name|struct
+name|ieee80211_key
+modifier|*
+modifier|*
+name|key
 parameter_list|)
 block|{
 define|#
@@ -2200,6 +2204,12 @@ name|wh
 decl_stmt|;
 specifier|const
 name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+decl_stmt|;
+specifier|const
+name|struct
 name|ieee80211_cipher
 modifier|*
 name|cip
@@ -2207,6 +2217,53 @@ decl_stmt|;
 name|uint8_t
 name|keyid
 decl_stmt|;
+comment|/* 	 * Check for hardware decryption and IV stripping. 	 * If the IV is stripped then we definitely can't find a key. 	 * Set the key to NULL but return true; upper layers 	 * will need to handle a NULL key for a successful 	 * decrypt. 	 */
+name|rxs
+operator|=
+name|ieee80211_get_rx_params_ptr
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rxs
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|rxs
+operator|->
+name|c_pktflags
+operator|&
+name|IEEE80211_RX_F_DECRYPTED
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|rxs
+operator|->
+name|c_pktflags
+operator|&
+name|IEEE80211_RX_F_IV_STRIP
+condition|)
+block|{
+comment|/* 			 * Hardware decrypted, IV stripped. 			 * We can't find a key with a stripped IV. 			 * Return successful. 			 */
+operator|*
+name|key
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
 comment|/* NB: this minimum size data frame could be bigger */
 if|if
 condition|(
@@ -2244,8 +2301,15 @@ name|is_rx_tooshort
 operator|++
 expr_stmt|;
 comment|/* XXX need unique stat? */
-return|return
+operator|*
+name|key
+operator|=
 name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Locate the key. If unicast and there is no unicast 	 * key then we fall back to the key id in the header. 	 * This assumes unicast keys are only configured when 	 * the key id in the header is meaningless (typically 0). 	 */
@@ -2376,12 +2440,20 @@ name|is_rx_wepfail
 operator|++
 expr_stmt|;
 comment|/* XXX */
-return|return
+operator|*
+name|key
+operator|=
 name|NULL
-return|;
-block|}
+expr_stmt|;
 return|return
 operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Attempt decryption. 	 * 	 * If we fail then don't return the key - return NULL 	 * and an error. 	 */
+if|if
+condition|(
 name|cip
 operator|->
 name|ic_decap
@@ -2392,10 +2464,29 @@ name|m
 argument_list|,
 name|hdrlen
 argument_list|)
-condition|?
+condition|)
+block|{
+comment|/* success */
+operator|*
+name|key
+operator|=
 name|k
-else|:
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* Failure */
+operator|*
+name|key
+operator|=
 name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 undef|#

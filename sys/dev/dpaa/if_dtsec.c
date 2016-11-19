@@ -134,18 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/fdt/simplebus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/mii/mii.h>
 end_include
 
@@ -2213,9 +2201,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|XX_TrackInit
-argument_list|()
-expr_stmt|;
 comment|/* Init locks */
 name|mtx_init
 argument_list|(

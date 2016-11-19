@@ -1022,7 +1022,7 @@ if|if
 condition|(
 name|rst
 operator|&
-name|BMCA_DMP_RC_RESET
+name|BCMA_DMP_RC_RESET
 condition|)
 return|return
 operator|(
@@ -1381,7 +1381,7 @@ if|if
 condition|(
 name|rst
 operator|&
-name|BMCA_DMP_RC_RESET
+name|BCMA_DMP_RC_RESET
 condition|)
 return|return
 operator|(
@@ -1400,7 +1400,7 @@ name|child
 argument_list|,
 name|dinfo
 argument_list|,
-name|BMCA_DMP_RC_RESET
+name|BCMA_DMP_RC_RESET
 argument_list|)
 operator|)
 condition|)

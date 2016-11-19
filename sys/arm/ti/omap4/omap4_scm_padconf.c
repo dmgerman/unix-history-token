@@ -5677,7 +5677,7 @@ begin_decl_stmt
 specifier|const
 name|struct
 name|ti_pinmux_device
-name|ti_pinmux_dev
+name|omap4_pinmux_dev
 init|=
 block|{
 operator|.

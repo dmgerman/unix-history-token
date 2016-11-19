@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1997 Christopher G. Demetriou.  All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * crunchide.c - tiptoes through an a.out symbol table, hiding all defined  *	global symbols.  Allows the user to supply a "keep list" of symbols  *	that are not to be hidden.  This program relies on the use of the  * 	linker's -dc flag to actually put global bss data into the file's  * 	bss segment (rather than leaving it as undefined "common" data).  *  * 	The point of all this is to allow multiple programs to be linked  *	together without getting multiple-defined errors.  *  *	For example, consider a program "foo.c".  It can be linked with a  *	small stub routine, called "foostub.c", eg:  *	    int foo_main(int argc, char **argv){ return main(argc, argv); }  *      like so:  *	    cc -c foo.c foostub.c  *	    ld -dc -r foo.o foostub.o -o foo.combined.o  *	    crunchide -k _foo_main foo.combined.o  *	at this point, foo.combined.o can be linked with another program  * 	and invoked with "foo_main(argc, argv)".  foo's main() and any  * 	other globals are hidden and will not conflict with other symbols.  *  * TODO:  *	- resolve the theoretical hanging reloc problem (see check_reloc()  *	  below). I have yet to see this problem actually occur in any real  *	  program. In what cases will gcc/gas generate code that needs a  *	  relative reloc from a global symbol, other than PIC?  The  *	  solution is to not hide the symbol from the linker in this case,  *	  but to generate some random name for it so that it doesn't link  *	  with anything but holds the place for the reloc.  *      - arrange that all the BSS segments start at the same address, so  *	  that the final crunched binary BSS size is the max of all the  *	  component programs' BSS sizes, rather than their sum.  */
+comment|/*  * crunchide.c - tiptoes through a symbol table, hiding all defined  *	global symbols.  Allows the user to supply a "keep list" of symbols  *	that are not to be hidden.  This program relies on the use of the  * 	linker's -dc flag to actually put global bss data into the file's  * 	bss segment (rather than leaving it as undefined "common" data).  *  * 	The point of all this is to allow multiple programs to be linked  *	together without getting multiple-defined errors.  *  *	For example, consider a program "foo.c".  It can be linked with a  *	small stub routine, called "foostub.c", eg:  *	    int foo_main(int argc, char **argv){ return main(argc, argv); }  *      like so:  *	    cc -c foo.c foostub.c  *	    ld -dc -r foo.o foostub.o -o foo.combined.o  *	    crunchide -k _foo_main foo.combined.o  *	at this point, foo.combined.o can be linked with another program  * 	and invoked with "foo_main(argc, argv)".  foo's main() and any  * 	other globals are hidden and will not conflict with other symbols.  *  * TODO:  *	- resolve the theoretical hanging reloc problem (see check_reloc()  *	  below). I have yet to see this problem actually occur in any real  *	  program. In what cases will gcc/gas generate code that needs a  *	  relative reloc from a global symbol, other than PIC?  The  *	  solution is to not hide the symbol from the linker in this case,  *	  but to generate some random name for it so that it doesn't link  *	  with anything but holds the place for the reloc.  *      - arrange that all the BSS segments start at the same address, so  *	  that the final crunched binary BSS size is the max of all the  *	  component programs' BSS sizes, rather than their sum.  */
 end_comment
 
 begin_include
@@ -90,12 +90,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
 end_include
 
 begin_include

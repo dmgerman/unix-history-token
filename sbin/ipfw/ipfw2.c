@@ -15182,11 +15182,11 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fill_table
 parameter_list|(
-name|ipfw_insn
+name|struct
+name|_ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
@@ -19083,6 +19083,8 @@ argument_list|,
 name|av
 argument_list|,
 name|cblen
+argument_list|,
+name|tstate
 argument_list|)
 expr_stmt|;
 comment|/* XXX: should check for IPv4, not !IPv6 */
@@ -19305,6 +19307,8 @@ argument_list|,
 name|av
 argument_list|,
 name|cblen
+argument_list|,
+name|tstate
 argument_list|)
 expr_stmt|;
 comment|/* XXX: should check for IPv4, not !IPv6 */
@@ -24127,6 +24131,8 @@ operator|*
 name|av
 argument_list|,
 name|cblen
+argument_list|,
+name|tstate
 argument_list|)
 condition|)
 block|{
@@ -24153,6 +24159,8 @@ operator|*
 name|av
 argument_list|,
 name|cblen
+argument_list|,
+name|tstate
 argument_list|)
 condition|)
 block|{

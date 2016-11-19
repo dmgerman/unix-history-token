@@ -77,6 +77,12 @@ directive|include
 file|<arm/ti/omap4/omap4_reg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/ti/omap4/pandaboard/pandaboard.h>
+end_include
+
 begin_comment
 comment|/* Registers in the SCRM that control the AUX clocks */
 end_comment
@@ -236,9 +242,8 @@ comment|/**  *	usb_hub_init - initialises and resets the external USB hub  *	  *
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|usb_hub_init
+name|pandaboard_usb_hub_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -541,44 +546,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/**  *	board_init - initialises the pandaboard  *	@dummy: ignored  *   *	This function is called before any of the driver are initialised, which is  *	annoying because it means we can't use the SCM, PRCM and GPIO modules which  *	would really be useful.  *  *	So we don't have:  *	   - any drivers  *	   - no interrupts  *  *	What we do have:  *	   - virt/phys mappings from the devmap (see omap4.c)  *	   -   *  *  *	So we are hamstrung without the useful drivers and we have to go back to  *	direct register manupulation. Luckly we don't have to do to much, basically  *	just setup the usb hub/ethernet.  *  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|board_init
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-parameter_list|)
-block|{
-comment|/* Initialise the USB phy and hub */
-name|usb_hub_init
-argument_list|()
-expr_stmt|;
-comment|/* 	 * XXX Board identification e.g. read out from FPGA or similar should 	 * go here 	 */
-block|}
-end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|board_init
-argument_list|,
-name|SI_SUB_CPU
-argument_list|,
-name|SI_ORDER_THIRD
-argument_list|,
-name|board_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 

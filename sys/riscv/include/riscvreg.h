@@ -172,13 +172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSTATUS_FS_MASK
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
 name|SSTATUS_FS_SHIFT
 value|13
 end_define
@@ -186,8 +179,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSTATUS_XS_MASK
-value|0x3
+name|SSTATUS_FS_OFF
+value|(0x0<< SSTATUS_FS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_INITIAL
+value|(0x1<< SSTATUS_FS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_CLEAN
+value|(0x2<< SSTATUS_FS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_DIRTY
+value|(0x3<< SSTATUS_FS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_FS_MASK
+value|(0x3<< SSTATUS_FS_SHIFT)
 end_define
 
 begin_define
@@ -195,6 +216,13 @@ define|#
 directive|define
 name|SSTATUS_XS_SHIFT
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSTATUS_XS_MASK
+value|(0x3<< SSTATUS_XS_SHIFT)
 end_define
 
 begin_define

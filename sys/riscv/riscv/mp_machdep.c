@@ -140,23 +140,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VFP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/vfp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|FDT
 end_ifdef
 
@@ -895,12 +878,6 @@ comment|/* Start per-CPU event timers. */
 name|cpu_initclocks_ap
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFP
-comment|/* TODO: init FPU */
-endif|#
-directive|endif
 comment|/* Enable interrupts */
 name|intr_enable
 argument_list|()

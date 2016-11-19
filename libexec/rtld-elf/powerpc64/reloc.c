@@ -2171,6 +2171,21 @@ end_function
 
 begin_function
 name|void
+name|ifunc_init
+parameter_list|(
+name|Elf_Auxinfo
+name|aux_info
+index|[
+specifier|static
+name|AT_COUNT
+index|]
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|allocate_initial_tls
 parameter_list|(
 name|Obj_Entry

@@ -144,12 +144,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/gpio/gpiobusvar.h>
 end_include
 
@@ -2349,6 +2343,14 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_busdev
+operator|!=
+name|NULL
+condition|)
 name|gpiobus_detach_bus
 argument_list|(
 name|dev
@@ -2389,6 +2391,12 @@ name|sc_irq_hdl
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_irq_res
+condition|)
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -2404,6 +2412,12 @@ operator|->
 name|sc_irq_res
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mem_res
+condition|)
 name|bus_release_resource
 argument_list|(
 name|dev

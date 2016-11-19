@@ -992,17 +992,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_CACHED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* page is cached */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_FICTITIOUS
 value|0x0004
 end_define
@@ -1247,28 +1236,6 @@ end_define
 
 begin_comment
 comment|/* (acg) Do not busy the page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_ALLOC_IFCACHED
-value|0x0400
-end_define
-
-begin_comment
-comment|/* (ag) Fail if page is not cached */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_ALLOC_IFNOTCACHED
-value|0x0800
-end_define
-
-begin_comment
-comment|/* (ag) Fail if page is cached */
 end_comment
 
 begin_define
@@ -1601,32 +1568,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_page_cache_free
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_cache_transfer
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_object_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_page_try_to_free
 parameter_list|(
@@ -1722,19 +1663,6 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|boolean_t
-name|vm_page_is_cached
-parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|,
-name|vm_pindex_t
-name|pindex
 parameter_list|)
 function_decl|;
 end_function_decl

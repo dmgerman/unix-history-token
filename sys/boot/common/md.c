@@ -206,7 +206,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|md_print
 parameter_list|(
 name|int
@@ -546,7 +546,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|md_print
 parameter_list|(
 name|int
@@ -555,11 +555,42 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"MD (%u bytes)\n"
+literal|"%s devices:"
+argument_list|,
+name|md_dev
+operator|.
+name|dv_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pager_output
+argument_list|(
+literal|"\n"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|printf
+argument_list|(
+literal|"MD (%u bytes)"
 argument_list|,
 name|MD_IMAGE_SIZE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|pager_output
+argument_list|(
+literal|"\n"
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

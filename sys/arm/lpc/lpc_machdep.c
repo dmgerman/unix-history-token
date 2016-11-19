@@ -107,12 +107,6 @@ directive|include
 file|<arm/lpc/lpcvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
 begin_function
 name|vm_offset_t
 name|platform_lastaddr

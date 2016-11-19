@@ -1402,7 +1402,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BMCA_DMP_RC_RESET
+name|BCMA_DMP_RC_RESET
 value|0x00000001
 end_define
 

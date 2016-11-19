@@ -27,6 +27,15 @@ directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|vunmap
+parameter_list|(
+name|handle
+parameter_list|)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -59,15 +68,6 @@ name|NULL
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|vunmap
-parameter_list|(
-name|handle
-parameter_list|)
-end_define
 
 begin_comment
 comment|/** Wrapper around agp_free_memory() */

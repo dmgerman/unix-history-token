@@ -162,11 +162,6 @@ argument_list|)
 name|rvq
 expr_stmt|;
 comment|/* list of reservations */
-name|struct
-name|vm_radix
-name|cache
-decl_stmt|;
-comment|/* (o + f) root of the cache page radix trie */
 name|void
 modifier|*
 name|handle
@@ -858,30 +853,6 @@ name|waitid
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|boolean_t
-name|vm_object_cache_is_empty
-parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vm_radix_is_empty
-argument_list|(
-operator|&
-name|object
-operator|->
-name|cache
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function_decl
 name|void

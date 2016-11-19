@@ -6483,6 +6483,15 @@ operator|->
 name|ic_curchan
 argument_list|)
 operator|&&
+operator|(
+operator|(
+name|vap
+operator|->
+name|iv_flags_ext
+operator|&
+name|IEEE80211_FEXT_SCAN_OFFLOAD
+operator|)
+operator|||
 name|ieee80211_time_after
 argument_list|(
 name|ticks
@@ -6495,6 +6504,7 @@ name|vap
 operator|->
 name|iv_bgscanidle
 argument_list|)
+operator|)
 condition|)
 name|ieee80211_bg_scan
 argument_list|(

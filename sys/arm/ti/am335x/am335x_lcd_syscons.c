@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -1729,7 +1723,7 @@ control|)
 block|{
 if|if
 condition|(
-name|fdt_is_compatible
+name|ofw_bus_node_is_compatible
 argument_list|(
 name|child
 argument_list|,
@@ -1845,7 +1839,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|display
 argument_list|,
@@ -1867,18 +1861,12 @@ name|va_sc
 operator|->
 name|width
 operator|=
-operator|(
-name|int
-operator|)
-name|fdt32_to_cpu
-argument_list|(
 name|cell
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|display
 argument_list|,
@@ -1900,13 +1888,7 @@ name|va_sc
 operator|->
 name|height
 operator|=
-operator|(
-name|int
-operator|)
-name|fdt32_to_cpu
-argument_list|(
 name|cell
-argument_list|)
 expr_stmt|;
 block|}
 if|if

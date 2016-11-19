@@ -1712,41 +1712,6 @@ begin_comment
 comment|/* end of xx_id group */
 end_comment
 
-begin_comment
-comment|/** FreeBSD Specific additions. */
-end_comment
-
-begin_function_decl
-name|void
-name|XX_TrackInit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|physAddress_t
-name|XX_TrackAddress
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|XX_UntrackAddress
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

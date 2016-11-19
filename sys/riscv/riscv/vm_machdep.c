@@ -295,21 +295,22 @@ expr_stmt|;
 name|tf
 operator|->
 name|tf_sstatus
-operator|=
+operator||=
 operator|(
 name|SSTATUS_SPIE
 operator|)
 expr_stmt|;
+comment|/* Enable interrupts. */
 name|tf
 operator|->
 name|tf_sstatus
-operator||=
+operator|&=
+operator|~
 operator|(
-name|MSTATUS_PRV_U
-operator|<<
-name|MSTATUS_SPP_SHIFT
+name|SSTATUS_SPP
 operator|)
 expr_stmt|;
+comment|/* User mode. */
 name|td2
 operator|->
 name|td_frame

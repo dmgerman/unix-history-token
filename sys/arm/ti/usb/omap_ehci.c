@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
+file|<dev/fdt/simplebus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/fdt/simplebus.h>
+file|<dev/fdt/fdt_common.h>
 end_include
 
 begin_include
@@ -159,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<arm/ti/usb/omap_usb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/ti/omap4/pandaboard/pandaboard.h>
 end_include
 
 begin_comment
@@ -958,12 +964,45 @@ name|isc
 operator|->
 name|base
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SOC_OMAP4
+name|phandle_t
+name|root
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|err
 decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SOC_OMAP4
+comment|/*  	 * If we're running a Pandaboard, run Pandaboard-specific  	 * init code. 	 */
+name|root
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ofw_bus_node_is_compatible
+argument_list|(
+name|root
+argument_list|,
+literal|"ti,omap4-panda"
+argument_list|)
+condition|)
+name|pandaboard_usb_hub_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* initialise some bus fields */
 name|sc
 operator|->

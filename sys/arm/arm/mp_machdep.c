@@ -208,12 +208,6 @@ directive|include
 file|<arm/mv/mvwin.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif

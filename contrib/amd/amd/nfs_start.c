@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/nfs_start.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/nfs_start.c  *  */
 end_comment
 
 begin_ifdef
@@ -126,7 +126,7 @@ name|char
 modifier|*
 name|max_mem
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|next_fd
@@ -426,13 +426,13 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|tvp
 operator|->
@@ -445,7 +445,7 @@ expr|struct
 name|timeval
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -567,13 +567,13 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|tvv
@@ -1180,7 +1180,12 @@ argument_list|,
 operator|&
 name|nfsxprt
 argument_list|,
-name|nfs_program_2
+name|nfs_dispatcher
+argument_list|,
+name|get_nfs_dispatcher_version
+argument_list|(
+name|nfs_dispatcher
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1215,10 +1220,9 @@ argument_list|,
 name|nfs_port
 argument_list|)
 expr_stmt|;
-comment|/* security: if user sets -D amq, don't even create listening socket */
+comment|/* security: if user sets -D noamq, don't even create listening socket */
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_AMQ
@@ -1342,7 +1346,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_AMQ
@@ -1350,10 +1353,20 @@ argument_list|)
 condition|)
 block|{
 comment|/*      * Complete registration of amq (first TCP service then UDP)      */
+name|int
+name|tcp_ok
+init|=
+literal|0
+decl_stmt|,
+name|udp_ok
+init|=
+literal|0
+decl_stmt|;
 name|unregister_amq
 argument_list|()
 expr_stmt|;
-name|ret
+comment|/* unregister leftover Amd, if any, just in case */
+name|tcp_ok
 operator|=
 name|amu_svc_register
 argument_list|(
@@ -1373,26 +1386,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|1
+operator|!
+name|tcp_ok
 condition|)
-block|{
 name|plog
 argument_list|(
 name|XLOG_FATAL
 argument_list|,
-literal|"unable to register (AMQ_PROGRAM=%d, AMQ_VERSION, tcp)"
+literal|"unable to register (AMQ_PROGRAM=%lu, AMQ_VERSION, tcp)"
 argument_list|,
 name|get_amd_program_number
 argument_list|()
 argument_list|)
 expr_stmt|;
-return|return
-literal|3
-return|;
-block|}
-name|ret
+name|udp_ok
 operator|=
 name|amu_svc_register
 argument_list|(
@@ -1412,23 +1419,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|!=
-literal|1
+operator|!
+name|udp_ok
 condition|)
-block|{
 name|plog
 argument_list|(
 name|XLOG_FATAL
 argument_list|,
-literal|"unable to register (AMQ_PROGRAM=%d, AMQ_VERSION, udp)"
+literal|"unable to register (AMQ_PROGRAM=%lu, AMQ_VERSION, udp)"
 argument_list|,
 name|get_amd_program_number
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|/* return error only if both failed */
+if|if
+condition|(
+operator|!
+name|tcp_ok
+operator|&&
+operator|!
+name|udp_ok
+condition|)
+block|{
+name|amd_state
+operator|=
+name|Done
+expr_stmt|;
 return|return
-literal|4
+literal|3
 return|;
 block|}
 block|}
