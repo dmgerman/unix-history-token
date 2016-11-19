@@ -1762,7 +1762,7 @@ init|=
 literal|0x80
 block|,
 comment|/* 0xC0-0xFF - vendor specific */
-comment|/*  * The following are Intel Specific log pages, but they seem to  * be widely implemented.  */
+comment|/* 	 * The following are Intel Specific log pages, but they seem 	 * to be widely implemented. 	 */
 name|INTEL_LOG_READ_LAT_LOG
 init|=
 literal|0xc1
@@ -1782,7 +1782,12 @@ block|,
 name|INTEL_LOG_DRIVE_MKT_NAME
 init|=
 literal|0xdd
-block|,  }
+block|,
+comment|/* 	 * HGST log page, with lots ofs sub pages. 	 */
+name|HGST_INFO_LOG
+init|=
+literal|0xc1
+block|, }
 enum|;
 end_enum
 
