@@ -1747,8 +1747,19 @@ name|NVME_LOG_FIRMWARE_SLOT
 init|=
 literal|0x03
 block|,
-comment|/* 0x04-0x7F - reserved */
+name|NVME_LOG_CHANGED_NAMESPACE
+init|=
+literal|0x04
+block|,
+name|NVME_LOG_COMMAND_EFFECT
+init|=
+literal|0x05
+block|,
+comment|/* 0x06-0x7F - reserved */
 comment|/* 0x80-0xBF - I/O command set specific */
+name|NVME_LOG_RES_NOTIFICATION
+init|=
+literal|0x80
 comment|/* 0xC0-0xFF - vendor specific */
 block|}
 enum|;
