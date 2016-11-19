@@ -266,6 +266,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIPS_PRID_CID_INGENIC
+value|0xe1
+end_define
+
+begin_comment
+comment|/* Ingenic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_PRID_CID_INGENIC2
+value|0xd1
+end_define
+
+begin_comment
+comment|/* Ingenic */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIPS_PRID_COPTS
 parameter_list|(
 name|x
