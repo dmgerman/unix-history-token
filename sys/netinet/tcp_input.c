@@ -9528,13 +9528,6 @@ name|ECONNRESET
 expr_stmt|;
 name|close
 label|:
-name|tcp_state_change
-argument_list|(
-name|tp
-argument_list|,
-name|TCPS_CLOSED
-argument_list|)
-expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
 name|tp
