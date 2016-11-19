@@ -258,6 +258,20 @@ name|mips_pdcache_linesize
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|mips_sdcache_linesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mips_dcache_max_linesize
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

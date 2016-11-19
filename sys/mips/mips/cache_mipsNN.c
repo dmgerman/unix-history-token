@@ -293,6 +293,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|mips_sdcache_linesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mips_dcache_max_linesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|picache_size
@@ -646,6 +658,23 @@ name|dc_nways
 operator|-
 literal|1
 expr_stmt|;
+name|mips_sdcache_linesize
+operator|=
+name|cpuinfo
+operator|->
+name|l2
+operator|.
+name|dc_linesize
+expr_stmt|;
+name|mips_dcache_max_linesize
+operator|=
+name|MAX
+argument_list|(
+name|mips_pdcache_linesize
+argument_list|,
+name|mips_sdcache_linesize
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|CACHE_DEBUG
@@ -694,6 +723,13 @@ argument_list|(
 literal|"  pdcache_loopcount = %d\n"
 argument_list|,
 name|pdcache_loopcount
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  max line size     = %d\n"
+argument_list|,
+name|mips_dcache_max_linesize
 argument_list|)
 expr_stmt|;
 endif|#
