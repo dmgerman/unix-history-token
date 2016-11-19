@@ -266,18 +266,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|_ti_chip
-operator|!=
-operator|-
-literal|1
-argument_list|,
-operator|(
-literal|"Can't determine TI Chip"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 name|_ti_chip
 return|;
