@@ -916,7 +916,7 @@ name|busdma_bufalloc_create
 argument_list|(
 literal|"buffer"
 argument_list|,
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 argument_list|,
 comment|/* minimum_alignment */
 name|NULL
@@ -936,7 +936,7 @@ name|busdma_bufalloc_create
 argument_list|(
 literal|"coherent"
 argument_list|,
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 argument_list|,
 comment|/* minimum_alignment */
 name|busdma_bufalloc_alloc_uncacheable
@@ -4766,12 +4766,12 @@ block|{
 name|char
 name|tmp_cl
 index|[
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 index|]
 decl_stmt|,
 name|tmp_clend
 index|[
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 index|]
 decl_stmt|;
 name|vm_offset_t
@@ -4787,7 +4787,7 @@ decl_stmt|;
 name|int
 name|cache_linesize_mask
 init|=
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 operator|-
 literal|1
 decl_stmt|;
@@ -4830,7 +4830,7 @@ expr_stmt|;
 name|size_clend
 operator|=
 operator|(
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 operator|-
 operator|(
 name|buf_clend
@@ -4957,7 +4957,7 @@ name|buf_clend
 operator|-
 name|buf_cl
 operator|>
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 operator|)
 condition|)
 name|mips_dcache_wbinv_range
@@ -5086,7 +5086,7 @@ name|buf_clend
 operator|-
 name|buf_cl
 operator|>
-name|mips_pdcache_linesize
+name|mips_dcache_max_linesize
 operator|)
 condition|)
 name|mips_dcache_wbinv_range
