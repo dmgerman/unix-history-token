@@ -1055,7 +1055,14 @@ condition|(
 name|smbios
 operator|.
 name|major
-operator|>=
+operator|>
+literal|2
+operator|||
+operator|(
+name|smbios
+operator|.
+name|major
+operator|==
 literal|2
 operator|&&
 name|smbios
@@ -1063,6 +1070,7 @@ operator|.
 name|minor
 operator|>=
 literal|4
+operator|)
 condition|)
 block|{
 name|smbios_setenv
