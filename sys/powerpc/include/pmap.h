@@ -73,6 +73,21 @@ directive|include
 file|<machine/tlb.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pmap
+modifier|*
+name|pmap_t
+typedef|;
+end_typedef
+
 begin_if
 if|#
 directive|if
@@ -113,21 +128,6 @@ struct_decl|struct
 name|slbtnode
 struct_decl|;
 end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|pmap
-struct_decl|;
-end_struct_decl
-
-begin_typedef
-typedef|typedef
-name|struct
-name|pmap
-modifier|*
-name|pmap_t
-typedef|;
-end_typedef
 
 begin_struct
 struct|struct
@@ -418,6 +418,10 @@ struct|struct
 name|pmap
 block|{
 name|struct
+name|pmap_statistics
+name|pm_stats
+decl_stmt|;
+name|struct
 name|mtx
 name|pm_mtx
 decl_stmt|;
@@ -455,10 +459,6 @@ name|struct
 name|pmap
 modifier|*
 name|pmap_phys
-decl_stmt|;
-name|struct
-name|pmap_statistics
-name|pm_stats
 decl_stmt|;
 name|struct
 name|pvo_tree
@@ -672,6 +672,11 @@ struct|struct
 name|pmap
 block|{
 name|struct
+name|pmap_statistics
+name|pm_stats
+decl_stmt|;
+comment|/* pmap statistics */
+name|struct
 name|mtx
 name|pm_mtx
 decl_stmt|;
@@ -687,11 +692,6 @@ name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
-name|struct
-name|pmap_statistics
-name|pm_stats
-decl_stmt|;
-comment|/* pmap statistics */
 comment|/* Page table directory, array of pointers to page tables. */
 name|pte_t
 modifier|*
@@ -711,15 +711,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|pmap
-modifier|*
-name|pmap_t
-typedef|;
-end_typedef
 
 begin_struct
 struct|struct
@@ -787,6 +778,33 @@ name|m
 parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Common pmap members between AIM and BOOKE.  * libkvm needs pm_stats at the same location between both, as it doesn't define  * AIM nor BOOKE, and is expected to work across all.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmap
+block|{
+name|struct
+name|pmap_statistics
+name|pm_stats
+decl_stmt|;
+comment|/* pmap statistics */
+name|struct
+name|mtx
+name|pm_mtx
+decl_stmt|;
+comment|/* pmap mutex */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
