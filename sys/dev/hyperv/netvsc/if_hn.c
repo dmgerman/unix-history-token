@@ -3018,7 +3018,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12094,7 +12094,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12218,7 +12218,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12584,7 +12584,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12658,7 +12658,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12751,7 +12751,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12825,7 +12825,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_rx_ring_inuse
+name|hn_rx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12913,7 +12913,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -12987,7 +12987,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -13131,7 +13131,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
@@ -17633,7 +17633,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|hn_tx_ring_inuse
+name|hn_tx_ring_cnt
 condition|;
 operator|++
 name|i
