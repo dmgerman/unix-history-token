@@ -41,6 +41,9 @@ name|uart_class
 modifier|*
 name|clas
 decl_stmt|;
+name|uint16_t
+name|port_subtype
+decl_stmt|;
 block|}
 struct|;
 end_struct
