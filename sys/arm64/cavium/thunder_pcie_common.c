@@ -152,6 +152,23 @@ directive|include
 file|<dev/pci/pci_host_generic.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pci_host_generic_fdt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
