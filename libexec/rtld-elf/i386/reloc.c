@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/segments.h>
 end_include
 
@@ -1824,17 +1818,81 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
-name|ifunc_init
-parameter_list|(
-name|Elf_Auxinfo
-name|aux_info
-index|[
 specifier|static
-name|AT_COUNT
-index|]
-name|__unused
+name|void
+name|rtld_cpuid_count
+parameter_list|(
+name|int
+name|idx
+parameter_list|,
+name|int
+name|cnt
+parameter_list|,
+name|u_int
+modifier|*
+name|p
 parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	pushl	%%ebx\n"
+literal|"	cpuid\n"
+literal|"	movl	%%ebx,%1\n"
+literal|"	popl	%%ebx\n"
+operator|:
+literal|"=a"
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|p
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"=d"
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|)
+operator|:
+literal|"0"
+operator|(
+name|idx
+operator|)
+operator|,
+literal|"2"
+operator|(
+name|cnt
+operator|)
+block|)
+function|;
+end_function
+
+begin_macro
+unit|}  void
+name|ifunc_init
+argument_list|(
+argument|Elf_Auxinfo aux_info[__min_size(AT_COUNT)] __unused
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|u_int
 name|p
@@ -1873,8 +1931,11 @@ literal|"eax"
 operator|,
 literal|"ecx"
 block|)
-function|;
-end_function
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_if
 if|if
@@ -1886,9 +1947,11 @@ return|return;
 end_if
 
 begin_expr_stmt
-name|do_cpuid
+name|rtld_cpuid_count
 argument_list|(
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 name|p
 argument_list|)
@@ -1916,8 +1979,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|do_cpuid
+name|rtld_cpuid_count
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|,
 name|p
@@ -1943,7 +2008,7 @@ operator|>=
 literal|7
 condition|)
 block|{
-name|cpuid_count
+name|rtld_cpuid_count
 argument_list|(
 literal|7
 argument_list|,
