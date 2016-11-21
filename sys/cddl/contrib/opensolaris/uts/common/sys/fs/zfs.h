@@ -2318,6 +2318,8 @@ name|ZFS_IOC_GET_BOOKMARKS
 block|,
 name|ZFS_IOC_DESTROY_BOOKMARKS
 block|,
+name|ZFS_IOC_NEXTBOOT
+block|,
 name|ZFS_IOC_LAST
 block|}
 name|zfs_ioc_t

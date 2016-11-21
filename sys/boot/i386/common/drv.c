@@ -470,11 +470,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|GPT
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ZFS
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -631,7 +639,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GPT */
+comment|/* GPT || ZFS */
 end_comment
 
 end_unit
