@@ -420,6 +420,22 @@ comment|/*								      */
 end_comment
 
 begin_comment
+comment|/*  2016/05/08							      */
+end_comment
+
+begin_comment
+comment|/*    [Fix]    C-DEX JST2000                                          */
+end_comment
+
+begin_comment
+comment|/*             Thanks to Mr. Kuramatsu for the report and the patch.  */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
 comment|/**********************************************************************/
 end_comment
 
@@ -6794,14 +6810,14 @@ return|return
 name|JJY_RECEIVE_ERROR
 return|;
 block|}
-comment|/* JYYMMDD HHMMSSS */
+comment|/* JYYMMDDWHHMMSSS */
 name|rc
 operator|=
 name|sscanf
 argument_list|(
 name|pBuf
 argument_list|,
-literal|"J%2d%2d%2d %2d%2d%2d%1d"
+literal|"J%2d%2d%2d%*1d%2d%2d%2d%1d"
 argument_list|,
 operator|&
 name|up

@@ -293,7 +293,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|monitor
+name|audiomonitor
 init|=
 name|SOUND_MIXER_WRITE_VOLUME
 decl_stmt|;
@@ -1688,7 +1688,7 @@ name|i
 operator|>=
 literal|0
 condition|)
-name|monitor
+name|audiomonitor
 operator|=
 name|MIXER_WRITE
 argument_list|(
@@ -2034,7 +2034,7 @@ name|ioctl
 argument_list|(
 name|ctl_fd
 argument_list|,
-name|monitor
+name|audiomonitor
 argument_list|,
 operator|&
 name|l

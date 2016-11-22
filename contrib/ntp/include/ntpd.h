@@ -3808,6 +3808,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_char
+name|sys_bcpollbstep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* broadcast poll backstep gate */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|u_long
 name|sys_epoch
 decl_stmt|;

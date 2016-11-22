@@ -62,6 +62,12 @@ directive|include
 file|"openssl/evp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libssl_compat.h"
+end_include
+
 begin_function_decl
 name|void
 name|atexit_ssl_cleanup
@@ -255,9 +261,6 @@ name|char
 modifier|*
 name|pch
 decl_stmt|;
-name|EVP_MD_CTX
-name|ctx
-decl_stmt|;
 comment|/* 	 * OpenSSL digest short names are capitalized, so uppercase the 	 * digest name before passing to OBJ_sn2nid().  If it is not 	 * recognized but begins with 'M' use NID_md5 to be consistent 	 * with past behavior. 	 */
 name|INIT_SSL
 argument_list|()
@@ -362,9 +365,17 @@ block|{
 ifdef|#
 directive|ifdef
 name|OPENSSL
+name|EVP_MD_CTX
+modifier|*
+name|ctx
+decl_stmt|;
+name|ctx
+operator|=
+name|EVP_MD_CTX_new
+argument_list|()
+expr_stmt|;
 name|EVP_DigestInit
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|EVP_get_digestbynid
@@ -375,13 +386,17 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestFinal
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|digest
 argument_list|,
 operator|&
 name|digest_len
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_free
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 if|if

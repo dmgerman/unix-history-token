@@ -1447,9 +1447,6 @@ operator|(
 name|ISC_R_MASKNONCONTIG
 operator|)
 return|;
-name|i
-operator|++
-expr_stmt|;
 block|}
 operator|*
 name|lenp
