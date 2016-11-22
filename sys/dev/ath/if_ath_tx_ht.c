@@ -1502,6 +1502,7 @@ name|ic_htcaps
 operator|&
 name|IEEE80211_HTCAP_TXSTBC
 operator|&&
+operator|(
 name|ni
 operator|->
 name|ni_vap
@@ -1509,12 +1510,15 @@ operator|->
 name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_STBC_TX
+operator|)
 operator|&&
+operator|(
 name|ni
 operator|->
 name|ni_htcap
 operator|&
-name|IEEE80211_HTCAP_RXSTBC_1STREAM
+name|IEEE80211_HTCAP_RXSTBC
+operator|)
 operator|&&
 operator|(
 name|sc
@@ -1813,6 +1817,15 @@ name|uint16_t
 name|pktlen
 parameter_list|)
 block|{
+define|#
+directive|define
+name|MS
+parameter_list|(
+name|_v
+parameter_list|,
+name|_f
+parameter_list|)
+value|(((_v)& _f)>> _f##_S)
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -1851,6 +1864,10 @@ name|int
 name|mpdudensity
 decl_stmt|;
 comment|/* in 1/100'th of a microsecond */
+name|int
+name|peer_mpdudensity
+decl_stmt|;
+comment|/* net80211 value */
 name|uint8_t
 name|rc
 decl_stmt|,
@@ -1871,12 +1888,37 @@ decl_stmt|;
 name|uint16_t
 name|minlen
 decl_stmt|;
-comment|/* 	 * vap->iv_ampdu_density is a value, rather than the actual 	 * density. 	 */
+comment|/* 	 * Get the advertised density from the node. 	 */
+name|peer_mpdudensity
+operator|=
+name|MS
+argument_list|(
+name|ni
+operator|->
+name|ni_htparam
+argument_list|,
+name|IEEE80211_HTCAP_MPDUDENSITY
+argument_list|)
+expr_stmt|;
+comment|/* 	 * vap->iv_ampdu_density is a net80211 value, rather than the actual 	 * density.  Larger values are longer A-MPDU density spacing values, 	 * and we want to obey larger configured / negotiated density values 	 * per station if we get it. 	 */
 if|if
 condition|(
 name|vap
 operator|->
 name|iv_ampdu_density
+operator|>
+name|peer_mpdudensity
+condition|)
+name|peer_mpdudensity
+operator|=
+name|vap
+operator|->
+name|iv_ampdu_density
+expr_stmt|;
+comment|/* 	 * Convert the A-MPDU density net80211 value to a 1/100 microsecond 	 * value for subsequent calculations. 	 */
+if|if
+condition|(
+name|peer_mpdudensity
 operator|>
 name|IEEE80211_HTCAP_MPDUDENSITY_16
 condition|)
@@ -1890,9 +1932,7 @@ name|mpdudensity
 operator|=
 name|ieee80211_mpdudensity_map
 index|[
-name|vap
-operator|->
-name|iv_ampdu_density
+name|peer_mpdudensity
 index|]
 expr_stmt|;
 comment|/* Select standard number of delimiters based on frame length */
@@ -2149,11 +2189,14 @@ expr_stmt|;
 return|return
 name|ndelim
 return|;
+undef|#
+directive|undef
+name|MS
 block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch the aggregation limit.  *  * It's the lowest of the four rate series 4ms frame length.  */
+comment|/*  * Fetch the aggregation limit.  *  * It's the lowest of the four rate series 4ms frame length.  *  * Also take into account the hardware specific limits (8KiB on AR5416)  * and per-peer limits in non-STA mode.  */
 end_comment
 
 begin_function
@@ -2167,11 +2210,25 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|struct
 name|ath_buf
 modifier|*
 name|bf
 parameter_list|)
 block|{
+define|#
+directive|define
+name|MS
+parameter_list|(
+name|_v
+parameter_list|,
+name|_f
+parameter_list|)
+value|(((_v)& _f)>> _f##_S)
 name|int
 name|amin
 init|=
@@ -2180,6 +2237,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* Extract out the maximum configured driver A-MPDU limit */
 if|if
 condition|(
 name|sc
@@ -2200,6 +2258,73 @@ name|sc
 operator|->
 name|sc_aggr_limit
 expr_stmt|;
+comment|/* 	 * Check the HTCAP field for the maximum size the node has 	 * negotiated.  If it's smaller than what we have, cap it there. 	 */
+switch|switch
+condition|(
+name|MS
+argument_list|(
+name|ni
+operator|->
+name|ni_htparam
+argument_list|,
+name|IEEE80211_HTCAP_MAXRXAMPDU
+argument_list|)
+condition|)
+block|{
+case|case
+name|IEEE80211_HTCAP_MAXRXAMPDU_16K
+case|:
+name|amin
+operator|=
+name|MIN
+argument_list|(
+name|amin
+argument_list|,
+literal|16384
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_HTCAP_MAXRXAMPDU_32K
+case|:
+name|amin
+operator|=
+name|MIN
+argument_list|(
+name|amin
+argument_list|,
+literal|32768
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_HTCAP_MAXRXAMPDU_64K
+case|:
+name|amin
+operator|=
+name|MIN
+argument_list|(
+name|amin
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_HTCAP_MAXRXAMPDU_8K
+case|:
+default|default:
+name|amin
+operator|=
+name|MIN
+argument_list|(
+name|amin
+argument_list|,
+literal|8192
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 name|i
@@ -2265,6 +2390,9 @@ expr_stmt|;
 return|return
 name|amin
 return|;
+undef|#
+directive|undef
+name|MS
 block|}
 end_function
 
@@ -3155,6 +3283,11 @@ operator|=
 name|ath_get_aggr_limit
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|an
+operator|->
+name|an_node
 argument_list|,
 name|bf_first
 argument_list|)
