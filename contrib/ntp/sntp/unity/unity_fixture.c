@@ -63,46 +63,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|setUp
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tearDown
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|setUp
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/*does nothing*/
-block|}
-end_function
-
-begin_function
-name|void
-name|tearDown
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/*does nothing*/
-block|}
-end_function
-
 begin_function
 specifier|static
 name|void

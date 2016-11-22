@@ -1106,7 +1106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * findpeer - find and return a peer match for a received datagram in  *	      the peer_hash table.  */
+comment|/*  * findpeer - find and return a peer match for a received datagram in  *	      the peer_hash table.  *  * [Bug 3072] To faciliate a faster reorganisation after routing changes  * the original code re-assigned the peer address to be the destination  * of the received packet and initiated another round on a mismatch.  * Unfortunately this leaves us wide open for a DoS attack where the  * attacker directs a packet with forged destination address to us --  * this results in a wrong interface assignment, actually creating a DoS  * situation.  *  * This condition would persist until the next update of the interface  * list, but a continued attack would put us out of business again soon  * enough. Authentication alone does not help here, since it does not  * protect the UDP layer and leaves us open for a replay attack.  *  * So we do not update the adresses and wait until the next interface  * list update does the right thing for us.  */
 end_comment
 
 begin_function
@@ -1185,8 +1185,22 @@ operator|->
 name|adr_link
 control|)
 block|{
+comment|/* [Bug 3072] ensure interface of peer matches */
 if|if
 condition|(
+name|p
+operator|->
+name|dstadr
+operator|!=
+name|rbufp
+operator|->
+name|dstadr
+condition|)
+continue|continue;
+comment|/* ensure peer source address matches */
+if|if
+condition|(
+operator|!
 name|ADDR_PORT_EQ
 argument_list|(
 name|srcadr
@@ -1197,8 +1211,8 @@ operator|->
 name|srcadr
 argument_list|)
 condition|)
-block|{
-comment|/* 			 * if the association matching rules determine 			 * that this is not a valid combination, then 			 * look for the next valid peer association. 			 */
+continue|continue;
+comment|/* If the association matching rules determine that this 		 * is not a valid combination, then look for the next 		 * valid peer association. 		 */
 operator|*
 name|action
 operator|=
@@ -1211,7 +1225,7 @@ argument_list|,
 name|pkt_mode
 argument_list|)
 expr_stmt|;
-comment|/* 			 * A response to our manycastclient solicitation 			 * might be misassociated with an ephemeral peer 			 * already spun for the server.  If the packet's 			 * org timestamp doesn't match the peer's, check 			 * if it matches the ACST prototype peer's.  If 			 * so it is a redundant solicitation response, 			 * return AM_ERR to discard it.  [Bug 1762] 			 */
+comment|/* A response to our manycastclient solicitation might 		 * be misassociated with an ephemeral peer already spun 		 * for the server.  If the packet's org timestamp 		 * doesn't match the peer's, check if it matches the 		 * ACST prototype peer's.  If so it is a redundant 		 * solicitation response, return AM_ERR to discard it. 		 * [Bug 1762] 		 */
 if|if
 condition|(
 name|MODE_SERVER
@@ -1267,7 +1281,7 @@ operator|=
 name|AM_ERR
 expr_stmt|;
 block|}
-comment|/* 			 * if an error was returned, exit back right 			 * here. 			 */
+comment|/* if an error was returned, exit back right here. */
 if|if
 condition|(
 operator|*
@@ -1278,7 +1292,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* 			 * if a match is found, we stop our search. 			 */
+comment|/* if a match is found, we stop our search. */
 if|if
 condition|(
 operator|*
@@ -1288,15 +1302,13 @@ name|AM_NOMATCH
 condition|)
 break|break;
 block|}
-block|}
-comment|/* 	 * If no matching association is found 	 */
+comment|/* If no matching association is found... */
 if|if
 condition|(
 name|NULL
 operator|==
 name|p
 condition|)
-block|{
 operator|*
 name|action
 operator|=
@@ -1307,68 +1319,6 @@ argument_list|,
 name|pkt_mode
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|dstadr
-operator|!=
-name|rbufp
-operator|->
-name|dstadr
-condition|)
-block|{
-name|set_peerdstadr
-argument_list|(
-name|p
-argument_list|,
-name|rbufp
-operator|->
-name|dstadr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|dstadr
-operator|==
-name|rbufp
-operator|->
-name|dstadr
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"Changed %s local address to match response\n"
-operator|,
-name|stoa
-argument_list|(
-operator|&
-name|p
-operator|->
-name|srcadr
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|findpeer
-argument_list|(
-name|rbufp
-argument_list|,
-name|pkt_mode
-argument_list|,
-name|action
-argument_list|)
-return|;
-block|}
-block|}
 return|return
 name|p
 return|;
@@ -2291,6 +2241,21 @@ name|peer
 modifier|*
 name|unlinked
 decl_stmt|;
+name|DEBUG_INSIST
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* check for impossible or identical assignment */
 if|if
 condition|(
 name|p
@@ -2332,6 +2297,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* unlink from list if we have an address prior to assignment */
 if|if
 condition|(
 name|p
@@ -2400,8 +2366,11 @@ name|dstadr
 operator|=
 name|dstadr
 expr_stmt|;
+comment|/* link to list if we have an address after assignment */
 if|if
 condition|(
+name|p
+operator|->
 name|dstadr
 operator|!=
 name|NULL
