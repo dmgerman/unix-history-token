@@ -3231,6 +3231,7 @@ operator|&
 name|scan
 argument_list|)
 condition|)
+block|{
 name|ni
 operator|=
 name|ieee80211_add_neighbor
@@ -3243,12 +3244,7 @@ operator|&
 name|scan
 argument_list|)
 expr_stmt|;
-else|else
-name|ni
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 				 * Send a probe request so we announce 11n 				 * capabilities. 				 */
+comment|/* 					 * Send a probe request so we announce 11n 					 * capabilities. 					 */
 name|ieee80211_send_probereq
 argument_list|(
 name|ni
@@ -3285,6 +3281,12 @@ name|ni_esslen
 argument_list|)
 expr_stmt|;
 comment|/* SSID */
+block|}
+else|else
+name|ni
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 elseif|else
 if|if
