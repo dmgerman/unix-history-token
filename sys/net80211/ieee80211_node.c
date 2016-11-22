@@ -1466,7 +1466,7 @@ name|vap
 argument_list|,
 name|IEEE80211_MSG_SCAN
 argument_list|,
-literal|"%s: creating %s on channel %u%c\n"
+literal|"%s: creating %s on channel %u%c flags 0x%08x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1488,6 +1488,10 @@ name|ieee80211_channel_type_char
 argument_list|(
 name|chan
 argument_list|)
+argument_list|,
+name|chan
+operator|->
+name|ic_flags
 argument_list|)
 expr_stmt|;
 name|ni
@@ -1929,6 +1933,25 @@ name|IEEE80211_MODE_11B
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX TODO: other bits and pieces - eg fast-frames? */
+comment|/* If we're an 11n channel then initialise the 11n bits */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
+condition|)
+block|{
+comment|/* XXX what else? */
+name|ieee80211_ht_node_init
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 name|void
@@ -6962,6 +6985,7 @@ name|IEEE80211_M_AHDEMO
 condition|)
 block|{
 comment|/* 			 * In adhoc demo mode there are no management 			 * frames to use to discover neighbor capabilities, 			 * so blindly propagate the local configuration  			 * so we can do interesting things (e.g. use 			 * WME to disable ACK's). 			 */
+comment|/* 			 * XXX TODO: 11n? 			 */
 if|if
 condition|(
 name|vap
@@ -7006,6 +7030,8 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX TODO: 11n? At least 20MHz, at least A-MPDU RX, 		 * not A-MPDU TX; not 11n rates, etc.  We'll cycle 		 * that after we hear that we can indeed do 11n 		 * (either by a beacon frame or by a probe response.) 		 */
+comment|/* 		 * This is the first time we see the node. 		 */
 if|if
 condition|(
 name|ic
@@ -7023,6 +7049,53 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Kick off a probe request to the given node; 		 * we will then use the probe response to update 		 * 11n/etc configuration state. 		 * 		 * XXX TODO: this isn't guaranteed, and until we get 		 * a probe response, we won't be able to actually 		 * do anything 802.11n related to the node. 		 * So if this does indeed work, maybe we should hold 		 * off on sending responses until we get the probe 		 * response, or just default to some sensible subset 		 * of 802.11n behaviour (eg always allow aggregation 		 * negotiation TO us, but not FROM us, etc) so we 		 * aren't entirely busted. 		 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_IBSS
+condition|)
+block|{
+name|ieee80211_send_probereq
+argument_list|(
+name|ni
+argument_list|,
+comment|/* node */
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|,
+comment|/* SA */
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+comment|/* DA */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|,
+comment|/* BSSID */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_essid
+argument_list|,
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_esslen
+argument_list|)
+expr_stmt|;
+comment|/* SSID */
+block|}
 comment|/* XXX not right for 802.1x/WPA */
 name|ieee80211_node_authorize
 argument_list|(
@@ -7462,6 +7535,27 @@ expr_stmt|;
 name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni
+argument_list|)
+expr_stmt|;
+comment|/* Reassociate; we're now 11n */
+comment|/* 		 * XXX TODO: this is the wrong thing to do - 		 * we're calling it with isnew=1 so the ath(4) 		 * driver reinitialises the rate tables. 		 * This "mostly" works for ath(4), but it won't 		 * be right for firmware devices which allocate 		 * node states. 		 * 		 * So, do we just create a new node and delete 		 * the old one? Or? 		 */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_ic
+operator|->
+name|ic_newassoc
+condition|)
+name|ni
+operator|->
+name|ni_ic
+operator|->
+name|ic_newassoc
+argument_list|(
+name|ni
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8162,6 +8256,7 @@ name|IEEE80211_M_AHDEMO
 condition|)
 block|{
 comment|/* 			 * In adhoc mode cons up a node for the destination. 			 * Note that we need an additional reference for the 			 * caller to be consistent with 			 * ieee80211_find_node_locked. 			 */
+comment|/* 			 * XXX TODO: this doesn't fake up 11n state; we need 			 * to find another way to get it upgraded. 			 */
 name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
