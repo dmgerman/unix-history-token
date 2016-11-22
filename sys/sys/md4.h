@@ -107,8 +107,10 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 literal|16
+argument_list|)
 index|]
 parameter_list|,
 name|MD4_CTX

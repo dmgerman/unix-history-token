@@ -263,8 +263,10 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SHA512_224_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SHA512_CTX
@@ -383,8 +385,10 @@ parameter_list|(
 name|unsigned
 name|char
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|SHA512_256_DIGEST_LENGTH
+argument_list|)
 index|]
 parameter_list|,
 name|SHA512_CTX
