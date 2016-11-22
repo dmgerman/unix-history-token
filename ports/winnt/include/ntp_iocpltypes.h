@@ -70,14 +70,14 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* ---------------------------------------------------------------------  * shared lock to avoid concurrent deletes on IO related stuff like  * RIO or ENDPOINT blocks.  *  * Basically we wwould need a multiple-reader/single-writer lock,  * but for now we do full mutual exclusion.  */
+comment|/* ---------------------------------------------------------------------  * shared control structure for IO. Removal of communication handles  * or other detach-like operations must be done exclusively by the IO  * thread, or Bad Things (tm) are bound to happen!  */
 end_comment
 
 begin_typedef
 typedef|typedef
 name|struct
-name|SharedLock
-name|SharedLock_t
+name|IoHndPad
+name|IoHndPad_T
 typedef|;
 end_typedef
 
@@ -85,21 +85,15 @@ begin_typedef
 typedef|typedef
 specifier|const
 name|struct
-name|SharedLock
-name|CSharedLock_t
+name|IoHndPad
+name|CIoHndPad_T
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|SharedLock
+name|IoHndPad
 block|{
-name|CRITICAL_SECTION
-name|mutex
-index|[
-literal|1
-index|]
-decl_stmt|;
 specifier|volatile
 name|u_long
 name|refc_count
@@ -115,7 +109,7 @@ name|endpt
 modifier|*
 name|ept
 decl_stmt|;
-comment|/*  inetrface backlink		*/
+comment|/*  interface backlink		*/
 name|ULONG_PTR
 name|key
 decl_stmt|;
@@ -135,10 +129,24 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* 0->COM/SOCK 1->BCASTSOCK	*/
+comment|/* COMPORT specific stuff */
 name|int
 name|riofd
 decl_stmt|;
 comment|/* FD for comports		*/
+name|unsigned
+name|int
+name|flDropEmpty
+range|:
+literal|1
+decl_stmt|;
+comment|/* no empty line*/
+name|unsigned
+name|int
+name|flFirstSeen
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -149,10 +157,10 @@ name|BOOL
 function_decl|(
 name|__fastcall
 modifier|*
-name|LockPredicateT
+name|IoPreCheck_T
 function_decl|)
 parameter_list|(
-name|CSharedLock_t
+name|CIoHndPad_T
 modifier|*
 parameter_list|)
 function_decl|;
@@ -160,10 +168,10 @@ end_typedef
 
 begin_function_decl
 specifier|extern
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 name|__fastcall
-name|slCreate
+name|iohpCreate
 parameter_list|(
 name|void
 modifier|*
@@ -174,12 +182,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 name|__fastcall
-name|slAttach
+name|iohpAttach
 parameter_list|(
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 parameter_list|)
 function_decl|;
@@ -187,64 +195,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 name|__fastcall
-name|slDetach
+name|iohpDetach
 parameter_list|(
-name|SharedLock_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|SharedLock_t
-modifier|*
-name|__fastcall
-name|slAttachShared
-parameter_list|(
-name|SharedLock_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|SharedLock_t
-modifier|*
-name|__fastcall
-name|slDetachShared
-parameter_list|(
-name|SharedLock_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|SharedLock_t
-modifier|*
-name|__fastcall
-name|slAttachExclusive
-parameter_list|(
-name|SharedLock_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|SharedLock_t
-modifier|*
-name|__fastcall
-name|slDetachExclusive
-parameter_list|(
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 parameter_list|)
 function_decl|;
@@ -254,9 +210,9 @@ begin_function_decl
 specifier|extern
 name|BOOL
 name|__fastcall
-name|slRefClockOK
+name|iohpRefClockOK
 parameter_list|(
-name|CSharedLock_t
+name|CIoHndPad_T
 modifier|*
 parameter_list|)
 function_decl|;
@@ -266,9 +222,9 @@ begin_function_decl
 specifier|extern
 name|BOOL
 name|__fastcall
-name|slEndPointOK
+name|iohpEndPointOK
 parameter_list|(
-name|CSharedLock_t
+name|CIoHndPad_T
 modifier|*
 parameter_list|)
 function_decl|;
@@ -277,12 +233,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|BOOL
-name|slQueueLocked
+name|iohpQueueLocked
 parameter_list|(
-name|SharedLock_t
+name|CIoHndPad_T
 modifier|*
 parameter_list|,
-name|LockPredicateT
+name|IoPreCheck_T
 parameter_list|,
 name|recvbuf_t
 modifier|*
@@ -546,9 +502,9 @@ name|IoCompleteFunc
 name|onIoDone
 decl_stmt|;
 comment|/* HL callback to execute	*/
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
-name|slock
+name|iopad
 decl_stmt|;
 name|DevCtx_t
 modifier|*
@@ -562,6 +518,10 @@ name|DWORD
 name|byteCount
 decl_stmt|;
 comment|/* byte count     "             */
+name|DWORD
+name|ioFlags
+decl_stmt|;
+comment|/* in/out flags for recvfrom()	*/
 name|u_int
 name|flRawMem
 range|:
@@ -650,7 +610,7 @@ modifier|*
 name|__fastcall
 name|IoCtxAlloc
 parameter_list|(
-name|SharedLock_t
+name|IoHndPad_T
 modifier|*
 parameter_list|,
 name|DevCtx_t
@@ -686,7 +646,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|BOOL
-name|IoCtxStartLocked
+name|IoCtxStartChecked
 parameter_list|(
 name|IoCtx_t
 modifier|*

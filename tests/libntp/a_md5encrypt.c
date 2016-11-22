@@ -249,7 +249,7 @@ name|length
 decl_stmt|;
 name|packetPtr
 operator|=
-name|emalloc
+name|emalloc_zero
 argument_list|(
 name|totalLength
 operator|*
@@ -258,17 +258,6 @@ argument_list|(
 operator|*
 name|packetPtr
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|packetPtr
-operator|+
-name|packetLength
-argument_list|,
-literal|0
-argument_list|,
-name|keyIdLength
 argument_list|)
 expr_stmt|;
 name|memcpy

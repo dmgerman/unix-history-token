@@ -23,6 +23,12 @@ directive|include
 file|"isc/string.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libssl_compat.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|key
@@ -74,6 +80,7 @@ name|int
 name|key_type
 decl_stmt|;
 name|EVP_MD_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 if|if
@@ -112,9 +119,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ctx
+operator|=
+name|EVP_MD_CTX_new
+argument_list|()
+expr_stmt|;
 name|EVP_DigestInit
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|EVP_get_digestbynid
@@ -125,7 +136,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|(
@@ -147,7 +157,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|pkt_data
@@ -160,13 +169,17 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestFinal
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|digest
 argument_list|,
 operator|&
 name|len
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_free
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -279,6 +292,11 @@ name|memcmp
 argument_list|(
 name|digest
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|pkt_data
 operator|+
 name|pkt_size

@@ -192,6 +192,12 @@ directive|include
 file|"openssl/err.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libssl_compat.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -15847,6 +15853,7 @@ init|=
 name|arg
 decl_stmt|;
 name|EVP_MD_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 name|u_int
@@ -15987,9 +15994,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Discard MACs that NTP won't accept.      * Keep this consistent with keytype_from_text() in ssl_init.c.      */
+name|ctx
+operator|=
+name|EVP_MD_CTX_new
+argument_list|()
+expr_stmt|;
 name|EVP_DigestInit
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|EVP_get_digestbyname
@@ -16000,13 +16011,17 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestFinal
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|digest
 argument_list|,
 operator|&
 name|digest_len
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_free
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 if|if

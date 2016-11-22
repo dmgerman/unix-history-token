@@ -146,8 +146,7 @@ specifier|extern
 name|int
 name|io_completion_port_sendto
 parameter_list|(
-name|struct
-name|interface
+name|endpt
 modifier|*
 parameter_list|,
 name|SOCKET

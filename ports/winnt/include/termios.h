@@ -1146,6 +1146,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|struct
+name|DeviceContext
+name|DevCtx_t
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|DevCtx_t
+modifier|*
+name|serial_devctx
+parameter_list|(
+name|HANDLE
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
