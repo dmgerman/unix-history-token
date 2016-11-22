@@ -101,6 +101,9 @@ decl_stmt|;
 name|ssize_t
 name|u
 decl_stmt|;
+name|u_int
+name|uu
+decl_stmt|;
 name|off_t
 name|ms
 decl_stmt|;
@@ -278,8 +281,12 @@ argument_list|,
 name|DIOCGSECTORSIZE
 argument_list|,
 operator|&
-name|u
+name|uu
 argument_list|)
+expr_stmt|;
+name|u
+operator|=
+name|uu
 expr_stmt|;
 if|if
 condition|(
