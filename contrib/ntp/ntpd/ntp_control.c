@@ -166,6 +166,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"libssl_compat.h"
+end_include
+
 begin_comment
 comment|/*  * Structure to hold request procedure information  */
 end_comment
@@ -1021,7 +1027,7 @@ block|,
 block|{
 name|CTL_OP_WRITECLOCK
 block|,
-name|NOAUTH
+name|AUTH
 block|,
 name|write_clockstatus
 block|}
@@ -1029,7 +1035,7 @@ block|,
 block|{
 name|CTL_OP_SETTRAP
 block|,
-name|NOAUTH
+name|AUTH
 block|,
 name|set_trap
 block|}
@@ -1077,7 +1083,7 @@ block|,
 block|{
 name|CTL_OP_UNSETTRAP
 block|,
-name|NOAUTH
+name|AUTH
 block|,
 name|unset_trap
 block|}
@@ -14885,7 +14891,7 @@ name|flags
 operator|)
 condition|)
 block|{
-comment|/* check if the var name matches the buffer */
+comment|/* Check if the var name matches the buffer. The 			 * name is bracketed by [reqpt..tp] and not NUL 			 * terminated, and it contains no '=' char. The 			 * lookup value IS NUL-terminated but might 			 * include a '='... We have to look out for 			 * that! 			 */
 specifier|const
 name|char
 modifier|*
@@ -14910,9 +14916,6 @@ operator|!=
 name|tp
 operator|)
 operator|&&
-operator|*
-name|sp2
-operator|&&
 operator|(
 operator|*
 name|sp1
@@ -14935,9 +14938,17 @@ name|sp1
 operator|==
 name|tp
 operator|&&
-operator|!
+operator|(
 operator|*
 name|sp2
+operator|==
+literal|'\0'
+operator|||
+operator|*
+name|sp2
+operator|==
+literal|'='
+operator|)
 condition|)
 break|break;
 block|}
@@ -16893,6 +16904,7 @@ block|}
 name|d
 union|;
 name|EVP_MD_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 name|u_int
@@ -16950,9 +16962,13 @@ operator|=
 name|current_time
 expr_stmt|;
 block|}
+name|ctx
+operator|=
+name|EVP_MD_CTX_new
+argument_list|()
+expr_stmt|;
 name|EVP_DigestInit
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|EVP_get_digestbynid
@@ -16963,7 +16979,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|salt
@@ -16976,7 +16991,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|&
@@ -16990,7 +17004,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|&
@@ -17011,7 +17024,6 @@ argument_list|)
 condition|)
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|&
@@ -17032,7 +17044,6 @@ expr_stmt|;
 else|else
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|&
@@ -17052,7 +17063,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 operator|&
@@ -17072,7 +17082,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestUpdate
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|salt
@@ -17085,7 +17094,6 @@ argument_list|)
 expr_stmt|;
 name|EVP_DigestFinal
 argument_list|(
-operator|&
 name|ctx
 argument_list|,
 name|d
@@ -17094,6 +17102,11 @@ name|digest
 argument_list|,
 operator|&
 name|len
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_free
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -17781,6 +17794,19 @@ name|int
 name|restrict_mask
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|char
+name|nulltxt
+index|[
+literal|1
+index|]
+init|=
+block|{
+literal|'\0'
+block|}
+decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|nonce_text
@@ -17788,6 +17814,7 @@ index|[]
 init|=
 literal|"nonce"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|frags_text
@@ -17795,6 +17822,7 @@ index|[]
 init|=
 literal|"frags"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|limit_text
@@ -17802,6 +17830,7 @@ index|[]
 init|=
 literal|"limit"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|mincount_text
@@ -17809,6 +17838,7 @@ index|[]
 init|=
 literal|"mincount"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|resall_text
@@ -17816,6 +17846,7 @@ index|[]
 init|=
 literal|"resall"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|resany_text
@@ -17823,6 +17854,7 @@ index|[]
 init|=
 literal|"resany"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|maxlstint_text
@@ -17830,6 +17862,7 @@ index|[]
 init|=
 literal|"maxlstint"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|laddr_text
@@ -17837,6 +17870,7 @@ index|[]
 init|=
 literal|"laddr"
 decl_stmt|;
+specifier|static
 specifier|const
 name|char
 name|resaxx_fmt
@@ -17911,6 +17945,7 @@ name|ctl_var
 modifier|*
 name|v
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|val
@@ -18241,6 +18276,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* have to go through '(void*)' to drop 'const' property from pointer. 	 * ctl_getitem()' needs some cleanup, too.... perlinger@ntp.org 	 */
 while|while
 condition|(
 name|NULL
@@ -18252,6 +18288,10 @@ name|ctl_getitem
 argument_list|(
 name|in_parms
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|val
 argument_list|)
@@ -18272,6 +18312,16 @@ name|si
 decl_stmt|;
 if|if
 condition|(
+name|NULL
+operator|==
+name|val
+condition|)
+name|val
+operator|=
+name|nulltxt
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -18283,12 +18333,6 @@ name|text
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|NULL
-operator|!=
-name|pnonce
-condition|)
 name|free
 argument_list|(
 name|pnonce
@@ -18296,10 +18340,17 @@ argument_list|)
 expr_stmt|;
 name|pnonce
 operator|=
+operator|(
+operator|*
+name|val
+operator|)
+condition|?
 name|estrdup
 argument_list|(
 name|val
 argument_list|)
+else|:
+name|NULL
 expr_stmt|;
 block|}
 elseif|else
@@ -18316,6 +18367,10 @@ name|text
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+literal|1
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18325,7 +18380,10 @@ argument_list|,
 operator|&
 name|frags
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|blooper
+goto|;
 block|}
 elseif|else
 if|if
@@ -18341,6 +18399,10 @@ name|text
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+literal|1
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18350,7 +18412,10 @@ argument_list|,
 operator|&
 name|limit
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|blooper
+goto|;
 block|}
 elseif|else
 if|if
@@ -18379,7 +18444,12 @@ argument_list|,
 operator|&
 name|mincount
 argument_list|)
-operator|||
+condition|)
+goto|goto
+name|blooper
+goto|;
+if|if
+condition|(
 name|mincount
 operator|<
 literal|0
@@ -18403,6 +18473,10 @@ name|text
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+literal|1
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18412,7 +18486,10 @@ argument_list|,
 operator|&
 name|resall
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|blooper
+goto|;
 block|}
 elseif|else
 if|if
@@ -18428,6 +18505,10 @@ name|text
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+literal|1
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18437,7 +18518,10 @@ argument_list|,
 operator|&
 name|resany
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|blooper
+goto|;
 block|}
 elseif|else
 if|if
@@ -18453,6 +18537,10 @@ name|text
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+literal|1
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18462,7 +18550,10 @@ argument_list|,
 operator|&
 name|maxlstint
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|blooper
+goto|;
 block|}
 elseif|else
 if|if
@@ -18480,6 +18571,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|decodenetnum
 argument_list|(
 name|val
@@ -18488,6 +18580,9 @@ operator|&
 name|laddr
 argument_list|)
 condition|)
+goto|goto
+name|blooper
+goto|;
 name|lcladr
 operator|=
 name|getinterface
@@ -18530,7 +18625,7 @@ block|{
 if|if
 condition|(
 literal|2
-operator|==
+operator|!=
 name|sscanf
 argument_list|(
 name|val
@@ -18544,7 +18639,9 @@ operator|&
 name|uf
 argument_list|)
 condition|)
-block|{
+goto|goto
+name|blooper
+goto|;
 name|last
 index|[
 name|si
@@ -18583,7 +18680,6 @@ name|priors
 operator|++
 expr_stmt|;
 block|}
-block|}
 elseif|else
 if|if
 condition|(
@@ -18614,6 +18710,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|decodenetnum
 argument_list|(
 name|val
@@ -18624,7 +18721,12 @@ index|[
 name|si
 index|]
 argument_list|)
-operator|&&
+condition|)
+goto|goto
+name|blooper
+goto|;
+if|if
+condition|(
 name|last
 index|[
 name|si
@@ -18646,6 +18748,50 @@ condition|)
 name|priors
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"read_mru_list: invalid key item: '%s' (ignored)\n"
+operator|,
+name|v
+operator|->
+name|text
+operator|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+name|blooper
+label|:
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"read_mru_list: invalid param for '%s': '%s' (bailing)\n"
+operator|,
+name|v
+operator|->
+name|text
+operator|,
+name|val
+operator|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pnonce
+argument_list|)
+expr_stmt|;
+name|pnonce
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|free_varlist
@@ -22482,6 +22628,19 @@ operator|<=
 literal|0
 condition|)
 return|return;
+comment|/* [Bug 3119] 	 * Peer Events should be associated with a peer -- hence the 	 * name. But there are instances where this function is called 	 * *without* a valid peer. This happens e.g. with an unsolicited 	 * CryptoNAK, or when a leap second alarm is going off while 	 * currently without a system peer. 	 * 	 * The most sensible approach to this seems to bail out here if 	 * this happens. Avoiding to call this function would also 	 * bypass the log reporting in the first part of this function, 	 * and this is probably not the best of all options. 	 *   -*-perlinger@ntp.org-*- 	 */
+if|if
+condition|(
+operator|(
+name|err
+operator|&
+name|PEER_EVENT
+operator|)
+operator|&&
+operator|!
+name|peer
+condition|)
+return|return;
 comment|/* 	 * Set up the outgoing packet variables 	 */
 name|res_opcode
 operator|=
@@ -22565,15 +22724,15 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|INSIST
-argument_list|(
-name|peer
-operator|!=
+elseif|else
+if|if
+condition|(
 name|NULL
-argument_list|)
-expr_stmt|;
+operator|!=
+name|peer
+condition|)
+block|{
+comment|/* paranoia -- skip output */
 name|rpkt
 operator|.
 name|associd
