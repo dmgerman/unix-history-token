@@ -659,10 +659,6 @@ name|ARGI_TARGETREF
 case|:
 comment|/* Allows implicit conversion rules before store */
 case|case
-name|ARGI_FIXED_TARGET
-case|:
-comment|/* No implicit conversion before store to target */
-case|case
 name|ARGI_SIMPLE_TARGET
 case|:
 comment|/* Name, Local, or Arg - no implicit conversion  */

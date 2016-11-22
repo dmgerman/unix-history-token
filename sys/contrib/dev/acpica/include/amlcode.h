@@ -1279,6 +1279,13 @@ begin_comment
 comment|/* For ObjectType only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARGP_MAX
+value|0x13
+end_define
+
 begin_comment
 comment|/*  * Resolved argument types for the AML Interpreter  * Each field in the ArgTypes UINT32 is 5 bits, allowing for a maximum of 6 arguments.  * There can be up to 31 unique argument types (0 is end-of-arg-list indicator)  *  * Note1: These values are completely independent from the ACPI_TYPEs  *        i.e., ARGI_INTEGER != ACPI_TYPE_INTEGER  *  * Note2: If and when 5 bits becomes insufficient, it would probably be best  * to convert to a 6-byte array of argument types, allowing 8 bits per argument.  */
 end_comment
@@ -1419,19 +1426,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARGI_FIXED_TARGET
-value|0x10
-end_define
-
-begin_comment
-comment|/* Target, no implicit conversion */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ARGI_SIMPLE_TARGET
-value|0x11
+value|0x10
 end_define
 
 begin_comment
@@ -1442,11 +1438,15 @@ begin_define
 define|#
 directive|define
 name|ARGI_STORE_TARGET
-value|0x12
+value|0x11
 end_define
 
 begin_comment
 comment|/* Target for store is TARGETREF + package objects */
+end_comment
+
+begin_comment
+comment|/*  * #define ARGI_FIXED_TARGET           0x10     Target, no implicit conversion  *  * Removed 10/2016. ARGI_FIXED_TARGET was used for these operators:  *      FromBCD  *      ToBCD  *      ToDecimalString  *      ToHexString  *      ToInteger  *      ToBuffer  * The purpose of this type was to disable "implicit result conversion",  * but this was incorrect per the ACPI spec and other ACPI implementations.  * These operators now have the target operand defined as a normal  * ARGI_TARGETREF.  */
 end_comment
 
 begin_comment

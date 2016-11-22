@@ -198,9 +198,6 @@ name|ACPI_BTYPE_REFERENCE_OBJECT
 operator|)
 return|;
 case|case
-name|ARGI_FIXED_TARGET
-case|:
-case|case
 name|ARGI_SIMPLE_TARGET
 case|:
 return|return

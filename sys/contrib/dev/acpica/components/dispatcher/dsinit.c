@@ -37,6 +37,12 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acinterp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -410,27 +416,6 @@ operator|=
 name|TableIndex
 expr_stmt|;
 comment|/* Walk entire namespace from the supplied root */
-name|Status
-operator|=
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * We don't use AcpiWalkNamespace since we do not want to acquire      * the namespace reader lock.      */
 name|Status
 operator|=
@@ -442,7 +427,7 @@ name|StartNode
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
-name|ACPI_NS_WALK_UNLOCK
+name|ACPI_NS_WALK_NO_UNLOCK
 argument_list|,
 name|AcpiDsInitOneObject
 argument_list|,
@@ -474,14 +459,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiGetTableByIndex

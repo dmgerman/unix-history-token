@@ -971,6 +971,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiNsHandleToName
+parameter_list|(
+name|ACPI_HANDLE
+name|TargetHandle
+parameter_list|,
+name|ACPI_BUFFER
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiNsHandleToPathname
 parameter_list|(
 name|ACPI_HANDLE

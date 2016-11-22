@@ -943,7 +943,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoFadt3
+name|AcpiDmTableInfoFadt2
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -951,7 +951,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoFadt4
+name|AcpiDmTableInfoFadt3
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -2083,19 +2083,6 @@ name|AcpiDmTableInfoGeneric
 index|[]
 index|[
 literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ACPI_DMTABLE_INFO
-modifier|*
-name|FadtRevisionInfo
-index|[
-name|ACPI_FADT_MAX_VERSION
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
