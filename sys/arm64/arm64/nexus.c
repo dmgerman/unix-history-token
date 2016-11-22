@@ -1925,6 +1925,8 @@ name|ofw_bus_map_intr
 argument_list|,
 name|nexus_ofw_map_intr
 argument_list|)
+block|,
+name|DEVMETHOD_END
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2201,6 +2203,8 @@ name|device_attach
 argument_list|,
 name|nexus_acpi_attach
 argument_list|)
+block|,
+name|DEVMETHOD_END
 block|, }
 decl_stmt|;
 end_decl_stmt
