@@ -626,7 +626,7 @@ name|cached
 operator|=
 name|vm_cnt
 operator|.
-name|v_cache_count
+name|v_inactive_count
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
