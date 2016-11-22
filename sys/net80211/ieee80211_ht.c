@@ -3441,7 +3441,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s: tid=%d, start=%d, wnd=%d, flags=0x%08x\n"
+literal|"%s: tid=%d, start=%d, wnd=%d, flags=0x%08x"
 argument_list|,
 name|__func__
 argument_list|,
