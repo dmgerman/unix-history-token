@@ -1029,17 +1029,6 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* resolve */
-name|fetch_info
-argument_list|(
-literal|"resolving host = %s service = %s af = %d"
-argument_list|,
-name|host
-argument_list|,
-name|service
-argument_list|,
-name|af
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1098,29 +1087,12 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-name|fetch_info
-argument_list|(
-literal|"getaddrinfo() failed: %s"
-argument_list|,
-name|gai_strerror
-argument_list|(
-name|err
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-name|fetch_info
-argument_list|(
-literal|"getaddrinfo() succeeded %p"
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|res
