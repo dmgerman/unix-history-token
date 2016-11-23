@@ -305,21 +305,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|boolean_t
-name|ofw_cpu_reg
-parameter_list|(
-name|phandle_t
-name|node
-parameter_list|,
-name|u_int
-parameter_list|,
-name|cell_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|struct
