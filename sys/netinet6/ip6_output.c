@@ -5924,6 +5924,11 @@ name|retval
 decl_stmt|;
 endif|#
 directive|endif
+comment|/*  * Don't use more than a quarter of mbuf clusters.  N.B.:  * nmbclusters is an int, but nmbclusters * MCLBYTES may overflow  * on LP64 architectures, so cast to u_long to avoid undefined  * behavior.  ILP32 architectures cannot have nmbclusters  * large enough to overflow for other reasons.  */
+define|#
+directive|define
+name|IPV6_PKTOPTIONS_MBUF_LIMIT
+value|((u_long)nmbclusters * MCLBYTES / 4)
 name|level
 operator|=
 name|sopt
@@ -6160,6 +6165,24 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+if|if
+condition|(
+name|optlen
+operator|>
+name|IPV6_PKTOPTIONS_MBUF_LIMIT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ip6_ctloutput: mbuf limit hit\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+break|break;
+block|}
 name|error
 operator|=
 name|soopt_getm
