@@ -106,9 +106,6 @@ begin_struct
 struct|struct
 name|vmbus_xact_ctx
 block|{
-name|uint32_t
-name|xc_flags
-decl_stmt|;
 name|size_t
 name|xc_req_size
 decl_stmt|;
@@ -119,22 +116,23 @@ name|size_t
 name|xc_priv_size
 decl_stmt|;
 name|struct
+name|mtx
+name|xc_lock
+decl_stmt|;
+comment|/* 	 * Protected by xc_lock. 	 */
+name|uint32_t
+name|xc_flags
+decl_stmt|;
+comment|/* VMBUS_XACT_CTXF_ */
+name|struct
 name|vmbus_xact
 modifier|*
 name|xc_free
 decl_stmt|;
 name|struct
-name|mtx
-name|xc_free_lock
-decl_stmt|;
-name|struct
 name|vmbus_xact
 modifier|*
 name|xc_active
-decl_stmt|;
-name|struct
-name|mtx
-name|xc_active_lock
 decl_stmt|;
 block|}
 struct|;
@@ -431,7 +429,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -462,7 +460,7 @@ argument_list|,
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -530,7 +528,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -638,23 +636,9 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|,
-literal|"vmbus xact free"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|ctx
-operator|->
-name|xc_active_lock
-argument_list|,
-literal|"vmbus xact active"
+literal|"vmbus xact"
 argument_list|,
 name|NULL
 argument_list|,
@@ -689,7 +673,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|ctx
@@ -703,7 +687,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -744,15 +728,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|ctx
-operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -882,7 +858,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -909,7 +885,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_free_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1047,7 +1023,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1074,7 +1050,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1104,7 +1080,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1131,7 +1107,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1175,7 +1151,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1215,7 +1191,7 @@ argument_list|,
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|,
 literal|0
 argument_list|,
@@ -1232,7 +1208,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -1245,7 +1221,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1274,7 +1250,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -1387,7 +1363,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1492,7 +1468,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|vmbus_xact_save_resp
@@ -1509,7 +1485,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1546,7 +1522,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1578,7 +1554,7 @@ argument_list|(
 operator|&
 name|ctx
 operator|->
-name|xc_active_lock
+name|xc_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
