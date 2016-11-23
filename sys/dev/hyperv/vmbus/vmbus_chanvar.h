@@ -330,6 +330,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHAN_ST_REVOKED_SHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* sticky */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHAN_ST_OPENED
 value|(1<< VMBUS_CHAN_ST_OPENED_SHIFT)
 end_define
@@ -353,6 +364,13 @@ define|#
 directive|define
 name|VMBUS_CHAN_ST_ONLIST
 value|(1<< VMBUS_CHAN_ST_ONLIST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_REVOKED
+value|(1<< VMBUS_CHAN_ST_REVOKED_SHIFT)
 end_define
 
 begin_struct_decl

@@ -5727,7 +5727,7 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-comment|/* 	 * Hook this channel up for later rescind. 	 */
+comment|/* 	 * Hook this channel up for later revocation. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6374,7 +6374,7 @@ name|sc
 operator|->
 name|vmbus_dev
 argument_list|,
-literal|"invalid rescinded chan%u\n"
+literal|"invalid revoked chan%u\n"
 argument_list|,
 name|note
 operator|->
@@ -6493,13 +6493,30 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|atomic_testandset_int
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_stflags
+argument_list|,
+name|VMBUS_CHAN_ST_REVOKED_SHIFT
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"channel has already been revoked"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|bootverbose
 condition|)
 name|vmbus_chan_printf
 argument_list|(
 name|chan
 argument_list|,
-literal|"chan%u rescinded\n"
+literal|"chan%u revoked\n"
 argument_list|,
 name|note
 operator|->
@@ -7674,6 +7691,38 @@ operator|(
 name|chan
 operator|->
 name|ch_mgmt_tq
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|vmbus_chan_is_revoked
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{
+if|if
+condition|(
+name|chan
+operator|->
+name|ch_stflags
+operator|&
+name|VMBUS_CHAN_ST_REVOKED
+condition|)
+return|return
+operator|(
+name|true
+operator|)
+return|;
+return|return
+operator|(
+name|false
 operator|)
 return|;
 block|}

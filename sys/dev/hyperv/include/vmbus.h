@@ -774,6 +774,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|vmbus_chan_is_revoked
+parameter_list|(
+specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|struct
 name|hyperv_guid
