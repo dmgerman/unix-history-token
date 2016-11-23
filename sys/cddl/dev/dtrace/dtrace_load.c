@@ -103,6 +103,25 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|illumos
+comment|/* 	 * DTrace uses negative logic for the destructive mode switch, so it 	 * is required to translate from the sysctl which uses positive logic. 	 */
+if|if
+condition|(
+name|dtrace_allow_destructive
+condition|)
+name|dtrace_destructive_disallow
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|dtrace_destructive_disallow
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Hook into the trap handler. */
 name|dtrace_trap_func
 operator|=
