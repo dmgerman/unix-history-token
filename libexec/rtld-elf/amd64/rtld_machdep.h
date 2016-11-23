@@ -173,6 +173,45 @@ define|\
 value|(((InitArrFunc)(target))(main_argc, main_argv, environ))
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|cpu_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|cpu_feature2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|cpu_stdext_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|cpu_stdext_feature2
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|call_ifunc_resolver
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|(((Elf_Addr (*)(uint32_t, uint32_t, uint32_t, uint32_t))ptr)( \ 	    cpu_feature, cpu_feature2, cpu_stdext_feature, cpu_stdext_feature2))
+end_define
+
 begin_define
 define|#
 directive|define

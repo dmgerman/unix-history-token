@@ -1646,6 +1646,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ifunc_init
+parameter_list|(
+name|Elf_Auxinfo
+index|[
+name|__min_size
+argument_list|(
+name|AT_COUNT
+argument_list|)
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|init_pltgot
 parameter_list|(
 name|Obj_Entry

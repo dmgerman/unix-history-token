@@ -118,6 +118,17 @@ define|\
 value|(((InitArrFunc)(target))(main_argc, main_argv, environ))
 end_define
 
+begin_define
+define|#
+directive|define
+name|call_ifunc_resolver
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|(((Elf_Addr (*)(void))ptr)())
+end_define
+
 begin_comment
 comment|/*  * Lazy binding entry point, called via PLT.  */
 end_comment
