@@ -10018,6 +10018,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|HWRM_PORT_PHY_QCFG_OUTPUT_PHY_TYPE_BASELR
 case|:
