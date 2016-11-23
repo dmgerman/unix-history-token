@@ -134,6 +134,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|call_ifunc_resolver
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|(((Elf_Addr (*)(void))ptr)())
+end_define
+
+begin_define
+define|#
+directive|define
 name|round
 parameter_list|(
 name|size

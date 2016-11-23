@@ -1541,27 +1541,15 @@ argument_list|)
 expr_stmt|;
 name|target
 operator|=
-operator|(
-operator|(
-name|Elf_Addr
+name|call_ifunc_resolver
 argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
-operator|(
 name|obj
 operator|->
 name|relocbase
 operator|+
 operator|*
 name|where
-operator|)
-operator|)
-operator|(
-operator|)
+argument_list|)
 expr_stmt|;
 name|wlock_acquire
 argument_list|(
@@ -1817,14 +1805,244 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|uint32_t
+name|cpu_feature
+decl_stmt|,
+name|cpu_feature2
+decl_stmt|,
+name|cpu_stdext_feature
+decl_stmt|,
+name|cpu_stdext_feature2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|void
-name|allocate_initial_tls
+name|rtld_cpuid_count
 parameter_list|(
-name|Obj_Entry
+name|int
+name|idx
+parameter_list|,
+name|int
+name|cnt
+parameter_list|,
+name|u_int
 modifier|*
-name|objs
+name|p
 parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	pushl	%%ebx\n"
+literal|"	cpuid\n"
+literal|"	movl	%%ebx,%1\n"
+literal|"	popl	%%ebx\n"
+operator|:
+literal|"=a"
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|p
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"=d"
+operator|(
+name|p
+index|[
+literal|3
+index|]
+operator|)
+operator|:
+literal|"0"
+operator|(
+name|idx
+operator|)
+operator|,
+literal|"2"
+operator|(
+name|cnt
+operator|)
+block|)
+function|;
+end_function
+
+begin_macro
+unit|}  void
+name|ifunc_init
+argument_list|(
+argument|Elf_Auxinfo aux_info[__min_size(AT_COUNT)] __unused
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|u_int
+name|p
+index|[
+literal|4
+index|]
+decl_stmt|,
+name|cpu_high
+decl_stmt|;
+name|int
+name|cpuid_supported
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	pushfl\n"
+literal|"	popl	%%eax\n"
+literal|"	movl    %%eax,%%ecx\n"
+literal|"	xorl    $0x200000,%%eax\n"
+literal|"	pushl	%%eax\n"
+literal|"	popfl\n"
+literal|"	pushfl\n"
+literal|"	popl    %%eax\n"
+literal|"	xorl    %%eax,%%ecx\n"
+literal|"	je	1f\n"
+literal|"	movl	$1,%0\n"
+literal|"	jmp	2f\n"
+literal|"1:	movl	$0,%0\n"
+literal|"2:\n"
+operator|:
+literal|"=r"
+operator|(
+name|cpuid_supported
+operator|)
+operator|:
+operator|:
+literal|"eax"
+operator|,
+literal|"ecx"
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|cpuid_supported
+condition|)
+return|return;
+end_if
+
+begin_expr_stmt
+name|rtld_cpuid_count
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cpu_feature
+operator|=
+name|p
+index|[
+literal|3
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cpu_feature2
+operator|=
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|rtld_cpuid_count
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cpu_high
+operator|=
+name|p
+index|[
+literal|0
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|cpu_high
+operator|>=
+literal|7
+condition|)
+block|{
+name|rtld_cpuid_count
+argument_list|(
+literal|7
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|cpu_stdext_feature
+operator|=
+name|p
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|cpu_stdext_feature2
+operator|=
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+block|}
+end_if
+
+begin_macro
+unit|}  void
+name|allocate_initial_tls
+argument_list|(
+argument|Obj_Entry *objs
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|void
 modifier|*
@@ -1864,7 +2082,7 @@ name|tls
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* GNU ABI */

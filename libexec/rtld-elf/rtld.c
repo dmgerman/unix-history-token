@@ -4150,6 +4150,11 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ifunc_init
+argument_list|(
+name|aux
+argument_list|)
+expr_stmt|;
 name|dbg
 argument_list|(
 literal|"resolving ifuncs"
@@ -4378,20 +4383,10 @@ argument_list|)
 expr_stmt|;
 name|target
 operator|=
-operator|(
-operator|(
-name|Elf_Addr
+name|call_ifunc_resolver
 argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
 name|ptr
-operator|)
-operator|(
-operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

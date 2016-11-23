@@ -160,6 +160,17 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|call_ifunc_resolver
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|(((Elf_Addr (*)(void))ptr)())
+end_define
+
+begin_define
+define|#
+directive|define
 name|TLS_TCB_SIZE
 value|16
 end_define
