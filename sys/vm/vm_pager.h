@@ -355,6 +355,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_PAGER_PUT_NOREUSE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_PAGER_CLUSTER_OK
 value|0x0008
 end_define

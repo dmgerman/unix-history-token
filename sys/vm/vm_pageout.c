@@ -2050,7 +2050,7 @@ index|]
 argument_list|,
 name|pageout_count
 argument_list|,
-literal|0
+name|VM_PAGER_PUT_NOREUSE
 argument_list|,
 literal|0
 argument_list|,
