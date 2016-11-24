@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/CoverageMapping.h"
+file|"llvm/ProfileData/Coverage/CoverageMapping.h"
 end_include
 
 begin_include

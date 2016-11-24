@@ -97,21 +97,21 @@ comment|///     in order to produce LLVM IR, this SemaConsumer must allow them t
 comment|///     pass to the next step in the chain after processing.  Passthrough is
 comment|///     the next ASTConsumer, or NULL if none is required.
 comment|///
+comment|/// @param[in] top_level
+comment|///     If true, register all top-level Decls and don't try to handle the
+comment|///     main function.
+comment|///
 comment|/// @param[in] target
 comment|///     The target, which contains the persistent variable store and the
 comment|///     AST importer.
 comment|//----------------------------------------------------------------------
 name|ASTResultSynthesizer
 argument_list|(
-name|clang
-operator|::
-name|ASTConsumer
-operator|*
-name|passthrough
+argument|clang::ASTConsumer *passthrough
 argument_list|,
-name|Target
-operator|&
-name|target
+argument|bool top_level
+argument_list|,
+argument|Target&target
 argument_list|)
 block|;
 comment|//----------------------------------------------------------------------
@@ -221,6 +221,13 @@ name|void
 name|ForgetSema
 argument_list|()
 name|override
+block|;
+comment|//----------------------------------------------------------------------
+comment|/// The parse has succeeded, so record its persistent decls
+comment|//----------------------------------------------------------------------
+name|void
+name|CommitPersistentDecls
+argument_list|()
 block|;
 name|private
 operator|:
@@ -337,6 +344,23 @@ operator|*
 name|D
 argument_list|)
 block|;
+comment|//----------------------------------------------------------------------
+comment|/// Given a NamedDecl, register it as a pointer type in the target's scratch
+comment|/// AST context.
+comment|///
+comment|/// @param[in] Body
+comment|///     The body of the function.
+comment|//----------------------------------------------------------------------
+name|void
+name|RecordPersistentDecl
+argument_list|(
+name|clang
+operator|::
+name|NamedDecl
+operator|*
+name|D
+argument_list|)
+block|;
 name|clang
 operator|::
 name|ASTContext
@@ -358,6 +382,18 @@ operator|*
 name|m_passthrough_sema
 block|;
 comment|///< The SemaConsumer down the chain, for passthrough.  NULL if it's an ASTConsumer.
+name|std
+operator|::
+name|vector
+operator|<
+name|clang
+operator|::
+name|NamedDecl
+operator|*
+operator|>
+name|m_decls
+block|;
+comment|///< Persistent declarations to register assuming the expression succeeds.
 name|Target
 operator|&
 name|m_target
@@ -370,7 +406,9 @@ operator|*
 name|m_sema
 block|;
 comment|///< The Sema to use.
-block|}
+name|bool
+name|m_top_level
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -1391,6 +1391,16 @@ init|=
 literal|224
 block|,
 comment|// AMD GPU architecture
+name|EM_LANAI
+init|=
+literal|244
+block|,
+comment|// Lanai 32-bit processor
+name|EM_BPF
+init|=
+literal|247
+block|,
+comment|// Linux kernel bpf virtual machine
 comment|// A request has been made to the maintainer of the official registry for
 comment|// such numbers for an official value for WebAssembly. As soon as one is
 comment|// allocated, this enum will be updated to use it.
@@ -1940,6 +1950,11 @@ literal|0x0000f000
 block|,
 comment|// Mask for selecting EF_MIPS_ABI_ variant.
 comment|// MIPS machine variant
+name|EF_MIPS_MACH_NONE
+init|=
+literal|0x00000000
+block|,
+comment|// A standard MIPS implementation.
 name|EF_MIPS_MACH_3900
 init|=
 literal|0x00810000
@@ -2329,6 +2344,14 @@ directive|include
 file|"ELFRelocs/Hexagon.def"
 block|}
 enum|;
+comment|// ELF Relocation type for Lanai.
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/Lanai.def"
+block|}
+enum|;
 comment|// ELF Relocation types for S390/zSeries
 enum|enum
 block|{
@@ -2351,6 +2374,22 @@ block|{
 include|#
 directive|include
 file|"ELFRelocs/WebAssembly.def"
+block|}
+enum|;
+comment|// ELF Relocation types for AMDGPU
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/AMDGPU.def"
+block|}
+enum|;
+comment|// ELF Relocation types for BPF
+enum|enum
+block|{
+include|#
+directive|include
+file|"ELFRelocs/BPF.def"
 block|}
 enum|;
 undef|#
@@ -2741,6 +2780,11 @@ comment|// This section holds Thread-Local Storage.
 name|SHF_TLS
 init|=
 literal|0x400U
+block|,
+comment|// Identifies a section containing compressed data.
+name|SHF_COMPRESSED
+init|=
+literal|0x800U
 block|,
 comment|// This section is excluded from the final executable or shared library.
 name|SHF_EXCLUDE
@@ -4213,6 +4257,16 @@ init|=
 literal|0x6FFFFEF5
 block|,
 comment|// Reference to the GNU hash table.
+name|DT_TLSDESC_PLT
+init|=
+literal|0x6FFFFEF6
+block|,
+comment|// Location of PLT entry for TLS descriptor resolver calls.
+name|DT_TLSDESC_GOT
+init|=
+literal|0x6FFFFEF7
+block|,
+comment|// Location of GOT entry used by TLS descriptor resolver PLT entry.
 name|DT_RELACOUNT
 init|=
 literal|0x6FFFFFF9
@@ -4509,8 +4563,19 @@ comment|// of a writable PLT.
 name|DT_MIPS_RLD_MAP_REL
 init|=
 literal|0x70000035
+block|,
 comment|// Relative offset of run time loader
 comment|// map, used for debugging.
+comment|// Sun machine-independent extensions.
+name|DT_AUXILIARY
+init|=
+literal|0x7FFFFFFD
+block|,
+comment|// Shared object to load before self
+name|DT_FILTER
+init|=
+literal|0x7FFFFFFF
+comment|// Shared object to get values from
 block|}
 enum|;
 comment|// DT_FLAGS values.
@@ -4822,6 +4887,76 @@ block|,
 name|VER_NEED_CURRENT
 init|=
 literal|1
+block|}
+enum|;
+comment|// SHT_NOTE section types
+enum|enum
+block|{
+name|NT_GNU_BUILD_ID
+init|=
+literal|3
+block|}
+enum|;
+comment|// Compressed section header for ELF32.
+struct|struct
+name|Elf32_Chdr
+block|{
+name|Elf32_Word
+name|ch_type
+decl_stmt|;
+name|Elf32_Word
+name|ch_size
+decl_stmt|;
+name|Elf32_Word
+name|ch_addralign
+decl_stmt|;
+block|}
+struct|;
+comment|// Compressed section header for ELF64.
+struct|struct
+name|Elf64_Chdr
+block|{
+name|Elf64_Word
+name|ch_type
+decl_stmt|;
+name|Elf64_Word
+name|ch_reserved
+decl_stmt|;
+name|Elf64_Xword
+name|ch_size
+decl_stmt|;
+name|Elf64_Xword
+name|ch_addralign
+decl_stmt|;
+block|}
+struct|;
+comment|// Legal values for ch_type field of compressed section header.
+enum|enum
+block|{
+name|ELFCOMPRESS_ZLIB
+init|=
+literal|1
+block|,
+comment|// ZLIB/DEFLATE algorithm.
+name|ELFCOMPRESS_LOOS
+init|=
+literal|0x60000000
+block|,
+comment|// Start of OS-specific.
+name|ELFCOMPRESS_HIOS
+init|=
+literal|0x6fffffff
+block|,
+comment|// End of OS-specific.
+name|ELFCOMPRESS_LOPROC
+init|=
+literal|0x70000000
+block|,
+comment|// Start of processor-specific.
+name|ELFCOMPRESS_HIPROC
+init|=
+literal|0x7fffffff
+comment|// End of processor-specific.
 block|}
 enum|;
 block|}

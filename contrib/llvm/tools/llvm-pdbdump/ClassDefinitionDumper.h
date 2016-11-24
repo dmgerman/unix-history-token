@@ -83,6 +83,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|LinePrinter
 decl_stmt|;
@@ -288,11 +291,9 @@ argument|const SymbolGroup&Group
 argument_list|)
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
+block|}
+end_decl_stmt
 
 begin_endif
 unit|}

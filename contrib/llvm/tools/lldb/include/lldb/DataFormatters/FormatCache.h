@@ -57,6 +57,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/ConstString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -277,9 +277,11 @@ expr_stmt|;
 name|CacheMap
 name|m_map
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|uint64_t
 name|m_cache_hits
 decl_stmt|;

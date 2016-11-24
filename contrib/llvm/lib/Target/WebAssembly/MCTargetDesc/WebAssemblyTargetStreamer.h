@@ -153,7 +153,25 @@ name|emitEndFunc
 argument_list|()
 operator|=
 literal|0
-block|; }
+block|;
+comment|/// .functype
+name|virtual
+name|void
+name|emitIndirectFunctionType
+argument_list|(
+argument|StringRef name
+argument_list|,
+argument|SmallVectorImpl<MVT>&SignatureVTs
+argument_list|,
+argument|size_t NumResults
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"emitIndirectFunctionType not implemented"
+argument_list|)
+block|;   }
+block|}
 decl_stmt|;
 comment|/// This part is for ascii assembly output
 name|class
@@ -204,6 +222,17 @@ block|;
 name|void
 name|emitEndFunc
 argument_list|()
+name|override
+block|;
+name|void
+name|emitIndirectFunctionType
+argument_list|(
+argument|StringRef name
+argument_list|,
+argument|SmallVectorImpl<MVT>&SignatureVTs
+argument_list|,
+argument|size_t NumResults
+argument_list|)
 name|override
 block|; }
 decl_stmt|;

@@ -59,6 +59,9 @@ decl_stmt|;
 name|class
 name|VirtRegMap
 decl_stmt|;
+name|class
+name|LiveIntervals
+decl_stmt|;
 comment|/// Spiller interface.
 comment|///
 comment|/// Implementations are utility classes which insert spill or remat code on
@@ -92,6 +95,12 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|postOptimization
+parameter_list|()
+block|{}
+empty_stmt|;
 block|}
 empty_stmt|;
 comment|/// Create and return a spiller that will insert spill code directly instead

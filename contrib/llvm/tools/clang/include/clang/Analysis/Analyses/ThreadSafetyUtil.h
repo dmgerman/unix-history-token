@@ -583,19 +583,15 @@ argument_list|)
 operator|*
 name|Size
 argument_list|)
-block|;
-return|return;
-block|}
+block|;   }
 comment|// Reserve space for at least N more items.
 name|void
 name|reserveCheck
-parameter_list|(
-name|size_t
-name|N
-parameter_list|,
-name|MemRegionRef
-name|A
-parameter_list|)
+argument_list|(
+argument|size_t N
+argument_list|,
+argument|MemRegionRef A
+argument_list|)
 block|{
 if|if
 condition|(

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Constant.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DerivedTypes.h"
 end_include
 
@@ -87,6 +81,12 @@ name|llvm
 block|{
 name|class
 name|Comdat
+decl_stmt|;
+name|class
+name|MDNode
+decl_stmt|;
+name|class
+name|Metadata
 decl_stmt|;
 name|class
 name|Module
@@ -162,13 +162,16 @@ comment|// Section to emit this into, empty means default
 name|Comdat
 operator|*
 name|ObjComdat
-block|;
-specifier|static
-specifier|const
-name|unsigned
-name|AlignmentBits
+block|;   enum
+block|{
+name|LastAlignmentBit
 operator|=
-literal|5
+literal|4
+block|,
+name|HasMetadataHashEntryBit
+block|,
+name|GlobalObjectBits
+block|,   }
 block|;
 specifier|static
 specifier|const
@@ -177,10 +180,19 @@ name|GlobalObjectSubClassDataBits
 operator|=
 name|GlobalValueSubClassDataBits
 operator|-
-name|AlignmentBits
+name|GlobalObjectBits
 block|;
 name|private
 operator|:
+specifier|static
+specifier|const
+name|unsigned
+name|AlignmentBits
+operator|=
+name|LastAlignmentBit
+operator|+
+literal|1
+block|;
 specifier|static
 specifier|const
 name|unsigned
@@ -190,6 +202,19 @@ operator|(
 literal|1
 operator|<<
 name|AlignmentBits
+operator|)
+operator|-
+literal|1
+block|;
+specifier|static
+specifier|const
+name|unsigned
+name|GlobalObjectMask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|GlobalObjectBits
 operator|)
 operator|-
 literal|1
@@ -248,28 +273,20 @@ specifier|const
 block|{
 return|return
 operator|!
-name|StringRef
-argument_list|(
 name|getSection
 argument_list|()
-argument_list|)
 operator|.
 name|empty
 argument_list|()
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getSection
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Section
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 name|void
@@ -320,6 +337,138 @@ name|ObjComdat
 operator|=
 name|C
 block|; }
+comment|/// Check if this has any metadata.
+name|bool
+name|hasMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasMetadataHashEntry
+argument_list|()
+return|;
+block|}
+comment|/// Get the current metadata attachments for the given kind, if any.
+comment|///
+comment|/// These functions require that the function have at most a single attachment
+comment|/// of the given kind, and return \c nullptr if such an attachment is missing.
+comment|/// @{
+name|MDNode
+operator|*
+name|getMetadata
+argument_list|(
+argument|unsigned KindID
+argument_list|)
+specifier|const
+block|;
+name|MDNode
+operator|*
+name|getMetadata
+argument_list|(
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// @}
+comment|/// Appends all attachments with the given ID to \c MDs in insertion order.
+comment|/// If the global has no attachments with the given ID, or if ID is invalid,
+comment|/// leaves MDs unchanged.
+comment|/// @{
+name|void
+name|getMetadata
+argument_list|(
+argument|unsigned KindID
+argument_list|,
+argument|SmallVectorImpl<MDNode *>&MDs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|getMetadata
+argument_list|(
+argument|StringRef Kind
+argument_list|,
+argument|SmallVectorImpl<MDNode *>&MDs
+argument_list|)
+specifier|const
+block|;
+comment|/// @}
+comment|/// Set a particular kind of metadata attachment.
+comment|///
+comment|/// Sets the given attachment to \c MD, erasing it if \c MD is \c nullptr or
+comment|/// replacing it if it already exists.
+comment|/// @{
+name|void
+name|setMetadata
+argument_list|(
+argument|unsigned KindID
+argument_list|,
+argument|MDNode *MD
+argument_list|)
+block|;
+name|void
+name|setMetadata
+argument_list|(
+argument|StringRef Kind
+argument_list|,
+argument|MDNode *MD
+argument_list|)
+block|;
+comment|/// @}
+comment|/// Add a metadata attachment.
+comment|/// @{
+name|void
+name|addMetadata
+argument_list|(
+argument|unsigned KindID
+argument_list|,
+argument|MDNode&MD
+argument_list|)
+block|;
+name|void
+name|addMetadata
+argument_list|(
+argument|StringRef Kind
+argument_list|,
+argument|MDNode&MD
+argument_list|)
+block|;
+comment|/// @}
+comment|/// Appends all attachments for the global to \c MDs, sorting by attachment
+comment|/// ID. Attachments with the same ID appear in insertion order.
+name|void
+name|getAllMetadata
+argument_list|(
+argument|SmallVectorImpl<std::pair<unsigned
+argument_list|,
+argument|MDNode *>>&MDs
+argument_list|)
+specifier|const
+block|;
+comment|/// Erase all metadata attachments with the given kind.
+name|void
+name|eraseMetadata
+argument_list|(
+argument|unsigned KindID
+argument_list|)
+block|;
+comment|/// Copy metadata from Src, adjusting offsets by Offset.
+name|void
+name|copyMetadata
+argument_list|(
+argument|const GlobalObject *Src
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+block|;
+name|void
+name|addTypeMetadata
+argument_list|(
+argument|unsigned Offset
+argument_list|,
+argument|Metadata *TypeID
+argument_list|)
+block|;
 name|void
 name|copyAttributesFrom
 argument_list|(
@@ -356,6 +505,60 @@ operator|::
 name|GlobalVariableVal
 return|;
 block|}
+name|void
+name|clearMetadata
+argument_list|()
+block|;
+name|private
+operator|:
+name|bool
+name|hasMetadataHashEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getGlobalValueSubClassData
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+name|HasMetadataHashEntryBit
+operator|)
+return|;
+block|}
+name|void
+name|setHasMetadataHashEntry
+argument_list|(
+argument|bool HasEntry
+argument_list|)
+block|{
+name|unsigned
+name|Mask
+operator|=
+literal|1
+operator|<<
+name|HasMetadataHashEntryBit
+block|;
+name|setGlobalValueSubClassData
+argument_list|(
+operator|(
+operator|~
+name|Mask
+operator|&
+name|getGlobalValueSubClassData
+argument_list|()
+operator|)
+operator||
+operator|(
+name|HasEntry
+condition|?
+name|Mask
+else|:
+literal|0u
+operator|)
+argument_list|)
+block|;   }
 expr|}
 block|;  }
 end_decl_stmt

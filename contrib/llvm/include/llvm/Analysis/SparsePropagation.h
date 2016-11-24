@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 

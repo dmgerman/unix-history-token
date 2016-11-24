@@ -83,6 +83,12 @@ directive|include
 file|"llvm/ADT/TinyPtrVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -410,6 +416,11 @@ name|INT_MAX
 decl_stmt|;
 name|int
 name|EHRegNodeEndOffset
+init|=
+name|INT_MAX
+decl_stmt|;
+name|int
+name|EHGuardFrameIndex
 init|=
 name|INT_MAX
 decl_stmt|;

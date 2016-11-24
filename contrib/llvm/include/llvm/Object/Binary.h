@@ -143,9 +143,9 @@ block|,
 name|ID_IR
 block|,
 comment|// LLVM IR
-name|ID_FunctionIndex
+name|ID_ModuleSummaryIndex
 block|,
-comment|// Function summary index
+comment|// Module summary index
 comment|// Object and children.
 name|ID_StartObjects
 block|,
@@ -391,14 +391,14 @@ name|ID_IR
 return|;
 block|}
 name|bool
-name|isFunctionIndex
+name|isModuleSummaryIndex
 argument_list|()
 specifier|const
 block|{
 return|return
 name|TypeID
 operator|==
-name|ID_FunctionIndex
+name|ID_ModuleSummaryIndex
 return|;
 block|}
 name|bool
@@ -432,7 +432,7 @@ empty_stmt|;
 comment|/// @brief Create a Binary from Source, autodetecting the file type.
 comment|///
 comment|/// @param Source The data to create the Binary from.
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -792,7 +792,7 @@ name|get
 argument_list|()
 return|;
 block|}
-name|ErrorOr
+name|Expected
 operator|<
 name|OwningBinary
 operator|<

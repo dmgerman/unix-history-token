@@ -467,7 +467,7 @@ block|}
 comment|/// \brief Can an out-of-line inline function serve as a key function?
 comment|///
 comment|/// This flag is only useful in ABIs where type data (for example,
-comment|/// v-tables and type_info objects) are emitted only after processing
+comment|/// vtables and type_info objects) are emitted only after processing
 comment|/// the definition of a special "key" virtual function.  (This is safe
 comment|/// because the ODR requires that every virtual function be defined
 comment|/// somewhere in a program.)  This usually permits such data to be

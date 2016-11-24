@@ -177,6 +177,18 @@ comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this val
 comment|// null, all registers in this list will be invalidated when the value of this
 comment|// register changes.  For example, the invalidate list for eax would be rax
 comment|// ax, ah, and al.
+specifier|const
+name|uint8_t
+modifier|*
+name|dynamic_size_dwarf_expr_bytes
+decl_stmt|;
+comment|// A DWARF expression that when evaluated gives
+comment|// the byte size of this register.
+name|size_t
+name|dynamic_size_dwarf_len
+decl_stmt|;
+comment|// The length of the DWARF expression in bytes
+comment|// in the dynamic_size_dwarf_expr_bytes member.
 block|}
 struct|;
 comment|//----------------------------------------------------------------------
@@ -340,6 +352,19 @@ index|]
 decl_stmt|;
 block|}
 name|type128
+typedef|;
+typedef|typedef
+struct|struct
+name|type256
+block|{
+name|uint64_t
+name|x
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|type256
 typedef|;
 block|}
 end_decl_stmt

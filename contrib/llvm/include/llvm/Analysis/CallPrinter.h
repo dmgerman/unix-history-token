@@ -77,7 +77,7 @@ parameter_list|()
 function_decl|;
 name|ModulePass
 modifier|*
-name|createCallGraphPrinterPass
+name|createCallGraphDOTPrinterPass
 parameter_list|()
 function_decl|;
 block|}

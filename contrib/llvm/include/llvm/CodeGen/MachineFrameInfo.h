@@ -273,6 +273,14 @@ comment|// arguments have ABI-prescribed offsets).
 name|bool
 name|isAliased
 decl_stmt|;
+comment|/// If true, the object has been zero-extended.
+name|bool
+name|isZExt
+decl_stmt|;
+comment|/// If true, the object has been zero-extended.
+name|bool
+name|isSExt
+decl_stmt|;
 name|StackObject
 argument_list|(
 argument|uint64_t Sz
@@ -332,7 +340,17 @@ argument_list|)
 operator|,
 name|isAliased
 argument_list|(
-argument|A
+name|A
+argument_list|)
+operator|,
+name|isZExt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isSExt
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 block|}
@@ -341,11 +359,12 @@ comment|/// The alignment of the stack.
 name|unsigned
 name|StackAlignment
 decl_stmt|;
-comment|/// Can the stack be realigned.
-comment|/// Targets that set this to false don't have the ability to overalign
-comment|/// their stack frame, and thus, overaligned allocas are all treated
-comment|/// as dynamic allocations and the target must handle them as part
-comment|/// of DYNAMIC_STACKALLOC lowering.
+comment|/// Can the stack be realigned. This can be false if the target does not
+comment|/// support stack realignment, or if the user asks us not to realign the
+comment|/// stack. In this situation, overaligned allocas are all treated as dynamic
+comment|/// allocations and the target must handle them as part of DYNAMIC_STACKALLOC
+comment|/// lowering. All non-alloca stack objects have their alignment clamped to the
+comment|/// base ABI stack alignment.
 comment|/// FIXME: There is room for improvement in this case, in terms of
 comment|/// grouping overaligned allocas into a "secondary stack frame" and
 comment|/// then only use a single alloca to allocate this frame and only a
@@ -354,6 +373,10 @@ comment|/// optimization, each such alloca gets it's own dynamic
 comment|/// realignment.
 name|bool
 name|StackRealignable
+decl_stmt|;
+comment|/// Whether the function has the \c alignstack attribute.
+name|bool
+name|ForcedRealign
 decl_stmt|;
 comment|/// The list of stack objects allocated.
 name|std
@@ -369,31 +392,43 @@ comment|/// the stack.  Because fixed objects are stored at a negative index in 
 comment|/// Objects list, this is also the index to the 0th object in the list.
 name|unsigned
 name|NumFixedObjects
+init|=
+literal|0
 decl_stmt|;
 comment|/// This boolean keeps track of whether any variable
 comment|/// sized objects have been allocated yet.
 name|bool
 name|HasVarSizedObjects
+init|=
+name|false
 decl_stmt|;
 comment|/// This boolean keeps track of whether there is a call
 comment|/// to builtin \@llvm.frameaddress.
 name|bool
 name|FrameAddressTaken
+init|=
+name|false
 decl_stmt|;
 comment|/// This boolean keeps track of whether there is a call
 comment|/// to builtin \@llvm.returnaddress.
 name|bool
 name|ReturnAddressTaken
+init|=
+name|false
 decl_stmt|;
 comment|/// This boolean keeps track of whether there is a call
 comment|/// to builtin \@llvm.experimental.stackmap.
 name|bool
 name|HasStackMap
+init|=
+name|false
 decl_stmt|;
 comment|/// This boolean keeps track of whether there is a call
 comment|/// to builtin \@llvm.experimental.patchpoint.
 name|bool
 name|HasPatchPoint
+init|=
+name|false
 decl_stmt|;
 comment|/// The prolog/epilog code inserter calculates the final stack
 comment|/// offsets for all of the fixed size objects, updating the Objects list
@@ -401,6 +436,8 @@ comment|/// above.  It then updates StackSize to contain the number of bytes tha
 comment|/// to be allocated on entry to the function.
 name|uint64_t
 name|StackSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// The amount that a frame offset needs to be adjusted to
 comment|/// have the actual offset from the stack/frame pointer.  The exact usage of
@@ -413,6 +450,8 @@ comment|/// TargetRegisterInfo::getFrameIndexReference); when generating code, t
 comment|/// corresponding adjustments are performed directly.
 name|int
 name|OffsetAdjustment
+init|=
+literal|0
 decl_stmt|;
 comment|/// The prolog/epilog code inserter may process objects that require greater
 comment|/// alignment than the default alignment the target provides.
@@ -423,24 +462,36 @@ comment|/// be needed.
 comment|///
 name|unsigned
 name|MaxAlignment
+init|=
+literal|0
 decl_stmt|;
 comment|/// Set to true if this function adjusts the stack -- e.g.,
 comment|/// when calling another function. This is only valid during and after
 comment|/// prolog/epilog code insertion.
 name|bool
 name|AdjustsStack
+init|=
+name|false
 decl_stmt|;
 comment|/// Set to true if this function has any function calls.
 name|bool
 name|HasCalls
+init|=
+name|false
 decl_stmt|;
 comment|/// The frame index for the stack protector.
 name|int
 name|StackProtectorIdx
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/// The frame index for the function context. Used for SjLj exceptions.
 name|int
 name|FunctionContextIdx
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/// This contains the size of the largest call frame if the target uses frame
 comment|/// setup/destroy pseudo instructions (as defined in the TargetFrameInfo
@@ -448,6 +499,8 @@ comment|/// class).  This information is important for frame pointer elimination
 comment|/// It is only valid during and after prolog/epilog code insertion.
 name|unsigned
 name|MaxCallFrameSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// The prolog/epilog code inserter fills in this vector with each
 comment|/// callee saved register saved in the frame.  Beyond its use by the prolog/
@@ -464,6 +517,8 @@ expr_stmt|;
 comment|/// Has CSInfo been set yet?
 name|bool
 name|CSIValid
+init|=
+name|false
 decl_stmt|;
 comment|/// References to frame indices which are mapped
 comment|/// into the local frame allocation block.<FrameIdx, LocalOffset>
@@ -485,179 +540,99 @@ expr_stmt|;
 comment|/// Size of the pre-allocated local frame block.
 name|int64_t
 name|LocalFrameSize
+init|=
+literal|0
 decl_stmt|;
 comment|/// Required alignment of the local object blob, which is the strictest
 comment|/// alignment of any object in it.
 name|unsigned
 name|LocalFrameMaxAlign
+init|=
+literal|0
 decl_stmt|;
 comment|/// Whether the local object blob needs to be allocated together. If not,
 comment|/// PEI should ignore the isPreAllocated flags on the stack objects and
 comment|/// just allocate them normally.
 name|bool
 name|UseLocalStackAllocationBlock
-decl_stmt|;
-comment|/// Whether the "realign-stack" option is on.
-name|bool
-name|RealignOption
+init|=
+name|false
 decl_stmt|;
 comment|/// True if the function dynamically adjusts the stack pointer through some
 comment|/// opaque mechanism like inline assembly or Win32 EH.
 name|bool
 name|HasOpaqueSPAdjustment
+init|=
+name|false
 decl_stmt|;
 comment|/// True if the function contains operations which will lower down to
 comment|/// instructions which manipulate the stack pointer.
 name|bool
 name|HasCopyImplyingStackAdjustment
+init|=
+name|false
 decl_stmt|;
 comment|/// True if the function contains a call to the llvm.vastart intrinsic.
 name|bool
 name|HasVAStart
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this is a varargs function that contains a musttail call.
 name|bool
 name|HasMustTailInVarArgFunc
+init|=
+name|false
 decl_stmt|;
 comment|/// True if this function contains a tail call. If so immutable objects like
 comment|/// function arguments are no longer so. A tail call *can* override fixed
 comment|/// stack objects like arguments so we can't treat them as immutable.
 name|bool
 name|HasTailCall
+init|=
+name|false
 decl_stmt|;
 comment|/// Not null, if shrink-wrapping found a better place for the prologue.
 name|MachineBasicBlock
 modifier|*
 name|Save
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// Not null, if shrink-wrapping found a better place for the epilogue.
 name|MachineBasicBlock
 modifier|*
 name|Restore
+init|=
+name|nullptr
 decl_stmt|;
 name|public
 label|:
 name|explicit
 name|MachineFrameInfo
 argument_list|(
-argument|unsigned StackAlign
+argument|unsigned StackAlignment
 argument_list|,
-argument|bool isStackRealign
+argument|bool StackRealignable
 argument_list|,
-argument|bool RealignOpt
+argument|bool ForcedRealign
 argument_list|)
 block|:
 name|StackAlignment
 argument_list|(
-name|StackAlign
+name|StackAlignment
 argument_list|)
 operator|,
 name|StackRealignable
 argument_list|(
-name|isStackRealign
+name|StackRealignable
 argument_list|)
 operator|,
-name|RealignOption
+name|ForcedRealign
 argument_list|(
-argument|RealignOpt
+argument|ForcedRealign
 argument_list|)
-block|{
-name|StackSize
-operator|=
-name|NumFixedObjects
-operator|=
-name|OffsetAdjustment
-operator|=
-name|MaxAlignment
-operator|=
-literal|0
-block|;
-name|HasVarSizedObjects
-operator|=
-name|false
-block|;
-name|FrameAddressTaken
-operator|=
-name|false
-block|;
-name|ReturnAddressTaken
-operator|=
-name|false
-block|;
-name|HasStackMap
-operator|=
-name|false
-block|;
-name|HasPatchPoint
-operator|=
-name|false
-block|;
-name|AdjustsStack
-operator|=
-name|false
-block|;
-name|HasCalls
-operator|=
-name|false
-block|;
-name|StackProtectorIdx
-operator|=
-operator|-
-literal|1
-block|;
-name|FunctionContextIdx
-operator|=
-operator|-
-literal|1
-block|;
-name|MaxCallFrameSize
-operator|=
-literal|0
-block|;
-name|CSIValid
-operator|=
-name|false
-block|;
-name|LocalFrameSize
-operator|=
-literal|0
-block|;
-name|LocalFrameMaxAlign
-operator|=
-literal|0
-block|;
-name|UseLocalStackAllocationBlock
-operator|=
-name|false
-block|;
-name|HasOpaqueSPAdjustment
-operator|=
-name|false
-block|;
-name|HasCopyImplyingStackAdjustment
-operator|=
-name|false
-block|;
-name|HasVAStart
-operator|=
-name|false
-block|;
-name|HasMustTailInVarArgFunc
-operator|=
-name|false
-block|;
-name|Save
-operator|=
-name|nullptr
-block|;
-name|Restore
-operator|=
-name|nullptr
-block|;
-name|HasTailCall
-operator|=
-name|false
-block|;   }
+block|{}
 comment|/// Return true if there are any stack objects in this function.
 name|bool
 name|hasStackObjects
@@ -1346,6 +1321,156 @@ index|]
 operator|.
 name|SPOffset
 return|;
+block|}
+name|bool
+name|isObjectZExt
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isZExt
+return|;
+block|}
+name|void
+name|setObjectZExt
+parameter_list|(
+name|int
+name|ObjectIdx
+parameter_list|,
+name|bool
+name|IsZExt
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isZExt
+operator|=
+name|IsZExt
+expr_stmt|;
+block|}
+name|bool
+name|isObjectSExt
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isSExt
+return|;
+block|}
+name|void
+name|setObjectSExt
+parameter_list|(
+name|int
+name|ObjectIdx
+parameter_list|,
+name|bool
+name|IsSExt
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isSExt
+operator|=
+name|IsSExt
+expr_stmt|;
 block|}
 comment|/// Set the stack frame offset of the specified object. The
 comment|/// offset is relative to the stack pointer on entry to the function.

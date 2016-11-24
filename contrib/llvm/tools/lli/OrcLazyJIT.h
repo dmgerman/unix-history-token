@@ -319,26 +319,6 @@ name|CODLayer
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|CompileCallbackMgr
-operator|>
-name|createCompileCallbackMgr
-argument_list|(
-argument|Triple T
-argument_list|)
-expr_stmt|;
-specifier|static
-name|IndirectStubsManagerBuilder
-name|createIndirectStubsMgrBuilder
-parameter_list|(
-name|Triple
-name|T
-parameter_list|)
-function_decl|;
 name|ModuleHandleT
 name|addModule
 argument_list|(
@@ -443,16 +423,9 @@ comment|// Symbol resolution order:
 comment|//   1) Search the JIT symbols.
 comment|//   2) Check for C++ runtime overrides.
 comment|//   3) Search the host process (LLI)'s symbol table.
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|RuntimeDyld
-operator|::
-name|SymbolResolver
-operator|>
+name|auto
 name|Resolver
-operator|=
+init|=
 name|orc
 operator|::
 name|createLambdaResolver
@@ -484,20 +457,10 @@ name|true
 argument_list|)
 condition|)
 return|return
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-argument_list|(
 name|Sym
 operator|.
-name|getAddress
+name|toRuntimeDyldSymbol
 argument_list|()
-argument_list|,
-name|Sym
-operator|.
-name|getFlags
-argument_list|()
-argument_list|)
 return|;
 if|if
 condition|(

@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugInfo.h"
 end_include
 
@@ -87,6 +81,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|AsmPrinter
 decl_stmt|;
@@ -111,6 +108,16 @@ range|:
 name|public
 name|DwarfUnit
 block|{
+comment|/// A numeric ID unique among all CUs in the module
+name|unsigned
+name|UniqueID
+block|;
+comment|/// Offset of the UnitDie from beginning of debug info section.
+name|unsigned
+name|DebugInfoOffset
+operator|=
+literal|0
+block|;
 comment|/// The attribute index of DW_AT_stmt_list in the compile unit DIE, avoiding
 comment|/// the need to search for it in applyStmtList.
 name|DIE
@@ -127,6 +134,11 @@ comment|/// The start of the unit within its section.
 name|MCSymbol
 operator|*
 name|LabelBegin
+block|;
+comment|/// The start of the unit macro info within macro section.
+name|MCSymbol
+operator|*
+name|MacroLabelBegin
 block|;
 typedef|typedef
 name|llvm
@@ -242,6 +254,36 @@ argument_list|,
 argument|DwarfFile *DWU
 argument_list|)
 empty_stmt|;
+name|unsigned
+name|getUniqueID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UniqueID
+return|;
+block|}
+name|unsigned
+name|getDebugInfoOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebugInfoOffset
+return|;
+block|}
+name|void
+name|setDebugInfoOffset
+parameter_list|(
+name|unsigned
+name|DbgInfoOff
+parameter_list|)
+block|{
+name|DebugInfoOffset
+operator|=
+name|DbgInfoOff
+expr_stmt|;
+block|}
 name|DwarfCompileUnit
 operator|*
 name|getSkeleton
@@ -362,12 +404,53 @@ modifier|*
 name|IE
 parameter_list|)
 block|{
-name|ImportedEntities
-index|[
+name|DIScope
+modifier|*
+name|Scope
+init|=
 name|IE
 operator|->
 name|getScope
 argument_list|()
+decl_stmt|;
+name|assert
+argument_list|(
+name|Scope
+operator|&&
+literal|"Invalid Scope encoding!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isa
+operator|<
+name|DILocalScope
+operator|>
+operator|(
+name|Scope
+operator|)
+condition|)
+comment|// No need to add imported enities that are not local declaration.
+return|return;
+name|auto
+operator|*
+name|LocalScope
+operator|=
+name|cast
+operator|<
+name|DILocalScope
+operator|>
+operator|(
+name|Scope
+operator|)
+operator|->
+name|getNonLexicalBlockFileScope
+argument_list|()
+expr_stmt|;
+name|ImportedEntities
+index|[
+name|LocalScope
 index|]
 operator|.
 name|push_back
@@ -628,15 +711,6 @@ modifier|*
 name|SP
 parameter_list|)
 function_decl|;
-name|void
-name|collectDeadVariables
-parameter_list|(
-specifier|const
-name|DISubprogram
-modifier|*
-name|SP
-parameter_list|)
-function_decl|;
 comment|/// Set the skeleton unit associated with this unit.
 name|void
 name|setSkeleton
@@ -712,6 +786,16 @@ argument_list|)
 block|;
 return|return
 name|LabelBegin
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getMacroLabelBegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MacroLabelBegin
 return|;
 block|}
 comment|/// Add a new global name to the compile unit.

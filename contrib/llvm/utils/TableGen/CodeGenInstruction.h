@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -105,6 +99,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|Record
 decl_stmt|;
@@ -113,9 +115,6 @@ name|DagInit
 decl_stmt|;
 name|class
 name|CodeGenTarget
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|class
 name|CGIOperandList
@@ -1089,6 +1088,11 @@ name|isConvergent
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|hasNoSchedulingInfo
+range|:
+literal|1
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -1227,7 +1231,12 @@ argument_list|)
 block|:
 name|Name
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|N
+argument_list|)
 argument_list|)
 operator|,
 name|R

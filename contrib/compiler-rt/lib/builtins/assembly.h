@@ -114,6 +114,12 @@ name|CONST_SECTION
 value|.const
 end_define
 
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -195,6 +201,48 @@ name|CONST_SECTION
 value|.section .rodata
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+value|.section .note.GNU-stack,"",%progbits
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -245,6 +293,12 @@ define|#
 directive|define
 name|CONST_SECTION
 value|.section .rdata,"rd"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_EXEC_STACK_DIRECTIVE
 end_define
 
 begin_endif

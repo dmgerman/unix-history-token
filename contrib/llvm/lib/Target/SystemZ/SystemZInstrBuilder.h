@@ -146,10 +146,12 @@ operator|->
 name|getDesc
 argument_list|()
 decl_stmt|;
-name|unsigned
+name|auto
 name|Flags
 init|=
-literal|0
+name|MachineMemOperand
+operator|::
+name|MONone
 decl_stmt|;
 if|if
 condition|(

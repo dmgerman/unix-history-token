@@ -228,12 +228,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iterator>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -3101,7 +3095,13 @@ name|detail
 operator|::
 name|hash_integer_value
 argument_list|(
+name|static_cast
+operator|<
+name|uint64_t
+operator|>
+operator|(
 name|value
+operator|)
 argument_list|)
 return|;
 block|}

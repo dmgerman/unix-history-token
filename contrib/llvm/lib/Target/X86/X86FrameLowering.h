@@ -145,7 +145,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|bool InProlog
 argument_list|)
@@ -169,7 +169,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 block|;
@@ -312,18 +312,22 @@ specifier|const
 name|override
 block|;
 name|int
-name|getFrameIndexReferenceFromSP
+name|getFrameIndexReferencePreferSP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
 argument_list|,
 argument|unsigned&FrameReg
+argument_list|,
+argument|bool IgnoreSPUpdates
 argument_list|)
 specifier|const
 name|override
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF
@@ -391,6 +395,22 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// Check whether or not the given \p MBB can be used as a prologue
+comment|/// for the target.
+comment|/// The prologue will be inserted first in this basic block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+comment|/// As soon as the target enable shrink-wrapping without overriding
+comment|/// this method, we assume that each basic block is a valid
+comment|/// prologue.
+name|bool
+name|canUseAsPrologue
+argument_list|(
+argument|const MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// Check whether or not the given \p MBB can be used as a epilogue
 comment|/// for the target.
 comment|/// The epilogue will be inserted before the first terminator of that block.
@@ -409,6 +429,20 @@ name|bool
 name|enableShrinkWrapping
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Order the symbols in the local stack.
+comment|/// We want to place the local stack objects in some sort of sensible order.
+comment|/// The heuristic we use is to try and pack them according to static number
+comment|/// of uses and size in order to minimize code size.
+name|void
+name|orderFrameObjects
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|SmallVectorImpl<int>&ObjectsToAllocate
 argument_list|)
 specifier|const
 name|override
@@ -438,9 +472,9 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
-argument|MCCFIInstruction CFIInst
+argument|const MCCFIInstruction&CFIInst
 argument_list|)
 specifier|const
 block|;
@@ -455,7 +489,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|bool RestoreSP = false
 argument_list|)
@@ -481,7 +515,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|bool InProlog
 argument_list|)
@@ -498,7 +532,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|bool InProlog
 argument_list|)
@@ -515,7 +549,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|bool InProlog
 argument_list|)
@@ -529,7 +563,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned Reg
 argument_list|,
@@ -545,7 +579,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|int Offset
 argument_list|)
@@ -559,7 +593,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|int64_t Offset
 argument_list|,

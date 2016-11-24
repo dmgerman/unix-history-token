@@ -922,6 +922,14 @@ name|CompilerType
 name|GetCompilerType
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get the size of the prologue instructions for this function.  The "prologue"
+comment|/// instructions include any instructions given line number 0 immediately following
+comment|/// the prologue end.
+comment|///
+comment|/// @return
+comment|///     The size of the prologue.
+comment|//------------------------------------------------------------------
 name|uint32_t
 name|GetPrologueByteSize
 parameter_list|()

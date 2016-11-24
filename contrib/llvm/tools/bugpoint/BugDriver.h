@@ -287,7 +287,12 @@ name|PassesToRun
 operator|.
 name|push_back
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -450,26 +455,6 @@ name|bool
 name|isExecutingJIT
 parameter_list|()
 function_decl|;
-comment|/// runPasses - Run all of the passes in the "PassesToRun" list, discard the
-comment|/// output, and return true if any of the passes crashed.
-name|bool
-name|runPasses
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|)
-decl|const
-block|{
-return|return
-name|runPasses
-argument_list|(
-name|M
-argument_list|,
-name|PassesToRun
-argument_list|)
-return|;
-block|}
 name|Module
 operator|*
 name|getProgram
@@ -605,7 +590,7 @@ name|executeProgramSafely
 argument_list|(
 argument|const Module *Program
 argument_list|,
-argument|std::string OutputFile
+argument|const std::string&OutputFile
 argument_list|,
 argument|std::string *Error
 argument_list|)
@@ -787,9 +772,6 @@ argument_list|)
 expr_stmt|;
 comment|/// Carefully run the specified set of pass on the specified/ module,
 comment|/// returning the transformed module on success, or a null pointer on failure.
-comment|/// If AutoDebugCrashes is set to true, then bugpoint will automatically
-comment|/// attempt to track down a crashing pass if one exists, and this method will
-comment|/// never return null.
 name|std
 operator|::
 name|unique_ptr
@@ -801,8 +783,6 @@ argument_list|(
 argument|Module *M
 argument_list|,
 argument|const std::vector<std::string>&Passes
-argument_list|,
-argument|bool AutoDebugCrashes = false
 argument_list|,
 argument|unsigned NumExtraArgs =
 literal|0
@@ -870,6 +850,49 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// runPasses - Just like the method above, but this just returns true or
+comment|/// false indicating whether or not the optimizer crashed on the specified
+comment|/// input (true = crashed).  Does not produce any output.
+comment|///
+name|bool
+name|runPasses
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|PassesToRun
+argument_list|)
+decl|const
+block|{
+name|std
+operator|::
+name|string
+name|Filename
+expr_stmt|;
+return|return
+name|runPasses
+argument_list|(
+name|M
+argument_list|,
+name|PassesToRun
+argument_list|,
+name|Filename
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// runManyPasses - Take the specified pass list and create different
 comment|/// combinations of passes to compile the program with. Compile the program with
 comment|/// each set and mark test to see if it compiled correctly. If the passes
@@ -941,54 +964,6 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/// runPasses - Just like the method above, but this just returns true or
-comment|/// false indicating whether or not the optimizer crashed on the specified
-comment|/// input (true = crashed).
-comment|///
-name|bool
-name|runPasses
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|PassesToRun
-argument_list|,
-name|bool
-name|DeleteOutput
-operator|=
-name|true
-argument_list|)
-decl|const
-block|{
-name|std
-operator|::
-name|string
-name|Filename
-expr_stmt|;
-return|return
-name|runPasses
-argument_list|(
-name|M
-argument_list|,
-name|PassesToRun
-argument_list|,
-name|Filename
-argument_list|,
-name|DeleteOutput
-argument_list|)
-return|;
-block|}
 comment|/// initializeExecutionEnvironment - This method is used to set up the
 comment|/// environment for executing LLVM programs.
 comment|///

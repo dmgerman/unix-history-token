@@ -244,6 +244,100 @@ operator|*
 operator|>
 name|MBBMap
 expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|1
+operator|>
+name|SwiftErrorVRegs
+expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+literal|1
+operator|>
+name|SwiftErrorValues
+expr_stmt|;
+comment|/// A function can only have a single swifterror argument. And if it does
+comment|/// have a swifterror argument, it must be the first entry in
+comment|/// SwiftErrorVals.
+name|SwiftErrorValues
+name|SwiftErrorVals
+decl_stmt|;
+comment|/// Track the virtual register for each swifterror value in a given basic
+comment|/// block. Entries in SwiftErrorVRegs have the same ordering as entries
+comment|/// in SwiftErrorVals.
+comment|/// Note that another choice that is more straight-forward is to use
+comment|/// Map<const MachineBasicBlock*, Map<Value*, unsigned/*VReg*/>>. It
+comment|/// maintains a map from swifterror values to virtual registers for each
+comment|/// machine basic block. This choice does not require a one-to-one
+comment|/// correspondence between SwiftErrorValues and SwiftErrorVRegs. But because
+comment|/// of efficiency concern, we do not choose it.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+operator|,
+name|SwiftErrorVRegs
+operator|>
+name|SwiftErrorMap
+expr_stmt|;
+comment|/// Track the virtual register for each swifterror value at the end of a basic
+comment|/// block when we need the assignment of a virtual register before the basic
+comment|/// block is visited. When we actually visit the basic block, we will make
+comment|/// sure the swifterror value is in the correct virtual register.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MachineBasicBlock
+operator|*
+operator|,
+name|SwiftErrorVRegs
+operator|>
+name|SwiftErrorWorklist
+expr_stmt|;
+comment|/// Find the swifterror virtual register in SwiftErrorMap. We will assert
+comment|/// failure when the value does not exist in swifterror map.
+name|unsigned
+name|findSwiftErrorVReg
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+argument_list|,
+specifier|const
+name|Value
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Set the swifterror virtual register in SwiftErrorMap.
+name|void
+name|setSwiftErrorVReg
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|;
 comment|/// ValueMap - Since we emit code for the function a basic block at a time,
 comment|/// we must remember which virtual registers hold the values for
 comment|/// cross-basic-block values.
@@ -268,12 +362,14 @@ name|unsigned
 operator|>
 name|CatchPadExceptionPointers
 expr_stmt|;
-comment|// Keep track of frame indices allocated for statepoints as they could be used
-comment|// across basic block boundaries.
-comment|// Key of the map is statepoint instruction, value is a map from spilled
-comment|// llvm Value to the optional stack stack slot index.
-comment|// If optional is unspecified it means that we have visited this value
-comment|// but didn't spill it.
+comment|/// Keep track of frame indices allocated for statepoints as they could be
+comment|/// used across basic block boundaries.  This struct is more complex than a
+comment|/// simple map because the stateopint lowering code de-duplicates gc pointers
+comment|/// based on their SDValue (so %p and (bitcast %p to T) will get the same
+comment|/// slot), and we track that here.
+struct|struct
+name|StatepointSpillMap
+block|{
 typedef|typedef
 name|DenseMap
 operator|<
@@ -285,17 +381,97 @@ name|Optional
 operator|<
 name|int
 operator|>>
-name|StatepointSpilledValueMapTy
+name|SlotMapTy
 expr_stmt|;
+comment|/// Maps uniqued llvm IR values to the slots they were spilled in.  If a
+comment|/// value is mapped to None it means we visited the value but didn't spill
+comment|/// it (because it was a constant, for instance).
+name|SlotMapTy
+name|SlotMap
+decl_stmt|;
+comment|/// Maps llvm IR values to the values they were de-duplicated to.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+specifier|const
+name|Value
+operator|*
+operator|>
+name|DuplicateMap
+expr_stmt|;
+name|SlotMapTy
+operator|::
+name|const_iterator
+name|find
+argument_list|(
+argument|const Value *V
+argument_list|)
+specifier|const
+block|{
+name|auto
+name|DuplIt
+operator|=
+name|DuplicateMap
+operator|.
+name|find
+argument_list|(
+name|V
+argument_list|)
+block|;
+if|if
+condition|(
+name|DuplIt
+operator|!=
+name|DuplicateMap
+operator|.
+name|end
+argument_list|()
+condition|)
+name|V
+operator|=
+name|DuplIt
+operator|->
+name|second
+expr_stmt|;
+return|return
+name|SlotMap
+operator|.
+name|find
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
+name|SlotMapTy
+decl|::
+name|const_iterator
+name|end
+argument_list|()
+decl|const
+block|{
+return|return
+name|SlotMap
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// Maps gc.statepoint instructions to their corresponding StatepointSpillMap
+comment|/// instances.
 name|DenseMap
 operator|<
 specifier|const
 name|Instruction
 operator|*
 operator|,
-name|StatepointSpilledValueMapTy
+name|StatepointSpillMap
 operator|>
-name|StatepointRelocatedValues
+name|StatepointSpillMaps
 expr_stmt|;
 comment|/// StaticAllocaMap - Keep track of frame indices for fixed sized allocas in
 comment|/// the entry block.  This allows the allocas to be efficiently referenced
@@ -372,7 +548,7 @@ name|NumSignBits
 range|:
 literal|31
 decl_stmt|;
-name|bool
+name|unsigned
 name|IsValid
 range|:
 literal|1
@@ -865,12 +1041,33 @@ operator|>
 name|LiveOutRegInfo
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// ComputeUsesVAFloatArgument - Determine if any floating-point values are
+end_comment
+
+begin_comment
 comment|/// being passed to this variadic function, and set the MachineModuleInfo's
+end_comment
+
+begin_comment
 comment|/// usesVAFloatArgument flag if so. This flag is used to emit an undefined
+end_comment
+
+begin_comment
 comment|/// reference to _fltused on Windows, which will link in MSVCRT's
+end_comment
+
+begin_comment
 comment|/// floating-point support.
+end_comment
+
+begin_function_decl
 name|void
 name|ComputeUsesVAFloatArgument
 parameter_list|(
@@ -884,8 +1081,17 @@ modifier|*
 name|MMI
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// AddLandingPadInfo - Extract the exception handling information from the
+end_comment
+
+begin_comment
 comment|/// landingpad instruction and add them to the specified machine module info.
+end_comment
+
+begin_function_decl
 name|void
 name|AddLandingPadInfo
 parameter_list|(
@@ -903,10 +1109,10 @@ modifier|*
 name|MBB
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

@@ -725,7 +725,7 @@ return|;
 block|}
 comment|/// \brief The maximum number of bytes of a vector register we can vectorize
 comment|/// the accesses safely with.
-name|unsigned
+name|uint64_t
 name|getMaxSafeDepDistBytes
 parameter_list|()
 block|{
@@ -907,7 +907,7 @@ name|unsigned
 name|AccessIdx
 decl_stmt|;
 comment|// We can access this many bytes in parallel safely.
-name|unsigned
+name|uint64_t
 name|MaxSafeDepDistBytes
 decl_stmt|;
 comment|/// \brief If we see a non-constant dependence distance we can still try to
@@ -966,13 +966,16 @@ argument_list|)
 expr_stmt|;
 comment|/// \brief Check whether the data dependence could prevent store-load
 comment|/// forwarding.
+comment|///
+comment|/// \return false if we shouldn't vectorize at all or avoid larger
+comment|/// vectorization factors by limiting MaxSafeDepDistBytes.
 name|bool
 name|couldPreventStoreLoadForward
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|Distance
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|TypeByteSize
 parameter_list|)
 function_decl|;
@@ -1129,10 +1132,10 @@ name|clear
 argument_list|()
 block|;   }
 comment|/// Insert a pointer and calculate the start and end SCEVs.
-comment|/// \p We need Preds in order to compute the SCEV expression of the pointer
+comment|/// We need \p PSE in order to compute the SCEV expression of the pointer
 comment|/// according to the assumptions that we've made during the analysis.
 comment|/// The method might also version the pointer stride according to \p Strides,
-comment|/// and change \p Preds.
+comment|/// and add new predicates to \p PSE.
 name|void
 name|insert
 argument_list|(
@@ -1601,11 +1604,6 @@ operator|*
 name|SE
 argument_list|,
 specifier|const
-name|DataLayout
-operator|&
-name|DL
-argument_list|,
-specifier|const
 name|TargetLibraryInfo
 operator|*
 name|TLI
@@ -1621,13 +1619,252 @@ argument_list|,
 name|LoopInfo
 operator|*
 name|LI
-argument_list|,
-specifier|const
-name|ValueToValueMap
-operator|&
-name|Strides
 argument_list|)
 expr_stmt|;
+comment|// FIXME:
+comment|// Hack for MSVC 2013 which sems like it can't synthesize this even
+comment|// with default keyword:
+comment|// LoopAccessInfo(LoopAccessInfo&&LAI) = default;
+name|LoopAccessInfo
+argument_list|(
+name|LoopAccessInfo
+operator|&&
+name|LAI
+argument_list|)
+operator|:
+name|PSE
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|PSE
+argument_list|)
+argument_list|)
+operator|,
+name|PtrRtChecking
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|PtrRtChecking
+argument_list|)
+argument_list|)
+operator|,
+name|DepChecker
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|DepChecker
+argument_list|)
+argument_list|)
+operator|,
+name|TheLoop
+argument_list|(
+name|LAI
+operator|.
+name|TheLoop
+argument_list|)
+operator|,
+name|NumLoads
+argument_list|(
+name|LAI
+operator|.
+name|NumLoads
+argument_list|)
+operator|,
+name|NumStores
+argument_list|(
+name|LAI
+operator|.
+name|NumStores
+argument_list|)
+operator|,
+name|MaxSafeDepDistBytes
+argument_list|(
+name|LAI
+operator|.
+name|MaxSafeDepDistBytes
+argument_list|)
+operator|,
+name|CanVecMem
+argument_list|(
+name|LAI
+operator|.
+name|CanVecMem
+argument_list|)
+operator|,
+name|StoreToLoopInvariantAddress
+argument_list|(
+name|LAI
+operator|.
+name|StoreToLoopInvariantAddress
+argument_list|)
+operator|,
+name|Report
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|Report
+argument_list|)
+argument_list|)
+operator|,
+name|SymbolicStrides
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|SymbolicStrides
+argument_list|)
+argument_list|)
+operator|,
+name|StrideSet
+argument_list|(
+argument|std::move(LAI.StrideSet)
+argument_list|)
+block|{}
+comment|// LoopAccessInfo&operator=(LoopAccessInfo&&LAI) = default;
+name|LoopAccessInfo
+operator|&
+name|operator
+operator|=
+operator|(
+name|LoopAccessInfo
+operator|&&
+name|LAI
+operator|)
+block|{
+name|assert
+argument_list|(
+name|this
+operator|!=
+operator|&
+name|LAI
+argument_list|)
+block|;
+name|PSE
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|PSE
+argument_list|)
+block|;
+name|PtrRtChecking
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|PtrRtChecking
+argument_list|)
+block|;
+name|DepChecker
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|DepChecker
+argument_list|)
+block|;
+name|TheLoop
+operator|=
+name|LAI
+operator|.
+name|TheLoop
+block|;
+name|NumLoads
+operator|=
+name|LAI
+operator|.
+name|NumLoads
+block|;
+name|NumStores
+operator|=
+name|LAI
+operator|.
+name|NumStores
+block|;
+name|MaxSafeDepDistBytes
+operator|=
+name|LAI
+operator|.
+name|MaxSafeDepDistBytes
+block|;
+name|CanVecMem
+operator|=
+name|LAI
+operator|.
+name|CanVecMem
+block|;
+name|StoreToLoopInvariantAddress
+operator|=
+name|LAI
+operator|.
+name|StoreToLoopInvariantAddress
+block|;
+name|Report
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|Report
+argument_list|)
+block|;
+name|SymbolicStrides
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|SymbolicStrides
+argument_list|)
+block|;
+name|StrideSet
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|LAI
+operator|.
+name|StrideSet
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 comment|/// Return true we can analyze the memory accesses in the loop and there are
 comment|/// no memory dependence cycles.
 name|bool
@@ -1647,8 +1884,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|PtrRtChecking
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|/// \brief Number of memchecks required to prove independence of otherwise
@@ -1660,7 +1899,7 @@ specifier|const
 block|{
 return|return
 name|PtrRtChecking
-operator|.
+operator|->
 name|getNumberOfChecks
 argument_list|()
 return|;
@@ -1694,7 +1933,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-name|unsigned
+name|uint64_t
 name|getMaxSafeDepDistBytes
 argument_list|()
 specifier|const
@@ -1791,6 +2030,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|DepChecker
 return|;
 block|}
@@ -1813,12 +2053,44 @@ specifier|const
 block|{
 return|return
 name|DepChecker
-operator|.
+operator|->
 name|getInstructionsForAccess
 argument_list|(
 name|Ptr
 argument_list|,
 name|isWrite
+argument_list|)
+return|;
+block|}
+comment|/// \brief If an access has a symbolic strides, this maps the pointer value to
+comment|/// the stride symbol.
+specifier|const
+name|ValueToValueMap
+operator|&
+name|getSymbolicStrides
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymbolicStrides
+return|;
+block|}
+comment|/// \brief Pointer has a symbolic stride.
+name|bool
+name|hasStride
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+block|{
+return|return
+name|StrideSet
+operator|.
+name|count
+argument_list|(
+name|V
 argument_list|)
 return|;
 block|}
@@ -1837,12 +2109,6 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Used to ensure that if the analysis was run with speculating the
-comment|/// value of symbolic strides, the client queries it with the same assumption.
-comment|/// Only used in DEBUG build but we don't want NDEBUG-dependent ABI.
-name|unsigned
-name|NumSymbolicStrides
-decl_stmt|;
 comment|/// \brief Checks existence of store to invariant address inside loop.
 comment|/// If the loop has any store to invariant address, then it returns true,
 comment|/// else returns false.
@@ -1860,19 +2126,40 @@ comment|/// them to a more usable form.  All SCEV expressions during the analysi
 comment|/// should be re-written (and therefore simplified) according to PSE.
 comment|/// A user of LoopAccessAnalysis will need to emit the runtime checks
 comment|/// associated with this predicate.
+specifier|const
 name|PredicatedScalarEvolution
+operator|&
+name|getPSE
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
 name|PSE
-decl_stmt|;
+return|;
+block|}
 name|private
 label|:
-comment|/// \brief Analyze the loop.  Substitute symbolic strides using Strides.
+comment|/// \brief Analyze the loop.
 name|void
 name|analyzeLoop
 parameter_list|(
+name|AliasAnalysis
+modifier|*
+name|AA
+parameter_list|,
+name|LoopInfo
+modifier|*
+name|LI
+parameter_list|,
 specifier|const
-name|ValueToValueMap
-modifier|&
-name|Strides
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
 parameter_list|)
 function_decl|;
 comment|/// \brief Check if the structure of the loop allows it to be analyzed by this
@@ -1889,41 +2176,49 @@ modifier|&
 name|Message
 parameter_list|)
 function_decl|;
+comment|/// \brief Collect memory access with loop invariant strides.
+comment|///
+comment|/// Looks for accesses like "a[i * StrideA]" where "StrideA" is loop
+comment|/// invariant.
+name|void
+name|collectStridedAccess
+parameter_list|(
+name|Value
+modifier|*
+name|LoadOrStoreInst
+parameter_list|)
+function_decl|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PredicatedScalarEvolution
+operator|>
+name|PSE
+expr_stmt|;
 comment|/// We need to check that all of the pointers in this list are disjoint
-comment|/// at runtime.
+comment|/// at runtime. Using std::unique_ptr to make using move ctor simpler.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RuntimePointerChecking
+operator|>
 name|PtrRtChecking
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief the Memory Dependence Checker which can determine the
 comment|/// loop-independent and loop-carried dependences between memory accesses.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MemoryDepChecker
+operator|>
 name|DepChecker
-decl_stmt|;
+expr_stmt|;
 name|Loop
 modifier|*
 name|TheLoop
-decl_stmt|;
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
-decl_stmt|;
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-decl_stmt|;
-name|AliasAnalysis
-modifier|*
-name|AA
-decl_stmt|;
-name|DominatorTree
-modifier|*
-name|DT
-decl_stmt|;
-name|LoopInfo
-modifier|*
-name|LI
 decl_stmt|;
 name|unsigned
 name|NumLoads
@@ -1931,7 +2226,7 @@ decl_stmt|;
 name|unsigned
 name|NumStores
 decl_stmt|;
-name|unsigned
+name|uint64_t
 name|MaxSafeDepDistBytes
 decl_stmt|;
 comment|/// \brief Cache the result of analyzeLoop.
@@ -1950,6 +2245,21 @@ operator|<
 name|LoopAccessReport
 operator|>
 name|Report
+expr_stmt|;
+comment|/// \brief If an access has a symbolic strides, this maps the pointer value to
+comment|/// the stride symbol.
+name|ValueToValueMap
+name|SymbolicStrides
+decl_stmt|;
+comment|/// \brief Set of symbolic strides values.
+name|SmallPtrSet
+operator|<
+name|Value
+operator|*
+operator|,
+literal|8
+operator|>
+name|StrideSet
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -1971,11 +2281,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|///\brief Return the SCEV corresponding to a pointer with the symbolic stride
+comment|/// \brief Return the SCEV corresponding to a pointer with the symbolic stride
 end_comment
 
 begin_comment
-comment|/// replaced with constant one, assuming \p Preds is true.
+comment|/// replaced with constant one, assuming the SCEV predicate associated with
+end_comment
+
+begin_comment
+comment|/// \p PSE is true.
 end_comment
 
 begin_comment
@@ -1987,7 +2301,7 @@ comment|/// If necessary this method will version the stride of the pointer acco
 end_comment
 
 begin_comment
-comment|/// to \p PtrToStride and therefore add a new predicate to \p Preds.
+comment|/// to \p PtrToStride and therefore add further predicates to \p PSE.
 end_comment
 
 begin_comment
@@ -2035,11 +2349,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Check the stride of the pointer and ensure that it does not wrap in
+comment|/// \brief If the pointer has a constant stride return it in units of its
 end_comment
 
 begin_comment
-comment|/// the address space, assuming \p Preds is true.
+comment|/// element size.  Otherwise return zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Ensure that it does not wrap in the address space, assuming the predicate
+end_comment
+
+begin_comment
+comment|/// associated with \p PSE is true.
 end_comment
 
 begin_comment
@@ -2051,12 +2377,20 @@ comment|/// If necessary this method will version the stride of the pointer acco
 end_comment
 
 begin_comment
-comment|/// to \p PtrToStride and therefore add a new predicate to \p Preds.
+comment|/// to \p PtrToStride and therefore add further predicates to \p PSE.
+end_comment
+
+begin_comment
+comment|/// The \p Assume parameter indicates if we are allowed to make additional
+end_comment
+
+begin_comment
+comment|/// run-time assumptions.
 end_comment
 
 begin_function_decl
-name|int
-name|isStridedPtr
+name|int64_t
+name|getPtrStride
 parameter_list|(
 name|PredicatedScalarEvolution
 modifier|&
@@ -2075,6 +2409,51 @@ specifier|const
 name|ValueToValueMap
 modifier|&
 name|StridesMap
+init|=
+name|ValueToValueMap
+argument_list|()
+parameter_list|,
+name|bool
+name|Assume
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Returns true if the memory operations \p A and \p B are consecutive.
+end_comment
+
+begin_comment
+comment|/// This is a simple API that does not depend on the analysis pass.
+end_comment
+
+begin_function_decl
+name|bool
+name|isConsecutiveAccess
+parameter_list|(
+name|Value
+modifier|*
+name|A
+parameter_list|,
+name|Value
+modifier|*
+name|B
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|ScalarEvolution
+modifier|&
+name|SE
+parameter_list|,
+name|bool
+name|CheckType
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2109,7 +2488,7 @@ end_comment
 
 begin_decl_stmt
 name|class
-name|LoopAccessAnalysis
+name|LoopAccessLegacyAnalysis
 range|:
 name|public
 name|FunctionPass
@@ -2120,7 +2499,7 @@ specifier|static
 name|char
 name|ID
 block|;
-name|LoopAccessAnalysis
+name|LoopAccessLegacyAnalysis
 argument_list|()
 operator|:
 name|FunctionPass
@@ -2128,7 +2507,7 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{
-name|initializeLoopAccessAnalysisPass
+name|initializeLoopAccessLegacyAnalysisPass
 argument_list|(
 operator|*
 name|PassRegistry
@@ -2154,10 +2533,7 @@ name|override
 block|;
 comment|/// \brief Query the result of the loop access information for the loop \p L.
 comment|///
-comment|/// If the client speculates (and then issues run-time checks) for the values
-comment|/// of symbolic strides, \p Strides provides the mapping (see
-comment|/// replaceSymbolicStrideSCEV).  If there is no cached result available run
-comment|/// the analysis.
+comment|/// If there is no cached result available run the analysis.
 specifier|const
 name|LoopAccessInfo
 operator|&
@@ -2166,11 +2542,6 @@ argument_list|(
 name|Loop
 operator|*
 name|L
-argument_list|,
-specifier|const
-name|ValueToValueMap
-operator|&
-name|Strides
 argument_list|)
 block|;
 name|void
@@ -2232,6 +2603,139 @@ block|;
 name|LoopInfo
 operator|*
 name|LI
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief This analysis provides dependence information for the memory
+end_comment
+
+begin_comment
+comment|/// accesses of a loop.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// It runs the analysis for a loop on demand.  This can be initiated by
+end_comment
+
+begin_comment
+comment|/// querying the loop access info via AM.getResult<LoopAccessAnalysis>.
+end_comment
+
+begin_comment
+comment|/// getResult return a LoopAccessInfo object.  See this class for the
+end_comment
+
+begin_comment
+comment|/// specifics of what information is provided.
+end_comment
+
+begin_decl_stmt
+name|class
+name|LoopAccessAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|LoopAccessAnalysis
+operator|>
+block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|LoopAccessAnalysis
+operator|>
+block|;
+specifier|static
+name|char
+name|PassID
+block|;
+name|public
+operator|:
+typedef|typedef
+name|LoopAccessInfo
+name|Result
+typedef|;
+name|Result
+name|run
+argument_list|(
+name|Loop
+operator|&
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Loop
+operator|>
+operator|&
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|StringRef
+name|name
+parameter_list|()
+block|{
+return|return
+literal|"LoopAccessAnalysis"
+return|;
+block|}
+end_function
+
+begin_comment
+unit|};
+comment|/// \brief Printer pass for the \c LoopAccessInfo results.
+end_comment
+
+begin_decl_stmt
+name|class
+name|LoopAccessInfoPrinterPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|LoopAccessInfoPrinterPass
+operator|>
+block|{
+name|raw_ostream
+operator|&
+name|OS
+block|;
+name|public
+operator|:
+name|explicit
+name|LoopAccessInfoPrinterPass
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+operator|:
+name|OS
+argument_list|(
+argument|OS
+argument_list|)
+block|{}
+name|PreservedAnalyses
+name|run
+argument_list|(
+name|Loop
+operator|&
+name|L
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Loop
+operator|>
+operator|&
+name|AM
+argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt

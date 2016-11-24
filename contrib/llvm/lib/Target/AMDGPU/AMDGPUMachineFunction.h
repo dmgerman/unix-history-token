@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- R600MachineFunctionInfo.h - R600 Machine Function Info ----*- C++ -*-=//
+comment|//===-- AMDGPUMachineFunctionInfo.h -------------------------------*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -31,28 +31,16 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|/// \file
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUMACHINEFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUMACHINEFUNCTION_H
 end_define
 
 begin_include
@@ -77,13 +65,16 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|uint64_t
+name|KernArgSize
+block|;
+name|unsigned
+name|MaxKernArgAlign
+block|;
 name|virtual
 name|void
 name|anchor
 argument_list|()
-block|;
-name|unsigned
-name|ShaderType
 block|;
 name|public
 operator|:
@@ -95,6 +86,55 @@ operator|&
 name|MF
 argument_list|)
 block|;
+name|uint64_t
+name|allocateKernArg
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned Align
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isPowerOf2_32
+argument_list|(
+name|Align
+argument_list|)
+argument_list|)
+block|;
+name|KernArgSize
+operator|=
+name|alignTo
+argument_list|(
+name|KernArgSize
+argument_list|,
+name|Align
+argument_list|)
+block|;
+name|uint64_t
+name|Result
+operator|=
+name|KernArgSize
+block|;
+name|KernArgSize
+operator|+=
+name|Size
+block|;
+name|MaxKernArgAlign
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|Align
+argument_list|,
+name|MaxKernArgAlign
+argument_list|)
+block|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// A map to keep track of local memory objects and their offsets within
 comment|/// the local memory space.
 name|std
@@ -117,25 +157,11 @@ comment|/// Start of implicit kernel args
 name|unsigned
 name|ABIArgOffset
 block|;
-name|unsigned
-name|getShaderType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShaderType
-return|;
-block|}
 name|bool
 name|isKernel
 argument_list|()
 specifier|const
-block|{
-comment|// FIXME: Assume everything is a kernel until function calls are supported.
-return|return
-name|true
-return|;
-block|}
+block|;
 name|unsigned
 name|ScratchSize
 block|;

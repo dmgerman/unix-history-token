@@ -99,6 +99,12 @@ directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -248,7 +254,7 @@ name|ArrayIndexTy
 argument_list|(
 name|context
 operator|.
-name|IntTy
+name|LongLongTy
 argument_list|)
 operator|,
 name|ArrayIndexWidth

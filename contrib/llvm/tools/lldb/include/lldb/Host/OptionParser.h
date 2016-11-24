@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|<string>
 end_include
 
 begin_struct_decl
@@ -109,11 +109,16 @@ specifier|static
 name|void
 name|Prepare
 argument_list|(
-name|Mutex
+name|std
 operator|::
-name|Locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|mutex
+operator|>
 operator|&
-name|locker
+name|lock
 argument_list|)
 decl_stmt|;
 specifier|static

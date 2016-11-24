@@ -71,6 +71,12 @@ directive|include
 file|"llvm/Support/Format.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -316,7 +322,7 @@ argument_list|)
 operator|:
 name|Current
 argument_list|(
-argument|symb
+argument|std::move(symb)
 argument_list|)
 block|{}
 specifier|const
@@ -708,7 +714,7 @@ return|;
 block|}
 comment|// construction aux.
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -726,7 +732,7 @@ argument|LLVMContext *Context
 argument_list|)
 decl_stmt|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -757,7 +763,7 @@ argument_list|)
 return|;
 block|}
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|OwningBinary
 operator|<

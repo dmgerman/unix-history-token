@@ -67,11 +67,23 @@ comment|// 32-bit rip-relative
 name|reloc_riprel_4byte_movq_load
 block|,
 comment|// 32-bit rip-relative in movq
+name|reloc_riprel_4byte_relax
+block|,
+comment|// 32-bit rip-relative in relaxable
+comment|// instruction
+name|reloc_riprel_4byte_relax_rex
+block|,
+comment|// 32-bit rip-relative in relaxable
+comment|// instruction with rex prefix
 name|reloc_signed_4byte
 block|,
 comment|// 32-bit signed. Unlike FK_Data_4
 comment|// this will be sign extended at
 comment|// runtime.
+name|reloc_signed_4byte_relax
+block|,
+comment|// like reloc_signed_4byte, but
+comment|// in a relaxable instruction.
 name|reloc_global_offset_table
 block|,
 comment|// 32-bit, relative to the start

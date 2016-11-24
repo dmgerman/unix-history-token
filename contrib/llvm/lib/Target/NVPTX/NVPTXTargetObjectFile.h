@@ -55,12 +55,6 @@ directive|include
 file|"llvm/Target/TargetLoweringObjectFile.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -475,6 +469,8 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
+argument_list|,
+argument|unsigned&Align
 argument_list|)
 specifier|const
 name|override

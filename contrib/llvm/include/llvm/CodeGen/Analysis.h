@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ISDOpcodes.h"
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt

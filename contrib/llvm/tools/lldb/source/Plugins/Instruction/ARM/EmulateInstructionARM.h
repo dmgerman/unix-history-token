@@ -391,8 +391,8 @@ name|evaluate_options
 argument_list|)
 name|override
 decl_stmt|;
-name|bool
-name|IsInstructionConditional
+name|InstructionCondition
+name|GetInstructionCondition
 argument_list|()
 name|override
 expr_stmt|;

@@ -107,7 +107,6 @@ name|Print
 expr_stmt|;
 name|Printable
 argument_list|(
-specifier|const
 name|std
 operator|::
 name|function
@@ -124,7 +123,7 @@ argument_list|)
 operator|:
 name|Print
 argument_list|(
-argument|Print
+argument|std::move(Print)
 argument_list|)
 block|{}
 block|}

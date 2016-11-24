@@ -177,6 +177,12 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -230,7 +236,7 @@ argument_list|)
 operator|,
 name|Loc
 argument_list|(
-argument|DL
+argument|std::move(DL)
 argument_list|)
 block|{}
 block|}
@@ -461,7 +467,9 @@ name|MCSymbol
 operator|*
 name|Label
 argument_list|,
+specifier|const
 name|DebugLoc
+operator|&
 name|DL
 argument_list|)
 block|{

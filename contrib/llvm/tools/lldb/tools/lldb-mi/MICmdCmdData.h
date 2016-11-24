@@ -127,6 +127,12 @@ directive|include
 file|"lldb/API/SBCommandReturnObject.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBError.h"
+end_include
+
 begin_comment
 comment|// In-house headers:
 end_comment
@@ -248,6 +254,12 @@ name|bool
 name|m_bEvaluatedExpression
 block|;
 comment|// True = yes is expression evaluated, false = failed
+name|lldb
+operator|::
+name|SBError
+name|m_Error
+block|;
+comment|// Error object, which is examined when m_bEvaluatedExpression is false
 name|CMIUtilString
 name|m_strValue
 block|;

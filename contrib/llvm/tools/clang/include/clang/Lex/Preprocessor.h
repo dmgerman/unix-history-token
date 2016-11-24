@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Registry.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -1990,6 +1996,8 @@ argument_list|,
 argument|SourceLocation ImportLoc
 argument_list|,
 argument|SubmoduleState *OuterSubmoduleState
+argument_list|,
+argument|unsigned OuterPendingModuleMacroNames
 argument_list|)
 block|:
 name|M
@@ -2004,9 +2012,14 @@ argument_list|)
 operator|,
 name|OuterSubmoduleState
 argument_list|(
-argument|OuterSubmoduleState
+name|OuterSubmoduleState
 argument_list|)
-block|{     }
+operator|,
+name|OuterPendingModuleMacroNames
+argument_list|(
+argument|OuterPendingModuleMacroNames
+argument_list|)
+block|{}
 comment|/// The module that we are building.
 name|Module
 operator|*
@@ -2020,6 +2033,10 @@ comment|/// The previous SubmoduleState.
 name|SubmoduleState
 modifier|*
 name|OuterSubmoduleState
+decl_stmt|;
+comment|/// The number of pending module macro names when we started building this.
+name|unsigned
+name|OuterPendingModuleMacroNames
 decl_stmt|;
 block|}
 struct|;
@@ -2109,6 +2126,25 @@ operator|<
 name|ModuleMacro
 operator|>
 name|ModuleMacros
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// The names of potential module macros that we've not yet processed.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|,
+literal|32
+operator|>
+name|PendingModuleMacroNames
 expr_stmt|;
 end_expr_stmt
 
@@ -4722,8 +4758,13 @@ comment|/// copied. If it is true, it assumes the array of tokens is allocated w
 end_comment
 
 begin_comment
-comment|/// \c new[] and must be freed.
+comment|/// \c new[] and the Preprocessor will delete[] it.
 end_comment
+
+begin_label
+name|private
+label|:
+end_label
 
 begin_function_decl
 name|void
@@ -4745,6 +4786,82 @@ name|OwnsTokens
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_decl_stmt
+name|void
+name|EnterTokenStream
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Token
+index|[]
+operator|>
+name|Toks
+argument_list|,
+name|unsigned
+name|NumToks
+argument_list|,
+name|bool
+name|DisableMacroExpansion
+argument_list|)
+block|{
+name|EnterTokenStream
+argument_list|(
+name|Toks
+operator|.
+name|release
+argument_list|()
+argument_list|,
+name|NumToks
+argument_list|,
+name|DisableMacroExpansion
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|EnterTokenStream
+argument_list|(
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|Toks
+argument_list|,
+name|bool
+name|DisableMacroExpansion
+argument_list|)
+block|{
+name|EnterTokenStream
+argument_list|(
+name|Toks
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|Toks
+operator|.
+name|size
+argument_list|()
+argument_list|,
+name|DisableMacroExpansion
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Pop the current lexer/macro exp off the top of the lexer stack.
@@ -5512,6 +5629,60 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Whether \p Tok is the most recent token (`CachedLexPos - 1`) in
+end_comment
+
+begin_comment
+comment|/// CachedTokens.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|IsPreviousCachedToken
+argument_list|(
+specifier|const
+name|Token
+operator|&
+name|Tok
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Replace token in `CachedLexPos - 1` in CachedTokens by the tokens
+end_comment
+
+begin_comment
+comment|/// in \p NewToks.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Useful when a token needs to be split in smaller ones and CachedTokens
+end_comment
+
+begin_comment
+comment|/// most recent token must to be updated to reflect that.
+end_comment
+
+begin_decl_stmt
+name|void
+name|ReplacePreviousCachedToken
+argument_list|(
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|NewToks
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Replace the last token with an annotation token.
@@ -7983,6 +8154,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Determine whether we need to create module macros for #defines in the
+end_comment
+
+begin_comment
+comment|/// current context.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needModuleMacros
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Update the set of active module macros and ambiguity flag for a module
 end_comment
 
@@ -8946,6 +9133,61 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// \brief We want to produce a diagnostic at location IncLoc concerning a
+end_comment
+
+begin_comment
+comment|/// missing module import.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IncLoc The location at which the missing import was detected.
+end_comment
+
+begin_comment
+comment|/// \param MLoc A location within the desired module at which some desired
+end_comment
+
+begin_comment
+comment|///        effect occurred (eg, where a desired entity was declared).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \return A file that can be #included to import a module containing MLoc.
+end_comment
+
+begin_comment
+comment|///         Null if no such file could be determined or if a #include is not
+end_comment
+
+begin_comment
+comment|///         appropriate.
+end_comment
+
+begin_function_decl
+specifier|const
+name|FileEntry
+modifier|*
+name|getModuleHeaderToIncludeForDiagnostics
+parameter_list|(
+name|SourceLocation
+name|IncLoc
+parameter_list|,
+name|SourceLocation
+name|MLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -9251,9 +9493,40 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// \brief Registry of pragma handlers added by plugins
+end_comment
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|Registry
+operator|<
+name|PragmaHandler
+operator|>
+name|PragmaHandlerRegistry
+expr_stmt|;
+end_typedef
+
+begin_comment
 unit|}
 comment|// end namespace clang
 end_comment
+
+begin_expr_stmt
+unit|extern
+name|template
+name|class
+name|llvm
+operator|::
+name|Registry
+operator|<
+name|clang
+operator|::
+name|PragmaHandler
+operator|>
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

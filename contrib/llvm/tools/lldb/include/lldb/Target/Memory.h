@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/RangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -276,9 +276,11 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from MemoryCache can see and modify these
 comment|//------------------------------------------------------------------
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|BlockMap
 name|m_L1_cache
 decl_stmt|;
@@ -564,9 +566,11 @@ name|Process
 modifier|&
 name|m_process
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 typedef|typedef
 name|std
 operator|::

@@ -120,6 +120,8 @@ directive|include
 file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_threadprivate
 block|,
+name|OMPC_uniform
+block|,
 name|OMPC_unknown
 block|}
 enum|;
@@ -253,6 +255,85 @@ file|"clang/Basic/OpenMPKinds.def"
 name|OMPC_MAP_unknown
 block|}
 enum|;
+comment|/// \brief OpenMP attributes for 'dist_schedule' clause.
+enum|enum
+name|OpenMPDistScheduleClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_DIST_SCHEDULE_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+value|OMPC_DIST_SCHEDULE_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_DIST_SCHEDULE_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP attributes for 'defaultmap' clause.
+enum|enum
+name|OpenMPDefaultmapClauseKind
+block|{
+define|#
+directive|define
+name|OPENMP_DEFAULTMAP_KIND
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_DEFAULTMAP_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_DEFAULTMAP_unknown
+block|}
+enum|;
+comment|/// \brief OpenMP modifiers for 'defaultmap' clause.
+enum|enum
+name|OpenMPDefaultmapClauseModifier
+block|{
+name|OMPC_DEFAULTMAP_MODIFIER_unknown
+init|=
+name|OMPC_DEFAULTMAP_unknown
+block|,
+define|#
+directive|define
+name|OPENMP_DEFAULTMAP_MODIFIER
+parameter_list|(
+name|Name
+parameter_list|)
+define|\
+value|OMPC_DEFAULTMAP_MODIFIER_##Name,
+include|#
+directive|include
+file|"clang/Basic/OpenMPKinds.def"
+name|OMPC_DEFAULTMAP_MODIFIER_last
+block|}
+enum|;
+comment|/// Scheduling data for loop-based OpenMP directives.
+struct|struct
+name|OpenMPScheduleTy
+name|final
+block|{
+name|OpenMPScheduleClauseKind
+name|Schedule
+init|=
+name|OMPC_SCHEDULE_unknown
+decl_stmt|;
+name|OpenMPScheduleClauseModifier
+name|M1
+init|=
+name|OMPC_SCHEDULE_MODIFIER_unknown
+decl_stmt|;
+name|OpenMPScheduleClauseModifier
+name|M2
+init|=
+name|OMPC_SCHEDULE_MODIFIER_unknown
+decl_stmt|;
+block|}
+struct|;
 name|OpenMPDirectiveKind
 name|getOpenMPDirectiveKind
 argument_list|(
@@ -368,12 +449,26 @@ name|OpenMPDirectiveKind
 name|DKind
 parameter_list|)
 function_decl|;
-comment|/// \brief Checks if the specified directive is a target-kind directive.
+comment|/// \brief Checks if the specified directive is a target code offload directive.
 comment|/// \param DKind Specified directive.
-comment|/// \return true - the directive is a target-like directive like 'omp target',
+comment|/// \return true - the directive is a target code offload directive like
+comment|/// 'omp target', 'omp target parallel', 'omp target xxx'
 comment|/// otherwise - false.
 name|bool
-name|isOpenMPTargetDirective
+name|isOpenMPTargetExecutionDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|DKind
+parameter_list|)
+function_decl|;
+comment|/// \brief Checks if the specified directive is a target data offload directive.
+comment|/// \param DKind Specified directive.
+comment|/// \return true - the directive is a target data offload directive like
+comment|/// 'omp target data', 'omp target update', 'omp target enter data',
+comment|/// 'omp target exit data'
+comment|/// otherwise - false.
+name|bool
+name|isOpenMPTargetDataManagementDirective
 parameter_list|(
 name|OpenMPDirectiveKind
 name|DKind
@@ -432,6 +527,25 @@ name|bool
 name|isOpenMPThreadPrivate
 parameter_list|(
 name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Checks if the specified directive kind is one of tasking directives - task,
+comment|/// taskloop or taksloop simd.
+name|bool
+name|isOpenMPTaskingDirective
+parameter_list|(
+name|OpenMPDirectiveKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// Checks if the specified directive kind is one of the composite or combined
+comment|/// directives that need loop bound sharing across loops outlined in nested
+comment|/// functions
+name|bool
+name|isOpenMPLoopBoundSharingDirective
+parameter_list|(
+name|OpenMPDirectiveKind
 name|Kind
 parameter_list|)
 function_decl|;

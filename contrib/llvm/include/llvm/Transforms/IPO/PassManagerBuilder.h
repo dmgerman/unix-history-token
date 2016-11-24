@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -80,7 +92,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|FunctionInfoIndex
+name|ModuleSummaryIndex
 decl_stmt|;
 name|class
 name|Pass
@@ -134,11 +146,11 @@ label|:
 comment|/// Extensions are passed the builder itself (so they can see how it is
 comment|/// configured) as well as the pass manager to add stuff to.
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|void
-argument_list|(
-operator|*
-name|ExtensionFn
-argument_list|)
 argument_list|(
 specifier|const
 name|PassManagerBuilder
@@ -151,6 +163,8 @@ name|PassManagerBase
 operator|&
 name|PM
 argument_list|)
+operator|>
+name|ExtensionFn
 expr_stmt|;
 enum|enum
 name|ExtensionPointTy
@@ -216,11 +230,11 @@ name|Pass
 modifier|*
 name|Inliner
 decl_stmt|;
-comment|/// The function summary index to use for function importing.
+comment|/// The module summary index to use for function importing.
 specifier|const
-name|FunctionInfoIndex
+name|ModuleSummaryIndex
 modifier|*
-name|FunctionIndex
+name|ModuleSummary
 decl_stmt|;
 name|bool
 name|DisableTailCalls
@@ -261,6 +275,24 @@ decl_stmt|;
 name|bool
 name|PrepareForLTO
 decl_stmt|;
+name|bool
+name|PrepareForThinLTO
+decl_stmt|;
+name|bool
+name|PerformThinLTO
+decl_stmt|;
+comment|/// Profile data file name that the instrumentation will be written to.
+name|std
+operator|::
+name|string
+name|PGOInstrGen
+expr_stmt|;
+comment|/// Path of the profile data file.
+name|std
+operator|::
+name|string
+name|PGOInstrUse
+expr_stmt|;
 name|private
 label|:
 comment|/// ExtensionList - This is list of all of the extensions that are registered.
@@ -275,8 +307,7 @@ operator|<
 name|ExtensionPointTy
 operator|,
 name|ExtensionFn
-operator|>
-expr|>
+operator|>>
 name|Extensions
 expr_stmt|;
 name|public
@@ -359,6 +390,37 @@ operator|&
 name|PM
 argument_list|)
 decl_stmt|;
+name|void
+name|addPGOInstrPasses
+argument_list|(
+name|legacy
+operator|::
+name|PassManagerBase
+operator|&
+name|MPM
+argument_list|)
+decl_stmt|;
+name|void
+name|addFunctionSimplificationPasses
+argument_list|(
+name|legacy
+operator|::
+name|PassManagerBase
+operator|&
+name|MPM
+argument_list|)
+decl_stmt|;
+name|void
+name|addInstructionCombiningPass
+argument_list|(
+name|legacy
+operator|::
+name|PassManagerBase
+operator|&
+name|MPM
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// populateFunctionPassManager - This fills in the function pass manager,
@@ -395,6 +457,16 @@ operator|&
 name|PM
 argument_list|)
 decl_stmt|;
+name|void
+name|populateThinLTOPassManager
+argument_list|(
+name|legacy
+operator|::
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Registers a function for adding a standard set of passes.  This should be
@@ -417,7 +489,12 @@ name|addGlobalExtension
 argument_list|(
 name|Ty
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Fn
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

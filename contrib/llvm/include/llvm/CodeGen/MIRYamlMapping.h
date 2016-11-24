@@ -36,18 +36,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The MIR serialization library is currently a work in progress. It can't
-end_comment
-
-begin_comment
-comment|// serialize machine functions at this time.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// This file implements the mapping between various MIR data structures and
 end_comment
 
@@ -1930,6 +1918,12 @@ name|HasInlineAsm
 operator|=
 name|false
 block|;
+comment|// MachineFunctionProperties
+name|bool
+name|AllVRegsAllocated
+operator|=
+name|false
+block|;
 comment|// Register information
 name|bool
 name|IsSSA
@@ -2069,6 +2063,17 @@ argument_list|,
 name|MF
 operator|.
 name|HasInlineAsm
+argument_list|)
+block|;
+name|YamlIO
+operator|.
+name|mapOptional
+argument_list|(
+literal|"allVRegsAllocated"
+argument_list|,
+name|MF
+operator|.
+name|AllVRegsAllocated
 argument_list|)
 block|;
 name|YamlIO

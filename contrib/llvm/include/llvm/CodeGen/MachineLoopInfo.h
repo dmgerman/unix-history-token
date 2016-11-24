@@ -168,17 +168,17 @@ label|:
 name|MachineLoop
 argument_list|()
 expr_stmt|;
-comment|/// getTopBlock - Return the "top" block in the loop, which is the first
-comment|/// block in the linear layout, ignoring any parts of the loop not
-comment|/// contiguous with the part the contains the header.
+comment|/// Return the "top" block in the loop, which is the first block in the linear
+comment|/// layout, ignoring any parts of the loop not contiguous with the part that
+comment|/// contains the header.
 name|MachineBasicBlock
 modifier|*
 name|getTopBlock
 parameter_list|()
 function_decl|;
-comment|/// getBottomBlock - Return the "bottom" block in the loop, which is the last
-comment|/// block in the linear layout, ignoring any parts of the loop not
-comment|/// contiguous with the part the contains the header.
+comment|/// Return the "bottom" block in the loop, which is the last block in the
+comment|/// linear layout, ignoring any parts of the loop not contiguous with the part
+comment|/// that contains the header.
 name|MachineBasicBlock
 modifier|*
 name|getBottomBlock
@@ -305,9 +305,7 @@ return|return
 name|LI
 return|;
 block|}
-comment|/// iterator/begin/end - The interface to the top-level loops in the current
-comment|/// function.
-comment|///
+comment|/// The iterator interface to the top-level loops in the current function.
 typedef|typedef
 name|LoopInfoBase
 operator|<
@@ -357,9 +355,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// getLoopFor - Return the inner most loop that BB lives in.  If a basic
-comment|/// block is in no loop (for example the entry node), null is returned.
-comment|///
+comment|/// Return the innermost loop that BB lives in. If a basic block is in no loop
+comment|/// (for example the entry node), null is returned.
 specifier|inline
 name|MachineLoop
 operator|*
@@ -378,8 +375,7 @@ name|BB
 argument_list|)
 return|;
 block|}
-comment|/// operator[] - same as getLoopFor...
-comment|///
+comment|/// Same as getLoopFor.
 specifier|inline
 specifier|const
 name|MachineLoop
@@ -403,8 +399,7 @@ name|BB
 argument_list|)
 return|;
 block|}
-comment|/// getLoopDepth - Return the loop nesting level of the specified block...
-comment|///
+comment|/// Return the loop nesting level of the specified block.
 specifier|inline
 name|unsigned
 name|getLoopDepth
@@ -422,7 +417,7 @@ name|BB
 argument_list|)
 return|;
 block|}
-comment|// isLoopHeader - True if the block is a loop header node
+comment|/// True if the block is a loop header node.
 specifier|inline
 name|bool
 name|isLoopHeader
@@ -440,8 +435,7 @@ name|BB
 argument_list|)
 return|;
 block|}
-comment|/// runOnFunction - Calculate the natural loop information.
-comment|///
+comment|/// Calculate the natural loop information.
 name|bool
 name|runOnMachineFunction
 argument_list|(
@@ -470,9 +464,8 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// removeLoop - This removes the specified top-level loop from this loop info
-comment|/// object.  The loop is not deleted, as it will presumably be inserted into
-comment|/// another loop.
+comment|/// This removes the specified top-level loop from this loop info object. The
+comment|/// loop is not deleted, as it will presumably be inserted into another loop.
 specifier|inline
 name|MachineLoop
 modifier|*
@@ -491,9 +484,9 @@ name|I
 argument_list|)
 return|;
 block|}
-comment|/// changeLoopFor - Change the top-level loop that contains BB to the
-comment|/// specified loop.  This should be used by transformations that restructure
-comment|/// the loop hierarchy tree.
+comment|/// Change the top-level loop that contains BB to the specified loop. This
+comment|/// should be used by transformations that restructure the loop hierarchy
+comment|/// tree.
 specifier|inline
 name|void
 name|changeLoopFor
@@ -517,8 +510,8 @@ name|L
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// changeTopLevelLoop - Replace the specified loop in the top-level loops
-comment|/// list with the indicated loop.
+comment|/// Replace the specified loop in the top-level loops list with the indicated
+comment|/// loop.
 specifier|inline
 name|void
 name|changeTopLevelLoop
@@ -542,8 +535,7 @@ name|NewLoop
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// addTopLevelLoop - This adds the specified loop to the collection of
-comment|/// top-level loops.
+comment|/// This adds the specified loop to the collection of top-level loops.
 specifier|inline
 name|void
 name|addTopLevelLoop
@@ -561,8 +553,8 @@ name|New
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// removeBlock - This method completely removes BB from all data structures,
-comment|/// including all of the Loop objects it is nested in and our mapping from
+comment|/// This method completely removes BB from all data structures, including all
+comment|/// of the Loop objects it is nested in and our mapping from
 comment|/// MachineBasicBlocks to loops.
 name|void
 name|removeBlock

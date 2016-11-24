@@ -185,7 +185,7 @@ comment|/// any side effects other than loading from the stack slot.
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -200,7 +200,7 @@ comment|/// any side effects other than storing to the stack slot.
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -208,7 +208,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -242,7 +242,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -262,7 +262,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -317,6 +317,15 @@ argument_list|(
 argument|MachineFunction *MF
 argument_list|)
 specifier|const
+block|;
+comment|// Lower pseudo instructions after register allocation.
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

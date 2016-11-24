@@ -141,6 +141,9 @@ name|class
 name|GCMetadataPrinter
 decl_stmt|;
 name|class
+name|GlobalIndirectSymbol
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -458,6 +461,11 @@ return|return
 name|DD
 return|;
 block|}
+name|bool
+name|isPositionIndependent
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if assembly output should contain comments.
 comment|///
 name|bool
@@ -715,24 +723,6 @@ name|virtual
 name|void
 name|EmitJumpTableInfo
 parameter_list|()
-function_decl|;
-comment|/// Emit the control variable for an emulated TLS variable.
-name|virtual
-name|void
-name|EmitEmulatedTLSControlVariable
-parameter_list|(
-specifier|const
-name|GlobalVariable
-modifier|*
-name|GV
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|EmittedSym
-parameter_list|,
-name|bool
-name|AllZeroInitValue
-parameter_list|)
 function_decl|;
 comment|/// Emit the specified global variable to the .s file.
 name|virtual
@@ -1887,6 +1877,26 @@ parameter_list|(
 name|GCStrategy
 modifier|&
 name|C
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Emit GlobalAlias or GlobalIFunc.
+end_comment
+
+begin_function_decl
+name|void
+name|emitGlobalIndirectSymbol
+parameter_list|(
+name|Module
+modifier|&
+name|M
+parameter_list|,
+specifier|const
+name|GlobalIndirectSymbol
+modifier|&
+name|GIS
 parameter_list|)
 function_decl|;
 end_function_decl

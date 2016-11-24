@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"AsmPrinterHandler.h"
+file|"DbgValueHistoryCalculator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DbgValueHistoryCalculator.h"
+file|"DebugHandlerBase.h"
 end_include
 
 begin_include
@@ -99,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
@@ -288,10 +282,6 @@ operator|>
 name|FrameIndex
 expr_stmt|;
 comment|/// Frame index.
-name|DwarfDebug
-modifier|*
-name|DD
-decl_stmt|;
 name|public
 label|:
 comment|/// Construct a DbgVariable.
@@ -309,10 +299,6 @@ specifier|const
 name|DILocation
 operator|*
 name|IA
-argument_list|,
-name|DwarfDebug
-operator|*
-name|DD
 argument_list|)
 operator|:
 name|Var
@@ -322,12 +308,7 @@ argument_list|)
 operator|,
 name|IA
 argument_list|(
-name|IA
-argument_list|)
-operator|,
-name|DD
-argument_list|(
-argument|DD
+argument|IA
 argument_list|)
 block|{}
 comment|/// Initialize from the MMI table.
@@ -531,6 +512,39 @@ specifier|const
 block|{
 return|return
 name|Expr
+return|;
+block|}
+specifier|const
+name|DIExpression
+operator|*
+name|getSingleExpression
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MInsn
+operator|&&
+name|Expr
+operator|.
+name|size
+argument_list|()
+operator|<=
+literal|1
+argument_list|)
+block|;
+return|return
+name|Expr
+operator|.
+name|size
+argument_list|()
+condition|?
+name|Expr
+index|[
+literal|0
+index|]
+else|:
+name|nullptr
 return|;
 block|}
 name|void
@@ -1020,14 +1034,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/// Look in the DwarfDebug map for the MDNode that
-end_comment
-
-begin_comment
-comment|/// corresponds to the reference.
-end_comment
-
 begin_expr_stmt
 name|template
 operator|<
@@ -1041,7 +1047,14 @@ argument_list|(
 argument|TypedDINodeRef<T> Ref
 argument_list|)
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|Ref
+operator|.
+name|resolve
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -1097,18 +1110,8 @@ name|class
 name|DwarfDebug
 range|:
 name|public
-name|AsmPrinterHandler
+name|DebugHandlerBase
 block|{
-comment|/// Target of Dwarf emission.
-name|AsmPrinter
-operator|*
-name|Asm
-block|;
-comment|/// Collected machine module information.
-name|MachineModuleInfo
-operator|*
-name|MMI
-block|;
 comment|/// All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
@@ -1124,18 +1127,6 @@ name|DwarfCompileUnit
 operator|*
 operator|>
 name|CUMap
-block|;
-comment|/// Maps subprogram MDNode with its corresponding DwarfCompileUnit.
-name|MapVector
-operator|<
-specifier|const
-name|MDNode
-operator|*
-block|,
-name|DwarfCompileUnit
-operator|*
-operator|>
-name|SPMap
 block|;
 comment|/// Maps a CU DIE with its corresponding DwarfCompileUnit.
 name|DenseMap
@@ -1168,9 +1159,6 @@ block|,
 name|uint64_t
 operator|>
 name|SymSize
-block|;
-name|LexicalScopes
-name|LScopes
 block|;
 comment|/// Collection of abstract variables.
 name|DenseMap
@@ -1217,61 +1205,11 @@ literal|16
 operator|>
 name|ProcessedSPNodes
 block|;
-comment|/// Maps instruction with label emitted before instruction.
-name|DenseMap
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-block|,
-name|MCSymbol
-operator|*
-operator|>
-name|LabelsBeforeInsn
-block|;
-comment|/// Maps instruction with label emitted after instruction.
-name|DenseMap
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-block|,
-name|MCSymbol
-operator|*
-operator|>
-name|LabelsAfterInsn
-block|;
-comment|/// History of DBG_VALUE and clobber instructions for each user
-comment|/// variable.  Variables are listed in order of appearance.
-name|DbgValueHistoryMap
-name|DbgValues
-block|;
-comment|/// Previous instruction's location information. This is used to
-comment|/// determine label location to indicate scope boundries in dwarf
-comment|/// debug info.
-name|DebugLoc
-name|PrevInstLoc
-block|;
-name|MCSymbol
-operator|*
-name|PrevLabel
-block|;
-comment|/// This location indicates end of function prologue and beginning of
-comment|/// function body.
-name|DebugLoc
-name|PrologEndLoc
-block|;
 comment|/// If nonnull, stores the current machine function we're processing.
 specifier|const
 name|MachineFunction
 operator|*
 name|CurFn
-block|;
-comment|/// If nonnull, stores the current machine instruction we're processing.
-specifier|const
-name|MachineInstr
-operator|*
-name|CurMI
 block|;
 comment|/// If nonnull, stores the CU in which the previous subprogram was contained.
 specifier|const
@@ -1290,19 +1228,17 @@ name|InfoHolder
 block|;
 comment|/// Holders for the various debug information flags that we might need to
 comment|/// have exposed. See accessor functions below for description.
-comment|/// Map from MDNodes for user-defined types to the type units that
-comment|/// describe them.
+comment|/// Map from MDNodes for user-defined types to their type signatures. Also
+comment|/// used to keep track of which types we have emitted type units for.
 name|DenseMap
 operator|<
 specifier|const
 name|MDNode
 operator|*
 block|,
-specifier|const
-name|DwarfTypeUnit
-operator|*
+name|uint64_t
 operator|>
-name|DwarfTypeUnits
+name|TypeSignatures
 block|;
 name|SmallVector
 operator|<
@@ -1334,22 +1270,25 @@ comment|/// Whether to use the GNU TLS opcode (instead of the standard opcode).
 name|bool
 name|UseGNUTLSOpcode
 block|;
-comment|/// Whether to emit DW_AT_[MIPS_]linkage_name.
+comment|/// Whether to use DWARF 2 bitfields (instead of the DWARF 4 format).
 name|bool
-name|UseLinkageNames
+name|UseDWARF2Bitfields
+block|;
+comment|/// Whether to emit all linkage names, or just abstract subprograms.
+name|bool
+name|UseAllLinkageNames
 block|;
 comment|/// Version of dwarf we're emitting.
 name|unsigned
 name|DwarfVersion
 block|;
-comment|/// Maps from a type identifier to the actual MDNode.
-name|DITypeIdentifierMap
-name|TypeIdentifierMap
-block|;
 comment|/// DWARF5 Experimental Options
 comment|/// @{
 name|bool
 name|HasDwarfAccelTables
+block|;
+name|bool
+name|HasAppleExtensionAttributes
 block|;
 name|bool
 name|HasSplitDwarf
@@ -1397,6 +1336,51 @@ comment|// Identify a debugger for "tuning" the debug info.
 name|DebuggerKind
 name|DebuggerTuning
 block|;
+comment|/// \defgroup DebuggerTuning Predicates to tune DWARF for a given debugger.
+comment|///
+comment|/// Returns whether we are "tuning" for a given debugger.
+comment|/// Should be used only within the constructor, to set feature flags.
+comment|/// @{
+name|bool
+name|tuneForGDB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|GDB
+return|;
+block|}
+name|bool
+name|tuneForLLDB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|LLDB
+return|;
+block|}
+name|bool
+name|tuneForSCE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerTuning
+operator|==
+name|DebuggerKind
+operator|::
+name|SCE
+return|;
+block|}
+comment|/// @}
 name|MCDwarfDwoLineTable
 operator|*
 name|getDwoLineTable
@@ -1413,7 +1397,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|>>
 operator|&
 name|getUnits
@@ -1528,17 +1512,6 @@ name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Collect info for variables that were optimized out.
-end_comment
-
-begin_function_decl
-name|void
-name|collectDeadVariables
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -1755,7 +1728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Emit visible names into a debug str section.
+comment|/// Emit null-terminated strings into a debug str section.
 end_comment
 
 begin_function_decl
@@ -1821,13 +1794,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|void
 name|emitMacro
 parameter_list|(
-name|AsmStreamerBase
-modifier|*
-name|AS
-parameter_list|,
 name|DIMacro
 modifier|&
 name|M
@@ -1836,13 +1805,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|void
 name|emitMacroFile
 parameter_list|(
-name|AsmStreamerBase
-modifier|*
-name|AS
-parameter_list|,
 name|DIMacroFile
 modifier|&
 name|F
@@ -1855,13 +1820,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|void
 name|handleMacroNodes
 parameter_list|(
-name|AsmStreamerBase
-modifier|*
-name|AS
-parameter_list|,
 name|DIMacroNodeArray
 name|Nodes
 parameter_list|,
@@ -1897,7 +1858,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|>
 name|NewU
 argument_list|)
@@ -2068,21 +2029,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Indentify instructions that are marking the beginning of or
-end_comment
-
-begin_comment
-comment|/// ending of a scope.
-end_comment
-
-begin_function_decl
-name|void
-name|identifyScopeMarkers
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Populate LexicalScope entries with variables' info.
 end_comment
 
@@ -2159,68 +2105,6 @@ name|P
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// Ensure that a label will be emitted before MI.
-end_comment
-
-begin_function
-name|void
-name|requestLabelBeforeInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-block|{
-name|LabelsBeforeInsn
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|MI
-argument_list|,
-name|nullptr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// Ensure that a label will be emitted after MI.
-end_comment
-
-begin_function
-name|void
-name|requestLabelAfterInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-block|{
-name|LabelsAfterInsn
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|MI
-argument_list|,
-name|nullptr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_label
 name|public
@@ -2340,18 +2224,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Process end of an instruction.
-end_comment
-
-begin_expr_stmt
-name|void
-name|endInstruction
-argument_list|()
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Perform an MD5 checksum of \p Identifier and return the lower 64 bits.
 end_comment
 
@@ -2452,17 +2324,21 @@ block|}
 end_function
 
 begin_comment
-comment|/// Returns whether to emit DW_AT_[MIPS_]linkage_name.
+comment|/// Returns whether we should emit all DW_AT_[MIPS_]linkage_name.
+end_comment
+
+begin_comment
+comment|/// If not, we still might emit certain cases.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|useLinkageNames
+name|useAllLinkageNames
 argument_list|()
 specifier|const
 block|{
 return|return
-name|UseLinkageNames
+name|UseAllLinkageNames
 return|;
 block|}
 end_expr_stmt
@@ -2488,72 +2364,24 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \defgroup DebuggerTuning Predicates to tune DWARF for a given debugger.
+comment|/// Returns whether to use the DWARF2 format for bitfields instyead of the
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Returns whether we are "tuning" for a given debugger.
-end_comment
-
-begin_comment
-comment|/// @{
+comment|/// DWARF4 format.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|tuneForGDB
+name|useDWARF2Bitfields
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DebuggerTuning
-operator|==
-name|DebuggerKind
-operator|::
-name|GDB
+name|UseDWARF2Bitfields
 return|;
 block|}
 end_expr_stmt
-
-begin_expr_stmt
-name|bool
-name|tuneForLLDB
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DebuggerTuning
-operator|==
-name|DebuggerKind
-operator|::
-name|LLDB
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|bool
-name|tuneForSCE
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DebuggerTuning
-operator|==
-name|DebuggerKind
-operator|::
-name|SCE
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// @}
-end_comment
 
 begin_comment
 comment|// Experimental DWARF5 features.
@@ -2575,6 +2403,18 @@ specifier|const
 block|{
 return|return
 name|HasDwarfAccelTables
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|useAppleExtensionAttributes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAppleExtensionAttributes
 return|;
 block|}
 end_expr_stmt
@@ -2736,27 +2576,7 @@ return|return
 name|Ref
 operator|.
 name|resolve
-argument_list|(
-name|TypeIdentifierMap
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Return the TypeIdentifierMap.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|DITypeIdentifierMap
-operator|&
-name|getTypeIdentifierMap
 argument_list|()
-specifier|const
-block|{
-return|return
-name|TypeIdentifierMap
 return|;
 block|}
 end_expr_stmt
@@ -2908,40 +2728,6 @@ parameter_list|(
 name|LexicalScope
 modifier|*
 name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Return Label preceding the instruction.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|getLabelBeforeInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Return Label immediately following the instruction.
-end_comment
-
-begin_function_decl
-name|MCSymbol
-modifier|*
-name|getLabelAfterInsn
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
 parameter_list|)
 function_decl|;
 end_function_decl

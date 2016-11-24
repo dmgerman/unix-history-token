@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -108,10 +102,9 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|/// DAGTypeLegalizer - This takes an arbitrary SelectionDAG as input and hacks
-comment|/// on it until only value types the target machine can handle are left.  This
-comment|/// involves promoting small sizes to large sizes or splitting up large values
-comment|/// into small values.
+comment|/// This takes an arbitrary SelectionDAG as input and hacks on it until only
+comment|/// value types the target machine can handle are left. This involves promoting
+comment|/// small sizes to large sizes or splitting up large values into small values.
 comment|///
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -128,32 +121,31 @@ name|DAG
 decl_stmt|;
 name|public
 label|:
-comment|// NodeIdFlags - This pass uses the NodeId on the SDNodes to hold information
-comment|// about the state of the node.  The enum has all the values.
+comment|/// This pass uses the NodeId on the SDNodes to hold information about the
+comment|/// state of the node. The enum has all the values.
 enum|enum
 name|NodeIdFlags
 block|{
-comment|/// ReadyToProcess - All operands have been processed, so this node is ready
-comment|/// to be handled.
+comment|/// All operands have been processed, so this node is ready to be handled.
 name|ReadyToProcess
 init|=
 literal|0
 block|,
-comment|/// NewNode - This is a new node, not before seen, that was created in the
-comment|/// process of legalizing some other node.
+comment|/// This is a new node, not before seen, that was created in the process of
+comment|/// legalizing some other node.
 name|NewNode
 init|=
 operator|-
 literal|1
 block|,
-comment|/// Unanalyzed - This node's ID needs to be set to the number of its
-comment|/// unprocessed operands.
+comment|/// This node's ID needs to be set to the number of its unprocessed
+comment|/// operands.
 name|Unanalyzed
 init|=
 operator|-
 literal|2
 block|,
-comment|/// Processed - This is a node that has already been processed.
+comment|/// This is a node that has already been processed.
 name|Processed
 init|=
 operator|-
@@ -163,15 +155,15 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// ValueTypeActions - This is a bitvector that contains two bits for each
-comment|/// simple value type, where the two bits correspond to the LegalizeAction
-comment|/// enum from TargetLowering.  This can be queried with "getTypeAction(VT)".
+comment|/// This is a bitvector that contains two bits for each simple value type,
+comment|/// where the two bits correspond to the LegalizeAction enum from
+comment|/// TargetLowering. This can be queried with "getTypeAction(VT)".
 name|TargetLowering
 operator|::
 name|ValueTypeActionImpl
 name|ValueTypeActions
 expr_stmt|;
-comment|/// getTypeAction - Return how we should legalize values of this type.
+comment|/// Return how we should legalize values of this type.
 name|TargetLowering
 operator|::
 name|LegalizeTypeAction
@@ -196,7 +188,7 @@ name|VT
 argument_list|)
 return|;
 block|}
-comment|/// isTypeLegal - Return true if this type is legal on this target.
+comment|/// Return true if this type is legal on this target.
 name|bool
 name|isTypeLegal
 argument_list|(
@@ -224,7 +216,7 @@ operator|::
 name|TypeLegal
 return|;
 block|}
-comment|/// isSimpleLegalType - Return true if this is a simple legal type.
+comment|/// Return true if this is a simple legal type.
 name|bool
 name|isSimpleLegalType
 argument_list|(
@@ -247,7 +239,7 @@ name|VT
 argument_list|)
 return|;
 block|}
-comment|/// isLegalInHWReg - Return true if this type can be passed in registers.
+comment|/// Return true if this type can be passed in registers.
 comment|/// For example, x86_64's f128, should to be legally in registers
 comment|/// and only some operations converted to library calls or integer
 comment|/// bitwise operations.
@@ -314,7 +306,7 @@ name|VT
 argument_list|)
 return|;
 block|}
-comment|/// IgnoreNodeResults - Pretend all of this node's results are legal.
+comment|/// Pretend all of this node's results are legal.
 name|bool
 name|IgnoreNodeResults
 argument_list|(
@@ -335,8 +327,8 @@ operator|::
 name|TargetConstant
 return|;
 block|}
-comment|/// PromotedIntegers - For integer nodes that are below legal width, this map
-comment|/// indicates what promoted value to use.
+comment|/// For integer nodes that are below legal width, this map indicates what
+comment|/// promoted value to use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -347,8 +339,8 @@ literal|8
 operator|>
 name|PromotedIntegers
 expr_stmt|;
-comment|/// ExpandedIntegers - For integer nodes that need to be expanded this map
-comment|/// indicates which operands are the expanded version of the input.
+comment|/// For integer nodes that need to be expanded this map indicates which
+comment|/// operands are the expanded version of the input.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -366,8 +358,8 @@ literal|8
 operator|>
 name|ExpandedIntegers
 expr_stmt|;
-comment|/// SoftenedFloats - For floating point nodes converted to integers of
-comment|/// the same size, this map indicates the converted value to use.
+comment|/// For floating-point nodes converted to integers of the same size, this map
+comment|/// indicates the converted value to use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -378,9 +370,8 @@ literal|8
 operator|>
 name|SoftenedFloats
 expr_stmt|;
-comment|/// PromotedFloats - For floating point nodes that have a smaller precision
-comment|/// than the smallest supported precision, this map indicates what promoted
-comment|/// value to use.
+comment|/// For floating-point nodes that have a smaller precision than the smallest
+comment|/// supported precision, this map indicates what promoted value to use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -391,8 +382,8 @@ literal|8
 operator|>
 name|PromotedFloats
 expr_stmt|;
-comment|/// ExpandedFloats - For float nodes that need to be expanded this map
-comment|/// indicates which operands are the expanded version of the input.
+comment|/// For float nodes that need to be expanded this map indicates which operands
+comment|/// are the expanded version of the input.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -410,8 +401,8 @@ literal|8
 operator|>
 name|ExpandedFloats
 expr_stmt|;
-comment|/// ScalarizedVectors - For nodes that are<1 x ty>, this map indicates the
-comment|/// scalar value of type 'ty' to use.
+comment|/// For nodes that are<1 x ty>, this map indicates the scalar value of type
+comment|/// 'ty' to use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -422,8 +413,8 @@ literal|8
 operator|>
 name|ScalarizedVectors
 expr_stmt|;
-comment|/// SplitVectors - For nodes that need to be split this map indicates
-comment|/// which operands are the expanded version of the input.
+comment|/// For nodes that need to be split this map indicates which operands are the
+comment|/// expanded version of the input.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -441,8 +432,8 @@ literal|8
 operator|>
 name|SplitVectors
 expr_stmt|;
-comment|/// WidenedVectors - For vector nodes that need to be widened, indicates
-comment|/// the widened value to use.
+comment|/// For vector nodes that need to be widened, indicates the widened value to
+comment|/// use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -453,8 +444,8 @@ literal|8
 operator|>
 name|WidenedVectors
 expr_stmt|;
-comment|/// ReplacedValues - For values that have been replaced with another,
-comment|/// indicates the replacement value to use.
+comment|/// For values that have been replaced with another, indicates the replacement
+comment|/// value to use.
 name|SmallDenseMap
 operator|<
 name|SDValue
@@ -465,9 +456,8 @@ literal|8
 operator|>
 name|ReplacedValues
 expr_stmt|;
-comment|/// Worklist - This defines a worklist of nodes to process.  In order to be
-comment|/// pushed onto this worklist, all operands of a node must have already been
-comment|/// processed.
+comment|/// This defines a worklist of nodes to process. In order to be pushed onto
+comment|/// this worklist, all operands of a node must have already been processed.
 name|SmallVector
 operator|<
 name|SDNode
@@ -518,7 +508,7 @@ argument_list|,
 literal|"Too many value types for ValueTypeActions to hold!"
 argument_list|)
 block|;   }
-comment|/// run - This is the main entry point for the type legalizer.  This does a
+comment|/// This is the main entry point for the type legalizer.  This does a
 comment|/// top-down traversal of the dag, legalizing types as it goes.  Returns
 comment|/// "true" if it made any changes.
 name|bool
@@ -685,9 +675,9 @@ name|EVT
 name|VT
 parameter_list|)
 function_decl|;
-comment|/// DisintegrateMERGE_VALUES - Replace each result of the given MERGE_VALUES
-comment|/// node with the corresponding input operand, except for the result 'ResNo',
-comment|/// for which the corresponding input operand is returned.
+comment|/// Replace each result of the given MERGE_VALUES node with the corresponding
+comment|/// input operand, except for the result 'ResNo', for which the corresponding
+comment|/// input operand is returned.
 name|SDValue
 name|DisintegrateMERGE_VALUES
 parameter_list|(
@@ -846,9 +836,9 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Integer Promotion Support: LegalizeIntegerTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetPromotedInteger - Given a processed operand Op which was promoted to a
-comment|/// larger integer type, this returns the promoted value.  The low bits of the
-comment|/// promoted value corresponding to the original type are exactly equal to Op.
+comment|/// Given a processed operand Op which was promoted to a larger integer type,
+comment|/// this returns the promoted value. The low bits of the promoted value
+comment|/// corresponding to the original type are exactly equal to Op.
 comment|/// The extra bits contain rubbish, so the promoted value may need to be zero-
 comment|/// or sign-extended from the original type before it is usable (the helpers
 comment|/// SExtPromotedInteger and ZExtPromotedInteger can do this for you).
@@ -900,8 +890,7 @@ name|SDValue
 name|Result
 parameter_list|)
 function_decl|;
-comment|/// SExtPromotedInteger - Get a promoted operand and sign extend it to the
-comment|/// final size.
+comment|/// Get a promoted operand and sign extend it to the final size.
 name|SDValue
 name|SExtPromotedInteger
 parameter_list|(
@@ -957,8 +946,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// ZExtPromotedInteger - Get a promoted operand and zero extend it to the
-comment|/// final size.
+comment|/// Get a promoted operand and zero extend it to the final size.
 name|SDValue
 name|ZExtPromotedInteger
 parameter_list|(
@@ -1679,9 +1667,9 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Integer Expansion Support: LegalizeIntegerTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetExpandedInteger - Given a processed operand Op which was expanded into
-comment|/// two integers of half the size, this returns the two halves.  The low bits
-comment|/// of Op are exactly equal to the bits of Lo; the high bits exactly equal Hi.
+comment|/// Given a processed operand Op which was expanded into two integers of half
+comment|/// the size, this returns the two halves. The low bits of Op are exactly
+comment|/// equal to the bits of Lo; the high bits exactly equal Hi.
 comment|/// For example, if Op is an i64 which was expanded into two i32's, then this
 comment|/// method returns the two i32's, with Lo being equal to the lower 32 bits of
 comment|/// Op, and Hi being equal to the upper 32 bits.
@@ -2158,6 +2146,22 @@ name|Hi
 parameter_list|)
 function_decl|;
 name|void
+name|ExpandIntRes_MINMAX
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
 name|ExpandIntRes_SADDSUBO
 parameter_list|(
 name|SDNode
@@ -2394,15 +2398,17 @@ name|CondCode
 operator|&
 name|CCCode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Float to Integer Conversion Support: LegalizeFloatTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetSoftenedFloat - Given an operand Op of Float type, returns the integer
-comment|/// if the Op is not supported in target HW and converted to the integer.
+comment|/// Given an operand Op of Float type, returns the integer if the Op is not
+comment|/// supported in target HW and converted to the integer.
 comment|/// The integer contains exactly the same bits as Op - only the type changed.
 comment|/// For example, if Op is an f32 which was softened to an i32, then this method
 comment|/// returns an i32, the bits of which coincide with those of Op.
@@ -2988,8 +2994,8 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Float Expansion Support: LegalizeFloatTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetExpandedFloat - Given a processed operand Op which was expanded into
-comment|/// two floating point values of half the size, this returns the two halves.
+comment|/// Given a processed operand Op which was expanded into two floating-point
+comment|/// values of half the size, this returns the two halves.
 comment|/// The low bits of Op are exactly equal to the bits of Lo; the high bits
 comment|/// exactly equal Hi.  For example, if Op is a ppcf128 which was expanded
 comment|/// into two f64's, then this method returns the two f64's, with Lo being
@@ -3626,7 +3632,9 @@ name|CondCode
 operator|&
 name|CCCode
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl_stmt|;
@@ -3892,9 +3900,9 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Scalarization Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetScalarizedVector - Given a processed one-element vector Op which was
-comment|/// scalarized to its element type, this returns the element.  For example,
-comment|/// if Op is a v1i32, Op =< i32 val>, this method returns val, an i32.
+comment|/// Given a processed one-element vector Op which was scalarized to its
+comment|/// element type, this returns the element. For example, if Op is a v1i32,
+comment|/// Op =< i32 val>, this method returns val, an i32.
 name|SDValue
 name|GetScalarizedVector
 parameter_list|(
@@ -4200,12 +4208,12 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Vector Splitting Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetSplitVector - Given a processed vector Op which was split into vectors
-comment|/// of half the size, this method returns the halves.  The first elements of
-comment|/// Op coincide with the elements of Lo; the remaining elements of Op coincide
-comment|/// with the elements of Hi: Op is what you would get by concatenating Lo and
-comment|/// Hi.  For example, if Op is a v8i32 that was split into two v4i32's, then
-comment|/// this method returns the two v4i32's, with Lo corresponding to the first 4
+comment|/// Given a processed vector Op which was split into vectors of half the size,
+comment|/// this method returns the halves. The first elements of Op coincide with the
+comment|/// elements of Lo; the remaining elements of Op coincide with the elements of
+comment|/// Hi: Op is what you would get by concatenating Lo and Hi.
+comment|/// For example, if Op is a v8i32 that was split into two v4i32's, then this
+comment|/// method returns the two v4i32's, with Lo corresponding to the first 4
 comment|/// elements of Op, and Hi to the last 4 elements.
 name|void
 name|GetSplitVector
@@ -4313,6 +4321,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|SplitVecRes_InregOp
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
+name|SplitVecRes_ExtVecInRegOp
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4693,12 +4717,12 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Vector Widening Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// GetWidenedVector - Given a processed vector Op which was widened into a
-comment|/// larger vector, this method returns the larger vector.  The elements of
-comment|/// the returned vector consist of the elements of Op followed by elements
-comment|/// containing rubbish.  For example, if Op is a v2i32 that was widened to a
-comment|/// v4i32, then this method returns a v4i32 for which the first two elements
-comment|/// are the same as those of Op, while the last two elements contain rubbish.
+comment|/// Given a processed vector Op which was widened into a larger vector, this
+comment|/// method returns the larger vector. The elements of the returned vector
+comment|/// consist of the elements of Op followed by elements containing rubbish.
+comment|/// For example, if Op is a v2i32 that was widened to a v4i32, then this
+comment|/// method returns a v4i32 for which the first two elements are the same as
+comment|/// those of Op, while the last two elements contain rubbish.
 name|SDValue
 name|GetWidenedVector
 parameter_list|(
@@ -4793,6 +4817,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|WidenVecRes_CONVERT_RNDSAT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|WidenVecRes_EXTEND_VECTOR_INREG
 parameter_list|(
 name|SDNode
 modifier|*
@@ -5076,8 +5108,8 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Vector Widening Utilities Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// Helper GenWidenVectorLoads - Helper function to generate a set of
-comment|/// loads to load a vector with a resulting wider type. It takes
+comment|/// Helper function to generate a set of loads to load a vector with a
+comment|/// resulting wider type. It takes:
 comment|///   LdChain: list of chains for the load to be generated.
 comment|///   Ld:      load to widen
 name|SDValue
@@ -5095,8 +5127,8 @@ operator|*
 name|LD
 argument_list|)
 decl_stmt|;
-comment|/// GenWidenVectorExtLoads - Helper function to generate a set of extension
-comment|/// loads to load a ector with a resulting wider type.  It takes
+comment|/// Helper function to generate a set of extension loads to load a vector with
+comment|/// a resulting wider type. It takes:
 comment|///   LdChain: list of chains for the load to be generated.
 comment|///   Ld:      load to widen
 comment|///   ExtType: extension element type
@@ -5120,8 +5152,8 @@ name|LoadExtType
 name|ExtType
 argument_list|)
 decl_stmt|;
-comment|/// Helper genWidenVectorStores - Helper function to generate a set of
-comment|/// stores to store a widen vector into non-widen memory
+comment|/// Helper function to generate a set of stores to store a widen vector into
+comment|/// non-widen memory.
 comment|///   StChain: list of chains for the stores we have generated
 comment|///   ST:      store of a widen value
 name|void
@@ -5139,8 +5171,8 @@ operator|*
 name|ST
 argument_list|)
 decl_stmt|;
-comment|/// Helper genWidenVectorTruncStores - Helper function to generate a set of
-comment|/// stores to store a truncate widen vector into non-widen memory
+comment|/// Helper function to generate a set of stores to store a truncate widen
+comment|/// vector into non-widen memory.
 comment|///   StChain: list of chains for the stores we have generated
 comment|///   ST:      store of a widen value
 name|void
@@ -5160,8 +5192,7 @@ argument_list|)
 decl_stmt|;
 comment|/// Modifies a vector input (widen or narrows) to a vector of NVT.  The
 comment|/// input vector must have the same element type as NVT.
-comment|/// When FillWithZeroes is "on" the vector will be widened with
-comment|/// zeroes.
+comment|/// When FillWithZeroes is "on" the vector will be widened with zeroes.
 comment|/// By default, the vector will be widened with undefined values.
 name|SDValue
 name|ModifyToType
@@ -5249,8 +5280,8 @@ name|Hi
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// GetPairElements - Use ISD::EXTRACT_ELEMENT nodes to extract the low and
-comment|/// high parts of the given value.
+comment|/// Use ISD::EXTRACT_ELEMENT nodes to extract the low and high parts of the
+comment|/// given value.
 name|void
 name|GetPairElements
 parameter_list|(

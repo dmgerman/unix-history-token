@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/TargetLibraryInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -155,17 +149,10 @@ specifier|const
 name|DataLayout
 operator|&
 name|DL
-argument_list|,
-specifier|const
-name|TargetLibraryInfo
-operator|&
-name|TLI
 argument_list|)
 operator|:
 name|AAResultBase
-argument_list|(
-name|TLI
-argument_list|)
+argument_list|()
 block|,
 name|DL
 argument_list|(
@@ -262,29 +249,29 @@ decl_stmt|;
 comment|/// Analysis pass providing a never-invalidated alias analysis result.
 name|class
 name|ObjCARCAA
-block|{
+range|:
 name|public
-label|:
+name|AnalysisInfoMixin
+operator|<
+name|ObjCARCAA
+operator|>
+block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|ObjCARCAA
+operator|>
+block|;
+specifier|static
+name|char
+name|PassID
+block|;
+name|public
+operator|:
 typedef|typedef
 name|ObjCARCAAResult
 name|Result
 typedef|;
-comment|/// \brief Opaque, unique identifier for this analysis pass.
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
 name|ObjCARCAAResult
 name|run
 argument_list|(
@@ -296,25 +283,9 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
-decl_stmt|;
-comment|/// \brief Provide access to a name for this pass for debugging purposes.
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"ObjCARCAA"
-return|;
-block|}
-name|private
-label|:
-specifier|static
-name|char
-name|PassID
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -388,11 +359,14 @@ name|override
 block|; }
 decl_stmt|;
 block|}
-comment|// namespace objcarc
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// namespace objcarc
+end_comment
+
+begin_comment
+unit|}
 comment|// namespace llvm
 end_comment
 

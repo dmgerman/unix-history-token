@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -53,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -97,6 +97,10 @@ operator|::
 name|ThreadSP
 operator|,
 name|vector_adapter
+operator|,
+name|std
+operator|::
+name|recursive_mutex
 operator|>
 name|ThreadIterable
 expr_stmt|;
@@ -119,6 +123,17 @@ argument_list|()
 expr_stmt|;
 name|void
 name|AddThread
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ThreadSP
+operator|&
+name|thread_sp
+argument_list|)
+decl_stmt|;
+name|void
+name|AddThreadSortedByIndexID
 argument_list|(
 specifier|const
 name|lldb
@@ -169,10 +184,12 @@ argument_list|)
 return|;
 block|}
 name|virtual
-name|Mutex
-modifier|&
+name|std
+operator|::
+name|recursive_mutex
+operator|&
 name|GetMutex
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_mutex
@@ -183,9 +200,11 @@ label|:
 name|collection
 name|m_threads
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

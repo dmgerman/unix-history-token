@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -64,6 +70,9 @@ end_include
 begin_decl_stmt
 name|namespace
 name|llvm
+block|{
+name|namespace
+name|pdb
 block|{
 typedef|typedef
 name|std
@@ -131,7 +140,9 @@ operator|&
 name|OS
 operator|,
 specifier|const
-name|PDB_RegisterId
+name|codeview
+operator|::
+name|RegisterId
 operator|&
 name|Reg
 operator|)
@@ -161,7 +172,9 @@ operator|&
 name|OS
 operator|,
 specifier|const
-name|PDB_ThunkOrdinal
+name|codeview
+operator|::
+name|ThunkOrdinal
 operator|&
 name|Thunk
 operator|)
@@ -266,6 +279,21 @@ operator|&
 name|OS
 operator|,
 specifier|const
+name|PDB_Machine
+operator|&
+name|Machine
+operator|)
+expr_stmt|;
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
 name|Variant
 operator|&
 name|Value
@@ -301,6 +329,7 @@ operator|&
 name|Stats
 operator|)
 expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

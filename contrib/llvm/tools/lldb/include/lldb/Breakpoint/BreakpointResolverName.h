@@ -77,6 +77,12 @@ directive|include
 file|"lldb/Breakpoint/BreakpointResolver.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Module.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -106,6 +112,8 @@ argument|lldb::LanguageType language
 argument_list|,
 argument|Breakpoint::MatchType type
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
@@ -122,6 +130,8 @@ argument|uint32_t name_type_mask
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
@@ -136,6 +146,8 @@ argument|uint32_t name_type_mask
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
+argument|lldb::addr_t offset
+argument_list|,
 argument|bool skip_prologue
 argument_list|)
 block|;
@@ -147,6 +159,8 @@ argument_list|,
 argument|RegularExpression&func_regex
 argument_list|,
 argument|lldb::LanguageType language
+argument_list|,
+argument|lldb::addr_t offset
 argument_list|,
 argument|bool skip_prologue
 argument_list|)
@@ -160,6 +174,8 @@ argument_list|,
 argument|const char *method
 argument_list|,
 argument|Breakpoint::MatchType type
+argument_list|,
+argument|lldb::addr_t offset
 argument_list|,
 argument|bool skip_prologue
 argument_list|)
@@ -256,55 +272,13 @@ name|BreakpointResolverName
 operator|&
 name|rhs
 argument_list|)
-block|;      struct
-name|LookupInfo
-block|{
-name|ConstString
-name|name
-block|;
-name|ConstString
-name|lookup_name
-block|;
-name|uint32_t
-name|name_type_mask
-block|;
-comment|// See FunctionNameType
-name|bool
-name|match_name_after_lookup
-block|;
-name|LookupInfo
-argument_list|()
-operator|:
-name|name
-argument_list|()
-block|,
-name|lookup_name
-argument_list|()
-block|,
-name|name_type_mask
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|match_name_after_lookup
-argument_list|(
-argument|false
-argument_list|)
-block|{         }
-name|void
-name|Prune
-argument_list|(
-argument|SymbolContextList&sc_list
-argument_list|,
-argument|size_t start_idx
-argument_list|)
-specifier|const
-block|;     }
 block|;
 name|std
 operator|::
 name|vector
 operator|<
+name|Module
+operator|::
 name|LookupInfo
 operator|>
 name|m_lookups

@@ -510,6 +510,71 @@ operator|>
 name|Fallback
 block|; }
 decl_stmt|;
+comment|/// Like Command, but always pretends that the wrapped command succeeded.
+name|class
+name|ForceSuccessCommand
+range|:
+name|public
+name|Command
+block|{
+name|public
+operator|:
+name|ForceSuccessCommand
+argument_list|(
+specifier|const
+name|Action
+operator|&
+name|Source_
+argument_list|,
+specifier|const
+name|Tool
+operator|&
+name|Creator_
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Executable_
+argument_list|,
+specifier|const
+name|ArgStringList
+operator|&
+name|Arguments_
+argument_list|,
+name|ArrayRef
+operator|<
+name|InputInfo
+operator|>
+name|Inputs
+argument_list|)
+block|;
+name|void
+name|Print
+argument_list|(
+argument|llvm::raw_ostream&OS
+argument_list|,
+argument|const char *Terminator
+argument_list|,
+argument|bool Quote
+argument_list|,
+argument|CrashReportInfo *CrashInfo = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+name|int
+name|Execute
+argument_list|(
+argument|const StringRef **Redirects
+argument_list|,
+argument|std::string *ErrMsg
+argument_list|,
+argument|bool *ExecutionFailed
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 comment|/// JobList - A sequence of jobs to perform.
 name|class
 name|JobList

@@ -57,6 +57,12 @@ directive|include
 file|<list>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Breakpoint/Breakpoint.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -221,10 +221,15 @@ name|GetSize
 argument_list|()
 specifier|const
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -354,13 +359,16 @@ comment|//------------------------------------------------------------------
 name|void
 name|GetListMutex
 argument_list|(
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|unique_lock
+operator|<
+name|std
 operator|::
-name|Locker
+name|recursive_mutex
+operator|>
 operator|&
-name|locker
+name|lock
 argument_list|)
 decl_stmt|;
 name|protected
@@ -393,7 +401,9 @@ argument|lldb::break_id_t breakID
 argument_list|)
 specifier|const
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -404,9 +414,11 @@ name|m_mutex
 return|;
 block|}
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|bp_collection
 name|m_breakpoints
 decl_stmt|;
@@ -431,6 +443,10 @@ operator|::
 name|BreakpointSP
 operator|,
 name|list_adapter
+operator|,
+name|std
+operator|::
+name|recursive_mutex
 operator|>
 name|BreakpointIterable
 expr_stmt|;

@@ -972,7 +972,7 @@ return|return;
 end_if
 
 begin_expr_stmt
-unit|}     if
+unit|}    if
 operator|(
 name|Sum
 operator|==

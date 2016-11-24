@@ -171,6 +171,10 @@ name|friend
 name|class
 name|SBProcess
 decl_stmt|;
+name|friend
+name|class
+name|SBThread
+decl_stmt|;
 name|lldb
 operator|::
 name|ThreadCollectionSP

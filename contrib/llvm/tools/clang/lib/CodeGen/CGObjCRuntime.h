@@ -1110,7 +1110,7 @@ name|GlobalVariable
 operator|*
 name|GetClassGlobal
 argument_list|(
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
 argument|bool Weak = false
 argument_list|)

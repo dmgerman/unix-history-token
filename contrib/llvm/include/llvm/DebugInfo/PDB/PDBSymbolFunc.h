@@ -62,6 +62,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 name|class
 name|PDBSymbolFunc
 range|:
@@ -268,10 +271,6 @@ argument|getRelativeVirtualAddress
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
 argument_list|(
-argument|getSymIndexId
-argument_list|)
-name|FORWARD_SYMBOL_METHOD
-argument_list|(
 argument|getToken
 argument_list|)
 name|FORWARD_SYMBOL_METHOD
@@ -305,11 +304,9 @@ argument_list|)
 block|}
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// namespace llvm
-end_comment
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -161,7 +161,7 @@ decl_stmt|;
 comment|/// True if this 'friend' declaration is unsupported.  Eventually we
 comment|/// will support every possible friend declaration, but for now we
 comment|/// silently ignore some and set this flag to authorize all access.
-name|bool
+name|unsigned
 name|UnsupportedFriend
 range|:
 literal|1

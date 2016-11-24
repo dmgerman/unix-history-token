@@ -117,6 +117,24 @@ operator|&
 name|MMO
 operator|)
 expr_stmt|;
+name|class
+name|PseudoSourceValue
+decl_stmt|;
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|PSV
+operator|)
+expr_stmt|;
 comment|/// Special value supplied for machine level alias analysis. It indicates that
 comment|/// a memory access references the functions stack frame (e.g., a spill slot),
 comment|/// below the stack frame (e.g., argument space), or constant pool.
@@ -148,6 +166,24 @@ label|:
 name|PSVKind
 name|Kind
 decl_stmt|;
+name|friend
+name|raw_ostream
+operator|&
+name|llvm
+operator|::
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|PseudoSourceValue
+operator|*
+name|PSV
+operator|)
+expr_stmt|;
 name|friend
 name|class
 name|MachineMemOperand

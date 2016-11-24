@@ -43,6 +43,12 @@ directive|define
 name|LLVM_LIB_TARGET_ARM_ARMASMBACKENDWINCOFF_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"ARMAsmBackend.h"
+end_include
+
 begin_decl_stmt
 name|using
 name|namespace

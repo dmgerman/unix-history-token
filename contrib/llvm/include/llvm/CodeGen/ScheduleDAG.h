@@ -1806,6 +1806,68 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+comment|/// addPredBarrier - This adds a barrier edge to SU by calling
+comment|/// addPred(), with latency 0 generally or latency 1 for a store
+comment|/// followed by a load.
+name|bool
+name|addPredBarrier
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+block|{
+name|SDep
+name|Dep
+argument_list|(
+name|SU
+argument_list|,
+name|SDep
+operator|::
+name|Barrier
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|TrueMemOrderLatency
+init|=
+operator|(
+operator|(
+name|SU
+operator|->
+name|getInstr
+argument_list|()
+operator|->
+name|mayStore
+argument_list|()
+operator|&&
+name|this
+operator|->
+name|getInstr
+argument_list|()
+operator|->
+name|mayLoad
+argument_list|()
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+decl_stmt|;
+name|Dep
+operator|.
+name|setLatency
+argument_list|(
+name|TrueMemOrderLatency
+argument_list|)
+expr_stmt|;
+return|return
+name|addPred
+argument_list|(
+name|Dep
+argument_list|)
+return|;
+block|}
 comment|/// removePred - This removes the specified edge as a pred of the current
 comment|/// node if it exists.  It also removes the current node as a successor of
 comment|/// the specified node.

@@ -112,12 +112,18 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale>
+end_include
+
 begin_comment
 comment|// components needed to handle wide characters (<codecvt>, codecvt_utf8, libedit built with '--enable-widec' )
 end_comment
 
 begin_comment
-comment|// are not consistenly available on non-OSX platforms.  The wchar_t versions of libedit functions will only be
+comment|// are available on some platforms. The wchar_t versions of libedit functions will only be
 end_comment
 
 begin_comment
@@ -130,6 +136,11 @@ directive|if
 name|defined
 argument_list|(
 name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
 argument_list|)
 end_if
 
@@ -224,6 +235,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -249,12 +266,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/FileSpec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -808,10 +819,19 @@ modifier|*
 name|Prompt
 parameter_list|()
 function_decl|;
-comment|/// Line break command used when return is pressed in multi-line mode.
+comment|/// Line break command used when meta+return is pressed in multi-line mode.
 name|unsigned
 name|char
 name|BreakLineCommand
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+comment|/// Command used when return is pressed in multi-line mode.
+name|unsigned
+name|char
+name|EndOrAddLineCommand
 parameter_list|(
 name|int
 name|ch
@@ -848,6 +868,24 @@ comment|/// Line navigation command used when ^N or down arrow are pressed in mu
 name|unsigned
 name|char
 name|NextLineCommand
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+comment|/// History navigation command used when Alt + up arrow is pressed in multi-line mode.
+name|unsigned
+name|char
+name|PreviousHistoryCommand
+parameter_list|(
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+comment|/// History navigation command used when Alt + down arrow is pressed in multi-line mode.
+name|unsigned
+name|char
+name|NextHistoryCommand
 parameter_list|(
 name|int
 name|ch
@@ -1080,9 +1118,11 @@ name|m_completion_callback_baton
 init|=
 name|nullptr
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_output_mutex
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

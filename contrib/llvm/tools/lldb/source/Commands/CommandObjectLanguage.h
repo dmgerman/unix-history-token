@@ -95,13 +95,6 @@ name|CommandObjectLanguage
 argument_list|()
 name|override
 block|;
-name|void
-name|GenerateHelpText
-argument_list|(
-argument|Stream&output_stream
-argument_list|)
-name|override
-block|;
 name|protected
 operator|:
 name|bool

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/VersionTuple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Action.h"
 end_include
 
@@ -850,6 +856,7 @@ name|false
 return|;
 block|}
 comment|/// \brief Check if the toolchain should use the integrated assembler.
+name|virtual
 name|bool
 name|useIntegratedAs
 argument_list|()
@@ -928,6 +935,18 @@ return|return
 name|ToolChain
 operator|::
 name|RLT_Libgcc
+return|;
+block|}
+name|virtual
+name|CXXStdlibType
+name|GetDefaultCXXStdlibType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ToolChain
+operator|::
+name|CST_Libstdcxx
 return|;
 block|}
 name|virtual
@@ -1120,6 +1139,17 @@ operator|&
 name|Args
 argument_list|)
 decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// SupportsEmbeddedBitcode - Does this tool chain support embedded bitcode.
+name|virtual
+name|bool
+name|SupportsEmbeddedBitcode
+argument_list|()
+specifier|const
 block|{
 return|return
 name|false
@@ -1482,6 +1512,30 @@ name|CC1Args
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Add arguments to use MCU GCC toolchain includes.
+name|virtual
+name|void
+name|AddIAMCUIncludeArgs
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|DriverArgs
+argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CC1Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return sanitizers which are available in this toolchain.
 name|virtual
 name|SanitizerMask
@@ -1489,6 +1543,30 @@ name|getSupportedSanitizers
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return sanitizers which are enabled by default.
+name|virtual
+name|SanitizerMask
+name|getDefaultSanitizers
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// \brief On Windows, returns the version of cl.exe.  On other platforms,
+comment|/// returns an empty VersionTuple.
+name|virtual
+name|VersionTuple
+name|getMSVCVersionFromExe
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VersionTuple
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

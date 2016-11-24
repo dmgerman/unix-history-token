@@ -116,7 +116,7 @@ name|public
 label|:
 name|WhitespaceManager
 argument_list|(
-argument|SourceManager&SourceMgr
+argument|const SourceManager&SourceMgr
 argument_list|,
 argument|const FormatStyle&Style
 argument_list|,
@@ -555,6 +555,7 @@ literal|16
 operator|>
 name|Changes
 expr_stmt|;
+specifier|const
 name|SourceManager
 modifier|&
 name|SourceMgr

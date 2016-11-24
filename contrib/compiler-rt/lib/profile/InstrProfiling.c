@@ -52,6 +52,7 @@ file|"InstrProfData.inc"
 end_include
 
 begin_function_decl
+name|COMPILER_RT_VISIBILITY
 name|char
 modifier|*
 function_decl|(
@@ -223,7 +224,7 @@ operator|=
 name|DataBegin
 init|;
 name|DI
-operator|!=
+operator|<
 name|DataEnd
 condition|;
 operator|++
@@ -314,8 +315,6 @@ condition|)
 block|{
 name|CurrentVNode
 operator|->
-name|VData
-operator|.
 name|Count
 operator|=
 literal|0

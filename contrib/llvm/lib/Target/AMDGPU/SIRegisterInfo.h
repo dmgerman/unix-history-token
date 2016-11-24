@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_SIREGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_SIREGISTERINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIREGISTERINFO_H
 end_define
 
 begin_include
@@ -72,27 +72,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|"AMDGPUSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Debug.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|SISubtarget
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
 name|struct
 name|SIRegisterInfo
+name|final
 range|:
 name|public
 name|AMDGPURegisterInfo
@@ -105,12 +100,29 @@ block|;
 name|unsigned
 name|VGPR32SetID
 block|;
+name|BitVector
+name|SGPRPressureSets
+block|;
+name|BitVector
+name|VGPRPressureSets
+block|;
 name|void
 name|reserveRegisterTuples
 argument_list|(
 argument|BitVector&
 argument_list|,
 argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|void
+name|classifyPressureSet
+argument_list|(
+argument|unsigned PSetID
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|BitVector&PressureSets
 argument_list|)
 specifier|const
 block|;
@@ -163,6 +175,101 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|requiresVirtualBaseRegisters
+argument_list|(
+argument|const MachineFunction&Fn
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|trackLivenessAfterRegAlloc
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|int64_t
+name|getFrameIndexInstrOffset
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int Idx
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Kind =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -183,8 +290,16 @@ argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
-name|override
-block|;
+block|{
+return|return
+name|getEncodingValue
+argument_list|(
+name|Reg
+argument_list|)
+operator|&
+literal|0xff
+return|;
+block|}
 comment|/// \brief Return the 'base' register class for this register.
 comment|/// e.g. SGPR0 => SReg_32, VGPR => VGPR_32 SGPR0_SGPR1 -> SReg_32, etc.
 specifier|const
@@ -239,6 +354,11 @@ argument|unsigned Reg
 argument_list|)
 specifier|const
 block|{
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+block|;
 if|if
 condition|(
 name|TargetRegisterInfo
@@ -248,21 +368,27 @@ argument_list|(
 name|Reg
 argument_list|)
 condition|)
-return|return
-name|isSGPRClass
-argument_list|(
+name|RC
+operator|=
 name|MRI
 operator|.
 name|getRegClass
 argument_list|(
 name|Reg
 argument_list|)
-argument_list|)
-return|;
-return|return
+expr_stmt|;
+else|else
+name|RC
+operator|=
 name|getPhysRegClass
 argument_list|(
 name|Reg
+argument_list|)
+expr_stmt|;
+return|return
+name|isSGPRClass
+argument_list|(
+name|RC
 argument_list|)
 return|;
 block|}
@@ -316,6 +442,19 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|SRC
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \returns A SGPR reg class with the same width as \p SRC
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getEquivalentSGPRClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|VRC
 argument_list|)
 decl|const
 decl_stmt|;
@@ -419,6 +558,14 @@ name|KERNARG_SEGMENT_PTR
 init|=
 literal|3
 block|,
+name|DISPATCH_ID
+init|=
+literal|4
+block|,
+name|FLAT_SCRATCH_INIT
+init|=
+literal|5
+block|,
 name|WORKGROUP_ID_X
 init|=
 literal|10
@@ -483,10 +630,10 @@ comment|///        concurrent waves.
 name|unsigned
 name|getNumSGPRsAllowed
 argument_list|(
-name|AMDGPUSubtarget
-operator|::
-name|Generation
-name|gen
+specifier|const
+name|SISubtarget
+operator|&
+name|ST
 argument_list|,
 name|unsigned
 name|WaveCount
@@ -505,6 +652,11 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 decl_stmt|;
@@ -528,6 +680,19 @@ name|VGPR32SetID
 return|;
 block|}
 empty_stmt|;
+name|bool
+name|isVGPR
+argument_list|(
+specifier|const
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -541,8 +706,10 @@ argument_list|,
 name|unsigned
 name|LoadStoreOp
 argument_list|,
-name|unsigned
-name|Value
+specifier|const
+name|MachineOperand
+operator|*
+name|SrcDst
 argument_list|,
 name|unsigned
 name|ScratchRsrcReg

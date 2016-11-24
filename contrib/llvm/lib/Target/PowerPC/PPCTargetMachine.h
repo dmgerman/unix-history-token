@@ -87,7 +87,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// PPCTargetMachine - Common code between 32-bit and 64-bit PowerPC targets.
+comment|/// Common code between 32-bit and 64-bit PowerPC targets.
 comment|///
 name|class
 name|PPCTargetMachine
@@ -148,7 +148,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -246,7 +246,7 @@ return|;
 block|}
 block|; }
 decl_stmt|;
-comment|/// PPC32TargetMachine - PowerPC 32-bit target machine.
+comment|/// PowerPC 32-bit target machine.
 comment|///
 name|class
 name|PPC32TargetMachine
@@ -273,7 +273,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -281,7 +281,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 decl_stmt|;
-comment|/// PPC64TargetMachine - PowerPC 64-bit target machine.
+comment|/// PowerPC 64-bit target machine.
 comment|///
 name|class
 name|PPC64TargetMachine
@@ -308,7 +308,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

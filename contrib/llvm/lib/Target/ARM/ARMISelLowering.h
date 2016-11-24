@@ -142,9 +142,6 @@ comment|// Function call that's predicable.
 name|CALL_NOLINK
 block|,
 comment|// Function call with branch not branch-and-link.
-name|tCALL
-block|,
-comment|// Thumb function call.
 name|BRCOND
 block|,
 comment|// Conditional branch.
@@ -184,6 +181,9 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
+name|SSAT
+block|,
+comment|// Signed saturation
 name|BCC_i64
 block|,
 name|SRL_FLAG
@@ -393,6 +393,9 @@ comment|// 64bit Unsigned Accumulate Multiply
 name|SMLAL
 block|,
 comment|// 64bit Signed Accumulate Multiply
+name|UMAAL
+block|,
+comment|// 64-bit Unsigned Accumulate Accumulate Multiply
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -582,7 +585,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -592,7 +595,7 @@ block|;
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|SDNode *Node
 argument_list|)
@@ -601,6 +604,15 @@ name|override
 block|;
 name|SDValue
 name|PerformCMOVCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|PerformBRCONDCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -857,6 +869,16 @@ argument_list|,
 argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|char
+operator|*
+name|LowerXConstraint
+argument_list|(
+argument|EVT ConstraintVT
 argument_list|)
 specifier|const
 name|override
@@ -1284,6 +1306,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|shouldInsertFencesForAtomic
+argument_list|(
+argument|const Instruction *I
+argument_list|)
+specifier|const
+name|override
+block|;
 name|TargetLoweringBase
 operator|::
 name|AtomicExpansionKind
@@ -1350,6 +1380,28 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|bool
+name|supportSwiftError
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|hasStandaloneRem
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|HasStandaloneRem
+return|;
+block|}
 name|protected
 operator|:
 name|std
@@ -1394,6 +1446,16 @@ comment|/// ARMPCLabelIndex - Keep track of the number of ARM PC labels created.
 comment|///
 name|unsigned
 name|ARMPCLabelIndex
+block|;
+comment|// TODO: remove this, and have shouldInsertFencesForAtomic do the proper
+comment|// check.
+name|bool
+name|InsertFencesForAtomic
+block|;
+name|bool
+name|HasStandaloneRem
+operator|=
+name|true
 block|;
 name|void
 name|addTypeForNEON
@@ -1454,7 +1516,7 @@ expr_stmt|;
 name|void
 name|PassF64ArgInRegs
 argument_list|(
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1495,7 +1557,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -1540,7 +1604,9 @@ argument_list|,
 name|SDValue
 name|Arg
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1705,6 +1771,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerGlobalTLSAddressDarwin
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerGlobalTLSAddressWindows
 argument_list|(
 name|SDValue
 name|Op
@@ -2125,7 +2203,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2236,7 +2316,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2264,7 +2346,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -2298,7 +2382,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SDValue
@@ -2473,7 +2559,9 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2510,7 +2598,9 @@ decl_stmt|;
 name|SDValue
 name|getCMOV
 argument_list|(
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|EVT
@@ -2559,7 +2649,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2577,7 +2669,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2610,7 +2704,7 @@ name|void
 name|SetupEntryBlockForSjLj
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2630,7 +2724,7 @@ name|void
 name|EmitSjLjDispatchBlock
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2643,7 +2737,7 @@ name|bool
 name|RemapAddSubWithFlags
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2657,7 +2751,7 @@ modifier|*
 name|EmitStructByval
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2671,7 +2765,7 @@ modifier|*
 name|EmitLowered__chkstk
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2685,7 +2779,7 @@ modifier|*
 name|EmitLowered__dbzchk
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock

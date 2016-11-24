@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Cuda.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Types.h"
 end_include
 
@@ -53,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Driver/Util.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -85,6 +97,9 @@ block|{
 name|namespace
 name|driver
 block|{
+name|class
+name|ToolChain
+decl_stmt|;
 comment|/// Action - Represent an abstract compilation step to perform.
 comment|///
 comment|/// An action represents an edge in the compilation graph; typically
@@ -112,13 +127,31 @@ typedef|typedef
 name|ActionList
 operator|::
 name|iterator
-name|iterator
+name|input_iterator
 expr_stmt|;
 typedef|typedef
 name|ActionList
 operator|::
 name|const_iterator
-name|const_iterator
+name|input_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|input_iterator
+operator|>
+name|input_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|input_const_iterator
+operator|>
+name|input_const_range
 expr_stmt|;
 enum|enum
 name|ActionClass
@@ -129,9 +162,7 @@ literal|0
 block|,
 name|BindArchClass
 block|,
-name|CudaDeviceClass
-block|,
-name|CudaHostClass
+name|OffloadClass
 block|,
 name|PreprocessJobClass
 block|,
@@ -166,6 +197,27 @@ init|=
 name|VerifyPCHJobClass
 block|}
 enum|;
+comment|// The offloading kind determines if this action is binded to a particular
+comment|// programming model. Each entry reserves one bit. We also have a special kind
+comment|// to designate the host offloading tool chain.
+enum|enum
+name|OffloadKind
+block|{
+name|OFK_None
+init|=
+literal|0x00
+block|,
+comment|// The host offloading tool chain.
+name|OFK_Host
+init|=
+literal|0x01
+block|,
+comment|// The device offloading tool chains - one bit for each programming model.
+name|OFK_Cuda
+init|=
+literal|0x02
+block|,   }
+enum|;
 specifier|static
 specifier|const
 name|char
@@ -192,6 +244,31 @@ name|Inputs
 decl_stmt|;
 name|protected
 label|:
+comment|///
+comment|/// Offload information.
+comment|///
+comment|/// The host offloading kind - a combination of kinds encoded in a mask.
+comment|/// Multiple programming models may be supported simultaneously by the same
+comment|/// host.
+name|unsigned
+name|ActiveOffloadKindMask
+init|=
+literal|0u
+decl_stmt|;
+comment|/// Offloading kind of the device.
+name|OffloadKind
+name|OffloadingDeviceKind
+init|=
+name|OFK_None
+decl_stmt|;
+comment|/// The Offloading architecture associated with this action.
+specifier|const
+name|char
+modifier|*
+name|OffloadingArch
+init|=
+name|nullptr
+decl_stmt|;
 name|Action
 argument_list|(
 argument|ActionClass Kind
@@ -342,8 +419,8 @@ name|size
 argument_list|()
 return|;
 block|}
-name|iterator
-name|begin
+name|input_iterator
+name|input_begin
 parameter_list|()
 block|{
 return|return
@@ -353,8 +430,8 @@ name|begin
 argument_list|()
 return|;
 block|}
-name|iterator
-name|end
+name|input_iterator
+name|input_end
 parameter_list|()
 block|{
 return|return
@@ -364,8 +441,23 @@ name|end
 argument_list|()
 return|;
 block|}
-name|const_iterator
-name|begin
+name|input_range
+name|inputs
+parameter_list|()
+block|{
+return|return
+name|input_range
+argument_list|(
+name|input_begin
+argument_list|()
+argument_list|,
+name|input_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|input_const_iterator
+name|input_begin
 argument_list|()
 specifier|const
 block|{
@@ -376,8 +468,8 @@ name|begin
 argument_list|()
 return|;
 block|}
-name|const_iterator
-name|end
+name|input_const_iterator
+name|input_end
 argument_list|()
 specifier|const
 block|{
@@ -386,6 +478,159 @@ name|Inputs
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+name|input_const_range
+name|inputs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|input_const_range
+argument_list|(
+name|input_begin
+argument_list|()
+argument_list|,
+name|input_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// Return a string containing the offload kind of the action.
+name|std
+operator|::
+name|string
+name|getOffloadingKindPrefix
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return a string that can be used as prefix in order to generate unique
+comment|/// files for each offloading kind.
+name|std
+operator|::
+name|string
+name|getOffloadingFileNamePrefix
+argument_list|(
+argument|llvm::StringRef NormalizedTriple
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Set the device offload info of this action and propagate it to its
+comment|/// dependences.
+name|void
+name|propagateDeviceOffloadInfo
+parameter_list|(
+name|OffloadKind
+name|OKind
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|OArch
+parameter_list|)
+function_decl|;
+comment|/// Append the host offload info of this action and propagate it to its
+comment|/// dependences.
+name|void
+name|propagateHostOffloadInfo
+parameter_list|(
+name|unsigned
+name|OKinds
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|OArch
+parameter_list|)
+function_decl|;
+comment|/// Set the offload info of this action to be the same as the provided action,
+comment|/// and propagate it to its dependences.
+name|void
+name|propagateOffloadInfo
+parameter_list|(
+specifier|const
+name|Action
+modifier|*
+name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|getOffloadingHostActiveKinds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ActiveOffloadKindMask
+return|;
+block|}
+name|OffloadKind
+name|getOffloadingDeviceKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OffloadingDeviceKind
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getOffloadingArch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OffloadingArch
+return|;
+block|}
+comment|/// Check if this action have any offload kinds. Note that host offload kinds
+comment|/// are only set if the action is a dependence to a host offload action.
+name|bool
+name|isHostOffloading
+argument_list|(
+name|OffloadKind
+name|OKind
+argument_list|)
+decl|const
+block|{
+return|return
+name|ActiveOffloadKindMask
+operator|&
+name|OKind
+return|;
+block|}
+name|bool
+name|isDeviceOffloading
+argument_list|(
+name|OffloadKind
+name|OKind
+argument_list|)
+decl|const
+block|{
+return|return
+name|OffloadingDeviceKind
+operator|==
+name|OKind
+return|;
+block|}
+name|bool
+name|isOffloading
+argument_list|(
+name|OffloadKind
+name|OKind
+argument_list|)
+decl|const
+block|{
+return|return
+name|isHostOffloading
+argument_list|(
+name|OKind
+argument_list|)
+operator|||
+name|isDeviceOffloading
+argument_list|(
+name|OKind
+argument_list|)
 return|;
 block|}
 block|}
@@ -513,8 +758,12 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// An offload action combines host or/and device actions according to the
+comment|/// programming model implementation needs and propagates the offloading kind to
+comment|/// its dependences.
 name|class
-name|CudaDeviceAction
+name|OffloadAction
+name|final
 operator|:
 name|public
 name|Action
@@ -524,113 +773,90 @@ name|void
 name|anchor
 argument_list|()
 block|;
-comment|/// GPU architecture to bind.  Always of the form /sm_\d+/.
-specifier|const
-name|char
-operator|*
-name|GpuArchName
-block|;
-comment|/// True when action results are not consumed by the host action (e.g when
-comment|/// -fsyntax-only or --cuda-device-only options are used).
-name|bool
-name|AtTopLevel
-block|;
 name|public
 operator|:
-name|CudaDeviceAction
-argument_list|(
-argument|Action *Input
-argument_list|,
-argument|const char *ArchName
-argument_list|,
-argument|bool AtTopLevel
-argument_list|)
-block|;
-specifier|const
-name|char
-operator|*
-name|getGpuArchName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GpuArchName
-return|;
-block|}
-comment|/// Gets the compute_XX that corresponds to getGpuArchName().
-specifier|const
-name|char
-operator|*
-name|getComputeArchName
-argument_list|()
-specifier|const
-block|;
-name|bool
-name|isAtTopLevel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtTopLevel
-return|;
-block|}
-specifier|static
-name|bool
-name|IsValidGpuArchName
-argument_list|(
-argument|llvm::StringRef ArchName
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Action *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|CudaDeviceClass
-return|;
-block|}
-expr|}
-block|;
+comment|/// Type used to communicate device actions. It associates bound architecture,
+comment|/// toolchain, and offload kind to each action.
 name|class
-name|CudaHostAction
-operator|:
-name|public
-name|Action
+name|DeviceDependences
+name|final
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
+name|public
+operator|:
+typedef|typedef
+name|SmallVector
+operator|<
+specifier|const
+name|ToolChain
+operator|*
+operator|,
+literal|3
+operator|>
+name|ToolChainList
+expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+literal|3
+operator|>
+name|BoundArchList
+expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|OffloadKind
+operator|,
+literal|3
+operator|>
+name|OffloadKindList
+expr_stmt|;
+name|private
+operator|:
+comment|// Lists that keep the information for each dependency. All the lists are
+comment|// meant to be updated in sync. We are adopting separate lists instead of a
+comment|// list of structs, because that simplifies forwarding the actions list to
+comment|// initialize the inputs of the base Action class.
+comment|/// The dependence actions.
 name|ActionList
 name|DeviceActions
+block|;
+comment|/// The offloading toolchains that should be used with the action.
+name|ToolChainList
+name|DeviceToolChains
+block|;
+comment|/// The architectures that should be used with this action.
+name|BoundArchList
+name|DeviceBoundArchs
+block|;
+comment|/// The offload kind of each dependence.
+name|OffloadKindList
+name|DeviceOffloadKinds
 block|;
 name|public
 operator|:
-name|CudaHostAction
+comment|/// Add a action along with the associated toolchain, bound arch, and
+comment|/// offload kind.
+name|void
+name|add
 argument_list|(
-name|Action
-operator|*
-name|Input
+argument|Action&A
 argument_list|,
-specifier|const
-name|ActionList
-operator|&
-name|DeviceActions
+argument|const ToolChain&TC
+argument_list|,
+argument|const char *BoundArch
+argument_list|,
+argument|OffloadKind OKind
 argument_list|)
 block|;
+comment|/// Get each of the individual arrays.
 specifier|const
 name|ActionList
 operator|&
-name|getDeviceActions
+name|getActions
 argument_list|()
 specifier|const
 block|{
@@ -638,12 +864,347 @@ return|return
 name|DeviceActions
 return|;
 block|}
+block|;
+specifier|const
+name|ToolChainList
+operator|&
+name|getToolChains
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeviceToolChains
+return|;
+block|}
+block|;
+specifier|const
+name|BoundArchList
+operator|&
+name|getBoundArchs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeviceBoundArchs
+return|;
+block|}
+block|;
+specifier|const
+name|OffloadKindList
+operator|&
+name|getOffloadKinds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeviceOffloadKinds
+return|;
+block|}
+block|;   }
+decl_stmt|;
+comment|/// Type used to communicate host actions. It associates bound architecture,
+comment|/// toolchain, and offload kinds to the host action.
+name|class
+name|HostDependence
+name|final
+block|{
+comment|/// The dependence action.
+name|Action
+modifier|&
+name|HostAction
+decl_stmt|;
+comment|/// The offloading toolchain that should be used with the action.
+specifier|const
+name|ToolChain
+modifier|&
+name|HostToolChain
+decl_stmt|;
+comment|/// The architectures that should be used with this action.
+specifier|const
+name|char
+modifier|*
+name|HostBoundArch
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The offload kind of each dependence.
+name|unsigned
+name|HostOffloadKinds
+init|=
+literal|0u
+decl_stmt|;
+name|public
+label|:
+name|HostDependence
+argument_list|(
+argument|Action&A
+argument_list|,
+argument|const ToolChain&TC
+argument_list|,
+argument|const char *BoundArch
+argument_list|,
+argument|const unsigned OffloadKinds
+argument_list|)
+block|:
+name|HostAction
+argument_list|(
+name|A
+argument_list|)
+operator|,
+name|HostToolChain
+argument_list|(
+name|TC
+argument_list|)
+operator|,
+name|HostBoundArch
+argument_list|(
+name|BoundArch
+argument_list|)
+operator|,
+name|HostOffloadKinds
+argument_list|(
+argument|OffloadKinds
+argument_list|)
+block|{}
+expr_stmt|;
+comment|/// Constructor version that obtains the offload kinds from the device
+comment|/// dependencies.
+name|HostDependence
+argument_list|(
+name|Action
+operator|&
+name|A
+argument_list|,
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
+argument_list|,
+specifier|const
+name|DeviceDependences
+operator|&
+name|DDeps
+argument_list|)
+expr_stmt|;
+name|Action
+operator|*
+name|getAction
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|HostAction
+return|;
+block|}
+empty_stmt|;
+specifier|const
+name|ToolChain
+operator|*
+name|getToolChain
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|HostToolChain
+return|;
+block|}
+empty_stmt|;
+specifier|const
+name|char
+operator|*
+name|getBoundArch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HostBoundArch
+return|;
+block|}
+empty_stmt|;
+name|unsigned
+name|getOffloadKinds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HostOffloadKinds
+return|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Action
+operator|*
+argument_list|,
+specifier|const
+name|ToolChain
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+operator|>
+name|OffloadActionWorkTy
+expr_stmt|;
+name|private
+label|:
+comment|/// The host offloading toolchain that should be used with the action.
+specifier|const
+name|ToolChain
+modifier|*
+name|HostTC
+init|=
+name|nullptr
+decl_stmt|;
+comment|/// The tool chains associated with the list of actions.
+name|DeviceDependences
+operator|::
+name|ToolChainList
+name|DevToolChains
+expr_stmt|;
+name|public
+label|:
+name|OffloadAction
+argument_list|(
+specifier|const
+name|HostDependence
+operator|&
+name|HDep
+argument_list|)
+expr_stmt|;
+name|OffloadAction
+argument_list|(
+argument|const DeviceDependences&DDeps
+argument_list|,
+argument|types::ID Ty
+argument_list|)
+empty_stmt|;
+name|OffloadAction
+argument_list|(
+specifier|const
+name|HostDependence
+operator|&
+name|HDep
+argument_list|,
+specifier|const
+name|DeviceDependences
+operator|&
+name|DDeps
+argument_list|)
+expr_stmt|;
+comment|/// Execute the work specified in \a Work on the host dependence.
+name|void
+name|doOnHostDependence
+argument_list|(
+specifier|const
+name|OffloadActionWorkTy
+operator|&
+name|Work
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Execute the work specified in \a Work on each device dependence.
+name|void
+name|doOnEachDeviceDependence
+argument_list|(
+specifier|const
+name|OffloadActionWorkTy
+operator|&
+name|Work
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Execute the work specified in \a Work on each dependence.
+name|void
+name|doOnEachDependence
+argument_list|(
+specifier|const
+name|OffloadActionWorkTy
+operator|&
+name|Work
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Execute the work specified in \a Work on each host or device dependence if
+comment|/// \a IsHostDependenceto is true or false, respectively.
+name|void
+name|doOnEachDependence
+argument_list|(
+name|bool
+name|IsHostDependence
+argument_list|,
+specifier|const
+name|OffloadActionWorkTy
+operator|&
+name|Work
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return true if the action has a host dependence.
+name|bool
+name|hasHostDependence
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return the host dependence of this action. This function is only expected
+comment|/// to be called if the host dependence exists.
+name|Action
+operator|*
+name|getHostDependence
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if the action has a single device dependence. If \a
+comment|/// DoNotConsiderHostActions is set, ignore the host dependence, if any, while
+comment|/// accounting for the number of dependences.
+name|bool
+name|hasSingleDeviceDependence
+argument_list|(
+name|bool
+name|DoNotConsiderHostActions
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the single device dependence of this action. This function is only
+comment|/// expected to be called if a single device dependence exists. If \a
+comment|/// DoNotConsiderHostActions is set, a host dependence is allowed.
+name|Action
+modifier|*
+name|getSingleDeviceDependence
+argument_list|(
+name|bool
+name|DoNotConsiderHostActions
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Action *A
-argument_list|)
+parameter_list|(
+specifier|const
+name|Action
+modifier|*
+name|A
+parameter_list|)
 block|{
 return|return
 name|A
@@ -651,14 +1212,14 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|CudaHostClass
+name|OffloadClass
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 name|class
 name|JobAction
-operator|:
+range|:
 name|public
 name|Action
 block|{

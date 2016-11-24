@@ -566,9 +566,6 @@ name|InstCombineIRInserter
 range|:
 name|public
 name|IRBuilderDefaultInserter
-operator|<
-name|true
-operator|>
 block|{
 name|InstCombineWorklist
 operator|&
@@ -615,9 +612,6 @@ argument_list|)
 specifier|const
 block|{
 name|IRBuilderDefaultInserter
-operator|<
-name|true
-operator|>
 operator|::
 name|InsertHelper
 argument_list|(
@@ -706,8 +700,6 @@ comment|/// worklist.
 typedef|typedef
 name|IRBuilder
 operator|<
-name|true
-operator|,
 name|TargetFolder
 operator|,
 name|InstCombineIRInserter
@@ -724,6 +716,11 @@ comment|// Mode in which we are running the combiner.
 specifier|const
 name|bool
 name|MinimizeSize
+block|;
+comment|/// Enable combines that trigger rarely but are costly in compiletime.
+specifier|const
+name|bool
+name|ExpensiveCombines
 block|;
 name|AliasAnalysis
 operator|*
@@ -767,6 +764,8 @@ argument|BuilderTy *Builder
 argument_list|,
 argument|bool MinimizeSize
 argument_list|,
+argument|bool ExpensiveCombines
+argument_list|,
 argument|AliasAnalysis *AA
 argument_list|,
 argument|AssumptionCache *AC
@@ -793,6 +792,11 @@ block|,
 name|MinimizeSize
 argument_list|(
 name|MinimizeSize
+argument_list|)
+block|,
+name|ExpensiveCombines
+argument_list|(
+name|ExpensiveCombines
 argument_list|)
 block|,
 name|AA
@@ -1877,6 +1881,24 @@ operator|&
 name|LI
 argument_list|)
 block|;
+name|Instruction
+operator|*
+name|visitVAStartInst
+argument_list|(
+name|VAStartInst
+operator|&
+name|I
+argument_list|)
+block|;
+name|Instruction
+operator|*
+name|visitVACopyInst
+argument_list|(
+name|VACopyInst
+operator|&
+name|I
+argument_list|)
+block|;
 comment|// visitInstruction - Specify what to return for unhandled instructions...
 name|Instruction
 operator|*
@@ -2176,6 +2198,15 @@ operator|>
 name|Mask
 argument_list|)
 block|;
+name|Instruction
+operator|*
+name|foldCastedBitwiseLogic
+argument_list|(
+name|BinaryOperator
+operator|&
+name|I
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// \brief Inserts an instruction \p New before instruction \p Old
@@ -2277,7 +2308,7 @@ comment|/// I to the worklist, replace all uses of I with the new value, then re
 comment|/// I, so that the inst combiner will know that I was modified.
 name|Instruction
 operator|*
-name|ReplaceInstUsesWith
+name|replaceInstUsesWith
 argument_list|(
 argument|Instruction&I
 argument_list|,
@@ -2469,7 +2500,7 @@ end_comment
 begin_function
 name|Instruction
 modifier|*
-name|EraseInstFromFunction
+name|eraseInstFromFunction
 parameter_list|(
 name|Instruction
 modifier|&
@@ -2512,50 +2543,34 @@ condition|)
 block|{
 for|for
 control|(
-name|User
-operator|::
-name|op_iterator
-name|i
-operator|=
+name|Use
+modifier|&
+name|Operand
+range|:
 name|I
 operator|.
-name|op_begin
+name|operands
 argument_list|()
-operator|,
-name|e
-operator|=
-name|I
-operator|.
-name|op_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
 if|if
 condition|(
-name|Instruction
-modifier|*
-name|Op
-init|=
+name|auto
+operator|*
+name|Inst
+operator|=
 name|dyn_cast
 operator|<
 name|Instruction
 operator|>
 operator|(
-operator|*
-name|i
+name|Operand
 operator|)
 condition|)
 name|Worklist
 operator|.
 name|Add
 argument_list|(
-name|Op
+name|Inst
 argument_list|)
 expr_stmt|;
 block|}
@@ -2966,7 +2981,9 @@ name|Use
 modifier|&
 name|U
 parameter_list|,
+specifier|const
 name|APInt
+modifier|&
 name|DemandedMask
 parameter_list|,
 name|APInt
@@ -3006,7 +3023,9 @@ name|Instruction
 modifier|*
 name|Sftl
 parameter_list|,
+specifier|const
 name|APInt
+modifier|&
 name|DemandedMask
 parameter_list|,
 name|APInt
@@ -3283,7 +3302,7 @@ end_function_decl
 begin_function_decl
 name|Instruction
 modifier|*
-name|MatchBSwapOrBitReverse
+name|MatchBSwap
 parameter_list|(
 name|BinaryOperator
 modifier|&

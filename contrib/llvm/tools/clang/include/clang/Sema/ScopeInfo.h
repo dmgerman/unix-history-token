@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/CleanupInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/Ownership.h"
 end_include
 
@@ -304,6 +310,16 @@ name|HasDroppedStmt
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if current scope is for OpenMP declare reduction combiner.
+name|bool
+name|HasOMPDeclareReductionCombiner
+decl_stmt|;
+comment|/// \brief Whether there is a fallthrough statement in this function.
+name|bool
+name|HasFallthroughStmt
+range|:
+literal|1
+decl_stmt|;
 comment|/// A flag that is set when parsing a method that must call super's
 comment|/// implementation, such as \c -dealloc, \c -finalize, or any method marked
 comment|/// with \c __attribute__((objc_requires_super)).
@@ -450,6 +466,7 @@ comment|/// cxxObj.obj.prop   | obj (FieldDecl)     | prop (ObjCPropertyDecl)
 comment|/// [self foo].prop   | 0 (unknown)         | prop (ObjCPropertyDecl)
 comment|/// self.prop1.prop2  | prop1 (ObjCPropertyDecl)    | prop2 (ObjCPropertyDecl)
 comment|/// MyClass.prop      | MyClass (ObjCInterfaceDecl) | -prop (ObjCMethodDecl)
+comment|/// MyClass.foo.prop  | +foo (ObjCMethodDecl)       | -prop (ObjCPropertyDecl)
 comment|/// weakVar           | 0 (known)           | weakVar (VarDecl)
 comment|/// self->weakIvar    | self (VarDecl)      | weakIvar (ObjCIvarDecl)
 comment|///
@@ -971,6 +988,24 @@ name|true
 expr_stmt|;
 block|}
 name|void
+name|setHasOMPDeclareReductionCombiner
+parameter_list|()
+block|{
+name|HasOMPDeclareReductionCombiner
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|void
+name|setHasFallthroughStmt
+parameter_list|()
+block|{
+name|HasFallthroughStmt
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|void
 name|setHasCXXTry
 parameter_list|(
 name|SourceLocation
@@ -1048,6 +1083,16 @@ name|false
 argument_list|)
 operator|,
 name|HasDroppedStmt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasOMPDeclareReductionCombiner
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasFallthroughStmt
 argument_list|(
 name|false
 argument_list|)
@@ -1156,11 +1201,21 @@ name|Cap_ByRef
 block|,
 name|Cap_Block
 block|,
-name|Cap_This
+name|Cap_VLA
+block|}
+block|;     enum
+block|{
+name|IsNestedCapture
+operator|=
+literal|0x1
+block|,
+name|IsThisCaptured
+operator|=
+literal|0x2
 block|}
 block|;
 comment|/// The variable being captured (if we are not capturing 'this') and whether
-comment|/// this is a nested capture.
+comment|/// this is a nested capture, and whether we are capturing 'this'
 name|llvm
 operator|::
 name|PointerIntPair
@@ -1168,11 +1223,9 @@ operator|<
 name|VarDecl
 operator|*
 block|,
-literal|1
-block|,
-name|bool
+literal|2
 operator|>
-name|VarAndNested
+name|VarAndNestedAndThis
 block|;
 comment|/// Expression to initialize a field of the given type, and the kind of
 comment|/// capture (if this is a capture and not an init-capture). The expression
@@ -1225,17 +1278,26 @@ argument_list|,
 argument|Expr *Cpy
 argument_list|)
 operator|:
-name|VarAndNested
+name|VarAndNestedAndThis
 argument_list|(
 name|Var
 argument_list|,
 name|IsNested
+condition|?
+name|IsNestedCapture
+else|:
+literal|0
 argument_list|)
 block|,
 name|InitExprAndCaptureKind
 argument_list|(
 name|Cpy
 argument_list|,
+operator|!
+name|Var
+condition|?
+name|Cap_VLA
+else|:
 name|Block
 condition|?
 name|Cap_Block
@@ -1279,20 +1341,36 @@ argument_list|,
 argument|QualType CaptureType
 argument_list|,
 argument|Expr *Cpy
+argument_list|,
+argument|const bool ByCopy
 argument_list|)
 operator|:
-name|VarAndNested
+name|VarAndNestedAndThis
 argument_list|(
 name|nullptr
 argument_list|,
+operator|(
+name|IsThisCaptured
+operator||
+operator|(
 name|IsNested
+condition|?
+name|IsNestedCapture
+else|:
+literal|0
+operator|)
+operator|)
 argument_list|)
 block|,
 name|InitExprAndCaptureKind
 argument_list|(
 name|Cpy
 argument_list|,
-name|Cap_This
+name|ByCopy
+condition|?
+name|Cap_ByCopy
+else|:
+name|Cap_ByRef
 argument_list|)
 block|,
 name|Loc
@@ -1314,12 +1392,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|InitExprAndCaptureKind
+name|VarAndNestedAndThis
 operator|.
 name|getInt
 argument_list|()
-operator|==
-name|Cap_This
+operator|&
+name|IsThisCaptured
 return|;
 block|}
 name|bool
@@ -1328,12 +1406,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|InitExprAndCaptureKind
-operator|.
-name|getInt
+operator|!
+name|isThisCapture
 argument_list|()
-operator|!=
-name|Cap_This
 operator|&&
 operator|!
 name|isVLATypeCapture
@@ -1352,10 +1427,6 @@ name|getInt
 argument_list|()
 operator|==
 name|Cap_ByCopy
-operator|&&
-operator|!
-name|isVLATypeCapture
-argument_list|()
 return|;
 block|}
 name|bool
@@ -1397,12 +1468,7 @@ operator|.
 name|getInt
 argument_list|()
 operator|==
-name|Cap_ByCopy
-operator|&&
-name|getVariable
-argument_list|()
-operator|==
-name|nullptr
+name|Cap_VLA
 return|;
 block|}
 name|bool
@@ -1411,10 +1477,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndNested
+name|VarAndNestedAndThis
 operator|.
 name|getInt
 argument_list|()
+operator|&
+name|IsNestedCapture
 return|;
 block|}
 name|VarDecl
@@ -1424,7 +1492,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|VarAndNested
+name|VarAndNestedAndThis
 operator|.
 name|getPointer
 argument_list|()
@@ -1459,6 +1527,13 @@ name|getCaptureType
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isThisCapture
+argument_list|()
+argument_list|)
+block|;
 return|return
 name|CaptureType
 return|;
@@ -1650,6 +1725,9 @@ name|nullptr
 argument_list|)
 argument_list|)
 block|;   }
+comment|// Note, we do not need to add the type of 'this' since that is always
+comment|// retrievable from Sema::getCurrentThisType - and is also encoded within the
+comment|// type of the corresponding FieldDecl.
 name|void
 name|addThisCapture
 argument_list|(
@@ -1657,9 +1735,9 @@ argument|bool isNested
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|QualType CaptureType
-argument_list|,
 argument|Expr *Cpy
+argument_list|,
+argument|bool ByCopy
 argument_list|)
 block|;
 comment|/// \brief Determine whether the C++ 'this' is captured.
@@ -1948,8 +2026,13 @@ operator|*
 name|ContextParam
 block|;
 comment|/// \brief The kind of captured region.
-name|CapturedRegionKind
+name|unsigned
+name|short
 name|CapRegionKind
+block|;
+name|unsigned
+name|short
+name|OpenMPLevel
 block|;
 name|CapturedRegionScopeInfo
 argument_list|(
@@ -1964,6 +2047,8 @@ argument_list|,
 argument|ImplicitParamDecl *Context
 argument_list|,
 argument|CapturedRegionKind K
+argument_list|,
+argument|unsigned OpenMPLevel
 argument_list|)
 operator|:
 name|CapturingScopeInfo
@@ -1995,7 +2080,12 @@ argument_list|)
 block|,
 name|CapRegionKind
 argument_list|(
-argument|K
+name|K
+argument_list|)
+block|,
+name|OpenMPLevel
+argument_list|(
+argument|OpenMPLevel
 argument_list|)
 block|{
 name|Kind
@@ -2096,8 +2186,8 @@ name|bool
 name|ExplicitParams
 block|;
 comment|/// \brief Whether any of the capture expressions requires cleanups.
-name|bool
-name|ExprNeedsCleanups
+name|CleanupInfo
+name|Cleanup
 block|;
 comment|/// \brief Whether the lambda contains an unexpanded parameter pack.
 name|bool
@@ -2210,10 +2300,8 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|ExprNeedsCleanups
-argument_list|(
-name|false
-argument_list|)
+name|Cleanup
+block|{}
 block|,
 name|ContainsUnexpandedParameterPack
 argument_list|(
@@ -2629,9 +2717,9 @@ argument|bool isNested
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|QualType CaptureType
-argument_list|,
 argument|Expr *Cpy
+argument_list|,
+argument|const bool ByCopy
 argument_list|)
 block|{
 name|Captures
@@ -2648,9 +2736,12 @@ name|isNested
 argument_list|,
 name|Loc
 argument_list|,
-name|CaptureType
+name|QualType
+argument_list|()
 argument_list|,
 name|Cpy
+argument_list|,
+name|ByCopy
 argument_list|)
 argument_list|)
 block|;

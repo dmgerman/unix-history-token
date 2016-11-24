@@ -66,6 +66,9 @@ name|class
 name|COFFObjectFile
 decl_stmt|;
 block|}
+name|namespace
+name|pdb
+block|{
 comment|/// PDBContext
 comment|/// This data structure is the top level entity that deals with PDB debug
 comment|/// information parsing.  This data structure exists only when there is a
@@ -139,6 +142,8 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|DIDumpType DumpType = DIDT_All
+argument_list|,
+argument|bool DumpEH = false
 argument_list|)
 name|override
 block|;
@@ -191,8 +196,9 @@ operator|<
 name|IPDBSession
 operator|>
 name|Session
-block|; }
+block|;   }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

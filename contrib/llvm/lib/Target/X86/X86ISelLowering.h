@@ -160,7 +160,7 @@ comment|///     #2 - The second register result value (optional)
 comment|///
 name|CALL
 block|,
-comment|/// This operation implements the lowering for readcyclecounter
+comment|/// This operation implements the lowering for readcyclecounter.
 name|RDTSC_DAG
 block|,
 comment|/// X86 Read Time-Stamp Counter and Processor ID.
@@ -195,10 +195,6 @@ comment|/// X86 FP SETCC, implemented with CMP{cc}SS/CMP{cc}SD.
 comment|/// Operands are two FP values to compare; result is a mask of
 comment|/// 0s or 1s.  Generally DTRT for C/C++ with NaNs.
 name|FSETCC
-block|,
-comment|/// X86 MOVMSK{pd|ps}, extracts sign bits of two or four FP values,
-comment|/// result in an integer GPR.  Needs masking for scalar result.
-name|FGETSIGNx86
 block|,
 comment|/// X86 conditional moves. Operand 0 and operand 1 are the two values
 comment|/// to select from. Operand 2 is the condition code, and operand 3 is the
@@ -284,9 +280,6 @@ block|,
 comment|/// Bitwise Logical AND NOT of Packed FP values.
 name|ANDNP
 block|,
-comment|/// Copy integer sign.
-name|PSIGN
-block|,
 comment|/// Blend where the selector is an immediate.
 name|BLENDI
 block|,
@@ -313,14 +306,16 @@ name|FMIN_RND
 block|,
 name|FSQRT_RND
 block|,
-comment|// FP vector get exponent
+comment|// FP vector get exponent.
 name|FGETEXP_RND
 block|,
-comment|// Extract Normalized Mantissas
+comment|// Extract Normalized Mantissas.
 name|VGETMANT
 block|,
-comment|// FP Scale
+comment|// FP Scale.
 name|SCALEF
+block|,
+name|SCALEFS
 block|,
 comment|// Integer add/sub with unsigned saturation.
 name|ADDUS
@@ -332,19 +327,17 @@ name|ADDS
 block|,
 name|SUBS
 block|,
-comment|// Unsigned Integer average
+comment|// Unsigned Integer average.
 name|AVG
 block|,
-comment|/// Integer horizontal add.
+comment|/// Integer horizontal add/sub.
 name|HADD
 block|,
-comment|/// Integer horizontal sub.
 name|HSUB
 block|,
-comment|/// Floating point horizontal add.
+comment|/// Floating point horizontal add/sub.
 name|FHADD
 block|,
-comment|/// Floating point horizontal sub.
 name|FHSUB
 block|,
 comment|// Integer absolute value
@@ -370,6 +363,10 @@ name|FRSQRT
 block|,
 name|FRCP
 block|,
+name|FRSQRTS
+block|,
+name|FRCPS
+block|,
 comment|// Thread Local Storage.
 name|TLSADDR
 block|,
@@ -389,6 +386,9 @@ name|EH_SJLJ_SETJMP
 block|,
 comment|// SjLj exception handling longjmp.
 name|EH_SJLJ_LONGJMP
+block|,
+comment|// SjLj exception handling dispatch.
+name|EH_SJLJ_SETUP_DISPATCH
 block|,
 comment|/// Tail call return. See X86TargetLowering::LowerCall for
 comment|/// the list of operands.
@@ -437,6 +437,11 @@ name|VSRL
 block|,
 name|VSRA
 block|,
+comment|// Vector variable shift right arithmetic.
+comment|// Unlike ISD::SRA, in case shift count greater then element size
+comment|// use sign bit to fill destination data element.
+name|VSRAV
+block|,
 comment|// Vector shift elements by immediate
 name|VSHLI
 block|,
@@ -461,6 +466,8 @@ comment|// Vector integer comparisons, the result is in a mask vector.
 name|PCMPEQM
 block|,
 name|PCMPGTM
+block|,
+name|MULTISHIFT
 block|,
 comment|/// Vector comparison generating mask bits for fp and
 comment|/// integer signed and unsigned data types.
@@ -492,13 +499,13 @@ name|XOR
 block|,
 name|AND
 block|,
+comment|// Bit field extract.
 name|BEXTR
 block|,
-comment|// Bit field extract
+comment|// LOW, HI, FLAGS = umul LHS, RHS.
 name|UMUL
 block|,
-comment|// LOW, HI, FLAGS = umul LHS, RHS
-comment|// 8-bit SMUL/UMUL - AX, FLAGS = smul8/umul8 AL, RHS
+comment|// 8-bit SMUL/UMUL - AX, FLAGS = smul8/umul8 AL, RHS.
 name|SMUL8
 block|,
 name|UMUL8
@@ -511,6 +518,9 @@ block|,
 comment|// X86-specific multiply by immediate.
 name|MUL_IMM
 block|,
+comment|// Vector sign bit extraction.
+name|MOVMSK
+block|,
 comment|// Vector bitwise comparisons.
 name|PTEST
 block|,
@@ -522,20 +532,21 @@ name|TESTM
 block|,
 name|TESTNM
 block|,
-comment|// OR/AND test for masks
+comment|// OR/AND test for masks.
 name|KORTEST
 block|,
 name|KTEST
 block|,
 comment|// Several flavors of instructions with vector shuffle behaviors.
+comment|// Saturated signed/unnsigned packing.
 name|PACKSS
 block|,
 name|PACKUS
 block|,
-comment|// Intra-lane alignr
+comment|// Intra-lane alignr.
 name|PALIGNR
 block|,
-comment|// AVX512 inter-lane alignr
+comment|// AVX512 inter-lane alignr.
 name|VALIGN
 block|,
 name|PSHUFD
@@ -546,7 +557,7 @@ name|PSHUFLW
 block|,
 name|SHUFP
 block|,
-comment|//Shuffle Packed Values at 128-bit granularity
+comment|//Shuffle Packed Values at 128-bit granularity.
 name|SHUF128
 block|,
 name|MOVDDUP
@@ -577,47 +588,55 @@ name|VPERMILPV
 block|,
 name|VPERMILPI
 block|,
-name|VPERMV
-block|,
-name|VPERMV3
-block|,
-name|VPERMIV3
-block|,
 name|VPERMI
 block|,
 name|VPERM2X128
 block|,
-comment|// Bitwise ternary logic
+comment|// Variable Permute (VPERM).
+comment|// Res = VPERMV MaskV, V0
+name|VPERMV
+block|,
+comment|// 3-op Variable Permute (VPERMT2).
+comment|// Res = VPERMV3 V0, MaskV, V1
+name|VPERMV3
+block|,
+comment|// 3-op Variable Permute overwriting the index (VPERMI2).
+comment|// Res = VPERMIV3 V0, MaskV, V1
+name|VPERMIV3
+block|,
+comment|// Bitwise ternary logic.
 name|VPTERNLOG
 block|,
-comment|// Fix Up Special Packed Float32/64 values
+comment|// Fix Up Special Packed Float32/64 values.
 name|VFIXUPIMM
 block|,
-comment|// Range Restriction Calculation For Packed Pairs of Float32/64 values
+name|VFIXUPIMMS
+block|,
+comment|// Range Restriction Calculation For Packed Pairs of Float32/64 values.
 name|VRANGE
 block|,
-comment|// Reduce - Perform Reduction Transformation on scalar\packed FP
+comment|// Reduce - Perform Reduction Transformation on scalar\packed FP.
 name|VREDUCE
 block|,
-comment|// RndScale - Round FP Values To Include A Given Number Of Fraction Bits
+comment|// RndScale - Round FP Values To Include A Given Number Of Fraction Bits.
 name|VRNDSCALE
 block|,
-comment|// VFPCLASS - Tests Types Of a FP Values for packed types.
+comment|// Tests Types Of a FP Values for packed types.
 name|VFPCLASS
 block|,
-comment|// VFPCLASSS - Tests Types Of a FP Values for scalar types.
+comment|// Tests Types Of a FP Values for scalar types.
 name|VFPCLASSS
 block|,
-comment|// Broadcast scalar to vector
+comment|// Broadcast scalar to vector.
 name|VBROADCAST
 block|,
-comment|// Broadcast mask to vector
+comment|// Broadcast mask to vector.
 name|VBROADCASTM
 block|,
-comment|// Broadcast subvector to vector
+comment|// Broadcast subvector to vector.
 name|SUBV_BROADCAST
 block|,
-comment|// Insert/Extract vector element
+comment|// Insert/Extract vector element.
 name|VINSERT
 block|,
 name|VEXTRACT
@@ -627,36 +646,46 @@ name|EXTRQI
 block|,
 name|INSERTQI
 block|,
-comment|// XOP variable/immediate rotations
+comment|// XOP variable/immediate rotations.
 name|VPROT
 block|,
 name|VPROTI
 block|,
-comment|// XOP arithmetic/logical shifts
+comment|// XOP arithmetic/logical shifts.
 name|VPSHA
 block|,
 name|VPSHL
 block|,
-comment|// XOP signed/unsigned integer comparisons
+comment|// XOP signed/unsigned integer comparisons.
 name|VPCOM
 block|,
 name|VPCOMU
 block|,
-comment|// Vector multiply packed unsigned doubleword integers
+comment|// XOP packed permute bytes.
+name|VPPERM
+block|,
+comment|// XOP two source permutation.
+name|VPERMIL2
+block|,
+comment|// Vector multiply packed unsigned doubleword integers.
 name|PMULUDQ
 block|,
-comment|// Vector multiply packed signed doubleword integers
+comment|// Vector multiply packed signed doubleword integers.
 name|PMULDQ
 block|,
-comment|// Vector Multiply Packed UnsignedIntegers with Round and Scale
+comment|// Vector Multiply Packed UnsignedIntegers with Round and Scale.
 name|MULHRS
 block|,
-comment|// Multiply and Add Packed Integers
+comment|// Multiply and Add Packed Integers.
 name|VPMADDUBSW
 block|,
 name|VPMADDWD
 block|,
-comment|// FMA nodes
+name|VPMADD52L
+block|,
+name|VPMADD52H
+block|,
+comment|// FMA nodes.
 name|FMADD
 block|,
 name|FNMADD
@@ -669,7 +698,7 @@ name|FMADDSUB
 block|,
 name|FMSUBADD
 block|,
-comment|// FMA with rounding mode
+comment|// FMA with rounding mode.
 name|FMADD_RND
 block|,
 name|FNMADD_RND
@@ -682,13 +711,13 @@ name|FMADDSUB_RND
 block|,
 name|FMSUBADD_RND
 block|,
-comment|// Compress and expand
+comment|// Compress and expand.
 name|COMPRESS
 block|,
 name|EXPAND
 block|,
-comment|//Convert Unsigned/Integer to Scalar Floating-Point Value
-comment|//with rounding mode
+comment|// Convert Unsigned/Integer to Scalar Floating-Point Value
+comment|// with rounding mode.
 name|SINT_TO_FP_RND
 block|,
 name|UINT_TO_FP_RND
@@ -697,6 +726,11 @@ comment|// Vector float/double to signed/unsigned integer.
 name|FP_TO_SINT_RND
 block|,
 name|FP_TO_UINT_RND
+block|,
+comment|// Scalar float/double to signed/unsigned integer.
+name|SCALAR_FP_TO_SINT_RND
+block|,
+name|SCALAR_FP_TO_UINT_RND
 block|,
 comment|// Save xmm argument registers to the stack, according to %al. An operator
 comment|// is needed so that this can be expanded with control flow.
@@ -710,14 +744,10 @@ comment|// segmented stacks. Check if the current stacklet has enough space, and
 comment|// falls back to heap allocation if not.
 name|SEG_ALLOCA
 block|,
-comment|// Memory barrier
+comment|// Memory barriers.
 name|MEMBARRIER
 block|,
 name|MFENCE
-block|,
-name|SFENCE
-block|,
-name|LFENCE
 block|,
 comment|// Store FP status word into i16 register.
 name|FNSTSW16r
@@ -732,6 +762,7 @@ comment|// Get a NIST SP800-90B& C compliant random integer and
 comment|// indicate whether it is valid in CF.
 name|RDSEED
 block|,
+comment|// SSE42 string comparisons.
 name|PCMPISTRI
 block|,
 name|PCMPESTRI
@@ -739,7 +770,7 @@ block|,
 comment|// Test if in transactional execution.
 name|XTEST
 block|,
-comment|// ERI instructions
+comment|// ERI instructions.
 name|RSQRT28
 block|,
 name|RCP28
@@ -756,6 +787,22 @@ block|,
 name|LCMPXCHG8_DAG
 block|,
 name|LCMPXCHG16_DAG
+block|,
+name|LCMPXCHG8_SAVE_EBX_DAG
+block|,
+name|LCMPXCHG16_SAVE_RBX_DAG
+block|,
+comment|/// LOCK-prefixed arithmetic read-modify-write instructions.
+comment|/// EFLAGS, OUTCHAIN = LADD(INCHAIN, PTR, RHS)
+name|LADD
+block|,
+name|LSUB
+block|,
+name|LOR
+block|,
+name|LXOR
+block|,
+name|LAND
 block|,
 comment|// Load, scalar_to_vector, and zero extend.
 name|VZEXT_LOAD
@@ -799,11 +846,12 @@ comment|/// This instruction grabs the address of the next argument
 comment|/// from a va_list. (reads and modifies the va_list in memory)
 name|VAARG_64
 comment|// WARNING: Do not add anything in the end unless you want the node to
-comment|// have memop! In fact, starting from ATOMADD64_DAG all opcodes will be
-comment|// thought as target memory ops!
+comment|// have memop! In fact, starting from FIRST_TARGET_MEMORY_OPCODE all
+comment|// opcodes will be thought as target memory ops!
 block|}
 enum|;
 block|}
+comment|// end namespace X86ISD
 comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|X86
@@ -940,10 +988,11 @@ name|bool
 name|IsVarArg
 argument_list|,
 name|bool
-name|TailCallOpt
+name|GuaranteeTCO
 argument_list|)
 decl_stmt|;
 block|}
+comment|// end namespace X86
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86 Implementation of the TargetLowering interface
 name|class
@@ -1125,6 +1174,22 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// Places new result values for the node in Results (their number
+comment|/// and types must exactly match those of the original return values of
+comment|/// the node), or leaves Results empty, which indicates that the node is not
+comment|/// to be custom lowered after all.
+name|void
+name|LowerOperationWrapper
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SmallVectorImpl<SDValue>&Results
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
@@ -1192,7 +1257,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -1219,6 +1284,41 @@ block|;
 name|bool
 name|isCheapToSpeculateCtlz
 argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|hasBitPreservingFPLogic
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|VT
+operator|==
+name|MVT
+operator|::
+name|f32
+operator|||
+name|VT
+operator|==
+name|MVT
+operator|::
+name|f64
+operator|||
+name|VT
+operator|.
+name|isVector
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasAndNotCompare
+argument_list|(
+argument|SDValue Y
+argument_list|)
 specifier|const
 name|override
 block|;
@@ -1894,6 +1994,13 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|virtual
+name|bool
+name|needsFixedCatchObjects
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
 comment|/// This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|FastISel
@@ -1912,19 +2019,57 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-comment|/// Return true if the target stores stack protector cookies at a fixed
-comment|/// offset in some non-standard address space, and populates the address
-comment|/// space and offset as appropriate.
-name|bool
-name|getStackCookieLocation
+comment|/// If the target has a standard location for the stack protector cookie,
+comment|/// returns the address of that location. Otherwise, returns nullptr.
+name|Value
+modifier|*
+name|getIRStackGuard
 argument_list|(
-name|unsigned
+name|IRBuilder
+operator|<
+operator|>
 operator|&
-name|AddressSpace
-argument_list|,
-name|unsigned
+name|IRB
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+name|void
+name|insertSSPDeclarations
+argument_list|(
+name|Module
 operator|&
-name|Offset
+name|M
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|Value
+modifier|*
+name|getSDagStackGuard
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|Value
+modifier|*
+name|getSSPStackGuardCheck
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
 argument_list|)
 decl|const
 name|override
@@ -1978,12 +2123,6 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|bool
-name|useLoadStackGuardNode
-argument_list|()
-specifier|const
-name|override
-expr_stmt|;
 comment|/// \brief Customize the preferred legalization strategy for certain types.
 name|LegalizeTypeAction
 name|getPreferredVectorAction
@@ -2006,6 +2145,16 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|bool
+name|supportSwiftError
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|protected
 label|:
 name|std
@@ -2029,11 +2178,11 @@ name|override
 expr_stmt|;
 name|private
 label|:
-comment|/// Keep a pointer to the X86Subtarget around so that we can
+comment|/// Keep a reference to the X86Subtarget around so that we can
 comment|/// make the right decision when generating code for different targets.
 specifier|const
 name|X86Subtarget
-modifier|*
+modifier|&
 name|Subtarget
 decl_stmt|;
 comment|/// Select between SSE or x87 floating point ops.
@@ -2100,7 +2249,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2137,7 +2288,9 @@ operator|>
 operator|&
 name|ArgInfo
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2170,7 +2323,9 @@ argument_list|,
 name|SDValue
 name|Arg
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2273,7 +2428,9 @@ argument_list|,
 name|int
 name|FPDiff
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2287,6 +2444,13 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getAddressSpace
+argument_list|(
+name|void
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2426,7 +2590,9 @@ name|GlobalValue
 operator|*
 name|GV
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|int64_t
@@ -2581,7 +2747,9 @@ operator|::
 name|CondCode
 name|CC
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2759,6 +2927,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|lowerEH_SJLJ_SETUP_DISPATCH
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerINIT_TRAMPOLINE
 argument_list|(
 name|SDValue
@@ -2842,7 +3022,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2908,7 +3090,9 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -3008,7 +3192,7 @@ decl|const
 name|override
 decl_stmt|;
 name|EVT
-name|getTypeForExtArgOrReturn
+name|getTypeForExtReturn
 argument_list|(
 name|LLVMContext
 operator|&
@@ -3120,13 +3304,33 @@ name|MemType
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|SetupEntryBlockForSjLj
+argument_list|(
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|DispatchBB
+argument_list|,
+name|int
+name|FI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Utility function to emit the low-level va_arg code for X86-64.
 name|MachineBasicBlock
 modifier|*
 name|EmitVAARG64WithCustomInserter
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3141,7 +3345,7 @@ modifier|*
 name|EmitVAStartSaveXMMRegsWithCustomInserter
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|BInstr
 argument_list|,
 name|MachineBasicBlock
@@ -3155,7 +3359,7 @@ modifier|*
 name|EmitLoweredSelect
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|I
 argument_list|,
 name|MachineBasicBlock
@@ -3169,22 +3373,8 @@ modifier|*
 name|EmitLoweredAtomicFP
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|I
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|)
-decl|const
-decl_stmt|;
-name|MachineBasicBlock
-modifier|*
-name|EmitLoweredWinAlloca
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
 argument_list|,
 name|MachineBasicBlock
 operator|*
@@ -3197,7 +3387,7 @@ modifier|*
 name|EmitLoweredCatchRet
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3211,7 +3401,7 @@ modifier|*
 name|EmitLoweredCatchPad
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3225,7 +3415,7 @@ modifier|*
 name|EmitLoweredSegAlloca
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3239,7 +3429,7 @@ modifier|*
 name|EmitLoweredTLSAddr
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3253,7 +3443,7 @@ modifier|*
 name|EmitLoweredTLSCall
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3267,7 +3457,7 @@ modifier|*
 name|emitEHSjLjSetJmp
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3281,7 +3471,7 @@ modifier|*
 name|emitEHSjLjLongJmp
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3295,7 +3485,21 @@ modifier|*
 name|emitFMA3Instr
 argument_list|(
 name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|MachineBasicBlock
 operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitSjLjDispatchBlock
+argument_list|(
+name|MachineInstr
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -3315,7 +3519,9 @@ argument_list|,
 name|unsigned
 name|X86CC
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -3338,7 +3544,9 @@ argument_list|,
 name|unsigned
 name|X86CC
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -3435,14 +3643,22 @@ function_decl|;
 block|}
 end_decl_stmt
 
-begin_endif
+begin_comment
+comment|// end namespace X86
+end_comment
+
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// X86ISELLOWERING_H
+comment|// LLVM_LIB_TARGET_X86_X86ISELLOWERING_H
 end_comment
 
 end_unit

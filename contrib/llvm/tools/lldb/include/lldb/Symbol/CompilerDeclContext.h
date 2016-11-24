@@ -188,6 +188,8 @@ operator|>
 name|FindDeclByName
 argument_list|(
 argument|ConstString name
+argument_list|,
+argument|const bool ignore_using_decls
 argument_list|)
 expr_stmt|;
 comment|//----------------------------------------------------------------------

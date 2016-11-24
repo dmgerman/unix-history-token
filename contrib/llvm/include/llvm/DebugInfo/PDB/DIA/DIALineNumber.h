@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|class
 name|DIALineNumber
 range|:
@@ -158,6 +161,7 @@ operator|>
 name|LineNumber
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -54,7 +54,9 @@ name|__inline__
 name|void
 name|__DEFAULT_FN_ATTRS
 name|_m_femms
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|__builtin_ia32_femms
 argument_list|()

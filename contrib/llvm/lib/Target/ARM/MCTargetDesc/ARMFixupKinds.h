@@ -82,6 +82,15 @@ comment|// fixup_t2_pcrel_10 - Equivalent to fixup_arm_pcrel_10, accounting for
 comment|// the short-swapped encoding of Thumb2 instructions.
 name|fixup_t2_pcrel_10
 block|,
+comment|// fixup_arm_pcrel_9 - 9-bit PC relative relocation for symbol addresses
+comment|// used in VFP instructions where bit 0 not encoded (so it's encoded as an
+comment|// 8-bit immediate).
+name|fixup_arm_pcrel_9
+block|,
+comment|// fixup_t2_pcrel_9 - Equivalent to fixup_arm_pcrel_9, accounting for
+comment|// the short-swapped encoding of Thumb2 instructions.
+name|fixup_t2_pcrel_9
+block|,
 comment|// fixup_thumb_adr_pcrel_10 - 10-bit PC relative relocation for symbol
 comment|// addresses where the lower 2 bits are not encoded (so it's encoded as an
 comment|// 8-bit immediate).

@@ -52,6 +52,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-types.h"
 end_include
 
@@ -81,6 +93,12 @@ specifier|const
 name|char
 modifier|*
 name|DEV_NULL
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|PATH_CONVERSION_ERROR
 decl_stmt|;
 specifier|static
 name|FileSpec
@@ -331,6 +349,40 @@ specifier|const
 name|FileSpec
 modifier|&
 name|spec
+parameter_list|)
+function_decl|;
+comment|/// Wraps ::fopen in a platform-independent way. Once opened, FILEs can be
+comment|/// manipulated and closed with the normal ::fread, ::fclose, etc. functions.
+specifier|static
+name|FILE
+modifier|*
+name|Fopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+comment|/// Wraps ::stat in a platform-independent way.
+specifier|static
+name|int
+name|Stat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|struct
+name|stat
+modifier|*
+name|stats
 parameter_list|)
 function_decl|;
 block|}

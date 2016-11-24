@@ -38,6 +38,62 @@ directive|define
 name|__BMIINTRIN_H
 end_define
 
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned short _tzcnt_u16(unsigned short a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 16-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 16-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -47,6 +103,74 @@ name|a
 parameter_list|)
 value|(__tzcnt_u16((a)))
 end_define
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of the second operand with the one's
+end_comment
+
+begin_comment
+comment|///    complement of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned int _andn_u32(unsigned int a, unsigned int b);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c ANDN instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the bitwise AND of the second
+end_comment
+
+begin_comment
+comment|///    operand with the one's complement of the first operand.
+end_comment
 
 begin_define
 define|#
@@ -64,6 +188,66 @@ begin_comment
 comment|/* _bextr_u32 != __bextr_u32 */
 end_comment
 
+begin_comment
+comment|/// \brief Clears all bits in the source except for the least significant bit
+end_comment
+
+begin_comment
+comment|///    containing a value of 1 and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned int _blsi_u32(unsigned int a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSI instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned integer whose bits are to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the result of clearing the bits from
+end_comment
+
+begin_comment
+comment|///    the source operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -73,6 +257,66 @@ name|a
 parameter_list|)
 value|(__blsi_u32((a)))
 end_define
+
+begin_comment
+comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
+end_comment
+
+begin_comment
+comment|///    including the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned int _blsmsk_u32(unsigned int a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to create the mask.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the newly created mask.
+end_comment
 
 begin_define
 define|#
@@ -84,6 +328,66 @@ parameter_list|)
 value|(__blsmsk_u32((a)))
 end_define
 
+begin_comment
+comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned int _blsr_u32(unsigned int a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing the operand to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the result of clearing the source
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -93,6 +397,62 @@ name|a
 parameter_list|)
 value|(__blsr_u32((a)))
 end_define
+
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned int _tzcnt_u32(unsigned int a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 32-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
 
 begin_define
 define|#
@@ -126,6 +486,46 @@ name|__RELAXED_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__))
 end_define
 
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 16-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 16-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -151,6 +551,58 @@ literal|16
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of the second operand with the one's
+end_comment
+
+begin_comment
+comment|///    complement of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c ANDN instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the bitwise AND of the second
+end_comment
+
+begin_comment
+comment|///    operand with the one's complement of the first operand.
+end_comment
 
 begin_function
 specifier|static
@@ -180,6 +632,66 @@ end_function
 
 begin_comment
 comment|/* AMD-specified, double-leading-underscore version of BEXTR */
+end_comment
+
+begin_comment
+comment|/// \brief Extracts the specified bits from the first operand and returns them
+end_comment
+
+begin_comment
+comment|///    in the least significant bits of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer whose bits are to be extracted.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to specify which bits are extracted. Bits [7:0]
+end_comment
+
+begin_comment
+comment|///    specify the index of the least significant bit. Bits [15:8] specify the
+end_comment
+
+begin_comment
+comment|///    number of bits to be extracted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer whose least significant bits contain the
+end_comment
+
+begin_comment
+comment|///    extracted bits.
 end_comment
 
 begin_function
@@ -212,6 +724,74 @@ end_function
 
 begin_comment
 comment|/* Intel-specified, single-leading-underscore version of BEXTR */
+end_comment
+
+begin_comment
+comment|/// \brief Extracts the specified bits from the first operand and returns them
+end_comment
+
+begin_comment
+comment|///    in the least significant bits of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer whose bits are to be extracted.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to specify the index of the least significant
+end_comment
+
+begin_comment
+comment|///    bit for the bits to be extracted. Bits [7:0] specify the index.
+end_comment
+
+begin_comment
+comment|/// \param __Z
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to specify the number of bits to be extracted.
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] specify the number of bits.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer whose least significant bits contain the
+end_comment
+
+begin_comment
+comment|///    extracted bits.
 end_comment
 
 begin_function
@@ -262,6 +842,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Clears all bits in the source except for the least significant bit
+end_comment
+
+begin_comment
+comment|///    containing a value of 1 and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSI instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer whose bits are to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the result of clearing the bits from
+end_comment
+
+begin_comment
+comment|///    the source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -283,6 +907,50 @@ name|__X
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
+end_comment
+
+begin_comment
+comment|///    including the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to create the mask.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the newly created mask.
+end_comment
 
 begin_function
 specifier|static
@@ -309,6 +977,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned integer containing the operand to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned integer containing the result of clearing the source
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -333,6 +1045,46 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 32-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -360,11 +1112,144 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 32-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An 32-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|int
+name|__RELAXED_FN_ATTRS
+name|_mm_tzcnt_32
+parameter_list|(
+name|unsigned
+name|int
+name|__X
+parameter_list|)
+block|{
+return|return
+name|__X
+condition|?
+name|__builtin_ctz
+argument_list|(
+name|__X
+argument_list|)
+else|:
+literal|32
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|__x86_64__
 end_ifdef
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of the second operand with the one's
+end_comment
+
+begin_comment
+comment|///    complement of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned long long _andn_u64 (unsigned long long a, unsigned long long b);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c ANDN instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the bitwise AND of the second
+end_comment
+
+begin_comment
+comment|///    operand with the one's complement of the first operand.
+end_comment
 
 begin_define
 define|#
@@ -382,6 +1267,66 @@ begin_comment
 comment|/* _bextr_u64 != __bextr_u64 */
 end_comment
 
+begin_comment
+comment|/// \brief Clears all bits in the source except for the least significant bit
+end_comment
+
+begin_comment
+comment|///    containing a value of 1 and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned long long _blsi_u64(unsigned long long a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSI instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose bits are to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the result of clearing the
+end_comment
+
+begin_comment
+comment|///    bits from the source operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -391,6 +1336,66 @@ name|a
 parameter_list|)
 value|(__blsi_u64((a)))
 end_define
+
+begin_comment
+comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
+end_comment
+
+begin_comment
+comment|///    including the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned long long _blsmsk_u64(unsigned long long a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer used to create the mask.
+end_comment
+
+begin_comment
+comment|/// \returns A unsigned 64-bit integer containing the newly created mask.
+end_comment
 
 begin_define
 define|#
@@ -402,6 +1407,66 @@ parameter_list|)
 value|(__blsmsk_u64((a)))
 end_define
 
+begin_comment
+comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned long long _blsr_u64(unsigned long long a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing the operand to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the result of clearing the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -412,6 +1477,62 @@ parameter_list|)
 value|(__blsr_u64((a)))
 end_define
 
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned long long _tzcnt_u64(unsigned long long a);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -421,6 +1542,58 @@ name|a
 parameter_list|)
 value|(__tzcnt_u64((a)))
 end_define
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of the second operand with the one's
+end_comment
+
+begin_comment
+comment|///    complement of the first operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c ANDN instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the bitwise AND of the second
+end_comment
+
+begin_comment
+comment|///    operand with the one's complement of the first operand.
+end_comment
 
 begin_function
 specifier|static
@@ -453,6 +1626,66 @@ end_function
 
 begin_comment
 comment|/* AMD-specified, double-leading-underscore version of BEXTR */
+end_comment
+
+begin_comment
+comment|/// \brief Extracts the specified bits from the first operand and returns them
+end_comment
+
+begin_comment
+comment|///    in the least significant bits of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose bits are to be extracted.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer used to specify which bits are extracted. Bits
+end_comment
+
+begin_comment
+comment|///    [7:0] specify the index of the least significant bit. Bits [15:8] specify
+end_comment
+
+begin_comment
+comment|///    the number of bits to be extracted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer whose least significant bits contain the
+end_comment
+
+begin_comment
+comment|///    extracted bits.
 end_comment
 
 begin_function
@@ -488,6 +1721,74 @@ end_function
 
 begin_comment
 comment|/* Intel-specified, single-leading-underscore version of BEXTR */
+end_comment
+
+begin_comment
+comment|/// \brief Extracts the specified bits from the first operand and returns them
+end_comment
+
+begin_comment
+comment|///     in the least significant bits of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BEXTR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose bits are to be extracted.
+end_comment
+
+begin_comment
+comment|/// \param __Y
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to specify the index of the least significant
+end_comment
+
+begin_comment
+comment|///    bit for the bits to be extracted. Bits [7:0] specify the index.
+end_comment
+
+begin_comment
+comment|/// \param __Z
+end_comment
+
+begin_comment
+comment|///    An unsigned integer used to specify the number of bits to be extracted.
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] specify the number of bits.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer whose least significant bits contain the
+end_comment
+
+begin_comment
+comment|///    extracted bits.
 end_comment
 
 begin_function
@@ -540,6 +1841,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Clears all bits in the source except for the least significant bit
+end_comment
+
+begin_comment
+comment|///    containing a value of 1 and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSI instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose bits are to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the result of clearing the
+end_comment
+
+begin_comment
+comment|///    bits from the source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -563,6 +1908,50 @@ name|__X
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Creates a mask whose bits are set to 1, using bit 0 up to and
+end_comment
+
+begin_comment
+comment|///    including the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSMSK instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer used to create the mask.
+end_comment
+
+begin_comment
+comment|/// \returns A unsigned 64-bit integer containing the newly created mask.
+end_comment
 
 begin_function
 specifier|static
@@ -591,6 +1980,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Clears the least siginificant bit that is set to 1 in the source
+end_comment
+
+begin_comment
+comment|///    operand and returns the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c BLSR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer containing the operand to be cleared.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the result of clearing the
+end_comment
+
+begin_comment
+comment|///    source operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -618,6 +2051,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An unsigned 64-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -626,6 +2099,73 @@ name|long
 name|long
 name|__RELAXED_FN_ATTRS
 name|__tzcnt_u64
+parameter_list|(
+name|unsigned
+name|long
+name|long
+name|__X
+parameter_list|)
+block|{
+return|return
+name|__X
+condition|?
+name|__builtin_ctzll
+argument_list|(
+name|__X
+argument_list|)
+else|:
+literal|64
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Counts the number of trailing zero bits in the operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c TZCNT instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __X
+end_comment
+
+begin_comment
+comment|///    An unsigned 64-bit integer whose trailing zeros are to be counted.
+end_comment
+
+begin_comment
+comment|/// \returns An 64-bit integer containing the number of trailing zero
+end_comment
+
+begin_comment
+comment|///    bits in the operand.
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|long
+name|long
+name|__RELAXED_FN_ATTRS
+name|_mm_tzcnt_64
 parameter_list|(
 name|unsigned
 name|long

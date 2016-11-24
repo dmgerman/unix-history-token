@@ -670,11 +670,6 @@ name|NumFrameworkLookups
 decl_stmt|,
 name|NumSubFrameworkLookups
 decl_stmt|;
-specifier|const
-name|LangOptions
-modifier|&
-name|LangOpts
-decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
 name|HeaderSearch
 argument_list|(
@@ -1192,6 +1187,11 @@ name|SuggestedModule
 argument_list|,
 name|bool
 name|SkipCache
+operator|=
+name|false
+argument_list|,
+name|bool
+name|BuildSystemModule
 operator|=
 name|false
 argument_list|)
@@ -1745,6 +1745,9 @@ argument_list|(
 name|StringRef
 name|FileName
 argument_list|,
+name|SourceLocation
+name|IncludeLoc
+argument_list|,
 specifier|const
 name|DirectoryEntry
 operator|*
@@ -1969,6 +1972,28 @@ name|StringRef
 name|Framework
 parameter_list|)
 function_decl|;
+comment|/// \brief Suggest a path by which the specified file could be found, for
+comment|/// use in diagnostics to suggest a #include.
+comment|///
+comment|/// \param IsSystem If non-null, filled in to indicate whether the suggested
+comment|///        path is relative to a system header directory.
+name|std
+operator|::
+name|string
+name|suggestPathToFileForDiagnostics
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|,
+name|bool
+operator|*
+name|IsSystem
+operator|=
+name|nullptr
+argument_list|)
+expr_stmt|;
 name|void
 name|PrintStats
 parameter_list|()
@@ -1977,17 +2002,6 @@ name|size_t
 name|getTotalMemory
 argument_list|()
 specifier|const
-expr_stmt|;
-specifier|static
-name|std
-operator|::
-name|string
-name|NormalizeDashIncludePath
-argument_list|(
-argument|StringRef File
-argument_list|,
-argument|FileManager&FileMgr
-argument_list|)
 expr_stmt|;
 name|private
 label|:

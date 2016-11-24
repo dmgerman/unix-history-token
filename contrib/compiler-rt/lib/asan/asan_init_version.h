@@ -74,19 +74,23 @@ block|{
 comment|// Every time the ASan ABI changes we also change the version number in the
 comment|// __asan_init function name.  Objects built with incompatible ASan ABI
 comment|// versions will not link with run-time.
+comment|//
 comment|// Changes between ABI versions:
 comment|// v1=>v2: added 'module_name' to __asan_global
 comment|// v2=>v3: stack frame description (created by the compiler)
-comment|//         contains the function PC as the 3-rd field (see
-comment|//         DescribeAddressIfStack).
-comment|// v3=>v4: added '__asan_global_source_location' to __asan_global.
+comment|//         contains the function PC as the 3rd field (see
+comment|//         DescribeAddressIfStack)
+comment|// v3=>v4: added '__asan_global_source_location' to __asan_global
 comment|// v4=>v5: changed the semantics and format of __asan_stack_malloc_ and
-comment|//         __asan_stack_free_ functions.
+comment|//         __asan_stack_free_ functions
 comment|// v5=>v6: changed the name of the version check symbol
+comment|// v6=>v7: added 'odr_indicator' to __asan_global
+comment|// v7=>v8: added '__asan_(un)register_image_globals' functions for dead
+comment|//         stripping support on Mach-O platforms
 define|#
 directive|define
 name|__asan_version_mismatch_check
-value|__asan_version_mismatch_check_v6
+value|__asan_version_mismatch_check_v8
 block|}
 end_extern
 

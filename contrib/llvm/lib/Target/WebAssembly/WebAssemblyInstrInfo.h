@@ -131,6 +131,16 @@ return|return
 name|RI
 return|;
 block|}
+name|bool
+name|isReallyTriviallyReMaterializable
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|AliasAnalysis *AA
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|copyPhysReg
 argument_list|(
@@ -138,7 +148,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -149,8 +159,23 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|MachineInstr
+operator|*
+name|commuteInstructionImpl
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|bool NewMI
+argument_list|,
+argument|unsigned OpIdx1
+argument_list|,
+argument|unsigned OpIdx2
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -184,7 +209,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override

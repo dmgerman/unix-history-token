@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_include
@@ -76,16 +88,6 @@ include|#
 directive|include
 file|<memory>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -103,33 +105,10 @@ struct_decl|;
 struct_decl|struct
 name|HMapHeader
 struct_decl|;
-comment|/// This class represents an Apple concept known as a 'header map'.  To the
-comment|/// \#include file resolution process, it basically acts like a directory of
-comment|/// symlinks to files.  Its advantages are that it is dense and more efficient
-comment|/// to create and process than a directory of symlinks.
+comment|/// Implementation for \a HeaderMap that doesn't depend on \a FileManager.
 name|class
-name|HeaderMap
+name|HeaderMapImpl
 block|{
-name|HeaderMap
-argument_list|(
-specifier|const
-name|HeaderMap
-operator|&
-argument_list|)
-operator|=
-name|delete
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|HeaderMap
-operator|&
-operator|)
-operator|=
-name|delete
-decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -144,11 +123,13 @@ expr_stmt|;
 name|bool
 name|NeedsBSwap
 decl_stmt|;
-name|HeaderMap
+name|public
+label|:
+name|HeaderMapImpl
 argument_list|(
 argument|std::unique_ptr<const llvm::MemoryBuffer> File
 argument_list|,
-argument|bool BSwap
+argument|bool NeedsBSwap
 argument_list|)
 block|:
 name|FileBuffer
@@ -163,49 +144,26 @@ argument_list|)
 operator|,
 name|NeedsBSwap
 argument_list|(
-argument|BSwap
+argument|NeedsBSwap
 argument_list|)
 block|{}
-name|public
-operator|:
-comment|/// HeaderMap::Create - This attempts to load the specified file as a header
-comment|/// map.  If it doesn't look like a HeaderMap, it gives up and returns null.
+comment|// Check for a valid header and extract the byte swap.
 specifier|static
-specifier|const
-name|HeaderMap
-operator|*
-name|Create
+name|bool
+name|checkHeader
 argument_list|(
 specifier|const
-name|FileEntry
-operator|*
-name|FE
-argument_list|,
-name|FileManager
+name|llvm
+operator|::
+name|MemoryBuffer
 operator|&
-name|FM
+name|File
+argument_list|,
+name|bool
+operator|&
+name|NeedsByteSwap
 argument_list|)
 expr_stmt|;
-comment|/// LookupFile - Check to see if the specified relative filename is located in
-comment|/// this HeaderMap.  If so, open it and return its FileEntry.
-comment|/// If RawPath is not NULL and the file is found, RawPath will be set to the
-comment|/// raw path at which the file was found in the file system. For example,
-comment|/// for a search path ".." and a filename "../file.h" this would be
-comment|/// "../../file.h".
-specifier|const
-name|FileEntry
-modifier|*
-name|LookupFile
-argument_list|(
-name|StringRef
-name|Filename
-argument_list|,
-name|FileManager
-operator|&
-name|FM
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// If the specified relative filename is located in this HeaderMap return
 comment|/// the filename it is mapped to, otherwise return an empty StringRef.
 name|StringRef
@@ -223,7 +181,7 @@ name|DestPath
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getFileName - Return the filename of the headermap.
+comment|/// Return the filename of the headermap.
 specifier|const
 name|char
 operator|*
@@ -231,7 +189,7 @@ name|getFileName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// dump - Print the contents of this headermap to stderr.
+comment|/// Print the contents of this headermap to stderr.
 name|void
 name|dump
 argument_list|()
@@ -262,18 +220,96 @@ name|BucketNo
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
+comment|/// Look up the specified string in the string table.  If the string index is
+comment|/// not valid, return None.
+name|Optional
+operator|<
+name|StringRef
+operator|>
 name|getString
 argument_list|(
-name|unsigned
-name|StrTabIdx
+argument|unsigned StrTabIdx
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// This class represents an Apple concept known as a 'header map'.  To the
+comment|/// \#include file resolution process, it basically acts like a directory of
+comment|/// symlinks to files.  Its advantages are that it is dense and more efficient
+comment|/// to create and process than a directory of symlinks.
+name|class
+name|HeaderMap
+range|:
+name|private
+name|HeaderMapImpl
+block|{
+name|HeaderMap
+argument_list|(
+argument|std::unique_ptr<const llvm::MemoryBuffer> File
+argument_list|,
+argument|bool BSwap
+argument_list|)
+operator|:
+name|HeaderMapImpl
+argument_list|(
+argument|std::move(File)
+argument_list|,
+argument|BSwap
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// This attempts to load the specified file as a header map.  If it doesn't
+comment|/// look like a HeaderMap, it gives up and returns null.
+specifier|static
+specifier|const
+name|HeaderMap
+operator|*
+name|Create
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|FE
+argument_list|,
+name|FileManager
+operator|&
+name|FM
+argument_list|)
+block|;
+comment|/// Check to see if the specified relative filename is located in this
+comment|/// HeaderMap.  If so, open it and return its FileEntry.  If RawPath is not
+comment|/// NULL and the file is found, RawPath will be set to the raw path at which
+comment|/// the file was found in the file system. For example, for a search path
+comment|/// ".." and a filename "../file.h" this would be "../../file.h".
+specifier|const
+name|FileEntry
+operator|*
+name|LookupFile
+argument_list|(
+argument|StringRef Filename
+argument_list|,
+argument|FileManager&FM
+argument_list|)
+specifier|const
+block|;
+name|using
+name|HeaderMapImpl
+operator|::
+name|lookupFilename
+block|;
+name|using
+name|HeaderMapImpl
+operator|::
+name|getFileName
+block|;
+name|using
+name|HeaderMapImpl
+operator|::
+name|dump
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

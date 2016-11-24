@@ -128,19 +128,18 @@ name|string
 name|TargetPrefix
 expr_stmt|;
 comment|// Target prefix, e.g. "ppc" for t-s intrinsics.
-comment|/// IntrinsicSignature - This structure holds the return values and
-comment|/// parameter values of an intrinsic. If the number of return values is> 1,
-comment|/// then the intrinsic implicitly returns a first-class aggregate. The
-comment|/// numbering of the types starts at 0 with the first return value and
-comment|/// continues from there through the parameter list. This is useful for
-comment|/// "matching" types.
+comment|/// This structure holds the return values and parameter values of an
+comment|/// intrinsic. If the number of return values is> 1, then the intrinsic
+comment|/// implicitly returns a first-class aggregate. The numbering of the types
+comment|/// starts at 0 with the first return value and continues from there through
+comment|/// the parameter list. This is useful for "matching" types.
 struct|struct
 name|IntrinsicSignature
 block|{
-comment|/// RetVTs - The MVT::SimpleValueType for each return type. Note that this
-comment|/// list is only populated when in the context of a target .td file. When
-comment|/// building Intrinsics.td, this isn't available, because we don't know
-comment|/// the target pointer size.
+comment|/// The MVT::SimpleValueType for each return type. Note that this list is
+comment|/// only populated when in the context of a target .td file. When building
+comment|/// Intrinsics.td, this isn't available, because we don't know the target
+comment|/// pointer size.
 name|std
 operator|::
 name|vector
@@ -151,7 +150,7 @@ name|SimpleValueType
 operator|>
 name|RetVTs
 expr_stmt|;
-comment|/// RetTypeDefs - The records for each return type.
+comment|/// The records for each return type.
 name|std
 operator|::
 name|vector
@@ -161,10 +160,10 @@ operator|*
 operator|>
 name|RetTypeDefs
 expr_stmt|;
-comment|/// ParamVTs - The MVT::SimpleValueType for each parameter type. Note that
-comment|/// this list is only populated when in the context of a target .td file.
-comment|/// When building Intrinsics.td, this isn't available, because we don't
-comment|/// know the target pointer size.
+comment|/// The MVT::SimpleValueType for each parameter type. Note that this list is
+comment|/// only populated when in the context of a target .td file.  When building
+comment|/// Intrinsics.td, this isn't available, because we don't know the target
+comment|/// pointer size.
 name|std
 operator|::
 name|vector
@@ -175,7 +174,7 @@ name|SimpleValueType
 operator|>
 name|ParamVTs
 expr_stmt|;
-comment|/// ParamTypeDefs - The records for each parameter type.
+comment|/// The records for each parameter type.
 name|std
 operator|::
 name|vector
@@ -190,22 +189,77 @@ struct|;
 name|IntrinsicSignature
 name|IS
 decl_stmt|;
-comment|// Memory mod/ref behavior of this intrinsic.
+comment|/// Bit flags describing the type (ref/mod) and location of memory
+comment|/// accesses that may be performed by the intrinsics. Analogous to
+comment|/// \c FunctionModRefBehaviour.
 enum|enum
-name|ModRefKind
+name|ModRefBits
+block|{
+comment|/// The intrinsic may access memory anywhere, i.e. it is not restricted
+comment|/// to access through pointer arguments.
+name|MR_Anywhere
+init|=
+literal|1
+block|,
+comment|/// The intrinsic may read memory.
+name|MR_Ref
+init|=
+literal|2
+block|,
+comment|/// The intrinsic may write memory.
+name|MR_Mod
+init|=
+literal|4
+block|,
+comment|/// The intrinsic may both read and write memory.
+name|MR_ModRef
+init|=
+name|MR_Ref
+operator||
+name|MR_Mod
+block|,   }
+enum|;
+comment|/// Memory mod/ref behavior of this intrinsic, corresponding to intrinsic
+comment|/// properties (IntrReadMem, IntrArgMemOnly, etc.).
+enum|enum
+name|ModRefBehavior
 block|{
 name|NoMem
+init|=
+literal|0
 block|,
 name|ReadArgMem
+init|=
+name|MR_Ref
 block|,
 name|ReadMem
+init|=
+name|MR_Ref
+operator||
+name|MR_Anywhere
+block|,
+name|WriteArgMem
+init|=
+name|MR_Mod
+block|,
+name|WriteMem
+init|=
+name|MR_Mod
+operator||
+name|MR_Anywhere
 block|,
 name|ReadWriteArgMem
+init|=
+name|MR_ModRef
 block|,
 name|ReadWriteMem
-block|}
+init|=
+name|MR_ModRef
+operator||
+name|MR_Anywhere
+block|,   }
 enum|;
-name|ModRefKind
+name|ModRefBehavior
 name|ModRef
 decl_stmt|;
 comment|/// This is set to true if the intrinsic is overloaded by its argument
@@ -213,23 +267,23 @@ comment|/// types.
 name|bool
 name|isOverloaded
 decl_stmt|;
-comment|/// isCommutative - True if the intrinsic is commutative.
+comment|/// True if the intrinsic is commutative.
 name|bool
 name|isCommutative
 decl_stmt|;
-comment|/// canThrow - True if the intrinsic can throw.
+comment|/// True if the intrinsic can throw.
 name|bool
 name|canThrow
 decl_stmt|;
-comment|/// isNoDuplicate - True if the intrinsic is marked as noduplicate.
+comment|/// True if the intrinsic is marked as noduplicate.
 name|bool
 name|isNoDuplicate
 decl_stmt|;
-comment|/// isNoReturn - True if the intrinsic is no-return.
+comment|/// True if the intrinsic is no-return.
 name|bool
 name|isNoReturn
 decl_stmt|;
-comment|/// isConvergent - True if the intrinsic is marked as convergent.
+comment|/// True if the intrinsic is marked as convergent.
 name|bool
 name|isConvergent
 decl_stmt|;
@@ -238,7 +292,11 @@ name|ArgAttribute
 block|{
 name|NoCapture
 block|,
+name|Returned
+block|,
 name|ReadOnly
+block|,
+name|WriteOnly
 block|,
 name|ReadNone
 block|}
@@ -254,8 +312,7 @@ operator|<
 name|unsigned
 operator|,
 name|ArgAttribute
-operator|>
-expr|>
+operator|>>
 name|ArgumentAttributes
 expr_stmt|;
 name|CodeGenIntrinsic
@@ -267,21 +324,120 @@ argument_list|)
 expr_stmt|;
 block|}
 struct|;
-comment|/// LoadIntrinsics - Read all of the intrinsics defined in the specified
-comment|/// .td file.
+name|class
+name|CodeGenIntrinsicTable
+block|{
 name|std
 operator|::
 name|vector
 operator|<
 name|CodeGenIntrinsic
 operator|>
-name|LoadIntrinsics
-argument_list|(
-argument|const RecordKeeper&RC
-argument_list|,
-argument|bool TargetOnly
-argument_list|)
+name|Intrinsics
 expr_stmt|;
+name|public
+label|:
+struct|struct
+name|TargetSet
+block|{
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+name|size_t
+name|Offset
+decl_stmt|;
+name|size_t
+name|Count
+decl_stmt|;
+block|}
+struct|;
+name|std
+operator|::
+name|vector
+operator|<
+name|TargetSet
+operator|>
+name|Targets
+expr_stmt|;
+name|explicit
+name|CodeGenIntrinsicTable
+parameter_list|(
+specifier|const
+name|RecordKeeper
+modifier|&
+name|RC
+parameter_list|,
+name|bool
+name|TargetOnly
+parameter_list|)
+function_decl|;
+name|CodeGenIntrinsicTable
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Intrinsics
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Intrinsics
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|CodeGenIntrinsic
+modifier|&
+name|operator
+function|[]
+parameter_list|(
+name|size_t
+name|Pos
+parameter_list|)
+block|{
+return|return
+name|Intrinsics
+index|[
+name|Pos
+index|]
+return|;
+block|}
+specifier|const
+name|CodeGenIntrinsic
+modifier|&
+name|operator
+index|[]
+argument_list|(
+name|size_t
+name|Pos
+argument_list|)
+decl|const
+block|{
+return|return
+name|Intrinsics
+index|[
+name|Pos
+index|]
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

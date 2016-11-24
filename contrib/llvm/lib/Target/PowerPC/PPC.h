@@ -69,12 +69,6 @@ directive|include
 file|"MCTargetDesc/PPCMCTargetDesc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_comment
 comment|// GCC #defines PPC on Linux but we use it as our namespace name
 end_comment
@@ -131,11 +125,6 @@ endif|#
 directive|endif
 name|FunctionPass
 modifier|*
-name|createPPCLoopDataPrefetchPass
-parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
 name|createPPCLoopPreIncPrepPass
 parameter_list|(
 name|PPCTargetMachine
@@ -176,6 +165,11 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createPPCBranchSelectionPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCQPXLoadSplatPass
 parameter_list|()
 function_decl|;
 name|FunctionPass
@@ -247,11 +241,10 @@ comment|//===------------------------------------------------------------------=
 comment|// PPC Specific MachineOperand flags.
 name|MO_NO_FLAG
 block|,
-comment|/// MO_PLT_OR_STUB - On a symbol operand "FOO", this indicates that the
-comment|/// reference is actually to the "FOO$stub" or "FOO@plt" symbol.  This is
-comment|/// used for calls and jumps to external functions on Tiger and earlier, and
+comment|/// On a symbol operand "FOO", this indicates that the reference is actually
+comment|/// to "FOO@plt".  This is used for calls and jumps to external functions on
 comment|/// for PIC calls on Linux and ELF systems.
-name|MO_PLT_OR_STUB
+name|MO_PLT
 init|=
 literal|1
 block|,

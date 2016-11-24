@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/DebugInfo.h"
 end_include
 
@@ -127,6 +115,14 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|class
 name|DIBuilder
 block|{
@@ -210,16 +206,20 @@ name|bool
 name|AllowUnresolvedNodes
 decl_stmt|;
 comment|/// Each subprogram's preserved local variables.
+comment|///
+comment|/// Do not use a std::vector.  Some versions of libc++ apparently copy
+comment|/// instead of move on grow operations, and TrackingMDRef is expensive to
+comment|/// copy.
 name|DenseMap
 operator|<
 name|MDNode
 operator|*
 operator|,
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|TrackingMDNodeRef
+operator|,
+literal|1
 operator|>>
 name|PreservedVariables
 expr_stmt|;
@@ -273,16 +273,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-enum|enum
-name|DebugEmissionKind
-block|{
-name|FullDebug
-init|=
-literal|1
-block|,
-name|LineTablesOnly
-block|}
-enum|;
 comment|/// Construct any deferred debug info descriptors.
 name|void
 name|finalize
@@ -308,63 +298,54 @@ comment|/// \param SplitName     The name of the file that we'll split debug inf
 comment|///                      out into.
 comment|/// \param Kind          The kind of debug information to generate.
 comment|/// \param DWOId         The DWOId if this is a split skeleton compile unit.
-comment|/// \param EmitDebugInfo A boolean flag which indicates whether
-comment|///                      debug information should be written to
-comment|///                      the final output or not. When this is
-comment|///                      false, debug information annotations will
-comment|///                      be present in the IL but they are not
-comment|///                      written to the final assembly or object
-comment|///                      file. This supports tracking source
-comment|///                      location information in the back end
-comment|///                      without actually changing the output
-comment|///                      (e.g., when using optimization remarks).
 name|DICompileUnit
 modifier|*
 name|createCompileUnit
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Lang
-parameter_list|,
+argument_list|,
 name|StringRef
 name|File
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Dir
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Producer
-parameter_list|,
+argument_list|,
 name|bool
 name|isOptimized
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Flags
-parameter_list|,
+argument_list|,
 name|unsigned
 name|RV
-parameter_list|,
+argument_list|,
 name|StringRef
 name|SplitName
-init|=
+operator|=
 name|StringRef
 argument_list|()
-parameter_list|,
+argument_list|,
+name|DICompileUnit
+operator|::
 name|DebugEmissionKind
 name|Kind
-init|=
+operator|=
+name|DICompileUnit
+operator|::
+name|DebugEmissionKind
+operator|::
 name|FullDebug
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|DWOId
-init|=
+operator|=
 literal|0
-parameter_list|,
-name|bool
-name|EmitDebugInfo
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Create a file descriptor to hold debugging information
 comment|/// for a file.
 name|DIFile
@@ -493,6 +474,11 @@ name|SizeInBits
 parameter_list|,
 name|uint64_t
 name|AlignInBits
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|Flags
 init|=
 literal|0
 parameter_list|)
@@ -626,6 +612,55 @@ name|AlignInBits
 parameter_list|,
 name|uint64_t
 name|OffsetInBits
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|DIType
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// Create debugging information entry for a bit field member.
+comment|/// \param Scope               Member scope.
+comment|/// \param Name                Member name.
+comment|/// \param File                File where this member is defined.
+comment|/// \param LineNo              Line number.
+comment|/// \param SizeInBits          Member size.
+comment|/// \param AlignInBits         Member alignment.
+comment|/// \param OffsetInBits        Member offset.
+comment|/// \param StorageOffsetInBits Member storage offset.
+comment|/// \param Flags               Flags to encode member attribute.
+comment|/// \param Ty                  Parent type.
+name|DIDerivedType
+modifier|*
+name|createBitFieldMemberType
+parameter_list|(
+name|DIScope
+modifier|*
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|DIFile
+modifier|*
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+parameter_list|,
+name|uint64_t
+name|AlignInBits
+parameter_list|,
+name|uint64_t
+name|OffsetInBits
+parameter_list|,
+name|uint64_t
+name|StorageOffsetInBits
 parameter_list|,
 name|unsigned
 name|Flags
@@ -1138,6 +1173,7 @@ comment|/// \param ParameterTypes  An array of subroutine parameter types. This
 comment|///                        includes return type at 0th index.
 comment|/// \param Flags           E.g.: LValueReference.
 comment|///                        These flags are used to emit dwarf attributes.
+comment|/// \param CC              Calling convention, e.g. dwarf::DW_CC_normal
 name|DISubroutineType
 modifier|*
 name|createSubroutineType
@@ -1147,6 +1183,11 @@ name|ParameterTypes
 parameter_list|,
 name|unsigned
 name|Flags
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|CC
 init|=
 literal|0
 parameter_list|)
@@ -1284,12 +1325,12 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
-comment|/// Retain DIType* in a module even if it is not referenced
+comment|/// Retain DIScope* in a module even if it is not referenced
 comment|/// through debug info anchors.
 name|void
 name|retainType
 parameter_list|(
-name|DIType
+name|DIScope
 modifier|*
 name|T
 parameter_list|)
@@ -1694,63 +1735,6 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// FIXME: this is added for dragonegg. Once we update dragonegg
-comment|/// to call resolve function, this will be removed.
-name|DISubprogram
-modifier|*
-name|createFunction
-parameter_list|(
-name|DIScopeRef
-name|Scope
-parameter_list|,
-name|StringRef
-name|Name
-parameter_list|,
-name|StringRef
-name|LinkageName
-parameter_list|,
-name|DIFile
-modifier|*
-name|File
-parameter_list|,
-name|unsigned
-name|LineNo
-parameter_list|,
-name|DISubroutineType
-modifier|*
-name|Ty
-parameter_list|,
-name|bool
-name|isLocalToUnit
-parameter_list|,
-name|bool
-name|isDefinition
-parameter_list|,
-name|unsigned
-name|ScopeLine
-parameter_list|,
-name|unsigned
-name|Flags
-init|=
-literal|0
-parameter_list|,
-name|bool
-name|isOptimized
-init|=
-name|false
-parameter_list|,
-name|DITemplateParameterArray
-name|TParams
-init|=
-name|nullptr
-parameter_list|,
-name|DISubprogram
-modifier|*
-name|Decl
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
 comment|/// Create a new descriptor for the specified C++ method.
 comment|/// See comments in \a DISubprogram* for descriptions of these fields.
 comment|/// \param Scope         Function scope.
@@ -1763,7 +1747,11 @@ comment|/// \param isLocalToUnit True if this function is not externally visible
 comment|/// \param isDefinition  True if this is a function definition.
 comment|/// \param Virtuality    Attributes describing virtualness. e.g. pure
 comment|///                      virtual function.
-comment|/// \param VTableIndex   Index no of this method in virtual table.
+comment|/// \param VTableIndex   Index no of this method in virtual table, or -1u if
+comment|///                      unrepresentable.
+comment|/// \param ThisAdjustment
+comment|///                      MS ABI-specific adjustment of 'this' that occurs
+comment|///                      in the prologue.
 comment|/// \param VTableHolder  Type that holds vtable.
 comment|/// \param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
@@ -1807,6 +1795,11 @@ literal|0
 parameter_list|,
 name|unsigned
 name|VTableIndex
+init|=
+literal|0
+parameter_list|,
+name|int
+name|ThisAdjustment
 init|=
 literal|0
 parameter_list|,

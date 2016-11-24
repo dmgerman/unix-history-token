@@ -917,28 +917,6 @@ name|DeclID
 operator|>
 name|GlobalToLocalDeclIDs
 expr_stmt|;
-comment|/// \brief The number of C++ base specifier sets in this AST file.
-name|unsigned
-name|LocalNumCXXBaseSpecifiers
-decl_stmt|;
-comment|/// \brief Offset of each C++ base specifier set within the bitstream,
-comment|/// indexed by the C++ base specifier set ID (-1).
-specifier|const
-name|uint32_t
-modifier|*
-name|CXXBaseSpecifiersOffsets
-decl_stmt|;
-comment|/// \brief The number of C++ ctor initializer lists in this AST file.
-name|unsigned
-name|LocalNumCXXCtorInitializers
-decl_stmt|;
-comment|/// \brief Offset of each C++ ctor initializer list within the bitstream,
-comment|/// indexed by the C++ ctor initializer list ID minus 1.
-specifier|const
-name|uint32_t
-modifier|*
-name|CXXCtorInitializersOffsets
-decl_stmt|;
 comment|/// \brief Array of file-level DeclIDs sorted by file.
 specifier|const
 name|serialization

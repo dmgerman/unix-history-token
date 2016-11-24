@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -104,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Host/TimeValue.h"
 end_include
 
@@ -129,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/PathMappingList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_decl_stmt
@@ -192,11 +198,13 @@ name|idx
 parameter_list|)
 function_decl|;
 specifier|static
-name|Mutex
-modifier|*
+name|std
+operator|::
+name|recursive_mutex
+operator|&
 name|GetAllocationModuleCollectionMutex
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Construct with file specification and architecture.
 comment|///
@@ -873,28 +881,40 @@ comment|///     The number of matches added to \a type_list.
 comment|//------------------------------------------------------------------
 name|size_t
 name|FindTypes
-parameter_list|(
+argument_list|(
 specifier|const
 name|SymbolContext
-modifier|&
+operator|&
 name|sc
-parameter_list|,
+argument_list|,
 specifier|const
 name|ConstString
-modifier|&
+operator|&
 name|type_name
-parameter_list|,
+argument_list|,
 name|bool
 name|exact_match
-parameter_list|,
+argument_list|,
 name|size_t
 name|max_matches
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|lldb_private
+operator|::
+name|SymbolFile
+operator|*
+operator|>
+operator|&
+name|searched_symbol_files
+argument_list|,
 name|TypeList
-modifier|&
+operator|&
 name|types
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|TypeSP
@@ -1817,7 +1837,9 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_expr_stmt
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -2044,71 +2066,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//------------------------------------------------------------------
+comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Prepare to do a function name lookup.
+comment|/// @class LookupInfo Module.h "lldb/Core/Module.h"
 end_comment
 
 begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Looking up functions by name can be a tricky thing. LLDB requires
-end_comment
-
-begin_comment
-comment|/// that accelerator tables contain full names for functions as well
-end_comment
-
-begin_comment
-comment|/// as function basenames which include functions, class methods and
-end_comment
-
-begin_comment
-comment|/// class functions. When the user requests that an action use a
-end_comment
-
-begin_comment
-comment|/// function by name, we are sometimes asked to automatically figure
-end_comment
-
-begin_comment
-comment|/// out what a name could possibly map to. A user might request a
-end_comment
-
-begin_comment
-comment|/// breakpoint be set on "count". If no options are supplied to limit
-end_comment
-
-begin_comment
-comment|/// the scope of where to search for count, we will by default match
-end_comment
-
-begin_comment
-comment|/// any function names named "count", all class and instance methods
-end_comment
-
-begin_comment
-comment|/// named "count" (no matter what the namespace or contained context)
-end_comment
-
-begin_comment
-comment|/// and any selectors named "count". If a user specifies "a::b" we
-end_comment
-
-begin_comment
-comment|/// will search for the basename "b", and then prune the results that
-end_comment
-
-begin_comment
-comment|/// don't match "a::b" (note that "c::a::b" and "d::e::a::b" will
-end_comment
-
-begin_comment
-comment|/// match a query of "a::b".
+comment|/// @brief A class that encapsulates name lookup information.
 end_comment
 
 begin_comment
@@ -2116,43 +2082,35 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param[in] name
+comment|/// Users can type a wide variety of partial names when setting
 end_comment
 
 begin_comment
-comment|///     The user supplied name to use in the lookup
+comment|/// breakpoints by name or when looking for functions by name.
 end_comment
 
 begin_comment
-comment|///
+comment|/// SymbolVendor and SymbolFile objects are only required to implement
 end_comment
 
 begin_comment
-comment|/// @param[in] name_type_mask
+comment|/// name lookup for function basenames and for fully mangled names.
 end_comment
 
 begin_comment
-comment|///     The mask of bits from lldb::FunctionNameType enumerations
+comment|/// This means if the user types in a partial name, we must reduce this
 end_comment
 
 begin_comment
-comment|///     that tell us what kind of name we are looking for.
+comment|/// to a name lookup that will work with all SymbolFile objects. So we
 end_comment
 
 begin_comment
-comment|///
+comment|/// might reduce a name lookup to look for a basename, and then prune
 end_comment
 
 begin_comment
-comment|/// @param[out] language
-end_comment
-
-begin_comment
-comment|///     If known, the language to use for determining the
-end_comment
-
-begin_comment
-comment|///     lookup_name_type_mask.
+comment|/// out any results that don't match.
 end_comment
 
 begin_comment
@@ -2160,31 +2118,27 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param[out] lookup_name
+comment|/// The "m_name" member variable represents the name as it was typed
 end_comment
 
 begin_comment
-comment|///     The actual name that will be used when calling
+comment|/// by the user. "m_lookup_name" will be the name we actually search
 end_comment
 
 begin_comment
-comment|///     SymbolVendor::FindFunctions() or Symtab::FindFunctionSymbols()
+comment|/// for through the symbol or objects files. Lanaguage is included in
 end_comment
 
 begin_comment
-comment|///
+comment|/// case we need to filter results by language at a later date. The
 end_comment
 
 begin_comment
-comment|/// @param[out] lookup_name_type_mask
+comment|/// "m_name_type_mask" member variable tells us what kinds of names we
 end_comment
 
 begin_comment
-comment|///     The actual name mask that should be used in the calls to
-end_comment
-
-begin_comment
-comment|///     SymbolVendor::FindFunctions() or Symtab::FindFunctionSymbols()
+comment|/// are looking for and can help us prune out unwanted results.
 end_comment
 
 begin_comment
@@ -2192,73 +2146,175 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param[out] match_name_after_lookup
+comment|/// Function lookups are done in Module.cpp, ModuleList.cpp and in
 end_comment
 
 begin_comment
-comment|///     A boolean that indicates if we need to iterate through any
+comment|/// BreakpointResolverName.cpp and they all now use this class to do
 end_comment
 
 begin_comment
-comment|///     match results obtained from SymbolVendor::FindFunctions() or
+comment|/// lookups correctly.
 end_comment
 
 begin_comment
-comment|///     Symtab::FindFunctionSymbols() to see if the name contains
-end_comment
-
-begin_comment
-comment|///     \a name. For example if \a name is "a::b", this function will
-end_comment
-
-begin_comment
-comment|///     return a \a lookup_name of "b", with \a match_name_after_lookup
-end_comment
-
-begin_comment
-comment|///     set to true to indicate any matches will need to be checked
-end_comment
-
-begin_comment
-comment|///     to make sure they contain \a name.
-end_comment
-
-begin_comment
-comment|//------------------------------------------------------------------
+comment|//----------------------------------------------------------------------
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|void
-name|PrepareForFunctionNameLookup
+name|class
+name|LookupInfo
+block|{
+name|public
+label|:
+name|LookupInfo
+argument_list|()
+operator|:
+name|m_name
+argument_list|()
+operator|,
+name|m_lookup_name
+argument_list|()
+operator|,
+name|m_language
 argument_list|(
+name|lldb
+operator|::
+name|eLanguageTypeUnknown
+argument_list|)
+operator|,
+name|m_name_type_mask
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|m_match_name_after_lookup
+argument_list|(
+argument|false
+argument_list|)
+block|{         }
+name|LookupInfo
+argument_list|(
+argument|const ConstString&name
+argument_list|,
+argument|uint32_t name_type_mask
+argument_list|,
+argument|lldb::LanguageType language
+argument_list|)
+expr_stmt|;
 specifier|const
 name|ConstString
 operator|&
+name|GetName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_name
+return|;
+block|}
+name|void
+name|SetName
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
 name|name
-argument_list|,
+parameter_list|)
+block|{
+name|m_name
+operator|=
+name|name
+expr_stmt|;
+block|}
+specifier|const
+name|ConstString
+operator|&
+name|GetLookupName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_lookup_name
+return|;
+block|}
+name|void
+name|SetLookupName
+parameter_list|(
+specifier|const
+name|ConstString
+modifier|&
+name|name
+parameter_list|)
+block|{
+name|m_lookup_name
+operator|=
+name|name
+expr_stmt|;
+block|}
 name|uint32_t
-name|name_type_mask
+name|GetNameTypeMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_name_type_mask
+return|;
+block|}
+name|void
+name|SetNameTypeMask
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+block|{
+name|m_name_type_mask
+operator|=
+name|mask
+expr_stmt|;
+block|}
+name|void
+name|Prune
+argument_list|(
+name|SymbolContextList
+operator|&
+name|sc_list
 argument_list|,
+name|size_t
+name|start_idx
+argument_list|)
+decl|const
+decl_stmt|;
+name|protected
+label|:
+name|ConstString
+name|m_name
+decl_stmt|;
+comment|///< What the user originally typed
+name|ConstString
+name|m_lookup_name
+decl_stmt|;
+comment|///< The actual name will lookup when calling in the object or symbol file
 name|lldb
 operator|::
 name|LanguageType
-name|language
-argument_list|,
-name|ConstString
-operator|&
-name|lookup_name
-argument_list|,
+name|m_language
+expr_stmt|;
+comment|///< Limit matches to only be for this language
 name|uint32_t
-operator|&
-name|lookup_name_type_mask
-argument_list|,
-name|bool
-operator|&
-name|match_name_after_lookup
-argument_list|)
+name|m_name_type_mask
 decl_stmt|;
+comment|///< One or more bits from lldb::FunctionNameType that indicate what kind of names we are looking for
+name|bool
+name|m_match_name_after_lookup
+decl_stmt|;
+comment|///< If \b true, then demangled names that match will need to contain "m_name" in order to be considered a match
+block|}
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_label
 name|protected
@@ -2277,12 +2333,14 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|///< A mutex to keep this object happy in multi-threaded environments.
@@ -2749,37 +2807,49 @@ begin_comment
 comment|// Only used internally by CreateJITModule ()
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|size_t
 name|FindTypes_Impl
-parameter_list|(
+argument_list|(
 specifier|const
 name|SymbolContext
-modifier|&
+operator|&
 name|sc
-parameter_list|,
+argument_list|,
 specifier|const
 name|ConstString
-modifier|&
+operator|&
 name|name
-parameter_list|,
+argument_list|,
 specifier|const
 name|CompilerDeclContext
-modifier|*
+operator|*
 name|parent_decl_ctx
-parameter_list|,
+argument_list|,
 name|bool
 name|append
-parameter_list|,
+argument_list|,
 name|size_t
 name|max_matches
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|lldb_private
+operator|::
+name|SymbolFile
+operator|*
+operator|>
+operator|&
+name|searched_symbol_files
+argument_list|,
 name|TypeMap
-modifier|&
+operator|&
 name|types
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|DISALLOW_COPY_AND_ASSIGN

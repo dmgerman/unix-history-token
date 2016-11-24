@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -111,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -1203,9 +1215,9 @@ argument_list|)
 range|:
 name|AllocatorRef
 argument_list|(
-argument|Allocator
+argument|std::move(Allocator)
 argument_list|)
-block|{ }
+block|{}
 name|IntrusiveRefCntPtr
 operator|<
 name|GlobalCodeCompletionAllocator

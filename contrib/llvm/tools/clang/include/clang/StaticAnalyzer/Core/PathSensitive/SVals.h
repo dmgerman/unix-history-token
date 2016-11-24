@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -78,7 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
@@ -145,26 +157,27 @@ enum|enum
 name|BaseKind
 block|{
 comment|// The enumerators must be representable using 2 bits.
-name|UndefinedValKind
-init|=
-literal|0
-block|,
-comment|// for subclass UndefinedVal (an uninitialized value)
-name|UnknownValKind
-init|=
-literal|1
-block|,
-comment|// for subclass UnknownVal (a void value)
-name|LocKind
-init|=
-literal|2
-block|,
-comment|// for subclass Loc (an L-value)
-name|NonLocKind
-init|=
-literal|3
-comment|// for subclass NonLoc (an R-value that's not
-comment|//   an L-value)
+define|#
+directive|define
+name|BASIC_SVAL
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+define|#
+directive|define
+name|ABSTRACT_SVAL_WITH_KIND
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
 block|}
 enum|;
 enum|enum
@@ -1143,15 +1156,18 @@ name|nonloc
 block|{  enum
 name|Kind
 block|{
-name|ConcreteIntKind
-block|,
-name|SymbolValKind
-block|,
-name|LocAsIntegerKind
-block|,
-name|CompoundValKind
-block|,
-name|LazyCompoundValKind
+define|#
+directive|define
+name|NONLOC_SVAL
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
 block|}
 block|;
 comment|/// \brief Represents symbolic expression.
@@ -1867,11 +1883,18 @@ name|loc
 block|{  enum
 name|Kind
 block|{
-name|GotoLabelKind
-block|,
-name|MemRegionValKind
-block|,
-name|ConcreteIntKind
+define|#
+directive|define
+name|LOC_SVAL
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.def"
 block|}
 block|;
 name|class

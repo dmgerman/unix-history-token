@@ -52,7 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -62,7 +74,10 @@ block|{
 name|class
 name|StringRef
 decl_stmt|;
-name|PDB_ErrorCode
+name|namespace
+name|pdb
+block|{
+name|Error
 name|loadDataForPDB
 argument_list|(
 name|PDB_ReaderType
@@ -81,7 +96,7 @@ operator|&
 name|Session
 argument_list|)
 decl_stmt|;
-name|PDB_ErrorCode
+name|Error
 name|loadDataForEXE
 argument_list|(
 name|PDB_ReaderType
@@ -100,6 +115,7 @@ operator|&
 name|Session
 argument_list|)
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

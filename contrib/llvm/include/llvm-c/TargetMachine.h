@@ -268,9 +268,9 @@ name|LLVMTargetMachineRef
 name|T
 parameter_list|)
 function_decl|;
-comment|/** Returns the llvm::DataLayout used for this llvm:TargetMachine. */
+comment|/** Create a DataLayout based on the targetMachine. */
 name|LLVMTargetDataRef
-name|LLVMGetTargetMachineData
+name|LLVMCreateTargetDataLayout
 parameter_list|(
 name|LLVMTargetMachineRef
 name|T

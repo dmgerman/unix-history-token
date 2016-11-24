@@ -85,13 +85,16 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MachineFunction
-decl_stmt|;
 comment|/// MachineFunctionPass - This class adapts the FunctionPass interface to
 comment|/// allow convenient creation of passes that operate on the MachineFunction
 comment|/// representation. Instead of overriding runOnFunction, subclasses
@@ -102,6 +105,36 @@ range|:
 name|public
 name|FunctionPass
 block|{
+name|public
+operator|:
+name|bool
+name|doInitialization
+argument_list|(
+argument|Module&
+argument_list|)
+name|override
+block|{
+comment|// Cache the properties info at module-init time so we don't have to
+comment|// construct them for every function.
+name|RequiredProperties
+operator|=
+name|getRequiredProperties
+argument_list|()
+block|;
+name|SetProperties
+operator|=
+name|getSetProperties
+argument_list|()
+block|;
+name|ClearedProperties
+operator|=
+name|getClearedProperties
+argument_list|()
+block|;
+return|return
+name|false
+return|;
+block|}
 name|protected
 operator|:
 name|explicit
@@ -145,8 +178,50 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|virtual
+name|MachineFunctionProperties
+name|getRequiredProperties
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+return|;
+block|}
+name|virtual
+name|MachineFunctionProperties
+name|getSetProperties
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+return|;
+block|}
+name|virtual
+name|MachineFunctionProperties
+name|getClearedProperties
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MachineFunctionProperties
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
+name|MachineFunctionProperties
+name|RequiredProperties
+block|;
+name|MachineFunctionProperties
+name|SetProperties
+block|;
+name|MachineFunctionProperties
+name|ClearedProperties
+block|;
 comment|/// createPrinterPass - Get a machine function printer pass.
 name|Pass
 operator|*

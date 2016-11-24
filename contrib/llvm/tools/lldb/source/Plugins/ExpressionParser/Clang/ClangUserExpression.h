@@ -181,16 +181,21 @@ name|public
 operator|:
 name|ClangUserExpressionHelper
 argument_list|(
-name|Target
-operator|&
-name|target
+argument|Target&target
+argument_list|,
+argument|bool top_level
 argument_list|)
 operator|:
 name|m_target
 argument_list|(
-argument|target
+name|target
 argument_list|)
-block|{         }
+block|,
+name|m_top_level
+argument_list|(
+argument|top_level
+argument_list|)
+block|{}
 operator|~
 name|ClangUserExpressionHelper
 argument_list|()
@@ -252,6 +257,11 @@ argument|clang::ASTConsumer *passthrough
 argument_list|)
 name|override
 block|;
+name|void
+name|CommitPersistentDecls
+argument_list|()
+name|override
+block|;
 name|private
 operator|:
 name|Target
@@ -282,6 +292,9 @@ operator|<
 name|ASTResultSynthesizer
 operator|>
 name|m_result_synthesizer_up
+block|;
+name|bool
+name|m_top_level
 block|;     }
 block|;
 comment|//------------------------------------------------------------------
@@ -326,8 +339,8 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Parse the expression
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print parse errors and warnings to.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to report parse errors and warnings to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when looking up entities that
@@ -347,7 +360,7 @@ comment|//------------------------------------------------------------------
 name|bool
 name|Parse
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -444,7 +457,7 @@ argument|std::vector<lldb::addr_t>&args
 argument_list|,
 argument|lldb::addr_t struct_address
 argument_list|,
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 name|override
 block|;

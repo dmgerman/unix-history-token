@@ -121,10 +121,16 @@ name|class
 name|Pass
 decl_stmt|;
 name|class
+name|PredicatedScalarEvolution
+decl_stmt|;
+name|class
 name|PredIteratorCache
 decl_stmt|;
 name|class
 name|ScalarEvolution
+decl_stmt|;
+name|class
+name|SCEV
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -132,7 +138,7 @@ decl_stmt|;
 comment|/// \brief Captures loop safety information.
 comment|/// It keep information for loop& its header may throw exception.
 struct|struct
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 block|{
 name|bool
 name|MayThrow
@@ -153,7 +159,7 @@ name|ColorVector
 operator|>
 name|BlockColors
 expr_stmt|;
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 argument_list|()
 operator|:
 name|MayThrow
@@ -643,6 +649,27 @@ modifier|&
 name|RedDes
 parameter_list|)
 function_decl|;
+comment|/// Returns true if Phi is a first-order recurrence. A first-order recurrence
+comment|/// is a non-reduction recurrence relation in which the value of the
+comment|/// recurrence in the current loop iteration equals a value defined in the
+comment|/// previous iteration.
+specifier|static
+name|bool
+name|isFirstOrderRecurrence
+parameter_list|(
+name|PHINode
+modifier|*
+name|Phi
+parameter_list|,
+name|Loop
+modifier|*
+name|TheLoop
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|)
+function_decl|;
 name|RecurrenceKind
 name|getRecurrenceKind
 parameter_list|()
@@ -927,7 +954,7 @@ argument_list|(
 name|IK_NoInduction
 argument_list|)
 operator|,
-name|StepValue
+name|Step
 argument_list|(
 argument|nullptr
 argument_list|)
@@ -960,6 +987,15 @@ argument_list|,
 name|Value
 operator|*
 name|Index
+argument_list|,
+name|ScalarEvolution
+operator|*
+name|SE
+argument_list|,
+specifier|const
+name|DataLayout
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;
@@ -982,16 +1018,28 @@ return|return
 name|IK
 return|;
 block|}
-name|ConstantInt
+specifier|const
+name|SCEV
 operator|*
-name|getStepValue
+name|getStep
 argument_list|()
 specifier|const
 block|{
 return|return
-name|StepValue
+name|Step
 return|;
 block|}
+name|ConstantInt
+operator|*
+name|getConstIntStepValue
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns true if \p Phi is an induction. If \p Phi is an induction,
+comment|/// the induction descriptor \p D will contain the data describing this
+comment|/// induction. If by some other means the caller has a better SCEV
+comment|/// expression for \p Phi than the one returned by the ScalarEvolution
+comment|/// analysis, it can be passed through \p Expr.
 specifier|static
 name|bool
 name|isInductionPHI
@@ -1007,6 +1055,40 @@ parameter_list|,
 name|InductionDescriptor
 modifier|&
 name|D
+parameter_list|,
+specifier|const
+name|SCEV
+modifier|*
+name|Expr
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if \p Phi is an induction, in the context associated with
+comment|/// the run-time predicate of PSE. If \p Assume is true, this can add further
+comment|/// SCEV predicates to \p PSE in order to prove that \p Phi is an induction.
+comment|/// If \p Phi is an induction, \p D will contain the data describing this
+comment|/// induction.
+specifier|static
+name|bool
+name|isInductionPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|Phi
+parameter_list|,
+name|PredicatedScalarEvolution
+modifier|&
+name|PSE
+parameter_list|,
+name|InductionDescriptor
+modifier|&
+name|D
+parameter_list|,
+name|bool
+name|Assume
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|private
@@ -1018,7 +1100,7 @@ argument|Value *Start
 argument_list|,
 argument|InductionKind K
 argument_list|,
-argument|ConstantInt *Step
+argument|const SCEV *Step
 argument_list|)
 empty_stmt|;
 comment|/// Start value.
@@ -1033,9 +1115,10 @@ name|InductionKind
 name|IK
 decl_stmt|;
 comment|/// Step value.
-name|ConstantInt
+specifier|const
+name|SCEV
 modifier|*
-name|StepValue
+name|Step
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1059,38 +1142,37 @@ name|bool
 name|PreserveLCSSA
 parameter_list|)
 function_decl|;
-comment|/// \brief Simplify each loop in a loop nest recursively.
+comment|/// Ensures LCSSA form for every instruction from the Worklist in the scope of
+comment|/// innermost containing loop.
 comment|///
-comment|/// This takes a potentially un-simplified loop L (and its children) and turns
-comment|/// it into a simplified loop nest with preheaders and single backedges. It will
-comment|/// update \c AliasAnalysis and \c ScalarEvolution analyses if they're non-null.
+comment|/// For the given instruction which have uses outside of the loop, an LCSSA PHI
+comment|/// node is inserted and the uses outside the loop are rewritten to use this
+comment|/// node.
+comment|///
+comment|/// LoopInfo and DominatorTree are required and, since the routine makes no
+comment|/// changes to CFG, preserved.
+comment|///
+comment|/// Returns true if any modifications are made.
 name|bool
-name|simplifyLoop
-parameter_list|(
-name|Loop
-modifier|*
-name|L
-parameter_list|,
+name|formLCSSAForInstructions
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|Worklist
+argument_list|,
 name|DominatorTree
-modifier|*
+operator|&
 name|DT
-parameter_list|,
+argument_list|,
 name|LoopInfo
-modifier|*
+operator|&
 name|LI
-parameter_list|,
-name|ScalarEvolution
-modifier|*
-name|SE
-parameter_list|,
-name|AssumptionCache
-modifier|*
-name|AC
-parameter_list|,
-name|bool
-name|PreserveLCSSA
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Put loop into LCSSA form.
 comment|///
 comment|/// Looks at all instructions in the loop which have uses outside of the
@@ -1183,7 +1265,7 @@ parameter_list|,
 name|AliasSetTracker
 modifier|*
 parameter_list|,
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1218,7 +1300,7 @@ parameter_list|,
 name|AliasSetTracker
 modifier|*
 parameter_list|,
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1258,28 +1340,58 @@ argument_list|,
 name|DominatorTree
 operator|*
 argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+argument_list|,
 name|Loop
 operator|*
 argument_list|,
 name|AliasSetTracker
 operator|*
 argument_list|,
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 operator|*
 argument_list|)
 decl_stmt|;
 comment|/// \brief Computes safety information for a loop
 comment|/// checks loop body& header for the possibility of may throw
-comment|/// exception, it takes LICMSafetyInfo and loop as argument.
-comment|/// Updates safety information in LICMSafetyInfo argument.
+comment|/// exception, it takes LoopSafetyInfo and loop as argument.
+comment|/// Updates safety information in LoopSafetyInfo argument.
 name|void
-name|computeLICMSafetyInfo
+name|computeLoopSafetyInfo
 parameter_list|(
-name|LICMSafetyInfo
+name|LoopSafetyInfo
 modifier|*
 parameter_list|,
 name|Loop
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/// Returns true if the instruction in a loop is guaranteed to execute at least
+comment|/// once.
+name|bool
+name|isGuaranteedToExecute
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|&
+name|Inst
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|CurLoop
+parameter_list|,
+specifier|const
+name|LoopSafetyInfo
+modifier|*
+name|SafetyInfo
 parameter_list|)
 function_decl|;
 comment|/// \brief Returns the instructions that use values defined in the loop.
@@ -1297,6 +1409,56 @@ operator|*
 name|L
 argument_list|)
 expr_stmt|;
+comment|/// \brief Find string metadata for loop
+comment|///
+comment|/// If it has a value (e.g. {"llvm.distribute", 1} return the value as an
+comment|/// operand or null otherwise.  If the string metadata is not found return
+comment|/// Optional's not-a-value.
+name|Optional
+operator|<
+specifier|const
+name|MDOperand
+operator|*
+operator|>
+name|findStringMetadataForLoop
+argument_list|(
+argument|Loop *TheLoop
+argument_list|,
+argument|StringRef Name
+argument_list|)
+expr_stmt|;
+comment|/// \brief Set input string into loop metadata by keeping other values intact.
+name|void
+name|addStringMetadataToLoop
+parameter_list|(
+name|Loop
+modifier|*
+name|TheLoop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|MDString
+parameter_list|,
+name|unsigned
+name|V
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Helper to consistently add the set of standard passes to a loop pass's \c
+comment|/// AnalysisUsage.
+comment|///
+comment|/// All loop passes should call this as part of implementing their \c
+comment|/// getAnalysisUsage.
+name|void
+name|getLoopAnalysisUsage
+parameter_list|(
+name|AnalysisUsage
+modifier|&
+name|AU
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

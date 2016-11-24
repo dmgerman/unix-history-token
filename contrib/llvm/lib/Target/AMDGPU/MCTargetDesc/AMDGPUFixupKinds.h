@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUFIXUPKINDS_H
+name|LLVM_LIB_TARGET_AMDGPU_MCTARGETDESC_AMDGPUFIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_MCTARGETDESC_AMDGPUFIXUPKINDS_H
+name|LLVM_LIB_TARGET_AMDGPU_MCTARGETDESC_AMDGPUFIXUPKINDS_H
 end_define
 
 begin_include
@@ -63,9 +63,6 @@ comment|/// 16-bit PC relative fixup for SOPP branch instructions.
 name|fixup_si_sopp_br
 init|=
 name|FirstTargetFixupKind
-block|,
-comment|/// fixup for global addresses with constant initializers
-name|fixup_si_rodata
 block|,
 comment|// Marker
 name|LastTargetFixupKind

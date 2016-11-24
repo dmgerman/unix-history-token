@@ -166,7 +166,7 @@ enum|enum
 block|{
 name|kMaxLoopSize
 init|=
-literal|8
+literal|20
 block|}
 enum|;
 name|int

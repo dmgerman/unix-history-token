@@ -119,7 +119,7 @@ modifier|*
 name|createAVRBranchSelectionPass
 parameter_list|()
 function_decl|;
-comment|/**  * Contains the AVR backend.  */
+comment|/// Contains the AVR backend.
 name|namespace
 name|AVR
 block|{

@@ -157,7 +157,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -321,7 +321,7 @@ name|MachineBasicBlock
 operator|*
 name|emitBPOSGE32
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -331,7 +331,7 @@ name|MachineBasicBlock
 operator|*
 name|emitMSACBranchPseudo
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|,
@@ -344,7 +344,7 @@ name|MachineBasicBlock
 operator|*
 name|emitCOPY_FW
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -355,7 +355,7 @@ name|MachineBasicBlock
 operator|*
 name|emitCOPY_FD
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -366,7 +366,7 @@ name|MachineBasicBlock
 operator|*
 name|emitINSERT_FW
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -377,7 +377,7 @@ name|MachineBasicBlock
 operator|*
 name|emitINSERT_FD
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -388,7 +388,7 @@ name|MachineBasicBlock
 operator|*
 name|emitINSERT_DF_VIDX
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|,
@@ -403,7 +403,7 @@ name|MachineBasicBlock
 operator|*
 name|emitFILL_FW
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -414,7 +414,7 @@ name|MachineBasicBlock
 operator|*
 name|emitFILL_FD
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -425,7 +425,7 @@ name|MachineBasicBlock
 operator|*
 name|emitFEXP2_W_1
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -436,7 +436,7 @@ name|MachineBasicBlock
 operator|*
 name|emitFEXP2_D_1
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)

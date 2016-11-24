@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/UniqueVector.h"
 end_include
 
@@ -81,6 +75,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Type.h"
 end_include
 
 begin_include
@@ -128,6 +134,9 @@ name|LocalAsMetadata
 decl_stmt|;
 name|class
 name|MDNode
+decl_stmt|;
+name|class
+name|MDOperand
 decl_stmt|;
 name|class
 name|NamedMDNode
@@ -238,16 +247,111 @@ operator|*
 operator|>
 name|MDs
 expr_stmt|;
-name|SmallVector
+name|std
+operator|::
+name|vector
 operator|<
 specifier|const
-name|LocalAsMetadata
+name|Metadata
 operator|*
-operator|,
-literal|8
 operator|>
-name|FunctionLocalMDs
+name|FunctionMDs
 expr_stmt|;
+comment|/// Index of information about a piece of metadata.
+struct|struct
+name|MDIndex
+block|{
+name|unsigned
+name|F
+init|=
+literal|0
+decl_stmt|;
+comment|///< The ID of the function for this metadata, if any.
+name|unsigned
+name|ID
+init|=
+literal|0
+decl_stmt|;
+comment|///< The implicit ID of this metadata in bitcode.
+name|MDIndex
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|explicit
+name|MDIndex
+argument_list|(
+argument|unsigned F
+argument_list|)
+block|:
+name|F
+argument_list|(
+argument|F
+argument_list|)
+block|{}
+comment|/// Check if this has a function tag, and it's different from NewF.
+name|bool
+name|hasDifferentFunction
+argument_list|(
+name|unsigned
+name|NewF
+argument_list|)
+decl|const
+block|{
+return|return
+name|F
+operator|&&
+name|F
+operator|!=
+name|NewF
+return|;
+block|}
+comment|/// Fetch the MD this references out of the given metadata array.
+specifier|const
+name|Metadata
+modifier|*
+name|get
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|Metadata
+operator|*
+operator|>
+name|MDs
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|ID
+operator|&&
+literal|"Expected non-zero ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|ID
+operator|<=
+name|MDs
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Expected valid ID"
+argument_list|)
+expr_stmt|;
+return|return
+name|MDs
+index|[
+name|ID
+operator|-
+literal|1
+index|]
+return|;
+block|}
+block|}
+struct|;
 typedef|typedef
 name|DenseMap
 operator|<
@@ -255,22 +359,61 @@ specifier|const
 name|Metadata
 operator|*
 operator|,
-name|unsigned
+name|MDIndex
 operator|>
 name|MetadataMapType
 expr_stmt|;
 name|MetadataMapType
 name|MetadataMap
 decl_stmt|;
-name|bool
-name|HasMDString
+comment|/// Range of metadata IDs, as a half-open range.
+struct|struct
+name|MDRange
+block|{
+name|unsigned
+name|First
+init|=
+literal|0
 decl_stmt|;
-name|bool
-name|HasDILocation
+name|unsigned
+name|Last
+init|=
+literal|0
 decl_stmt|;
-name|bool
-name|HasGenericDINode
+comment|/// Number of strings in the prefix of the metadata range.
+name|unsigned
+name|NumStrings
+init|=
+literal|0
 decl_stmt|;
+name|MDRange
+argument_list|()
+operator|=
+expr|default
+expr_stmt|;
+name|explicit
+name|MDRange
+argument_list|(
+argument|unsigned First
+argument_list|)
+block|:
+name|First
+argument_list|(
+argument|First
+argument_list|)
+block|{}
+block|}
+struct|;
+name|SmallDenseMap
+operator|<
+name|unsigned
+operator|,
+name|MDRange
+operator|,
+literal|1
+operator|>
+name|FunctionMDInfo
+expr_stmt|;
 name|bool
 name|ShouldPreserveUseListOrder
 decl_stmt|;
@@ -365,6 +508,13 @@ comment|/// When a function is incorporated, this is the size of the Metadatas l
 comment|/// before incorporation.
 name|unsigned
 name|NumModuleMDs
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|NumMDStrings
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|FirstFuncConstantID
@@ -504,6 +654,8 @@ name|lookup
 argument_list|(
 name|MD
 argument_list|)
+operator|.
+name|ID
 return|;
 block|}
 name|unsigned
@@ -516,33 +668,6 @@ name|MDs
 operator|.
 name|size
 argument_list|()
-return|;
-block|}
-name|bool
-name|hasMDString
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMDString
-return|;
-block|}
-name|bool
-name|hasDILocation
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasDILocation
-return|;
-block|}
-name|bool
-name|hasGenericDINode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasGenericDINode
 return|;
 block|}
 name|bool
@@ -747,38 +872,72 @@ return|return
 name|Values
 return|;
 block|}
+comment|/// Check whether the current block has any metadata to emit.
+name|bool
+name|hasMDs
+argument_list|()
 specifier|const
-name|std
-operator|::
-name|vector
+block|{
+return|return
+name|NumModuleMDs
+operator|<
+name|MDs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// Get the MDString metadata for this block.
+name|ArrayRef
 operator|<
 specifier|const
 name|Metadata
 operator|*
 operator|>
-operator|&
-name|getMDs
+name|getMDStrings
 argument_list|()
 specifier|const
 block|{
 return|return
+name|makeArrayRef
+argument_list|(
 name|MDs
+argument_list|)
+operator|.
+name|slice
+argument_list|(
+name|NumModuleMDs
+argument_list|,
+name|NumMDStrings
+argument_list|)
 return|;
 block|}
-specifier|const
-name|SmallVectorImpl
+comment|/// Get the non-MDString metadata for this block.
+name|ArrayRef
 operator|<
 specifier|const
-name|LocalAsMetadata
+name|Metadata
 operator|*
 operator|>
-operator|&
-name|getFunctionLocalMDs
+name|getNonMDStrings
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FunctionLocalMDs
+name|makeArrayRef
+argument_list|(
+name|MDs
+argument_list|)
+operator|.
+name|slice
+argument_list|(
+name|NumModuleMDs
+argument_list|)
+operator|.
+name|slice
+argument_list|(
+name|NumMDStrings
+argument_list|)
 return|;
 block|}
 specifier|const
@@ -909,18 +1068,92 @@ name|unsigned
 name|CstEnd
 parameter_list|)
 function_decl|;
+comment|/// Reorder the reachable metadata.
+comment|///
+comment|/// This is not just an optimization, but is mandatory for emitting MDString
+comment|/// correctly.
 name|void
-name|EnumerateMDNodeOperands
+name|organizeMetadata
+parameter_list|()
+function_decl|;
+comment|/// Drop the function tag from the transitive operands of the given node.
+name|void
+name|dropFunctionFromMetadata
+argument_list|(
+name|MetadataMapType
+operator|::
+name|value_type
+operator|&
+name|FirstMD
+argument_list|)
+decl_stmt|;
+comment|/// Incorporate the function metadata.
+comment|///
+comment|/// This should be called before enumerating LocalAsMetadata for the
+comment|/// function.
+name|void
+name|incorporateFunctionMetadata
 parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
+comment|/// Enumerate a single instance of metadata with the given function tag.
+comment|///
+comment|/// If \c MD has already been enumerated, check that \c F matches its
+comment|/// function tag.  If not, call \a dropFunctionFromMetadata().
+comment|///
+comment|/// Otherwise, mark \c MD as visited.  Assign it an ID, or just return it if
+comment|/// it's an \a MDNode.
 specifier|const
 name|MDNode
 modifier|*
-name|N
+name|enumerateMetadataImpl
+parameter_list|(
+name|unsigned
+name|F
+parameter_list|,
+specifier|const
+name|Metadata
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
+name|unsigned
+name|getMetadataFunctionID
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Enumerate reachable metadata in (almost) post-order.
+comment|///
+comment|/// Enumerate all the metadata reachable from MD.  We want to minimize the
+comment|/// cost of reading bitcode records, and so the primary consideration is that
+comment|/// operands of uniqued nodes are resolved before the nodes are read.  This
+comment|/// avoids re-uniquing them on the context and factors away RAUW support.
+comment|///
+comment|/// This algorithm guarantees that subgraphs of uniqued nodes are in
+comment|/// post-order.  Distinct subgraphs reachable only from a single uniqued node
+comment|/// will be in post-order.
+comment|///
+comment|/// \note The relative order of a distinct and uniqued node is irrelevant.
+comment|/// \a organizeMetadata() will later partition distinct nodes ahead of
+comment|/// uniqued ones.
+comment|///{
 name|void
 name|EnumerateMetadata
 parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|,
 specifier|const
 name|Metadata
 modifier|*
@@ -928,8 +1161,38 @@ name|MD
 parameter_list|)
 function_decl|;
 name|void
+name|EnumerateMetadata
+parameter_list|(
+name|unsigned
+name|F
+parameter_list|,
+specifier|const
+name|Metadata
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
+comment|///}
+name|void
 name|EnumerateFunctionLocalMetadata
 parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|LocalAsMetadata
+modifier|*
+name|Local
+parameter_list|)
+function_decl|;
+name|void
+name|EnumerateFunctionLocalMetadata
+parameter_list|(
+name|unsigned
+name|F
+parameter_list|,
 specifier|const
 name|LocalAsMetadata
 modifier|*

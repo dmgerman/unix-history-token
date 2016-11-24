@@ -88,7 +88,7 @@ argument|const std::string&MainFileName
 argument_list|,
 argument|const std::string&OutputFileName
 argument_list|,
-argument|llvm::raw_pwrite_stream *OS
+argument|std::unique_ptr<llvm::raw_pwrite_stream> OS
 argument_list|,
 argument|std::shared_ptr<PCHBuffer> Buffer
 argument_list|)

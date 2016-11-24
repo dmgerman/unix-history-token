@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_R600ISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_R600ISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_R600ISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_R600ISELLOWERING_H
 end_define
 
 begin_include
@@ -77,7 +77,11 @@ name|class
 name|R600InstrInfo
 decl_stmt|;
 name|class
+name|R600Subtarget
+decl_stmt|;
+name|class
 name|R600TargetLowering
+name|final
 range|:
 name|public
 name|AMDGPUTargetLowering
@@ -86,23 +90,31 @@ name|public
 operator|:
 name|R600TargetLowering
 argument_list|(
+specifier|const
 name|TargetMachine
 operator|&
 name|TM
 argument_list|,
 specifier|const
-name|AMDGPUSubtarget
+name|R600Subtarget
 operator|&
 name|STI
 argument_list|)
+block|;
+specifier|const
+name|R600Subtarget
+operator|*
+name|getSubtarget
+argument_list|()
+specifier|const
 block|;
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
-argument|MachineBasicBlock * BB
+argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
 name|override
@@ -150,7 +162,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -171,6 +183,20 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|unsigned AS
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool *IsFast
+argument_list|)
+specifier|const
+name|override
+block|;
 name|private
 operator|:
 name|unsigned
@@ -187,7 +213,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|EVT VT
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|unsigned DwordOffset
 argument_list|)
@@ -215,7 +241,7 @@ argument|SDValue Swz[]
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|)
 specifier|const
 block|;
@@ -225,6 +251,15 @@ argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue Vector
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFrameIndex
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -247,9 +282,30 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerGlobalAddress
+argument_list|(
+argument|AMDGPUMachineFunction *MFI
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
 name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerPrivateTruncStore
+argument_list|(
+argument|StoreSDNode *Store
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -265,7 +321,25 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFPTOUINT
+name|lowerFP_TO_UINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFP_TO_SINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerPrivateExtLoad
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -359,6 +433,41 @@ name|bool
 name|isZero
 argument_list|(
 argument|SDValue Op
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isHWTrueValue
+argument_list|(
+argument|SDValue Op
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isHWFalseValue
+argument_list|(
+argument|SDValue Op
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|FoldOperand
+argument_list|(
+argument|SDNode *ParentNode
+argument_list|,
+argument|unsigned SrcIdx
+argument_list|,
+argument|SDValue&Src
+argument_list|,
+argument|SDValue&Neg
+argument_list|,
+argument|SDValue&Abs
+argument_list|,
+argument|SDValue&Sel
+argument_list|,
+argument|SDValue&Imm
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;

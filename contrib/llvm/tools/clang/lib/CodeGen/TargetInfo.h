@@ -117,14 +117,14 @@ name|namespace
 name|clang
 block|{
 name|class
-name|ABIInfo
-decl_stmt|;
-name|class
 name|Decl
 decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
+name|class
+name|ABIInfo
+decl_stmt|;
 name|class
 name|CallArgList
 decl_stmt|;
@@ -137,7 +137,6 @@ decl_stmt|;
 name|class
 name|CGFunctionInfo
 decl_stmt|;
-block|}
 comment|/// TargetCodeGenInfo - This class organizes various target-specific
 comment|/// codegeneration issues, like target-specific attributes, builtins and so
 comment|/// on.
@@ -605,8 +604,17 @@ name|Opt
 argument_list|)
 decl|const
 block|{}
+comment|/// Get LLVM calling convention for OpenCL kernel.
+name|virtual
+name|unsigned
+name|getOpenCLKernelCallingConv
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
+block|}
+comment|// namespace CodeGen
 block|}
 end_decl_stmt
 

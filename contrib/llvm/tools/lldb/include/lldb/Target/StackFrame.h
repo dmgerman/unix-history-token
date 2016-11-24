@@ -57,6 +57,12 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -525,6 +531,8 @@ name|VariableListSP
 name|GetInScopeVariableList
 argument_list|(
 argument|bool get_file_globals
+argument_list|,
+argument|bool must_have_valid_location = false
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -788,6 +796,14 @@ name|LanguageType
 name|GetLanguage
 argument_list|()
 expr_stmt|;
+comment|// similar to GetLanguage(), but is allowed to take a potentially incorrect guess
+comment|// if exact information is not available
+name|lldb
+operator|::
+name|LanguageType
+name|GuessLanguage
+argument_list|()
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// lldb::ExecutionContextScope pure virtual functions
 comment|//------------------------------------------------------------------
@@ -929,9 +945,11 @@ comment|// Value objects for each variable in m_variable_list_sp
 name|StreamString
 name|m_disassembly
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|StackFrame

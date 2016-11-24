@@ -230,15 +230,24 @@ comment|// Kalimba: generic kalimba
 name|shave
 block|,
 comment|// SHAVE: Movidius vector VLIW processors
+name|lanai
+block|,
+comment|// Lanai: Lanai 32-bit
 name|wasm32
 block|,
 comment|// WebAssembly with 32-bit pointers
 name|wasm64
 block|,
 comment|// WebAssembly with 64-bit pointers
+name|renderscript32
+block|,
+comment|// 32-bit RenderScript
+name|renderscript64
+block|,
+comment|// 64-bit RenderScript
 name|LastArchType
 init|=
-name|wasm64
+name|renderscript64
 block|}
 enum|;
 enum|enum
@@ -251,6 +260,10 @@ block|,
 name|ARMSubArch_v8_1a
 block|,
 name|ARMSubArch_v8
+block|,
+name|ARMSubArch_v8m_baseline
+block|,
+name|ARMSubArch_v8m_mainline
 block|,
 name|ARMSubArch_v7
 block|,
@@ -312,9 +325,13 @@ name|CSR
 block|,
 name|Myriad
 block|,
+name|AMD
+block|,
+name|Mesa
+block|,
 name|LastVendorType
 init|=
-name|Myriad
+name|Mesa
 block|}
 enum|;
 enum|enum
@@ -384,9 +401,11 @@ comment|// Apple tvOS
 name|WatchOS
 block|,
 comment|// Apple watchOS
+name|Mesa3D
+block|,
 name|LastOSType
 init|=
-name|WatchOS
+name|Mesa3D
 block|}
 enum|;
 enum|enum
@@ -395,6 +414,8 @@ block|{
 name|UnknownEnvironment
 block|,
 name|GNU
+block|,
+name|GNUABI64
 block|,
 name|GNUEABI
 block|,
@@ -409,6 +430,12 @@ block|,
 name|EABIHF
 block|,
 name|Android
+block|,
+name|Musl
+block|,
+name|MuslEABI
+block|,
+name|MuslEABIHF
 block|,
 name|MSVC
 block|,
@@ -1087,7 +1114,7 @@ block|}
 comment|/// isMacOSXVersionLT - Comparison function for checking OS X version
 comment|/// compatibility, which handles supporting skewed version numbering schemes
 comment|/// used by the "darwin" triples.
-name|unsigned
+name|bool
 name|isMacOSXVersionLT
 argument_list|(
 name|unsigned
@@ -1231,6 +1258,20 @@ operator|::
 name|WatchOS
 return|;
 block|}
+name|bool
+name|isWatchABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ARMSubArch_v7k
+return|;
+block|}
 comment|/// isOSDarwin - Is this a "Darwin" OS (OS X, iOS, or watchOS).
 name|bool
 name|isOSDarwin
@@ -1344,6 +1385,49 @@ operator|==
 name|Triple
 operator|::
 name|ELFIAMCU
+return|;
+block|}
+name|bool
+name|isGNUEnvironment
+argument_list|()
+specifier|const
+block|{
+name|EnvironmentType
+name|Env
+operator|=
+name|getEnvironment
+argument_list|()
+block|;
+return|return
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNU
+operator|||
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNUABI64
+operator|||
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNUEABI
+operator|||
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNUEABIHF
+operator|||
+name|Env
+operator|==
+name|Triple
+operator|::
+name|GNUX32
 return|;
 block|}
 comment|/// Checks if the environment could be MSVC.
@@ -1559,6 +1643,43 @@ operator|::
 name|Linux
 return|;
 block|}
+comment|/// Tests whether the OS is kFreeBSD.
+name|bool
+name|isOSKFreeBSD
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|KFreeBSD
+return|;
+block|}
+comment|/// Tests whether the OS uses glibc.
+name|bool
+name|isOSGlibc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Linux
+operator|||
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|KFreeBSD
+return|;
+block|}
 comment|/// Tests whether the OS uses the ELF binary format.
 name|bool
 name|isOSBinFormatELF
@@ -1668,6 +1789,69 @@ operator|==
 name|Triple
 operator|::
 name|Android
+return|;
+block|}
+comment|/// Tests whether the environment is musl-libc
+name|bool
+name|isMusl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Musl
+operator|||
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABI
+operator|||
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MuslEABIHF
+return|;
+block|}
+comment|/// Tests whether the target is NVPTX (32- or 64-bit).
+name|bool
+name|isNVPTX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|nvptx
+operator|||
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|nvptx64
+return|;
+block|}
+comment|/// Tests wether the target supports comdat
+name|bool
+name|supportsCOMDAT
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isOSBinFormatMachO
+argument_list|()
 return|;
 block|}
 comment|/// @}
@@ -1842,6 +2026,14 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Tests whether the target triple is little endian.
+comment|///
+comment|/// \returns true if the triple is little endian, false otherwise.
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Static helpers for IDs.
 comment|/// @{

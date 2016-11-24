@@ -133,6 +133,23 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|enum
+name|class
+name|ObjSizeMode
+block|{
+name|Exact
+operator|=
+literal|0
+operator|,
+name|Min
+operator|=
+literal|1
+operator|,
+name|Max
+operator|=
+literal|2
+block|}
+empty_stmt|;
 comment|/// \brief Tests if a value is a call or invoke to a library function that
 comment|/// allocates or reallocates memory (either malloc, calloc, realloc, or strdup
 comment|/// like).
@@ -491,6 +508,8 @@ comment|/// object we mean the region of memory starting at Ptr to the end of th
 comment|/// underlying object pointed to by Ptr.
 comment|/// If RoundToAlign is true, then Size is rounded up to the aligment of allocas,
 comment|/// byval arguments, and global variables.
+comment|/// If Mode is Min or Max the size will be evaluated even if it depends on
+comment|/// a condition and corresponding value will be returned (min or max).
 name|bool
 name|getObjectSize
 parameter_list|(
@@ -517,6 +536,13 @@ name|bool
 name|RoundToAlign
 init|=
 name|false
+parameter_list|,
+name|ObjSizeMode
+name|Mode
+init|=
+name|ObjSizeMode
+operator|::
+name|Exact
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -555,6 +581,9 @@ name|TLI
 decl_stmt|;
 name|bool
 name|RoundToAlign
+decl_stmt|;
+name|ObjSizeMode
+name|Mode
 decl_stmt|;
 name|unsigned
 name|IntTyBits
@@ -609,6 +638,8 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|,
 argument|bool RoundToAlign = false
+argument_list|,
+argument|ObjSizeMode Mode = ObjSizeMode::Exact
 argument_list|)
 empty_stmt|;
 name|SizeOffsetType
@@ -619,9 +650,11 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+specifier|static
 name|bool
 name|knownSize
 parameter_list|(
+specifier|const
 name|SizeOffsetType
 modifier|&
 name|SizeOffset
@@ -638,9 +671,11 @@ operator|>
 literal|1
 return|;
 block|}
+specifier|static
 name|bool
 name|knownOffset
 parameter_list|(
+specifier|const
 name|SizeOffsetType
 modifier|&
 name|SizeOffset
@@ -657,9 +692,11 @@ operator|>
 literal|1
 return|;
 block|}
+specifier|static
 name|bool
 name|bothKnown
 parameter_list|(
+specifier|const
 name|SizeOffsetType
 modifier|&
 name|SizeOffset
@@ -825,8 +862,6 @@ block|{
 typedef|typedef
 name|IRBuilder
 operator|<
-name|true
-operator|,
 name|TargetFolder
 operator|>
 name|BuilderTy

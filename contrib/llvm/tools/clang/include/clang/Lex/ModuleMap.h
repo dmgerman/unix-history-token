@@ -171,6 +171,29 @@ argument_list|,
 argument|bool IsSystem
 argument_list|)
 block|{}
+comment|/// \brief Called when a header is added during module map parsing.
+comment|///
+comment|/// \param Filename The header file itself.
+name|virtual
+name|void
+name|moduleMapAddHeader
+argument_list|(
+argument|StringRef Filename
+argument_list|)
+block|{}
+comment|/// \brief Called when an umbrella header is added during module map parsing.
+comment|///
+comment|/// \param FileMgr FileManager instance
+comment|/// \param Header The umbrella header to collect.
+name|virtual
+name|void
+name|moduleMapAddUmbrellaHeader
+argument_list|(
+argument|FileManager *FileMgr
+argument_list|,
+argument|const FileEntry *Header
+argument_list|)
+block|{}
 block|}
 empty_stmt|;
 name|class
@@ -226,25 +249,12 @@ comment|/// These are always simple C language options.
 name|LangOptions
 name|MMapLangOpts
 decl_stmt|;
-comment|// The module that we are building; related to \c LangOptions::CurrentModule.
-name|Module
-modifier|*
-name|CompilingModule
-decl_stmt|;
-name|public
-label|:
-comment|// The module that the .cc source file is associated with.
+comment|// The module that the main source file is associated with (the module
+comment|// named LangOpts::CurrentModule, if we've loaded it).
 name|Module
 modifier|*
 name|SourceModule
 decl_stmt|;
-name|std
-operator|::
-name|string
-name|SourceModuleName
-expr_stmt|;
-name|private
-label|:
 comment|/// \brief The top-level modules that are known.
 name|llvm
 operator|::
@@ -424,6 +434,41 @@ argument_list|()
 operator|->
 name|isAvailable
 argument_list|()
+return|;
+block|}
+comment|/// \brief Whether this header is accessible from the specified module.
+name|bool
+name|isAccessibleFrom
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+operator|(
+name|getRole
+argument_list|()
+operator|&
+name|PrivateHeader
+operator|)
+operator|||
+operator|(
+name|M
+operator|&&
+name|M
+operator|->
+name|getTopLevelModule
+argument_list|()
+operator|==
+name|getModule
+argument_list|()
+operator|->
+name|getTopLevelModule
+argument_list|()
+operator|)
 return|;
 block|}
 comment|// \brief Whether this known header is valid (i.e., it has an
@@ -929,6 +974,11 @@ comment|/// \brief Reports errors if a module must not include a specific file.
 comment|///
 comment|/// \param RequestingModule The module including a file.
 comment|///
+comment|/// \param RequestingModuleIsModuleInterface \c true if the inclusion is in
+comment|///        the interface of RequestingModule, \c false if it's in the
+comment|///        implementation of RequestingModule. Value is ignored and
+comment|///        meaningless if RequestingModule is nullptr.
+comment|///
 comment|/// \param FilenameLoc The location of the inclusion's filename.
 comment|///
 comment|/// \param Filename The included filename as written.
@@ -940,6 +990,9 @@ parameter_list|(
 name|Module
 modifier|*
 name|RequestingModule
+parameter_list|,
+name|bool
+name|RequestingModuleIsModuleInterface
 parameter_list|,
 name|SourceLocation
 name|FilenameLoc

@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Argument.h"
 end_include
 
@@ -133,6 +127,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Optional
+expr_stmt|;
 name|class
 name|FunctionType
 decl_stmt|;
@@ -232,10 +234,6 @@ name|AttributeSet
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
-name|FunctionType
-modifier|*
-name|Ty
-decl_stmt|;
 comment|/*    * Value::SubclassData    *    * bit 0      : HasLazyArguments    * bit 1      : HasPrefixData    * bit 2      : HasPrologueData    * bit 3      : HasPersonalityFn    * bits 4-13  : CallingConvention    * bits 14    : HasGC    * bits 15 : [reserved]    */
 comment|/// Bits from GlobalObject::GlobalObjectSubclassData.
 enum|enum
@@ -243,47 +241,9 @@ block|{
 comment|/// Whether this function is materializable.
 name|IsMaterializableBit
 init|=
-literal|1
-operator|<<
 literal|0
-block|,
-name|HasMetadataHashEntryBit
-init|=
-literal|1
-operator|<<
-literal|1
-block|}
+block|,   }
 enum|;
-name|void
-name|setGlobalObjectBit
-parameter_list|(
-name|unsigned
-name|Mask
-parameter_list|,
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|setGlobalObjectSubClassData
-argument_list|(
-operator|(
-operator|~
-name|Mask
-operator|&
-name|getGlobalObjectSubClassData
-argument_list|()
-operator|)
-operator||
-operator|(
-name|Value
-condition|?
-name|Mask
-else|:
-literal|0u
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -303,6 +263,8 @@ comment|/// hasLazyArguments/CheckLazyArguments - The argument list of a functio
 comment|/// built on demand, so that the list isn't allocated until the first client
 comment|/// needs it.  The hasLazyArguments predicate returns true if the arg list
 comment|/// hasn't been set up yet.
+name|public
+label|:
 name|bool
 name|hasLazyArguments
 argument_list|()
@@ -319,6 +281,8 @@ literal|0
 operator|)
 return|;
 block|}
+name|private
+label|:
 name|void
 name|CheckLazyArguments
 argument_list|()
@@ -607,12 +571,12 @@ name|void
 name|setAttributes
 parameter_list|(
 name|AttributeSet
-name|attrs
+name|Attrs
 parameter_list|)
 block|{
 name|AttributeSets
 operator|=
-name|attrs
+name|Attrs
 expr_stmt|;
 block|}
 comment|/// @brief Add function attributes to this function.
@@ -650,7 +614,7 @@ argument_list|(
 name|Attribute
 operator|::
 name|AttrKind
-name|N
+name|Kind
 argument_list|)
 block|{
 name|setAttributes
@@ -666,7 +630,7 @@ name|AttributeSet
 operator|::
 name|FunctionIndex
 argument_list|,
-name|N
+name|Kind
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -758,12 +722,8 @@ block|{
 return|return
 name|AttributeSets
 operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Kind
 argument_list|)
 return|;
@@ -801,8 +761,6 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|AttributeSets
-operator|.
 name|getAttribute
 argument_list|(
 name|AttributeSet
@@ -822,8 +780,6 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|AttributeSets
-operator|.
 name|getAttribute
 argument_list|(
 name|AttributeSet
@@ -840,6 +796,19 @@ name|getFnStackAlignment
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|StackAlignment
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|AttributeSets
 operator|.
@@ -881,7 +850,6 @@ expr_stmt|;
 name|void
 name|setGC
 argument_list|(
-specifier|const
 name|std
 operator|::
 name|string
@@ -902,9 +870,20 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|attr
+name|Kind
 argument_list|)
 decl_stmt|;
+comment|/// @brief adds the attribute to the list of attributes.
+name|void
+name|addAttribute
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|Attribute
+name|Attr
+parameter_list|)
+function_decl|;
 comment|/// @brief adds the attributes to the list of attributes.
 name|void
 name|addAttributes
@@ -913,7 +892,31 @@ name|unsigned
 name|i
 parameter_list|,
 name|AttributeSet
-name|attrs
+name|Attrs
+parameter_list|)
+function_decl|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl_stmt|;
+comment|/// @brief removes the attribute from the list of attributes.
+name|void
+name|removeAttribute
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|StringRef
+name|Kind
 parameter_list|)
 function_decl|;
 comment|/// @brief removes the attributes from the list of attributes.
@@ -924,9 +927,81 @@ name|unsigned
 name|i
 parameter_list|,
 name|AttributeSet
-name|attr
+name|Attrs
 parameter_list|)
 function_decl|;
+comment|/// @brief check if an attributes is in the list of attributes.
+name|bool
+name|hasAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAttributes
+argument_list|()
+operator|.
+name|hasAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+name|Attribute
+name|getAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
+name|Attribute
+name|getAttribute
+argument_list|(
+name|unsigned
+name|i
+argument_list|,
+name|StringRef
+name|Kind
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
 comment|/// @brief adds the dereferenceable attribute to the list of attributes.
 name|void
 name|addDereferenceableAttr
@@ -1013,14 +1088,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|ReadNone
@@ -1049,14 +1118,8 @@ return|return
 name|doesNotAccessMemory
 argument_list|()
 operator|||
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|ReadOnly
@@ -1075,6 +1138,36 @@ name|ReadOnly
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// @brief Determine if the function does not access or only writes memory.
+name|bool
+name|doesNotReadMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|doesNotAccessMemory
+argument_list|()
+operator|||
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+return|;
+block|}
+name|void
+name|setDoesNotReadMemory
+parameter_list|()
+block|{
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|WriteOnly
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// @brief Determine if the call can access memmory only using pointers based
 comment|/// on its arguments.
 name|bool
@@ -1083,14 +1176,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|ArgMemOnly
@@ -1117,14 +1204,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|InaccessibleMemOnly
@@ -1151,14 +1232,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|InaccessibleMemOrArgMemOnly
@@ -1184,14 +1259,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|NoReturn
@@ -1217,14 +1286,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|NoUnwind
@@ -1250,14 +1313,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|NoDuplicate
@@ -1283,14 +1340,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|Convergent
@@ -1309,6 +1360,18 @@ name|Convergent
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|setNotConvergent
+parameter_list|()
+block|{
+name|removeFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|Convergent
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Determine if the function is known not to recurse, directly or
 comment|/// indirectly.
 name|bool
@@ -1317,14 +1380,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|NoRecurse
@@ -1351,14 +1408,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttributeSets
-operator|.
-name|hasAttribute
+name|hasFnAttribute
 argument_list|(
-name|AttributeSet
-operator|::
-name|FunctionIndex
-argument_list|,
 name|Attribute
 operator|::
 name|UWTable
@@ -1663,6 +1714,18 @@ name|eraseFromParent
 argument_list|()
 name|override
 expr_stmt|;
+comment|/// Steal arguments from another function.
+comment|///
+comment|/// Drop this function's arguments and splice in the ones from \c Src.
+comment|/// Requires that this has no function body.
+name|void
+name|stealArgumentListFrom
+parameter_list|(
+name|Function
+modifier|&
+name|Src
+parameter_list|)
+function_decl|;
 comment|/// Get the underlying elements of the Function... the basic block list is
 comment|/// empty for external functions.
 comment|///
@@ -2125,6 +2188,33 @@ modifier|*
 name|PrologueData
 parameter_list|)
 function_decl|;
+comment|/// Print the function to an output stream with an optional
+comment|/// AssemblyAnnotationWriter.
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|AssemblyAnnotationWriter
+operator|*
+name|AAW
+operator|=
+name|nullptr
+argument_list|,
+name|bool
+name|ShouldPreserveUseListOrder
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsForDebug
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// viewCFG - This function is meant for use from the debugger.  You can just
 comment|/// say 'call F->viewCFG()' and a ghostview window should pop up from the
 comment|/// program, displaying the CFG of the current function with the code for each
@@ -2217,101 +2307,6 @@ name|callsFunctionThatReturnsTwice
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Check if this has any metadata.
-name|bool
-name|hasMetadata
-argument_list|()
-specifier|const
-block|{
-return|return
-name|hasMetadataHashEntry
-argument_list|()
-return|;
-block|}
-comment|/// \brief Get the current metadata attachment, if any.
-comment|///
-comment|/// Returns \c nullptr if such an attachment is missing.
-comment|/// @{
-name|MDNode
-modifier|*
-name|getMetadata
-argument_list|(
-name|unsigned
-name|KindID
-argument_list|)
-decl|const
-decl_stmt|;
-name|MDNode
-modifier|*
-name|getMetadata
-argument_list|(
-name|StringRef
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @}
-comment|/// \brief Set a particular kind of metadata attachment.
-comment|///
-comment|/// Sets the given attachment to \c MD, erasing it if \c MD is \c nullptr or
-comment|/// replacing it if it already exists.
-comment|/// @{
-name|void
-name|setMetadata
-parameter_list|(
-name|unsigned
-name|KindID
-parameter_list|,
-name|MDNode
-modifier|*
-name|MD
-parameter_list|)
-function_decl|;
-name|void
-name|setMetadata
-parameter_list|(
-name|StringRef
-name|Kind
-parameter_list|,
-name|MDNode
-modifier|*
-name|MD
-parameter_list|)
-function_decl|;
-comment|/// @}
-comment|/// \brief Get all current metadata attachments.
-name|void
-name|getAllMetadata
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|MDNode
-operator|*
-operator|>>
-operator|&
-name|MDs
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Drop metadata not in the given list.
-comment|///
-comment|/// Drop all metadata from \c this not included in \c KnownIDs.
-name|void
-name|dropUnknownMetadata
-argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|KnownIDs
-argument_list|)
-decl_stmt|;
 comment|/// \brief Set the attached subprogram.
 comment|///
 comment|/// Calls \a setMetadata() with \a LLVMContext::MD_dbg.
@@ -2380,39 +2375,14 @@ name|bool
 name|On
 parameter_list|)
 function_decl|;
-name|bool
-name|hasMetadataHashEntry
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getGlobalObjectSubClassData
-argument_list|()
-operator|&
-name|HasMetadataHashEntryBit
-return|;
 block|}
-name|void
-name|setHasMetadataHashEntry
-parameter_list|(
-name|bool
-name|HasEntry
-parameter_list|)
-block|{
-name|setGlobalObjectBit
-argument_list|(
-name|HasMetadataHashEntryBit
-argument_list|,
-name|HasEntry
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|clearMetadata
-parameter_list|()
-function_decl|;
-block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2429,16 +2399,19 @@ literal|3
 operator|>
 block|{}
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|Function
 argument_list|,
 argument|Value
 argument_list|)
-block|}
-end_decl_stmt
+end_macro
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

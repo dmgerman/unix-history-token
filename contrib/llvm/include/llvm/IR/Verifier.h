@@ -90,13 +90,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_decl_stmt
@@ -114,9 +108,6 @@ name|ModulePass
 decl_stmt|;
 name|class
 name|Module
-decl_stmt|;
-name|class
-name|PreservedAnalyses
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -144,9 +135,14 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Check a module for errors.
 comment|///
-comment|/// If there are no errors, the function returns false. If an error is found,
-comment|/// a message describing the error is written to OS (if non-null) and true is
-comment|/// returned.
+comment|/// If there are no errors, the function returns false. If an error is
+comment|/// found, a message describing the error is written to OS (if
+comment|/// non-null) and true is returned.
+comment|///
+comment|/// \return true if the module is broken. If BrokenDebugInfo is
+comment|/// supplied, DebugInfo verification failures won't be considered as
+comment|/// error and instead *BrokenDebugInfo will be set to true. Debug
+comment|/// info errors can be "recovered" from by stripping the debug info.
 name|bool
 name|verifyModule
 parameter_list|(
@@ -160,6 +156,112 @@ modifier|*
 name|OS
 init|=
 name|nullptr
+parameter_list|,
+name|bool
+modifier|*
+name|BrokenDebugInfo
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createVerifierPass
+parameter_list|(
+name|bool
+name|FatalErrors
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// Check a module for errors, and report separate error states for IR
+comment|/// and debug info errors.
+name|class
+name|VerifierAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|VerifierAnalysis
+operator|>
+block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|VerifierAnalysis
+operator|>
+block|;
+specifier|static
+name|char
+name|PassID
+block|;
+name|public
+operator|:
+expr|struct
+name|Result
+block|{
+name|bool
+name|IRBroken
+block|,
+name|DebugInfoBroken
+block|;   }
+block|;
+specifier|static
+name|void
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|PassID
+return|;
+block|}
+name|Result
+name|run
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+argument_list|)
+block|;
+name|Result
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// Check a module for errors, but report debug info errors separately.
+comment|/// Otherwise behaves as the normal verifyModule. Debug info errors can be
+comment|/// "recovered" from by stripping the debug info.
+name|bool
+name|verifyModule
+parameter_list|(
+name|bool
+modifier|&
+name|BrokenDebugInfo
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|,
+name|raw_ostream
+modifier|*
+name|OS
 parameter_list|)
 function_decl|;
 comment|/// \brief Create a verifier pass.
@@ -172,30 +274,26 @@ comment|/// passing \c false to \p FatalErrors.
 comment|///
 comment|/// Note that this creates a pass suitable for the legacy pass manager. It has
 comment|/// nothing to do with \c VerifierPass.
-name|FunctionPass
-modifier|*
-name|createVerifierPass
-parameter_list|(
-name|bool
-name|FatalErrors
-init|=
-name|true
-parameter_list|)
-function_decl|;
 name|class
 name|VerifierPass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|VerifierPass
+operator|>
 block|{
 name|bool
 name|FatalErrors
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|explicit
 name|VerifierPass
 argument_list|(
 argument|bool FatalErrors = true
 argument_list|)
-block|:
+operator|:
 name|FatalErrors
 argument_list|(
 argument|FatalErrors
@@ -203,31 +301,29 @@ argument_list|)
 block|{}
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
+argument_list|,
+name|ModuleAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|;
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"VerifierPass"
-return|;
-block|}
-block|}
-empty_stmt|;
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+name|AM
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

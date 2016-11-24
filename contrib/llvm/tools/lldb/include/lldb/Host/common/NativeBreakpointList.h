@@ -55,12 +55,6 @@ directive|include
 file|"lldb/Core/Error.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
 begin_comment
 comment|// #include "lldb/Host/NativeBreakpoint.h"
 end_comment
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
 end_include
 
 begin_decl_stmt
@@ -197,9 +197,11 @@ name|NativeBreakpointSP
 operator|>
 name|BreakpointMap
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|BreakpointMap
 name|m_breakpoints
 decl_stmt|;

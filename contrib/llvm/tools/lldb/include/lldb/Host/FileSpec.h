@@ -287,6 +287,26 @@ operator|~
 name|FileSpec
 argument_list|()
 expr_stmt|;
+name|bool
+name|DirectoryEquals
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|other
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|FileEquals
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|other
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Assignment operator.
 comment|///
@@ -507,6 +527,24 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Case sensitivity of path.
+comment|///
+comment|/// @return
+comment|///     \b true if the file path is case sensitive (POSIX), false
+comment|///		if case insensitive (Windows).
+comment|//------------------------------------------------------------------
+name|bool
+name|IsCaseSensitive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_syntax
+operator|!=
+name|ePathSyntaxWindows
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Dump this object to a Stream.
 comment|///

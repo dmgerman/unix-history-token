@@ -124,10 +124,6 @@ block|{
 name|class
 name|MachineRegisterInfo
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|rdf
 block|{
@@ -269,6 +265,14 @@ decl_stmt|;
 name|Liveness
 name|LV
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|SetQueue
+expr_stmt|;
 name|bool
 name|isLiveInstr
 argument_list|(
@@ -289,7 +293,7 @@ operator|*
 operator|>
 name|IA
 argument_list|,
-name|SetVector
+name|SetQueue
 operator|<
 name|NodeId
 operator|>
@@ -307,7 +311,7 @@ operator|*
 operator|>
 name|DA
 argument_list|,
-name|SetVector
+name|SetQueue
 operator|<
 name|NodeId
 operator|>
@@ -325,7 +329,7 @@ operator|*
 operator|>
 name|UA
 argument_list|,
-name|SetVector
+name|SetQueue
 operator|<
 name|NodeId
 operator|>
@@ -336,7 +340,13 @@ decl_stmt|;
 block|}
 struct|;
 block|}
+comment|// namespace rdf
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

@@ -296,7 +296,7 @@ block|;     }
 name|bool
 name|Install
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|)

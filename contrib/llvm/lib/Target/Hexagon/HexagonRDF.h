@@ -56,10 +56,6 @@ block|{
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|namespace
 name|rdf
 block|{
@@ -104,7 +100,13 @@ name|override
 block|;   }
 decl_stmt|;
 block|}
+comment|// namespace rdf
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

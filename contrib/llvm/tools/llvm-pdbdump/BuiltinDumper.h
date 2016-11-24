@@ -46,12 +46,21 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/DebugInfo/PDB/PDBSymDumper.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
+block|{
+name|namespace
+name|pdb
 block|{
 name|class
 name|LinePrinter
@@ -96,6 +105,7 @@ operator|&
 name|Printer
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

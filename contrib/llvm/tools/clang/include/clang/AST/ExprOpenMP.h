@@ -351,6 +351,7 @@ specifier|static
 name|QualType
 name|getBaseOriginalType
 argument_list|(
+specifier|const
 name|Expr
 operator|*
 name|Base

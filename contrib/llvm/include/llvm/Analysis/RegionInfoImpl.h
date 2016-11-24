@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
@@ -4194,7 +4188,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|XDEBUG
+name|EXPENSIVE_CHECKS
 end_ifdef
 
 begin_expr_stmt
@@ -4722,7 +4716,7 @@ begin_ifdef
 unit|}
 ifdef|#
 directive|ifdef
-name|XDEBUG
+name|EXPENSIVE_CHECKS
 end_ifdef
 
 begin_expr_stmt
@@ -4921,7 +4915,7 @@ name|verifyAnalysis
 argument_list|()
 specifier|const
 block|{
-comment|// Do only verify regions if explicitely activated using XDEBUG or
+comment|// Do only verify regions if explicitely activated using EXPENSIVE_CHECKS or
 comment|// -verify-region-info
 if|if
 condition|(

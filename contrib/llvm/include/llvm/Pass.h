@@ -122,12 +122,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -737,6 +731,17 @@ operator|~
 name|ModulePass
 argument_list|()
 name|override
+block|;
+name|protected
+operator|:
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when optimization bisect is over the limit.
+name|bool
+name|skipModule
+argument_list|(
+argument|Module&M
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -882,10 +887,11 @@ name|override
 block|;
 name|protected
 operator|:
-comment|/// skipOptnoneFunction - This function has Attribute::OptimizeNone
-comment|/// and most transformation passes should skip it.
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when Attribute::OptimizeNone is set or when
+comment|/// optimization bisect is over the limit.
 name|bool
-name|skipOptnoneFunction
+name|skipFunction
 argument_list|(
 argument|const Function&F
 argument_list|)
@@ -1005,10 +1011,11 @@ name|override
 block|;
 name|protected
 operator|:
-comment|/// skipOptnoneFunction - Containing function has Attribute::OptimizeNone
-comment|/// and most transformation passes should skip it.
+comment|/// Optional passes call this function to check whether the pass should be
+comment|/// skipped. This is the case when Attribute::OptimizeNone is set or when
+comment|/// optimization bisect is over the limit.
 name|bool
-name|skipOptnoneFunction
+name|skipBasicBlock
 argument_list|(
 argument|const BasicBlock&BB
 argument_list|)

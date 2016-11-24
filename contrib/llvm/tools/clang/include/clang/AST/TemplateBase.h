@@ -1226,6 +1226,22 @@ name|Out
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Debugging aid that dumps the template argument.
+name|void
+name|dump
+argument_list|(
+name|raw_ostream
+operator|&
+name|Out
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Debugging aid that dumps the template argument to standard error.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Used to insert TemplateArguments into FoldingSets.
 name|void
 name|Profile

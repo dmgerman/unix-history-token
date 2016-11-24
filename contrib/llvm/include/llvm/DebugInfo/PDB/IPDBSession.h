@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
@@ -64,6 +70,9 @@ end_include
 begin_decl_stmt
 name|namespace
 name|llvm
+block|{
+name|namespace
+name|pdb
 block|{
 name|class
 name|PDBSymbolCompiland
@@ -227,11 +236,102 @@ name|unique_ptr
 operator|<
 name|IPDBEnumLineNumbers
 operator|>
+name|findLineNumbers
+argument_list|(
+argument|const PDBSymbolCompiland&Compiland
+argument_list|,
+argument|const IPDBSourceFile&File
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumLineNumbers
+operator|>
 name|findLineNumbersByAddress
 argument_list|(
 argument|uint64_t Address
 argument_list|,
 argument|uint32_t Length
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumSourceFiles
+operator|>
+name|findSourceFiles
+argument_list|(
+argument|const PDBSymbolCompiland *Compiland
+argument_list|,
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBSourceFile
+operator|>
+name|findOneSourceFile
+argument_list|(
+argument|const PDBSymbolCompiland *Compiland
+argument_list|,
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumChildren
+operator|<
+name|PDBSymbolCompiland
+operator|>>
+name|findCompilandsForSourceFile
+argument_list|(
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbolCompiland
+operator|>
+name|findOneCompilandForSourceFile
+argument_list|(
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
 argument_list|)
 specifier|const
 operator|=
@@ -294,11 +394,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
+block|}
+end_decl_stmt
 
 begin_endif
 unit|}

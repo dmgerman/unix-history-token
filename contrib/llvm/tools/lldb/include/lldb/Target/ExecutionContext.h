@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Target/StackID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -748,9 +748,14 @@ name|ExecutionContextRef
 operator|&
 name|exe_ctx_ref
 argument_list|,
-name|Mutex
+name|std
 operator|::
-name|Locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
 operator|&
 name|locker
 argument_list|)
@@ -762,9 +767,14 @@ name|ExecutionContextRef
 operator|*
 name|exe_ctx_ref
 argument_list|,
-name|Mutex
+name|std
 operator|::
-name|Locker
+name|unique_lock
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
 operator|&
 name|locker
 argument_list|)

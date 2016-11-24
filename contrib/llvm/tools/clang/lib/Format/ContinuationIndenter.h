@@ -129,7 +129,7 @@ argument|const FormatStyle&Style
 argument_list|,
 argument|const AdditionalKeywords&Keywords
 argument_list|,
-argument|SourceManager&SourceMgr
+argument|const SourceManager&SourceMgr
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|,
@@ -399,6 +399,7 @@ name|AdditionalKeywords
 modifier|&
 name|Keywords
 decl_stmt|;
+specifier|const
 name|SourceManager
 modifier|&
 name|SourceMgr

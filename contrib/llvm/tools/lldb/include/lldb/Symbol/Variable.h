@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/RangeMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/UserID.h"
 end_include
 
@@ -115,6 +121,19 @@ decl|>
 block|{
 name|public
 label|:
+typedef|typedef
+name|RangeVector
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|>
+name|RangeList
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -132,6 +151,8 @@ argument_list|,
 argument|lldb::ValueType scope
 argument_list|,
 argument|SymbolContextScope *owner_scope
+argument_list|,
+argument|const RangeList& scope_range
 argument_list|,
 argument|Declaration* decl
 argument_list|,
@@ -481,6 +502,10 @@ modifier|*
 name|m_owner_scope
 decl_stmt|;
 comment|// The symbol file scope that this variable was defined in
+name|RangeList
+name|m_scope_range
+decl_stmt|;
+comment|// The list of ranges inside the owner's scope where this variable is valid
 name|Declaration
 name|m_declaration
 decl_stmt|;

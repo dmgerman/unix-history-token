@@ -43,6 +43,12 @@ directive|define
 name|LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMPARSERCOMMON_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

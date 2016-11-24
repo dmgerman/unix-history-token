@@ -55,6 +55,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugInfoMetadata.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -64,12 +70,6 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
-decl_stmt|;
-name|class
-name|DILocalVariable
-decl_stmt|;
-name|class
-name|DILocation
 decl_stmt|;
 name|class
 name|TargetRegisterInfo

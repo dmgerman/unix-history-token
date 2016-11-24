@@ -100,6 +100,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineInstrBuilder
+decl_stmt|;
+name|class
 name|X86RegisterInfo
 decl_stmt|;
 name|class
@@ -182,13 +185,13 @@ init|=
 name|COND_S
 block|,
 comment|// Artificial condition codes. These are used by AnalyzeBranch
-comment|// to indicate a block terminated with two conditional branches to
-comment|// the same location. This occurs in code using FCMP_OEQ or FCMP_UNE,
+comment|// to indicate a block terminated with two conditional branches that together
+comment|// form a compound condition. They occur in code using FCMP_OEQ or FCMP_UNE,
 comment|// which can't be represented on x86 with a single condition. These
-comment|// are never used in MachineInstrs.
+comment|// are never used in MachineInstrs and are inverses of one another.
 name|COND_NE_OR_P
 block|,
-name|COND_NP_OR_E
+name|COND_E_AND_NP
 block|,
 name|COND_INVALID
 block|}
@@ -298,12 +301,6 @@ operator|::
 name|MO_DARWIN_NONLAZY
 case|:
 comment|// Normal $non_lazy_ptr ref.
-case|case
-name|X86II
-operator|::
-name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
-case|:
-comment|// Hidden $non_lazy_ptr ref.
 return|return
 name|true
 return|;
@@ -355,12 +352,6 @@ operator|::
 name|MO_DARWIN_NONLAZY_PIC_BASE
 case|:
 comment|// Darwin/32 external global.
-case|case
-name|X86II
-operator|::
-name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
-case|:
-comment|// Darwin/32 hidden global.
 case|case
 name|X86II
 operator|::
@@ -431,7 +422,7 @@ name|isLeaMem
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned
@@ -441,7 +432,7 @@ block|{
 if|if
 condition|(
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -461,12 +452,12 @@ operator|::
 name|AddrSegmentReg
 operator|<=
 name|MI
-operator|->
+operator|.
 name|getNumOperands
 argument_list|()
 operator|&&
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -482,7 +473,7 @@ operator|&&
 name|isScale
 argument_list|(
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -494,7 +485,7 @@ argument_list|)
 argument_list|)
 operator|&&
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -509,7 +500,7 @@ argument_list|()
 operator|&&
 operator|(
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -523,7 +514,7 @@ name|isImm
 argument_list|()
 operator|||
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -537,7 +528,7 @@ name|isGlobal
 argument_list|()
 operator|||
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -551,7 +542,7 @@ name|isCPI
 argument_list|()
 operator|||
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -573,7 +564,7 @@ name|isMem
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned
@@ -583,7 +574,7 @@ block|{
 if|if
 condition|(
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -603,12 +594,12 @@ operator|::
 name|AddrNumOperands
 operator|<=
 name|MI
-operator|->
+operator|.
 name|getNumOperands
 argument_list|()
 operator|&&
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|Op
@@ -656,9 +647,9 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|uint16_t
 operator|,
-name|unsigned
+name|uint16_t
 operator|>
 expr|>
 name|RegOp2MemOpTableType
@@ -692,9 +683,9 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|uint16_t
 operator|,
-name|unsigned
+name|uint16_t
 operator|>
 expr|>
 name|MemOp2RegOpTableType
@@ -714,13 +705,13 @@ name|MemOp2RegOpTableType
 modifier|&
 name|M2RTable
 parameter_list|,
-name|unsigned
+name|uint16_t
 name|RegOp
 parameter_list|,
-name|unsigned
+name|uint16_t
 name|MemOp
 parameter_list|,
-name|unsigned
+name|uint16_t
 name|Flags
 parameter_list|)
 function_decl|;
@@ -799,7 +790,7 @@ name|getSPAdjust
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -839,7 +830,7 @@ name|isLoadFromStackSlot
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|int
@@ -857,7 +848,7 @@ name|isLoadFromStackSlotPostFE
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|int
@@ -872,7 +863,7 @@ name|isStoreToStackSlot
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|int
@@ -890,7 +881,7 @@ name|isStoreToStackSlotPostFE
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|int
@@ -905,7 +896,7 @@ name|isReallyTriviallyReMaterializable
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|AliasAnalysis
@@ -935,7 +926,7 @@ name|SubIdx
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|Orig
 argument_list|,
 specifier|const
@@ -958,7 +949,7 @@ name|bool
 name|classifyLEAReg
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
@@ -987,6 +978,10 @@ argument_list|,
 name|MachineOperand
 operator|&
 name|ImplicitOp
+argument_list|,
+name|LiveVariables
+operator|*
+name|LV
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1010,11 +1005,9 @@ name|iterator
 operator|&
 name|MFI
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|MachineInstr
 operator|&
-name|MBBI
+name|MI
 argument_list|,
 name|LiveVariables
 operator|*
@@ -1042,7 +1035,7 @@ name|bool
 name|findCommutedOpIndices
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1082,7 +1075,7 @@ name|bool
 name|findFMA3CommutedOpIndices
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1109,7 +1102,7 @@ name|unsigned
 name|getFMA3OpcodeToCommuteOperands
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1126,14 +1119,14 @@ name|isUnpredicatedTerminator
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
 name|override
 decl_stmt|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 name|MachineBasicBlock
 operator|&
@@ -1166,14 +1159,14 @@ name|bool
 name|getMemOpBaseRegImmOfs
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|LdSt
 argument_list|,
 name|unsigned
 operator|&
 name|BaseReg
 argument_list|,
-name|unsigned
+name|int64_t
 operator|&
 name|Offset
 argument_list|,
@@ -1186,7 +1179,7 @@ decl|const
 name|override
 decl_stmt|;
 name|bool
-name|AnalyzeBranchPredicate
+name|analyzeBranchPredicate
 argument_list|(
 name|MachineBasicBlock
 operator|&
@@ -1237,7 +1230,9 @@ name|MachineOperand
 operator|>
 name|Cond
 argument_list|,
+specifier|const
 name|DebugLoc
+operator|&
 name|DL
 argument_list|)
 decl|const
@@ -1284,7 +1279,9 @@ operator|::
 name|iterator
 name|MI
 argument_list|,
+specifier|const
 name|DebugLoc
+operator|&
 name|DL
 argument_list|,
 name|unsigned
@@ -1317,7 +1314,9 @@ operator|::
 name|iterator
 name|MI
 argument_list|,
+specifier|const
 name|DebugLoc
+operator|&
 name|DL
 argument_list|,
 name|unsigned
@@ -1487,9 +1486,8 @@ decl_stmt|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|MachineInstr
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -1510,7 +1508,7 @@ operator|&
 name|MF
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|ArrayRef
@@ -1526,6 +1524,12 @@ name|InsertPt
 argument_list|,
 name|int
 name|FrameIndex
+argument_list|,
+name|LiveIntervals
+operator|*
+name|LIS
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 name|override
@@ -1542,7 +1546,7 @@ operator|&
 name|MF
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|ArrayRef
@@ -1557,8 +1561,14 @@ name|iterator
 name|InsertPt
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|LoadMI
+argument_list|,
+name|LiveIntervals
+operator|*
+name|LIS
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 name|override
@@ -1574,7 +1584,7 @@ operator|&
 name|MF
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1708,11 +1718,11 @@ name|bool
 name|shouldScheduleAdjacent
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|First
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|Second
 argument_list|)
 decl|const
@@ -1778,7 +1788,7 @@ name|bool
 name|hasLiveCondCodeDef
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl|const
@@ -1806,7 +1816,7 @@ name|uint16_t
 operator|>
 name|getExecutionDomain
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -1815,7 +1825,7 @@ name|void
 name|setExecutionDomain
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1829,7 +1839,7 @@ name|getPartialRegUpdateClearance
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1848,7 +1858,7 @@ name|getUndefRegClearance
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1866,9 +1876,8 @@ decl_stmt|;
 name|void
 name|breakPartialRegDependency
 argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|MachineInstr
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1891,7 +1900,7 @@ operator|&
 name|MF
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -1974,7 +1983,7 @@ name|MRI
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|DefMI
 argument_list|,
 name|unsigned
@@ -1982,7 +1991,7 @@ name|DefIdx
 argument_list|,
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|UseMI
 argument_list|,
 name|unsigned
@@ -2059,7 +2068,7 @@ name|analyzeCompare
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -2088,7 +2097,7 @@ name|bool
 name|optimizeCompareInstr
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|CmpInstr
 argument_list|,
 name|unsigned
@@ -2123,7 +2132,7 @@ modifier|*
 name|optimizeLoadInstr
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
@@ -2193,7 +2202,7 @@ modifier|*
 name|commuteInstructionImpl
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|bool
@@ -2223,11 +2232,9 @@ name|iterator
 operator|&
 name|MFI
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|MachineInstr
 operator|&
-name|MBBI
+name|MI
 argument_list|,
 name|LiveVariables
 operator|*
@@ -2246,7 +2253,7 @@ operator|&
 name|MF
 argument_list|,
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -2278,7 +2285,7 @@ name|isFrameOperand
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -2288,6 +2295,16 @@ argument_list|,
 name|int
 operator|&
 name|FrameIndex
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Expand the MOVImmSExti8 pseudo-instructions.
+name|bool
+name|ExpandMOVImmSExti8
+argument_list|(
+name|MachineInstrBuilder
+operator|&
+name|MIB
 argument_list|)
 decl|const
 decl_stmt|;

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -86,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
+file|"lldb/Utility/Iterable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Utility/Iterable.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_decl_stmt
@@ -408,7 +414,9 @@ modifier|*
 name|prefix_cstr
 parameter_list|)
 function_decl|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -891,6 +899,16 @@ argument_list|,
 name|size_t
 name|max_matches
 argument_list|,
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|SymbolFile
+operator|*
+operator|>
+operator|&
+name|searched_symbol_files
+argument_list|,
 name|TypeList
 operator|&
 name|types
@@ -1320,9 +1338,11 @@ name|m_modules
 decl_stmt|;
 comment|///< The collection of modules.
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_modules_mutex
-decl_stmt|;
+expr_stmt|;
 name|Notifier
 modifier|*
 name|m_notifier
@@ -1339,6 +1359,10 @@ operator|::
 name|ModuleSP
 operator|,
 name|vector_adapter
+operator|,
+name|std
+operator|::
+name|recursive_mutex
 operator|>
 name|ModuleIterable
 expr_stmt|;

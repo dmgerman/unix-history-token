@@ -117,6 +117,9 @@ comment|///< .no_dead_strip (MachO)
 name|MCSA_SymbolResolver
 block|,
 comment|///< .symbol_resolver (MachO)
+name|MCSA_AltEntry
+block|,
+comment|///< .alt_entry (MachO)
 name|MCSA_PrivateExtern
 block|,
 comment|///< .private_extern (MachO)

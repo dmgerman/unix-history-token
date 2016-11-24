@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -82,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PassManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -89,7 +89,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// VecDesc - Describes a possible vectorization of a function.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
+comment|/// Describes a possible vectorization of a function.
 comment|/// Function 'VectorFnName' is equivalent to 'ScalarFnName' vectorized
 comment|/// by a factor 'VectorizationFactor'.
 struct|struct
@@ -110,9 +118,6 @@ name|VectorizationFactor
 decl_stmt|;
 block|}
 struct|;
-name|class
-name|PreservedAnalyses
-decl_stmt|;
 name|namespace
 name|LibFunc
 block|{
@@ -129,7 +134,7 @@ name|NumLibFuncs
 block|}
 enum|;
 block|}
-comment|/// \brief Implementation of the target library information.
+comment|/// Implementation of the target library information.
 comment|///
 comment|/// This class constructs tables that hold the target library information and
 comment|/// make it available. However, it is somewhat expensive to compute and only
@@ -305,9 +310,31 @@ name|VecDesc
 operator|>
 name|ScalarDescs
 expr_stmt|;
+comment|/// Return true if the function type FTy is valid for the library function
+comment|/// F, regardless of whether the function is available.
+name|bool
+name|isValidProtoForLibFunc
+argument_list|(
+specifier|const
+name|FunctionType
+operator|&
+name|FTy
+argument_list|,
+name|LibFunc
+operator|::
+name|Func
+name|F
+argument_list|,
+specifier|const
+name|DataLayout
+operator|*
+name|DL
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
-comment|/// \brief  List of known vector-functions libraries.
+comment|/// List of known vector-functions libraries.
 comment|///
 comment|/// The vector-functions library defines, which functions are vectorizable
 comment|/// and with which factor. The library can be specified by either frontend,
@@ -373,7 +400,7 @@ operator|&&
 name|TLI
 operator|)
 decl_stmt|;
-comment|/// \brief Searches for a particular function name.
+comment|/// Searches for a particular function name.
 comment|///
 comment|/// If it is one of the known library functions, return true and set F to the
 comment|/// corresponding value.
@@ -391,7 +418,28 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Forces a function to be marked as unavailable.
+comment|/// Searches for a particular function name, also checking that its type is
+comment|/// valid for the library function matching that name.
+comment|///
+comment|/// If it is one of the known library functions, return true and set F to the
+comment|/// corresponding value.
+name|bool
+name|getLibFunc
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|FDecl
+argument_list|,
+name|LibFunc
+operator|::
+name|Func
+operator|&
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Forces a function to be marked as unavailable.
 name|void
 name|setUnavailable
 argument_list|(
@@ -409,7 +457,7 @@ name|Unavailable
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Forces a function to be marked as available.
+comment|/// Forces a function to be marked as available.
 name|void
 name|setAvailable
 argument_list|(
@@ -427,8 +475,8 @@ name|StandardName
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Forces a function to be marked as available and provide an
-comment|/// alternate name that must be used.
+comment|/// Forces a function to be marked as available and provide an alternate name
+comment|/// that must be used.
 name|void
 name|setAvailableWithName
 argument_list|(
@@ -492,15 +540,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/// \brief Disables all builtins.
+comment|/// Disables all builtins.
 comment|///
 comment|/// This can be used for options like -fno-builtin.
 name|void
 name|disableAllFunctions
 parameter_list|()
 function_decl|;
-comment|/// addVectorizableFunctions - Add a set of scalar -> vector mappings,
-comment|/// queryable via getVectorizedFunction and getScalarizedFunction.
+comment|/// Add a set of scalar -> vector mappings, queryable via
+comment|/// getVectorizedFunction and getScalarizedFunction.
 name|void
 name|addVectorizableFunctions
 argument_list|(
@@ -521,8 +569,8 @@ name|VectorLibrary
 name|VecLib
 parameter_list|)
 function_decl|;
-comment|/// isFunctionVectorizable - Return true if the function F has a
-comment|/// vector equivalent with vectorization factor VF.
+comment|/// Return true if the function F has a vector equivalent with vectorization
+comment|/// factor VF.
 name|bool
 name|isFunctionVectorizable
 argument_list|(
@@ -547,8 +595,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// isFunctionVectorizable - Return true if the function F has a
-comment|/// vector equivalent with any vectorization factor.
+comment|/// Return true if the function F has a vector equivalent with any
+comment|/// vectorization factor.
 name|bool
 name|isFunctionVectorizable
 argument_list|(
@@ -557,9 +605,8 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getVectorizedFunction - Return the name of the equivalent of
-comment|/// F, vectorized with factor VF. If no such mapping exists,
-comment|/// return the empty string.
+comment|/// Return the name of the equivalent of F, vectorized with factor VF. If no
+comment|/// such mapping exists, return the empty string.
 name|StringRef
 name|getVectorizedFunction
 argument_list|(
@@ -571,8 +618,8 @@ name|VF
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isFunctionScalarizable - Return true if the function F has a
-comment|/// scalar equivalent, and set VF to be the vectorization factor.
+comment|/// Return true if the function F has a scalar equivalent, and set VF to be
+comment|/// the vectorization factor.
 name|bool
 name|isFunctionScalarizable
 argument_list|(
@@ -598,8 +645,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// getScalarizedFunction - Return the name of the equivalent of
-comment|/// F, scalarized. If no such mapping exists, return the empty string.
+comment|/// Return the name of the equivalent of F, scalarized. If no such mapping
+comment|/// exists, return the empty string.
 comment|///
 comment|/// Set VF to the vectorization factor.
 name|StringRef
@@ -616,7 +663,7 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// \brief Provides information about what library functions are available for
+comment|/// Provides information about what library functions are available for
 comment|/// the current target.
 comment|///
 comment|/// This both allows optimizations to handle them specially and frontends to
@@ -722,7 +769,7 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// \brief Searches for a particular function name.
+comment|/// Searches for a particular function name.
 comment|///
 comment|/// If it is one of the known library functions, return true and set F to the
 comment|/// corresponding value.
@@ -751,7 +798,34 @@ name|F
 argument_list|)
 return|;
 block|}
-comment|/// \brief Tests whether a library function is available.
+name|bool
+name|getLibFunc
+argument_list|(
+specifier|const
+name|Function
+operator|&
+name|FDecl
+argument_list|,
+name|LibFunc
+operator|::
+name|Func
+operator|&
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+name|Impl
+operator|->
+name|getLibFunc
+argument_list|(
+name|FDecl
+argument_list|,
+name|F
+argument_list|)
+return|;
+block|}
+comment|/// Tests whether a library function is available.
 name|bool
 name|has
 argument_list|(
@@ -836,8 +910,8 @@ name|VF
 argument_list|)
 return|;
 block|}
-comment|/// \brief Tests if the function is both available and a candidate for
-comment|/// optimized code generation.
+comment|/// Tests if the function is both available and a candidate for optimized code
+comment|/// generation.
 name|bool
 name|hasOptimizedCodeGen
 argument_list|(
@@ -1224,7 +1298,7 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// \brief Handle invalidation from the pass manager.
+comment|/// Handle invalidation from the pass manager.
 comment|///
 comment|/// If we try to invalidate this info, just return false. It cannot become
 comment|/// invalid even if the module changes.
@@ -1245,43 +1319,33 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief Analysis pass providing the \c TargetLibraryInfo.
+comment|/// Analysis pass providing the \c TargetLibraryInfo.
 comment|///
 comment|/// Note that this pass's result cannot be invalidated, it is immutable for the
 comment|/// life of the module.
 name|class
 name|TargetLibraryAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|TargetLibraryAnalysis
+operator|>
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|TargetLibraryInfo
 name|Result
 typedef|;
-comment|/// \brief Opaque, unique identifier for this analysis pass.
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-comment|/// \brief Default construct the library analysis.
+comment|/// Default construct the library analysis.
 comment|///
 comment|/// This will use the module's triple to construct the library info for that
 comment|/// module.
 name|TargetLibraryAnalysis
 argument_list|()
 block|{}
-comment|/// \brief Construct a library analysis with preset info.
+comment|/// Construct a library analysis with preset info.
 comment|///
 comment|/// This will directly copy the preset info into the result without
 comment|/// consulting the module's triple.
@@ -1289,7 +1353,7 @@ name|TargetLibraryAnalysis
 argument_list|(
 argument|TargetLibraryInfoImpl PresetInfoImpl
 argument_list|)
-block|:
+operator|:
 name|PresetInfoImpl
 argument_list|(
 argument|std::move(PresetInfoImpl)
@@ -1314,16 +1378,23 @@ operator|.
 name|PresetInfoImpl
 argument_list|)
 argument_list|)
-operator|,
+decl_stmt|,
 name|Impls
 argument_list|(
-argument|std::move(Arg.Impls)
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|Impls
+argument_list|)
 argument_list|)
 block|{}
 name|TargetLibraryAnalysis
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 name|TargetLibraryAnalysis
 operator|&&
@@ -1363,6 +1434,9 @@ parameter_list|(
 name|Module
 modifier|&
 name|M
+parameter_list|,
+name|ModuleAnalysisManager
+modifier|&
 parameter_list|)
 function_decl|;
 name|TargetLibraryInfo
@@ -1371,20 +1445,19 @@ parameter_list|(
 name|Function
 modifier|&
 name|F
+parameter_list|,
+name|FunctionAnalysisManager
+modifier|&
 parameter_list|)
 function_decl|;
-comment|/// \brief Provide access to a name for this pass for debugging purposes.
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"TargetLibraryAnalysis"
-return|;
-block|}
 name|private
 label|:
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|TargetLibraryAnalysis
+operator|>
+expr_stmt|;
 specifier|static
 name|char
 name|PassID
@@ -1409,12 +1482,20 @@ name|TargetLibraryInfoImpl
 modifier|&
 name|lookupInfoImpl
 parameter_list|(
+specifier|const
 name|Triple
+modifier|&
 name|T
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|TargetLibraryInfoWrapperPass
 range|:

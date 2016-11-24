@@ -117,6 +117,13 @@ name|LLVMOpaqueUse
 modifier|*
 name|LLVMUseRef
 typedef|;
+comment|/**  * Used to represent an attributes.  *  * @see llvm::Attribute  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueAttributeRef
+modifier|*
+name|LLVMAttributeRef
+typedef|;
 comment|/**  * @see llvm::DiagnosticInfo  */
 typedef|typedef
 name|struct

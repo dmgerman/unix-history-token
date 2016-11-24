@@ -172,12 +172,13 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
+name|Optional
+operator|<
+name|MCFixupKind
+operator|>
 name|getFixupKind
 argument_list|(
 argument|StringRef Name
-argument_list|,
-argument|MCFixupKind&MappedKind
 argument_list|)
 specifier|const
 name|override
@@ -258,6 +259,8 @@ name|void
 name|relaxInstruction
 argument_list|(
 argument|const MCInst&Inst
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|MCInst&Res
 argument_list|)

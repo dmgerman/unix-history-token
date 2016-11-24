@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -1505,6 +1505,8 @@ comment|///
 comment|/// @param[in] module
 comment|///     The module to query TLS data for.
 comment|///
+comment|/// @param[in] tls_file_addr
+comment|///     The thread local address in module
 comment|/// @return
 comment|///     If the thread has TLS data allocated for the
 comment|///     module, the address of the TLS block. Otherwise
@@ -1517,6 +1519,8 @@ name|addr_t
 name|GetThreadLocalData
 argument_list|(
 argument|const lldb::ModuleSP module
+argument_list|,
+argument|lldb::addr_t tls_file_addr
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -2695,9 +2699,11 @@ name|m_state
 expr_stmt|;
 comment|///< The state of our process.
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_state_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< Multithreaded protection for m_state.
 name|plan_stack
 name|m_plan_stack
@@ -2712,9 +2718,11 @@ name|m_discarded_plan_stack
 decl_stmt|;
 comment|///< Plans that have been discarded by this stop.  They get deleted when the thread resumes.
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_frame_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< Multithreaded protection for m_state.
 name|lldb
 operator|::

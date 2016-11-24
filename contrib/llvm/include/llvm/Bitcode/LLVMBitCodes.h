@@ -123,7 +123,7 @@ name|USELIST_BLOCK_ID
 block|,
 name|MODULE_STRTAB_BLOCK_ID
 block|,
-name|FUNCTION_SUMMARY_BLOCK_ID
+name|GLOBALVAL_SUMMARY_BLOCK_ID
 block|,
 name|OPERAND_BUNDLE_TAGS_BLOCK_ID
 block|,
@@ -237,11 +237,25 @@ name|MODULE_CODE_ALIAS
 init|=
 literal|14
 block|,
-comment|// METADATA_VALUES: [numvals]
-name|MODULE_CODE_METADATA_VALUES
+name|MODULE_CODE_METADATA_VALUES_UNUSED
 init|=
 literal|15
-block|,   }
+block|,
+comment|// SOURCE_FILENAME: [namechar x N]
+name|MODULE_CODE_SOURCE_FILENAME
+init|=
+literal|16
+block|,
+comment|// HASH: [5*i32]
+name|MODULE_CODE_HASH
+init|=
+literal|17
+block|,
+comment|// IFUNC: [ifunc value type, addrspace, resolver val#, linkage, visibility]
+name|MODULE_CODE_IFUNC
+init|=
+literal|18
+block|, }
 enum|;
 comment|/// PARAMATTR blocks have code for defining a parameter attribute set.
 enum|enum
@@ -425,10 +439,10 @@ init|=
 literal|3
 block|,
 comment|// VST_FNENTRY: [valueid, offset, namechar x N]
-comment|// VST_COMBINED_FNENTRY: [offset, namechar x N]
-name|VST_CODE_COMBINED_FNENTRY
+comment|// VST_COMBINED_ENTRY: [valueid, refguid]
+name|VST_CODE_COMBINED_ENTRY
 init|=
-literal|4
+literal|5
 block|}
 enum|;
 comment|// The module path symbol table only has one code (MST_CODE_ENTRY).
@@ -440,29 +454,79 @@ init|=
 literal|1
 block|,
 comment|// MST_ENTRY: [modid, namechar x N]
-block|}
-enum|;
-comment|// The function summary section uses different codes in the per-module
-comment|// and combined index cases.
-enum|enum
-name|FunctionSummarySymtabCodes
-block|{
-name|FS_CODE_PERMODULE_ENTRY
-init|=
-literal|1
-block|,
-comment|// FS_ENTRY: [valueid, islocal, instcount]
-name|FS_CODE_COMBINED_ENTRY
+name|MST_CODE_HASH
 init|=
 literal|2
 block|,
-comment|// FS_ENTRY: [modid, instcount]
+comment|// MST_HASH:  [5*i32]
 block|}
+enum|;
+comment|// The summary section uses different codes in the per-module
+comment|// and combined index cases.
+enum|enum
+name|GlobalValueSummarySymtabCodes
+block|{
+comment|// PERMODULE: [valueid, flags, instcount, numrefs, numrefs x valueid,
+comment|//             n x (valueid, callsitecount)]
+name|FS_PERMODULE
+init|=
+literal|1
+block|,
+comment|// PERMODULE_PROFILE: [valueid, flags, instcount, numrefs,
+comment|//                     numrefs x valueid,
+comment|//                     n x (valueid, callsitecount, profilecount)]
+name|FS_PERMODULE_PROFILE
+init|=
+literal|2
+block|,
+comment|// PERMODULE_GLOBALVAR_INIT_REFS: [valueid, flags, n x valueid]
+name|FS_PERMODULE_GLOBALVAR_INIT_REFS
+init|=
+literal|3
+block|,
+comment|// COMBINED: [valueid, modid, flags, instcount, numrefs, numrefs x valueid,
+comment|//            n x (valueid, callsitecount)]
+name|FS_COMBINED
+init|=
+literal|4
+block|,
+comment|// COMBINED_PROFILE: [valueid, modid, flags, instcount, numrefs,
+comment|//                    numrefs x valueid,
+comment|//                    n x (valueid, callsitecount, profilecount)]
+name|FS_COMBINED_PROFILE
+init|=
+literal|5
+block|,
+comment|// COMBINED_GLOBALVAR_INIT_REFS: [valueid, modid, flags, n x valueid]
+name|FS_COMBINED_GLOBALVAR_INIT_REFS
+init|=
+literal|6
+block|,
+comment|// ALIAS: [valueid, flags, valueid]
+name|FS_ALIAS
+init|=
+literal|7
+block|,
+comment|// COMBINED_ALIAS: [valueid, modid, flags, valueid]
+name|FS_COMBINED_ALIAS
+init|=
+literal|8
+block|,
+comment|// COMBINED_ORIGINAL_NAME: [original_name_hash]
+name|FS_COMBINED_ORIGINAL_NAME
+init|=
+literal|9
+block|,
+comment|// VERSION of the summary, bumped when adding flags for instance.
+name|FS_VERSION
+init|=
+literal|10
+block|, }
 enum|;
 enum|enum
 name|MetadataCodes
 block|{
-name|METADATA_STRING
+name|METADATA_STRING_OLD
 init|=
 literal|1
 block|,
@@ -556,7 +620,7 @@ name|METADATA_SUBROUTINE_TYPE
 init|=
 literal|19
 block|,
-comment|// [distinct, flags, types]
+comment|// [distinct, flags, types, cc]
 name|METADATA_COMPILE_UNIT
 init|=
 literal|20
@@ -632,6 +696,16 @@ init|=
 literal|34
 block|,
 comment|// [distinct, macinfo, line, file, ...]
+name|METADATA_STRINGS
+init|=
+literal|35
+block|,
+comment|// [count, offset] blob([lengths][chars])
+name|METADATA_GLOBAL_DECL_ATTACHMENT
+init|=
+literal|36
+block|,
+comment|// [valueid, n x [id, mdnode]]
 block|}
 enum|;
 comment|// The constants block (CONSTANTS_BLOCK_ID) describes emission for each
@@ -1505,6 +1579,14 @@ block|,
 name|ATTR_KIND_INACCESSIBLEMEM_OR_ARGMEMONLY
 init|=
 literal|50
+block|,
+name|ATTR_KIND_ALLOC_SIZE
+init|=
+literal|51
+block|,
+name|ATTR_KIND_WRITEONLY
+init|=
+literal|52
 block|}
 enum|;
 enum|enum
@@ -1529,7 +1611,7 @@ block|,
 name|COMDAT_SELECTION_KIND_SAME_SIZE
 init|=
 literal|5
-block|,   }
+block|, }
 enum|;
 block|}
 comment|// End bitc namespace

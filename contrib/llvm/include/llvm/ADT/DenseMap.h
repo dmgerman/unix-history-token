@@ -480,27 +480,36 @@ name|getNumEntries
 argument_list|()
 return|;
 block|}
-comment|/// Grow the densemap so that it has at least Size buckets. Does not shrink
+comment|/// Grow the densemap so that it can contain at least \p NumEntries items
+comment|/// before resizing again.
 name|void
-name|resize
+name|reserve
 parameter_list|(
 name|size_type
-name|Size
+name|NumEntries
 parameter_list|)
 block|{
+name|auto
+name|NumBuckets
+init|=
+name|getMinBucketToReserveForEntries
+argument_list|(
+name|NumEntries
+argument_list|)
+decl_stmt|;
 name|incrementEpoch
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|Size
+name|NumBuckets
 operator|>
 name|getNumBuckets
 argument_list|()
 condition|)
 name|grow
 argument_list|(
-name|Size
+name|NumBuckets
 argument_list|)
 expr_stmt|;
 block|}
@@ -1143,6 +1152,139 @@ end_return
 
 begin_comment
 unit|}
+comment|/// Alternate version of insert() which allows a different, and possibly
+end_comment
+
+begin_comment
+comment|/// less expensive, key type.
+end_comment
+
+begin_comment
+comment|/// The DenseMapInfo is responsible for supplying methods
+end_comment
+
+begin_comment
+comment|/// getHashValue(LookupKeyT) and isEqual(LookupKeyT, KeyT) for each key
+end_comment
+
+begin_comment
+comment|/// type used.
+end_comment
+
+begin_expr_stmt
+unit|template
+operator|<
+name|typename
+name|LookupKeyT
+operator|>
+name|std
+operator|::
+name|pair
+operator|<
+name|iterator
+operator|,
+name|bool
+operator|>
+name|insert_as
+argument_list|(
+argument|std::pair<KeyT
+argument_list|,
+argument|ValueT>&&KV
+argument_list|,
+argument|const LookupKeyT&Val
+argument_list|)
+block|{
+name|BucketT
+operator|*
+name|TheBucket
+block|;
+if|if
+condition|(
+name|LookupBucketFor
+argument_list|(
+name|Val
+argument_list|,
+name|TheBucket
+argument_list|)
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|TheBucket
+argument_list|,
+name|getBucketsEnd
+argument_list|()
+argument_list|,
+operator|*
+name|this
+argument_list|,
+name|true
+argument_list|)
+argument_list|,
+name|false
+argument_list|)
+return|;
+comment|// Already in map.
+comment|// Otherwise, insert the new element.
+name|TheBucket
+operator|=
+name|InsertIntoBucket
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|KV
+operator|.
+name|first
+argument_list|)
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|KV
+operator|.
+name|second
+argument_list|)
+argument_list|,
+name|Val
+argument_list|,
+name|TheBucket
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|TheBucket
+argument_list|,
+name|getBucketsEnd
+argument_list|()
+argument_list|,
+operator|*
+name|this
+argument_list|,
+name|true
+argument_list|)
+argument_list|,
+name|true
+argument_list|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// insert - Range insertion of pairs.
 end_comment
 
@@ -1667,6 +1809,49 @@ argument_list|(
 name|EmptyKey
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Returns the number of buckets to allocate to ensure that the DenseMap can
+end_comment
+
+begin_comment
+comment|/// accommodate \p NumEntries without need to grow().
+end_comment
+
+begin_function
+name|unsigned
+name|getMinBucketToReserveForEntries
+parameter_list|(
+name|unsigned
+name|NumEntries
+parameter_list|)
+block|{
+comment|// Ensure that "NumEntries * 4< NumBuckets * 3"
+if|if
+condition|(
+name|NumEntries
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+comment|// +1 is required because of the strict equality.
+comment|// For example if NumEntries is 48, we need to return 401.
+return|return
+name|NextPowerOf2
+argument_list|(
+name|NumEntries
+operator|*
+literal|4
+operator|/
+literal|3
+operator|+
+literal|1
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -2447,6 +2632,8 @@ name|InsertIntoBucketImpl
 argument_list|(
 name|Key
 argument_list|,
+name|Key
+argument_list|,
 name|TheBucket
 argument_list|)
 expr_stmt|;
@@ -2498,6 +2685,8 @@ name|InsertIntoBucketImpl
 argument_list|(
 name|Key
 argument_list|,
+name|Key
+argument_list|,
 name|TheBucket
 argument_list|)
 expr_stmt|;
@@ -2553,6 +2742,8 @@ name|InsertIntoBucketImpl
 argument_list|(
 name|Key
 argument_list|,
+name|Key
+argument_list|,
 name|TheBucket
 argument_list|)
 expr_stmt|;
@@ -2589,24 +2780,89 @@ return|;
 block|}
 end_decl_stmt
 
-begin_function
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|LookupKeyT
+operator|>
 name|BucketT
-modifier|*
-name|InsertIntoBucketImpl
-parameter_list|(
-specifier|const
-name|KeyT
-modifier|&
-name|Key
-parameter_list|,
-name|BucketT
-modifier|*
+operator|*
+name|InsertIntoBucket
+argument_list|(
+argument|KeyT&&Key
+argument_list|,
+argument|ValueT&&Value
+argument_list|,
+argument|LookupKeyT&Lookup
+argument_list|,
+argument|BucketT *TheBucket
+argument_list|)
+block|{
 name|TheBucket
-parameter_list|)
+operator|=
+name|InsertIntoBucketImpl
+argument_list|(
+name|Key
+argument_list|,
+name|Lookup
+argument_list|,
+name|TheBucket
+argument_list|)
+block|;
+name|TheBucket
+operator|->
+name|getFirst
+argument_list|()
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Key
+argument_list|)
+block|;
+operator|::
+name|new
+argument_list|(
+argument|&TheBucket->getSecond()
+argument_list|)
+name|ValueT
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Value
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|TheBucket
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|LookupKeyT
+operator|>
+name|BucketT
+operator|*
+name|InsertIntoBucketImpl
+argument_list|(
+argument|const KeyT&Key
+argument_list|,
+argument|const LookupKeyT&Lookup
+argument_list|,
+argument|BucketT *TheBucket
+argument_list|)
 block|{
 name|incrementEpoch
 argument_list|()
-expr_stmt|;
+block|;
 comment|// If the load of the hash table is more than 3/4, or if fewer than 1/8 of
 comment|// the buckets are empty (meaning that many are filled with tombstones),
 comment|// grow the table.
@@ -2618,18 +2874,18 @@ comment|// table completely filled with tombstones, no lookup would ever succeed
 comment|// causing infinite loops in lookup.
 name|unsigned
 name|NewNumEntries
-init|=
+operator|=
 name|getNumEntries
 argument_list|()
 operator|+
 literal|1
-decl_stmt|;
+block|;
 name|unsigned
 name|NumBuckets
-init|=
+operator|=
 name|getNumBuckets
 argument_list|()
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|LLVM_UNLIKELY
@@ -2655,7 +2911,7 @@ argument_list|)
 expr_stmt|;
 name|LookupBucketFor
 argument_list|(
-name|Key
+name|Lookup
 argument_list|,
 name|TheBucket
 argument_list|)
@@ -2666,6 +2922,9 @@ name|getNumBuckets
 argument_list|()
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_elseif
 elseif|else
 if|if
 condition|(
@@ -2695,23 +2954,41 @@ argument_list|)
 expr_stmt|;
 name|LookupBucketFor
 argument_list|(
-name|Key
+name|Lookup
 argument_list|,
 name|TheBucket
 argument_list|)
 expr_stmt|;
 block|}
+end_elseif
+
+begin_expr_stmt
 name|assert
 argument_list|(
 name|TheBucket
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Only update the state after we've grown our bucket space appropriately
+end_comment
+
+begin_comment
 comment|// so that when growing buckets we have self-consistent entry count.
+end_comment
+
+begin_expr_stmt
 name|incrementNumEntries
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// If we are writing over a tombstone, remember this.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|KeyT
 name|EmptyKey
@@ -2719,6 +2996,9 @@ init|=
 name|getEmptyKey
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -2737,13 +3017,16 @@ condition|)
 name|decrementNumTombstones
 argument_list|()
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 name|TheBucket
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/// LookupBucketFor - Lookup the appropriate bucket for Val, returning it in
 end_comment
 
@@ -2760,7 +3043,7 @@ comment|/// returns false.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|LookupKeyT
@@ -3219,19 +3502,27 @@ name|public
 label|:
 end_label
 
+begin_comment
+comment|/// Create a DenseMap wth an optional \p InitialReserve that guarantee that
+end_comment
+
+begin_comment
+comment|/// this number of elements can be inserted in the map without grow()
+end_comment
+
 begin_function
 name|explicit
 name|DenseMap
 parameter_list|(
 name|unsigned
-name|NumInitBuckets
+name|InitialReserve
 init|=
 literal|0
 parameter_list|)
 block|{
 name|init
 argument_list|(
-name|NumInitBuckets
+name|InitialReserve
 argument_list|)
 expr_stmt|;
 block|}
@@ -3293,8 +3584,6 @@ argument_list|)
 block|{
 name|init
 argument_list|(
-name|NextPowerOf2
-argument_list|(
 name|std
 operator|::
 name|distance
@@ -3302,7 +3591,6 @@ argument_list|(
 name|I
 argument_list|,
 name|E
-argument_list|)
 argument_list|)
 argument_list|)
 block|;
@@ -3521,9 +3809,19 @@ name|void
 name|init
 parameter_list|(
 name|unsigned
-name|InitBuckets
+name|InitNumEntries
 parameter_list|)
 block|{
+name|auto
+name|InitBuckets
+init|=
+name|BaseT
+operator|::
+name|getMinBucketToReserveForEntries
+argument_list|(
+name|InitNumEntries
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|allocateBuckets

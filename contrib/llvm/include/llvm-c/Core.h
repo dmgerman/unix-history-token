@@ -201,7 +201,7 @@ init|=
 literal|1
 operator|<<
 literal|31
-comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMSanitizeAddressAttribute = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<35,     LLVMColdAttribute = 1ULL<< 40,     LLVMOptimizeNoneAttribute = 1ULL<< 42,     LLVMInAllocaAttribute = 1ULL<< 43,     LLVMNonNullAttribute = 1ULL<< 44,     LLVMJumpTableAttribute = 1ULL<< 45,     LLVMConvergentAttribute = 1ULL<< 46,     LLVMSafeStackAttribute = 1ULL<< 47,     */
+comment|/* FIXME: These attributes are currently not included in the C API as        a temporary measure until the API/ABI impact to the C API is understood        and the path forward agreed upon.     LLVMSanitizeAddressAttribute = 1ULL<< 32,     LLVMStackProtectStrongAttribute = 1ULL<<35,     LLVMColdAttribute = 1ULL<< 40,     LLVMOptimizeNoneAttribute = 1ULL<< 42,     LLVMInAllocaAttribute = 1ULL<< 43,     LLVMNonNullAttribute = 1ULL<< 44,     LLVMJumpTableAttribute = 1ULL<< 45,     LLVMConvergentAttribute = 1ULL<< 46,     LLVMSafeStackAttribute = 1ULL<< 47,     LLVMSwiftSelfAttribute = 1ULL<< 48,     LLVMSwiftErrorAttribute = 1ULL<< 49,     */
 block|}
 name|LLVMAttribute
 typedef|;
@@ -655,6 +655,61 @@ typedef|;
 typedef|typedef
 enum|enum
 block|{
+name|LLVMArgumentValueKind
+block|,
+name|LLVMBasicBlockValueKind
+block|,
+name|LLVMMemoryUseValueKind
+block|,
+name|LLVMMemoryDefValueKind
+block|,
+name|LLVMMemoryPhiValueKind
+block|,
+name|LLVMFunctionValueKind
+block|,
+name|LLVMGlobalAliasValueKind
+block|,
+name|LLVMGlobalIFuncValueKind
+block|,
+name|LLVMGlobalVariableValueKind
+block|,
+name|LLVMBlockAddressValueKind
+block|,
+name|LLVMConstantExprValueKind
+block|,
+name|LLVMConstantArrayValueKind
+block|,
+name|LLVMConstantStructValueKind
+block|,
+name|LLVMConstantVectorValueKind
+block|,
+name|LLVMUndefValueValueKind
+block|,
+name|LLVMConstantAggregateZeroValueKind
+block|,
+name|LLVMConstantDataArrayValueKind
+block|,
+name|LLVMConstantDataVectorValueKind
+block|,
+name|LLVMConstantIntValueKind
+block|,
+name|LLVMConstantFPValueKind
+block|,
+name|LLVMConstantPointerNullValueKind
+block|,
+name|LLVMConstantTokenNoneValueKind
+block|,
+name|LLVMMetadataAsValueValueKind
+block|,
+name|LLVMInlineAsmValueKind
+block|,
+name|LLVMInstructionValueKind
+block|, }
+name|LLVMValueKind
+typedef|;
+typedef|typedef
+enum|enum
+block|{
 name|LLVMIntEQ
 init|=
 literal|32
@@ -861,6 +916,26 @@ name|LLVMDSNote
 block|}
 name|LLVMDiagnosticSeverity
 typedef|;
+comment|/**  * Attribute index are either LLVMAttributeReturnIndex,  * LLVMAttributeFunctionIndex or a parameter number from 1 to N.  */
+enum|enum
+block|{
+name|LLVMAttributeReturnIndex
+init|=
+literal|0U
+block|,
+comment|// ISO C restricts enumerator values to range of 'int'
+comment|// (4294967295 is too large)
+comment|// LLVMAttributeFunctionIndex = ~0U,
+name|LLVMAttributeFunctionIndex
+init|=
+operator|-
+literal|1
+block|, }
+enum|;
+typedef|typedef
+name|unsigned
+name|LLVMAttributeIndex
+typedef|;
 comment|/**  * @}  */
 name|void
 name|LLVMInitializeCore
@@ -951,6 +1026,23 @@ modifier|*
 name|DiagnosticContext
 parameter_list|)
 function_decl|;
+comment|/**  * Get the diagnostic handler of this context.  */
+name|LLVMDiagnosticHandler
+name|LLVMContextGetDiagnosticHandler
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * Get the diagnostic context of this context.  */
+name|void
+modifier|*
+name|LLVMContextGetDiagnosticContext
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|)
+function_decl|;
 comment|/**  * Set the yield callback function for this context.  *  * @see LLVMContext::setYieldCallback()  */
 name|void
 name|LLVMContextSetYieldCallback
@@ -1018,6 +1110,122 @@ name|unsigned
 name|SLen
 parameter_list|)
 function_decl|;
+comment|/**  * Return an unique id given the name of a enum attribute,  * or 0 if no attribute by that name exists.  *  * See http://llvm.org/docs/LangRef.html#parameter-attributes  * and http://llvm.org/docs/LangRef.html#function-attributes  * for the list of available attributes.  *  * NB: Attribute names and/or id are subject to change without  * going through the C API deprecation cycle.  */
+name|unsigned
+name|LLVMGetEnumAttributeKindForName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|,
+name|size_t
+name|SLen
+parameter_list|)
+function_decl|;
+name|unsigned
+name|LLVMGetLastEnumAttributeKind
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * Create an enum attribute.  */
+name|LLVMAttributeRef
+name|LLVMCreateEnumAttribute
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+name|unsigned
+name|KindID
+parameter_list|,
+name|uint64_t
+name|Val
+parameter_list|)
+function_decl|;
+comment|/**  * Get the unique id corresponding to the enum attribute  * passed as argument.  */
+name|unsigned
+name|LLVMGetEnumAttributeKind
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
+comment|/**  * Get the enum attribute's value. 0 is returned if none exists.  */
+name|uint64_t
+name|LLVMGetEnumAttributeValue
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
+comment|/**  * Create a string attribute.  */
+name|LLVMAttributeRef
+name|LLVMCreateStringAttribute
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|K
+parameter_list|,
+name|unsigned
+name|KLength
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|VLength
+parameter_list|)
+function_decl|;
+comment|/**  * Get the string attribute's kind.  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetStringAttributeKind
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|,
+name|unsigned
+modifier|*
+name|Length
+parameter_list|)
+function_decl|;
+comment|/**  * Get the string attribute's value.  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetStringAttributeValue
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|,
+name|unsigned
+modifier|*
+name|Length
+parameter_list|)
+function_decl|;
+comment|/**  * Check for the different types of attributes.  */
+name|LLVMBool
+name|LLVMIsEnumAttribute
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
+name|LLVMBool
+name|LLVMIsStringAttribute
+parameter_list|(
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreModule Modules  *  * Modules represent the top-level structure in an LLVM program. An LLVM  * module is effectively a translation unit or a collection of  * translation units merged together.  *  * @{  */
 comment|/**  * Create a new, empty module in the global context.  *  * This is equivalent to calling LLVMModuleCreateWithNameInContext with  * LLVMGetGlobalContext() as the context parameter.  *  * Every invocation should be paired with LLVMDisposeModule() or memory  * will be leaked.  */
@@ -1059,7 +1267,46 @@ name|LLVMModuleRef
 name|M
 parameter_list|)
 function_decl|;
-comment|/**  * Obtain the data layout for a module.  *  * @see Module::getDataLayout()  */
+comment|/**  * Obtain the identifier of a module.  *  * @param M Module to obtain identifier of  * @param Len Out parameter which holds the length of the returned string.  * @return The identifier of M.  * @see Module::getModuleIdentifier()  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetModuleIdentifier
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|size_t
+modifier|*
+name|Len
+parameter_list|)
+function_decl|;
+comment|/**  * Set the identifier of a module to a string Ident with length Len.  *  * @param M The module to set identifier  * @param Ident The string to set M's identifier to  * @param Len Length of Ident  * @see Module::setModuleIdentifier()  */
+name|void
+name|LLVMSetModuleIdentifier
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Ident
+parameter_list|,
+name|size_t
+name|Len
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the data layout for a module.  *  * @see Module::getDataLayoutStr()  *  * LLVMGetDataLayout is DEPRECATED, as the name is not only incorrect,  * but match the name of another method on the module. Prefer the use  * of LLVMGetDataLayoutStr, which is not ambiguous.  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetDataLayoutStr
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -1079,7 +1326,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|Triple
+name|DataLayoutStr
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain the target triple for a module.  *  * @see Module::getTargetTriple()  */
@@ -1184,7 +1431,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|Name
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain the named metadata operands for a module.  *  * The passed LLVMValueRef pointer should refer to an array of  * LLVMValueRef at least LLVMGetNamedMetadataNumOperands long. This  * array will be populated with the LLVMValueRef instances. Each  * instance corresponds to a llvm::MDNode.  *  * @see llvm::Module::getNamedMetadata()  * @see llvm::MDNode::getOperand()  */
@@ -1197,7 +1444,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|Name
 parameter_list|,
 name|LLVMValueRef
 modifier|*
@@ -1214,7 +1461,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|name
+name|Name
 parameter_list|,
 name|LLVMValueRef
 name|Val
@@ -1827,6 +2074,14 @@ name|LLVMValueRef
 name|Val
 parameter_list|)
 function_decl|;
+comment|/**  * Obtain the enumerated type of a Value instance.  *  * @see llvm::Value::getValueID()  */
+name|LLVMValueKind
+name|LLVMGetValueKind
+parameter_list|(
+name|LLVMValueRef
+name|Val
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the string name of a value.  *  * @see llvm::Value::getName()  */
 specifier|const
 name|char
@@ -1878,7 +2133,7 @@ name|LLVMValueRef
 name|NewVal
 parameter_list|)
 function_decl|;
-comment|/**  * Determine whether the specified constant instance is constant.  */
+comment|/**  * Determine whether the specified value instance is constant.  */
 name|LLVMBool
 name|LLVMIsConstant
 parameter_list|(
@@ -2239,7 +2494,7 @@ name|c
 parameter_list|,
 name|size_t
 modifier|*
-name|out
+name|Length
 parameter_list|)
 function_decl|;
 comment|/**  * Create an anonymous ConstantStruct with the specified values.  *  * @see llvm::ConstantStruct::getAnon()  */
@@ -2310,7 +2565,7 @@ name|LLVMValueRef
 name|LLVMGetElementAsConstant
 parameter_list|(
 name|LLVMValueRef
-name|c
+name|C
 parameter_list|,
 name|unsigned
 name|idx
@@ -3121,7 +3376,7 @@ name|unsigned
 name|Bytes
 parameter_list|)
 function_decl|;
-comment|/**   * @}   */
+comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCoreValueConstantGlobalVariable Global Variables  *  * This group contains functions that operate on global variable values.  *  * @see llvm::GlobalVariable  *  * @{  */
 name|LLVMValueRef
 name|LLVMAddGlobal
@@ -3318,6 +3573,14 @@ name|LLVMValueRef
 name|Fn
 parameter_list|)
 function_decl|;
+comment|/**  * Check whether the given function has a personality function.  *  * @see llvm::Function::hasPersonalityFn()  */
+name|LLVMBool
+name|LLVMHasPersonalityFn
+parameter_list|(
+name|LLVMValueRef
+name|Fn
+parameter_list|)
+function_decl|;
 comment|/**  * Obtain the personality function attached to the function.  *  * @see llvm::Function::getPersonalityFn()  */
 name|LLVMValueRef
 name|LLVMGetPersonalityFn
@@ -3396,6 +3659,105 @@ name|Fn
 parameter_list|,
 name|LLVMAttribute
 name|PA
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMAddAttributeAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|LLVMGetAttributeCountAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMGetAttributesAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|LLVMAttributeRef
+modifier|*
+name|Attrs
+parameter_list|)
+function_decl|;
+name|LLVMAttributeRef
+name|LLVMGetEnumAttributeAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|unsigned
+name|KindID
+parameter_list|)
+function_decl|;
+name|LLVMAttributeRef
+name|LLVMGetStringAttributeAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|K
+parameter_list|,
+name|unsigned
+name|KLen
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMRemoveEnumAttributeAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|unsigned
+name|KindID
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMRemoveStringAttributeAtIndex
+parameter_list|(
+name|LLVMValueRef
+name|F
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|K
+parameter_list|,
+name|unsigned
+name|KLen
 parameter_list|)
 function_decl|;
 comment|/**  * Add a target-dependent attribute to a function  * @see llvm::AttrBuilder::addAttribute()  */
@@ -3545,7 +3907,7 @@ name|LLVMValueRef
 name|Arg
 parameter_list|,
 name|unsigned
-name|align
+name|Align
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -3609,7 +3971,7 @@ name|unsigned
 name|Count
 parameter_list|)
 function_decl|;
-comment|/**  * Obtain the underlying string from a MDString value.  *  * @param V Instance to obtain string from.  * @param Len Memory address which will hold length of returned string.  * @return String data in MDString.  */
+comment|/**  * Obtain the underlying string from a MDString value.  *  * @param V Instance to obtain string from.  * @param Length Memory address which will hold length of returned string.  * @return String data in MDString.  */
 specifier|const
 name|char
 modifier|*
@@ -3620,7 +3982,7 @@ name|V
 parameter_list|,
 name|unsigned
 modifier|*
-name|Len
+name|Length
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain the number of operands from an MDNode value.  *  * @param V MDNode to get number of operands from.  * @return Number of operands of the MDNode.  */
@@ -3667,6 +4029,16 @@ name|LLVMValueAsBasicBlock
 parameter_list|(
 name|LLVMValueRef
 name|Val
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the string name of a basic block.  */
+specifier|const
+name|char
+modifier|*
+name|LLVMGetBasicBlockName
+parameter_list|(
+name|LLVMBasicBlockRef
+name|BB
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain the function to which a basic block belongs.  *  * @see llvm::BasicBlock::getParent()  */
@@ -3916,6 +4288,14 @@ name|LLVMValueRef
 name|Inst
 parameter_list|)
 function_decl|;
+comment|/**  * Remove and delete an instruction.  *  * The instruction specified is removed from its containing building  * block but is kept alive.  *  * @see llvm::Instruction::removeFromParent()  */
+name|void
+name|LLVMInstructionRemoveFromParent
+parameter_list|(
+name|LLVMValueRef
+name|Inst
+parameter_list|)
+function_decl|;
 comment|/**  * Remove and delete an instruction.  *  * The instruction specified is removed from its containing building  * block and then deleted.  *  * @see llvm::Instruction::eraseFromParent()  */
 name|void
 name|LLVMInstructionEraseFromParent
@@ -3957,6 +4337,14 @@ name|Inst
 parameter_list|)
 function_decl|;
 comment|/**  * @defgroup LLVMCCoreValueInstructionCall Call Sites and Invocations  *  * Functions in this group apply to instructions that refer to call  * sites and invocations. These correspond to C++ types in the  * llvm::CallInst class tree.  *  * @{  */
+comment|/**  * Obtain the argument count for a call instruction.  *  * This expects an LLVMValueRef that corresponds to a llvm::CallInst or  * llvm::InvokeInst.  *  * @see llvm::CallInst::getNumArgOperands()  * @see llvm::InvokeInst::getNumArgOperands()  */
+name|unsigned
+name|LLVMGetNumArgOperands
+parameter_list|(
+name|LLVMValueRef
+name|Instr
+parameter_list|)
+function_decl|;
 comment|/**  * Set the calling convention for a call instruction.  *  * This expects an LLVMValueRef that corresponds to a llvm::CallInst or  * llvm::InvokeInst.  *  * @see llvm::CallInst::setCallingConv()  * @see llvm::InvokeInst::setCallingConv()  */
 name|void
 name|LLVMSetInstructionCallConv
@@ -4010,7 +4398,114 @@ name|unsigned
 name|index
 parameter_list|,
 name|unsigned
-name|align
+name|Align
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMAddCallSiteAttribute
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|LLVMAttributeRef
+name|A
+parameter_list|)
+function_decl|;
+name|unsigned
+name|LLVMGetCallSiteAttributeCount
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMGetCallSiteAttributes
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|LLVMAttributeRef
+modifier|*
+name|Attrs
+parameter_list|)
+function_decl|;
+name|LLVMAttributeRef
+name|LLVMGetCallSiteEnumAttribute
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|unsigned
+name|KindID
+parameter_list|)
+function_decl|;
+name|LLVMAttributeRef
+name|LLVMGetCallSiteStringAttribute
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|K
+parameter_list|,
+name|unsigned
+name|KLen
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMRemoveCallSiteEnumAttribute
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+name|unsigned
+name|KindID
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMRemoveCallSiteStringAttribute
+parameter_list|(
+name|LLVMValueRef
+name|C
+parameter_list|,
+name|LLVMAttributeIndex
+name|Idx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|K
+parameter_list|,
+name|unsigned
+name|KLen
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the pointer to the function invoked by this instruction.  *  * This expects an LLVMValueRef that corresponds to a llvm::CallInst or  * llvm::InvokeInst.  *  * @see llvm::CallInst::getCalledValue()  * @see llvm::InvokeInst::getCalledValue()  */
+name|LLVMValueRef
+name|LLVMGetCalledValue
+parameter_list|(
+name|LLVMValueRef
+name|Instr
 parameter_list|)
 function_decl|;
 comment|/**  * Obtain whether a call instruction is a tail call.  *  * This only works on llvm::CallInst instructions.  *  * @see llvm::CallInst::isTailCall()  */
@@ -4030,6 +4525,44 @@ name|CallInst
 parameter_list|,
 name|LLVMBool
 name|IsTailCall
+parameter_list|)
+function_decl|;
+comment|/**  * Return the normal destination basic block.  *  * This only works on llvm::InvokeInst instructions.  *  * @see llvm::InvokeInst::getNormalDest()  */
+name|LLVMBasicBlockRef
+name|LLVMGetNormalDest
+parameter_list|(
+name|LLVMValueRef
+name|InvokeInst
+parameter_list|)
+function_decl|;
+comment|/**  * Return the unwind destination basic block.  *  * This only works on llvm::InvokeInst instructions.  *  * @see llvm::InvokeInst::getUnwindDest()  */
+name|LLVMBasicBlockRef
+name|LLVMGetUnwindDest
+parameter_list|(
+name|LLVMValueRef
+name|InvokeInst
+parameter_list|)
+function_decl|;
+comment|/**  * Set the normal destination basic block.  *  * This only works on llvm::InvokeInst instructions.  *  * @see llvm::InvokeInst::setNormalDest()  */
+name|void
+name|LLVMSetNormalDest
+parameter_list|(
+name|LLVMValueRef
+name|InvokeInst
+parameter_list|,
+name|LLVMBasicBlockRef
+name|B
+parameter_list|)
+function_decl|;
+comment|/**  * Set the unwind destination basic block.  *  * This only works on llvm::InvokeInst instructions.  *  * @see llvm::InvokeInst::setUnwindDest()  */
+name|void
+name|LLVMSetUnwindDest
+parameter_list|(
+name|LLVMValueRef
+name|InvokeInst
+parameter_list|,
+name|LLVMBasicBlockRef
+name|B
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -4103,6 +4636,37 @@ name|SwitchInstr
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
+comment|/**  * @defgroup LLVMCCoreValueInstructionAlloca Allocas  *  * Functions in this group only apply to instructions that map to  * llvm::AllocaInst instances.  *  * @{  */
+comment|/**  * Obtain the type that is being allocated by the alloca instruction.  */
+name|LLVMTypeRef
+name|LLVMGetAllocatedType
+parameter_list|(
+name|LLVMValueRef
+name|Alloca
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * @defgroup LLVMCCoreValueInstructionGetElementPointer GEPs  *  * Functions in this group only apply to instructions that map to  * llvm::GetElementPtrInst instances.  *  * @{  */
+comment|/**  * Check whether the given GEP instruction is inbounds.  */
+name|LLVMBool
+name|LLVMIsInBounds
+parameter_list|(
+name|LLVMValueRef
+name|GEP
+parameter_list|)
+function_decl|;
+comment|/**  * Set the given GEP instruction to be inbounds or not.  */
+name|void
+name|LLVMSetIsInBounds
+parameter_list|(
+name|LLVMValueRef
+name|GEP
+parameter_list|,
+name|LLVMBool
+name|InBounds
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
 comment|/**  * @defgroup LLVMCCoreValueInstructionPHINode PHI Nodes  *  * Functions in this group only apply to instructions that map to  * llvm::PHINode instances.  *  * @{  */
 comment|/**  * Add an incoming value to the end of a PHI list.  */
 name|void
@@ -4151,6 +4715,26 @@ name|PhiNode
 parameter_list|,
 name|unsigned
 name|Index
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * @defgroup LLVMCCoreValueInstructionExtractValue ExtractValue  * @defgroup LLVMCCoreValueInstructionInsertValue InsertValue  *  * Functions in this group only apply to instructions that map to  * llvm::ExtractValue and llvm::InsertValue instances.  *  * @{  */
+comment|/**  * Obtain the number of indices.  * NB: This also works on GEP.  */
+name|unsigned
+name|LLVMGetNumIndices
+parameter_list|(
+name|LLVMValueRef
+name|Inst
+parameter_list|)
+function_decl|;
+comment|/**  * Obtain the indices as an array.  */
+specifier|const
+name|unsigned
+modifier|*
+name|LLVMGetIndices
+parameter_list|(
+name|LLVMValueRef
+name|Inst
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -4447,6 +5031,25 @@ name|LLVMBasicBlockRef
 name|Dest
 parameter_list|)
 function_decl|;
+comment|/* Get the number of clauses on the landingpad instruction */
+name|unsigned
+name|LLVMGetNumClauses
+parameter_list|(
+name|LLVMValueRef
+name|LandingPad
+parameter_list|)
+function_decl|;
+comment|/* Get the value of the clause at idnex Idx on the landingpad instruction */
+name|LLVMValueRef
+name|LLVMGetClause
+parameter_list|(
+name|LLVMValueRef
+name|LandingPad
+parameter_list|,
+name|unsigned
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/* Add a catch or filter clause to the landingpad instruction */
 name|void
 name|LLVMAddClause
@@ -4456,6 +5059,14 @@ name|LandingPad
 parameter_list|,
 name|LLVMValueRef
 name|ClauseVal
+parameter_list|)
+function_decl|;
+comment|/* Get the 'cleanup' flag in the landingpad instruction */
+name|LLVMBool
+name|LLVMIsCleanup
+parameter_list|(
+name|LLVMValueRef
+name|LandingPad
 parameter_list|)
 function_decl|;
 comment|/* Set the 'cleanup' flag in the landingpad instruction */
@@ -5853,6 +6464,82 @@ name|ordering
 parameter_list|,
 name|LLVMBool
 name|singleThread
+parameter_list|)
+function_decl|;
+name|LLVMValueRef
+name|LLVMBuildAtomicCmpXchg
+parameter_list|(
+name|LLVMBuilderRef
+name|B
+parameter_list|,
+name|LLVMValueRef
+name|Ptr
+parameter_list|,
+name|LLVMValueRef
+name|Cmp
+parameter_list|,
+name|LLVMValueRef
+name|New
+parameter_list|,
+name|LLVMAtomicOrdering
+name|SuccessOrdering
+parameter_list|,
+name|LLVMAtomicOrdering
+name|FailureOrdering
+parameter_list|,
+name|LLVMBool
+name|SingleThread
+parameter_list|)
+function_decl|;
+name|LLVMBool
+name|LLVMIsAtomicSingleThread
+parameter_list|(
+name|LLVMValueRef
+name|AtomicInst
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetAtomicSingleThread
+parameter_list|(
+name|LLVMValueRef
+name|AtomicInst
+parameter_list|,
+name|LLVMBool
+name|SingleThread
+parameter_list|)
+function_decl|;
+name|LLVMAtomicOrdering
+name|LLVMGetCmpXchgSuccessOrdering
+parameter_list|(
+name|LLVMValueRef
+name|CmpXchgInst
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetCmpXchgSuccessOrdering
+parameter_list|(
+name|LLVMValueRef
+name|CmpXchgInst
+parameter_list|,
+name|LLVMAtomicOrdering
+name|Ordering
+parameter_list|)
+function_decl|;
+name|LLVMAtomicOrdering
+name|LLVMGetCmpXchgFailureOrdering
+parameter_list|(
+name|LLVMValueRef
+name|CmpXchgInst
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetCmpXchgFailureOrdering
+parameter_list|(
+name|LLVMValueRef
+name|CmpXchgInst
+parameter_list|,
+name|LLVMAtomicOrdering
+name|Ordering
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

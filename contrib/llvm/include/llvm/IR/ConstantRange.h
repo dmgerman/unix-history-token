@@ -247,17 +247,49 @@ operator|&
 name|Other
 argument_list|)
 decl_stmt|;
-comment|/// Return the largest range containing all X such that "X BinOpC C" does not
-comment|/// wrap (overflow).
+comment|/// Produce the exact range such that all values in the returned range satisfy
+comment|/// the given predicate with any value contained within Other. Formally, this
+comment|/// returns the exact answer when the superset of 'union over all y in Other
+comment|/// is exactly same as the subset of intersection over all y in Other.
+comment|/// { x : icmp op x y is true}'.
 comment|///
-comment|/// Example:
-comment|///  typedef OverflowingBinaryOperator OBO;
-comment|///  makeNoWrapRegion(Add, i8 1, OBO::NoSignedWrap) == [-128, 127)
-comment|///  makeNoWrapRegion(Add, i8 1, OBO::NoUnsignedWrap) == [0, -1)
-comment|///  makeNoWrapRegion(Add, i8 0, OBO::NoUnsignedWrap) == Full Set
+comment|/// Example: Pred = ult and Other = i8 3 returns [0, 3)
 specifier|static
 name|ConstantRange
-name|makeNoWrapRegion
+name|makeExactICmpRegion
+argument_list|(
+name|CmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Other
+argument_list|)
+decl_stmt|;
+comment|/// Return the largest range containing all X such that "X BinOpC Y" is
+comment|/// guaranteed not to wrap (overflow) for all Y in Other.
+comment|///
+comment|/// NB! The returned set does *not* contain **all** possible values of X for
+comment|/// which "X BinOpC Y" does not wrap -- some viable values of X may be
+comment|/// missing, so you cannot use this to contrain X's range.  E.g. in the last
+comment|/// example, "(-2) + 1" is both nsw and nuw (so the "X" could be -2), but (-2)
+comment|/// is not in the set returned.
+comment|///
+comment|/// Examples:
+comment|///  typedef OverflowingBinaryOperator OBO;
+comment|///  #define MGNR makeGuaranteedNoWrapRegion
+comment|///  MGNR(Add, [i8 1, 2), OBO::NoSignedWrap) == [-128, 127)
+comment|///  MGNR(Add, [i8 1, 2), OBO::NoUnsignedWrap) == [0, -1)
+comment|///  MGNR(Add, [i8 0, 1), OBO::NoUnsignedWrap) == Full Set
+comment|///  MGNR(Add, [i8 1, 2), OBO::NoUnsignedWrap | OBO::NoSignedWrap)
+comment|///    == [0,INT_MAX)
+comment|///  MGNR(Add, [i8 -1, 6), OBO::NoSignedWrap) == [INT_MIN+1, INT_MAX-4)
+specifier|static
+name|ConstantRange
+name|makeGuaranteedNoWrapRegion
 argument_list|(
 name|Instruction
 operator|::
@@ -265,13 +297,31 @@ name|BinaryOps
 name|BinOp
 argument_list|,
 specifier|const
-name|APInt
+name|ConstantRange
 operator|&
-name|C
+name|Other
 argument_list|,
 name|unsigned
 name|NoWrapKind
 argument_list|)
+decl_stmt|;
+comment|/// Set up \p Pred and \p RHS such that
+comment|/// ConstantRange::makeExactICmpRegion(Pred, RHS) == *this.  Return true if
+comment|/// successful.
+name|bool
+name|getEquivalentICmp
+argument_list|(
+name|CmpInst
+operator|::
+name|Predicate
+operator|&
+name|Pred
+argument_list|,
+name|APInt
+operator|&
+name|RHS
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// Return the lower value for this range.
 comment|///
@@ -654,6 +704,30 @@ comment|/// Return a new range representing the possible values resulting
 comment|/// from an unsigned maximum of a value in this range and a value in \p Other.
 name|ConstantRange
 name|umax
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return a new range representing the possible values resulting
+comment|/// from a signed minimum of a value in this range and a value in \p Other.
+name|ConstantRange
+name|smin
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return a new range representing the possible values resulting
+comment|/// from an unsigned minimum of a value in this range and a value in \p Other.
+name|ConstantRange
+name|umin
 argument_list|(
 specifier|const
 name|ConstantRange

@@ -230,6 +230,19 @@ decl_stmt|;
 name|RegisterClassInfo
 name|RegClassInfo
 decl_stmt|;
+comment|/// Inst which is a def of an original reg and whose defs are already all
+comment|/// dead after remat is saved in DeadRemats. The deletion of such inst is
+comment|/// postponed till all the allocations are done, so its remat expr is
+comment|/// always available for the remat of all the siblings of the original reg.
+name|SmallPtrSet
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+literal|32
+operator|>
+name|DeadRemats
+expr_stmt|;
 name|RegAllocBase
 argument_list|()
 operator|:
@@ -284,6 +297,13 @@ comment|// The top-level driver. The output is a VirtRegMap that us updated with
 comment|// physical register assignments.
 name|void
 name|allocatePhysRegs
+parameter_list|()
+function_decl|;
+comment|// Include spiller post optimization and removing dead defs left because of
+comment|// rematerialization.
+name|virtual
+name|void
+name|postOptimization
 parameter_list|()
 function_decl|;
 comment|// Get a temporary reference to a Spiller instance.

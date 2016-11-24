@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -201,7 +207,7 @@ name|ProcessGDBRemote
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|)
 block|;
 operator|~
@@ -217,7 +223,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const FileSpec *crash_file_path
 argument_list|)
@@ -745,7 +751,9 @@ operator|>
 name|m_stop_packet_stack
 block|;
 comment|// The stop packet stack replaces the last stop packet variable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_last_stop_packet_mutex
 block|;
 name|GDBRemoteDynamicRegisterInfo
@@ -754,13 +762,17 @@ block|;
 name|Broadcaster
 name|m_async_broadcaster
 block|;
-name|Listener
-name|m_async_listener
+name|lldb
+operator|::
+name|ListenerSP
+name|m_async_listener_sp
 block|;
 name|HostThread
 name|m_async_thread
 block|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_async_thread_state_mutex
 block|;
 typedef|typedef
@@ -1143,9 +1155,13 @@ specifier|static
 name|bool
 name|MonitorDebugserverProcess
 argument_list|(
-name|void
-operator|*
-name|callback_baton
+name|std
+operator|::
+name|weak_ptr
+operator|<
+name|ProcessGDBRemote
+operator|>
+name|process_wp
 argument_list|,
 name|lldb
 operator|::
@@ -1290,7 +1306,11 @@ expr_stmt|;
 comment|// Query remote GDBServer for register information
 name|bool
 name|GetGDBServerRegisterInfo
-parameter_list|()
+parameter_list|(
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
 function_decl|;
 comment|// Query remote GDBServer for a detailed loaded library list
 name|Error
@@ -1306,6 +1326,8 @@ name|ModuleSP
 name|LoadModuleAtAddress
 argument_list|(
 argument|const FileSpec&file
+argument_list|,
+argument|lldb::addr_t link_map
 argument_list|,
 argument|lldb::addr_t base_addr
 argument_list|,

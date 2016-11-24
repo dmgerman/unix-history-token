@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -83,9 +95,6 @@ name|Module
 decl_stmt|;
 name|class
 name|StructType
-decl_stmt|;
-name|class
-name|Type
 decl_stmt|;
 name|class
 name|Value

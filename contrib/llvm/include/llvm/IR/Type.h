@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -214,7 +220,7 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Context - This refers to the LLVMContext in which this type was uniqued.
+comment|/// This refers to the LLVMContext in which this type was uniqued.
 name|LLVMContext
 modifier|&
 name|Context
@@ -308,24 +314,51 @@ literal|"Subclass data too large for field"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// NumContainedTys - Keeps track of how many Type*'s there are in the
-comment|/// ContainedTys list.
+comment|/// Keeps track of how many Type*'s there are in the ContainedTys list.
 name|unsigned
 name|NumContainedTys
 decl_stmt|;
-comment|/// ContainedTys - A pointer to the array of Types contained by this Type.
-comment|/// For example, this includes the arguments of a function type, the elements
-comment|/// of a structure, the pointee of a pointer, the element type of an array,
-comment|/// etc.  This pointer may be 0 for types that don't contain other types
-comment|/// (Integer, Double, Float).
+comment|/// A pointer to the array of Types contained by this Type. For example, this
+comment|/// includes the arguments of a function type, the elements of a structure,
+comment|/// the pointee of a pointer, the element type of an array, etc. This pointer
+comment|/// may be 0 for types that don't contain other types (Integer, Double,
+comment|/// Float).
 name|Type
 modifier|*
 specifier|const
 modifier|*
 name|ContainedTys
 decl_stmt|;
+specifier|static
+name|bool
+name|isSequentialType
+parameter_list|(
+name|TypeID
+name|TyID
+parameter_list|)
+block|{
+return|return
+name|TyID
+operator|==
+name|ArrayTyID
+operator|||
+name|TyID
+operator|==
+name|PointerTyID
+operator|||
+name|TyID
+operator|==
+name|VectorTyID
+return|;
+block|}
 name|public
 label|:
+comment|/// Print the current type.
+comment|/// Omit the type details if \p NoDetails == true.
+comment|/// E.g., let %st = type { i32, i16 }
+comment|/// When \p NoDetails is true, we only print %st.
+comment|/// Put differently, \p NoDetails prints the type as if
+comment|/// inlined with the operands when printing an instruction.
 name|void
 name|print
 argument_list|(
@@ -337,6 +370,11 @@ name|bool
 name|IsForDebug
 operator|=
 name|false
+argument_list|,
+name|bool
+name|NoDetails
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -345,7 +383,7 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getContext - Return the LLVMContext in which this type was uniqued.
+comment|/// Return the LLVMContext in which this type was uniqued.
 name|LLVMContext
 operator|&
 name|getContext
@@ -359,9 +397,8 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors for working with types.
 comment|//
-comment|/// getTypeID - Return the type id for the type.  This will return one
-comment|/// of the TypeID enum elements defined above.
-comment|///
+comment|/// Return the type id for the type. This will return one of the TypeID enum
+comment|/// elements defined above.
 name|TypeID
 name|getTypeID
 argument_list|()
@@ -371,7 +408,7 @@ return|return
 name|ID
 return|;
 block|}
-comment|/// isVoidTy - Return true if this is 'void'.
+comment|/// Return true if this is 'void'.
 name|bool
 name|isVoidTy
 argument_list|()
@@ -384,7 +421,7 @@ operator|==
 name|VoidTyID
 return|;
 block|}
-comment|/// isHalfTy - Return true if this is 'half', a 16-bit IEEE fp type.
+comment|/// Return true if this is 'half', a 16-bit IEEE fp type.
 name|bool
 name|isHalfTy
 argument_list|()
@@ -397,7 +434,7 @@ operator|==
 name|HalfTyID
 return|;
 block|}
-comment|/// isFloatTy - Return true if this is 'float', a 32-bit IEEE fp type.
+comment|/// Return true if this is 'float', a 32-bit IEEE fp type.
 name|bool
 name|isFloatTy
 argument_list|()
@@ -410,7 +447,7 @@ operator|==
 name|FloatTyID
 return|;
 block|}
-comment|/// isDoubleTy - Return true if this is 'double', a 64-bit IEEE fp type.
+comment|/// Return true if this is 'double', a 64-bit IEEE fp type.
 name|bool
 name|isDoubleTy
 argument_list|()
@@ -423,7 +460,7 @@ operator|==
 name|DoubleTyID
 return|;
 block|}
-comment|/// isX86_FP80Ty - Return true if this is x86 long double.
+comment|/// Return true if this is x86 long double.
 name|bool
 name|isX86_FP80Ty
 argument_list|()
@@ -436,7 +473,7 @@ operator|==
 name|X86_FP80TyID
 return|;
 block|}
-comment|/// isFP128Ty - Return true if this is 'fp128'.
+comment|/// Return true if this is 'fp128'.
 name|bool
 name|isFP128Ty
 argument_list|()
@@ -449,7 +486,7 @@ operator|==
 name|FP128TyID
 return|;
 block|}
-comment|/// isPPC_FP128Ty - Return true if this is powerpc long double.
+comment|/// Return true if this is powerpc long double.
 name|bool
 name|isPPC_FP128Ty
 argument_list|()
@@ -462,8 +499,7 @@ operator|==
 name|PPC_FP128TyID
 return|;
 block|}
-comment|/// isFloatingPointTy - Return true if this is one of the six floating point
-comment|/// types
+comment|/// Return true if this is one of the six floating-point types
 name|bool
 name|isFloatingPointTy
 argument_list|()
@@ -570,7 +606,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/// isX86_MMXTy - Return true if this is X86 MMX.
+comment|/// Return true if this is X86 MMX.
 name|bool
 name|isX86_MMXTy
 argument_list|()
@@ -583,8 +619,7 @@ operator|==
 name|X86_MMXTyID
 return|;
 block|}
-comment|/// isFPOrFPVectorTy - Return true if this is a FP type or a vector of FP.
-comment|///
+comment|/// Return true if this is a FP type or a vector of FP.
 name|bool
 name|isFPOrFPVectorTy
 argument_list|()
@@ -598,7 +633,7 @@ name|isFloatingPointTy
 argument_list|()
 return|;
 block|}
-comment|/// isLabelTy - Return true if this is 'label'.
+comment|/// Return true if this is 'label'.
 name|bool
 name|isLabelTy
 argument_list|()
@@ -611,7 +646,7 @@ operator|==
 name|LabelTyID
 return|;
 block|}
-comment|/// isMetadataTy - Return true if this is 'metadata'.
+comment|/// Return true if this is 'metadata'.
 name|bool
 name|isMetadataTy
 argument_list|()
@@ -624,7 +659,7 @@ operator|==
 name|MetadataTyID
 return|;
 block|}
-comment|/// isTokenTy - Return true if this is 'token'.
+comment|/// Return true if this is 'token'.
 name|bool
 name|isTokenTy
 argument_list|()
@@ -637,8 +672,7 @@ operator|==
 name|TokenTyID
 return|;
 block|}
-comment|/// isIntegerTy - True if this is an instance of IntegerType.
-comment|///
+comment|/// True if this is an instance of IntegerType.
 name|bool
 name|isIntegerTy
 argument_list|()
@@ -651,7 +685,7 @@ operator|==
 name|IntegerTyID
 return|;
 block|}
-comment|/// isIntegerTy - Return true if this is an IntegerType of the given width.
+comment|/// Return true if this is an IntegerType of the given width.
 name|bool
 name|isIntegerTy
 argument_list|(
@@ -660,9 +694,7 @@ name|Bitwidth
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isIntOrIntVectorTy - Return true if this is an integer type or a vector of
-comment|/// integer types.
-comment|///
+comment|/// Return true if this is an integer type or a vector of integer types.
 name|bool
 name|isIntOrIntVectorTy
 argument_list|()
@@ -676,8 +708,7 @@ name|isIntegerTy
 argument_list|()
 return|;
 block|}
-comment|/// isFunctionTy - True if this is an instance of FunctionType.
-comment|///
+comment|/// True if this is an instance of FunctionType.
 name|bool
 name|isFunctionTy
 argument_list|()
@@ -690,8 +721,7 @@ operator|==
 name|FunctionTyID
 return|;
 block|}
-comment|/// isStructTy - True if this is an instance of StructType.
-comment|///
+comment|/// True if this is an instance of StructType.
 name|bool
 name|isStructTy
 argument_list|()
@@ -704,8 +734,7 @@ operator|==
 name|StructTyID
 return|;
 block|}
-comment|/// isArrayTy - True if this is an instance of ArrayType.
-comment|///
+comment|/// True if this is an instance of ArrayType.
 name|bool
 name|isArrayTy
 argument_list|()
@@ -718,8 +747,7 @@ operator|==
 name|ArrayTyID
 return|;
 block|}
-comment|/// isPointerTy - True if this is an instance of PointerType.
-comment|///
+comment|/// True if this is an instance of PointerType.
 name|bool
 name|isPointerTy
 argument_list|()
@@ -732,9 +760,7 @@ operator|==
 name|PointerTyID
 return|;
 block|}
-comment|/// isPtrOrPtrVectorTy - Return true if this is a pointer type or a vector of
-comment|/// pointer types.
-comment|///
+comment|/// Return true if this is a pointer type or a vector of pointer types.
 name|bool
 name|isPtrOrPtrVectorTy
 argument_list|()
@@ -748,8 +774,7 @@ name|isPointerTy
 argument_list|()
 return|;
 block|}
-comment|/// isVectorTy - True if this is an instance of VectorType.
-comment|///
+comment|/// True if this is an instance of VectorType.
 name|bool
 name|isVectorTy
 argument_list|()
@@ -762,10 +787,9 @@ operator|==
 name|VectorTyID
 return|;
 block|}
-comment|/// canLosslesslyBitCastTo - Return true if this type could be converted
-comment|/// with a lossless BitCast to type 'Ty'. For example, i8* to i32*. BitCasts
-comment|/// are valid for types of the same size only where no re-interpretation of
-comment|/// the bits is done.
+comment|/// Return true if this type could be converted with a lossless BitCast to
+comment|/// type 'Ty'. For example, i8* to i32*. BitCasts are valid for types of the
+comment|/// same size only where no re-interpretation of the bits is done.
 comment|/// @brief Determine if this type could be losslessly bitcast to Ty
 name|bool
 name|canLosslesslyBitCastTo
@@ -776,16 +800,15 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isEmptyTy - Return true if this type is empty, that is, it has no
-comment|/// elements or all its elements are empty.
+comment|/// Return true if this type is empty, that is, it has no elements or all of
+comment|/// its elements are empty.
 name|bool
 name|isEmptyTy
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isFirstClassType - Return true if the type is "first class", meaning it
-comment|/// is a valid type for a Value.
-comment|///
+comment|/// Return true if the type is "first class", meaning it is a valid type for a
+comment|/// Value.
 name|bool
 name|isFirstClassType
 argument_list|()
@@ -803,10 +826,8 @@ operator|!=
 name|VoidTyID
 return|;
 block|}
-comment|/// isSingleValueType - Return true if the type is a valid type for a
-comment|/// register in codegen.  This includes all first-class types except struct
-comment|/// and array types.
-comment|///
+comment|/// Return true if the type is a valid type for a register in codegen. This
+comment|/// includes all first-class types except struct and array types.
 name|bool
 name|isSingleValueType
 argument_list|()
@@ -829,11 +850,9 @@ name|isVectorTy
 argument_list|()
 return|;
 block|}
-comment|/// isAggregateType - Return true if the type is an aggregate type. This
-comment|/// means it is valid as the first operand of an insertvalue or
-comment|/// extractvalue instruction. This includes struct and array types, but
-comment|/// does not include vector types.
-comment|///
+comment|/// Return true if the type is an aggregate type. This means it is valid as
+comment|/// the first operand of an insertvalue or extractvalue instruction. This
+comment|/// includes struct and array types, but does not include vector types.
 name|bool
 name|isAggregateType
 argument_list|()
@@ -851,10 +870,9 @@ operator|==
 name|ArrayTyID
 return|;
 block|}
-comment|/// isSized - Return true if it makes sense to take the size of this type.  To
-comment|/// get the actual size for a particular target, it is reasonable to use the
+comment|/// Return true if it makes sense to take the size of this type. To get the
+comment|/// actual size for a particular target, it is reasonable to use the
 comment|/// DataLayout subsystem to do this.
-comment|///
 name|bool
 name|isSized
 argument_list|(
@@ -924,8 +942,8 @@ name|Visited
 argument_list|)
 return|;
 block|}
-comment|/// getPrimitiveSizeInBits - Return the basic size of this type if it is a
-comment|/// primitive type.  These are fixed by LLVM and are not target dependent.
+comment|/// Return the basic size of this type if it is a primitive type. These are
+comment|/// fixed by LLVM and are not target-dependent.
 comment|/// This will return zero if the type does not have a size or is not a
 comment|/// primitive type.
 comment|///
@@ -940,25 +958,25 @@ argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
-comment|/// getScalarSizeInBits - If this is a vector type, return the
-comment|/// getPrimitiveSizeInBits value for the element type. Otherwise return the
-comment|/// getPrimitiveSizeInBits value for this type.
+comment|/// If this is a vector type, return the getPrimitiveSizeInBits value for the
+comment|/// element type. Otherwise return the getPrimitiveSizeInBits value for this
+comment|/// type.
 name|unsigned
 name|getScalarSizeInBits
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 expr_stmt|;
-comment|/// getFPMantissaWidth - Return the width of the mantissa of this type.  This
-comment|/// is only valid on floating point types.  If the FP type does not
-comment|/// have a stable mantissa (e.g. ppc long double), this method returns -1.
+comment|/// Return the width of the mantissa of this type. This is only valid on
+comment|/// floating-point types. If the FP type does not have a stable mantissa (e.g.
+comment|/// ppc long double), this method returns -1.
 name|int
 name|getFPMantissaWidth
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getScalarType - If this is a vector type, return the element type,
-comment|/// otherwise return 'this'.
+comment|/// If this is a vector type, return the element type, otherwise return
+comment|/// 'this'.
 name|Type
 operator|*
 name|getScalarType
@@ -1053,10 +1071,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getContainedType - This method is used to implement the type iterator
-comment|/// (defined at the end of the file).  For derived types, this returns the
-comment|/// types 'contained' in the derived type.
-comment|///
+comment|/// This method is used to implement the type iterator (defined at the end of
+comment|/// the file). For derived types, this returns the types 'contained' in the
+comment|/// derived type.
 name|Type
 modifier|*
 name|getContainedType
@@ -1082,8 +1099,7 @@ name|i
 index|]
 return|;
 block|}
-comment|/// getNumContainedTypes - Return the number of types in the derived type.
-comment|///
+comment|/// Return the number of types in the derived type.
 name|unsigned
 name|getNumContainedTypes
 argument_list|()
@@ -1155,7 +1171,25 @@ operator|*
 name|getSequentialElementType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+name|assert
+argument_list|(
+name|isSequentialType
+argument_list|(
+name|getTypeID
+argument_list|()
+argument_list|)
+operator|&&
+literal|"Not a sequential type!"
+argument_list|)
+block|;
+return|return
+name|ContainedTys
+index|[
+literal|0
+index|]
+return|;
+block|}
 specifier|inline
 name|uint64_t
 name|getArrayNumElements
@@ -1201,7 +1235,7 @@ name|getSequentialElementType
 argument_list|()
 return|;
 block|}
-comment|/// \brief Get the address space of this pointer or pointer vector type.
+comment|/// Get the address space of this pointer or pointer vector type.
 specifier|inline
 name|unsigned
 name|getPointerAddressSpace
@@ -1212,7 +1246,7 @@ comment|//===-------------------------------------------------------------------
 comment|// Static members exported by the Type class itself.  Useful for getting
 comment|// instances of Type.
 comment|//
-comment|/// getPrimitiveType - Return a type based on an identifier.
+comment|/// Return a type based on an identifier.
 specifier|static
 name|Type
 modifier|*
@@ -1614,8 +1648,8 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// getPointerTo - Return a pointer to the current type.  This is equivalent
-comment|/// to PointerType::get(Foo, AddrSpace).
+comment|/// Return a pointer to the current type. This is equivalent to
+comment|/// PointerType::get(Foo, AddrSpace).
 name|PointerType
 modifier|*
 name|getPointerTo
@@ -1629,9 +1663,9 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/// isSizedDerivedType - Derived types like structures and arrays are sized
-comment|/// iff all of the members of the type are sized as well.  Since asking for
-comment|/// their size is relatively uncommon, move this operation out of line.
+comment|/// Derived types like structures and arrays are sized iff all of the members
+comment|/// of the type are sized as well. Since asking for their size is relatively
+comment|/// uncommon, move this operation out-of-line.
 name|bool
 name|isSizedDerivedType
 argument_list|(

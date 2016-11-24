@@ -346,6 +346,38 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
+comment|// getBranchTargetOpValue1SImm16 - Return binary encoding of the branch
+comment|// target operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTargetOpValue1SImm16
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+comment|// getBranchTargetOpValueMMR6 - Return binary encoding of the branch
+comment|// target operand. If the machine operand requires relocation,
+comment|// record the relocation and return zero.
+name|unsigned
+name|getBranchTargetOpValueMMR6
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
 comment|// getBranchTarget7OpValue - Return binary encoding of the microMIPS branch
 comment|// target operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
@@ -399,6 +431,22 @@ comment|// offset operand. If the machine operand requires relocation,
 comment|// record the relocation and return zero.
 name|unsigned
 name|getBranchTarget21OpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+comment|// getBranchTarget21OpValueMM - Return binary encoding of the branch
+comment|// offset operand for microMIPS. If the machine operand requires
+comment|// relocation,record the relocation and return zero.
+name|unsigned
+name|getBranchTarget21OpValueMM
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -486,6 +534,13 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 specifier|const
 block|;
+name|template
+operator|<
+name|unsigned
+name|ShiftAmount
+operator|=
+literal|0
+operator|>
 name|unsigned
 name|getMemEncoding
 argument_list|(
@@ -566,6 +621,19 @@ specifier|const
 block|;
 name|unsigned
 name|getMemEncodingMMImm9
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getMemEncodingMMImm11
 argument_list|(
 argument|const MCInst&MI
 argument_list|,
@@ -776,6 +844,15 @@ argument_list|,
 argument|SmallVectorImpl<MCFixup>&Fixups
 argument_list|,
 argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|void
+name|LowerCompactBranch
+argument_list|(
+argument|MCInst& Inst
 argument_list|)
 specifier|const
 block|; }

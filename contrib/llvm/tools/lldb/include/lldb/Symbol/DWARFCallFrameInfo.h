@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Core/AddressRange.h"
 end_include
 
@@ -83,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -198,6 +198,29 @@ modifier|&
 name|function_info
 parameter_list|)
 function_decl|;
+name|void
+name|ForEachFDEEntries
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+argument_list|,
+name|uint32_t
+argument_list|,
+name|dw_offset_t
+argument_list|)
+operator|>
+operator|&
+name|callback
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 enum|enum
@@ -474,9 +497,11 @@ name|bool
 name|m_fde_index_initialized
 decl_stmt|;
 comment|// only scan the section for FDEs once
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_fde_index_mutex
-decl_stmt|;
+expr_stmt|;
 comment|// and isolate the thread that does it
 name|bool
 name|m_is_eh_frame

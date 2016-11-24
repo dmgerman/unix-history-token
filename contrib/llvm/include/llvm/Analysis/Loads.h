@@ -87,10 +87,82 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+comment|/// isDereferenceablePointer - Return true if this is always a dereferenceable
+comment|/// pointer. If the context instruction is specified perform context-sensitive
+comment|/// analysis and return true if the pointer is dereferenceable at the
+comment|/// specified instruction.
+name|bool
+name|isDereferenceablePointer
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Returns true if V is always a dereferenceable pointer with alignment
+comment|/// greater or equal than requested. If the context instruction is specified
+comment|/// performs context-sensitive analysis and returns true if the pointer is
+comment|/// dereferenceable at the specified instruction.
+name|bool
+name|isDereferenceableAndAlignedPointer
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// isSafeToLoadUnconditionally - Return true if we know that executing a load
-comment|/// from this value cannot trap.  If it is not obviously safe to load from the
-comment|/// specified pointer, we do a quick local scan of the basic block containing
-comment|/// ScanFrom, to determine if the address is already accessed.
+comment|/// from this value cannot trap.
+comment|///
+comment|/// If DT and ScanFrom are specified this method performs context-sensitive
+comment|/// analysis and returns true if it is safe to load immediately before ScanFrom.
+comment|///
+comment|/// If it is not obviously safe to load from the specified pointer, we do a
+comment|/// quick local scan of the basic block containing ScanFrom, to determine if
+comment|/// the address is already accessed.
 name|bool
 name|isSafeToLoadUnconditionally
 parameter_list|(
@@ -98,41 +170,64 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
 name|Instruction
 modifier|*
 name|ScanFrom
+init|=
+name|nullptr
 parameter_list|,
-name|unsigned
-name|Align
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DefMaxInstsToScan - the default number of maximum instructions
 comment|/// to scan in the block, used by FindAvailableLoadedValue().
 extern|extern cl::opt<unsigned> DefMaxInstsToScan;
-comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at
-comment|/// the instruction before ScanFrom) checking to see if we have the value at
-comment|/// the memory address *Ptr locally available within a small number of
-comment|///  instructions. If the value is available, return it.
+comment|/// \brief Scan backwards to see if we have the value of the given load
+comment|/// available locally within a small number of instructions.
 comment|///
-comment|/// If not, return the iterator for the last validated instruction that the
-comment|/// value would be live through.  If we scanned the entire block and didn't
-comment|/// find something that invalidates *Ptr or provides it, ScanFrom would be
-comment|/// left at begin() and this returns null.  ScanFrom could also be left
+comment|/// You can use this function to scan across multiple blocks: after you call
+comment|/// this function, if ScanFrom points at the beginning of the block, it's safe
+comment|/// to continue scanning the predecessors.
 comment|///
-comment|/// MaxInstsToScan specifies the maximum instructions to scan in the block.
-comment|/// If it is set to 0, it will scan the whole block. You can also optionally
-comment|/// specify an alias analysis implementation, which makes this more precise.
+comment|/// Note that performing load CSE requires special care to make sure the
+comment|/// metadata is set appropriately.  In particular, aliasing metadata needs
+comment|/// to be merged.  (This doesn't matter for store-to-load forwarding because
+comment|/// the only relevant load gets deleted.)
 comment|///
-comment|/// If AATags is non-null and a load or store is found, the AA tags from the
-comment|/// load or store are recorded there.  If there are no AA tags or if no access
-comment|/// is found, it is left unmodified.
+comment|/// \param Load The load we want to replace.
+comment|/// \param ScanBB The basic block to scan. FIXME: This is redundant.
+comment|/// \param [in,out] ScanFrom The location to start scanning from. When this
+comment|/// function returns, it points at the last instruction scanned.
+comment|/// \param MaxInstsToScan The maximum number of instructions to scan. If this
+comment|/// is zero, the whole block will be scanned.
+comment|/// \param AA Optional pointer to alias analysis, to make the scan more
+comment|/// precise.
+comment|/// \param [out] AATags The aliasing metadata for the operation which produced
+comment|/// the value. FIXME: This is basically useless.
+comment|/// \param [out] IsLoadCSE Whether the returned value is a load from the same
+comment|/// location in memory, as opposed to the value operand of a store.
+comment|///
+comment|/// \returns The found value, or nullptr if no value is found.
 name|Value
 modifier|*
 name|FindAvailableLoadedValue
 argument_list|(
-name|Value
+name|LoadInst
 operator|*
-name|Ptr
+name|Load
 argument_list|,
 name|BasicBlock
 operator|*
@@ -158,6 +253,12 @@ argument_list|,
 name|AAMDNodes
 operator|*
 name|AATags
+operator|=
+name|nullptr
+argument_list|,
+name|bool
+operator|*
+name|IsLoadCSE
 operator|=
 name|nullptr
 argument_list|)

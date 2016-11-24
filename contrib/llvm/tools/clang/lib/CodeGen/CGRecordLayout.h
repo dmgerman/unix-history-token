@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Decl.h"
+file|"clang/AST/DeclCXX.h"
 end_include
 
 begin_include

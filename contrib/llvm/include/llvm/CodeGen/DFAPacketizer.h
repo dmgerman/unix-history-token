@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -241,7 +247,7 @@ name|unsigned
 operator|>
 name|CachedTable
 expr_stmt|;
-comment|// ReadTable - Read the DFA transition table and update CachedTable.
+comment|// Read the DFA transition table and update CachedTable.
 name|void
 name|ReadTable
 parameter_list|(
@@ -284,7 +290,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|// getInsnInput - Return the DFAInput for an instruction class.
+comment|// Return the DFAInput for an instruction class.
 name|DFAInput
 name|getInsnInput
 parameter_list|(
@@ -292,7 +298,7 @@ name|unsigned
 name|InsnClass
 parameter_list|)
 function_decl|;
-comment|// getInsnInput - Return the DFAInput for an instruction class input vector.
+comment|// Return the DFAInput for an instruction class input vector.
 specifier|static
 name|DFAInput
 name|getInsnInput
@@ -308,8 +314,8 @@ operator|&
 name|InsnClass
 argument_list|)
 decl_stmt|;
-comment|// canReserveResources - Check if the resources occupied by a MCInstrDesc
-comment|// are available in the current state.
+comment|// Check if the resources occupied by a MCInstrDesc are available in
+comment|// the current state.
 name|bool
 name|canReserveResources
 argument_list|(
@@ -321,8 +327,8 @@ operator|*
 name|MID
 argument_list|)
 decl_stmt|;
-comment|// reserveResources - Reserve the resources occupied by a MCInstrDesc and
-comment|// change the current state to reflect that change.
+comment|// Reserve the resources occupied by a MCInstrDesc and change the current
+comment|// state to reflect that change.
 name|void
 name|reserveResources
 argument_list|(
@@ -334,27 +340,27 @@ operator|*
 name|MID
 argument_list|)
 decl_stmt|;
-comment|// canReserveResources - Check if the resources occupied by a machine
-comment|// instruction are available in the current state.
+comment|// Check if the resources occupied by a machine instruction are available
+comment|// in the current state.
 name|bool
 name|canReserveResources
 argument_list|(
 name|llvm
 operator|::
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl_stmt|;
-comment|// reserveResources - Reserve the resources occupied by a machine
-comment|// instruction and change the current state to reflect that change.
+comment|// Reserve the resources occupied by a machine instruction and change the
+comment|// current state to reflect that change.
 name|void
 name|reserveResources
 argument_list|(
 name|llvm
 operator|::
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|)
 decl_stmt|;
@@ -371,13 +377,13 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|// VLIWPacketizerList - Implements a simple VLIW packetizer using DFA. The
-comment|// packetizer works on machine basic blocks. For each instruction I in BB, the
-comment|// packetizer consults the DFA to see if machine resources are available to
-comment|// execute I. If so, the packetizer checks if I depends on any instruction J in
-comment|// the current packet. If no dependency is found, I is added to current packet
-comment|// and machine resource is marked as taken. If any dependency is found, a target
-comment|// API call is made to prune the dependence.
+comment|// VLIWPacketizerList implements a simple VLIW packetizer using DFA. The
+comment|// packetizer works on machine basic blocks. For each instruction I in BB,
+comment|// the packetizer consults the DFA to see if machine resources are available
+comment|// to execute I. If so, the packetizer checks if I depends on any instruction
+comment|// in the current packet. If no dependency is found, I is added to current
+comment|// packet and the machine resource is marked as taken. If any dependency is
+comment|// found, a target API call is made to prune the dependence.
 name|class
 name|VLIWPacketizerList
 block|{
@@ -416,7 +422,7 @@ name|DFAPacketizer
 modifier|*
 name|ResourceTracker
 decl_stmt|;
-comment|// Generate MI -> SU map.
+comment|// Map: MI -> SU.
 name|std
 operator|::
 name|map
@@ -452,7 +458,7 @@ operator|~
 name|VLIWPacketizerList
 argument_list|()
 expr_stmt|;
-comment|// PacketizeMIs - Implement this API in the backend to bundle instructions.
+comment|// Implement this API in the backend to bundle instructions.
 name|void
 name|PacketizeMIs
 argument_list|(
@@ -471,7 +477,7 @@ name|iterator
 name|EndItr
 argument_list|)
 decl_stmt|;
-comment|// getResourceTracker - return ResourceTracker
+comment|// Return the ResourceTracker.
 name|DFAPacketizer
 modifier|*
 name|getResourceTracker
@@ -488,20 +494,14 @@ operator|::
 name|iterator
 name|addToPacket
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 block|{
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MII
-operator|=
-name|MI
-block|;
 name|CurrentPacketMIs
 operator|.
 name|push_back
 argument_list|(
+operator|&
 name|MI
 argument_list|)
 block|;
@@ -513,7 +513,7 @@ name|MI
 argument_list|)
 block|;
 return|return
-name|MII
+name|MI
 return|;
 block|}
 comment|// End the current packet and reset the state of the packetizer.
@@ -522,34 +522,32 @@ comment|// to perform custom finalization.
 name|virtual
 name|void
 name|endPacket
-parameter_list|(
+argument_list|(
 name|MachineBasicBlock
-modifier|*
+operator|*
 name|MBB
-parameter_list|,
-name|MachineInstr
-modifier|*
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|MI
-parameter_list|)
-function_decl|;
-comment|// initPacketizerState - perform initialization before packetizing
-comment|// an instruction. This function is supposed to be overrided by
-comment|// the target dependent packetizer.
+argument_list|)
+decl_stmt|;
+comment|// Perform initialization before packetizing an instruction. This
+comment|// function is supposed to be overrided by the target dependent packetizer.
 name|virtual
 name|void
 name|initPacketizerState
 parameter_list|()
-block|{
-return|return;
-block|}
-comment|// ignorePseudoInstruction - Ignore bundling of pseudo instructions.
+block|{}
+comment|// Check if the given instruction I should be ignored by the packetizer.
 name|virtual
 name|bool
 name|ignorePseudoInstruction
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|I
 parameter_list|,
 specifier|const
@@ -562,15 +560,15 @@ return|return
 name|false
 return|;
 block|}
-comment|// isSoloInstruction - return true if instruction MI can not be packetized
-comment|// with any other instruction, which means that MI itself is a packet.
+comment|// Return true if instruction MI can not be packetized with any other
+comment|// instruction, which means that MI itself is a packet.
 name|virtual
 name|bool
 name|isSoloInstruction
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -590,7 +588,7 @@ name|shouldAddToPacket
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -598,8 +596,7 @@ return|return
 name|true
 return|;
 block|}
-comment|// isLegalToPacketizeTogether - Is it legal to packetize SUI and SUJ
-comment|// together.
+comment|// Check if it is legal to packetize SUI and SUJ together.
 name|virtual
 name|bool
 name|isLegalToPacketizeTogether
@@ -617,8 +614,7 @@ return|return
 name|false
 return|;
 block|}
-comment|// isLegalToPruneDependencies - Is it legal to prune dependece between SUI
-comment|// and SUJ.
+comment|// Check if it is legal to prune dependece between SUI and SUJ.
 name|virtual
 name|bool
 name|isLegalToPruneDependencies
@@ -636,10 +632,27 @@ return|return
 name|false
 return|;
 block|}
+comment|// Add a DAG mutation to be done before the packetization begins.
+name|void
+name|addMutation
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ScheduleDAGMutation
+operator|>
+name|Mutation
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

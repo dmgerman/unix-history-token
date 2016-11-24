@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_SIISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_SIISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_SIISELLOWERING_H
+name|LLVM_LIB_TARGET_AMDGPU_SIISELLOWERING_H
 end_define
 
 begin_include
@@ -81,10 +81,24 @@ name|llvm
 block|{
 name|class
 name|SITargetLowering
+name|final
 range|:
 name|public
 name|AMDGPUTargetLowering
 block|{
+name|SDValue
+name|LowerParameterPtr
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const SDLoc&SL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+specifier|const
+block|;
 name|SDValue
 name|LowerParameter
 argument_list|(
@@ -94,24 +108,13 @@ argument|EVT VT
 argument_list|,
 argument|EVT MemVT
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&SL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|unsigned Offset
 argument_list|,
 argument|bool Signed
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSampleIntrinsic
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|const SDValue&Op
-argument_list|,
-argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -142,6 +145,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINTRINSIC_W_CHAIN
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -186,7 +198,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFastFDIV
+name|lowerFastUnsafeFDIV
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerFDIV_FAST
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -251,7 +272,43 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerATOMIC_CMP_SWAP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerBRCOND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|getSegmentAperture
+argument_list|(
+argument|unsigned AS
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerADDRSPACECAST
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerTRAP
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -316,7 +373,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|performMin3Max3Combine
+name|performFCanonicalizeCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performMinMaxCombine
 argument_list|(
 argument|SDNode *N
 argument_list|,
@@ -347,19 +413,53 @@ argument|const AddrMode&AM
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|isCFIntrinsic
+argument_list|(
+argument|const SDNode *Intr
+argument_list|)
+specifier|const
+block|;
+name|void
+name|createDebuggerPrologueStackObjects
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|SITargetLowering
 argument_list|(
+specifier|const
 name|TargetMachine
 operator|&
 name|tm
 argument_list|,
 specifier|const
-name|AMDGPUSubtarget
+name|SISubtarget
 operator|&
 name|STI
 argument_list|)
+block|;
+specifier|const
+name|SISubtarget
+operator|*
+name|getSubtarget
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+argument|IntrinsicInfo&
+argument_list|,
+argument|const CallInst&
+argument_list|,
+argument|unsigned IntrinsicID
+argument_list|)
+specifier|const
+name|override
 block|;
 name|bool
 name|isShuffleMaskLegal
@@ -458,6 +558,24 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|isTypeDesirableForOp
+argument_list|(
+argument|unsigned Op
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isOffsetFoldingLegal
+argument_list|(
+argument|const GlobalAddressSDNode *GA
+argument_list|)
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -469,7 +587,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -491,7 +609,19 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -500,11 +630,21 @@ name|override
 block|;
 name|MachineBasicBlock
 operator|*
+name|splitKillBlock
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr * MI
+argument|MachineInstr&MI
 argument_list|,
-argument|MachineBasicBlock * BB
+argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
 name|override
@@ -581,7 +721,7 @@ block|;
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|SDNode *Node
 argument_list|)
@@ -624,7 +764,7 @@ name|wrapAddr64Rsrc
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Ptr
 argument_list|)
@@ -636,7 +776,7 @@ name|buildRSRC
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Ptr
 argument_list|,
@@ -682,7 +822,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue V
 argument_list|)

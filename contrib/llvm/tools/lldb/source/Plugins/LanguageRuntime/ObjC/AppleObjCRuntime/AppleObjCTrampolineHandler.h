@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-public.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -212,12 +212,6 @@ specifier|const
 name|char
 modifier|*
 name|g_lookup_implementation_function_name
-decl_stmt|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|g_lookup_implementation_function_code
 decl_stmt|;
 specifier|static
 specifier|const
@@ -618,6 +612,11 @@ operator|::
 name|ModuleSP
 name|m_objc_module_sp
 expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|m_lookup_implementation_function_code
+decl_stmt|;
 name|std
 operator|::
 name|unique_ptr
@@ -626,9 +625,11 @@ name|UtilityFunction
 operator|>
 name|m_impl_code
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_impl_function_mutex
-decl_stmt|;
+expr_stmt|;
 name|lldb
 operator|::
 name|addr_t

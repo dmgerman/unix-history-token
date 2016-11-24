@@ -94,6 +94,55 @@ typedef|(32)));
 end_typedef
 
 begin_comment
+comment|/* Unsigned types */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|__v4du
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__v8su
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|__v16hu
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|__v32qu
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_comment
 comment|/* We need an explicitly signed variant for char. Note that this shouldn't  * appear in the interface though. */
 end_comment
 
@@ -154,6 +203,54 @@ begin_comment
 comment|/* Arithmetic */
 end_comment
 
+begin_comment
+comment|/// \brief Adds two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VADDPD / ADDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -169,12 +266,71 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256d
+call|)
+argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 operator|+
+operator|(
+name|__v4df
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VADDPS / ADDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -191,12 +347,71 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256
+call|)
+argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 operator|+
+operator|(
+name|__v8sf
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSUBPD / SUBPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the minuend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the subtrahend.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the differences between
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -213,12 +428,71 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256d
+call|)
+argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 operator|-
+operator|(
+name|__v4df
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSUBPS / SUBPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the minuend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the subtrahend.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the differences between
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -235,12 +509,75 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256
+call|)
+argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 operator|-
+operator|(
+name|__v8sf
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds the even-indexed values and subtracts the odd-indexed values of
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VADDSUBPD / ADDSUBPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the left source operand.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the right source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the alternating sums
+end_comment
+
+begin_comment
+comment|///    and differences between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -276,6 +613,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds the even-indexed values and subtracts the odd-indexed values of
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VADDSUBPS / ADDSUBPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the left source operand.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the right source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the alternating sums and
+end_comment
+
+begin_comment
+comment|///    differences between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -310,6 +699,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Divides two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VDIVPD / DIVPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the dividend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the divisor.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the quotients of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -325,12 +762,71 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256d
+call|)
+argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 operator|/
+operator|(
+name|__v4df
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Divides two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VDIVPS / DIVPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the dividend.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the divisor.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the quotients of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -347,12 +843,75 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256
+call|)
+argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 operator|/
+operator|(
+name|__v8sf
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares two 256-bit vectors of [4 x double] and returns the greater
+end_comment
+
+begin_comment
+comment|///    of each pair of values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMAXPD / MAXPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the maximum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -388,6 +947,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares two 256-bit vectors of [8 x float] and returns the greater
+end_comment
+
+begin_comment
+comment|///    of each pair of values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMAXPS / MAXPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the maximum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -421,6 +1032,58 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares two 256-bit vectors of [4 x double] and returns the lesser
+end_comment
+
+begin_comment
+comment|///    of each pair of values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMINPD / MINPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the minimum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -456,6 +1119,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares two 256-bit vectors of [8 x float] and returns the lesser
+end_comment
+
+begin_comment
+comment|///    of each pair of values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMINPS / MINPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the minimum values
+end_comment
+
+begin_comment
+comment|///    between both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -490,6 +1205,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMULPD / MULPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the products of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -505,12 +1268,71 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256d
+call|)
+argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 operator|*
+operator|(
+name|__v4df
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMULPS / MULPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the products of both
+end_comment
+
+begin_comment
+comment|///    operands.
+end_comment
 
 begin_function
 specifier|static
@@ -527,12 +1349,67 @@ name|__b
 parameter_list|)
 block|{
 return|return
+call|(
+name|__m256
+call|)
+argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 operator|*
+operator|(
+name|__v8sf
+operator|)
 name|__b
+argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Calculates the square roots of the values in a 256-bit vector of
+end_comment
+
+begin_comment
+comment|///    [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSQRTPD / SQRTPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the square roots of the
+end_comment
+
+begin_comment
+comment|///    values in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -560,6 +1437,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Calculates the square roots of the values in a 256-bit vector of
+end_comment
+
+begin_comment
+comment|///    [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSQRTPS / SQRTPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the square roots of the
+end_comment
+
+begin_comment
+comment|///    values in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -585,6 +1506,50 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Calculates the reciprocal square roots of the values in a 256-bit
+end_comment
+
+begin_comment
+comment|///    vector of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VRSQRTPS / RSQRTPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the reciprocal square
+end_comment
+
+begin_comment
+comment|///    roots of the values in the operand.
+end_comment
 
 begin_function
 specifier|static
@@ -612,6 +1577,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Calculates the reciprocals of the values in a 256-bit vector of
+end_comment
+
+begin_comment
+comment|///    [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VRCPPS / RCPPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the reciprocals of the
+end_comment
+
+begin_comment
+comment|///    values in the operand.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -638,6 +1647,122 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Rounds the values in a 256-bit vector of [4 x double] as specified
+end_comment
+
+begin_comment
+comment|///    by the byte operand. The source values are rounded to integer values and
+end_comment
+
+begin_comment
+comment|///    returned as 64-bit double-precision floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_round_pd(__m256d V, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPD / ROUNDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An integer value that specifies the rounding operation.
+end_comment
+
+begin_comment
+comment|///    Bits [7:4] are reserved.
+end_comment
+
+begin_comment
+comment|///    Bit [3] is a precision exception value:
+end_comment
+
+begin_comment
+comment|///    0: A normal PE exception is used.
+end_comment
+
+begin_comment
+comment|///    1: The PE field is not updated.
+end_comment
+
+begin_comment
+comment|///    Bit [2] is the rounding control source:
+end_comment
+
+begin_comment
+comment|///    0: Use bits [1:0] of M.
+end_comment
+
+begin_comment
+comment|///    1: Use the current MXCSR setting.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0] contain the rounding control definition:
+end_comment
+
+begin_comment
+comment|///    00: Nearest.
+end_comment
+
+begin_comment
+comment|///    01: Downward (toward negative infinity).
+end_comment
+
+begin_comment
+comment|///    10: Upward (toward positive infinity).
+end_comment
+
+begin_comment
+comment|///    11: Truncated.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the rounded values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -649,6 +1774,122 @@ name|M
 parameter_list|)
 value|__extension__ ({ \     (__m256d)__builtin_ia32_roundpd256((__v4df)(__m256d)(V), (M)); })
 end_define
+
+begin_comment
+comment|/// \brief Rounds the values stored in a 256-bit vector of [8 x float] as
+end_comment
+
+begin_comment
+comment|///    specified by the byte operand. The source values are rounded to integer
+end_comment
+
+begin_comment
+comment|///    values and returned as floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_round_ps(__m256 V, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPS / ROUNDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An integer value that specifies the rounding operation.
+end_comment
+
+begin_comment
+comment|///    Bits [7:4] are reserved.
+end_comment
+
+begin_comment
+comment|///    Bit [3] is a precision exception value:
+end_comment
+
+begin_comment
+comment|///    0: A normal PE exception is used.
+end_comment
+
+begin_comment
+comment|///    1: The PE field is not updated.
+end_comment
+
+begin_comment
+comment|///    Bit [2] is the rounding control source:
+end_comment
+
+begin_comment
+comment|///    0: Use bits [1:0] of M.
+end_comment
+
+begin_comment
+comment|///    1: Use the current MXCSR setting.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0] contain the rounding control definition:
+end_comment
+
+begin_comment
+comment|///    00: Nearest.
+end_comment
+
+begin_comment
+comment|///    01: Downward (toward negative infinity).
+end_comment
+
+begin_comment
+comment|///    10: Upward (toward positive infinity).
+end_comment
+
+begin_comment
+comment|///    11: Truncated.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the rounded values.
+end_comment
 
 begin_define
 define|#
@@ -662,6 +1903,66 @@ parameter_list|)
 value|__extension__ ({ \   (__m256)__builtin_ia32_roundps256((__v8sf)(__m256)(V), (M)); })
 end_define
 
+begin_comment
+comment|/// \brief Rounds up the values stored in a 256-bit vector of [4 x double]. The
+end_comment
+
+begin_comment
+comment|///    source values are rounded up to integer values and returned as 64-bit
+end_comment
+
+begin_comment
+comment|///    double-precision floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_ceil_pd(__m256d V);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPD / ROUNDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the rounded up values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -671,6 +1972,70 @@ name|V
 parameter_list|)
 value|_mm256_round_pd((V), _MM_FROUND_CEIL)
 end_define
+
+begin_comment
+comment|/// \brief Rounds down the values stored in a 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|///    The source values are rounded down to integer values and returned as
+end_comment
+
+begin_comment
+comment|///    64-bit double-precision floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_floor_pd(__m256d V);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPD / ROUNDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the rounded down
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_define
 define|#
@@ -682,6 +2047,66 @@ parameter_list|)
 value|_mm256_round_pd((V), _MM_FROUND_FLOOR)
 end_define
 
+begin_comment
+comment|/// \brief Rounds up the values stored in a 256-bit vector of [8 x float]. The
+end_comment
+
+begin_comment
+comment|///    source values are rounded up to integer values and returned as
+end_comment
+
+begin_comment
+comment|///    floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_ceil_ps(__m256 V);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPS / ROUNDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the rounded up values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -691,6 +2116,66 @@ name|V
 parameter_list|)
 value|_mm256_round_ps((V), _MM_FROUND_CEIL)
 end_define
+
+begin_comment
+comment|/// \brief Rounds down the values stored in a 256-bit vector of [8 x float]. The
+end_comment
+
+begin_comment
+comment|///    source values are rounded down to integer values and returned as
+end_comment
+
+begin_comment
+comment|///    floating-point values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_floor_ps(__m256 V);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VROUNDPS / ROUNDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the rounded down values.
+end_comment
 
 begin_define
 define|#
@@ -704,6 +2189,54 @@ end_define
 
 begin_comment
 comment|/* Logical */
+end_comment
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VANDPD / ANDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
 end_comment
 
 begin_function
@@ -726,18 +2259,66 @@ name|__m256d
 call|)
 argument_list|(
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VANDPS / ANDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -759,18 +2340,78 @@ name|__m256
 call|)
 argument_list|(
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 256-bit vectors of [4 x double], using
+end_comment
+
+begin_comment
+comment|///    the one's complement of the values contained in the first source operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VANDNPD / ANDNPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the left source operand. The
+end_comment
+
+begin_comment
+comment|///    one's complement of this value is used in the bitwise AND.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing the right source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values of the second operand and the one's complement of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
 
 begin_function
 specifier|static
@@ -793,18 +2434,78 @@ call|)
 argument_list|(
 operator|~
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 256-bit vectors of [8 x float], using
+end_comment
+
+begin_comment
+comment|///    the one's complement of the values contained in the first source operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VANDNPS / ANDNPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the left source operand. The
+end_comment
+
+begin_comment
+comment|///    one's complement of this value is used in the bitwise AND.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing the right source operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the bitwise AND of the
+end_comment
+
+begin_comment
+comment|///    values of the second operand and the one's complement of the first
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
 
 begin_function
 specifier|static
@@ -827,18 +2528,66 @@ call|)
 argument_list|(
 operator|~
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__a
 operator|&
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise OR of two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VORPD / ORPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the bitwise OR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -860,18 +2609,66 @@ name|__m256d
 call|)
 argument_list|(
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__a
 operator||
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise OR of two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VORPS / ORPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the bitwise OR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -893,18 +2690,66 @@ name|__m256
 call|)
 argument_list|(
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__a
 operator||
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise XOR of two 256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VXORPD / XORPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the bitwise XOR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -926,18 +2771,66 @@ name|__m256d
 call|)
 argument_list|(
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__a
 operator|^
 operator|(
-name|__v4di
+name|__v4du
 operator|)
 name|__b
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise XOR of two 256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VXORPS / XORPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the bitwise XOR of the
+end_comment
+
+begin_comment
+comment|///    values between both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -959,12 +2852,12 @@ name|__m256
 call|)
 argument_list|(
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__a
 operator|^
 operator|(
-name|__v8si
+name|__v8su
 operator|)
 name|__b
 argument_list|)
@@ -974,6 +2867,74 @@ end_function
 
 begin_comment
 comment|/* Horizontal arithmetic */
+end_comment
+
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in two
+end_comment
+
+begin_comment
+comment|///    256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VHADDPD / HADDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal sums of the values are returned in the even-indexed
+end_comment
+
+begin_comment
+comment|///    elements of a vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal sums of the values are returned in the odd-indexed
+end_comment
+
+begin_comment
+comment|///    elements of a vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the horizontal sums of
+end_comment
+
+begin_comment
+comment|///    both operands.
 end_comment
 
 begin_function
@@ -1010,6 +2971,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally adds the adjacent pairs of values contained in two
+end_comment
+
+begin_comment
+comment|///    256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VHADDPS / HADDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal sums of the values are returned in the elements with
+end_comment
+
+begin_comment
+comment|///    index 0, 1, 4, 5 of a vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal sums of the values are returned in the elements with
+end_comment
+
+begin_comment
+comment|///    index 2, 3, 6, 7 of a vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the horizontal sums of
+end_comment
+
+begin_comment
+comment|///    both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1044,6 +3073,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in two
+end_comment
+
+begin_comment
+comment|///    256-bit vectors of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VHSUBPD / HSUBPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal differences between the values are returned in the
+end_comment
+
+begin_comment
+comment|///    even-indexed elements of a vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal differences between the values are returned in the
+end_comment
+
+begin_comment
+comment|///    odd-indexed elements of a vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the horizontal
+end_comment
+
+begin_comment
+comment|///    differences of both operands.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1077,6 +3174,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Horizontally subtracts the adjacent pairs of values contained in two
+end_comment
+
+begin_comment
+comment|///    256-bit vectors of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VHSUBPS / HSUBPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal differences between the values are returned in the
+end_comment
+
+begin_comment
+comment|///    elements with index 0, 1, 4, 5 of a vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float] containing one of the source operands.
+end_comment
+
+begin_comment
+comment|///    The horizontal differences between the values are returned in the
+end_comment
+
+begin_comment
+comment|///    elements with index 2, 3, 6, 7 of a vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the horizontal
+end_comment
+
+begin_comment
+comment|///    differences of both operands.
+end_comment
 
 begin_function
 specifier|static
@@ -1116,6 +3281,98 @@ begin_comment
 comment|/* Vector permutations */
 end_comment
 
+begin_comment
+comment|/// \brief Copies the values in a 128-bit vector of [2 x double] as specified
+end_comment
+
+begin_comment
+comment|///    by the 128-bit integer vector operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPD / PERMILPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    copied.
+end_comment
+
+begin_comment
+comment|///    Bit [1]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [65]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the copied values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1149,6 +3406,138 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Copies the values in a 256-bit vector of [4 x double] as
+end_comment
+
+begin_comment
+comment|///    specified by the 256-bit integer vector operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPD / PERMILPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    copied.
+end_comment
+
+begin_comment
+comment|///    Bit [1]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [65]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [129]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [191:128] of the source are copied to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [255:192] of the source are copied to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [193]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [191:128] of the source are copied to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [255:192] of the source are copied to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the copied values.
+end_comment
 
 begin_function
 specifier|static
@@ -1184,6 +3573,202 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Copies the values stored in a 128-bit vector of [4 x float] as
+end_comment
+
+begin_comment
+comment|///    specified by the 128-bit integer vector operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    copied.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [33:32]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [65:64]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [97:96]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing the copied values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1217,6 +3802,346 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Copies the values stored in a 256-bit vector of [8 x float] as
+end_comment
+
+begin_comment
+comment|///    specified by the 256-bit integer vector operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    copied.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [33:32]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [65:64]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [97:96]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [129:128]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [161:160]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [193:192]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [225:224]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the copied values.
+end_comment
 
 begin_function
 specifier|static
@@ -1252,6 +4177,110 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Copies the values in a 128-bit vector of [2 x double] as
+end_comment
+
+begin_comment
+comment|///    specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128d _mm_permute_pd(__m128d A, const int C);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPD / PERMILPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param A
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param C
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be copied.
+end_comment
+
+begin_comment
+comment|///    Bit [0]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [1]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the copied values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1261,8 +4290,152 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_shufflevector((__v2df)(__m128d)(A), \                                    (__v2df)_mm_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1); })
+value|__extension__ ({ \   (__m128d)__builtin_shufflevector((__v2df)(__m128d)(A), \                                    (__v2df)_mm_undefined_pd(), \                                    ((C)>> 0)& 0x1, ((C)>> 1)& 0x1); })
 end_define
+
+begin_comment
+comment|/// \brief Copies the values in a 256-bit vector of [4 x double] as
+end_comment
+
+begin_comment
+comment|///    specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_permute_pd(__m256d A, const int C);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPD / PERMILPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param A
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param C
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be copied.
+end_comment
+
+begin_comment
+comment|///    Bit [0]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [1]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [63:0] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [127:64] of the source are copied to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [2]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [191:128] of the source are copied to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [255:192] of the source are copied to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bit [3]:
+end_comment
+
+begin_comment
+comment|///    0: Bits [191:128] of the source are copied to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    1: Bits [255:192] of the source are copied to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the copied values.
+end_comment
 
 begin_define
 define|#
@@ -1273,8 +4446,216 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(A), \                                    (__v4df)_mm256_setzero_pd(), \                                    (C)& 0x1, ((C)& 0x2)>> 1, \                                    2 + (((C)& 0x4)>> 2), \                                    2 + (((C)& 0x8)>> 3)); })
+value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(A), \                                    (__v4df)_mm256_undefined_pd(), \                                    0 + (((C)>> 0)& 0x1), \                                    0 + (((C)>> 1)& 0x1), \                                    2 + (((C)>> 2)& 0x1), \                                    2 + (((C)>> 3)& 0x1)); })
 end_define
+
+begin_comment
+comment|/// \brief Copies the values in a 128-bit vector of [4 x float] as
+end_comment
+
+begin_comment
+comment|///    specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128 _mm_permute_ps(__m128 A, const int C);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param A
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param C
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be copied.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [3:2]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [7:6]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing the copied values.
+end_comment
 
 begin_define
 define|#
@@ -1285,8 +4666,360 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_shufflevector((__v4sf)(__m128)(A), \                                   (__v4sf)_mm_setzero_ps(), \                                    (C)& 0x3, ((C)& 0xc)>> 2, \                                    ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6); })
+value|__extension__ ({ \   (__m128)__builtin_shufflevector((__v4sf)(__m128)(A), \                                   (__v4sf)_mm_undefined_ps(), \                                   ((C)>> 0)& 0x3, ((C)>> 2)& 0x3, \                                   ((C)>> 4)& 0x3, ((C)>> 6)& 0x3); })
 end_define
+
+begin_comment
+comment|/// \brief Copies the values in a 256-bit vector of [8 x float] as
+end_comment
+
+begin_comment
+comment|///    specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_permute_ps(__m256 A, const int C);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERMILPS / PERMILPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param A
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param C
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be copied.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [31:0] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [3:2]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [63:32] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [95:64] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [7:6]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] of the source are copied to bits [127:96] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [159:128] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [3:2]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [191:160] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [223:192] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    Bits [7:6]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [159:128] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    01: Bits [191:160] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    10: Bits [223:192] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:224] of the source are copied to bits [255:224] of the
+end_comment
+
+begin_comment
+comment|///    returned vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the copied values.
+end_comment
 
 begin_define
 define|#
@@ -1297,8 +5030,156 @@ name|A
 parameter_list|,
 name|C
 parameter_list|)
-value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(A), \                                   (__v8sf)_mm256_setzero_ps(), \                                   (C)& 0x3, ((C)& 0xc)>> 2, \                                   ((C)& 0x30)>> 4, ((C)& 0xc0)>> 6, \                                   4 + (((C)& 0x03)>> 0), \                                   4 + (((C)& 0x0c)>> 2), \                                   4 + (((C)& 0x30)>> 4), \                                   4 + (((C)& 0xc0)>> 6)); })
+value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(A), \                                   (__v8sf)_mm256_undefined_ps(), \                                   0 + (((C)>> 0)& 0x3), \                                   0 + (((C)>> 2)& 0x3), \                                   0 + (((C)>> 4)& 0x3), \                                   0 + (((C)>> 6)& 0x3), \                                   4 + (((C)>> 0)& 0x3), \                                   4 + (((C)>> 2)& 0x3), \                                   4 + (((C)>> 4)& 0x3), \                                   4 + (((C)>> 6)& 0x3)); })
 end_define
+
+begin_comment
+comment|/// \brief Permutes 128-bit data values stored in two 256-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x double], as specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_permute2f128_pd(__m256d V1, __m256d V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERM2F128 / PERM2F128 instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double.
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    permuted.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the copied values.
+end_comment
 
 begin_define
 define|#
@@ -1314,6 +5195,154 @@ parameter_list|)
 value|__extension__ ({ \   (__m256d)__builtin_ia32_vperm2f128_pd256((__v4df)(__m256d)(V1), \                                            (__v4df)(__m256d)(V2), (M)); })
 end_define
 
+begin_comment
+comment|/// \brief Permutes 128-bit data values stored in two 256-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [8 x float], as specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_permute2f128_ps(__m256 V1, __m256 V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERM2F128 / PERM2F128 instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be
+end_comment
+
+begin_comment
+comment|///    permuted.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the copied values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1327,6 +5356,150 @@ name|M
 parameter_list|)
 value|__extension__ ({ \   (__m256)__builtin_ia32_vperm2f128_ps256((__v8sf)(__m256)(V1), \                                           (__v8sf)(__m256)(V2), (M)); })
 end_define
+
+begin_comment
+comment|/// \brief Permutes 128-bit data values stored in two 256-bit integer vectors,
+end_comment
+
+begin_comment
+comment|///    as specified by the immediate integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256i _mm256_permute2f128_si256(__m256i V1, __m256i V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPERM2F128 / PERM2F128 instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand specifying how the values are to be copied.
+end_comment
+
+begin_comment
+comment|///    Bits [1:0]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [127:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4]:
+end_comment
+
+begin_comment
+comment|///    00: Bits [127:0] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    01: Bits [255:128] of operand V1 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    10: Bits [127:0] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    11: Bits [255:128] of operand V2 are copied to bits [255:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit integer vector containing the copied values.
+end_comment
 
 begin_define
 define|#
@@ -1346,6 +5519,102 @@ begin_comment
 comment|/* Vector Blend */
 end_comment
 
+begin_comment
+comment|/// \brief Merges 64-bit double-precision data values stored in either of the
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [4 x double], as specified by the immediate
+end_comment
+
+begin_comment
+comment|///    integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_blend_pd(__m256d V1, __m256d V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VBLENDPD / BLENDPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with mask bits [3:0] specifying how the
+end_comment
+
+begin_comment
+comment|///    values are to be copied. The position of the mask bit corresponds to the
+end_comment
+
+begin_comment
+comment|///    index of a copied value. When a mask bit is 0, the corresponding 64-bit
+end_comment
+
+begin_comment
+comment|///    element in operand V1 is copied to the same position in the destination.
+end_comment
+
+begin_comment
+comment|///    When a mask bit is 1, the corresponding 64-bit element in operand V2 is
+end_comment
+
+begin_comment
+comment|///    copied to the same position in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the copied values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1360,6 +5629,102 @@ parameter_list|)
 value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(V1), \                                    (__v4df)(__m256d)(V2), \                                    (((M)& 0x01) ? 4 : 0), \                                    (((M)& 0x02) ? 5 : 1), \                                    (((M)& 0x04) ? 6 : 2), \                                    (((M)& 0x08) ? 7 : 3)); })
 end_define
 
+begin_comment
+comment|/// \brief Merges 32-bit single-precision data values stored in either of the
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [8 x float], as specified by the immediate
+end_comment
+
+begin_comment
+comment|///    integer operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_blend_ps(__m256 V1, __m256 V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VBLENDPS / BLENDPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with mask bits [7:0] specifying how the
+end_comment
+
+begin_comment
+comment|///    values are to be copied. The position of the mask bit corresponds to the
+end_comment
+
+begin_comment
+comment|///    index of a copied value. When a mask bit is 0, the corresponding 32-bit
+end_comment
+
+begin_comment
+comment|///    element in operand V1 is copied to the same position in the destination.
+end_comment
+
+begin_comment
+comment|///    When a mask bit is 1, the corresponding 32-bit element in operand V2 is
+end_comment
+
+begin_comment
+comment|///    copied to the same position in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the copied values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1373,6 +5738,90 @@ name|M
 parameter_list|)
 value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(V1), \                                   (__v8sf)(__m256)(V2), \                                   (((M)& 0x01) ?  8 : 0), \                                   (((M)& 0x02) ?  9 : 1), \                                   (((M)& 0x04) ? 10 : 2), \                                   (((M)& 0x08) ? 11 : 3), \                                   (((M)& 0x10) ? 12 : 4), \                                   (((M)& 0x20) ? 13 : 5), \                                   (((M)& 0x40) ? 14 : 6), \                                   (((M)& 0x80) ? 15 : 7)); })
 end_define
+
+begin_comment
+comment|/// \brief Merges 64-bit double-precision data values stored in either of the
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [4 x double], as specified by the 256-bit vector
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VBLENDVPD / BLENDVPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector operand, with mask bits 255, 191, 127, and 63 specifying
+end_comment
+
+begin_comment
+comment|///    how the values are to be copied. The position of the mask bit corresponds
+end_comment
+
+begin_comment
+comment|///    to the most significant bit of a copied value. When a mask bit is 0, the
+end_comment
+
+begin_comment
+comment|///    corresponding 64-bit element in operand __a is copied to the same
+end_comment
+
+begin_comment
+comment|///    position in the destination. When a mask bit is 1, the corresponding
+end_comment
+
+begin_comment
+comment|///    64-bit element in operand __b is copied to the same position in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the copied values.
+end_comment
 
 begin_function
 specifier|static
@@ -1415,6 +5864,90 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Merges 32-bit single-precision data values stored in either of the
+end_comment
+
+begin_comment
+comment|///    two 256-bit vectors of [8 x float], as specified by the 256-bit vector
+end_comment
+
+begin_comment
+comment|///    operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VBLENDVPS / BLENDVPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param __c
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector operand, with mask bits 255, 223, 191, 159, 127, 95, 63,
+end_comment
+
+begin_comment
+comment|///    and 31 specifying how the values are to be copied. The position of the
+end_comment
+
+begin_comment
+comment|///    mask bit corresponds to the most significant bit of a copied value. When
+end_comment
+
+begin_comment
+comment|///    a mask bit is 0, the corresponding 32-bit element in operand __a is
+end_comment
+
+begin_comment
+comment|///    copied to the same position in the destination. When a mask bit is 1, the
+end_comment
+
+begin_comment
+comment|///    corresponding 32-bit element in operand __b is copied to the same
+end_comment
+
+begin_comment
+comment|///    position in the destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the copied values.
+end_comment
 
 begin_function
 specifier|static
@@ -1462,6 +5995,150 @@ begin_comment
 comment|/* Vector Dot Product */
 end_comment
 
+begin_comment
+comment|/// \brief Computes two dot products in parallel, using the lower and upper
+end_comment
+
+begin_comment
+comment|///    halves of two [8 x float] vectors as input to the two computations, and
+end_comment
+
+begin_comment
+comment|///    returning the two dot products in the lower and upper halves of the
+end_comment
+
+begin_comment
+comment|///    [8 x float] result. The immediate integer operand controls which
+end_comment
+
+begin_comment
+comment|///    input elements will contribute to the dot product, and where the final
+end_comment
+
+begin_comment
+comment|///    results are returned. In general, for each dot product, the four
+end_comment
+
+begin_comment
+comment|///    corresponding elements of the input vectors are multiplied; the first
+end_comment
+
+begin_comment
+comment|///    two and second two products are summed, then the two sums are added to
+end_comment
+
+begin_comment
+comment|///    form the final result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_dp_ps(__m256 V1, __m256 V2, const int M);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VDPPS / DPPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param V1
+end_comment
+
+begin_comment
+comment|///    A vector of [8 x float] values, treated as two [4 x float] vectors.
+end_comment
+
+begin_comment
+comment|/// \param V2
+end_comment
+
+begin_comment
+comment|///    A vector of [8 x float] values, treated as two [4 x float] vectors.
+end_comment
+
+begin_comment
+comment|/// \param M
+end_comment
+
+begin_comment
+comment|///    An immediate integer argument. Bits [7:4] determine which elements of
+end_comment
+
+begin_comment
+comment|///    the input vectors are used, with bit [4] corresponding to the lowest
+end_comment
+
+begin_comment
+comment|///    element and bit [7] corresponding to the highest element of each [4 x
+end_comment
+
+begin_comment
+comment|///    float] subvector. If a bit is set, the corresponding elements from the
+end_comment
+
+begin_comment
+comment|///    two input vectors are used as an input for dot product; otherwise that
+end_comment
+
+begin_comment
+comment|///    input is treated as zero. Bits [3:0] determine which elements of the
+end_comment
+
+begin_comment
+comment|///    result will receive a copy of the final dot product, with bit [0]
+end_comment
+
+begin_comment
+comment|///    corresponding to the lowest element and bit [3] corresponding to the
+end_comment
+
+begin_comment
+comment|///    highest element of each [4 x float] subvector. If a bit is set, the dot
+end_comment
+
+begin_comment
+comment|///    product is returned in the corresponding element; otherwise that element
+end_comment
+
+begin_comment
+comment|///    is set to zero. The bitmask is applied in the same way to each of the
+end_comment
+
+begin_comment
+comment|///    two parallel dot product computations.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the two dot products.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1480,6 +6157,194 @@ begin_comment
 comment|/* Vector shuffle */
 end_comment
 
+begin_comment
+comment|/// \brief Selects 8 float values from the 256-bit operands of [8 x float], as
+end_comment
+
+begin_comment
+comment|///    specified by the immediate value operand. The four selected elements in
+end_comment
+
+begin_comment
+comment|///    each operand are copied to the destination according to the bits
+end_comment
+
+begin_comment
+comment|///    specified in the immediate operand. The selected elements from the first
+end_comment
+
+begin_comment
+comment|///    256-bit operand are copied to bits [63:0] and bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    destination, and the selected elements from the second 256-bit operand
+end_comment
+
+begin_comment
+comment|///    are copied to bits [127:64] and bits [255:192] of the destination. For
+end_comment
+
+begin_comment
+comment|///    example, if bits [7:0] of the immediate operand contain a value of 0xFF,
+end_comment
+
+begin_comment
+comment|///    the 256-bit destination vector would contain the following values: b[7],
+end_comment
+
+begin_comment
+comment|///    b[7], a[7], a[7], b[3], b[3], a[3], a[3].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_shuffle_ps(__m256 a, __m256 b, const int mask);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSHUFPS / SHUFPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float]. The four selected elements in this
+end_comment
+
+begin_comment
+comment|///    operand are copied to bits [63:0] and bits [191:128] in the destination,
+end_comment
+
+begin_comment
+comment|///    according to the bits specified in the immediate operand.
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float]. The four selected elements in this
+end_comment
+
+begin_comment
+comment|///    operand are copied to bits [127:64] and bits [255:192] in the
+end_comment
+
+begin_comment
+comment|///    destination, according to the bits specified in the immediate operand.
+end_comment
+
+begin_comment
+comment|/// \param mask
+end_comment
+
+begin_comment
+comment|///    An immediate value containing an 8-bit value specifying which elements to
+end_comment
+
+begin_comment
+comment|///    copy from a and b. Bits [3:0] specify the values copied from operand a.
+end_comment
+
+begin_comment
+comment|///    Bits [7:4] specify the values copied from operand b.
+end_comment
+
+begin_comment
+comment|///    The destinations within the 256-bit destination are assigned values as
+end_comment
+
+begin_comment
+comment|///    follows, according to the bit value assignments described below:
+end_comment
+
+begin_comment
+comment|///    Bits [1:0] are used to assign values to bits [31:0] and [159:128] in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [3:2] are used to assign values to bits [63:32] and [191:160] in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [5:4] are used to assign values to bits [95:64] and [223:192] in the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bits [7:6] are used to assign values to bits [127:96] and [255:224] in
+end_comment
+
+begin_comment
+comment|///    the destination.
+end_comment
+
+begin_comment
+comment|///    Bit value assignments:
+end_comment
+
+begin_comment
+comment|///    00: Bits [31:0] and [159:128] are copied from the selected operand.
+end_comment
+
+begin_comment
+comment|///    01: Bits [63:32] and [191:160] are copied from the selected operand.
+end_comment
+
+begin_comment
+comment|///    10: Bits [95:64] and [223:192] are copied from the selected operand.
+end_comment
+
+begin_comment
+comment|///    11: Bits [127:96] and [255:224] are copied from the selected operand.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the shuffled values.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1491,8 +6356,172 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-value|__extension__ ({ \         (__m256)__builtin_shufflevector((__v8sf)(__m256)(a), \                                         (__v8sf)(__m256)(b), \                                         (mask)& 0x3, \                                         ((mask)& 0xc)>> 2, \                                         (((mask)& 0x30)>> 4) + 8, \                                         (((mask)& 0xc0)>> 6) + 8, \                                         ((mask)& 0x3) + 4, \                                         (((mask)& 0xc)>> 2) + 4, \                                         (((mask)& 0x30)>> 4) + 12, \                                         (((mask)& 0xc0)>> 6) + 12); })
+value|__extension__ ({ \   (__m256)__builtin_shufflevector((__v8sf)(__m256)(a), \                                   (__v8sf)(__m256)(b), \                                   0  + (((mask)>> 0)& 0x3), \                                   0  + (((mask)>> 2)& 0x3), \                                   8  + (((mask)>> 4)& 0x3), \                                   8  + (((mask)>> 6)& 0x3), \                                   4  + (((mask)>> 0)& 0x3), \                                   4  + (((mask)>> 2)& 0x3), \                                   12 + (((mask)>> 4)& 0x3), \                                   12 + (((mask)>> 6)& 0x3)); })
 end_define
+
+begin_comment
+comment|/// \brief Selects four double-precision values from the 256-bit operands of
+end_comment
+
+begin_comment
+comment|///    [4 x double], as specified by the immediate value operand. The selected
+end_comment
+
+begin_comment
+comment|///    elements from the first 256-bit operand are copied to bits [63:0] and
+end_comment
+
+begin_comment
+comment|///    bits [191:128] in the destination, and the selected elements from the
+end_comment
+
+begin_comment
+comment|///    second 256-bit operand are copied to bits [127:64] and bits [255:192] in
+end_comment
+
+begin_comment
+comment|///    the destination. For example, if bits [3:0] of the immediate operand
+end_comment
+
+begin_comment
+comment|///    contain a value of 0xF, the 256-bit destination vector would contain the
+end_comment
+
+begin_comment
+comment|///    following values: b[3], a[3], b[1], a[1].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_shuffle_pd(__m256d a, __m256d b, const int mask);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VSHUFPD / SHUFPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param mask
+end_comment
+
+begin_comment
+comment|///    An immediate value containing 8-bit values specifying which elements to
+end_comment
+
+begin_comment
+comment|///    copy from a and b:
+end_comment
+
+begin_comment
+comment|///    Bit [0]=0: Bits [63:0] are copied from a to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [0]=1: Bits [127:64] are copied from a to bits [63:0] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [1]=0: Bits [63:0] are copied from b to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [1]=1: Bits [127:64] are copied from b to bits [127:64] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [2]=0: Bits [191:128] are copied from a to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [2]=1: Bits [255:192] are copied from a to bits [191:128] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [3]=0: Bits [191:128] are copied from b to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///    Bit [3]=1: Bits [255:192] are copied from b to bits [255:192] of the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the shuffled values.
+end_comment
 
 begin_define
 define|#
@@ -1505,7 +6534,7 @@ name|b
 parameter_list|,
 name|mask
 parameter_list|)
-value|__extension__ ({ \         (__m256d)__builtin_shufflevector((__v4df)(__m256d)(a), \                                          (__v4df)(__m256d)(b), \                                          (mask)& 0x1, \                                          (((mask)& 0x2)>> 1) + 4, \                                          (((mask)& 0x4)>> 2) + 2, \                                          (((mask)& 0x8)>> 3) + 6); })
+value|__extension__ ({ \   (__m256d)__builtin_shufflevector((__v4df)(__m256d)(a), \                                    (__v4df)(__m256d)(b), \                                    0 + (((mask)>> 0)& 0x1), \                                    4 + (((mask)>> 1)& 0x1), \                                    2 + (((mask)>> 2)& 0x1), \                                    6 + (((mask)>> 3)& 0x1)); })
 end_define
 
 begin_comment
@@ -1864,6 +6893,134 @@ begin_comment
 comment|/* True (unordered, signaling)  */
 end_comment
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of two
+end_comment
+
+begin_comment
+comment|///    128-bit vectors of [2 x double], using the operation specified by the
+end_comment
+
+begin_comment
+comment|///    immediate integer operand. Returns a [2 x double] vector consisting of
+end_comment
+
+begin_comment
+comment|///    two doubles corresponding to the two comparison results: zero if the
+end_comment
+
+begin_comment
+comment|///    comparison is false, and all 1's if the comparison is true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128d _mm_cmp_pd(__m128d a, __m128d b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPPD / CMPPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                        (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the comparison results.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1877,6 +7034,134 @@ name|c
 parameter_list|)
 value|__extension__ ({ \   (__m128d)__builtin_ia32_cmppd((__v2df)(__m128d)(a), \                                 (__v2df)(__m128d)(b), (c)); })
 end_define
+
+begin_comment
+comment|/// \brief Compares each of the corresponding values of two 128-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x float], using the operation specified by the immediate integer
+end_comment
+
+begin_comment
+comment|///    operand. Returns a [4 x float] vector consisting of four floats
+end_comment
+
+begin_comment
+comment|///    corresponding to the four comparison results: zero if the comparison is
+end_comment
+
+begin_comment
+comment|///    false, and all 1's if the comparison is true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128 _mm_cmp_ps(__m128 a, __m128 b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPPS / CMPPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                       (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing the comparison results.
+end_comment
 
 begin_define
 define|#
@@ -1892,6 +7177,134 @@ parameter_list|)
 value|__extension__ ({ \   (__m128)__builtin_ia32_cmpps((__v4sf)(__m128)(a), \                                (__v4sf)(__m128)(b), (c)); })
 end_define
 
+begin_comment
+comment|/// \brief Compares each of the corresponding double-precision values of two
+end_comment
+
+begin_comment
+comment|///    256-bit vectors of [4 x double], using the operation specified by the
+end_comment
+
+begin_comment
+comment|///    immediate integer operand. Returns a [4 x double] vector consisting of
+end_comment
+
+begin_comment
+comment|///    four doubles corresponding to the four comparison results: zero if the
+end_comment
+
+begin_comment
+comment|///    comparison is false, and all 1's if the comparison is true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256d _mm256_cmp_pd(__m256d a, __m256d b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPPD / CMPPD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                        (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the comparison results.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1905,6 +7318,134 @@ name|c
 parameter_list|)
 value|__extension__ ({ \   (__m256d)__builtin_ia32_cmppd256((__v4df)(__m256d)(a), \                                    (__v4df)(__m256d)(b), (c)); })
 end_define
+
+begin_comment
+comment|/// \brief Compares each of the corresponding values of two 256-bit vectors of
+end_comment
+
+begin_comment
+comment|///    [8 x float], using the operation specified by the immediate integer
+end_comment
+
+begin_comment
+comment|///    operand. Returns a [8 x float] vector consisting of eight floats
+end_comment
+
+begin_comment
+comment|///    corresponding to the eight comparison results: zero if the comparison is
+end_comment
+
+begin_comment
+comment|///    false, and all 1's if the comparison is true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m256 _mm256_cmp_ps(__m256 a, __m256 b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPPS / CMPPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                       (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the comparison results.
+end_comment
 
 begin_define
 define|#
@@ -1920,6 +7461,130 @@ parameter_list|)
 value|__extension__ ({ \   (__m256)__builtin_ia32_cmpps256((__v8sf)(__m256)(a), \                                   (__v8sf)(__m256)(b), (c)); })
 end_define
 
+begin_comment
+comment|/// \brief Compares each of the corresponding scalar double-precision values of
+end_comment
+
+begin_comment
+comment|///    two 128-bit vectors of [2 x double], using the operation specified by the
+end_comment
+
+begin_comment
+comment|///    immediate integer operand. If the result is true, all 64 bits of the
+end_comment
+
+begin_comment
+comment|///    destination vector are set; otherwise they are cleared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128d _mm_cmp_sd(__m128d a, __m128d b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPSD / CMPSD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [2 x double].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                       (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [2 x double] containing the comparison results.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1934,6 +7599,130 @@ parameter_list|)
 value|__extension__ ({ \   (__m128d)__builtin_ia32_cmpsd((__v2df)(__m128d)(a), \                                 (__v2df)(__m128d)(b), (c)); })
 end_define
 
+begin_comment
+comment|/// \brief Compares each of the corresponding scalar values of two 128-bit
+end_comment
+
+begin_comment
+comment|///    vectors of [4 x float], using the operation specified by the immediate
+end_comment
+
+begin_comment
+comment|///    integer operand. If the result is true, all 32 bits of the destination
+end_comment
+
+begin_comment
+comment|///    vector are set; otherwise they are cleared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128 _mm_cmp_ss(__m128 a, __m128 b, const int c);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCMPSS / CMPSS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param b
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector of [4 x float].
+end_comment
+
+begin_comment
+comment|/// \param c
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand, with bits [4:0] specifying which comparison
+end_comment
+
+begin_comment
+comment|///    operation to use:
+end_comment
+
+begin_comment
+comment|///    00h, 08h, 10h, 18h: Equal
+end_comment
+
+begin_comment
+comment|///    01h, 09h, 11h, 19h: Less than
+end_comment
+
+begin_comment
+comment|///    02h, 0Ah, 12h, 1Ah: Less than or equal / Greater than or equal (swapped
+end_comment
+
+begin_comment
+comment|///                        operands)
+end_comment
+
+begin_comment
+comment|///    03h, 0Bh, 13h, 1Bh: Unordered
+end_comment
+
+begin_comment
+comment|///    04h, 0Ch, 14h, 1Ch: Not equal
+end_comment
+
+begin_comment
+comment|///    05h, 0Dh, 15h, 1Dh: Not less than / Not greater than (swapped operands)
+end_comment
+
+begin_comment
+comment|///    06h, 0Eh, 16h, 1Eh: Not less than or equal / Not greater than or equal
+end_comment
+
+begin_comment
+comment|///                       (swapped operands)
+end_comment
+
+begin_comment
+comment|///    07h, 0Fh, 17h, 1Fh: Ordered
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing the comparison results.
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1947,6 +7736,66 @@ name|c
 parameter_list|)
 value|__extension__ ({ \   (__m128)__builtin_ia32_cmpss((__v4sf)(__m128)(a), \                                (__v4sf)(__m128)(b), (c)); })
 end_define
+
+begin_comment
+comment|/// \brief Takes a [8 x i32] vector and returns the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VEXTRACTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///   EXTRACTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand with bits [2:0] determining which vector
+end_comment
+
+begin_comment
+comment|///    element is extracted and returned.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit integer containing the extracted 32 bits of extended
+end_comment
+
+begin_comment
+comment|///    packed data.
+end_comment
 
 begin_function
 specifier|static
@@ -1982,6 +7831,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Takes a [16 x i16] vector and returns the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VEXTRACTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    EXTRACTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector of [16 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand with bits [3:0] determining which vector
+end_comment
+
+begin_comment
+comment|///    element is extracted and returned.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit integer containing the extracted 16 bits of zero extended
+end_comment
+
+begin_comment
+comment|///    packed data.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2006,6 +7915,10 @@ operator|)
 name|__a
 decl_stmt|;
 return|return
+operator|(
+name|unsigned
+name|short
+operator|)
 name|__b
 index|[
 name|__imm
@@ -2015,6 +7928,66 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Takes a [32 x i8] vector and returns the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VEXTRACTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    EXTRACTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector of [32 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand with bits [4:0] determining which vector
+end_comment
+
+begin_comment
+comment|///    element is extracted and returned.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit integer containing the extracted 8 bits of zero extended
+end_comment
+
+begin_comment
+comment|///    packed data.
+end_comment
 
 begin_function
 specifier|static
@@ -2040,6 +8013,10 @@ operator|)
 name|__a
 decl_stmt|;
 return|return
+operator|(
+name|unsigned
+name|char
+operator|)
 name|__b
 index|[
 name|__imm
@@ -2055,6 +8032,66 @@ ifdef|#
 directive|ifdef
 name|__x86_64__
 end_ifdef
+
+begin_comment
+comment|/// \brief Takes a [4 x i64] vector and returns the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VEXTRACTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    EXTRACTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector of [4 x i64].
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer operand with bits [1:0] determining which vector
+end_comment
+
+begin_comment
+comment|///    element is extracted and returned.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer containing the extracted 64 bits of extended
+end_comment
+
+begin_comment
+comment|///    packed data.
+end_comment
 
 begin_function
 specifier|static
@@ -2095,6 +8132,78 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/// \brief Takes a [8 x i32] vector and replaces the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand by a new value. Returns the
+end_comment
+
+begin_comment
+comment|///    modified vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VINSERTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    INSERTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A vector of [8 x i32] to be used by the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    An integer value. The replacement value for the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer specifying the index of the vector element to be
+end_comment
+
+begin_comment
+comment|///    replaced.
+end_comment
+
+begin_comment
+comment|/// \returns A copy of vector __a, after replacing its element indexed by __imm
+end_comment
+
+begin_comment
+comment|///     with __b.
+end_comment
 
 begin_function
 specifier|static
@@ -2140,6 +8249,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Takes a [16 x i16] vector and replaces the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand with a new value. Returns the
+end_comment
+
+begin_comment
+comment|///    modified vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VINSERTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    INSERTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A vector of [16 x i16] to be used by the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    An i16 integer value. The replacement value for the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer specifying the index of the vector element to be
+end_comment
+
+begin_comment
+comment|///    replaced.
+end_comment
+
+begin_comment
+comment|/// \returns A copy of vector __a, after replacing its element indexed by __imm
+end_comment
+
+begin_comment
+comment|///     with __b.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2183,6 +8364,78 @@ name|__c
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Takes a [32 x i8] vector and replaces the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand with a new value. Returns the
+end_comment
+
+begin_comment
+comment|///    modified vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VINSERTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    INSERTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A vector of [32 x i8] to be used by the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    An i8 integer value. The replacement value for the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer specifying the index of the vector element to be
+end_comment
+
+begin_comment
+comment|///    replaced.
+end_comment
+
+begin_comment
+comment|/// \returns A copy of vector __a, after replacing its element indexed by __imm
+end_comment
+
+begin_comment
+comment|///    with __b.
+end_comment
 
 begin_function
 specifier|static
@@ -2233,6 +8486,78 @@ ifdef|#
 directive|ifdef
 name|__x86_64__
 end_ifdef
+
+begin_comment
+comment|/// \brief Takes a [4 x i64] vector and replaces the vector element value
+end_comment
+
+begin_comment
+comment|///    indexed by the immediate constant operand with a new value. Returns the
+end_comment
+
+begin_comment
+comment|///    modified vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VINSERTF128+COMPOSITE /
+end_comment
+
+begin_comment
+comment|///    INSERTF128+COMPOSITE instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A vector of [4 x i64] to be used by the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer value. The replacement value for the insert operation.
+end_comment
+
+begin_comment
+comment|/// \param __imm
+end_comment
+
+begin_comment
+comment|///    An immediate integer specifying the index of the vector element to be
+end_comment
+
+begin_comment
+comment|///    replaced.
+end_comment
+
+begin_comment
+comment|/// \returns A copy of vector __a, after replacing its element indexed by __imm
+end_comment
+
+begin_comment
+comment|///     with __b.
+end_comment
 
 begin_function
 specifier|static
@@ -2288,6 +8613,42 @@ begin_comment
 comment|/* Conversion */
 end_comment
 
+begin_comment
+comment|/// \brief Converts a vector of [4 x i32] into a vector of [4 x double].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTDQ2PD / CVTDQ2PD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector of [4 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [4 x double] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2303,16 +8664,54 @@ return|return
 operator|(
 name|__m256d
 operator|)
-name|__builtin_ia32_cvtdq2pd256
+name|__builtin_convertvector
 argument_list|(
 operator|(
 name|__v4si
 operator|)
 name|__a
+argument_list|,
+name|__v4df
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts a vector of [8 x i32] into a vector of [8 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTDQ2PS / CVTDQ2PS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit vector of [8 x float] containing the converted values.
+end_comment
 
 begin_function
 specifier|static
@@ -2340,6 +8739,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts a 256-bit vector of [4 x double] into a 128-bit vector of
+end_comment
+
+begin_comment
+comment|///    [4 x float].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPD2PS / CVTPD2PS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [4 x double].
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing the converted values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2365,6 +8804,42 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts a vector of [8 x float] into a vector of [8 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPS2DQ / CVTPS2DQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 256-bit vector of [8 x float].
+end_comment
+
+begin_comment
+comment|/// \returns A 256-bit integer vector containing the converted values.
+end_comment
 
 begin_function
 specifier|static
@@ -2407,12 +8882,14 @@ return|return
 operator|(
 name|__m256d
 operator|)
-name|__builtin_ia32_cvtps2pd256
+name|__builtin_convertvector
 argument_list|(
 operator|(
 name|__v4sf
 operator|)
 name|__a
+argument_list|,
+name|__v4df
 argument_list|)
 return|;
 block|}
@@ -2496,6 +8973,74 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|double
+name|__DEFAULT_FN_ATTRS
+name|_mm256_cvtsd_f64
+parameter_list|(
+name|__m256d
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__a
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__DEFAULT_FN_ATTRS
+name|_mm256_cvtsi256_si32
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+name|__v8si
+name|__b
+init|=
+operator|(
+name|__v8si
+operator|)
+name|__a
+decl_stmt|;
+return|return
+name|__b
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|float
+name|__DEFAULT_FN_ATTRS
+name|_mm256_cvtss_f32
+parameter_list|(
+name|__m256
+name|__a
+parameter_list|)
+block|{
+return|return
+name|__a
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Vector replicate */
 end_comment
@@ -2514,8 +9059,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
 literal|1
@@ -2552,8 +9103,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -2590,8 +9147,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -2627,8 +9190,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4df
+operator|)
 name|__b
 argument_list|,
 literal|1
@@ -2664,8 +9233,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4df
+operator|)
 name|__b
 argument_list|,
 literal|0
@@ -2701,8 +9276,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v8sf
+operator|)
 name|__b
 argument_list|,
 literal|2
@@ -2750,8 +9331,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v8sf
+operator|)
 name|__b
 argument_list|,
 literal|0
@@ -3485,6 +10072,11 @@ name|__m256d
 operator|)
 name|__builtin_ia32_vbroadcastf128_pd256
 argument_list|(
+operator|(
+name|__v2df
+specifier|const
+operator|*
+operator|)
 name|__a
 argument_list|)
 return|;
@@ -3510,6 +10102,11 @@ name|__m256
 operator|)
 name|__builtin_ia32_vbroadcastf128_ps256
 argument_list|(
+operator|(
+name|__v4sf
+specifier|const
+operator|*
+operator|)
 name|__a
 argument_list|)
 return|;
@@ -3823,15 +10420,34 @@ name|__m256d
 name|__a
 parameter_list|)
 block|{
-name|__builtin_ia32_storeupd256
+struct|struct
+name|__storeu_pd
+block|{
+name|__m256d
+name|__v
+decl_stmt|;
+block|}
+name|__attribute__
 argument_list|(
-name|__p
-argument_list|,
 operator|(
-name|__v4df
+name|__packed__
+operator|,
+name|__may_alias__
 operator|)
-name|__a
 argument_list|)
+struct|;
+operator|(
+operator|(
+expr|struct
+name|__storeu_pd
+operator|*
+operator|)
+name|__p
+operator|)
+operator|->
+name|__v
+operator|=
+name|__a
 expr_stmt|;
 block|}
 end_function
@@ -3851,15 +10467,34 @@ name|__m256
 name|__a
 parameter_list|)
 block|{
-name|__builtin_ia32_storeups256
+struct|struct
+name|__storeu_ps
+block|{
+name|__m256
+name|__v
+decl_stmt|;
+block|}
+name|__attribute__
 argument_list|(
-name|__p
-argument_list|,
 operator|(
-name|__v8sf
+name|__packed__
+operator|,
+name|__may_alias__
 operator|)
-name|__a
 argument_list|)
+struct|;
+operator|(
+operator|(
+expr|struct
+name|__storeu_ps
+operator|*
+operator|)
+name|__p
+operator|)
+operator|->
+name|__v
+operator|=
+name|__a
 expr_stmt|;
 block|}
 end_function
@@ -3902,19 +10537,34 @@ name|__m256i
 name|__a
 parameter_list|)
 block|{
-name|__builtin_ia32_storedqu256
+struct|struct
+name|__storeu_si256
+block|{
+name|__m256i
+name|__v
+decl_stmt|;
+block|}
+name|__attribute__
 argument_list|(
 operator|(
-name|char
+name|__packed__
+operator|,
+name|__may_alias__
+operator|)
+argument_list|)
+struct|;
+operator|(
+operator|(
+expr|struct
+name|__storeu_si256
 operator|*
 operator|)
 name|__p
-argument_list|,
-operator|(
-name|__v32qi
 operator|)
+operator|->
+name|__v
+operator|=
 name|__a
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4258,18 +10908,18 @@ name|__m256i
 name|__b
 parameter_list|)
 block|{
-name|__builtin_ia32_movntdq256
+name|__builtin_nontemporal_store
 argument_list|(
+operator|(
+name|__v4di
+operator|)
+name|__b
+argument_list|,
 operator|(
 name|__v4di
 operator|*
 operator|)
 name|__a
-argument_list|,
-operator|(
-name|__v4di
-operator|)
-name|__b
 argument_list|)
 expr_stmt|;
 block|}
@@ -4290,14 +10940,18 @@ name|__m256d
 name|__b
 parameter_list|)
 block|{
-name|__builtin_ia32_movntpd256
+name|__builtin_nontemporal_store
 argument_list|(
-name|__a
-argument_list|,
 operator|(
 name|__v4df
 operator|)
 name|__b
+argument_list|,
+operator|(
+name|__v4df
+operator|*
+operator|)
+name|__a
 argument_list|)
 expr_stmt|;
 block|}
@@ -4318,14 +10972,18 @@ name|__m256
 name|__a
 parameter_list|)
 block|{
-name|__builtin_ia32_movntps256
+name|__builtin_nontemporal_store
 argument_list|(
-name|__p
-argument_list|,
 operator|(
 name|__v8sf
 operator|)
 name|__a
+argument_list|,
+operator|(
+name|__v8sf
+operator|*
+operator|)
+name|__p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4341,7 +10999,9 @@ name|__inline__
 name|__m256d
 name|__DEFAULT_FN_ATTRS
 name|_mm256_undefined_pd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4359,7 +11019,9 @@ name|__inline__
 name|__m256
 name|__DEFAULT_FN_ATTRS
 name|_mm256_undefined_ps
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4377,7 +11039,9 @@ name|__inline__
 name|__m256i
 name|__DEFAULT_FN_ATTRS
 name|_mm256_undefined_si256
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -5861,8 +12525,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4df
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -5887,8 +12557,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v8sf
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -5917,8 +12593,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4di
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4di
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -5943,8 +12625,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v2df
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v2df
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -5975,8 +12663,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v4sf
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -6017,8 +12711,14 @@ block|{
 return|return
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__a
 argument_list|,
+operator|(
+name|__v2di
+operator|)
 name|__a
 argument_list|,
 literal|0
@@ -6094,7 +12794,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128)__builtin_shufflevector( \     (__v8sf)(__m256)(V), \     (__v8sf)(_mm256_setzero_ps()), \     (((M)& 1) ? 4 : 0), \     (((M)& 1) ? 5 : 1), \     (((M)& 1) ? 6 : 2), \     (((M)& 1) ? 7 : 3) );})
+value|__extension__ ({ \   (__m128)__builtin_shufflevector( \     (__v8sf)(__m256)(V), \     (__v8sf)(_mm256_undefined_ps()), \     (((M)& 1) ? 4 : 0), \     (((M)& 1) ? 5 : 1), \     (((M)& 1) ? 6 : 2), \     (((M)& 1) ? 7 : 3) );})
 end_define
 
 begin_define
@@ -6106,7 +12806,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128d)__builtin_shufflevector( \     (__v4df)(__m256d)(V), \     (__v4df)(_mm256_setzero_pd()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
+value|__extension__ ({ \   (__m128d)__builtin_shufflevector( \     (__v4df)(__m256d)(V), \     (__v4df)(_mm256_undefined_pd()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
 end_define
 
 begin_define
@@ -6118,7 +12818,7 @@ name|V
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   (__m128i)__builtin_shufflevector( \     (__v4di)(__m256i)(V), \     (__v4di)(_mm256_setzero_si256()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
+value|__extension__ ({ \   (__m128i)__builtin_shufflevector( \     (__v4di)(__m256i)(V), \     (__v4di)(_mm256_undefined_si256()), \     (((M)& 1) ? 2 : 0), \     (((M)& 1) ? 3 : 1) );})
 end_define
 
 begin_comment
@@ -6143,37 +12843,15 @@ modifier|*
 name|__addr_lo
 parameter_list|)
 block|{
-struct|struct
-name|__loadu_ps
-block|{
-name|__m128
-name|__v
-decl_stmt|;
-block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|,
-name|__may_alias__
-operator|)
-argument_list|)
-struct|;
 name|__m256
 name|__v256
 init|=
 name|_mm256_castps128_ps256
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|__loadu_ps
-operator|*
-operator|)
+name|_mm_loadu_ps
+argument_list|(
 name|__addr_lo
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|)
 decl_stmt|;
 return|return
@@ -6181,16 +12859,10 @@ name|_mm256_insertf128_ps
 argument_list|(
 name|__v256
 argument_list|,
-operator|(
-operator|(
-expr|struct
-name|__loadu_ps
-operator|*
-operator|)
+name|_mm_loadu_ps
+argument_list|(
 name|__addr_hi
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -6216,37 +12888,15 @@ modifier|*
 name|__addr_lo
 parameter_list|)
 block|{
-struct|struct
-name|__loadu_pd
-block|{
-name|__m128d
-name|__v
-decl_stmt|;
-block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|,
-name|__may_alias__
-operator|)
-argument_list|)
-struct|;
 name|__m256d
 name|__v256
 init|=
 name|_mm256_castpd128_pd256
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|__loadu_pd
-operator|*
-operator|)
+name|_mm_loadu_pd
+argument_list|(
 name|__addr_lo
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|)
 decl_stmt|;
 return|return
@@ -6254,16 +12904,10 @@ name|_mm256_insertf128_pd
 argument_list|(
 name|__v256
 argument_list|,
-operator|(
-operator|(
-expr|struct
-name|__loadu_pd
-operator|*
-operator|)
+name|_mm_loadu_pd
+argument_list|(
 name|__addr_hi
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -6289,37 +12933,15 @@ modifier|*
 name|__addr_lo
 parameter_list|)
 block|{
-struct|struct
-name|__loadu_si128
-block|{
-name|__m128i
-name|__v
-decl_stmt|;
-block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|,
-name|__may_alias__
-operator|)
-argument_list|)
-struct|;
 name|__m256i
 name|__v256
 init|=
 name|_mm256_castsi128_si256
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|__loadu_si128
-operator|*
-operator|)
+name|_mm_loadu_si128
+argument_list|(
 name|__addr_lo
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|)
 decl_stmt|;
 return|return
@@ -6327,16 +12949,10 @@ name|_mm256_insertf128_si256
 argument_list|(
 name|__v256
 argument_list|,
-operator|(
-operator|(
-expr|struct
-name|__loadu_si128
-operator|*
-operator|)
+name|_mm_loadu_si128
+argument_list|(
 name|__addr_hi
-operator|)
-operator|->
-name|__v
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -6377,7 +12993,7 @@ argument_list|(
 name|__a
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storeups
+name|_mm_storeu_ps
 argument_list|(
 name|__addr_lo
 argument_list|,
@@ -6393,7 +13009,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storeups
+name|_mm_storeu_ps
 argument_list|(
 name|__addr_hi
 argument_list|,
@@ -6432,7 +13048,7 @@ argument_list|(
 name|__a
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storeupd
+name|_mm_storeu_pd
 argument_list|(
 name|__addr_lo
 argument_list|,
@@ -6448,7 +13064,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storeupd
+name|_mm_storeu_pd
 argument_list|(
 name|__addr_hi
 argument_list|,
@@ -6487,17 +13103,10 @@ argument_list|(
 name|__a
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storedqu
+name|_mm_storeu_si128
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|__addr_lo
 argument_list|,
-operator|(
-name|__v16qi
-operator|)
 name|__v128
 argument_list|)
 expr_stmt|;
@@ -6510,17 +13119,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|__builtin_ia32_storedqu
+name|_mm_storeu_si128
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|__addr_hi
 argument_list|,
-operator|(
-name|__v16qi
-operator|)
 name|__v128
 argument_list|)
 expr_stmt|;
@@ -6547,8 +13149,14 @@ name|__m256
 operator|)
 name|__builtin_shufflevector
 argument_list|(
+operator|(
+name|__v4sf
+operator|)
 name|__lo
 argument_list|,
+operator|(
+name|__v4sf
+operator|)
 name|__hi
 argument_list|,
 literal|0

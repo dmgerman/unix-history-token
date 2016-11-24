@@ -99,16 +99,25 @@ name|llvm
 block|{
 name|class
 name|InstCombinePass
+range|:
+name|public
+name|PassInfoMixin
+operator|<
+name|InstCombinePass
+operator|>
 block|{
 name|InstCombineWorklist
 name|Worklist
-decl_stmt|;
+block|;
+name|bool
+name|ExpensiveCombines
+block|;
 name|public
-label|:
+operator|:
 specifier|static
 name|StringRef
 name|name
-parameter_list|()
+argument_list|()
 block|{
 return|return
 literal|"InstCombinePass"
@@ -116,7 +125,14 @@ return|;
 block|}
 comment|// Explicitly define constructors for MSVC.
 name|InstCombinePass
-argument_list|()
+argument_list|(
+argument|bool ExpensiveCombines = true
+argument_list|)
+operator|:
+name|ExpensiveCombines
+argument_list|(
+argument|ExpensiveCombines
+argument_list|)
 block|{}
 name|InstCombinePass
 argument_list|(
@@ -127,7 +143,19 @@ argument_list|)
 operator|:
 name|Worklist
 argument_list|(
-argument|std::move(Arg.Worklist)
+name|std
+operator|::
+name|move
+argument_list|(
+name|Arg
+operator|.
+name|Worklist
+argument_list|)
+argument_list|)
+block|,
+name|ExpensiveCombines
+argument_list|(
+argument|Arg.ExpensiveCombines
 argument_list|)
 block|{}
 name|InstCombinePass
@@ -151,6 +179,12 @@ operator|.
 name|Worklist
 argument_list|)
 block|;
+name|ExpensiveCombines
+operator|=
+name|RHS
+operator|.
+name|ExpensiveCombines
+block|;
 return|return
 operator|*
 name|this
@@ -167,12 +201,75 @@ name|AnalysisManager
 operator|<
 name|Function
 operator|>
-operator|*
+operator|&
 name|AM
 argument_list|)
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
+comment|/// \brief The legacy pass manager's instcombine pass.
+comment|///
+comment|/// This is a basic whole-function wrapper around the instcombine utility. It
+comment|/// will try to combine all instructions in the function.
+name|class
+name|InstructionCombiningPass
+range|:
+name|public
+name|FunctionPass
+block|{
+name|InstCombineWorklist
+name|Worklist
+block|;
+specifier|const
+name|bool
+name|ExpensiveCombines
+block|;
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+comment|// Pass identification, replacement for typeid
+name|InstructionCombiningPass
+argument_list|(
+argument|bool ExpensiveCombines = true
+argument_list|)
+operator|:
+name|FunctionPass
+argument_list|(
+name|ID
+argument_list|)
+block|,
+name|ExpensiveCombines
+argument_list|(
+argument|ExpensiveCombines
+argument_list|)
+block|{
+name|initializeInstructionCombiningPassPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|runOnFunction
+argument_list|(
+argument|Function&F
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

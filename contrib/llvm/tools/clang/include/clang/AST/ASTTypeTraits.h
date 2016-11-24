@@ -224,7 +224,19 @@ name|ASTNodeKind
 name|Other
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|KindId
+operator|!=
+name|NKI_None
+operator|&&
+name|KindId
+operator|==
+name|Other
+operator|.
+name|KindId
+return|;
+block|}
 comment|/// \brief Returns \c true only for the default \c ASTNodeKind()
 name|bool
 name|isNone

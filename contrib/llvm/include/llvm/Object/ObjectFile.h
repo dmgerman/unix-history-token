@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SubtargetFeature.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Object/SymbolicFile.h"
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<cstring>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -341,6 +341,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isCompressed
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isText
 argument_list|()
 specifier|const
@@ -357,6 +362,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isVirtual
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isBitcode
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -487,7 +497,7 @@ argument_list|()
 operator|)
 argument_list|)
 block|;   }
-name|ErrorOr
+name|Expected
 operator|<
 name|StringRef
 operator|>
@@ -497,7 +507,7 @@ specifier|const
 block|;
 comment|/// Returns the symbol virtual address (i.e. address at which it will be
 comment|/// mapped).
-name|ErrorOr
+name|Expected
 operator|<
 name|uint64_t
 operator|>
@@ -523,16 +533,19 @@ name|getCommonSize
 argument_list|()
 specifier|const
 block|;
+name|Expected
+operator|<
 name|SymbolRef
 operator|::
 name|Type
+operator|>
 name|getType
 argument_list|()
 specifier|const
 block|;
 comment|/// @brief Get section this symbol is defined in reference to. Result is
 comment|/// end_sections() if it is undefined or is an absolute symbol.
-name|ErrorOr
+name|Expected
 operator|<
 name|section_iterator
 operator|>
@@ -721,7 +734,7 @@ name|class
 name|SymbolRef
 block|;
 name|virtual
-name|ErrorOr
+name|Expected
 operator|<
 name|StringRef
 operator|>
@@ -746,7 +759,7 @@ specifier|const
 name|override
 block|;
 name|virtual
-name|ErrorOr
+name|Expected
 operator|<
 name|uint64_t
 operator|>
@@ -787,9 +800,12 @@ operator|=
 literal|0
 block|;
 name|virtual
+name|Expected
+operator|<
 name|SymbolRef
 operator|::
 name|Type
+operator|>
 name|getSymbolType
 argument_list|(
 argument|DataRefImpl Symb
@@ -799,7 +815,7 @@ operator|=
 literal|0
 block|;
 name|virtual
-name|ErrorOr
+name|Expected
 operator|<
 name|section_iterator
 operator|>
@@ -886,6 +902,16 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|isSectionCompressed
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
 name|isSectionText
 argument_list|(
 argument|DataRefImpl Sec
@@ -924,6 +950,14 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+name|virtual
+name|bool
+name|isSectionBitcode
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|relocation_iterator
@@ -1134,6 +1168,14 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|SubtargetFeatures
+name|getFeatures
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Returns platform-specific object flags, if any.
 name|virtual
 name|std
@@ -1169,7 +1211,7 @@ comment|/// @param ObjectPath The path to the object file. ObjectPath.isObject m
 comment|///        return true.
 comment|/// @brief Create ObjectFile from path.
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|OwningBinary
 operator|<
@@ -1181,7 +1223,7 @@ argument|StringRef ObjectPath
 argument_list|)
 expr_stmt|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1197,7 +1239,7 @@ argument|sys::fs::file_magic Type
 argument_list|)
 expr_stmt|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1272,7 +1314,7 @@ argument|MemoryBufferRef Object
 argument_list|)
 expr_stmt|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1306,7 +1348,7 @@ argument|Owner
 argument_list|)
 block|{}
 specifier|inline
-name|ErrorOr
+name|Expected
 operator|<
 name|StringRef
 operator|>
@@ -1328,7 +1370,7 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|ErrorOr
+name|Expected
 operator|<
 name|uint64_t
 operator|>
@@ -1407,7 +1449,7 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-name|ErrorOr
+name|Expected
 operator|<
 name|section_iterator
 operator|>
@@ -1429,9 +1471,12 @@ argument_list|)
 return|;
 block|}
 specifier|inline
+name|Expected
+operator|<
 name|SymbolRef
 operator|::
 name|Type
+operator|>
 name|SymbolRef
 operator|::
 name|getType
@@ -1683,6 +1728,23 @@ specifier|inline
 name|bool
 name|SectionRef
 operator|::
+name|isCompressed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|isSectionCompressed
+argument_list|(
+name|SectionPimpl
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|SectionRef
+operator|::
 name|isText
 argument_list|()
 specifier|const
@@ -1742,6 +1804,23 @@ return|return
 name|OwningObject
 operator|->
 name|isSectionVirtual
+argument_list|(
+name|SectionPimpl
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|SectionRef
+operator|::
+name|isBitcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|isSectionBitcode
 argument_list|(
 name|SectionPimpl
 argument_list|)

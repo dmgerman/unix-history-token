@@ -74,6 +74,9 @@ block|{
 name|class
 name|Function
 decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -113,6 +116,22 @@ name|CGM
 decl_stmt|;
 name|public
 label|:
+comment|// Global variable properties that must be passed to CUDA runtime.
+enum|enum
+name|DeviceVarFlags
+block|{
+name|ExternDeviceVar
+init|=
+literal|0x01
+block|,
+comment|// extern
+name|ConstantDeviceVar
+init|=
+literal|0x02
+block|,
+comment|// __constant__
+block|}
+enum|;
 name|CGCUDARuntime
 argument_list|(
 name|CodeGenModule
@@ -163,6 +182,22 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|registerDeviceVar
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|&
+name|Var
+argument_list|,
+name|unsigned
+name|Flags
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 comment|/// Constructs and returns a module initialization function or nullptr if it's
 comment|/// not needed. Must be called after all kernels have been emitted.
 name|virtual

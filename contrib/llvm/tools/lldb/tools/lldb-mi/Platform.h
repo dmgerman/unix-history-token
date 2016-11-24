@@ -46,16 +46,6 @@ name|_MSC_VER
 argument_list|)
 end_if
 
-begin_comment
-comment|// this will stop signal.h being included
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_INC_SIGNAL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -72,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -240,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|PATH_MAX
-value|MAX_PATH
+value|32768
 end_define
 
 begin_define
@@ -344,17 +340,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIGINT
-value|2
-end_define
-
-begin_comment
-comment|// Terminal interrupt signal
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SIGQUIT
 value|3
 end_define
@@ -428,41 +413,6 @@ end_define
 begin_comment
 comment|// (== SIGVTALRM)
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|((sighandler_t)-1)
-end_define
-
-begin_comment
-comment|// Default handler
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|((sighandler_t)-2)
-end_define
-
-begin_comment
-comment|// Ignored
-end_comment
-
-begin_function_decl
-specifier|extern
-name|sighandler_t
-name|signal
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|sighandler_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_else
 else|#

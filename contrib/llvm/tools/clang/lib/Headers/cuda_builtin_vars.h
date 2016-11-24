@@ -16,6 +16,22 @@ name|__CUDA_BUILTIN_VARS_H
 end_define
 
 begin_comment
+comment|// Forward declares from vector_types.h.
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|uint3
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|dim3
+struct_decl|;
+end_struct_decl
+
+begin_comment
 comment|// The file implements built-in CUDA variables using __declspec(property).
 end_comment
 
@@ -28,7 +44,7 @@ comment|// All read accesses of built-in variable fields get converted into call
 end_comment
 
 begin_comment
-comment|// getter function which in turn would call appropriate builtin to fetch the
+comment|// getter function which in turn calls the appropriate builtin to fetch the
 end_comment
 
 begin_comment
@@ -52,7 +68,7 @@ comment|// IR output:
 end_comment
 
 begin_comment
-comment|//  %0 = call i32 @llvm.ptx.read.tid.x() #3
+comment|//  %0 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x() #3
 end_comment
 
 begin_comment
@@ -138,7 +154,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|x
 argument_list|,
-name|__builtin_ptx_read_tid_x
+name|__nvvm_read_ptx_sreg_tid_x
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -146,7 +162,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|y
 argument_list|,
-name|__builtin_ptx_read_tid_y
+name|__nvvm_read_ptx_sreg_tid_y
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -154,9 +170,20 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|z
 argument_list|,
-name|__builtin_ptx_read_tid_z
+name|__nvvm_read_ptx_sreg_tid_z
 argument_list|()
 argument_list|)
+expr_stmt|;
+comment|// threadIdx should be convertible to uint3 (in fact in nvcc, it *is* a
+comment|// uint3).  This function is defined after we pull in vector_types.h.
+name|__attribute__
+argument_list|(
+argument|(device)
+argument_list|)
+name|operator
+name|uint3
+argument_list|()
+specifier|const
 expr_stmt|;
 name|private
 label|:
@@ -177,7 +204,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|x
 argument_list|,
-name|__builtin_ptx_read_ctaid_x
+name|__nvvm_read_ptx_sreg_ctaid_x
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -185,7 +212,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|y
 argument_list|,
-name|__builtin_ptx_read_ctaid_y
+name|__nvvm_read_ptx_sreg_ctaid_y
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -193,9 +220,20 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|z
 argument_list|,
-name|__builtin_ptx_read_ctaid_z
+name|__nvvm_read_ptx_sreg_ctaid_z
 argument_list|()
 argument_list|)
+expr_stmt|;
+comment|// blockIdx should be convertible to uint3 (in fact in nvcc, it *is* a
+comment|// uint3).  This function is defined after we pull in vector_types.h.
+name|__attribute__
+argument_list|(
+argument|(device)
+argument_list|)
+name|operator
+name|uint3
+argument_list|()
+specifier|const
 expr_stmt|;
 name|private
 label|:
@@ -216,7 +254,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|x
 argument_list|,
-name|__builtin_ptx_read_ntid_x
+name|__nvvm_read_ptx_sreg_ntid_x
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -224,7 +262,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|y
 argument_list|,
-name|__builtin_ptx_read_ntid_y
+name|__nvvm_read_ptx_sreg_ntid_y
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -232,9 +270,20 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|z
 argument_list|,
-name|__builtin_ptx_read_ntid_z
+name|__nvvm_read_ptx_sreg_ntid_z
 argument_list|()
 argument_list|)
+expr_stmt|;
+comment|// blockDim should be convertible to dim3 (in fact in nvcc, it *is* a
+comment|// dim3).  This function is defined after we pull in vector_types.h.
+name|__attribute__
+argument_list|(
+argument|(device)
+argument_list|)
+name|operator
+name|dim3
+argument_list|()
+specifier|const
 expr_stmt|;
 name|private
 label|:
@@ -255,7 +304,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|x
 argument_list|,
-name|__builtin_ptx_read_nctaid_x
+name|__nvvm_read_ptx_sreg_nctaid_x
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -263,7 +312,7 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|y
 argument_list|,
-name|__builtin_ptx_read_nctaid_y
+name|__nvvm_read_ptx_sreg_nctaid_y
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -271,9 +320,20 @@ name|__CUDA_DEVICE_BUILTIN
 argument_list|(
 name|z
 argument_list|,
-name|__builtin_ptx_read_nctaid_z
+name|__nvvm_read_ptx_sreg_nctaid_z
 argument_list|()
 argument_list|)
+expr_stmt|;
+comment|// gridDim should be convertible to dim3 (in fact in nvcc, it *is* a
+comment|// dim3).  This function is defined after we pull in vector_types.h.
+name|__attribute__
+argument_list|(
+argument|(device)
+argument_list|)
+name|operator
+name|dim3
+argument_list|()
+specifier|const
 expr_stmt|;
 name|private
 label|:

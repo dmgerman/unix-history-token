@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCCodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDwarf.h"
 end_include
 
@@ -186,6 +192,9 @@ decl_stmt|;
 name|class
 name|MCSectionCOFF
 decl_stmt|;
+name|class
+name|CodeViewContext
+decl_stmt|;
 comment|/// Context object for machine code objects.  This class owns all of the
 comment|/// sections that it creates.
 comment|///
@@ -252,6 +261,14 @@ name|MCObjectFileInfo
 modifier|*
 name|MOFI
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CodeViewContext
+operator|>
+name|CVContext
+expr_stmt|;
 comment|/// Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
@@ -317,7 +334,9 @@ operator|>
 name|LocalSymbols
 expr_stmt|;
 comment|/// Keeps tracks of names that were used both for used declared and
-comment|/// artificial symbols.
+comment|/// artificial symbols. The value is "true" if the name has been used for a
+comment|/// non-section symbol (there can be at most one of those, plus an unlimited
+comment|/// number of section symbols with the same name).
 name|StringMap
 operator|<
 name|bool
@@ -418,6 +437,30 @@ name|CurrentDwarfLoc
 decl_stmt|;
 name|bool
 name|DwarfLocSeen
+decl_stmt|;
+comment|/// The current CodeView line information from the last .cv_loc directive.
+name|MCCVLoc
+name|CurrentCVLoc
+init|=
+name|MCCVLoc
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+decl_stmt|;
+name|bool
+name|CVLocSeen
+init|=
+name|false
 decl_stmt|;
 comment|/// Generate dwarf debugging info for assembly source files.
 name|bool
@@ -578,6 +621,9 @@ decl_stmt|;
 name|int
 name|SelectionKey
 decl_stmt|;
+name|unsigned
+name|UniqueID
+decl_stmt|;
 name|COFFSectionKey
 argument_list|(
 argument|StringRef SectionName
@@ -585,6 +631,8 @@ argument_list|,
 argument|StringRef GroupName
 argument_list|,
 argument|int SelectionKey
+argument_list|,
+argument|unsigned UniqueID
 argument_list|)
 block|:
 name|SectionName
@@ -599,7 +647,12 @@ argument_list|)
 operator|,
 name|SelectionKey
 argument_list|(
-argument|SelectionKey
+name|SelectionKey
+argument_list|)
+operator|,
+name|UniqueID
+argument_list|(
+argument|UniqueID
 argument_list|)
 block|{}
 name|bool
@@ -643,12 +696,27 @@ name|Other
 operator|.
 name|GroupName
 return|;
+if|if
+condition|(
+name|SelectionKey
+operator|!=
+name|Other
+operator|.
+name|SelectionKey
+condition|)
 return|return
 name|SelectionKey
 operator|<
 name|Other
 operator|.
 name|SelectionKey
+return|;
+return|return
+name|UniqueID
+operator|<
+name|Other
+operator|.
+name|UniqueID
 return|;
 block|}
 block|}
@@ -881,6 +949,14 @@ name|MOFI
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|CodeViewContext
+modifier|&
+name|getCVContext
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -1200,6 +1276,21 @@ begin_comment
 comment|/// @{
 end_comment
 
+begin_enum_decl
+enum_decl|enum :
+name|unsigned
+block|{
+comment|/// Pass this value as the UniqueID during section creation to get the
+comment|/// generic section with the given name and characteristics. The usual
+comment|/// sections such as .text use this ID.
+name|GenericSectionID
+init|=
+operator|~
+literal|0U
+block|}
+enum_decl|;
+end_enum_decl
+
 begin_comment
 comment|/// Return the MCSection for the specified mach-o section.  This requires
 end_comment
@@ -1287,7 +1378,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1317,7 +1410,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1356,7 +1451,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1368,7 +1465,9 @@ parameter_list|,
 name|unsigned
 name|EntrySize
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Group
 parameter_list|)
 block|{
@@ -1396,7 +1495,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1408,7 +1509,9 @@ parameter_list|,
 name|unsigned
 name|EntrySize
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Group
 parameter_list|,
 specifier|const
@@ -1444,7 +1547,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1456,7 +1561,9 @@ parameter_list|,
 name|unsigned
 name|EntrySize
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Group
 parameter_list|,
 name|unsigned
@@ -1489,7 +1596,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1501,7 +1610,9 @@ parameter_list|,
 name|unsigned
 name|EntrySize
 parameter_list|,
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Group
 parameter_list|,
 name|unsigned
@@ -1520,7 +1631,9 @@ name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Section
 parameter_list|,
 name|unsigned
@@ -1553,12 +1666,59 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Get a section with the provided group identifier. This section is
+end_comment
+
+begin_comment
+comment|/// named by concatenating \p Prefix with '.' then \p Suffix. The \p Type
+end_comment
+
+begin_comment
+comment|/// describes the type of the section and \p Flags are used to further
+end_comment
+
+begin_comment
+comment|/// configure this named section.
+end_comment
+
+begin_function_decl
+name|MCSectionELF
+modifier|*
+name|getELFNamedSection
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Prefix
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Suffix
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|unsigned
+name|EntrySize
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|MCSectionELF
 modifier|*
 name|createELFRelSection
 parameter_list|(
-name|StringRef
+specifier|const
+name|Twine
+modifier|&
 name|Name
 parameter_list|,
 name|unsigned
@@ -1629,6 +1789,11 @@ name|COMDATSymName
 parameter_list|,
 name|int
 name|Selection
+parameter_list|,
+name|unsigned
+name|UniqueID
+init|=
+name|GenericSectionID
 parameter_list|,
 specifier|const
 name|char
@@ -1704,6 +1869,11 @@ specifier|const
 name|MCSymbol
 modifier|*
 name|KeySym
+parameter_list|,
+name|unsigned
+name|UniqueID
+init|=
+name|GenericSectionID
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1742,19 +1912,11 @@ comment|/// \brief Get the compilation directory for DW_AT_comp_dir
 end_comment
 
 begin_comment
-comment|/// This can be overridden by clients which want to control the reported
+comment|/// The compilation directory should be set with \c setCompilationDir before
 end_comment
 
 begin_comment
-comment|/// compilation directory and have it be something other than the current
-end_comment
-
-begin_comment
-comment|/// working directory.
-end_comment
-
-begin_comment
-comment|/// Returns an empty string if the current directory cannot be determined.
+comment|/// calling this function. If it is unset, an empty string will be returned.
 end_comment
 
 begin_expr_stmt
@@ -1771,10 +1933,6 @@ end_expr_stmt
 
 begin_comment
 comment|/// \brief Set the compilation directory for DW_AT_comp_dir
-end_comment
-
-begin_comment
-comment|/// Override the default (CWD) compilation directory.
 end_comment
 
 begin_function
@@ -2450,6 +2608,169 @@ name|DwarfVersion
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// \name CodeView Management
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
+comment|/// Creates an entry in the cv file table.
+end_comment
+
+begin_function_decl
+name|unsigned
+name|getCVFile
+parameter_list|(
+name|StringRef
+name|FileName
+parameter_list|,
+name|unsigned
+name|FileNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Saves the information from the currently parsed .cv_loc directive
+end_comment
+
+begin_comment
+comment|/// and sets CVLocSeen.  When the next instruction is assembled an entry
+end_comment
+
+begin_comment
+comment|/// in the line number table with this information and the address of the
+end_comment
+
+begin_comment
+comment|/// instruction will be created.
+end_comment
+
+begin_function
+name|void
+name|setCurrentCVLoc
+parameter_list|(
+name|unsigned
+name|FunctionId
+parameter_list|,
+name|unsigned
+name|FileNo
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Column
+parameter_list|,
+name|bool
+name|PrologueEnd
+parameter_list|,
+name|bool
+name|IsStmt
+parameter_list|)
+block|{
+name|CurrentCVLoc
+operator|.
+name|setFunctionId
+argument_list|(
+name|FunctionId
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setFileNum
+argument_list|(
+name|FileNo
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setLine
+argument_list|(
+name|Line
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setColumn
+argument_list|(
+name|Column
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setPrologueEnd
+argument_list|(
+name|PrologueEnd
+argument_list|)
+expr_stmt|;
+name|CurrentCVLoc
+operator|.
+name|setIsStmt
+argument_list|(
+name|IsStmt
+argument_list|)
+expr_stmt|;
+name|CVLocSeen
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|clearCVLocSeen
+parameter_list|()
+block|{
+name|CVLocSeen
+operator|=
+name|false
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|getCVLocSeen
+parameter_list|()
+block|{
+return|return
+name|CVLocSeen
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|MCCVLoc
+modifier|&
+name|getCurrentCVLoc
+parameter_list|()
+block|{
+return|return
+name|CurrentCVLoc
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|bool
+name|isValidCVFileNumber
+parameter_list|(
+name|unsigned
+name|FileNumber
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// @}

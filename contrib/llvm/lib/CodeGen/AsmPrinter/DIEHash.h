@@ -417,7 +417,9 @@ comment|/// \brief Hashes an individual attribute.
 name|void
 name|hashAttribute
 argument_list|(
+specifier|const
 name|DIEValue
+operator|&
 name|Value
 argument_list|,
 name|dwarf

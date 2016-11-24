@@ -287,7 +287,9 @@ argument|unsigned NumAlignedDPRCS2Regs
 argument_list|)
 specifier|const
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF

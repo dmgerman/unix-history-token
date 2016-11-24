@@ -36,19 +36,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares the machine register scavenger class. It can provide
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// information such as unused register at any point in a machine basic block.
+comment|/// This file declares the machine register scavenger class. It can provide
 end_comment
 
 begin_comment
-comment|// It also provides a mechanism to make registers available by evicting them
+comment|/// information such as unused register at any point in a machine basic block.
 end_comment
 
 begin_comment
-comment|// to spill slots.
+comment|/// It also provides a mechanism to make registers available by evicting them
+end_comment
+
+begin_comment
+comment|/// to spill slots.
 end_comment
 
 begin_comment
@@ -225,13 +229,13 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|/// Start tracking liveness from the begin of the specific basic block.
+comment|/// Start tracking liveness from the begin of basic block \p MBB.
 name|void
 name|enterBasicBlock
 argument_list|(
 name|MachineBasicBlock
-operator|*
-name|mbb
+operator|&
+name|MBB
 argument_list|)
 expr_stmt|;
 comment|/// Move the internal MBB iterator and update register states.

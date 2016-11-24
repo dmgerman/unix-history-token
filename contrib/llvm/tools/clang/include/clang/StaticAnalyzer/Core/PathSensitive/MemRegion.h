@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -275,114 +281,34 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-name|friend
-name|class
-name|MemRegionManager
-block|;
 name|public
 operator|:
 expr|enum
 name|Kind
 block|{
-comment|// Memory spaces.
-name|CodeSpaceRegionKind
-block|,
-name|StackLocalsSpaceRegionKind
-block|,
-name|StackArgumentsSpaceRegionKind
-block|,
-name|HeapSpaceRegionKind
-block|,
-name|UnknownSpaceRegionKind
-block|,
-name|StaticGlobalSpaceRegionKind
-block|,
-name|GlobalInternalSpaceRegionKind
-block|,
-name|GlobalSystemSpaceRegionKind
-block|,
-name|GlobalImmutableSpaceRegionKind
-block|,
-name|BEGIN_NON_STATIC_GLOBAL_MEMSPACES
-operator|=
-name|GlobalInternalSpaceRegionKind
-block|,
-name|END_NON_STATIC_GLOBAL_MEMSPACES
-operator|=
-name|GlobalImmutableSpaceRegionKind
-block|,
-name|BEGIN_GLOBAL_MEMSPACES
-operator|=
-name|StaticGlobalSpaceRegionKind
-block|,
-name|END_GLOBAL_MEMSPACES
-operator|=
-name|GlobalImmutableSpaceRegionKind
-block|,
-name|BEGIN_MEMSPACES
-operator|=
-name|CodeSpaceRegionKind
-block|,
-name|END_MEMSPACES
-operator|=
-name|GlobalImmutableSpaceRegionKind
-block|,
-comment|// Untyped regions.
-name|SymbolicRegionKind
-block|,
-name|AllocaRegionKind
-block|,
-comment|// Typed regions.
-name|BEGIN_TYPED_REGIONS
-block|,
-name|FunctionCodeRegionKind
-operator|=
-name|BEGIN_TYPED_REGIONS
-block|,
-name|BlockCodeRegionKind
-block|,
-name|BlockDataRegionKind
-block|,
-name|BEGIN_TYPED_VALUE_REGIONS
-block|,
-name|CompoundLiteralRegionKind
-operator|=
-name|BEGIN_TYPED_VALUE_REGIONS
-block|,
-name|CXXThisRegionKind
-block|,
-name|StringRegionKind
-block|,
-name|ObjCStringRegionKind
-block|,
-name|ElementRegionKind
-block|,
-comment|// Decl Regions.
-name|BEGIN_DECL_REGIONS
-block|,
-name|VarRegionKind
-operator|=
-name|BEGIN_DECL_REGIONS
-block|,
-name|FieldRegionKind
-block|,
-name|ObjCIvarRegionKind
-block|,
-name|END_DECL_REGIONS
-operator|=
-name|ObjCIvarRegionKind
-block|,
-name|CXXTempObjectRegionKind
-block|,
-name|CXXBaseObjectRegionKind
-block|,
-name|END_TYPED_VALUE_REGIONS
-operator|=
-name|CXXBaseObjectRegionKind
-block|,
-name|END_TYPED_REGIONS
-operator|=
-name|CXXBaseObjectRegionKind
+define|#
+directive|define
+name|REGION
+parameter_list|(
+name|Id
+parameter_list|,
+name|Parent
+parameter_list|)
+value|Id ## Kind,
+define|#
+directive|define
+name|REGION_RANGE
+parameter_list|(
+name|Id
+parameter_list|,
+name|First
+parameter_list|,
+name|Last
+parameter_list|)
+value|BEGIN_##Id = First, END_##Id = Last,
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/Regions.def"
 block|}
 block|;
 name|private
@@ -590,13 +516,44 @@ return|return
 name|false
 return|;
 block|}
-expr|}
+comment|/// Get descriptive name for memory region. The name is obtained from
+comment|/// the variable/field declaration retrieved from the memory region.
+comment|/// Regions that point to an element of an array are returned as: "arr[0]".
+comment|/// Regions that point to a struct are returned as: "st.var".
+comment|//
+comment|/// \param UseQuotes Set if the name should be quoted.
+comment|///
+comment|/// \returns variable name for memory region
+name|std
+operator|::
+name|string
+name|getDescriptiveName
+argument_list|(
+argument|bool UseQuotes = true
+argument_list|)
+specifier|const
 block|;
+comment|/// Retrieve source range from memory region. The range retrieval
+comment|/// is based on the decl obtained from the memory region.
+comment|/// For a VarRegion the range of the base region is returned.
+comment|/// For a FieldRegion the range of the field is returned.
+comment|/// If no declaration is found, an empty source range is returned.
+comment|/// The client is responsible for checking if the returned range is valid.
+comment|///
+comment|/// \returns source range for declaration retrieved from memory region
+name|clang
+operator|::
+name|SourceRange
+name|sourceRange
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
 comment|/// MemSpaceRegion - A memory region that represents a "memory space";
 comment|///  for example, the set of global variables, the stack frame, etc.
 name|class
 name|MemSpaceRegion
-operator|:
+range|:
 name|public
 name|MemRegion
 block|{
@@ -1310,11 +1267,11 @@ block|;
 return|return
 name|k
 operator|>=
-name|StackLocalsSpaceRegionKind
+name|BEGIN_STACK_MEMSPACES
 operator|&&
 name|k
 operator|<=
-name|StackArgumentsSpaceRegionKind
+name|END_STACK_MEMSPACES
 return|;
 block|}
 expr|}
@@ -1985,11 +1942,11 @@ block|;
 return|return
 name|k
 operator|>=
-name|FunctionCodeRegionKind
+name|BEGIN_CODE_TEXT_REGIONS
 operator|&&
 name|k
 operator|<=
-name|BlockCodeRegionKind
+name|END_CODE_TEXT_REGIONS
 return|;
 block|}
 expr|}
@@ -5269,6 +5226,7 @@ argument|SymbolRef Sym
 argument_list|,
 argument|InvalidationKinds IK
 argument_list|)
+specifier|const
 block|;
 name|bool
 name|hasTrait
@@ -5277,6 +5235,7 @@ argument|const MemRegion *MR
 argument_list|,
 argument|InvalidationKinds IK
 argument_list|)
+specifier|const
 block|; }
 block|;    }
 comment|// end GR namespace

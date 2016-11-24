@@ -162,6 +162,9 @@ parameter_list|(
 name|StringRef
 name|Prop
 parameter_list|,
+name|bool
+name|isClassProp
+parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS

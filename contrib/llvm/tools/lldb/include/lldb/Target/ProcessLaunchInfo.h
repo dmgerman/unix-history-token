@@ -365,9 +365,7 @@ block|;
 name|void
 name|SetMonitorProcessCallback
 argument_list|(
-argument|Host::MonitorChildProcessCallback callback
-argument_list|,
-argument|void *baton
+argument|const Host::MonitorChildProcessCallback&callback
 argument_list|,
 argument|bool monitor_signals
 argument_list|)
@@ -381,16 +379,6 @@ specifier|const
 block|{
 return|return
 name|m_monitor_callback
-return|;
-block|}
-name|void
-operator|*
-name|GetMonitorProcessBaton
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_monitor_callback_baton
 return|;
 block|}
 name|bool
@@ -444,8 +432,9 @@ name|m_listener_sp
 operator|=
 name|listener_sp
 block|;         }
-name|Listener
-operator|&
+name|lldb
+operator|::
+name|ListenerSP
 name|GetListenerForProcess
 argument_list|(
 name|Debugger

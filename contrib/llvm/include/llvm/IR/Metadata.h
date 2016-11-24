@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
@@ -182,9 +188,8 @@ block|}
 enum|;
 comment|/// \brief Storage flag for non-uniqued, otherwise unowned, metadata.
 name|unsigned
+name|char
 name|Storage
-range|:
-literal|2
 decl_stmt|;
 comment|// TODO: expose remaining bits to subclasses.
 name|unsigned
@@ -199,61 +204,16 @@ label|:
 enum|enum
 name|MetadataKind
 block|{
-name|MDTupleKind
-block|,
-name|DILocationKind
-block|,
-name|GenericDINodeKind
-block|,
-name|DISubrangeKind
-block|,
-name|DIEnumeratorKind
-block|,
-name|DIBasicTypeKind
-block|,
-name|DIDerivedTypeKind
-block|,
-name|DICompositeTypeKind
-block|,
-name|DISubroutineTypeKind
-block|,
-name|DIFileKind
-block|,
-name|DICompileUnitKind
-block|,
-name|DISubprogramKind
-block|,
-name|DILexicalBlockKind
-block|,
-name|DILexicalBlockFileKind
-block|,
-name|DINamespaceKind
-block|,
-name|DIModuleKind
-block|,
-name|DITemplateTypeParameterKind
-block|,
-name|DITemplateValueParameterKind
-block|,
-name|DIGlobalVariableKind
-block|,
-name|DILocalVariableKind
-block|,
-name|DIExpressionKind
-block|,
-name|DIObjCPropertyKind
-block|,
-name|DIImportedEntityKind
-block|,
-name|ConstantAsMetadataKind
-block|,
-name|LocalAsMetadataKind
-block|,
-name|MDStringKind
-block|,
-name|DIMacroKind
-block|,
-name|DIMacroFileKind
+define|#
+directive|define
+name|HANDLE_METADATA_LEAF
+parameter_list|(
+name|CLASS
+parameter_list|)
+value|CLASS##Kind,
+include|#
+directive|include
+file|"llvm/IR/Metadata.def"
 block|}
 enum|;
 name|protected
@@ -284,7 +244,20 @@ name|SubclassData32
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+operator|==
+literal|8
+argument_list|,
+literal|"Metdata fields poorly packed"
+argument_list|)
+block|;   }
 operator|~
 name|Metadata
 argument_list|()
@@ -923,11 +896,6 @@ literal|4
 operator|>
 name|UseMap
 expr_stmt|;
-comment|/// Flag that can be set to false if this metadata should not be
-comment|/// RAUW'ed, e.g. if it is used as the key of a map.
-name|bool
-name|CanReplace
-decl_stmt|;
 name|public
 label|:
 name|ReplaceableMetadataImpl
@@ -946,11 +914,6 @@ name|NextIndex
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|CanReplace
-argument_list|(
-argument|true
-argument_list|)
 block|{}
 operator|~
 name|ReplaceableMetadataImpl
@@ -966,17 +929,6 @@ operator|&&
 literal|"Cannot destroy in-use replaceable metadata"
 argument_list|)
 block|;   }
-comment|/// Set the CanReplace flag to the given value.
-name|void
-name|setCanReplace
-argument_list|(
-argument|bool Replaceable
-argument_list|)
-block|{
-name|CanReplace
-operator|=
-name|Replaceable
-block|; }
 name|LLVMContext
 operator|&
 name|getContext
@@ -1050,11 +1002,39 @@ modifier|&
 name|MD
 parameter_list|)
 function_decl|;
+comment|/// Lazily construct RAUW support on MD.
+comment|///
+comment|/// If this is an unresolved MDNode, RAUW support will be created on-demand.
+comment|/// ValueAsMetadata always has RAUW support.
 specifier|static
 name|ReplaceableMetadataImpl
 modifier|*
-name|get
+name|getOrCreate
 parameter_list|(
+name|Metadata
+modifier|&
+name|MD
+parameter_list|)
+function_decl|;
+comment|/// Get RAUW support on MD, if it exists.
+specifier|static
+name|ReplaceableMetadataImpl
+modifier|*
+name|getIfExists
+parameter_list|(
+name|Metadata
+modifier|&
+name|MD
+parameter_list|)
+function_decl|;
+comment|/// Check whether this node will support RAUW.
+comment|///
+comment|/// Returns \c true unless getOrCreate() would return null.
+specifier|static
+name|bool
+name|isReplaceable
+parameter_list|(
+specifier|const
 name|Metadata
 modifier|&
 name|MD
@@ -2380,19 +2360,6 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-name|MDString
-argument_list|(
-name|MDString
-operator|&&
-argument_list|)
-operator|:
-name|Metadata
-argument_list|(
-argument|MDStringKind
-argument_list|,
-argument|Uniqued
-argument_list|)
-block|{}
 name|public
 operator|:
 specifier|static
@@ -3386,6 +3353,46 @@ end_return
 
 begin_comment
 unit|}
+comment|/// Ensure that this has RAUW support, and then return it.
+end_comment
+
+begin_expr_stmt
+unit|ReplaceableMetadataImpl
+operator|*
+name|getOrCreateReplaceableUses
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|hasReplaceableUses
+argument_list|()
+condition|)
+name|makeReplaceable
+argument_list|(
+name|llvm
+operator|::
+name|make_unique
+operator|<
+name|ReplaceableMetadataImpl
+operator|>
+operator|(
+name|getContext
+argument_list|()
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getReplaceableUses
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Assign RAUW support to this.
 end_comment
 
@@ -3665,11 +3672,11 @@ block|;
 name|unsigned
 name|NumUnresolved
 block|;
-name|protected
-operator|:
 name|ContextAndReplaceableUses
 name|Context
 block|;
+name|protected
+operator|:
 name|void
 operator|*
 name|operator
@@ -4005,10 +4012,11 @@ specifier|const
 block|{
 return|return
 operator|!
-name|Context
-operator|.
-name|hasReplaceableUses
+name|isTemporary
 argument_list|()
+operator|&&
+operator|!
+name|NumUnresolved
 return|;
 block|}
 end_expr_stmt
@@ -4084,15 +4092,13 @@ operator|&&
 literal|"Expected temporary node"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-operator|!
-name|isResolved
+if|if
+condition|(
+name|Context
+operator|.
+name|hasReplaceableUses
 argument_list|()
-operator|&&
-literal|"Expected RAUW support"
-argument_list|)
-expr_stmt|;
+condition|)
 name|Context
 operator|.
 name|getReplaceableUses
@@ -4101,31 +4107,6 @@ operator|->
 name|replaceAllUsesWith
 argument_list|(
 name|MD
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// Set the CanReplace flag to the given value.
-end_comment
-
-begin_function
-name|void
-name|setCanReplace
-parameter_list|(
-name|bool
-name|Replaceable
-parameter_list|)
-block|{
-name|Context
-operator|.
-name|getReplaceableUses
-argument_list|()
-operator|->
-name|setCanReplace
-argument_list|(
-name|Replaceable
 argument_list|)
 expr_stmt|;
 block|}
@@ -4144,15 +4125,7 @@ comment|/// Once all forward declarations have been resolved, force cycles to be
 end_comment
 
 begin_comment
-comment|/// resolved. This interface is used when there are no more temporaries,
-end_comment
-
-begin_comment
-comment|/// and thus unresolved nodes are part of cycles and no longer need RAUW
-end_comment
-
-begin_comment
-comment|/// support.
+comment|/// resolved.
 end_comment
 
 begin_comment
@@ -4163,53 +4136,12 @@ begin_comment
 comment|/// \pre No operands (or operands' operands, etc.) have \a isTemporary().
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|resolveCycles
 parameter_list|()
-block|{
-name|resolveRecursivelyImpl
-argument_list|(
-comment|/* AllowTemps */
-name|false
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Resolve cycles while ignoring temporaries.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This drops RAUW support for any temporaries, which can no longer
-end_comment
-
-begin_comment
-comment|/// be uniqued.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function
-name|void
-name|resolveNonTemporaries
-parameter_list|()
-block|{
-name|resolveRecursivelyImpl
-argument_list|(
-comment|/* AllowTemps */
-name|true
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Replace a temporary node with a permanent one.
@@ -4554,9 +4486,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Resolve a unique, unresolved node.
+end_comment
+
 begin_function_decl
 name|void
 name|resolve
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Drop RAUW support, if any.
+end_comment
+
+begin_function_decl
+name|void
+name|dropReplaceableUses
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -4584,31 +4531,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|void
 name|countUnresolvedOperands
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Resolve cycles recursively. If \p AllowTemps is true, then any temporary
-end_comment
-
-begin_comment
-comment|/// metadata is ignored, otherwise it asserts when encountering temporary
-end_comment
-
-begin_comment
-comment|/// metadata.
-end_comment
-
-begin_function_decl
-name|void
-name|resolveRecursivelyImpl
-parameter_list|(
-name|bool
-name|AllowTemps
-parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -5841,16 +5766,160 @@ value|typedef MDTupleTypedArrayWrapper<CLASS> CLASS##Array;
 include|#
 directive|include
 file|"llvm/IR/Metadata.def"
+comment|/// Placeholder metadata for operands of distinct MDNodes.
+comment|///
+comment|/// This is a lightweight placeholder for an operand of a distinct node.  It's
+comment|/// purpose is to help track forward references when creating a distinct node.
+comment|/// This allows distinct nodes involved in a cycle to be constructed before
+comment|/// their operands without requiring a heavyweight temporary node with
+comment|/// full-blown RAUW support.
+comment|///
+comment|/// Each placeholder supports only a single MDNode user.  Clients should pass
+comment|/// an ID, retrieved via \a getID(), to indicate the "real" operand that this
+comment|/// should be replaced with.
+comment|///
+comment|/// While it would be possible to implement move operators, they would be
+comment|/// fairly expensive.  Leave them unimplemented to discourage their use
+comment|/// (clients can use std::deque, std::list, BumpPtrAllocator, etc.).
+name|class
+name|DistinctMDOperandPlaceholder
+operator|:
+name|public
+name|Metadata
+block|{
+name|friend
+name|class
+name|MetadataTracking
+block|;
+name|Metadata
+operator|*
+operator|*
+name|Use
+operator|=
+name|nullptr
+block|;
+name|DistinctMDOperandPlaceholder
+argument_list|()
+operator|=
+name|delete
+block|;
+name|DistinctMDOperandPlaceholder
+argument_list|(
+name|DistinctMDOperandPlaceholder
+operator|&&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|DistinctMDOperandPlaceholder
+argument_list|(
+specifier|const
+name|DistinctMDOperandPlaceholder
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|public
+operator|:
+name|explicit
+name|DistinctMDOperandPlaceholder
+argument_list|(
+argument|unsigned ID
+argument_list|)
+operator|:
+name|Metadata
+argument_list|(
+argument|DistinctMDOperandPlaceholderKind
+argument_list|,
+argument|Distinct
+argument_list|)
+block|{
+name|SubclassData32
+operator|=
+name|ID
+block|;   }
+operator|~
+name|DistinctMDOperandPlaceholder
+argument_list|()
+block|{
+if|if
+condition|(
+name|Use
+condition|)
+operator|*
+name|Use
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+name|unsigned
+name|getID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData32
+return|;
+block|}
+comment|/// Replace the use of this with MD.
+name|void
+name|replaceUseWith
+argument_list|(
+argument|Metadata *MD
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Use
+condition|)
+return|return;
+operator|*
+name|Use
+operator|=
+name|MD
+block|;
+name|Use
+operator|=
+name|nullptr
+block|;   }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// \brief A tuple of MDNodes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Despite its name, a NamedMDNode isn't itself an MDNode. NamedMDNodes belong
+end_comment
+
+begin_comment
 comment|/// to modules, have names, and contain lists of MDNodes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// TODO: Inherit from Metadata.
+end_comment
+
+begin_decl_stmt
 name|class
 name|NamedMDNode
-operator|:
+range|:
 name|public
 name|ilist_node
 operator|<
@@ -6196,6 +6265,17 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|print
+argument_list|(
+argument|raw_ostream&ROS
+argument_list|,
+argument|ModuleSlotTracker&MST
+argument_list|,
+argument|bool IsForDebug = false
+argument_list|)
+specifier|const
+block|;
+name|void
 name|dump
 argument_list|()
 specifier|const
@@ -6319,11 +6399,15 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end llvm namespace
 end_comment
 

@@ -73,9 +73,9 @@ parameter_list|,
 name|fast
 parameter_list|)
 define|\
-value|BufferedStackTrace stack;                                                    \   {                                                                            \     uptr stack_top = 0, stack_bottom = 0;                                      \     ThreadContext *t;                                                          \     if (fast&& (t = CurrentThreadContext())) {                                \       stack_top = t->stack_end();                                              \       stack_bottom = t->stack_begin();                                         \     }                                                                          \     stack.Unwind(max_size, StackTrace::GetCurrentPc(), GET_CURRENT_FRAME(),    \
+value|BufferedStackTrace stack;                                                    \   {                                                                            \     uptr stack_top = 0, stack_bottom = 0;                                      \     ThreadContext *t;                                                          \     if (fast&& (t = CurrentThreadContext())) {                                \       stack_top = t->stack_end();                                              \       stack_bottom = t->stack_begin();                                         \     }                                                                          \     if (!SANITIZER_MIPS ||                                                     \         IsValidFrame(GET_CURRENT_FRAME(), stack_top, stack_bottom)) {          \       stack.Unwind(max_size, StackTrace::GetCurrentPc(), GET_CURRENT_FRAME(),  \
 comment|/* context */
-value|0, stack_top, stack_bottom, fast);              \   }
+value|0, stack_top, stack_bottom, fast);            \     }                                                                          \   }
 end_define
 
 begin_define

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/RangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -462,6 +462,44 @@ name|Address
 name|pc_or_function_start
 parameter_list|)
 function_decl|;
+name|bool
+name|CreateUnwindPlan_arm64
+parameter_list|(
+name|Target
+modifier|&
+name|target
+parameter_list|,
+name|FunctionInfo
+modifier|&
+name|function_info
+parameter_list|,
+name|UnwindPlan
+modifier|&
+name|unwind_plan
+parameter_list|,
+name|Address
+name|pc_or_function_start
+parameter_list|)
+function_decl|;
+name|bool
+name|CreateUnwindPlan_armv7
+parameter_list|(
+name|Target
+modifier|&
+name|target
+parameter_list|,
+name|FunctionInfo
+modifier|&
+name|function_info
+parameter_list|,
+name|UnwindPlan
+modifier|&
+name|unwind_plan
+parameter_list|,
+name|Address
+name|pc_or_function_start
+parameter_list|)
+function_decl|;
 name|ObjectFile
 modifier|&
 name|m_objfile
@@ -478,9 +516,11 @@ name|m_section_contents_if_encrypted
 expr_stmt|;
 comment|// if the binary is encrypted, read the sect contents
 comment|// out of live memory and cache them here
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|std
 operator|::
 name|vector

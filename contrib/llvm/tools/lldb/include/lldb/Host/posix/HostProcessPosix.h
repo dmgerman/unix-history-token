@@ -152,9 +152,7 @@ block|;
 name|HostThread
 name|StartMonitoring
 argument_list|(
-argument|HostProcess::MonitorCallback callback
-argument_list|,
-argument|void *callback_baton
+argument|const Host::MonitorChildProcessCallback&callback
 argument_list|,
 argument|bool monitor_signals
 argument_list|)

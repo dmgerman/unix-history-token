@@ -814,6 +814,14 @@ name|DomTreeNode
 name|NodeType
 expr_stmt|;
 typedef|typedef
+operator|::
+name|clang
+operator|::
+name|DomTreeNode
+operator|*
+name|NodeRef
+expr_stmt|;
+typedef|typedef
 name|NodeType
 operator|::
 name|iterator

@@ -75,6 +75,11 @@ name|final
 block|;
 name|protected
 operator|:
+comment|/// Targets which have non-executable stacks by default can set this to false
+comment|/// to disable the special section which requests a non-executable stack.
+name|bool
+name|UsesNonexecutableStackSection
+block|;
 name|MCAsmInfoELF
 argument_list|()
 block|; }

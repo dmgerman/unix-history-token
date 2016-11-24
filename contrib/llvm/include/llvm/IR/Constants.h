@@ -156,12 +156,13 @@ operator|>
 expr|struct
 name|ConstantAggrKeyType
 expr_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// This is the shared class of boolean and integer constants. This class
-comment|/// represents both boolean and integral constants.
-comment|/// @brief Class for constant integers.
+comment|/// Base class for constants with no operands.
+comment|///
+comment|/// These constants have no operands; they represent their data directly.
+comment|/// Since they can be in use by unrelated modules (and are never based on
+comment|/// GlobalValues), it never makes sense to RAUW them.
 name|class
-name|ConstantInt
+name|ConstantData
 range|:
 name|public
 name|Constant
@@ -182,6 +183,123 @@ name|unsigned
 argument_list|)
 operator|=
 name|delete
+block|;
+name|ConstantData
+argument_list|()
+operator|=
+name|delete
+block|;
+name|ConstantData
+argument_list|(
+specifier|const
+name|ConstantData
+operator|&
+argument_list|)
+operator|=
+name|delete
+block|;
+name|friend
+name|class
+name|Constant
+block|;
+name|Value
+operator|*
+name|handleOperandChangeImpl
+argument_list|(
+argument|Value *From
+argument_list|,
+argument|Value *To
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Constant data does not have operands!"
+argument_list|)
+block|;   }
+name|protected
+operator|:
+name|explicit
+name|ConstantData
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|ValueTy VT
+argument_list|)
+operator|:
+name|Constant
+argument_list|(
+argument|Ty
+argument_list|,
+argument|VT
+argument_list|,
+argument|nullptr
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t s
+argument_list|)
+block|{
+return|return
+name|User
+operator|::
+name|operator
+name|new
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+comment|/// Methods to support type inquiry through isa, cast, and dyn_cast.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|>=
+name|ConstantDataFirstVal
+operator|&&
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|<=
+name|ConstantDataLastVal
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// This is the shared class of boolean and integer constants. This class
+comment|/// represents both boolean and integral constants.
+comment|/// @brief Class for constant integers.
+name|class
+name|ConstantInt
+name|final
+operator|:
+name|public
+name|ConstantData
+block|{
+name|void
+name|anchor
+argument_list|()
+name|override
 block|;
 name|ConstantInt
 argument_list|(
@@ -215,46 +333,6 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -722,9 +800,10 @@ comment|/// ConstantFP - Floating Point Values [float, double]
 comment|///
 name|class
 name|ConstantFP
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
 name|APFloat
 name|Val
@@ -733,18 +812,6 @@ name|void
 name|anchor
 argument_list|()
 name|override
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
 block|;
 name|ConstantFP
 argument_list|(
@@ -757,35 +824,12 @@ name|delete
 block|;
 name|friend
 name|class
-name|LLVMContextImpl
-block|;
-name|friend
-name|class
 name|Constant
 block|;
 name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
 name|ConstantFP
 argument_list|(
 name|Type
@@ -798,29 +842,6 @@ operator|&
 name|V
 argument_list|)
 block|;
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 comment|/// Floating point negation must be implemented with f(x) = -0.0 - x. This
@@ -836,10 +857,10 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// get() - This returns a ConstantFP, or a vector containing a splat of a
-comment|/// ConstantFP, for the specified value in the specified type.  This should
-comment|/// only be used for simple constant values like 2.0/1.0 etc, that are
-comment|/// known-valid both as host double and as the target format.
+comment|/// This returns a ConstantFP, or a vector containing a splat of a ConstantFP,
+comment|/// for the specified value in the specified type. This should only be used
+comment|/// for simple constant values like 2.0/1.0 etc, that are known-valid both as
+comment|/// host double and as the target format.
 specifier|static
 name|Constant
 operator|*
@@ -908,7 +929,7 @@ argument_list|,
 argument|bool Negative = false
 argument_list|)
 block|;
-comment|/// isValueValidForType - return true if Ty is big enough to represent V.
+comment|/// Return true if Ty is big enough to represent V.
 specifier|static
 name|bool
 name|isValueValidForType
@@ -935,7 +956,7 @@ return|return
 name|Val
 return|;
 block|}
-comment|/// isZero - Return true if the value is positive or negative zero.
+comment|/// Return true if the value is positive or negative zero.
 name|bool
 name|isZero
 argument_list|()
@@ -948,7 +969,7 @@ name|isZero
 argument_list|()
 return|;
 block|}
-comment|/// isNegative - Return true if the sign bit is set.
+comment|/// Return true if the sign bit is set.
 name|bool
 name|isNegative
 argument_list|()
@@ -961,7 +982,7 @@ name|isNegative
 argument_list|()
 return|;
 block|}
-comment|/// isInfinity - Return true if the value is infinity
+comment|/// Return true if the value is infinity
 name|bool
 name|isInfinity
 argument_list|()
@@ -974,7 +995,7 @@ name|isInfinity
 argument_list|()
 return|;
 block|}
-comment|/// isNaN - Return true if the value is a NaN.
+comment|/// Return true if the value is a NaN.
 name|bool
 name|isNaN
 argument_list|()
@@ -987,8 +1008,8 @@ name|isNaN
 argument_list|()
 return|;
 block|}
-comment|/// isExactlyValue - We don't rely on operator== working on double values, as
-comment|/// it returns true for things that are clearly not equal, like -0.0 and 0.0.
+comment|/// We don't rely on operator== working on double values, as it returns true
+comment|/// for things that are clearly not equal, like -0.0 and 0.0.
 comment|/// As such, this method can be used to do an exact bit-for-bit comparison of
 comment|/// two floating point values.  The version with a double operand is retained
 comment|/// because it's so convenient to write isExactlyValue(2.0), but please use
@@ -1060,26 +1081,15 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantAggregateZero - All zero aggregate value
+comment|/// All zero aggregate value
 comment|///
 name|class
 name|ConstantAggregateZero
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|ConstantAggregateZero
 argument_list|(
 specifier|const
@@ -1097,67 +1107,21 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
 name|explicit
 name|ConstantAggregateZero
 argument_list|(
 name|Type
 operator|*
-name|ty
+name|Ty
 argument_list|)
 operator|:
-name|Constant
+name|ConstantData
 argument_list|(
-argument|ty
+argument|Ty
 argument_list|,
 argument|ConstantAggregateZeroVal
-argument_list|,
-argument|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|{}
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -1170,16 +1134,16 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
-comment|/// with the right element type.
+comment|/// If this CAZ has array or vector type, return a zero with the right element
+comment|/// type.
 name|Constant
 operator|*
 name|getSequentialElement
 argument_list|()
 specifier|const
 block|;
-comment|/// getStructElement - If this CAZ has struct type, return a zero with the
-comment|/// right element type for the specified element.
+comment|/// If this CAZ has struct type, return a zero with the right element type for
+comment|/// the specified element.
 name|Constant
 operator|*
 name|getStructElement
@@ -1188,8 +1152,8 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementValue - Return a zero of the right value for the specified GEP
-comment|/// index.
+comment|/// Return a zero of the right value for the specified GEP index if we can,
+comment|/// otherwise return null (e.g. if C is a ConstantExpr).
 name|Constant
 operator|*
 name|getElementValue
@@ -1198,8 +1162,7 @@ argument|Constant *C
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementValue - Return a zero of the right value for the specified GEP
-comment|/// index.
+comment|/// Return a zero of the right value for the specified GEP index.
 name|Constant
 operator|*
 name|getElementValue
@@ -1208,7 +1171,7 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Return the number of elements in the array, vector, or struct.
+comment|/// Return the number of elements in the array, vector, or struct.
 name|unsigned
 name|getNumElements
 argument_list|()
@@ -1234,14 +1197,99 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// Base class for aggregate constants (with operands).
+comment|///
+comment|/// These constants are aggregates of other constants, which are stored as
+comment|/// operands.
+comment|///
+comment|/// Subclasses are \a ConstantStruct, \a ConstantArray, and \a
+comment|/// ConstantVector.
+comment|///
+comment|/// \note Some subclasses of \a ConstantData are semantically aggregates --
+comment|/// such as \a ConstantDataArray -- but are not subclasses of this because they
+comment|/// use operands.
+name|class
+name|ConstantAggregate
+operator|:
+name|public
+name|Constant
+block|{
+name|protected
+operator|:
+name|ConstantAggregate
+argument_list|(
+argument|CompositeType *T
+argument_list|,
+argument|ValueTy VT
+argument_list|,
+argument|ArrayRef<Constant *> V
+argument_list|)
+block|;
+name|public
+operator|:
+comment|/// Transparently provide more efficient getOperand methods.
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Constant
+argument_list|)
+block|;
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|>=
+name|ConstantAggregateFirstVal
+operator|&&
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|<=
+name|ConstantAggregateLastVal
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|OperandTraits
+operator|<
+name|ConstantAggregate
+operator|>
+operator|:
+name|public
+name|VariadicOperandTraits
+operator|<
+name|ConstantAggregate
+operator|>
+block|{}
+block|;
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+argument|ConstantAggregate
+argument_list|,
+argument|Constant
+argument_list|)
 comment|//===----------------------------------------------------------------------===//
 comment|/// ConstantArray - Constant Array Declarations
 comment|///
 name|class
 name|ConstantArray
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantAggregate
 block|{
 name|friend
 expr|struct
@@ -1249,15 +1297,6 @@ name|ConstantAggrKeyType
 operator|<
 name|ConstantArray
 operator|>
-block|;
-name|ConstantArray
-argument_list|(
-specifier|const
-name|ConstantArray
-operator|&
-argument_list|)
-operator|=
-name|delete
 block|;
 name|friend
 name|class
@@ -1278,14 +1317,8 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
-name|protected
-operator|:
 name|ConstantArray
 argument_list|(
 name|ArrayType
@@ -1341,15 +1374,8 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// Transparently provide more efficient getOperand methods.
-name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-name|Constant
-argument_list|)
-block|;
-comment|/// getType - Specialize the getType() method to always return an ArrayType,
+comment|/// Specialize the getType() method to always return an ArrayType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
-comment|///
 specifier|inline
 name|ArrayType
 operator|*
@@ -1389,36 +1415,15 @@ return|;
 block|}
 expr|}
 block|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|OperandTraits
-operator|<
-name|ConstantArray
-operator|>
-operator|:
-name|public
-name|VariadicOperandTraits
-operator|<
-name|ConstantArray
-operator|>
-block|{ }
-block|;
-name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-argument|ConstantArray
-argument_list|,
-argument|Constant
-argument_list|)
 comment|//===----------------------------------------------------------------------===//
-comment|// ConstantStruct - Constant Struct Declarations
+comment|// Constant Struct Declarations
 comment|//
 name|class
 name|ConstantStruct
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantAggregate
 block|{
 name|friend
 expr|struct
@@ -1426,15 +1431,6 @@ name|ConstantAggrKeyType
 operator|<
 name|ConstantStruct
 operator|>
-block|;
-name|ConstantStruct
-argument_list|(
-specifier|const
-name|ConstantStruct
-operator|&
-argument_list|)
-operator|=
-name|delete
 block|;
 name|friend
 name|class
@@ -1455,14 +1451,8 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
-name|protected
-operator|:
 name|ConstantStruct
 argument_list|(
 name|StructType
@@ -1508,9 +1498,8 @@ argument|...
 argument_list|)
 name|LLVM_END_WITH_NULL
 block|;
-comment|/// getAnon - Return an anonymous struct that has the specified
-comment|/// elements.  If the struct is possibly empty, then you must specify a
-comment|/// context.
+comment|/// Return an anonymous struct that has the specified elements.
+comment|/// If the struct is possibly empty, then you must specify a context.
 specifier|static
 name|Constant
 operator|*
@@ -1563,8 +1552,8 @@ name|V
 argument_list|)
 return|;
 block|}
-comment|/// getTypeForElements - Return an anonymous struct type to use for a constant
-comment|/// with the specified set of elements.  The list must not be empty.
+comment|/// Return an anonymous struct type to use for a constant with the specified
+comment|/// set of elements. The list must not be empty.
 specifier|static
 name|StructType
 operator|*
@@ -1575,7 +1564,7 @@ argument_list|,
 argument|bool Packed = false
 argument_list|)
 block|;
-comment|/// getTypeForElements - This version of the method allows an empty list.
+comment|/// This version of the method allows an empty list.
 specifier|static
 name|StructType
 operator|*
@@ -1588,14 +1577,7 @@ argument_list|,
 argument|bool Packed = false
 argument_list|)
 block|;
-comment|/// Transparently provide more efficient getOperand methods.
-name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-name|Constant
-argument_list|)
-block|;
-comment|/// getType() specialization - Reduce amount of casting...
-comment|///
+comment|/// Specialization - reduce amount of casting.
 specifier|inline
 name|StructType
 operator|*
@@ -1635,36 +1617,15 @@ return|;
 block|}
 expr|}
 block|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|OperandTraits
-operator|<
-name|ConstantStruct
-operator|>
-operator|:
-name|public
-name|VariadicOperandTraits
-operator|<
-name|ConstantStruct
-operator|>
-block|{ }
-block|;
-name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-argument|ConstantStruct
-argument_list|,
-argument|Constant
-argument_list|)
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantVector - Constant Vector Declarations
+comment|/// Constant Vector Declarations
 comment|///
 name|class
 name|ConstantVector
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantAggregate
 block|{
 name|friend
 expr|struct
@@ -1672,15 +1633,6 @@ name|ConstantAggrKeyType
 operator|<
 name|ConstantVector
 operator|>
-block|;
-name|ConstantVector
-argument_list|(
-specifier|const
-name|ConstantVector
-operator|&
-argument_list|)
-operator|=
-name|delete
 block|;
 name|friend
 name|class
@@ -1701,14 +1653,8 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
-name|protected
-operator|:
 name|ConstantVector
 argument_list|(
 name|VectorType
@@ -1756,8 +1702,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// getSplat - Return a ConstantVector with the specified constant in each
-comment|/// element.
+comment|/// Return a ConstantVector with the specified constant in each element.
 specifier|static
 name|Constant
 operator|*
@@ -1768,15 +1713,8 @@ argument_list|,
 argument|Constant *Elt
 argument_list|)
 block|;
-comment|/// Transparently provide more efficient getOperand methods.
-name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-name|Constant
-argument_list|)
-block|;
-comment|/// getType - Specialize the getType() method to always return a VectorType,
+comment|/// Specialize the getType() method to always return a VectorType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
-comment|///
 specifier|inline
 name|VectorType
 operator|*
@@ -1797,8 +1735,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// getSplatValue - If this is a splat constant, meaning that all of the
-comment|/// elements have the same value, return that value. Otherwise return NULL.
+comment|/// If this is a splat constant, meaning that all of the elements have the
+comment|/// same value, return that value. Otherwise return NULL.
 name|Constant
 operator|*
 name|getSplatValue
@@ -1824,49 +1762,16 @@ return|;
 block|}
 expr|}
 block|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|OperandTraits
-operator|<
-name|ConstantVector
-operator|>
-operator|:
-name|public
-name|VariadicOperandTraits
-operator|<
-name|ConstantVector
-operator|>
-block|{ }
-block|;
-name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
-argument_list|(
-argument|ConstantVector
-argument_list|,
-argument|Constant
-argument_list|)
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantPointerNull - a constant pointer value that points to null
+comment|/// A constant pointer value that points to null
 comment|///
 name|class
 name|ConstantPointerNull
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|ConstantPointerNull
 argument_list|(
 specifier|const
@@ -1884,25 +1789,6 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
 name|explicit
 name|ConstantPointerNull
 argument_list|(
@@ -1911,43 +1797,16 @@ operator|*
 name|T
 argument_list|)
 operator|:
-name|Constant
+name|ConstantData
 argument_list|(
 argument|T
 argument_list|,
 argument|Value::ConstantPointerNullVal
-argument_list|,
-argument|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|{}
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return objects of the specified value
+comment|/// Static factory methods - Return objects of the specified value
 specifier|static
 name|ConstantPointerNull
 operator|*
@@ -1958,9 +1817,8 @@ operator|*
 name|T
 argument_list|)
 block|;
-comment|/// getType - Specialize the getType() method to always return an PointerType,
+comment|/// Specialize the getType() method to always return an PointerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
-comment|///
 specifier|inline
 name|PointerType
 operator|*
@@ -2013,38 +1871,26 @@ name|class
 name|ConstantDataSequential
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
 name|friend
 name|class
 name|LLVMContextImpl
 block|;
-comment|/// DataElements - A pointer to the bytes underlying this constant (which is
-comment|/// owned by the uniquing StringMap).
+comment|/// A pointer to the bytes underlying this constant (which is owned by the
+comment|/// uniquing StringMap).
 specifier|const
 name|char
 operator|*
 name|DataElements
 block|;
-comment|/// Next - This forms a link list of ConstantDataSequential nodes that have
+comment|/// This forms a link list of ConstantDataSequential nodes that have
 comment|/// the same value but different type.  For example, 0,0,0,1 could be a 4
 comment|/// element array of i8, or a 1-element array of i32.  They'll both end up in
 comment|/// the same StringMap bucket, linked up.
 name|ConstantDataSequential
 operator|*
 name|Next
-block|;
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
 block|;
 name|ConstantDataSequential
 argument_list|(
@@ -2063,23 +1909,6 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
 name|protected
 operator|:
 name|explicit
@@ -2092,15 +1921,11 @@ argument_list|,
 argument|const char *Data
 argument_list|)
 operator|:
-name|Constant
+name|ConstantData
 argument_list|(
 name|ty
 argument_list|,
 name|VT
-argument_list|,
-name|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|,
 name|DataElements
@@ -2131,33 +1956,10 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 block|;
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands.
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
-comment|/// isElementTypeCompatible - Return true if a ConstantDataSequential can be
-comment|/// formed with a vector or array of the specified element type.
+comment|/// Return true if a ConstantDataSequential can be formed with a vector or
+comment|/// array of the specified element type.
 comment|/// ConstantDataArray only works with normal float and int types that are
 comment|/// stored densely in memory, not with things like i42 or x86_f80.
 specifier|static
@@ -2169,8 +1971,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getElementAsInteger - If this is a sequential container of integers (of
-comment|/// any size), return the specified element in the low bits of a uint64_t.
+comment|/// If this is a sequential container of integers (of any size), return the
+comment|/// specified element in the low bits of a uint64_t.
 name|uint64_t
 name|getElementAsInteger
 argument_list|(
@@ -2178,8 +1980,8 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementAsAPFloat - If this is a sequential container of floating point
-comment|/// type, return the specified element as an APFloat.
+comment|/// If this is a sequential container of floating point type, return the
+comment|/// specified element as an APFloat.
 name|APFloat
 name|getElementAsAPFloat
 argument_list|(
@@ -2187,8 +1989,8 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementAsFloat - If this is an sequential container of floats, return
-comment|/// the specified element as a float.
+comment|/// If this is an sequential container of floats, return the specified element
+comment|/// as a float.
 name|float
 name|getElementAsFloat
 argument_list|(
@@ -2196,8 +1998,8 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementAsDouble - If this is an sequential container of doubles, return
-comment|/// the specified element as a double.
+comment|/// If this is an sequential container of doubles, return the specified
+comment|/// element as a double.
 name|double
 name|getElementAsDouble
 argument_list|(
@@ -2205,7 +2007,7 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementAsConstant - Return a Constant for a specified index's element.
+comment|/// Return a Constant for a specified index's element.
 comment|/// Note that this has to compute a new constant to return, so it isn't as
 comment|/// efficient as getElementAsInteger/Float/Double.
 name|Constant
@@ -2216,9 +2018,8 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getType - Specialize the getType() method to always return a
-comment|/// SequentialType, which reduces the amount of casting needed in parts of the
-comment|/// compiler.
+comment|/// Specialize the getType() method to always return a SequentialType, which
+comment|/// reduces the amount of casting needed in parts of the compiler.
 specifier|inline
 name|SequentialType
 operator|*
@@ -2239,43 +2040,41 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// getElementType - Return the element type of the array/vector.
+comment|/// Return the element type of the array/vector.
 name|Type
 operator|*
 name|getElementType
 argument_list|()
 specifier|const
 block|;
-comment|/// getNumElements - Return the number of elements in the array or vector.
+comment|/// Return the number of elements in the array or vector.
 name|unsigned
 name|getNumElements
 argument_list|()
 specifier|const
 block|;
-comment|/// getElementByteSize - Return the size (in bytes) of each element in the
-comment|/// array/vector.  The size of the elements is known to be a multiple of one
-comment|/// byte.
+comment|/// Return the size (in bytes) of each element in the array/vector.
+comment|/// The size of the elements is known to be a multiple of one byte.
 name|uint64_t
 name|getElementByteSize
 argument_list|()
 specifier|const
 block|;
-comment|/// isString - This method returns true if this is an array of i8.
+comment|/// This method returns true if this is an array of i8.
 name|bool
 name|isString
 argument_list|()
 specifier|const
 block|;
-comment|/// isCString - This method returns true if the array "isString", ends with a
-comment|/// nul byte, and does not contains any other nul bytes.
+comment|/// This method returns true if the array "isString", ends with a null byte,
+comment|/// and does not contains any other null bytes.
 name|bool
 name|isCString
 argument_list|()
 specifier|const
 block|;
-comment|/// getAsString - If this array is isString(), then this method returns the
-comment|/// array as a StringRef.  Otherwise, it asserts out.
-comment|///
+comment|/// If this array is isString(), then this method returns the array as a
+comment|/// StringRef. Otherwise, it asserts out.
 name|StringRef
 name|getAsString
 argument_list|()
@@ -2294,10 +2093,8 @@ name|getRawDataValues
 argument_list|()
 return|;
 block|}
-comment|/// getAsCString - If this array is isCString(), then this method returns the
-comment|/// array (without the trailing null byte) as a StringRef. Otherwise, it
-comment|/// asserts out.
-comment|///
+comment|/// If this array is isCString(), then this method returns the array (without
+comment|/// the trailing null byte) as a StringRef. Otherwise, it asserts out.
 name|StringRef
 name|getAsCString
 argument_list|()
@@ -2333,16 +2130,15 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getRawDataValues - Return the raw, underlying, bytes of this data.  Note
-comment|/// that this is an extremely tricky thing to work with, as it exposes the
-comment|/// host endianness of the data elements.
+comment|/// Return the raw, underlying, bytes of this data. Note that this is an
+comment|/// extremely tricky thing to work with, as it exposes the host endianness of
+comment|/// the data elements.
 name|StringRef
 name|getRawDataValues
 argument_list|()
 specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-comment|///
 specifier|static
 name|bool
 name|classof
@@ -2379,13 +2175,14 @@ specifier|const
 block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantDataArray - An array constant whose element type is a simple
-comment|/// 1/2/4/8-byte integer or float/double, and whose elements are just simple
-comment|/// data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
-comment|/// operands because it stores all of the elements of the constant as densely
-comment|/// packed data, instead of as Value*'s.
+comment|/// An array constant whose element type is a simple 1/2/4/8-byte integer or
+comment|/// float/double, and whose elements are just simple data values
+comment|/// (i.e. ConstantInt/ConstantFP). This Constant node has no operands because it
+comment|/// stores all of the elements of the constant as densely packed data, instead
+comment|/// of as Value*'s.
 name|class
 name|ConstantDataArray
+name|final
 operator|:
 name|public
 name|ConstantDataSequential
@@ -2442,9 +2239,7 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands.
+comment|/// Allocate space for exactly zero operands.
 name|void
 operator|*
 name|operator
@@ -2619,8 +2414,8 @@ operator|>
 name|Elts
 argument_list|)
 block|;
-comment|/// getString - This method constructs a CDS and initializes it with a text
-comment|/// string. The default behavior (AddNull==true) causes a null terminator to
+comment|/// This method constructs a CDS and initializes it with a text string.
+comment|/// The default behavior (AddNull==true) causes a null terminator to
 comment|/// be placed at the end of the array (increasing the length of the string by
 comment|/// one more than the StringRef would normally indicate.  Pass AddNull=false
 comment|/// to disable this behavior.
@@ -2636,9 +2431,8 @@ argument_list|,
 argument|bool AddNull = true
 argument_list|)
 block|;
-comment|/// getType - Specialize the getType() method to always return an ArrayType,
+comment|/// Specialize the getType() method to always return an ArrayType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
-comment|///
 specifier|inline
 name|ArrayType
 operator|*
@@ -2660,7 +2454,6 @@ operator|)
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-comment|///
 specifier|static
 name|bool
 name|classof
@@ -2680,13 +2473,14 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantDataVector - A vector constant whose element type is a simple
-comment|/// 1/2/4/8-byte integer or float/double, and whose elements are just simple
-comment|/// data values (i.e. ConstantInt/ConstantFP).  This Constant node has no
-comment|/// operands because it stores all of the elements of the constant as densely
-comment|/// packed data, instead of as Value*'s.
+comment|/// A vector constant whose element type is a simple 1/2/4/8-byte integer or
+comment|/// float/double, and whose elements are just simple data values
+comment|/// (i.e. ConstantInt/ConstantFP). This Constant node has no operands because it
+comment|/// stores all of the elements of the constant as densely packed data, instead
+comment|/// of as Value*'s.
 name|class
 name|ConstantDataVector
+name|final
 operator|:
 name|public
 name|ConstantDataSequential
@@ -2743,8 +2537,6 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
-name|protected
-operator|:
 comment|// allocate space for exactly zero operands.
 name|void
 operator|*
@@ -2920,8 +2712,8 @@ operator|>
 name|Elts
 argument_list|)
 block|;
-comment|/// getSplat - Return a ConstantVector with the specified constant in each
-comment|/// element.  The specified constant has to be a of a compatible type (i8/i16/
+comment|/// Return a ConstantVector with the specified constant in each element.
+comment|/// The specified constant has to be a of a compatible type (i8/i16/
 comment|/// i32/i64/float/double) and must be a ConstantFP or ConstantInt.
 specifier|static
 name|Constant
@@ -2933,17 +2725,16 @@ argument_list|,
 argument|Constant *Elt
 argument_list|)
 block|;
-comment|/// getSplatValue - If this is a splat constant, meaning that all of the
-comment|/// elements have the same value, return that value. Otherwise return NULL.
+comment|/// If this is a splat constant, meaning that all of the elements have the
+comment|/// same value, return that value. Otherwise return NULL.
 name|Constant
 operator|*
 name|getSplatValue
 argument_list|()
 specifier|const
 block|;
-comment|/// getType - Specialize the getType() method to always return a VectorType,
+comment|/// Specialize the getType() method to always return a VectorType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
-comment|///
 specifier|inline
 name|VectorType
 operator|*
@@ -2965,7 +2756,6 @@ operator|)
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-comment|///
 specifier|static
 name|bool
 name|classof
@@ -2985,26 +2775,15 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantTokenNone - a constant token which is empty
+comment|/// A constant token which is empty
 comment|///
 name|class
 name|ConstantTokenNone
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|ConstantTokenNone
 argument_list|(
 specifier|const
@@ -3022,25 +2801,6 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
 name|explicit
 name|ConstantTokenNone
 argument_list|(
@@ -3049,38 +2809,13 @@ operator|&
 name|Context
 argument_list|)
 operator|:
-name|Constant
+name|ConstantData
 argument_list|(
 argument|Type::getTokenTy(Context)
 argument_list|,
 argument|ConstantTokenNoneVal
-argument_list|,
-argument|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|{}
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
 comment|/// Return the ConstantTokenNone.
@@ -3113,10 +2848,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// BlockAddress - The address of a basic block.
+comment|/// The address of a basic block.
 comment|///
 name|class
 name|BlockAddress
+name|final
 operator|:
 name|public
 name|Constant
@@ -3183,15 +2919,11 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
 name|public
 operator|:
-comment|/// get - Return a BlockAddress for the specified function and basic block.
+comment|/// Return a BlockAddress for the specified function and basic block.
 specifier|static
 name|BlockAddress
 operator|*
@@ -3206,7 +2938,7 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// get - Return a BlockAddress for the specified basic block.  The basic
+comment|/// Return a BlockAddress for the specified basic block.  The basic
 comment|/// block must be embedded into a function.
 specifier|static
 name|BlockAddress
@@ -3218,8 +2950,7 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// \brief Lookup an existing \c BlockAddress constant for the given
-comment|/// BasicBlock.
+comment|/// Lookup an existing \c BlockAddress constant for the given BasicBlock.
 comment|///
 comment|/// \returns 0 if \c !BB->hasAddressTaken(), otherwise the \c BlockAddress.
 specifier|static
@@ -3328,7 +3059,7 @@ argument_list|,
 argument|Value
 argument_list|)
 comment|//===----------------------------------------------------------------------===//
-comment|/// ConstantExpr - a constant value that is initialized with an expression using
+comment|/// A constant value that is initialized with an expression using
 comment|/// other constant values.
 comment|///
 comment|/// This class uses the standard Instruction opcodes to define the various
@@ -3363,10 +3094,6 @@ argument_list|,
 name|Value
 operator|*
 name|To
-argument_list|,
-name|Use
-operator|*
-name|U
 argument_list|)
 block|;
 name|protected
@@ -4199,7 +3926,7 @@ name|true
 argument_list|)
 return|;
 block|}
-comment|/// getBinOpIdentity - Return the identity for the given binary operation,
+comment|/// Return the identity for the given binary operation,
 comment|/// i.e. a constant C such that X op C = X and C op X = X for every X.  It
 comment|/// returns null if the operator doesn't have an identity.
 specifier|static
@@ -4212,7 +3939,7 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 block|;
-comment|/// getBinOpAbsorber - Return the absorbing element for the given binary
+comment|/// Return the absorbing element for the given binary
 comment|/// operation, i.e. a constant C such that X op C = C and C op X = C for
 comment|/// every X.  For example, this returns zero for integer multiplication.
 comment|/// It returns null if the operator doesn't have an absorbing element.
@@ -4801,7 +4528,7 @@ operator|=
 name|nullptr
 argument_list|)
 block|;
-comment|/// getOpcode - Return the opcode at the root of this constant expression
+comment|/// Return the opcode at the root of this constant expression
 name|unsigned
 name|getOpcode
 argument_list|()
@@ -4812,14 +4539,14 @@ name|getSubclassDataFromValue
 argument_list|()
 return|;
 block|}
-comment|/// getPredicate - Return the ICMP or FCMP predicate value. Assert if this is
-comment|/// not an ICMP or FCMP constant expression.
+comment|/// Return the ICMP or FCMP predicate value. Assert if this is not an ICMP or
+comment|/// FCMP constant expression.
 name|unsigned
 name|getPredicate
 argument_list|()
 specifier|const
 block|;
-comment|/// getIndices - Assert that this is an insertvalue or exactvalue
+comment|/// Assert that this is an insertvalue or exactvalue
 comment|/// expression and return the list of indices.
 name|ArrayRef
 operator|<
@@ -4829,7 +4556,7 @@ name|getIndices
 argument_list|()
 specifier|const
 block|;
-comment|/// getOpcodeName - Return a string representation for an opcode.
+comment|/// Return a string representation for an opcode.
 specifier|const
 name|char
 operator|*
@@ -4837,8 +4564,8 @@ name|getOpcodeName
 argument_list|()
 specifier|const
 block|;
-comment|/// getWithOperandReplaced - Return a constant expression identical to this
-comment|/// one, but with the specified operand set to the specified value.
+comment|/// Return a constant expression identical to this one, but with the specified
+comment|/// operand set to the specified value.
 name|Constant
 operator|*
 name|getWithOperandReplaced
@@ -4849,9 +4576,9 @@ argument|Constant *Op
 argument_list|)
 specifier|const
 block|;
-comment|/// getWithOperands - This returns the current constant expression with the
-comment|/// operands replaced with the specified values.  The specified array must
-comment|/// have the same number of operands as our current one.
+comment|/// This returns the current constant expression with the operands replaced
+comment|/// with the specified values. The specified array must have the same number
+comment|/// of operands as our current one.
 name|Constant
 operator|*
 name|getWithOperands
@@ -4870,7 +4597,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief Get the current expression with the operands replaced.
+comment|/// Get the current expression with the operands replaced.
 comment|///
 comment|/// Return the current constant expression with the operands replaced with \c
 comment|/// Ops and the type with \c Ty.  The new operands must have the same number
@@ -4893,9 +4620,8 @@ argument|Type *SrcTy = nullptr
 argument_list|)
 specifier|const
 block|;
-comment|/// getAsInstruction - Returns an Instruction which implements the same
-comment|/// operation as this ConstantExpr. The instruction is not linked to any basic
-comment|/// block.
+comment|/// Returns an Instruction which implements the same operation as this
+comment|/// ConstantExpr. The instruction is not linked to any basic block.
 comment|///
 comment|/// A better approach to this could be to have a constructor for Instruction
 comment|/// which would take a ConstantExpr parameter, but that would have spread
@@ -4968,7 +4694,7 @@ argument_list|,
 argument|Constant
 argument_list|)
 comment|//===----------------------------------------------------------------------===//
-comment|/// UndefValue - 'undef' values are things that do not have specified contents.
+comment|/// 'undef' values are things that do not have specified contents.
 comment|/// These are used for a variety of purposes, including global variable
 comment|/// initializers and operands to instructions.  'undef' values can occur with
 comment|/// any first-class type.
@@ -4979,22 +4705,11 @@ comment|/// LangRef.html#undefvalues for details.
 comment|///
 name|class
 name|UndefValue
+name|final
 operator|:
 name|public
-name|Constant
+name|ConstantData
 block|{
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-name|size_t
-argument_list|,
-name|unsigned
-argument_list|)
-operator|=
-name|delete
-block|;
 name|UndefValue
 argument_list|(
 specifier|const
@@ -5012,25 +4727,6 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|Value
-operator|*
-name|handleOperandChangeImpl
-argument_list|(
-name|Value
-operator|*
-name|From
-argument_list|,
-name|Value
-operator|*
-name|To
-argument_list|,
-name|Use
-operator|*
-name|U
-argument_list|)
-block|;
-name|protected
-operator|:
 name|explicit
 name|UndefValue
 argument_list|(
@@ -5039,45 +4735,16 @@ operator|*
 name|T
 argument_list|)
 operator|:
-name|Constant
+name|ConstantData
 argument_list|(
 argument|T
 argument_list|,
 argument|UndefValueVal
-argument_list|,
-argument|nullptr
-argument_list|,
-literal|0
 argument_list|)
 block|{}
-name|protected
-operator|:
-comment|// allocate space for exactly zero operands
-name|void
-operator|*
-name|operator
-name|new
-argument_list|(
-argument|size_t s
-argument_list|)
-block|{
-return|return
-name|User
-operator|::
-name|operator
-name|new
-argument_list|(
-name|s
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
 name|public
 operator|:
-comment|/// get() - Static factory methods - Return an 'undef' object of the specified
-comment|/// type.
-comment|///
+comment|/// Static factory methods - Return an 'undef' object of the specified type.
 specifier|static
 name|UndefValue
 operator|*
@@ -5088,16 +4755,16 @@ operator|*
 name|T
 argument_list|)
 block|;
-comment|/// getSequentialElement - If this Undef has array or vector type, return a
-comment|/// undef with the right element type.
+comment|/// If this Undef has array or vector type, return a undef with the right
+comment|/// element type.
 name|UndefValue
 operator|*
 name|getSequentialElement
 argument_list|()
 specifier|const
 block|;
-comment|/// getStructElement - If this undef has struct type, return a undef with the
-comment|/// right element type for the specified element.
+comment|/// If this undef has struct type, return a undef with the right element type
+comment|/// for the specified element.
 name|UndefValue
 operator|*
 name|getStructElement
@@ -5106,8 +4773,8 @@ argument|unsigned Elt
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementValue - Return an undef of the right value for the specified GEP
-comment|/// index.
+comment|/// Return an undef of the right value for the specified GEP index if we can,
+comment|/// otherwise return null (e.g. if C is a ConstantExpr).
 name|UndefValue
 operator|*
 name|getElementValue
@@ -5116,8 +4783,7 @@ argument|Constant *C
 argument_list|)
 specifier|const
 block|;
-comment|/// getElementValue - Return an undef of the right value for the specified GEP
-comment|/// index.
+comment|/// Return an undef of the right value for the specified GEP index.
 name|UndefValue
 operator|*
 name|getElementValue
@@ -5126,7 +4792,7 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Return the number of elements in the array, vector, or struct.
+comment|/// Return the number of elements in the array, vector, or struct.
 name|unsigned
 name|getNumElements
 argument_list|()

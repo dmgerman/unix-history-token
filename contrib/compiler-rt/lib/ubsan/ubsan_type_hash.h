@@ -205,6 +205,16 @@ name|VptrTypeCacheSize
 init|=
 literal|128
 decl_stmt|;
+comment|/// A sanity check for Vtable. Offsets to top must be reasonably small
+comment|/// numbers (by absolute value). It's a weak check for Vtable corruption.
+specifier|const
+name|int
+name|VptrMaxOffsetToTop
+init|=
+literal|1
+operator|<<
+literal|20
+decl_stmt|;
 comment|/// \brief A cache of the results of checkDynamicType. \c checkDynamicType would
 comment|/// return \c true (modulo hash collisions) if
 comment|/// \code

@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorOr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/LineIterator.h"
 end_include
 
@@ -274,11 +268,9 @@ begin_decl_stmt
 name|class
 name|InstrProfReader
 block|{
-name|std
-operator|::
-name|error_code
+name|instrprof_error
 name|LastError
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|InstrProfReader
@@ -301,9 +293,7 @@ argument_list|()
 block|{}
 comment|/// Read the header.  Required before reading first record.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|readHeader
 argument_list|()
 operator|=
@@ -311,18 +301,16 @@ literal|0
 expr_stmt|;
 comment|/// Read a single record.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|readNextRecord
-argument_list|(
+parameter_list|(
 name|InstrProfRecord
-operator|&
+modifier|&
 name|Record
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// Iterator over profile data.
 name|InstrProfIterator
 name|begin
@@ -344,6 +332,14 @@ name|InstrProfIterator
 argument_list|()
 return|;
 block|}
+name|virtual
+name|bool
+name|isIRLevelProfile
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// Return the PGO symtab. There are three different readers:
 comment|/// Raw, Text, and Indexed profile readers. The first two types
 comment|/// of readers are used only by llvm-profdata tool, while the indexed
@@ -372,29 +368,70 @@ name|InstrProfSymtab
 operator|>
 name|Symtab
 expr_stmt|;
-comment|/// Set the current std::error_code and return same.
-name|std
-operator|::
-name|error_code
+comment|/// Set the current error and return same.
+name|Error
 name|error
-argument_list|(
-argument|std::error_code EC
-argument_list|)
+parameter_list|(
+name|instrprof_error
+name|Err
+parameter_list|)
 block|{
 name|LastError
 operator|=
-name|EC
-block|;
-return|return
-name|EC
-return|;
-block|}
-comment|/// Clear the current error code and return a successful one.
-name|std
+name|Err
+expr_stmt|;
+if|if
+condition|(
+name|Err
+operator|==
+name|instrprof_error
 operator|::
-name|error_code
+name|success
+condition|)
+return|return
+name|Error
+operator|::
 name|success
 argument_list|()
+return|;
+return|return
+name|make_error
+operator|<
+name|InstrProfError
+operator|>
+operator|(
+name|Err
+operator|)
+return|;
+block|}
+name|Error
+name|error
+parameter_list|(
+name|Error
+name|E
+parameter_list|)
+block|{
+return|return
+name|error
+argument_list|(
+name|InstrProfError
+operator|::
+name|take
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|E
+argument_list|)
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// Clear the current error and return a successful one.
+name|Error
+name|success
+parameter_list|()
 block|{
 return|return
 name|error
@@ -427,27 +464,46 @@ parameter_list|()
 block|{
 return|return
 name|LastError
+operator|!=
+name|instrprof_error
+operator|::
+name|success
 operator|&&
 operator|!
 name|isEOF
 argument_list|()
 return|;
 block|}
-comment|/// Get the current error code.
-name|std
-operator|::
-name|error_code
+comment|/// Get the current error.
+name|Error
 name|getError
-argument_list|()
+parameter_list|()
 block|{
+if|if
+condition|(
+name|hasError
+argument_list|()
+condition|)
 return|return
+name|make_error
+operator|<
+name|InstrProfError
+operator|>
+operator|(
 name|LastError
+operator|)
+return|;
+return|return
+name|Error
+operator|::
+name|success
+argument_list|()
 return|;
 block|}
 comment|/// Factory method to create an appropriately typed reader for the given
 comment|/// instrprof file.
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -457,11 +513,14 @@ name|InstrProfReader
 operator|>>
 name|create
 argument_list|(
-argument|std::string Path
+specifier|const
+name|Twine
+operator|&
+name|Path
 argument_list|)
 expr_stmt|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -541,6 +600,9 @@ comment|/// Iterator over the profile data.
 name|line_iterator
 name|Line
 block|;
+name|bool
+name|IsIRLevelProfile
+block|;
 name|TextInstrProfReader
 argument_list|(
 specifier|const
@@ -562,9 +624,7 @@ operator|)
 operator|=
 name|delete
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readValueProfileData
 argument_list|(
 name|InstrProfRecord
@@ -597,11 +657,17 @@ argument_list|)
 block|,
 name|Line
 argument_list|(
-argument|*DataBuffer
+operator|*
+name|DataBuffer
 argument_list|,
-argument|true
+name|true
 argument_list|,
 literal|'#'
+argument_list|)
+block|,
+name|IsIRLevelProfile
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// Return true if the given buffer is in text instrprof format.
@@ -615,18 +681,24 @@ operator|&
 name|Buffer
 argument_list|)
 block|;
+name|bool
+name|isIRLevelProfile
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|IsIRLevelProfile
+return|;
+block|}
 comment|/// Read the header.
-name|std
-operator|::
-name|error_code
+name|Error
 name|readHeader
 argument_list|()
 name|override
 block|;
 comment|/// Read a single record.
-name|std
-operator|::
-name|error_code
+name|Error
 name|readNextRecord
 argument_list|(
 argument|InstrProfRecord&Record
@@ -689,6 +761,12 @@ block|;
 name|bool
 name|ShouldSwapBytes
 block|;
+comment|// The value of the version field of the raw profile data header. The lower 56
+comment|// bits specifies the format version and the most significant 8 bits specify
+comment|// the variant types of the profile.
+name|uint64_t
+name|Version
+block|;
 name|uint64_t
 name|CountersDelta
 block|;
@@ -725,15 +803,15 @@ name|char
 operator|*
 name|NamesStart
 block|;
+name|uint64_t
+name|NamesSize
+block|;
+comment|// After value profile is all read, this pointer points to
+comment|// the header of next profile data (if exists)
 specifier|const
 name|uint8_t
 operator|*
 name|ValueDataStart
-block|;
-specifier|const
-name|char
-operator|*
-name|ProfileEnd
 block|;
 name|uint32_t
 name|ValueKindLast
@@ -795,22 +873,34 @@ operator|&
 name|DataBuffer
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readHeader
 argument_list|()
 name|override
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readNextRecord
 argument_list|(
 argument|InstrProfRecord&Record
 argument_list|)
 name|override
 block|;
+name|bool
+name|isIRLevelProfile
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|(
+name|Version
+operator|&
+name|VARIANT_MASK_IR_PROF
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 name|InstrProfSymtab
 operator|&
 name|getSymtab
@@ -835,7 +925,7 @@ return|;
 block|}
 name|private
 operator|:
-name|void
+name|Error
 name|createSymtab
 argument_list|(
 name|InstrProfSymtab
@@ -843,9 +933,7 @@ operator|&
 name|Symtab
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readNextHeader
 argument_list|(
 specifier|const
@@ -854,9 +942,7 @@ operator|*
 name|CurrentPos
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readHeader
 argument_list|(
 specifier|const
@@ -960,9 +1046,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|std
-operator|::
-name|error_code
+name|Error
 name|readName
 argument_list|(
 name|InstrProfRecord
@@ -970,9 +1054,7 @@ operator|&
 name|Record
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readFuncHash
 argument_list|(
 name|InstrProfRecord
@@ -980,9 +1062,7 @@ operator|&
 name|Record
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readRawCounts
 argument_list|(
 name|InstrProfRecord
@@ -990,9 +1070,7 @@ operator|&
 name|Record
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|readValueProfilingData
 argument_list|(
 name|InstrProfRecord
@@ -1022,6 +1100,28 @@ name|ValueDataStart
 operator|+=
 name|CurValueDataSize
 block|;   }
+specifier|const
+name|char
+operator|*
+name|getNextHeaderPos
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|atEnd
+argument_list|()
+argument_list|)
+block|;
+return|return
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|ValueDataStart
+return|;
+block|}
 specifier|const
 name|uint64_t
 operator|*
@@ -1054,36 +1154,23 @@ operator|+
 name|Offset
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getName
 argument_list|(
-argument|IntPtrT NamePtr
+argument|uint64_t NameRef
 argument_list|)
 specifier|const
 block|{
-name|ptrdiff_t
-name|Offset
-operator|=
-operator|(
+return|return
+name|Symtab
+operator|->
+name|getFuncName
+argument_list|(
 name|swap
 argument_list|(
-name|NamePtr
+name|NameRef
 argument_list|)
-operator|-
-name|NamesDelta
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
 argument_list|)
-block|;
-return|return
-name|NamesStart
-operator|+
-name|Offset
 return|;
 block|}
 expr|}
@@ -1404,9 +1491,7 @@ block|{
 comment|// Read all the profile records with the same key pointed to the current
 comment|// iterator.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|getRecords
 argument_list|(
 name|ArrayRef
@@ -1416,23 +1501,27 @@ operator|>
 operator|&
 name|Data
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|// Read all the profile records with the key equal to FuncName
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|getRecords
 argument_list|(
-argument|StringRef FuncName
+name|StringRef
+name|FuncName
 argument_list|,
-argument|ArrayRef<InstrProfRecord>&Data
+name|ArrayRef
+operator|<
+name|InstrProfRecord
+operator|>
+operator|&
+name|Data
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|void
 name|advanceToNextKey
@@ -1468,6 +1557,14 @@ block|{}
 name|virtual
 name|uint64_t
 name|getVersion
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|bool
+name|isIRLevelProfile
 argument_list|()
 specifier|const
 operator|=
@@ -1543,18 +1640,14 @@ argument_list|,
 argument|uint64_t Version
 argument_list|)
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|getRecords
 argument_list|(
 argument|ArrayRef<InstrProfRecord>&Data
 argument_list|)
 name|override
 block|;
-name|std
-operator|::
-name|error_code
+name|Error
 name|getRecords
 argument_list|(
 argument|StringRef FuncName
@@ -1615,7 +1708,29 @@ specifier|const
 name|override
 block|{
 return|return
+name|GET_VERSION
+argument_list|(
 name|FormatVersion
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|isIRLevelProfile
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|(
+name|FormatVersion
+operator|&
+name|VARIANT_MASK_IR_PROF
+operator|)
+operator|!=
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -1675,9 +1790,14 @@ name|InstrProfReaderIndexBase
 operator|>
 name|Index
 block|;
-comment|/// The maximal execution count among all functions.
-name|uint64_t
-name|MaxFunctionCount
+comment|/// Profile summary data.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ProfileSummary
+operator|>
+name|Summary
 block|;
 name|IndexedInstrProfReader
 argument_list|(
@@ -1700,8 +1820,22 @@ operator|)
 operator|=
 name|delete
 block|;
+comment|// Read the profile summary. Return a pointer pointing to one byte past the
+comment|// end of the summary data if it exists or the input \c Cur.
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|readSummary
+argument_list|(
+argument|IndexedInstrProf::ProfVersion Version
+argument_list|,
+argument|const unsigned char *Cur
+argument_list|)
+block|;
 name|public
 operator|:
+comment|/// Return the profile version.
 name|uint64_t
 name|getVersion
 argument_list|()
@@ -1711,6 +1845,19 @@ return|return
 name|Index
 operator|->
 name|getVersion
+argument_list|()
+return|;
+block|}
+name|bool
+name|isIRLevelProfile
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Index
+operator|->
+name|isIRLevelProfile
 argument_list|()
 return|;
 block|}
@@ -1752,17 +1899,13 @@ name|DataBuffer
 argument_list|)
 block|;
 comment|/// Read the file header.
-name|std
-operator|::
-name|error_code
+name|Error
 name|readHeader
 argument_list|()
 name|override
 block|;
 comment|/// Read a single record.
-name|std
-operator|::
-name|error_code
+name|Error
 name|readNextRecord
 argument_list|(
 argument|InstrProfRecord&Record
@@ -1771,7 +1914,7 @@ name|override
 block|;
 comment|/// Return the pointer to InstrProfRecord associated with FuncName
 comment|/// and FuncHash
-name|ErrorOr
+name|Expected
 operator|<
 name|InstrProfRecord
 operator|>
@@ -1783,9 +1926,7 @@ argument|uint64_t FuncHash
 argument_list|)
 block|;
 comment|/// Fill Counts with the profile data for the given function name.
-name|std
-operator|::
-name|error_code
+name|Error
 name|getFunctionCounts
 argument_list|(
 argument|StringRef FuncName
@@ -1801,12 +1942,15 @@ name|getMaximumFunctionCount
 argument_list|()
 block|{
 return|return
-name|MaxFunctionCount
+name|Summary
+operator|->
+name|getMaxFunctionCount
+argument_list|()
 return|;
 block|}
 comment|/// Factory method to create an indexed reader.
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1816,11 +1960,14 @@ name|IndexedInstrProfReader
 operator|>>
 name|create
 argument_list|(
-argument|std::string Path
+specifier|const
+name|Twine
+operator|&
+name|Path
 argument_list|)
 block|;
 specifier|static
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -1861,12 +2008,27 @@ operator|&
 name|getSymtab
 argument_list|()
 name|override
-block|; }
-decl_stmt|;
+block|;
+name|ProfileSummary
+operator|&
+name|getSummary
+argument_list|()
+block|{
+return|return
+operator|*
+operator|(
+name|Summary
+operator|.
+name|get
+argument_list|()
+operator|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

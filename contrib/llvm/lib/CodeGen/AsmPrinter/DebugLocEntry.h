@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/Constants.h"
 end_include
 
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MachineLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_decl_stmt
@@ -413,8 +413,96 @@ name|Value
 operator|&
 operator|)
 expr_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isLocation
+argument_list|()
+condition|)
+block|{
+name|llvm
+operator|::
+name|dbgs
+argument_list|()
+operator|<<
+literal|"Loc = { reg="
+operator|<<
+name|Loc
+operator|.
+name|getReg
+argument_list|()
+operator|<<
+literal|" "
+expr_stmt|;
+if|if
+condition|(
+name|Loc
+operator|.
+name|isIndirect
+argument_list|()
+condition|)
+name|llvm
+operator|::
+name|dbgs
+argument_list|()
+operator|<<
+literal|'+'
+operator|<<
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|dbgs
+argument_list|()
+operator|<<
+literal|"} "
+expr_stmt|;
 block|}
-struct|;
+elseif|else
+if|if
+condition|(
+name|isConstantInt
+argument_list|()
+condition|)
+name|Constant
+operator|.
+name|CIP
+operator|->
+name|dump
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isConstantFP
+argument_list|()
+condition|)
+name|Constant
+operator|.
+name|CFP
+operator|->
+name|dump
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Expression
+condition|)
+name|Expression
+operator|->
+name|dump
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 name|private
 label|:
 comment|/// A nonempty list of locations/constants belonging to this entry,
@@ -617,8 +705,17 @@ block|)
 decl|&& "value must be a piece"
 decl_stmt|);
 block|}
+end_decl_stmt
+
+begin_comment
 comment|// \brief Sort the pieces by offset.
+end_comment
+
+begin_comment
 comment|// Remove any duplicate entries by dropping all but the first.
+end_comment
+
+begin_function
 name|void
 name|sortUniqueValues
 parameter_list|()
@@ -685,9 +782,12 @@ block|)
 operator|,
 function|Values.end
 parameter_list|()
-block|)
-decl_stmt|;
-end_decl_stmt
+end_function
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}

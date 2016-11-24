@@ -69,6 +69,26 @@ directive|include
 file|"llvm/Config/llvm-config.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -503,6 +523,11 @@ name|defined
 argument_list|(
 name|__GXX_EXPERIMENTAL_CXX0X__
 argument_list|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1900
+argument_list|)
 end_if
 
 begin_define
@@ -715,6 +740,22 @@ define|#
 directive|define
 name|LLVM_ATTRIBUTE_UNUSED_RESULT
 value|__attribute__((__warn_unused_result__))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
+value|_Check_return_
 end_define
 
 begin_else
@@ -1240,6 +1281,22 @@ name|LLVM_ATTRIBUTE_RETURNS_NONNULL
 value|__attribute__((returns_nonnull))
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
+value|_Ret_notnull_
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1572,6 +1629,90 @@ define|#
 directive|define
 name|LLVM_BUILTIN_TRAP
 value|*(volatile int*)0x11 = 0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// LLVM_BUILTIN_DEBUGTRAP - On compilers which support it, expands to
+end_comment
+
+begin_comment
+comment|/// an expression which causes the program to break while running
+end_comment
+
+begin_comment
+comment|/// under a debugger.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_builtin
+argument_list|(
+name|__builtin_debugtrap
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_DEBUGTRAP
+value|__builtin_debugtrap()
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_comment
+comment|// The __debugbreak intrinsic is supported by MSVC and breaks while
+end_comment
+
+begin_comment
+comment|// running under the debugger, and also supports invoking a debugger
+end_comment
+
+begin_comment
+comment|// when the OS is configured appropriately.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_DEBUGTRAP
+value|__debugbreak()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Just continue execution when built with compilers that have no
+end_comment
+
+begin_comment
+comment|// support. This is a debugging aid and not intended to force the
+end_comment
+
+begin_comment
+comment|// program to abort if encountered.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_DEBUGTRAP
 end_define
 
 begin_endif
@@ -2404,6 +2545,52 @@ define|#
 directive|define
 name|TsanIgnoreWritesEnd
 parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_NO_SANITIZE
+end_comment
+
+begin_comment
+comment|/// \brief Disable a particular sanitizer for a function.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|no_sanitize
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_NO_SANITIZE
+parameter_list|(
+name|KIND
+parameter_list|)
+value|__attribute__((no_sanitize(KIND)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_NO_SANITIZE
+parameter_list|(
+name|KIND
+parameter_list|)
 end_define
 
 begin_endif

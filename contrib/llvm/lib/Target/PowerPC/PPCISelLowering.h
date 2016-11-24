@@ -163,6 +163,18 @@ comment|/// VPERM - The PPC VPERM Instruction.
 comment|///
 name|VPERM
 block|,
+comment|/// XXSPLT - The PPC VSX splat instructions
+comment|///
+name|XXSPLT
+block|,
+comment|/// XXINSERT - The PPC VSX insert instruction
+comment|///
+name|XXINSERT
+block|,
+comment|/// VECSHL - The PPC VSX shift left instruction
+comment|///
+name|VECSHL
+block|,
 comment|/// The CMPB instruction (takes two operands of i32 or i64).
 name|CMPB
 block|,
@@ -241,6 +253,16 @@ name|MTVSRA
 block|,
 comment|/// Direct move from a GPR to a VSX register (zero)
 name|MTVSRZ
+block|,
+comment|/// Extract a subvector from signed integer vector and convert to FP.
+comment|/// It is primarily used to convert a (widened) illegal integer vector
+comment|/// type to a legal floating point vector type.
+comment|/// For example v2i32 -> widened to v4i32 -> v2f64
+name|SINT_VEC_TO_FP
+block|,
+comment|/// Extract a subvector from unsigned integer vector and convert to FP.
+comment|/// As with SINT_VEC_TO_FP, used for converting illegal types.
+name|UINT_VEC_TO_FP
 block|,
 comment|// FIXME: Remove these once the ANDI glue bug is fixed:
 comment|/// i1 = ANDIo_1_[EQ|GT]_BIT(i32 or i64 x) - Represents the result of the
@@ -410,6 +432,10 @@ comment|/// or stxvd2x instruction.  The chain is necessary because the
 comment|/// sequence replaces a load and needs to provide the same number
 comment|/// of outputs.
 name|XXSWAPD
+block|,
+comment|/// An SDNode for swaps that are not associated with any loads/stores
+comment|/// and thereby have no chain.
+name|SWAP_NO_CHAIN
 block|,
 comment|/// QVFPERM = This corresponds to the QPX qvfperm instruction.
 name|QVFPERM
@@ -624,6 +650,36 @@ name|unsigned
 name|EltSize
 parameter_list|)
 function_decl|;
+comment|/// isXXINSERTWMask - Return true if this VECTOR_SHUFFLE can be handled by
+comment|/// the XXINSERTW instruction introduced in ISA 3.0. This is essentially any
+comment|/// shuffle of v4f32/v4i32 vectors that just inserts one element from one
+comment|/// vector into the other. This function will also set a couple of
+comment|/// output parameters for how much the source vector needs to be shifted and
+comment|/// what byte number needs to be specified for the instruction to put the
+comment|/// element in the desired location of the target vector.
+name|bool
+name|isXXINSERTWMask
+parameter_list|(
+name|ShuffleVectorSDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+modifier|&
+name|ShiftElts
+parameter_list|,
+name|unsigned
+modifier|&
+name|InsertAtByte
+parameter_list|,
+name|bool
+modifier|&
+name|Swap
+parameter_list|,
+name|bool
+name|IsLE
+parameter_list|)
+function_decl|;
 comment|/// getVSPLTImmediate - Return the appropriate VSPLT* immediate to splat the
 comment|/// specified isSplatShuffleMask VECTOR_SHUFFLE mask.
 name|unsigned
@@ -710,20 +766,66 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// getPreferredVectorAction - The code we generate when vector types are
+comment|/// legalized by promoting the integer element type is often much worse
+comment|/// than code we generate if we widen the type for applicable vector types.
+comment|/// The issue with promoting is that the vector is scalaraized, individual
+comment|/// elements promoted and then the vector is rebuilt. So say we load a pair
+comment|/// of v4i8's and shuffle them. This will turn into a mess of 8 extending
+comment|/// loads, moves back into VSR's (or memory ops if we don't have moves) and
+comment|/// then the VPERM for the shuffle. All in all a very slow sequence.
+name|TargetLoweringBase
+operator|::
+name|LegalizeTypeAction
+name|getPreferredVectorAction
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|{
+if|if
+condition|(
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+operator|.
+name|getSizeInBits
+argument_list|()
+operator|%
+literal|8
+operator|==
+literal|0
+condition|)
+return|return
+name|TypeWidenVector
+return|;
+return|return
+name|TargetLoweringBase
+operator|::
+name|getPreferredVectorAction
+argument_list|(
+name|VT
+argument_list|)
+return|;
+block|}
 name|bool
 name|useSoftFloat
 argument_list|()
 specifier|const
 name|override
-block|;
+expr_stmt|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
-argument|const DataLayout&
-argument_list|,
-argument|EVT
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+argument_list|,
+name|EVT
+argument_list|)
+decl|const
 name|override
 block|{
 return|return
@@ -752,65 +854,156 @@ return|return
 name|true
 return|;
 block|}
+name|bool
+name|supportSplitCSR
+argument_list|(
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|MF
+operator|->
+name|getFunction
+argument_list|()
+operator|->
+name|getCallingConv
+argument_list|()
+operator|==
+name|CallingConv
+operator|::
+name|CXX_FAST_TLS
+operator|&&
+name|MF
+operator|->
+name|getFunction
+argument_list|()
+operator|->
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|NoUnwind
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeSplitCSR
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|Entry
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|insertCopiesSplitCSR
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|Entry
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|&
+name|Exits
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|EVT
 name|getSetCCResultType
 argument_list|(
-argument|const DataLayout&DL
-argument_list|,
-argument|LLVMContext&Context
-argument_list|,
-argument|EVT VT
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Return true if target always beneficiates from combining into FMA for a
 comment|/// given value type. This must typically return false on targets where FMA
 comment|/// takes more cycles to execute than FADD.
 name|bool
 name|enableAggressiveFMAFusion
 argument_list|(
-argument|EVT VT
+name|EVT
+name|VT
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if the node's address
 comment|/// can be legally represented as pre-indexed load / store address.
 name|bool
 name|getPreIndexedAddressParts
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|SDValue&Base
+name|SDValue
+operator|&
+name|Base
 argument_list|,
-argument|SDValue&Offset
+name|SDValue
+operator|&
+name|Offset
 argument_list|,
-argument|ISD::MemIndexedMode&AM
+name|ISD
+operator|::
+name|MemIndexedMode
+operator|&
+name|AM
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// SelectAddressRegReg - Given the specified addressed, check to see if it
 comment|/// can be represented as an indexed [r+r] operation.  Returns false if it
 comment|/// can be more efficiently represented with [r+imm].
 name|bool
 name|SelectAddressRegReg
 argument_list|(
-argument|SDValue N
+name|SDValue
+name|N
 argument_list|,
-argument|SDValue&Base
+name|SDValue
+operator|&
+name|Base
 argument_list|,
-argument|SDValue&Index
+name|SDValue
+operator|&
+name|Index
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// SelectAddressRegImm - Returns true if the address N can be represented
 comment|/// by a base register plus a signed 16-bit displacement [r+imm], and if it
 comment|/// is not better represented as reg+reg.  If Aligned is true, only accept
@@ -818,33 +1011,48 @@ comment|/// displacements suitable for STD and friends, i.e. multiples of 4.
 name|bool
 name|SelectAddressRegImm
 argument_list|(
-argument|SDValue N
+name|SDValue
+name|N
 argument_list|,
-argument|SDValue&Disp
+name|SDValue
+operator|&
+name|Disp
 argument_list|,
-argument|SDValue&Base
+name|SDValue
+operator|&
+name|Base
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|,
-argument|bool Aligned
+name|bool
+name|Aligned
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// SelectAddressRegRegOnly - Given the specified addressed, force it to be
 comment|/// represented as an indexed [r+r] operation.
 name|bool
 name|SelectAddressRegRegOnly
 argument_list|(
-argument|SDValue N
+name|SDValue
+name|N
 argument_list|,
-argument|SDValue&Base
+name|SDValue
+operator|&
+name|Base
 argument_list|,
-argument|SDValue&Index
+name|SDValue
+operator|&
+name|Index
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|Sched
 operator|::
 name|Preference
@@ -854,228 +1062,345 @@ argument|SDNode *N
 argument_list|)
 specifier|const
 name|override
-block|;
+expr_stmt|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 comment|///
 name|SDValue
 name|LowerOperation
 argument_list|(
-argument|SDValue Op
+name|SDValue
+name|Op
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
 name|void
 name|ReplaceNodeResults
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|SmallVectorImpl<SDValue>&Results
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|Results
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|SDValue
 name|expandVSXLoadForLE
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|DAGCombinerInfo&DCI
+name|DAGCombinerInfo
+operator|&
+name|DCI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|SDValue
 name|expandVSXStoreForLE
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|DAGCombinerInfo&DCI
+name|DAGCombinerInfo
+operator|&
+name|DCI
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|DAGCombinerInfo&DCI
+name|DAGCombinerInfo
+operator|&
+name|DCI
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|SDValue
 name|BuildSDIVPow2
 argument_list|(
-argument|SDNode *N
+name|SDNode
+operator|*
+name|N
 argument_list|,
-argument|const APInt&Divisor
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|std::vector<SDNode *> *Created
-argument_list|)
 specifier|const
+name|APInt
+operator|&
+name|Divisor
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SDNode
+operator|*
+operator|>
+operator|*
+name|Created
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|getRegisterByName
 argument_list|(
-argument|const char* RegName
-argument_list|,
-argument|EVT VT
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
 specifier|const
+name|char
+operator|*
+name|RegName
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|void
 name|computeKnownBitsForTargetNode
 argument_list|(
-argument|const SDValue Op
+specifier|const
+name|SDValue
+name|Op
 argument_list|,
-argument|APInt&KnownZero
+name|APInt
+operator|&
+name|KnownZero
 argument_list|,
-argument|APInt&KnownOne
+name|APInt
+operator|&
+name|KnownOne
 argument_list|,
-argument|const SelectionDAG&DAG
+specifier|const
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|,
-argument|unsigned Depth =
+name|unsigned
+name|Depth
+operator|=
 literal|0
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|getPrefLoopAlignment
 argument_list|(
-argument|MachineLoop *ML
+name|MachineLoop
+operator|*
+name|ML
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
+name|bool
+name|shouldInsertFencesForAtomic
+argument_list|(
+specifier|const
 name|Instruction
 operator|*
+name|I
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|Instruction
+modifier|*
 name|emitLeadingFence
 argument_list|(
-argument|IRBuilder<>&Builder
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
 argument_list|,
-argument|AtomicOrdering Ord
+name|AtomicOrdering
+name|Ord
 argument_list|,
-argument|bool IsStore
+name|bool
+name|IsStore
 argument_list|,
-argument|bool IsLoad
+name|bool
+name|IsLoad
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|Instruction
-operator|*
+modifier|*
 name|emitTrailingFence
 argument_list|(
-argument|IRBuilder<>&Builder
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|Builder
 argument_list|,
-argument|AtomicOrdering Ord
+name|AtomicOrdering
+name|Ord
 argument_list|,
-argument|bool IsStore
+name|bool
+name|IsStore
 argument_list|,
-argument|bool IsLoad
+name|bool
+name|IsLoad
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|MachineBasicBlock *MBB
-argument_list|)
-specifier|const
-name|override
-block|;
 name|MachineBasicBlock
 operator|*
+name|MBB
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|EmitAtomicBinary
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|unsigned AtomicSize
-argument_list|,
-argument|unsigned BinOpcode
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|MBB
+argument_list|,
+name|unsigned
+name|AtomicSize
+argument_list|,
+name|unsigned
+name|BinOpcode
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|EmitPartwordAtomicBinary
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|bool is8bit
-argument_list|,
-argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|MBB
+argument_list|,
+name|bool
+name|is8bit
+argument_list|,
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitEHSjLjSetJmp
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|MachineBasicBlock *MBB
-argument_list|)
-specifier|const
-block|;
 name|MachineBasicBlock
 operator|*
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|emitEHSjLjLongJmp
 argument_list|(
-argument|MachineInstr *MI
+name|MachineInstr
+operator|&
+name|MI
 argument_list|,
-argument|MachineBasicBlock *MBB
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
-argument|StringRef Constraint
+name|StringRef
+name|Constraint
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
 name|ConstraintWeight
 name|getSingleConstraintMatchWeight
 argument_list|(
-argument|AsmOperandInfo&info
+name|AsmOperandInfo
+operator|&
+name|info
 argument_list|,
-argument|const char *constraint
-argument_list|)
 specifier|const
+name|char
+operator|*
+name|constraint
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -1090,42 +1415,62 @@ argument|MVT VT
 argument_list|)
 specifier|const
 name|override
-block|;
+expr_stmt|;
 comment|/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
 comment|/// function arguments in the caller parameter area.  This is the actual
 comment|/// alignment, not its logarithm.
 name|unsigned
 name|getByValTypeAlignment
 argument_list|(
-argument|Type *Ty
+name|Type
+operator|*
+name|Ty
 argument_list|,
-argument|const DataLayout&DL
-argument_list|)
 specifier|const
+name|DataLayout
+operator|&
+name|DL
+argument_list|)
+decl|const
 name|override
-block|;
+decl_stmt|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops.
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
-argument|SDValue Op
+name|SDValue
+name|Op
 argument_list|,
-argument|std::string&Constraint
+name|std
+operator|::
+name|string
+operator|&
+name|Constraint
 argument_list|,
-argument|std::vector<SDValue>&Ops
+name|std
+operator|::
+name|vector
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|Ops
 argument_list|,
-argument|SelectionDAG&DAG
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
-specifier|const
+decl|const
 name|override
-block|;
+decl_stmt|;
 name|unsigned
 name|getInlineAsmMemConstraint
 argument_list|(
-argument|StringRef ConstraintCode
+name|StringRef
+name|ConstraintCode
 argument_list|)
-specifier|const
+decl|const
 name|override
 block|{
 if|if
@@ -1524,6 +1869,23 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+comment|/// Override to support customized stack guard loading.
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+expr_stmt|;
+name|void
+name|insertSSPDeclarations
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
 name|private
 label|:
 struct|struct
@@ -1632,7 +1994,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -1647,7 +2011,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -1662,7 +2028,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -1715,6 +2083,50 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|IsEligibleForTailCallOptimization_64SVR4
+argument_list|(
+name|SDValue
+name|Callee
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CalleeCC
+argument_list|,
+name|ImmutableCallSite
+operator|*
+name|CS
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|EmitTailCallLoadFPAndRetAddr
 argument_list|(
@@ -1736,10 +2148,9 @@ name|SDValue
 operator|&
 name|FPOpOut
 argument_list|,
-name|bool
-name|isDarwinABI
-argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -1873,11 +2284,6 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
-argument_list|,
-specifier|const
-name|PPCSubtarget
-operator|&
-name|Subtarget
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1890,11 +2296,6 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
-argument_list|,
-specifier|const
-name|PPCSubtarget
-operator|&
-name|Subtarget
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1907,11 +2308,6 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
-argument_list|,
-specifier|const
-name|PPCSubtarget
-operator|&
-name|Subtarget
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1924,11 +2320,6 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
-argument_list|,
-specifier|const
-name|PPCSubtarget
-operator|&
-name|Subtarget
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1941,11 +2332,6 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
-argument_list|,
-specifier|const
-name|PPCSubtarget
-operator|&
-name|Subtarget
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1958,11 +2344,18 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerEH_DWARF_CFA
+argument_list|(
+name|SDValue
+name|Op
 argument_list|,
-specifier|const
-name|PPCSubtarget
+name|SelectionDAG
 operator|&
-name|Subtarget
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2024,7 +2417,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2224,7 +2619,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2248,7 +2645,9 @@ operator|::
 name|ID
 name|CallConv
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|bool
@@ -2258,7 +2657,7 @@ name|bool
 name|isVarArg
 argument_list|,
 name|bool
-name|IsPatchPoint
+name|isPatchPoint
 argument_list|,
 name|bool
 name|hasNest
@@ -2349,7 +2748,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2449,7 +2850,9 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2477,7 +2880,9 @@ argument_list|,
 name|SDValue
 name|ArgVal
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2506,7 +2911,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2546,7 +2953,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2586,7 +2995,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2623,7 +3034,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|)
 decl|const
@@ -2649,7 +3062,7 @@ name|bool
 name|isTailCall
 argument_list|,
 name|bool
-name|IsPatchPoint
+name|isPatchPoint
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -2679,7 +3092,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2720,7 +3135,7 @@ name|bool
 name|isTailCall
 argument_list|,
 name|bool
-name|IsPatchPoint
+name|isPatchPoint
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -2750,7 +3165,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2791,7 +3208,7 @@ name|bool
 name|isTailCall
 argument_list|,
 name|bool
-name|IsPatchPoint
+name|isPatchPoint
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -2821,7 +3238,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -2867,6 +3286,19 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|DAGCombineExtBoolTrunc
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|DAGCombineBuildVector
 argument_list|(
 name|SDNode
 operator|*

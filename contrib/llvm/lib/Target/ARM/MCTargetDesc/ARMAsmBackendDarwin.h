@@ -46,21 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ARMAsmBackend.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MachO.h"
 end_include
 
 begin_decl_stmt
-name|using
 name|namespace
 name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|namespace
-end_macro
-
-begin_block
 block|{
 name|class
 name|ARMAsmBackendDarwin
@@ -111,11 +108,7 @@ name|Subtype
 argument_list|(
 argument|st
 argument_list|)
-block|{
-name|HasDataInCodeSupport
-operator|=
-name|true
-block|;   }
+block|{   }
 name|MCObjectWriter
 operator|*
 name|createObjectWriter
@@ -151,7 +144,11 @@ name|override
 block|; }
 decl_stmt|;
 block|}
-end_block
+end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

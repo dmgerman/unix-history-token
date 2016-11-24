@@ -227,6 +227,7 @@ block|{     }
 comment|//----------------------------------------------------------------------
 comment|// Tests
 comment|//----------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -473,14 +474,16 @@ name|ResolveType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//----------------------------------------------------------------------
 comment|// Resolve a type by UID using this DIE's DWARF file
+comment|//----------------------------------------------------------------------
 name|lldb_private
 operator|::
 name|Type
 operator|*
 name|ResolveTypeUID
 argument_list|(
-argument|lldb::user_id_t uid
+argument|const DIERef&die_ref
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -635,6 +638,15 @@ name|fail_value
 argument_list|)
 decl|const
 decl_stmt|;
+name|DWARFDIE
+name|GetAttributeValueAsReferenceDIE
+argument_list|(
+specifier|const
+name|dw_attr_t
+name|attr
+argument_list|)
+decl|const
+decl_stmt|;
 name|uint64_t
 name|GetAttributeValueAsAddress
 argument_list|(
@@ -730,6 +742,27 @@ name|recurse_depth
 argument_list|)
 decl|const
 decl_stmt|;
+name|lldb_private
+operator|::
+name|CompilerDecl
+name|GetDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb_private
+operator|::
+name|CompilerDeclContext
+name|GetDeclContext
+argument_list|()
+specifier|const
+expr_stmt|;
+name|lldb_private
+operator|::
+name|CompilerDeclContext
+name|GetContainingDeclContext
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|DWARFCompileUnit

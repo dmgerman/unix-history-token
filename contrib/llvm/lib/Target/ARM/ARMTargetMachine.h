@@ -150,7 +150,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -226,7 +226,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ARMTargetMachine - ARM target machine.
+comment|/// ARM target machine.
 comment|///
 name|class
 name|ARMTargetMachine
@@ -253,7 +253,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -263,7 +263,7 @@ argument|bool isLittle
 argument_list|)
 block|; }
 block|;
-comment|/// ARMLETargetMachine - ARM little endian target machine.
+comment|/// ARM little endian target machine.
 comment|///
 name|class
 name|ARMLETargetMachine
@@ -290,7 +290,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -298,7 +298,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 block|;
-comment|/// ARMBETargetMachine - ARM big endian target machine.
+comment|/// ARM big endian target machine.
 comment|///
 name|class
 name|ARMBETargetMachine
@@ -325,7 +325,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -333,7 +333,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 block|;
-comment|/// ThumbTargetMachine - Thumb target machine.
+comment|/// Thumb target machine.
 comment|/// Due to the way architectures are handled, this represents both
 comment|///   Thumb-1 and Thumb-2.
 comment|///
@@ -362,7 +362,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -372,7 +372,7 @@ argument|bool isLittle
 argument_list|)
 block|; }
 block|;
-comment|/// ThumbLETargetMachine - Thumb little endian target machine.
+comment|/// Thumb little endian target machine.
 comment|///
 name|class
 name|ThumbLETargetMachine
@@ -399,7 +399,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -407,7 +407,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 block|;
-comment|/// ThumbBETargetMachine - Thumb big endian target machine.
+comment|/// Thumb big endian target machine.
 comment|///
 name|class
 name|ThumbBETargetMachine
@@ -434,7 +434,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

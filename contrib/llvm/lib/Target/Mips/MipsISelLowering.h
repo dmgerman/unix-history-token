@@ -495,6 +495,20 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|ISD
+operator|::
+name|NodeType
+name|getExtendForAtomicOps
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|ISD
+operator|::
+name|SIGN_EXTEND
+return|;
+block|}
 name|void
 name|LowerOperationWrapper
 argument_list|(
@@ -572,7 +586,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -702,7 +716,7 @@ name|getAddrLocal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -786,14 +800,6 @@ operator|.
 name|getMachineFunction
 argument_list|()
 argument_list|)
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-literal|0
 argument_list|)
 block|;
 name|unsigned
@@ -869,7 +875,7 @@ name|getAddrGlobal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -931,14 +937,6 @@ argument_list|,
 name|Tgt
 argument_list|,
 name|PtrInfo
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -956,7 +954,7 @@ name|getAddrGlobalLargeGOT
 argument_list|(
 argument|NodeTy *N
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -1066,14 +1064,6 @@ argument_list|,
 name|Wrapper
 argument_list|,
 name|PtrInfo
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -1091,7 +1081,7 @@ name|getAddrNonPIC
 argument_list|(
 argument|NodeTy *N
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -1190,7 +1180,7 @@ name|getAddrGPRel
 argument_list|(
 argument|NodeTy *N
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -1416,7 +1406,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1601,7 +1591,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerADD
+name|lowerEH_DWARF_CFA
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1642,7 +1632,7 @@ name|copyByValRegs
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|std::vector<SDValue>&OutChains
 argument_list|,
@@ -1670,7 +1660,7 @@ name|passByValArg
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|std::deque<std::pair<unsigned
 argument_list|,
@@ -1708,7 +1698,7 @@ argument|std::vector<SDValue>&OutChains
 argument_list|,
 argument|SDValue Chain
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1727,7 +1717,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1747,7 +1737,7 @@ argument|SDValue Chain
 argument_list|,
 argument|SDValue Arg
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|bool IsTailCall
 argument_list|,
@@ -1794,7 +1784,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1806,7 +1796,7 @@ name|LowerInterruptReturn
 argument_list|(
 argument|SmallVectorImpl<SDValue>&RetOps
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -2033,13 +2023,28 @@ argument_list|()
 specifier|const
 name|override
 expr_stmt|;
+name|bool
+name|shouldInsertFencesForAtomic
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Emit a sign-extension using sll/sra, seb, or seh appropriately.
 name|MachineBasicBlock
 modifier|*
 name|emitSignExtendToI32InReg
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2062,7 +2067,7 @@ modifier|*
 name|emitAtomicBinary
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2087,7 +2092,7 @@ modifier|*
 name|emitAtomicBinaryPartword
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2112,7 +2117,7 @@ modifier|*
 name|emitAtomicCmpSwap
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2129,7 +2134,7 @@ modifier|*
 name|emitAtomicCmpSwapPartword
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2146,7 +2151,7 @@ modifier|*
 name|emitSEL_D
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -2160,7 +2165,7 @@ modifier|*
 name|emitPseudoSELECT
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock

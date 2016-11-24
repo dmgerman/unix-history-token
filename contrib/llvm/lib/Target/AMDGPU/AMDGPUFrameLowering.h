@@ -124,36 +124,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
-name|SpillSlot
-operator|*
-name|getCalleeSavedSpillSlots
-argument_list|(
-argument|unsigned&NumEntries
-argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-name|override
-block|;
 name|bool
 name|hasFP
 argument_list|(
@@ -161,9 +131,13 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
-block|; }
-decl_stmt|;
+block|{
+return|return
+name|false
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

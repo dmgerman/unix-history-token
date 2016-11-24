@@ -281,6 +281,8 @@ argument|const char *in_contents
 argument_list|,
 argument|bool in_is_file
 argument_list|,
+argument|bool is_cwd_lldbinit_file_read
+argument_list|,
 argument|bool in_quiet = false
 argument_list|)
 block|:
@@ -292,6 +294,11 @@ operator|,
 name|is_file
 argument_list|(
 name|in_is_file
+argument_list|)
+operator|,
+name|is_cwd_lldbinit_file_read
+argument_list|(
+name|is_cwd_lldbinit_file_read
 argument_list|)
 operator|,
 name|source_quietly
@@ -307,6 +314,10 @@ expr_stmt|;
 name|bool
 name|is_file
 decl_stmt|;
+name|bool
+name|is_cwd_lldbinit_file_read
+decl_stmt|;
+comment|// if this is reading ./.lldbinit - so we may skip if not permitted
 name|bool
 name|source_quietly
 decl_stmt|;

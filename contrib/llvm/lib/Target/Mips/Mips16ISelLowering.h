@@ -109,7 +109,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -187,7 +187,7 @@ name|emitSel16
 argument_list|(
 argument|unsigned Opc
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -201,7 +201,7 @@ argument|unsigned Opc1
 argument_list|,
 argument|unsigned Opc2
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -215,7 +215,7 @@ argument|unsigned Opc1
 argument_list|,
 argument|unsigned Opc2
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -229,7 +229,7 @@ argument|unsigned BtOpc
 argument_list|,
 argument|unsigned CmpOpc
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -247,7 +247,7 @@ argument|unsigned CmpiXOpc
 argument_list|,
 argument|bool ImmSigned
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -259,7 +259,7 @@ name|emitFEXT_CCRX16_ins
 argument_list|(
 argument|unsigned SltOpc
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -273,7 +273,7 @@ argument|unsigned SltiOpc
 argument_list|,
 argument|unsigned SltiXOpc
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)

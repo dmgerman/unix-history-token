@@ -114,7 +114,10 @@ name|StringRef
 name|CurBuf
 block|;
 name|bool
-name|isAtStartOfLine
+name|IsAtStartOfLine
+block|;
+name|bool
+name|IsAtStartOfStatement
 block|;
 name|void
 name|operator
@@ -172,10 +175,6 @@ name|LexUntilEndOfStatement
 argument_list|()
 name|override
 block|;
-name|StringRef
-name|LexUntilEndOfLine
-argument_list|()
-block|;
 name|size_t
 name|peekTokens
 argument_list|(
@@ -185,6 +184,19 @@ argument|bool ShouldSkipSpace = true
 argument_list|)
 name|override
 block|;
+specifier|const
+name|MCAsmInfo
+operator|&
+name|getMAI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MAI
+return|;
+block|}
+name|private
+operator|:
 name|bool
 name|isAtStartOfComment
 argument_list|(
@@ -203,19 +215,6 @@ operator|*
 name|Ptr
 argument_list|)
 block|;
-specifier|const
-name|MCAsmInfo
-operator|&
-name|getMAI
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MAI
-return|;
-block|}
-name|private
-operator|:
 name|int
 name|getNextChar
 argument_list|()
@@ -269,6 +268,10 @@ name|LexHexFloatLiteral
 argument_list|(
 argument|bool NoIntDigits
 argument_list|)
+block|;
+name|StringRef
+name|LexUntilEndOfLine
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

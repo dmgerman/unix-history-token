@@ -190,6 +190,9 @@ name|class
 name|GlobalAlias
 decl_stmt|;
 name|class
+name|GlobalIFunc
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 define|#
@@ -235,6 +238,12 @@ argument_list|)
 name|DEFINE_SYMBOL_TABLE_PARENT_TYPE
 argument_list|(
 argument|GlobalAlias
+argument_list|,
+argument|Module
+argument_list|)
+name|DEFINE_SYMBOL_TABLE_PARENT_TYPE
+argument_list|(
+argument|GlobalIFunc
 argument_list|,
 argument|Module
 argument_list|)

@@ -102,6 +102,39 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// llvm/Support/Debug.h unconditionally #defines DEBUG as a macro.
+end_comment
+
+begin_comment
+comment|// DIA headers #define it if it is not already defined, so we have
+end_comment
+
+begin_comment
+comment|// an order of includes problem.  The real fix is to make LLVM use
+end_comment
+
+begin_comment
+comment|// something less generic than DEBUG, such as LLVM_DEBUG(), but it's
+end_comment
+
+begin_comment
+comment|// fairly prevalent.  So for now, we save the definition state and
+end_comment
+
+begin_comment
+comment|// restore it.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|push_macro
+name|(
+literal|"DEBUG"
+name|)
+end_pragma
+
+begin_comment
 comment|// atlbase.h has to come before windows.h
 end_comment
 
@@ -132,6 +165,21 @@ include|#
 directive|include
 file|<dia2.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<diacreate.h>
+end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pop_macro
+name|(
+literal|"DEBUG"
+name|)
+end_pragma
 
 begin_endif
 endif|#

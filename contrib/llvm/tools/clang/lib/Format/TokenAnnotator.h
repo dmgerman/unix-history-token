@@ -414,10 +414,41 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|startsWith
-argument_list|(
 name|First
-argument_list|,
+operator|&&
+name|First
+operator|->
+name|startsSequence
+argument_list|(
+name|Tokens
+operator|...
+argument_list|)
+return|;
+block|}
+comment|/// \c true if this line ends with the given tokens in reversed order,
+comment|/// ignoring comments.
+comment|/// For example, given tokens [T1, T2, T3, ...], the function returns true if
+comment|/// this line is like "... T3 T2 T1".
+name|template
+operator|<
+name|typename
+operator|...
+name|Ts
+operator|>
+name|bool
+name|endsWith
+argument_list|(
+argument|Ts... Tokens
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Last
+operator|&&
+name|Last
+operator|->
+name|endsSequence
+argument_list|(
 name|Tokens
 operator|...
 argument_list|)
@@ -525,100 +556,14 @@ operator|)
 operator|=
 name|delete
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|A
-operator|,
-name|typename
-operator|...
-name|Ts
-operator|>
-name|bool
-name|startsWith
-argument_list|(
-argument|FormatToken *Tok
-argument_list|,
-argument|A K1
-argument_list|)
-specifier|const
-block|{
-while|while
-condition|(
-name|Tok
-operator|&&
-name|Tok
-operator|->
-name|is
-argument_list|(
-name|tok
-operator|::
-name|comment
-argument_list|)
-condition|)
-name|Tok
-operator|=
-name|Tok
-operator|->
-name|Next
-expr_stmt|;
-return|return
-name|Tok
-operator|&&
-name|Tok
-operator|->
-name|is
-argument_list|(
-name|K1
-argument_list|)
-return|;
 block|}
 end_decl_stmt
 
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|A
-operator|,
-name|typename
-operator|...
-name|Ts
-operator|>
-name|bool
-name|startsWith
-argument_list|(
-argument|FormatToken *Tok
-argument_list|,
-argument|A K1
-argument_list|,
-argument|Ts... Tokens
-argument_list|)
-specifier|const
-block|{
-return|return
-name|startsWith
-argument_list|(
-name|Tok
-argument_list|,
-name|K1
-argument_list|)
-operator|&&
-name|startsWith
-argument_list|(
-name|Tok
-operator|->
-name|Next
-argument_list|,
-name|Tokens
-operator|...
-argument_list|)
-return|;
-block|}
-end_expr_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Determines extra information about the tokens comprising an
 end_comment
 

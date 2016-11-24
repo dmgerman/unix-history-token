@@ -94,6 +94,9 @@ name|class
 name|Function
 decl_stmt|;
 name|class
+name|ProfileSummaryInfo
+decl_stmt|;
+name|class
 name|TargetTransformInfo
 decl_stmt|;
 name|namespace
@@ -354,9 +357,10 @@ empty_stmt|;
 comment|/// \brief Get an InlineCost object representing the cost of inlining this
 comment|/// callsite.
 comment|///
-comment|/// Note that threshold is passed into this function. Only costs below the
-comment|/// threshold are computed with any accuracy. The threshold can be used to
-comment|/// bound the computation necessary to determine whether the cost is
+comment|/// Note that a default threshold is passed into this function. This threshold
+comment|/// could be modified based on callsite's properties and only costs below this
+comment|/// new threshold are computed with any accuracy. The new threshold can be
+comment|/// used to bound the computation necessary to determine whether the cost is
 comment|/// sufficiently low to warrant inlining.
 comment|///
 comment|/// Also note that calling this function *dynamically* computes the cost of
@@ -368,7 +372,7 @@ name|CallSite
 name|CS
 parameter_list|,
 name|int
-name|Threshold
+name|DefaultThreshold
 parameter_list|,
 name|TargetTransformInfo
 modifier|&
@@ -377,6 +381,10 @@ parameter_list|,
 name|AssumptionCacheTracker
 modifier|*
 name|ACT
+parameter_list|,
+name|ProfileSummaryInfo
+modifier|*
+name|PSI
 parameter_list|)
 function_decl|;
 comment|/// \brief Get an InlineCost with the callee explicitly specified.
@@ -395,7 +403,7 @@ modifier|*
 name|Callee
 parameter_list|,
 name|int
-name|Threshold
+name|DefaultThreshold
 parameter_list|,
 name|TargetTransformInfo
 modifier|&
@@ -404,7 +412,26 @@ parameter_list|,
 name|AssumptionCacheTracker
 modifier|*
 name|ACT
+parameter_list|,
+name|ProfileSummaryInfo
+modifier|*
+name|PSI
 parameter_list|)
+function_decl|;
+name|int
+name|computeThresholdFromOptLevels
+parameter_list|(
+name|unsigned
+name|OptLevel
+parameter_list|,
+name|unsigned
+name|SizeOptLevel
+parameter_list|)
+function_decl|;
+comment|/// \brief Return the default value of -inline-threshold.
+name|int
+name|getDefaultInlineThreshold
+parameter_list|()
 function_decl|;
 comment|/// \brief Minimal filter to detect invalid constructs for inlining.
 name|bool

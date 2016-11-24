@@ -201,6 +201,12 @@ modifier|*
 name|Name
 decl_stmt|;
 comment|// Name of the file.
+name|std
+operator|::
+name|string
+name|RealPathName
+expr_stmt|;
+comment|// Real path to the file; could be empty.
 name|off_t
 name|Size
 decl_stmt|;
@@ -348,6 +354,15 @@ specifier|const
 block|{
 return|return
 name|Name
+return|;
+block|}
+name|StringRef
+name|tryGetRealPathName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RealPathName
 return|;
 block|}
 name|bool

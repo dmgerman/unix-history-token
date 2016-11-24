@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineInstrBundleIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
@@ -553,702 +565,337 @@ return|return
 name|xParent
 return|;
 block|}
-comment|/// MachineBasicBlock iterator that automatically skips over MIs that are
-comment|/// inside bundles (i.e. walk top level MIs only).
-name|template
-operator|<
-name|typename
-name|Ty
-operator|,
-name|typename
-name|IterTy
-operator|>
-name|class
-name|bundle_iterator
-operator|:
-name|public
-name|std
+typedef|typedef
+name|Instructions
 operator|::
 name|iterator
-operator|<
+name|instr_iterator
+expr_stmt|;
+typedef|typedef
+name|Instructions
+operator|::
+name|const_iterator
+name|const_instr_iterator
+expr_stmt|;
+typedef|typedef
 name|std
 operator|::
-name|bidirectional_iterator_tag
-operator|,
-name|Ty
-operator|,
-name|ptrdiff_t
-operator|>
-block|{
-name|IterTy
-name|MII
-block|;
-name|public
-operator|:
-name|bundle_iterator
-argument_list|(
-argument|IterTy MI
-argument_list|)
-operator|:
-name|MII
-argument_list|(
-argument|MI
-argument_list|)
-block|{}
-name|bundle_iterator
-argument_list|(
-name|Ty
-operator|&
-name|MI
-argument_list|)
-operator|:
-name|MII
-argument_list|(
-argument|MI
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|MI
-operator|.
-name|isBundledWithPred
-argument_list|()
-operator|&&
-literal|"It's not legal to initialize bundle_iterator with a bundled MI"
-argument_list|)
-block|;     }
-name|bundle_iterator
-argument_list|(
-name|Ty
-operator|*
-name|MI
-argument_list|)
-operator|:
-name|MII
-argument_list|(
-argument|MI
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|MI
-operator|||
-operator|!
-name|MI
-operator|->
-name|isBundledWithPred
-argument_list|()
-operator|)
-operator|&&
-literal|"It's not legal to initialize bundle_iterator with a bundled MI"
-argument_list|)
-block|;     }
-comment|// Template allows conversion from const to nonconst.
-name|template
+name|reverse_iterator
 operator|<
-name|class
-name|OtherTy
-block|,
-name|class
-name|OtherIterTy
+name|instr_iterator
 operator|>
-name|bundle_iterator
-argument_list|(
+name|reverse_instr_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|const_instr_iterator
+operator|>
+name|const_reverse_instr_iterator
+expr_stmt|;
+typedef|typedef
+name|MachineInstrBundleIterator
+operator|<
+name|MachineInstr
+operator|>
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|MachineInstrBundleIterator
+operator|<
 specifier|const
-name|bundle_iterator
+name|MachineInstr
+operator|>
+name|const_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
 operator|<
-name|OtherTy
+name|const_iterator
+operator|>
+name|const_reverse_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|iterator
+operator|>
+name|reverse_iterator
+expr_stmt|;
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|unsigned
+operator|)
+name|Insts
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|MachineInstr
+modifier|&
+name|instr_front
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+name|MachineInstr
+modifier|&
+name|instr_back
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|back
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MachineInstr
+operator|&
+name|instr_front
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MachineInstr
+operator|&
+name|instr_back
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|back
+argument_list|()
+return|;
+block|}
+name|MachineInstr
+modifier|&
+name|front
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+name|MachineInstr
+modifier|&
+name|back
+parameter_list|()
+block|{
+return|return
+operator|*
+operator|--
+name|end
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MachineInstr
+operator|&
+name|front
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MachineInstr
+operator|&
+name|back
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+operator|--
+name|end
+argument_list|()
+return|;
+block|}
+name|instr_iterator
+name|instr_begin
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_instr_iterator
+name|instr_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|instr_iterator
+name|instr_end
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_instr_iterator
+name|instr_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|reverse_instr_iterator
+name|instr_rbegin
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|const_reverse_instr_iterator
+name|instr_rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|reverse_instr_iterator
+name|instr_rend
+parameter_list|()
+block|{
+return|return
+name|Insts
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+name|const_reverse_instr_iterator
+name|instr_rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Insts
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+typedef|typedef
+name|iterator_range
+operator|<
+name|instr_iterator
+operator|>
+name|instr_range
+expr_stmt|;
+typedef|typedef
+name|iterator_range
+operator|<
+name|const_instr_iterator
+operator|>
+name|const_instr_range
+expr_stmt|;
+name|instr_range
+name|instrs
+parameter_list|()
+block|{
+return|return
+name|instr_range
+argument_list|(
+name|instr_begin
+argument_list|()
 argument_list|,
-name|OtherIterTy
-operator|>
-operator|&
-name|I
+name|instr_end
+argument_list|()
 argument_list|)
-operator|:
-name|MII
+return|;
+block|}
+name|const_instr_range
+name|instrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_instr_range
 argument_list|(
-argument|I.getInstrIterator()
+name|instr_begin
+argument_list|()
+argument_list|,
+name|instr_end
+argument_list|()
 argument_list|)
-block|{}
-name|bundle_iterator
-argument_list|()
-operator|:
-name|MII
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{}
-name|Ty
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-operator|*
-name|MII
 return|;
 block|}
-name|Ty
-operator|*
-name|operator
-operator|->
-expr|(
-block|)
-specifier|const
-block|{
-return|return
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-return|;
-block|}
-name|operator
-name|Ty
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|MII
-operator|.
-name|getNodePtrUnchecked
-argument_list|()
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|bundle_iterator
-operator|&
-name|X
-operator|)
-specifier|const
-block|{
-return|return
-name|MII
-operator|==
-name|X
-operator|.
-name|MII
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|bundle_iterator
-operator|&
-name|X
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|X
-operator|)
-return|;
-block|}
-comment|// Increment and decrement operators...
-name|bundle_iterator
-operator|&
-name|operator
-operator|--
-operator|(
-operator|)
-block|{
-comment|// predecrement - Back up
-do|do
-operator|--
-name|MII
-expr_stmt|;
-do|while
-condition|(
-name|MII
-operator|->
-name|isBundledWithPred
-argument_list|()
-condition|)
-do|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|bundle_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-comment|// preincrement - Advance
-while|while
-condition|(
-name|MII
-operator|->
-name|isBundledWithSucc
-argument_list|()
-condition|)
-operator|++
-name|MII
-expr_stmt|;
-operator|++
-name|MII
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|bundle_iterator
-name|operator
-operator|--
-operator|(
-name|int
-operator|)
-block|{
-comment|// postdecrement operators...
-name|bundle_iterator
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|--
-operator|*
-name|this
-block|;
-return|return
-name|tmp
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|bundle_iterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-comment|// postincrement operators...
-name|bundle_iterator
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|++
-operator|*
-name|this
-block|;
-return|return
-name|tmp
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|IterTy
-name|getInstrIterator
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MII
-return|;
-block|}
-end_expr_stmt
-
-begin_typedef
-unit|};
-typedef|typedef
-name|Instructions
-operator|::
-name|iterator
-name|instr_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|Instructions
-operator|::
-name|const_iterator
-name|const_instr_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|instr_iterator
-operator|>
-name|reverse_instr_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|const_instr_iterator
-operator|>
-name|const_reverse_instr_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bundle_iterator
-operator|<
-name|MachineInstr
-operator|,
-name|instr_iterator
-operator|>
-name|iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|bundle_iterator
-operator|<
-specifier|const
-name|MachineInstr
-operator|,
-name|const_instr_iterator
-operator|>
-name|const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|const_iterator
-operator|>
-name|const_reverse_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|reverse_iterator
-operator|<
-name|iterator
-operator|>
-name|reverse_iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|unsigned
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|unsigned
-operator|)
-name|Insts
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|MachineInstr
-modifier|&
-name|instr_front
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|front
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-name|MachineInstr
-modifier|&
-name|instr_back
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|back
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|const
-name|MachineInstr
-operator|&
-name|instr_front
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|front
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|MachineInstr
-operator|&
-name|instr_back
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|back
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|MachineInstr
-modifier|&
-name|front
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|front
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-name|MachineInstr
-modifier|&
-name|back
-parameter_list|()
-block|{
-return|return
-operator|*
-operator|--
-name|end
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|const
-name|MachineInstr
-operator|&
-name|front
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|front
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|MachineInstr
-operator|&
-name|back
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-operator|--
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|instr_iterator
-name|instr_begin
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_instr_iterator
-name|instr_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|instr_iterator
-name|instr_end
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_instr_iterator
-name|instr_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_instr_iterator
-name|instr_rbegin
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_reverse_instr_iterator
-name|instr_rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_instr_iterator
-name|instr_rend
-parameter_list|()
-block|{
-return|return
-name|Insts
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_reverse_instr_iterator
-name|instr_rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Insts
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -1258,9 +905,6 @@ name|instr_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -1271,9 +915,6 @@ name|instr_begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -1283,9 +924,6 @@ name|instr_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -1296,9 +934,6 @@ name|instr_end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|reverse_iterator
 name|rbegin
 parameter_list|()
@@ -1308,9 +943,6 @@ name|instr_rbegin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_reverse_iterator
 name|rbegin
 argument_list|()
@@ -1321,9 +953,6 @@ name|instr_rbegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|reverse_iterator
 name|rend
 parameter_list|()
@@ -1333,9 +962,6 @@ name|instr_rend
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_reverse_iterator
 name|rend
 argument_list|()
@@ -1346,13 +972,7 @@ name|instr_rend
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Support for MachineInstr::getNextNode().
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|Instructions
 name|MachineBasicBlock
@@ -1370,9 +990,6 @@ operator|::
 name|Insts
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1392,9 +1009,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1415,13 +1029,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Machine-CFG iterators
-end_comment
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1434,9 +1042,6 @@ operator|::
 name|iterator
 name|pred_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1449,9 +1054,6 @@ operator|::
 name|const_iterator
 name|const_pred_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1464,9 +1066,6 @@ operator|::
 name|iterator
 name|succ_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1479,9 +1078,6 @@ operator|::
 name|const_iterator
 name|const_succ_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1494,9 +1090,6 @@ operator|::
 name|reverse_iterator
 name|pred_reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1509,9 +1102,6 @@ operator|::
 name|const_reverse_iterator
 name|const_pred_reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1524,9 +1114,6 @@ operator|::
 name|reverse_iterator
 name|succ_reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1539,9 +1126,6 @@ operator|::
 name|const_reverse_iterator
 name|const_succ_reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_function
 name|pred_iterator
 name|pred_begin
 parameter_list|()
@@ -1553,9 +1137,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_pred_iterator
 name|pred_begin
 argument_list|()
@@ -1568,9 +1149,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|pred_iterator
 name|pred_end
 parameter_list|()
@@ -1582,9 +1160,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_pred_iterator
 name|pred_end
 argument_list|()
@@ -1597,9 +1172,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|pred_reverse_iterator
 name|pred_rbegin
 parameter_list|()
@@ -1611,9 +1183,6 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_pred_reverse_iterator
 name|pred_rbegin
 argument_list|()
@@ -1626,9 +1195,6 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|pred_reverse_iterator
 name|pred_rend
 parameter_list|()
@@ -1640,9 +1206,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_pred_reverse_iterator
 name|pred_rend
 argument_list|()
@@ -1655,9 +1218,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|pred_size
 argument_list|()
@@ -1673,9 +1233,6 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|pred_empty
 argument_list|()
@@ -1688,9 +1245,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|succ_iterator
 name|succ_begin
 parameter_list|()
@@ -1702,9 +1256,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_succ_iterator
 name|succ_begin
 argument_list|()
@@ -1717,9 +1268,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|succ_iterator
 name|succ_end
 parameter_list|()
@@ -1731,9 +1279,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_succ_iterator
 name|succ_end
 argument_list|()
@@ -1746,9 +1291,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|succ_reverse_iterator
 name|succ_rbegin
 parameter_list|()
@@ -1760,9 +1302,6 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_succ_reverse_iterator
 name|succ_rbegin
 argument_list|()
@@ -1775,9 +1314,6 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|succ_reverse_iterator
 name|succ_rend
 parameter_list|()
@@ -1789,9 +1325,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_succ_reverse_iterator
 name|succ_rend
 argument_list|()
@@ -1804,9 +1337,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|succ_size
 argument_list|()
@@ -1822,9 +1352,6 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|succ_empty
 argument_list|()
@@ -1837,9 +1364,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1859,9 +1383,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1882,9 +1403,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1904,9 +1422,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|iterator_range
 operator|<
@@ -1927,25 +1442,10 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// LiveIn management methods.
-end_comment
-
-begin_comment
 comment|/// Adds the specified register as a live in. Note that it is an error to add
-end_comment
-
-begin_comment
 comment|/// the same register to the same set more than once unless the intention is
-end_comment
-
-begin_comment
 comment|/// to call sortUniqueLiveIns after all registers are added.
-end_comment
-
-begin_function
 name|void
 name|addLiveIn
 parameter_list|(
@@ -1972,9 +1472,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|addLiveIn
 parameter_list|(
@@ -1992,40 +1489,16 @@ name|RegMaskPair
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Sorts and uniques the LiveIns vector. It can be significantly faster to do
-end_comment
-
-begin_comment
 comment|/// this than repeatedly calling isLiveIn before calling addLiveIn for every
-end_comment
-
-begin_comment
 comment|/// LiveIn insertion.
-end_comment
-
-begin_function_decl
 name|void
 name|sortUniqueLiveIns
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Add PhysReg as live in to this block, and ensure that there is a copy of
-end_comment
-
-begin_comment
 comment|/// PhysReg to a virtual register of class RC. Return the virtual register
-end_comment
-
-begin_comment
 comment|/// that is a copy of the live in PhysReg.
-end_comment
-
-begin_function_decl
 name|unsigned
 name|addLiveIn
 parameter_list|(
@@ -2038,13 +1511,7 @@ modifier|*
 name|RC
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Remove the specified register from the live in set.
-end_comment
-
-begin_function_decl
 name|void
 name|removeLiveIn
 parameter_list|(
@@ -2058,13 +1525,7 @@ operator|~
 literal|0u
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Return true if the specified register is in the live in set.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isLiveIn
 argument_list|(
@@ -2079,26 +1540,14 @@ literal|0u
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Iteration support for live in sets.  These sets are kept in sorted
-end_comment
-
-begin_comment
 comment|// order by their register number.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|LiveInVector
 operator|::
 name|const_iterator
 name|livein_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|livein_iterator
 name|livein_begin
 argument_list|()
@@ -2111,9 +1560,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|livein_iterator
 name|livein_end
 argument_list|()
@@ -2126,9 +1572,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|livein_empty
 argument_list|()
@@ -2141,9 +1584,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|iterator_range
 operator|<
 name|livein_iterator
@@ -2163,17 +1603,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Get the clobber mask for the start of this basic block. Funclets use this
-end_comment
-
-begin_comment
 comment|/// to prevent register allocation across funclet transitions.
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|uint32_t
 modifier|*
@@ -2186,17 +1617,8 @@ name|TRI
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Get the clobber mask for the end of the basic block.
-end_comment
-
-begin_comment
 comment|/// \see getBeginClobberMask()
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|uint32_t
 modifier|*
@@ -2209,17 +1631,8 @@ name|TRI
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return alignment of the basic block. The alignment is specified as
-end_comment
-
-begin_comment
 comment|/// log2(bytes).
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getAlignment
 argument_list|()
@@ -2229,17 +1642,8 @@ return|return
 name|Alignment
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Set alignment of the basic block. The alignment is specified as
-end_comment
-
-begin_comment
 comment|/// log2(bytes).
-end_comment
-
-begin_function
 name|void
 name|setAlignment
 parameter_list|(
@@ -2252,17 +1656,8 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Returns true if the block is a landing pad. That is this basic block is
-end_comment
-
-begin_comment
 comment|/// entered via an exception handler.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isEHPad
 argument_list|()
@@ -2272,17 +1667,8 @@ return|return
 name|IsEHPad
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Indicates the block is a landing pad.  That is this basic block is entered
-end_comment
-
-begin_comment
 comment|/// via an exception handler.
-end_comment
-
-begin_function
 name|void
 name|setIsEHPad
 parameter_list|(
@@ -2297,39 +1683,12 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/// If this block has a successor that is a landing pad, return it. Otherwise
-end_comment
-
-begin_comment
-comment|/// return NULL.
-end_comment
-
-begin_expr_stmt
-specifier|const
-name|MachineBasicBlock
-operator|*
-name|getLandingPadSuccessor
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|hasEHPadSuccessor
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Returns true if this is the entry block of an EH funclet.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isEHFuncletEntry
 argument_list|()
@@ -2339,13 +1698,7 @@ return|return
 name|IsEHFuncletEntry
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Indicates if this is the entry block of an EH funclet.
-end_comment
-
-begin_function
 name|void
 name|setIsEHFuncletEntry
 parameter_list|(
@@ -2360,13 +1713,7 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Returns true if this is the entry block of a cleanup funclet.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isCleanupFuncletEntry
 argument_list|()
@@ -2376,13 +1723,7 @@ return|return
 name|IsCleanupFuncletEntry
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Indicates if this is the entry block of a cleanup funclet.
-end_comment
-
-begin_function
 name|void
 name|setIsCleanupFuncletEntry
 parameter_list|(
@@ -2397,25 +1738,10 @@ operator|=
 name|V
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|// Code Layout methods.
-end_comment
-
-begin_comment
 comment|/// Move 'this' block before or after the specified block.  This only moves
-end_comment
-
-begin_comment
 comment|/// the block, it does not modify the CFG or adjust potential fall-throughs at
-end_comment
-
-begin_comment
 comment|/// the end of the block.
-end_comment
-
-begin_function_decl
 name|void
 name|moveBefore
 parameter_list|(
@@ -2424,9 +1750,6 @@ modifier|*
 name|NewAfter
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|moveAfter
 parameter_list|(
@@ -2435,68 +1758,23 @@ modifier|*
 name|NewBefore
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Update the terminator instructions in block to account for changes to the
-end_comment
-
-begin_comment
 comment|/// layout. If the block previously used a fallthrough, it may now need a
-end_comment
-
-begin_comment
 comment|/// branch, and if it previously used branching it may now be able to use a
-end_comment
-
-begin_comment
 comment|/// fallthrough.
-end_comment
-
-begin_function_decl
 name|void
 name|updateTerminator
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// Machine-CFG mutators
-end_comment
-
-begin_comment
 comment|/// Add Succ as a successor of this MachineBasicBlock.  The Predecessors list
-end_comment
-
-begin_comment
 comment|/// of Succ is automatically updated. PROB parameter is stored in
-end_comment
-
-begin_comment
 comment|/// Probabilities list. The default probability is set as unknown. Mixing
-end_comment
-
-begin_comment
 comment|/// known and unknown probabilities in successor list is not allowed. When all
-end_comment
-
-begin_comment
 comment|/// successors have unknown probabilities, 1 / N is returned as the
-end_comment
-
-begin_comment
 comment|/// probability for each successor, where N is the number of successors.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that duplicate Machine CFG edges are not allowed.
-end_comment
-
-begin_function_decl
 name|void
 name|addSuccessor
 parameter_list|(
@@ -2513,25 +1791,10 @@ name|getUnknown
 argument_list|()
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Add Succ as a successor of this MachineBasicBlock.  The Predecessors list
-end_comment
-
-begin_comment
 comment|/// of Succ is automatically updated. The probability is not provided because
-end_comment
-
-begin_comment
 comment|/// BPI is not available (e.g. -O0 is used), in which case edge probabilities
-end_comment
-
-begin_comment
 comment|/// won't be used. Using this interface can save some space.
-end_comment
-
-begin_function_decl
 name|void
 name|addSuccessorWithoutProb
 parameter_list|(
@@ -2540,13 +1803,7 @@ modifier|*
 name|Succ
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Set successor probability of a given iterator.
-end_comment
-
-begin_function_decl
 name|void
 name|setSuccProbability
 parameter_list|(
@@ -2557,29 +1814,11 @@ name|BranchProbability
 name|Prob
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Normalize probabilities of all successors so that the sum of them becomes
-end_comment
-
-begin_comment
 comment|/// one. This is usually done when the current update on this MBB is done, and
-end_comment
-
-begin_comment
 comment|/// the sum of its successors' probabilities is not guaranteed to be one. The
-end_comment
-
-begin_comment
 comment|/// user is responsible for the correct use of this function.
-end_comment
-
-begin_comment
 comment|/// MBB::removeSuccessor() has an option to do this automatically.
-end_comment
-
-begin_function
 name|void
 name|normalizeSuccProbs
 parameter_list|()
@@ -2600,41 +1839,17 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Validate successors' probabilities and check if the sum of them is
-end_comment
-
-begin_comment
 comment|/// approximate one. This only works in DEBUG mode.
-end_comment
-
-begin_expr_stmt
 name|void
 name|validateSuccProbs
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Remove successor from the successors list of this MachineBasicBlock. The
-end_comment
-
-begin_comment
 comment|/// Predecessors list of Succ is automatically updated.
-end_comment
-
-begin_comment
 comment|/// If NormalizeSuccProbs is true, then normalize successors' probabilities
-end_comment
-
-begin_comment
 comment|/// after the successor is removed.
-end_comment
-
-begin_function_decl
 name|void
 name|removeSuccessor
 parameter_list|(
@@ -2648,29 +1863,11 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Remove specified successor from the successors list of this
-end_comment
-
-begin_comment
 comment|/// MachineBasicBlock. The Predecessors list of Succ is automatically updated.
-end_comment
-
-begin_comment
 comment|/// If NormalizeSuccProbs is true, then normalize successors' probabilities
-end_comment
-
-begin_comment
 comment|/// after the successor is removed.
-end_comment
-
-begin_comment
 comment|/// Return the iterator to the element after the one removed.
-end_comment
-
-begin_function_decl
 name|succ_iterator
 name|removeSuccessor
 parameter_list|(
@@ -2683,13 +1880,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Replace successor OLD with NEW and update probability info.
-end_comment
-
-begin_function_decl
 name|void
 name|replaceSuccessor
 parameter_list|(
@@ -2702,21 +1893,9 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Transfers all the successors from MBB to this machine basic block (i.e.,
-end_comment
-
-begin_comment
 comment|/// copies all the successors FromMBB and remove all the successors from
-end_comment
-
-begin_comment
 comment|/// FromMBB).
-end_comment
-
-begin_function_decl
 name|void
 name|transferSuccessors
 parameter_list|(
@@ -2725,17 +1904,8 @@ modifier|*
 name|FromMBB
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Transfers all the successors, as in transferSuccessors, and update PHI
-end_comment
-
-begin_comment
 comment|/// operands in the successor blocks which refer to FromMBB to refer to this.
-end_comment
-
-begin_function_decl
 name|void
 name|transferSuccessorsAndUpdatePHIs
 parameter_list|(
@@ -2744,13 +1914,7 @@ modifier|*
 name|FromMBB
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Return true if any of the successors have probabilities attached to them.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasSuccessorProbabilities
 argument_list|()
@@ -2764,13 +1928,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Return true if the specified MBB is a predecessor of this block.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isPredecessor
 argument_list|(
@@ -2781,13 +1939,7 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return true if the specified MBB is a successor of this block.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isSuccessor
 argument_list|(
@@ -2798,29 +1950,11 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return true if the specified MBB will be emitted immediately after this
-end_comment
-
-begin_comment
 comment|/// block, such that if this block exits by falling through, control will
-end_comment
-
-begin_comment
 comment|/// transfer to the specified MBB. Note that MBB need not be a successor at
-end_comment
-
-begin_comment
 comment|/// all, for example if this block ends with an unconditional branch to some
-end_comment
-
-begin_comment
 comment|/// other block.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isLayoutSuccessor
 argument_list|(
@@ -2831,71 +1965,26 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return true if the block can implicitly transfer control to the block
-end_comment
-
-begin_comment
 comment|/// after it by falling off the end of it.  This should return false if it can
-end_comment
-
-begin_comment
 comment|/// reach the block after it, but it uses an explicit branch to do so (e.g., a
-end_comment
-
-begin_comment
 comment|/// table jump).  True is a conservative answer.
-end_comment
-
-begin_function_decl
 name|bool
 name|canFallThrough
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Returns a pointer to the first instruction in this block that is not a
-end_comment
-
-begin_comment
 comment|/// PHINode instruction. When adding instructions to the beginning of the
-end_comment
-
-begin_comment
 comment|/// basic block, they should be added before the returned value, not before
-end_comment
-
-begin_comment
 comment|/// the first instruction, which might be PHI.
-end_comment
-
-begin_comment
 comment|/// Returns end() is there's no non-PHI instruction.
-end_comment
-
-begin_function_decl
 name|iterator
 name|getFirstNonPHI
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Return the first instruction in MBB after I that is not a PHI or a label.
-end_comment
-
-begin_comment
 comment|/// This is the correct point to insert copies at the beginning of a basic
-end_comment
-
-begin_comment
 comment|/// block.
-end_comment
-
-begin_function_decl
 name|iterator
 name|SkipPHIsAndLabels
 parameter_list|(
@@ -2903,24 +1992,12 @@ name|iterator
 name|I
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Returns an iterator to the first terminator instruction of this basic
-end_comment
-
-begin_comment
 comment|/// block. If a terminator does not exist, it returns end().
-end_comment
-
-begin_function_decl
 name|iterator
 name|getFirstTerminator
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|const_iterator
 name|getFirstTerminator
 argument_list|()
@@ -2940,39 +2017,18 @@ name|getFirstTerminator
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Same getFirstTerminator but it ignores bundles and return an
-end_comment
-
-begin_comment
 comment|/// instr_iterator instead.
-end_comment
-
-begin_function_decl
 name|instr_iterator
 name|getFirstInstrTerminator
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Returns an iterator to the first non-debug instruction in the basic block,
-end_comment
-
-begin_comment
 comment|/// or end().
-end_comment
-
-begin_function_decl
 name|iterator
 name|getFirstNonDebugInstr
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|const_iterator
 name|getFirstNonDebugInstr
 argument_list|()
@@ -2992,24 +2048,12 @@ name|getFirstNonDebugInstr
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Returns an iterator to the last non-debug instruction in the basic block,
-end_comment
-
-begin_comment
 comment|/// or end().
-end_comment
-
-begin_function_decl
 name|iterator
 name|getLastNonDebugInstr
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|const_iterator
 name|getLastNonDebugInstr
 argument_list|()
@@ -3029,17 +2073,8 @@ name|getLastNonDebugInstr
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Convenience function that returns true if the block ends in a return
-end_comment
-
-begin_comment
 comment|/// instruction.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isReturnBlock
 argument_list|()
@@ -3057,29 +2092,11 @@ name|isReturn
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Split the critical edge from this block to the given successor block, and
-end_comment
-
-begin_comment
 comment|/// return the newly created block, or null if splitting is not possible.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function updates LiveVariables, MachineDominatorTree, and
-end_comment
-
-begin_comment
 comment|/// MachineLoopInfo, as applicable.
-end_comment
-
-begin_function_decl
 name|MachineBasicBlock
 modifier|*
 name|SplitCriticalEdge
@@ -3089,13 +2106,24 @@ modifier|*
 name|Succ
 parameter_list|,
 name|Pass
-modifier|*
+modifier|&
 name|P
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
+comment|/// Check if the edge between this block and the given successor \p
+comment|/// Succ, can be split. If this returns true a subsequent call to
+comment|/// SplitCriticalEdge is guaranteed to return a valid basic block if
+comment|/// no changes occured in the meantime.
+name|bool
+name|canSplitCriticalEdge
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|Succ
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|pop_front
 parameter_list|()
@@ -3106,9 +2134,6 @@ name|pop_front
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|pop_back
 parameter_list|()
@@ -3119,9 +2144,6 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|push_back
 parameter_list|(
@@ -3138,33 +2160,12 @@ name|MI
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Insert MI into the instruction list before I, possibly inside a bundle.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the insertion point is inside a bundle, MI will be added to the bundle,
-end_comment
-
-begin_comment
 comment|/// otherwise MI will not be added to any bundle. That means this function
-end_comment
-
-begin_comment
 comment|/// alone can't be used to prepend or append instructions to bundles. See
-end_comment
-
-begin_comment
 comment|/// MIBundleBuilder::insert() for a more reliable way of doing that.
-end_comment
-
-begin_function_decl
 name|instr_iterator
 name|insert
 parameter_list|(
@@ -3176,13 +2177,7 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Insert a range of instructions into the instruction list before I.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3290,13 +2285,7 @@ name|MI
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Insert MI into the instruction list after I.
-end_comment
-
-begin_function
 name|iterator
 name|insertAfter
 parameter_list|(
@@ -3358,25 +2347,10 @@ name|MI
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove an instruction from the instruction list and delete it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the instruction is part of a bundle, the other instructions in the
-end_comment
-
-begin_comment
 comment|/// bundle will still be bundled after removing the single instruction.
-end_comment
-
-begin_function_decl
 name|instr_iterator
 name|erase
 parameter_list|(
@@ -3384,25 +2358,10 @@ name|instr_iterator
 name|I
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Remove an instruction from the instruction list and delete it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the instruction is part of a bundle, the other instructions in the
-end_comment
-
-begin_comment
 comment|/// bundle will still be bundled after removing the single instruction.
-end_comment
-
-begin_function
 name|instr_iterator
 name|erase_instr
 parameter_list|(
@@ -3421,13 +2380,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove a range of instructions from the instruction list and delete them.
-end_comment
-
-begin_function
 name|iterator
 name|erase
 parameter_list|(
@@ -3455,21 +2408,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove an instruction or bundle from the instruction list and delete it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If I points to a bundle of instructions, they are all erased.
-end_comment
-
-begin_function
 name|iterator
 name|erase
 parameter_list|(
@@ -3491,25 +2432,10 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove an instruction from the instruction list and delete it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If I is the head of a bundle of instructions, the whole bundle will be
-end_comment
-
-begin_comment
 comment|/// erased.
-end_comment
-
-begin_function
 name|iterator
 name|erase
 parameter_list|(
@@ -3528,29 +2454,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove the unbundled instruction from the instruction list without
-end_comment
-
-begin_comment
 comment|/// deleting it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This function can not be used to remove bundled instructions, use
-end_comment
-
-begin_comment
 comment|/// remove_instr to remove individual instructions from a bundle.
-end_comment
-
-begin_function
 name|MachineInstr
 modifier|*
 name|remove
@@ -3583,29 +2491,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Remove the possibly bundled instruction from the instruction list
-end_comment
-
-begin_comment
 comment|/// without deleting it.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the instruction is part of a bundle, the other instructions in the
-end_comment
-
-begin_comment
 comment|/// bundle will still be bundled after removing the single instruction.
-end_comment
-
-begin_function_decl
 name|MachineInstr
 modifier|*
 name|remove_instr
@@ -3615,9 +2505,6 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|void
 name|clear
 parameter_list|()
@@ -3628,25 +2515,10 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Take an instruction from MBB 'Other' at the position From, and insert it
-end_comment
-
-begin_comment
 comment|/// into this MBB right before 'Where'.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If From points to a bundle of instructions, the whole bundle is moved.
-end_comment
-
-begin_function
 name|void
 name|splice
 parameter_list|(
@@ -3685,29 +2557,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Take a block of instructions from MBB 'Other' in the range [From, To),
-end_comment
-
-begin_comment
 comment|/// and insert them into this MBB right before 'Where'.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The instruction at 'Where' must not be included in the range of
-end_comment
-
-begin_comment
 comment|/// instructions to move.
-end_comment
-
-begin_function
 name|void
 name|splice
 parameter_list|(
@@ -3750,44 +2604,20 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// This method unlinks 'this' from the containing function, and returns it,
-end_comment
-
-begin_comment
 comment|/// but does not delete it.
-end_comment
-
-begin_function_decl
 name|MachineBasicBlock
 modifier|*
 name|removeFromParent
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// This method unlinks 'this' from the containing function and deletes it.
-end_comment
-
-begin_function_decl
 name|void
 name|eraseFromParent
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Given a machine basic block that branched to 'Old', change the code and
-end_comment
-
-begin_comment
 comment|/// CFG so that it branches to 'New' instead.
-end_comment
-
-begin_function_decl
 name|void
 name|ReplaceUsesOfBlockWith
 parameter_list|(
@@ -3800,33 +2630,12 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Various pieces of code can cause excess edges in the CFG to be inserted.
-end_comment
-
-begin_comment
 comment|/// If we have proven that MBB can only branch to DestA and DestB, remove any
-end_comment
-
-begin_comment
 comment|/// other MBB successors from the CFG. DestA and DestB can be null. Besides
-end_comment
-
-begin_comment
 comment|/// DestA and DestB, retain other edges leading to LandingPads (currently
-end_comment
-
-begin_comment
 comment|/// there can be only one; we don't check or require that here). Note it is
-end_comment
-
-begin_comment
 comment|/// possible that DestA and/or DestB are LandingPads.
-end_comment
-
-begin_function_decl
 name|bool
 name|CorrectExtraCFGEdges
 parameter_list|(
@@ -3842,17 +2651,8 @@ name|bool
 name|IsCond
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Find the next valid DebugLoc starting at MBBI, skipping any DBG_VALUE
-end_comment
-
-begin_comment
 comment|/// instructions.  Return UnknownLoc if there is none.
-end_comment
-
-begin_function_decl
 name|DebugLoc
 name|findDebugLoc
 parameter_list|(
@@ -3860,9 +2660,6 @@ name|instr_iterator
 name|MBBI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|DebugLoc
 name|findDebugLoc
 parameter_list|(
@@ -3880,13 +2677,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// Possible outcome of a register liveness query to computeRegisterLiveness()
-end_comment
-
-begin_enum
 enum|enum
 name|LivenessQueryResult
 block|{
@@ -3900,41 +2691,14 @@ name|LQR_Unknown
 comment|///< Register liveness not decidable from local neighborhood.
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/// Return whether (physical) register \p Reg has been<def>ined and not
-end_comment
-
-begin_comment
 comment|///<kill>ed as of just before \p Before.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Search is localised to a neighborhood of \p Neighborhood instructions
-end_comment
-
-begin_comment
 comment|/// before (searching for defs or kills) and \p Neighborhood instructions
-end_comment
-
-begin_comment
 comment|/// after (searching just for defs) \p Before.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \p Reg must be a physical register.
-end_comment
-
-begin_decl_stmt
 name|LivenessQueryResult
 name|computeRegisterLiveness
 argument_list|(
@@ -3956,21 +2720,12 @@ literal|10
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Debugging methods.
-end_comment
-
-begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -3978,6 +2733,7 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
+specifier|const
 name|SlotIndexes
 operator|*
 operator|=
@@ -3985,9 +2741,6 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -3999,6 +2752,7 @@ name|ModuleSlotTracker
 operator|&
 name|MST
 argument_list|,
+specifier|const
 name|SlotIndexes
 operator|*
 operator|=
@@ -4006,13 +2760,7 @@ name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Printing method used by LoopInfo.
-end_comment
-
-begin_decl_stmt
 name|void
 name|printAsOperand
 argument_list|(
@@ -4027,17 +2775,8 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// MachineBasicBlocks are uniquely numbered at the function level, unless
-end_comment
-
-begin_comment
 comment|/// they're not in a MachineFunction yet, in which case this will return -1.
-end_comment
-
-begin_expr_stmt
 name|int
 name|getNumber
 argument_list|()
@@ -4047,9 +2786,6 @@ return|return
 name|Number
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setNumber
 parameter_list|(
@@ -4062,31 +2798,16 @@ operator|=
 name|N
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// Return the MCSymbol for this basic block.
-end_comment
-
-begin_expr_stmt
 name|MCSymbol
 operator|*
 name|getSymbol
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
 comment|/// Return probability iterator corresponding to the I successor iterator.
-end_comment
-
-begin_function_decl
 name|probability_iterator
 name|getProbabilityIterator
 parameter_list|(
@@ -4094,9 +2815,6 @@ name|succ_iterator
 name|I
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|const_probability_iterator
 name|getProbabilityIterator
 argument_list|(
@@ -4105,35 +2823,17 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|MachineBranchProbabilityInfo
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|MIPrinter
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Return probability of the edge from this block to MBB. This method should
-end_comment
-
-begin_comment
 comment|/// NOT be called directly, but by using getEdgeProbability method from
-end_comment
-
-begin_comment
 comment|/// MachineBranchProbabilityInfo class.
-end_comment
-
-begin_decl_stmt
 name|BranchProbability
 name|getSuccProbability
 argument_list|(
@@ -4142,42 +2842,18 @@ name|Succ
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Methods used to maintain doubly linked list of blocks...
-end_comment
-
-begin_macro
 name|friend
-end_macro
-
-begin_expr_stmt
-unit|struct
+block|struct
 name|ilist_traits
 operator|<
 name|MachineBasicBlock
 operator|>
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Machine-CFG mutators
-end_comment
-
-begin_comment
 comment|/// Remove Pred as a predecessor of this MachineBasicBlock. Don't do this
-end_comment
-
-begin_comment
 comment|/// unless you know what you're doing, because it doesn't update Pred's
-end_comment
-
-begin_comment
 comment|/// successors list. Use Pred->addSuccessor instead.
-end_comment
-
-begin_function_decl
 name|void
 name|addPredecessor
 parameter_list|(
@@ -4186,21 +2862,9 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// Remove Pred as a predecessor of this MachineBasicBlock. Don't do this
-end_comment
-
-begin_comment
 comment|/// unless you know what you're doing, because it doesn't update Pred's
-end_comment
-
-begin_comment
 comment|/// successors list. Use Pred->removeSuccessor instead.
-end_comment
-
-begin_function_decl
 name|void
 name|removePredecessor
 parameter_list|(
@@ -4209,10 +2873,8 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
-unit|};
+block|}
+empty_stmt|;
 name|raw_ostream
 operator|&
 name|operator
@@ -4228,13 +2890,7 @@ operator|&
 name|MBB
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// This is useful when building IndexedMaps keyed on basic block pointers.
-end_comment
-
-begin_decl_stmt
 name|struct
 name|MBB2NumberFunctor
 range|:
@@ -4269,37 +2925,13 @@ argument_list|()
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// GraphTraits specializations for machine basic block graphs (machine-CFGs)
-end_comment
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Provide specializations of GraphTraits to be able to treat a
-end_comment
-
-begin_comment
 comment|// MachineFunction as a graph of MachineBasicBlocks.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -4314,18 +2946,17 @@ typedef|typedef
 name|MachineBasicBlock
 name|NodeType
 typedef|;
-end_expr_stmt
-
-begin_typedef
+typedef|typedef
+name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
 typedef|typedef
 name|MachineBasicBlock
 operator|::
 name|succ_iterator
 name|ChildIteratorType
 expr_stmt|;
-end_typedef
-
-begin_function
 specifier|static
 name|NodeType
 modifier|*
@@ -4340,9 +2971,6 @@ return|return
 name|BB
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -4360,9 +2988,6 @@ name|succ_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -4380,10 +3005,14 @@ name|succ_end
 argument_list|()
 return|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 operator|>
@@ -4401,6 +3030,15 @@ name|MachineBasicBlock
 name|NodeType
 typedef|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -4517,6 +3155,14 @@ end_expr_stmt
 begin_typedef
 typedef|typedef
 name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|MachineBasicBlock
 operator|::
 name|pred_iterator
 name|ChildIteratorType
@@ -4607,6 +3253,15 @@ name|MachineBasicBlock
 name|NodeType
 typedef|;
 end_expr_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|NodeRef
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

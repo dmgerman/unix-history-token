@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -71,21 +71,12 @@ directive|include
 file|"llvm/MC/MCAsmInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Triple.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|Target
-decl_stmt|;
-name|class
-name|Triple
 decl_stmt|;
 name|class
 name|BPFMCAsmInfo

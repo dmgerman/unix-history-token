@@ -259,8 +259,6 @@ decl_stmt|;
 typedef|typedef
 name|IRBuilder
 operator|<
-name|true
-operator|,
 name|TargetFolder
 operator|>
 name|BuilderType
@@ -268,6 +266,198 @@ expr_stmt|;
 name|BuilderType
 name|Builder
 decl_stmt|;
+comment|// RAII object that stores the current insertion point and restores it when
+comment|// the object is destroyed. This includes the debug location.  Duplicated
+comment|// from InsertPointGuard to add SetInsertPoint() which is used to updated
+comment|// InsertPointGuards stack when insert points are moved during SCEV
+comment|// expansion.
+name|class
+name|SCEVInsertPointGuard
+block|{
+name|IRBuilderBase
+modifier|&
+name|Builder
+decl_stmt|;
+name|AssertingVH
+operator|<
+name|BasicBlock
+operator|>
+name|Block
+expr_stmt|;
+name|BasicBlock
+operator|::
+name|iterator
+name|Point
+expr_stmt|;
+name|DebugLoc
+name|DbgLoc
+decl_stmt|;
+name|SCEVExpander
+modifier|*
+name|SE
+decl_stmt|;
+name|SCEVInsertPointGuard
+argument_list|(
+specifier|const
+name|SCEVInsertPointGuard
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|SCEVInsertPointGuard
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|SCEVInsertPointGuard
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|public
+label|:
+name|SCEVInsertPointGuard
+argument_list|(
+name|IRBuilderBase
+operator|&
+name|B
+argument_list|,
+name|SCEVExpander
+operator|*
+name|SE
+argument_list|)
+operator|:
+name|Builder
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|Block
+argument_list|(
+name|B
+operator|.
+name|GetInsertBlock
+argument_list|()
+argument_list|)
+operator|,
+name|Point
+argument_list|(
+name|B
+operator|.
+name|GetInsertPoint
+argument_list|()
+argument_list|)
+operator|,
+name|DbgLoc
+argument_list|(
+name|B
+operator|.
+name|getCurrentDebugLocation
+argument_list|()
+argument_list|)
+operator|,
+name|SE
+argument_list|(
+argument|SE
+argument_list|)
+block|{
+name|SE
+operator|->
+name|InsertPointGuards
+operator|.
+name|push_back
+argument_list|(
+name|this
+argument_list|)
+block|;       }
+operator|~
+name|SCEVInsertPointGuard
+argument_list|()
+block|{
+comment|// These guards should always created/destroyed in FIFO order since they
+comment|// are used to guard lexically scoped blocks of code in
+comment|// ScalarEvolutionExpander.
+name|assert
+argument_list|(
+name|SE
+operator|->
+name|InsertPointGuards
+operator|.
+name|back
+argument_list|()
+operator|==
+name|this
+argument_list|)
+block|;
+name|SE
+operator|->
+name|InsertPointGuards
+operator|.
+name|pop_back
+argument_list|()
+block|;
+name|Builder
+operator|.
+name|restoreIP
+argument_list|(
+name|IRBuilderBase
+operator|::
+name|InsertPoint
+argument_list|(
+name|Block
+argument_list|,
+name|Point
+argument_list|)
+argument_list|)
+block|;
+name|Builder
+operator|.
+name|SetCurrentDebugLocation
+argument_list|(
+name|DbgLoc
+argument_list|)
+block|;       }
+name|BasicBlock
+operator|::
+name|iterator
+name|GetInsertPoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Point
+return|;
+block|}
+name|void
+name|SetInsertPoint
+argument_list|(
+name|BasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|)
+block|{
+name|Point
+operator|=
+name|I
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|/// Stack of pointers to saved insert points, used to keep insert points
+comment|/// consistent when instructions are moved.
+name|SmallVector
+operator|<
+name|SCEVInsertPointGuard
+operator|*
+operator|,
+literal|8
+operator|>
+name|InsertPointGuards
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -361,6 +551,19 @@ block|;
 endif|#
 directive|endif
 block|}
+operator|~
+name|SCEVExpander
+argument_list|()
+block|{
+comment|// Make sure the insert point guard stack is consistent.
+name|assert
+argument_list|(
+name|InsertPointGuards
+operator|.
+name|empty
+argument_list|()
+argument_list|)
+block|;     }
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -540,6 +743,26 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
+comment|/// \brief Insert code to directly compute the specified SCEV expression
+comment|/// into the program.  The inserted code is inserted into the SCEVExpander's
+comment|/// current insertion point. If a type is specified, the result will be
+comment|/// expanded to have that type, with a cast if necessary.
+name|Value
+modifier|*
+name|expandCodeFor
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|SH
+parameter_list|,
+name|Type
+modifier|*
+name|Ty
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// \brief Generates a code sequence that evaluates this predicate.
 comment|/// The inserted instructions will be at position \p Loc.
 comment|/// The result will be of type i1 and will have a value of 0 when the
@@ -568,6 +791,41 @@ specifier|const
 name|SCEVEqualPredicate
 modifier|*
 name|Pred
+parameter_list|,
+name|Instruction
+modifier|*
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief Generates code that evaluates if the \p AR expression will
+comment|/// overflow.
+name|Value
+modifier|*
+name|generateOverflowCheck
+parameter_list|(
+specifier|const
+name|SCEVAddRecExpr
+modifier|*
+name|AR
+parameter_list|,
+name|Instruction
+modifier|*
+name|Loc
+parameter_list|,
+name|bool
+name|Signed
+parameter_list|)
+function_decl|;
+comment|/// \brief A specialized variant of expandCodeForPredicate, handling the
+comment|/// case when we are expanding code for a SCEVWrapPredicate.
+name|Value
+modifier|*
+name|expandWrapPredicate
+parameter_list|(
+specifier|const
+name|SCEVWrapPredicate
+modifier|*
+name|P
 parameter_list|,
 name|Instruction
 modifier|*
@@ -682,6 +940,31 @@ block|{
 name|LSRMode
 operator|=
 name|true
+expr_stmt|;
+block|}
+comment|/// \brief Set the current insertion point. This is useful if multiple calls
+comment|/// to expandCodeFor() are going to be made with the same insert point and
+comment|/// the insert point may be moved during one of the expansions (e.g. if the
+comment|/// insert point is not a block terminator).
+name|void
+name|setInsertPoint
+parameter_list|(
+name|Instruction
+modifier|*
+name|IP
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|IP
+argument_list|)
+expr_stmt|;
+name|Builder
+operator|.
+name|SetInsertPoint
+argument_list|(
+name|IP
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Clear the current insertion point. This is useful if the
@@ -905,6 +1188,22 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+comment|/// \brief Find a previous Value in ExprValueMap for expand.
+name|Value
+modifier|*
+name|FindValueInExprValueMap
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|InsertPt
+parameter_list|)
+function_decl|;
 name|Value
 modifier|*
 name|expand
@@ -913,26 +1212,6 @@ specifier|const
 name|SCEV
 modifier|*
 name|S
-parameter_list|)
-function_decl|;
-comment|/// \brief Insert code to directly compute the specified SCEV expression
-comment|/// into the program.  The inserted code is inserted into the SCEVExpander's
-comment|/// current insertion point. If a type is specified, the result will be
-comment|/// expanded to have that type, with a cast if necessary.
-name|Value
-modifier|*
-name|expandCodeFor
-parameter_list|(
-specifier|const
-name|SCEV
-modifier|*
-name|SH
-parameter_list|,
-name|Type
-modifier|*
-name|Ty
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine the most "relevant" loop for the given SCEV.
@@ -1180,6 +1459,34 @@ name|IntTy
 parameter_list|,
 name|bool
 name|useSubtract
+parameter_list|)
+function_decl|;
+name|void
+name|hoistBeforePos
+parameter_list|(
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|,
+name|Instruction
+modifier|*
+name|InstToHoist
+parameter_list|,
+name|Instruction
+modifier|*
+name|Pos
+parameter_list|,
+name|PHINode
+modifier|*
+name|LoopPhi
+parameter_list|)
+function_decl|;
+name|void
+name|fixupInsertPoints
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
 parameter_list|)
 function_decl|;
 block|}

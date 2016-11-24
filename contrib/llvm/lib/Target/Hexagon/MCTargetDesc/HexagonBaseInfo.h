@@ -664,6 +664,26 @@ name|MO_HI16
 block|,
 comment|// Offset from the base of the SDA.
 name|MO_GPREL
+block|,
+comment|// MO_GDGOT - indicates GOT relative relocation for TLS
+comment|// GeneralDynamic method
+name|MO_GDGOT
+block|,
+comment|// MO_GDPLT - indicates PLT relative relocation for TLS
+comment|// GeneralDynamic method
+name|MO_GDPLT
+block|,
+comment|// MO_IE - indicates non PIC relocation for TLS
+comment|// Initial Executable method
+name|MO_IE
+block|,
+comment|// MO_IEGOT - indicates PIC relocation for TLS
+comment|// Initial Executable method
+name|MO_IEGOT
+block|,
+comment|// MO_TPREL - indicates relocation for TLS
+comment|// local Executable method
+name|MO_TPREL
 block|}
 enum|;
 comment|// Hexagon Sub-instruction classes.

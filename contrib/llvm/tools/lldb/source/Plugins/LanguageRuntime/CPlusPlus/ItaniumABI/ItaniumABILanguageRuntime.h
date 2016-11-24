@@ -54,6 +54,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -75,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Breakpoint/BreakpointResolver.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/Type.h"
 end_include
 
 begin_include
@@ -275,6 +293,19 @@ argument_list|)
 block|;
 name|private
 operator|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|lldb_private
+operator|::
+name|Address
+operator|,
+name|TypeAndOrName
+operator|>
+name|DynamicTypeCache
+expr_stmt|;
 name|ItaniumABILanguageRuntime
 argument_list|(
 name|Process
@@ -282,24 +313,90 @@ operator|*
 name|process
 argument_list|)
 operator|:
+comment|// Call CreateInstance instead.
 name|lldb_private
 operator|::
 name|CPPLanguageRuntime
 argument_list|(
-argument|process
+name|process
 argument_list|)
-block|{ }
-comment|// Call CreateInstance instead.
+block|,
+name|m_cxx_exception_bp_sp
+argument_list|()
+block|,
+name|m_dynamic_type_map
+argument_list|()
+block|,
+name|m_dynamic_type_map_mutex
+argument_list|()
+block|{         }
 name|lldb
 operator|::
 name|BreakpointSP
 name|m_cxx_exception_bp_sp
-block|;     }
+decl_stmt|;
+name|DynamicTypeCache
+name|m_dynamic_type_map
+decl_stmt|;
+name|std
+operator|::
+name|mutex
+name|m_dynamic_type_map_mutex
+expr_stmt|;
+name|TypeAndOrName
+name|GetTypeInfoFromVTableAddress
+argument_list|(
+name|ValueObject
+operator|&
+name|in_value
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|original_ptr
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|vtable_addr
+argument_list|)
+decl_stmt|;
+name|TypeAndOrName
+name|GetDynamicTypeInfo
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|Address
+operator|&
+name|vtable_addr
+argument_list|)
+decl_stmt|;
+name|void
+name|SetDynamicTypeInfo
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|Address
+operator|&
+name|vtable_addr
+argument_list|,
+specifier|const
+name|TypeAndOrName
+operator|&
+name|type_info
+argument_list|)
 decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb_private
 end_comment
 

@@ -163,7 +163,12 @@ argument_list|)
 block|{
 name|Prefix
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Value
+argument_list|)
 block|; }
 name|void
 name|BeginSourceFile

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_AMDGPUINTRINSICINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUINTRINSICINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_AMDGPUINTRINSICINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_AMDGPUINTRINSICINFO_H
 end_define
 
 begin_include
@@ -113,6 +113,7 @@ block|}
 comment|// end namespace AMDGPUIntrinsic
 name|class
 name|AMDGPUIntrinsicInfo
+name|final
 range|:
 name|public
 name|TargetIntrinsicInfo
@@ -121,6 +122,15 @@ name|public
 operator|:
 name|AMDGPUIntrinsicInfo
 argument_list|()
+block|;
+name|StringRef
+name|getName
+argument_list|(
+argument|unsigned IntrId
+argument_list|,
+argument|ArrayRef<Type *> Tys = None
+argument_list|)
+specifier|const
 block|;
 name|std
 operator|::
@@ -131,7 +141,7 @@ argument|unsigned IntrId
 argument_list|,
 argument|Type **Tys = nullptr
 argument_list|,
-argument|unsigned numTys =
+argument|unsigned NumTys =
 literal|0
 argument_list|)
 specifier|const
@@ -165,11 +175,35 @@ argument|unsigned ID
 argument_list|,
 argument|Type **Tys = nullptr
 argument_list|,
-argument|unsigned numTys =
+argument|unsigned NumTys =
 literal|0
 argument_list|)
 specifier|const
 name|override
+block|;
+name|Function
+operator|*
+name|getDeclaration
+argument_list|(
+argument|Module *M
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ArrayRef<Type *> = None
+argument_list|)
+specifier|const
+block|;
+name|FunctionType
+operator|*
+name|getType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ArrayRef<Type*> Tys = None
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

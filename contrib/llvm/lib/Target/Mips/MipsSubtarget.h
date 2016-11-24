@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
 end_include
 
 begin_include
@@ -243,6 +243,10 @@ comment|// IsFP64bit - General-purpose registers are 64 bits wide
 name|bool
 name|IsGP64bit
 block|;
+comment|// IsPTR64bit - Pointers are 64 bit wide
+name|bool
+name|IsPTR64bit
+block|;
 comment|// HasVFPU - Processor has a vector floating point unit.
 name|bool
 name|HasVFPU
@@ -350,7 +354,7 @@ name|Triple
 name|TargetTriple
 block|;
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 name|TSInfo
 block|;
 name|std
@@ -382,6 +386,11 @@ name|TLInfo
 block|;
 name|public
 operator|:
+name|bool
+name|isPositionIndependent
+argument_list|()
+specifier|const
+block|;
 comment|/// This overrides the PostRAScheduler bit in the SchedModel for each CPU.
 name|bool
 name|enablePostRAScheduler
@@ -404,12 +413,6 @@ name|getOptLevelToEnablePostRAScheduler
 argument_list|()
 specifier|const
 name|override
-block|;
-comment|/// Only O32 and EABI supported right now.
-name|bool
-name|isABI_EABI
-argument_list|()
-specifier|const
 block|;
 name|bool
 name|isABI_N64
@@ -806,6 +809,25 @@ literal|4
 return|;
 block|}
 name|bool
+name|isPTR64bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPTR64bit
+return|;
+block|}
+name|bool
+name|isPTR32bit
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsPTR64bit
+return|;
+block|}
+name|bool
 name|isSingleFloat
 argument_list|()
 specifier|const
@@ -1100,7 +1122,7 @@ name|setHelperClassesMipsSE
 argument_list|()
 block|;
 specifier|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 operator|*
 name|getSelectionDAGInfo
 argument_list|()

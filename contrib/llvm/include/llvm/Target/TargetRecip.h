@@ -80,7 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<cstdint>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_include
@@ -92,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -275,13 +281,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETRECIP_H
+end_comment
 
 end_unit
 

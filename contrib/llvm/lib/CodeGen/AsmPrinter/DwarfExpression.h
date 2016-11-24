@@ -99,11 +99,6 @@ block|{
 name|protected
 label|:
 comment|// Various convenience accessors that extract things out of AsmPrinter.
-specifier|const
-name|TargetRegisterInfo
-modifier|&
-name|TRI
-decl_stmt|;
 name|unsigned
 name|DwarfVersion
 decl_stmt|;
@@ -111,16 +106,9 @@ name|public
 label|:
 name|DwarfExpression
 argument_list|(
-argument|const TargetRegisterInfo&TRI
-argument_list|,
 argument|unsigned DwarfVersion
 argument_list|)
 block|:
-name|TRI
-argument_list|(
-name|TRI
-argument_list|)
-operator|,
 name|DwarfVersion
 argument_list|(
 argument|DwarfVersion
@@ -171,6 +159,11 @@ name|virtual
 name|bool
 name|isFrameRegister
 parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
 name|unsigned
 name|MachineReg
 parameter_list|)
@@ -231,11 +224,32 @@ name|unsigned
 name|ShiftBy
 parameter_list|)
 function_decl|;
+comment|/// Emit a DW_OP_stack_value, if supported.
+comment|///
+comment|/// The proper way to describe a constant value is
+comment|/// DW_OP_constu<const>, DW_OP_stack_value.
+comment|/// Unfortunately, DW_OP_stack_value was not available until DWARF-4,
+comment|/// so we will continue to generate DW_OP_constu<const> for DWARF-2
+comment|/// and DWARF-3. Technically, this is incorrect since DW_OP_const<const>
+comment|/// actually describes a value at a constant addess, not a constant value.
+comment|/// However, in the past there was no better way  to describe a constant
+comment|/// value, so the producers and consumers started to rely on heuristics
+comment|/// to disambiguate the value vs. location status of the expression.
+comment|/// See PR21176 for more details.
+name|void
+name|AddStackValue
+parameter_list|()
+function_decl|;
 comment|/// Emit an indirect dwarf register operation for the given machine register.
 comment|/// \return false if no DWARF register exists for MachineReg.
 name|bool
 name|AddMachineRegIndirect
 parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
 name|unsigned
 name|MachineReg
 parameter_list|,
@@ -262,6 +276,11 @@ comment|/// \return false if no DWARF register exists for MachineReg.
 name|bool
 name|AddMachineRegPiece
 parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
 name|unsigned
 name|MachineReg
 parameter_list|,
@@ -280,7 +299,7 @@ comment|/// Emit a signed constant.
 name|void
 name|AddSignedConstant
 parameter_list|(
-name|int
+name|int64_t
 name|Value
 parameter_list|)
 function_decl|;
@@ -288,7 +307,17 @@ comment|/// Emit an unsigned constant.
 name|void
 name|AddUnsignedConstant
 parameter_list|(
-name|unsigned
+name|uint64_t
+name|Value
+parameter_list|)
+function_decl|;
+comment|/// Emit an unsigned constant.
+name|void
+name|AddUnsignedConstant
+parameter_list|(
+specifier|const
+name|APInt
+modifier|&
 name|Value
 parameter_list|)
 function_decl|;
@@ -300,6 +329,11 @@ comment|/// \return false if no DWARF register exists for MachineReg.
 name|bool
 name|AddMachineRegExpression
 parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|TRI
+parameter_list|,
 specifier|const
 name|DIExpression
 modifier|*
@@ -353,8 +387,6 @@ name|public
 operator|:
 name|DebugLocDwarfExpression
 argument_list|(
-argument|const TargetRegisterInfo&TRI
-argument_list|,
 argument|unsigned DwarfVersion
 argument_list|,
 argument|ByteStreamer&BS
@@ -362,8 +394,6 @@ argument_list|)
 operator|:
 name|DwarfExpression
 argument_list|(
-name|TRI
-argument_list|,
 name|DwarfVersion
 argument_list|)
 block|,
@@ -398,6 +428,8 @@ block|;
 name|bool
 name|isFrameRegister
 argument_list|(
+argument|const TargetRegisterInfo&TRI
+argument_list|,
 argument|unsigned MachineReg
 argument_list|)
 name|override
@@ -467,6 +499,8 @@ block|;
 name|bool
 name|isFrameRegister
 argument_list|(
+argument|const TargetRegisterInfo&TRI
+argument_list|,
 argument|unsigned MachineReg
 argument_list|)
 name|override

@@ -93,6 +93,9 @@ decl_stmt|;
 name|class
 name|InlineCost
 decl_stmt|;
+name|class
+name|ProfileSummaryInfo
+decl_stmt|;
 name|template
 operator|<
 name|class
@@ -125,8 +128,6 @@ name|explicit
 name|Inliner
 argument_list|(
 argument|char&ID
-argument_list|,
-argument|int Threshold
 argument_list|,
 argument|bool InsertLifetime
 argument_list|)
@@ -167,30 +168,6 @@ argument|CallGraph&CG
 argument_list|)
 name|override
 block|;
-comment|/// This method returns the value specified by the -inline-threshold value,
-comment|/// specified on the command line.  This is typically not directly needed.
-comment|///
-name|unsigned
-name|getInlineThreshold
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InlineThreshold
-return|;
-block|}
-comment|/// Calculate the inline threshold for given Caller. This threshold is lower
-comment|/// if the caller is marked with OptimizeForSize and -inline-threshold is not
-comment|/// given on the comand line. It is higher if the callee is marked with the
-comment|/// inlinehint attribute.
-comment|///
-name|unsigned
-name|getInlineThreshold
-argument_list|(
-argument|CallSite CS
-argument_list|)
-specifier|const
-block|;
 comment|/// getInlineCost - This method must be implemented by the subclass to
 comment|/// determine the cost of inlining the specified call site.  If the cost
 comment|/// returned is greater than the current inline threshold, the call site is
@@ -219,12 +196,20 @@ argument_list|,
 argument|bool AlwaysInlineOnly = false
 argument_list|)
 block|;
+comment|/// This function performs the main work of the pass.  The default
+comment|/// of Inlinter::runOnSCC() calls skipSCC() before calling this method, but
+comment|/// derived classes which cannot be skipped can override that method and
+comment|/// call this function unconditionally.
+name|bool
+name|inlineCalls
+argument_list|(
+name|CallGraphSCC
+operator|&
+name|SCC
+argument_list|)
+block|;
 name|private
 operator|:
-comment|// InlineThreshold - Cache the value here for easy access.
-name|unsigned
-name|InlineThreshold
-block|;
 comment|// InsertLifetime - Insert @llvm.lifetime intrinsics.
 name|bool
 name|InsertLifetime
@@ -237,11 +222,32 @@ argument_list|(
 argument|CallSite CS
 argument_list|)
 block|;
+comment|/// Return true if inlining of CS can block the caller from being
+comment|/// inlined which is proved to be more beneficial. \p IC is the
+comment|/// estimated inline cost associated with callsite \p CS.
+comment|/// \p TotalAltCost will be set to the estimated cost of inlining the caller
+comment|/// if \p CS is suppressed for inlining.
+name|bool
+name|shouldBeDeferred
+argument_list|(
+argument|Function *Caller
+argument_list|,
+argument|CallSite CS
+argument_list|,
+argument|InlineCost IC
+argument_list|,
+argument|int&TotalAltCost
+argument_list|)
+block|;
 name|protected
 operator|:
 name|AssumptionCacheTracker
 operator|*
 name|ACT
+block|;
+name|ProfileSummaryInfo
+operator|*
+name|PSI
 block|; }
 decl_stmt|;
 block|}

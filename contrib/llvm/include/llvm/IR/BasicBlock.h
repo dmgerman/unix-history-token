@@ -390,6 +390,35 @@ name|getTerminator
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the call instruction calling @llvm.experimental.deoptimize
+comment|/// prior to the terminating return instruction of this basic block, if such a
+comment|/// call is present.  Otherwise, returns null.
+name|CallInst
+modifier|*
+name|getTerminatingDeoptimizeCall
+parameter_list|()
+function_decl|;
+specifier|const
+name|CallInst
+operator|*
+name|getTerminatingDeoptimizeCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTerminatingDeoptimizeCall
+argument_list|()
+return|;
+block|}
 comment|/// \brief Returns the call instruction marked 'musttail' prior to the
 comment|/// terminating return instruction of this basic block, if such a call is
 comment|/// present.  Otherwise, returns null.

@@ -151,7 +151,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
@@ -187,7 +187,7 @@ name|ProcessElfCore
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec&core_file
 argument_list|)
@@ -294,6 +294,17 @@ argument|lldb_private::Error&error
 argument_list|)
 name|override
 block|;
+name|lldb_private
+operator|::
+name|Error
+name|GetMemoryRegionInfo
+argument_list|(
+argument|lldb::addr_t load_addr
+argument_list|,
+argument|lldb_private::MemoryRegionInfo&region_info
+argument_list|)
+name|override
+block|;
 name|lldb
 operator|::
 name|addr_t
@@ -314,6 +325,13 @@ operator|::
 name|DataBufferSP
 name|GetAuxvData
 argument_list|()
+name|override
+block|;
+name|bool
+name|GetProcessInfo
+argument_list|(
+argument|lldb_private::ProcessInstanceInfo&info
+argument_list|)
 name|override
 block|;
 name|protected
@@ -396,6 +414,26 @@ operator|,
 literal|1
 operator|>
 name|VMRangeToFileOffset
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|lldb_private
+operator|::
+name|RangeDataVector
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|uint32_t
+operator|>
+name|VMRangeToPermissions
 expr_stmt|;
 end_typedef
 
@@ -485,6 +523,16 @@ end_comment
 begin_decl_stmt
 name|VMRangeToFileOffset
 name|m_core_aranges
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Permissions for all ranges
+end_comment
+
+begin_decl_stmt
+name|VMRangeToPermissions
+name|m_core_range_infos
 decl_stmt|;
 end_decl_stmt
 

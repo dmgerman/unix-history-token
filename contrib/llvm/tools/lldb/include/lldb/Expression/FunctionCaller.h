@@ -217,8 +217,13 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Compile the wrapper function
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to print parser errors to.
+comment|/// @param[in] thread_to_use_sp
+comment|///     Compilation might end up calling functions.  Pass in the thread you
+comment|///     want the compilation to use.  If you pass in an empty ThreadSP it will
+comment|///     use the currently selected thread.
+comment|///
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report parser errors to.
 comment|///
 comment|/// @return
 comment|///     The number of errors.
@@ -227,9 +232,9 @@ name|virtual
 name|unsigned
 name|CompileFunction
 argument_list|(
-name|Stream
-operator|&
-name|errors
+argument|lldb::ThreadSP thread_to_use_sp
+argument_list|,
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 operator|=
 literal|0
@@ -246,8 +251,8 @@ comment|///     The address of the structure to write the arguments into.  May
 comment|///     be LLDB_INVALID_ADDRESS; if it is, a new structure is allocated
 comment|///     and args_addr_ref is pointed to it.
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @return
 comment|///     True on success; false otherwise.
@@ -265,9 +270,9 @@ name|addr_t
 operator|&
 name|args_addr_ref
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -277,8 +282,8 @@ comment|/// @param[in] exe_ctx
 comment|///     The execution context to insert the function and its arguments
 comment|///     into.
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @return
 comment|///     True on success; false otherwise.
@@ -290,9 +295,9 @@ name|ExecutionContext
 operator|&
 name|exe_ctx
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -307,8 +312,8 @@ comment|///     The address of the structure to write the arguments into.  May
 comment|///     be LLDB_INVALID_ADDRESS; if it is, a new structure is allocated
 comment|///     and args_addr_ref is pointed to it.
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @return
 comment|///     True on success; false otherwise.
@@ -326,9 +331,9 @@ name|addr_t
 operator|&
 name|args_addr_ref
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -347,8 +352,8 @@ comment|///
 comment|/// @param[in] arg_values
 comment|///     The values of the function's arguments.
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @return
 comment|///     True on success; false otherwise.
@@ -370,9 +375,9 @@ name|ValueList
 operator|&
 name|arg_values
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -390,8 +395,8 @@ comment|///     will be allocated, filled and the address returned to you.  You 
 comment|///     for deallocating it.  And if passed in with a value other than LLDB_INVALID_ADDRESS,
 comment|///     this should point to an already allocated structure with the values already written.
 comment|///
-comment|/// @param[in] errors
-comment|///     Errors will be written here if there are any.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @param[in] options
 comment|///     The options for this expression execution.
@@ -422,9 +427,9 @@ name|EvaluateExpressionOptions
 operator|&
 name|options
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|,
 name|Value
 operator|&
@@ -444,8 +449,8 @@ comment|///
 comment|/// @param[in] args_addr
 comment|///     The address of the argument struct.
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to write errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report errors to.
 comment|///
 comment|/// @param[in] stop_others
 comment|///     True if other threads should pause during execution.
@@ -467,7 +472,7 @@ argument|lldb::addr_t args_addr
 argument_list|,
 argument|const EvaluateExpressionOptions&options
 argument_list|,
-argument|Stream&errors
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------

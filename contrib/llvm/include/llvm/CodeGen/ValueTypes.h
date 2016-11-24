@@ -513,6 +513,25 @@ name|isExtendedInteger
 argument_list|()
 return|;
 block|}
+comment|/// isScalarInteger - Return true if this is an integer, but not a vector.
+name|bool
+name|isScalarInteger
+argument_list|()
+decl|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+condition|?
+name|V
+operator|.
+name|isScalarInteger
+argument_list|()
+else|:
+name|isExtendedScalarInteger
+argument_list|()
+return|;
+block|}
 comment|/// isVector - Return true if this is a vector value type.
 name|bool
 name|isVector
@@ -1545,6 +1564,12 @@ specifier|const
 name|LLVM_READONLY
 expr_stmt|;
 name|bool
+name|isExtendedScalarInteger
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+name|bool
 name|isExtendedVector
 argument_list|()
 specifier|const
@@ -1613,6 +1638,7 @@ name|unsigned
 name|getExtendedSizeInBits
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 block|}
 end_decl_stmt

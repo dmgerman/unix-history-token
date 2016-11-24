@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<system_error>
 end_include
 
@@ -102,9 +96,6 @@ name|Function
 decl_stmt|;
 name|class
 name|GlobalValue
-decl_stmt|;
-name|class
-name|Metadata
 decl_stmt|;
 name|class
 name|Module
@@ -169,29 +160,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// Client should define this interface if the mapping between metadata
-comment|/// values and value ids needs to be preserved, e.g. across materializer
-comment|/// instantiations. If OnlyTempMD is true, only those that have remained
-comment|/// temporary metadata are recorded in the map.
-name|virtual
-name|void
-name|saveMetadataList
-argument_list|(
-name|DenseMap
-operator|<
-specifier|const
-name|Metadata
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-name|MetadataToIDs
-argument_list|,
-name|bool
-name|OnlyTempMD
-argument_list|)
-block|{}
 name|virtual
 name|std
 operator|::

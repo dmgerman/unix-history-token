@@ -65,12 +65,6 @@ begin_comment
 comment|// Project includes
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -1041,6 +1035,9 @@ operator|::
 name|const_iterator
 operator|&
 operator|)
+operator|,
+name|typename
+name|MutexType
 operator|>
 name|class
 name|LockingAdaptedIterable
@@ -1063,7 +1060,7 @@ name|C
 operator|&
 name|container
 argument_list|,
-name|Mutex
+name|MutexType
 operator|&
 name|mutex
 argument_list|)
@@ -1087,7 +1084,7 @@ argument_list|)
 block|{
 name|m_mutex
 operator|->
-name|Lock
+name|lock
 argument_list|()
 block|;     }
 name|LockingAdaptedIterable
@@ -1130,13 +1127,13 @@ name|m_mutex
 condition|)
 name|m_mutex
 operator|->
-name|Unlock
+name|unlock
 argument_list|()
 expr_stmt|;
 block|}
 name|private
 operator|:
-name|Mutex
+name|MutexType
 operator|*
 name|m_mutex
 operator|=
@@ -1153,7 +1150,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};      }
+unit|};  }
 comment|// namespace lldb_private
 end_comment
 

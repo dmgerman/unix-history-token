@@ -3,10 +3,6 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_comment
-comment|/* include/llvm/Config/config.h.cmake corresponding to config.h.in. */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -71,16 +67,6 @@ name|ENABLE_CRASH_OVERRIDES
 end_define
 
 begin_comment
-comment|/* Define to disable C++ atexit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DISABLE_LLVM_DYLIB_ATEXIT
-end_define
-
-begin_comment
 comment|/* Define if position independent code is enabled */
 end_comment
 
@@ -89,14 +75,6 @@ define|#
 directive|define
 name|ENABLE_PIC
 end_define
-
-begin_comment
-comment|/* Define if timestamp information (e.g., __DATE__) is allowed */
-end_comment
-
-begin_comment
-comment|/* #undef ENABLE_TIMESTAMPS */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `arc4random' function. */
@@ -896,6 +874,17 @@ name|HAVE_SHL_LOAD
 end_undef
 
 begin_comment
+comment|/* Define to 1 if you have the `sigaltstack' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGALTSTACK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `siglongjmp' function. */
 end_comment
 
@@ -1103,9 +1092,12 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/types.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_TYPES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/uio.h> header file. */
@@ -1128,6 +1120,14 @@ directive|define
 name|HAVE_TERMINFO
 value|1
 end_define
+
+begin_comment
+comment|/* Define if the xar_open() function is supported this platform. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBXAR */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<termios.h> header file. */
@@ -1161,6 +1161,14 @@ directive|define
 name|HAVE_UNISTD_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `_Unwind_Backtrace' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UNWIND_BACKTRACE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<utime.h> header file. */
@@ -1643,7 +1651,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|8
+value|9
 end_define
 
 begin_comment
@@ -1665,8 +1673,16 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.8.0"
+value|"3.9.0"
 end_define
+
+begin_comment
+comment|/* LLVM version information */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_VERSION_INFO */
+end_comment
 
 begin_comment
 comment|/* Define if we link Polly to the tools */
@@ -1763,7 +1779,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.8.0"
+value|"LLVM 3.9.0"
 end_define
 
 begin_comment
@@ -1784,8 +1800,16 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.8.0"
+value|"3.9.0"
 end_define
+
+begin_comment
+comment|/* Define to the vendor of this package. */
+end_comment
+
+begin_comment
+comment|/* #undef PACKAGE_VENDOR */
+end_comment
 
 begin_comment
 comment|/* Define as the return type of signal handlers (`int' or `void'). */
@@ -1837,14 +1861,6 @@ undef|#
 directive|undef
 name|TM_IN_SYS_TIME
 end_undef
-
-begin_comment
-comment|/* Type of 1st arg on ELM Callback */
-end_comment
-
-begin_comment
-comment|/* #undef WIN32_ELMCB_PCSTR */
-end_comment
 
 begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */

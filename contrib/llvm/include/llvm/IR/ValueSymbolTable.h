@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -94,6 +88,14 @@ name|ValueSubClass
 operator|>
 name|class
 name|SymbolTableListTraits
+expr_stmt|;
+name|template
+operator|<
+name|unsigned
+name|InternalLen
+operator|>
+name|class
+name|SmallString
 expr_stmt|;
 name|class
 name|BasicBlock
@@ -161,6 +163,13 @@ name|class
 name|SymbolTableListTraits
 operator|<
 name|GlobalAlias
+operator|>
+expr_stmt|;
+name|friend
+name|class
+name|SymbolTableListTraits
+operator|<
+name|GlobalIFunc
 operator|>
 expr_stmt|;
 comment|/// @name Types

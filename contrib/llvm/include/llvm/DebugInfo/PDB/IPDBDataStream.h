@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 comment|/// IPDBDataStream defines an interface used to represent a stream consisting
 comment|/// of a name and a series of records whose formats depend on the particular
 comment|/// stream type.
@@ -151,6 +154,7 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_decl_stmt
 

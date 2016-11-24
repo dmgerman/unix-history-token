@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntervalMap.h"
 end_include
 
@@ -136,6 +142,143 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+comment|/// Determines the latest safe point in a block in which we can insert a split,
+comment|/// spill or other instruction related with CurLI.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|InsertPointAnalysis
+block|{
+name|private
+label|:
+specifier|const
+name|LiveIntervals
+modifier|&
+name|LIS
+decl_stmt|;
+comment|/// Last legal insert point in each basic block in the current function.
+comment|/// The first entry is the first terminator, the second entry is the
+comment|/// last valid point to insert a split or spill for a variable that is
+comment|/// live into a landing pad successor.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|SlotIndex
+operator|,
+name|SlotIndex
+operator|>
+operator|,
+literal|8
+operator|>
+name|LastInsertPoint
+expr_stmt|;
+name|SlotIndex
+name|computeLastInsertPoint
+parameter_list|(
+specifier|const
+name|LiveInterval
+modifier|&
+name|CurLI
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+function_decl|;
+name|public
+label|:
+name|InsertPointAnalysis
+argument_list|(
+argument|const LiveIntervals&lis
+argument_list|,
+argument|unsigned BBNum
+argument_list|)
+empty_stmt|;
+comment|/// Return the base index of the last valid insert point for \pCurLI in \pMBB.
+name|SlotIndex
+name|getLastInsertPoint
+parameter_list|(
+specifier|const
+name|LiveInterval
+modifier|&
+name|CurLI
+parameter_list|,
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
+parameter_list|)
+block|{
+name|unsigned
+name|Num
+init|=
+name|MBB
+operator|.
+name|getNumber
+argument_list|()
+decl_stmt|;
+comment|// Inline the common simple case.
+if|if
+condition|(
+name|LastInsertPoint
+index|[
+name|Num
+index|]
+operator|.
+name|first
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+operator|!
+name|LastInsertPoint
+index|[
+name|Num
+index|]
+operator|.
+name|second
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return
+name|LastInsertPoint
+index|[
+name|Num
+index|]
+operator|.
+name|first
+return|;
+return|return
+name|computeLastInsertPoint
+argument_list|(
+name|CurLI
+argument_list|,
+name|MBB
+argument_list|)
+return|;
+block|}
+comment|/// Returns the last insert point as an iterator for \pCurLI in \pMBB.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getLastInsertPointIter
+argument_list|(
+specifier|const
+name|LiveInterval
+operator|&
+name|CurLI
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/// SplitAnalysis - Analyze a LiveInterval, looking for live range splitting
 comment|/// opportunities.
 name|class
@@ -241,6 +384,10 @@ name|LiveInterval
 modifier|*
 name|CurLI
 decl_stmt|;
+comment|/// Insert Point Analysis.
+name|InsertPointAnalysis
+name|IPA
+decl_stmt|;
 comment|// Sorted slot indexes of using instructions.
 name|SmallVector
 operator|<
@@ -249,25 +396,6 @@ operator|,
 literal|8
 operator|>
 name|UseSlots
-expr_stmt|;
-comment|/// LastSplitPoint - Last legal split point in each basic block in the current
-comment|/// function. The first entry is the first terminator, the second entry is the
-comment|/// last valid split point for a variable that is live in to a landing pad
-comment|/// successor.
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|SlotIndex
-operator|,
-name|SlotIndex
-operator|>
-operator|,
-literal|8
-operator|>
-name|LastSplitPoint
 expr_stmt|;
 comment|/// UseBlocks - Blocks where CurLI has uses.
 name|SmallVector
@@ -295,13 +423,6 @@ comment|/// DidRepairRange - analyze was forced to shrinkToUses().
 name|bool
 name|DidRepairRange
 decl_stmt|;
-name|SlotIndex
-name|computeLastSplitPoint
-parameter_list|(
-name|unsigned
-name|Num
-parameter_list|)
-function_decl|;
 comment|// Sumarize statistics by counting instructions using CurLI.
 name|void
 name|analyzeUses
@@ -374,64 +495,6 @@ operator|*
 name|CurLI
 return|;
 block|}
-comment|/// getLastSplitPoint - Return the base index of the last valid split point
-comment|/// in the basic block numbered Num.
-name|SlotIndex
-name|getLastSplitPoint
-parameter_list|(
-name|unsigned
-name|Num
-parameter_list|)
-block|{
-comment|// Inline the common simple case.
-if|if
-condition|(
-name|LastSplitPoint
-index|[
-name|Num
-index|]
-operator|.
-name|first
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-operator|!
-name|LastSplitPoint
-index|[
-name|Num
-index|]
-operator|.
-name|second
-operator|.
-name|isValid
-argument_list|()
-condition|)
-return|return
-name|LastSplitPoint
-index|[
-name|Num
-index|]
-operator|.
-name|first
-return|;
-return|return
-name|computeLastSplitPoint
-argument_list|(
-name|Num
-argument_list|)
-return|;
-block|}
-comment|/// getLastSplitPointIter - Returns the last split point as an iterator.
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|getLastSplitPointIter
-argument_list|(
-name|MachineBasicBlock
-operator|*
-argument_list|)
-expr_stmt|;
 comment|/// isOriginalEndpoint - Return true if the original live range was killed or
 comment|/// (re-)defined at Idx. Idx should be the 'def' slot for a normal kill/def,
 comment|/// and 'use' for an early-clobber def.
@@ -577,6 +640,52 @@ name|SingleInstrs
 argument_list|)
 decl|const
 decl_stmt|;
+name|SlotIndex
+name|getLastSplitPoint
+parameter_list|(
+name|unsigned
+name|Num
+parameter_list|)
+block|{
+return|return
+name|IPA
+operator|.
+name|getLastInsertPoint
+argument_list|(
+operator|*
+name|CurLI
+argument_list|,
+operator|*
+name|MF
+operator|.
+name|getBlockNumbered
+argument_list|(
+name|Num
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getLastSplitPointIter
+argument_list|(
+argument|MachineBasicBlock *BB
+argument_list|)
+block|{
+return|return
+name|IPA
+operator|.
+name|getLastInsertPointIter
+argument_list|(
+operator|*
+name|CurLI
+argument_list|,
+operator|*
+name|BB
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// SplitEditor - Edit machine code and LiveIntervals for live range
@@ -597,6 +706,10 @@ block|{
 name|SplitAnalysis
 modifier|&
 name|SA
+decl_stmt|;
+name|AliasAnalysis
+modifier|&
+name|AA
 decl_stmt|;
 name|LiveIntervals
 modifier|&
@@ -864,10 +977,31 @@ modifier|*
 name|DefMBB
 parameter_list|)
 function_decl|;
-comment|/// hoistCopiesForSize - Hoist back-copies to the complement interval in a
-comment|/// way that minimizes code size. This implements the SM_Size spill mode.
+comment|/// Find out all the backCopies dominated by others.
 name|void
-name|hoistCopiesForSize
+name|computeRedundantBackCopies
+argument_list|(
+name|DenseSet
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|NotToHoistSet
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|VNInfo
+operator|*
+operator|>
+operator|&
+name|BackCopies
+argument_list|)
+decl_stmt|;
+comment|/// Hoist back-copies to the complement interval. It tries to hoist all
+comment|/// the back-copies to one BB if it is beneficial, or else simply remove
+comment|/// redundant backcopies dominated by others.
+name|void
+name|hoistCopies
 parameter_list|()
 function_decl|;
 comment|/// transferValues - Transfer values to the new ranges.
@@ -904,6 +1038,10 @@ argument_list|(
 name|SplitAnalysis
 operator|&
 name|SA
+argument_list|,
+name|AliasAnalysis
+operator|&
+name|AA
 argument_list|,
 name|LiveIntervals
 operator|&

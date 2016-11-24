@@ -100,6 +100,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -244,6 +256,34 @@ name|Offset
 operator|+
 name|Length
 operator|)
+return|;
+block|}
+comment|/// \brief Whether this range equals to \p RHS or not.
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Range
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|Offset
+operator|==
+name|RHS
+operator|.
+name|getOffset
+argument_list|()
+operator|&&
+name|Length
+operator|==
+name|RHS
+operator|.
+name|getLength
+argument_list|()
 return|;
 block|}
 comment|/// @}
@@ -545,11 +585,19 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Applies all replacements in \p Replaces to \p Code.
 comment|///
-comment|/// This completely ignores the path stored in each replacement. If one or more
-comment|/// replacements cannot be applied, this returns an empty \c string.
+comment|/// This completely ignores the path stored in each replacement. If all
+comment|/// replacements are applied successfully, this returns the code with
+comment|/// replacements applied; otherwise, an llvm::Error carrying llvm::StringError
+comment|/// is returned (the Error message can be converted to string using
+comment|/// `llvm::toString()` and 'std::error_code` in the `Error` should be ignored).
+name|llvm
+operator|::
+name|Expected
+operator|<
 name|std
 operator|::
 name|string
+operator|>
 name|applyAllReplacements
 argument_list|(
 argument|StringRef Code
@@ -649,61 +697,76 @@ name|Replacements
 expr_stmt|;
 block|}
 struct|;
-comment|/// \brief Apply all replacements in \p Replaces to the Rewriter \p Rewrite.
+comment|/// \brief Calculates the ranges in a single file that are affected by the
+comment|/// Replacements. Overlapping ranges will be merged.
 comment|///
-comment|/// Replacement applications happen independently of the success of
-comment|/// other applications.
+comment|/// \pre Replacements must be for the same file.
 comment|///
-comment|/// \returns true if all replacements apply. false otherwise.
-name|bool
-name|applyAllReplacements
-parameter_list|(
+comment|/// \returns a non-overlapping and sorted ranges.
+name|std
+operator|::
+name|vector
+operator|<
+name|Range
+operator|>
+name|calculateChangedRanges
+argument_list|(
 specifier|const
 name|Replacements
-modifier|&
+operator|&
 name|Replaces
-parameter_list|,
-name|Rewriter
-modifier|&
-name|Rewrite
-parameter_list|)
-function_decl|;
-comment|/// \brief Apply all replacements in \p Replaces to the Rewriter \p Rewrite.
+argument_list|)
+expr_stmt|;
+comment|/// \brief Calculates the new ranges after \p Replaces are applied. These
+comment|/// include both the original \p Ranges and the affected ranges of \p Replaces
+comment|/// in the new code.
 comment|///
-comment|/// Replacement applications happen independently of the success of
-comment|/// other applications.
+comment|/// \pre Replacements must be for the same file.
 comment|///
-comment|/// \returns true if all replacements apply. false otherwise.
-name|bool
-name|applyAllReplacements
+comment|/// \return The new ranges after \p Replaces are applied. The new ranges will be
+comment|/// sorted and non-overlapping.
+name|std
+operator|::
+name|vector
+operator|<
+name|Range
+operator|>
+name|calculateRangesAfterReplacements
 argument_list|(
+specifier|const
+name|Replacements
+operator|&
+name|Replaces
+argument_list|,
 specifier|const
 name|std
 operator|::
 name|vector
 operator|<
-name|Replacement
+name|Range
 operator|>
 operator|&
-name|Replaces
-argument_list|,
-name|Rewriter
-operator|&
-name|Rewrite
+name|Ranges
 argument_list|)
-decl_stmt|;
-comment|/// \brief Applies all replacements in \p Replaces to \p Code.
-comment|///
-comment|/// This completely ignores the path stored in each replacement. If one or more
-comment|/// replacements cannot be applied, this returns an empty \c string.
+expr_stmt|;
+comment|/// \brief Groups a random set of replacements by file path. Replacements
+comment|/// related to the same file entry are put into the same vector.
+name|std
+operator|::
+name|map
+operator|<
 name|std
 operator|::
 name|string
-name|applyAllReplacements
+operator|,
+name|Replacements
+operator|>
+name|groupReplacementsByFile
 argument_list|(
-argument|StringRef Code
-argument_list|,
-argument|const Replacements&Replaces
+specifier|const
+name|Replacements
+operator|&
+name|Replaces
 argument_list|)
 expr_stmt|;
 comment|/// \brief Merges two sets of replacements with the second set referring to the

@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -1284,6 +1290,59 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Configuration point for MDNodeInfo::isEqual().
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+expr|struct
+name|MDNodeSubsetEqualImpl
+block|{
+typedef|typedef
+name|MDNodeKeyImpl
+operator|<
+name|NodeTy
+operator|>
+name|KeyTy
+expr_stmt|;
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const KeyTy&LHS
+argument_list|,
+argument|const NodeTy *RHS
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const NodeTy *LHS
+argument_list|,
+argument|const NodeTy *RHS
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief DenseMapInfo for MDTuple.
 end_comment
 
@@ -1560,14 +1619,15 @@ block|{
 name|unsigned
 name|Tag
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Header
 block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|unsigned Tag
 argument_list|,
-argument|StringRef Header
+argument|MDString *Header
 argument_list|,
 argument|ArrayRef<Metadata *> DwarfOps
 argument_list|)
@@ -1612,7 +1672,7 @@ argument_list|)
 block|,
 name|Header
 argument_list|(
-argument|N->getHeader()
+argument|N->getRawHeader()
 argument_list|)
 block|{}
 name|bool
@@ -1634,7 +1694,7 @@ name|Header
 operator|==
 name|RHS
 operator|->
-name|getHeader
+name|getRawHeader
 argument_list|()
 operator|&&
 name|compareOps
@@ -1795,14 +1855,15 @@ block|{
 name|int64_t
 name|Value
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|int64_t Value
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|)
 operator|:
 name|Value
@@ -1833,7 +1894,7 @@ argument_list|)
 block|,
 name|Name
 argument_list|(
-argument|N->getName()
+argument|N->getRawName()
 argument_list|)
 block|{}
 name|bool
@@ -1855,7 +1916,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 return|;
 block|}
@@ -1889,7 +1950,8 @@ block|{
 name|unsigned
 name|Tag
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|uint64_t
@@ -1905,7 +1967,7 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|unsigned Tag
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|uint64_t SizeInBits
 argument_list|,
@@ -1959,7 +2021,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -2003,7 +2065,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|SizeInBits
@@ -2064,7 +2126,8 @@ block|{
 name|unsigned
 name|Tag
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -2102,7 +2165,7 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|unsigned Tag
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|Metadata *File
 argument_list|,
@@ -2198,7 +2261,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -2290,7 +2353,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|File
@@ -2362,6 +2425,67 @@ name|getHashValue
 argument_list|()
 specifier|const
 block|{
+comment|// If this is a member inside an ODR type, only hash the type and the name.
+comment|// Otherwise the hash will be stronger than
+comment|// MDNodeSubsetEqualImpl::isODRMember().
+if|if
+condition|(
+name|Tag
+operator|==
+name|dwarf
+operator|::
+name|DW_TAG_member
+operator|&&
+name|Name
+condition|)
+if|if
+condition|(
+name|auto
+operator|*
+name|CT
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+name|Scope
+operator|)
+condition|)
+if|if
+condition|(
+name|CT
+operator|->
+name|getRawIdentifier
+argument_list|()
+condition|)
+return|return
+name|hash_combine
+argument_list|(
+name|Name
+argument_list|,
+name|Scope
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// Intentionally computes the hash on a subset of the operands for
+end_comment
+
+begin_comment
+comment|// performance reason. The subset has to be significant enough to avoid
+end_comment
+
+begin_comment
+comment|// collision "most of the time". There is no correctness issue in case of
+end_comment
+
+begin_comment
+comment|// collision because of the full check above.
+end_comment
+
+begin_return
 return|return
 name|hash_combine
 argument_list|(
@@ -2377,22 +2501,188 @@ name|Scope
 argument_list|,
 name|BaseType
 argument_list|,
-name|SizeInBits
-argument_list|,
-name|AlignInBits
-argument_list|,
-name|OffsetInBits
-argument_list|,
 name|Flags
+argument_list|)
+return|;
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|MDNodeSubsetEqualImpl
+operator|<
+name|DIDerivedType
+operator|>
+block|{
+typedef|typedef
+name|MDNodeKeyImpl
+operator|<
+name|DIDerivedType
+operator|>
+name|KeyTy
+expr_stmt|;
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const KeyTy&LHS
 argument_list|,
-name|ExtraData
+argument|const DIDerivedType *RHS
+argument_list|)
+block|{
+return|return
+name|isODRMember
+argument_list|(
+name|LHS
+operator|.
+name|Tag
+argument_list|,
+name|LHS
+operator|.
+name|Scope
+argument_list|,
+name|LHS
+operator|.
+name|Name
+argument_list|,
+name|RHS
 argument_list|)
 return|;
 block|}
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const DIDerivedType *LHS
+argument_list|,
+argument|const DIDerivedType *RHS
+argument_list|)
+block|{
+return|return
+name|isODRMember
+argument_list|(
+name|LHS
+operator|->
+name|getTag
+argument_list|()
+argument_list|,
+name|LHS
+operator|->
+name|getRawScope
+argument_list|()
+argument_list|,
+name|LHS
+operator|->
+name|getRawName
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
+comment|/// Subprograms compare equal if they declare the same function in an ODR
+comment|/// type.
+specifier|static
+name|bool
+name|isODRMember
+argument_list|(
+argument|unsigned Tag
+argument_list|,
+argument|const Metadata *Scope
+argument_list|,
+argument|const MDString *Name
+argument_list|,
+argument|const DIDerivedType *RHS
+argument_list|)
+block|{
+comment|// Check whether the LHS is eligible.
+if|if
+condition|(
+name|Tag
+operator|!=
+name|dwarf
+operator|::
+name|DW_TAG_member
+operator|||
+operator|!
+name|Name
+condition|)
+return|return
+name|false
+return|;
+name|auto
+operator|*
+name|CT
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+name|Scope
+operator|)
+expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+operator|!
+name|CT
+operator|||
+operator|!
+name|CT
+operator|->
+name|getRawIdentifier
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+end_if
+
+begin_comment
+comment|// Compare to the RHS.
+end_comment
+
+begin_return
+return|return
+name|Tag
+operator|==
+name|RHS
+operator|->
+name|getTag
+argument_list|()
+operator|&&
+name|Name
+operator|==
+name|RHS
+operator|->
+name|getRawName
+argument_list|()
+operator|&&
+name|Scope
+operator|==
+name|RHS
+operator|->
+name|getRawScope
+argument_list|()
+return|;
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 operator|>
@@ -2405,7 +2695,8 @@ block|{
 name|unsigned
 name|Tag
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -2450,14 +2741,15 @@ name|Metadata
 operator|*
 name|TemplateParams
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Identifier
 block|;
 name|MDNodeKeyImpl
 argument_list|(
 argument|unsigned Tag
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|Metadata *File
 argument_list|,
@@ -2483,7 +2775,7 @@ argument|Metadata *VTableHolder
 argument_list|,
 argument|Metadata *TemplateParams
 argument_list|,
-argument|StringRef Identifier
+argument|MDString *Identifier
 argument_list|)
 operator|:
 name|Tag
@@ -2581,7 +2873,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -2683,7 +2975,7 @@ argument_list|)
 block|,
 name|Identifier
 argument_list|(
-argument|N->getIdentifier()
+argument|N->getRawIdentifier()
 argument_list|)
 block|{}
 name|bool
@@ -2705,7 +2997,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|File
@@ -2796,7 +3088,7 @@ name|Identifier
 operator|==
 name|RHS
 operator|->
-name|getIdentifier
+name|getRawIdentifier
 argument_list|()
 return|;
 block|}
@@ -2805,38 +3097,26 @@ name|getHashValue
 argument_list|()
 specifier|const
 block|{
+comment|// Intentionally computes the hash on a subset of the operands for
+comment|// performance reason. The subset has to be significant enough to avoid
+comment|// collision "most of the time". There is no correctness issue in case of
+comment|// collision because of the full check above.
 return|return
 name|hash_combine
 argument_list|(
-name|Tag
-argument_list|,
 name|Name
 argument_list|,
 name|File
 argument_list|,
 name|Line
 argument_list|,
-name|Scope
-argument_list|,
 name|BaseType
 argument_list|,
-name|SizeInBits
-argument_list|,
-name|AlignInBits
-argument_list|,
-name|OffsetInBits
-argument_list|,
-name|Flags
+name|Scope
 argument_list|,
 name|Elements
 argument_list|,
-name|RuntimeLang
-argument_list|,
-name|VTableHolder
-argument_list|,
 name|TemplateParams
-argument_list|,
-name|Identifier
 argument_list|)
 return|;
 block|}
@@ -2856,13 +3136,18 @@ block|{
 name|unsigned
 name|Flags
 block|;
+name|uint8_t
+name|CC
+block|;
 name|Metadata
 operator|*
 name|TypeArray
 block|;
 name|MDNodeKeyImpl
 argument_list|(
-argument|int64_t Flags
+argument|unsigned Flags
+argument_list|,
+argument|uint8_t CC
 argument_list|,
 argument|Metadata *TypeArray
 argument_list|)
@@ -2870,6 +3155,11 @@ operator|:
 name|Flags
 argument_list|(
 name|Flags
+argument_list|)
+block|,
+name|CC
+argument_list|(
+name|CC
 argument_list|)
 block|,
 name|TypeArray
@@ -2893,6 +3183,14 @@ name|getFlags
 argument_list|()
 argument_list|)
 block|,
+name|CC
+argument_list|(
+name|N
+operator|->
+name|getCC
+argument_list|()
+argument_list|)
+block|,
 name|TypeArray
 argument_list|(
 argument|N->getRawTypeArray()
@@ -2913,6 +3211,13 @@ operator|->
 name|getFlags
 argument_list|()
 operator|&&
+name|CC
+operator|==
+name|RHS
+operator|->
+name|getCC
+argument_list|()
+operator|&&
 name|TypeArray
 operator|==
 name|RHS
@@ -2931,6 +3236,8 @@ name|hash_combine
 argument_list|(
 name|Flags
 argument_list|,
+name|CC
+argument_list|,
 name|TypeArray
 argument_list|)
 return|;
@@ -2948,17 +3255,23 @@ operator|<
 name|DIFile
 operator|>
 block|{
-name|StringRef
+name|MDString
+operator|*
 name|Filename
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Directory
 block|;
 name|MDNodeKeyImpl
 argument_list|(
-argument|StringRef Filename
+name|MDString
+operator|*
+name|Filename
 argument_list|,
-argument|StringRef Directory
+name|MDString
+operator|*
+name|Directory
 argument_list|)
 operator|:
 name|Filename
@@ -2983,13 +3296,13 @@ name|Filename
 argument_list|(
 name|N
 operator|->
-name|getFilename
+name|getRawFilename
 argument_list|()
 argument_list|)
 block|,
 name|Directory
 argument_list|(
-argument|N->getDirectory()
+argument|N->getRawDirectory()
 argument_list|)
 block|{}
 name|bool
@@ -3004,14 +3317,14 @@ name|Filename
 operator|==
 name|RHS
 operator|->
-name|getFilename
+name|getRawFilename
 argument_list|()
 operator|&&
 name|Directory
 operator|==
 name|RHS
 operator|->
-name|getDirectory
+name|getRawDirectory
 argument_list|()
 return|;
 block|}
@@ -3046,10 +3359,12 @@ name|Metadata
 operator|*
 name|Scope
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|LinkageName
 block|;
 name|Metadata
@@ -3082,11 +3397,18 @@ block|;
 name|unsigned
 name|VirtualIndex
 block|;
+name|int
+name|ThisAdjustment
+block|;
 name|unsigned
 name|Flags
 block|;
 name|bool
 name|IsOptimized
+block|;
+name|Metadata
+operator|*
+name|Unit
 block|;
 name|Metadata
 operator|*
@@ -3104,9 +3426,9 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
-argument|StringRef LinkageName
+argument|MDString *LinkageName
 argument_list|,
 argument|Metadata *File
 argument_list|,
@@ -3126,9 +3448,13 @@ argument|unsigned Virtuality
 argument_list|,
 argument|unsigned VirtualIndex
 argument_list|,
+argument|int ThisAdjustment
+argument_list|,
 argument|unsigned Flags
 argument_list|,
 argument|bool IsOptimized
+argument_list|,
+argument|Metadata *Unit
 argument_list|,
 argument|Metadata *TemplateParams
 argument_list|,
@@ -3197,6 +3523,11 @@ argument_list|(
 name|VirtualIndex
 argument_list|)
 block|,
+name|ThisAdjustment
+argument_list|(
+name|ThisAdjustment
+argument_list|)
+block|,
 name|Flags
 argument_list|(
 name|Flags
@@ -3205,6 +3536,11 @@ block|,
 name|IsOptimized
 argument_list|(
 name|IsOptimized
+argument_list|)
+block|,
+name|Unit
+argument_list|(
+name|Unit
 argument_list|)
 block|,
 name|TemplateParams
@@ -3242,7 +3578,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -3250,7 +3586,7 @@ name|LinkageName
 argument_list|(
 name|N
 operator|->
-name|getLinkageName
+name|getRawLinkageName
 argument_list|()
 argument_list|)
 block|,
@@ -3326,6 +3662,14 @@ name|getVirtualIndex
 argument_list|()
 argument_list|)
 block|,
+name|ThisAdjustment
+argument_list|(
+name|N
+operator|->
+name|getThisAdjustment
+argument_list|()
+argument_list|)
+block|,
 name|Flags
 argument_list|(
 name|N
@@ -3339,6 +3683,14 @@ argument_list|(
 name|N
 operator|->
 name|isOptimized
+argument_list|()
+argument_list|)
+block|,
+name|Unit
+argument_list|(
+name|N
+operator|->
+name|getRawUnit
 argument_list|()
 argument_list|)
 block|,
@@ -3382,14 +3734,14 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|LinkageName
 operator|==
 name|RHS
 operator|->
-name|getLinkageName
+name|getRawLinkageName
 argument_list|()
 operator|&&
 name|File
@@ -3455,6 +3807,13 @@ operator|->
 name|getVirtualIndex
 argument_list|()
 operator|&&
+name|ThisAdjustment
+operator|==
+name|RHS
+operator|->
+name|getThisAdjustment
+argument_list|()
+operator|&&
 name|Flags
 operator|==
 name|RHS
@@ -3467,6 +3826,13 @@ operator|==
 name|RHS
 operator|->
 name|isOptimized
+argument_list|()
+operator|&&
+name|Unit
+operator|==
+name|RHS
+operator|->
+name|getUnit
 argument_list|()
 operator|&&
 name|TemplateParams
@@ -3496,49 +3862,256 @@ name|getHashValue
 argument_list|()
 specifier|const
 block|{
+comment|// If this is a declaration inside an ODR type, only hash the type and the
+comment|// name.  Otherwise the hash will be stronger than
+comment|// MDNodeSubsetEqualImpl::isDeclarationOfODRMember().
+if|if
+condition|(
+operator|!
+name|IsDefinition
+operator|&&
+name|LinkageName
+condition|)
+if|if
+condition|(
+name|auto
+operator|*
+name|CT
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+name|Scope
+operator|)
+condition|)
+if|if
+condition|(
+name|CT
+operator|->
+name|getRawIdentifier
+argument_list|()
+condition|)
 return|return
 name|hash_combine
 argument_list|(
-name|Scope
+name|LinkageName
 argument_list|,
+name|Scope
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// Intentionally computes the hash on a subset of the operands for
+end_comment
+
+begin_comment
+comment|// performance reason. The subset has to be significant enough to avoid
+end_comment
+
+begin_comment
+comment|// collision "most of the time". There is no correctness issue in case of
+end_comment
+
+begin_comment
+comment|// collision because of the full check above.
+end_comment
+
+begin_return
+return|return
+name|hash_combine
+argument_list|(
 name|Name
 argument_list|,
-name|LinkageName
+name|Scope
 argument_list|,
 name|File
 argument_list|,
-name|Line
-argument_list|,
 name|Type
 argument_list|,
-name|IsLocalToUnit
+name|Line
+argument_list|)
+return|;
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|MDNodeSubsetEqualImpl
+operator|<
+name|DISubprogram
+operator|>
+block|{
+typedef|typedef
+name|MDNodeKeyImpl
+operator|<
+name|DISubprogram
+operator|>
+name|KeyTy
+expr_stmt|;
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const KeyTy&LHS
 argument_list|,
+argument|const DISubprogram *RHS
+argument_list|)
+block|{
+return|return
+name|isDeclarationOfODRMember
+argument_list|(
+name|LHS
+operator|.
 name|IsDefinition
 argument_list|,
-name|ScopeLine
+name|LHS
+operator|.
+name|Scope
 argument_list|,
-name|ContainingType
+name|LHS
+operator|.
+name|LinkageName
 argument_list|,
-name|Virtuality
-argument_list|,
-name|VirtualIndex
-argument_list|,
-name|Flags
-argument_list|,
-name|IsOptimized
-argument_list|,
-name|TemplateParams
-argument_list|,
-name|Declaration
-argument_list|,
-name|Variables
+name|RHS
 argument_list|)
 return|;
 block|}
+specifier|static
+name|bool
+name|isSubsetEqual
+argument_list|(
+argument|const DISubprogram *LHS
+argument_list|,
+argument|const DISubprogram *RHS
+argument_list|)
+block|{
+return|return
+name|isDeclarationOfODRMember
+argument_list|(
+name|LHS
+operator|->
+name|isDefinition
+argument_list|()
+argument_list|,
+name|LHS
+operator|->
+name|getRawScope
+argument_list|()
+argument_list|,
+name|LHS
+operator|->
+name|getRawLinkageName
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
+comment|/// Subprograms compare equal if they declare the same function in an ODR
+comment|/// type.
+specifier|static
+name|bool
+name|isDeclarationOfODRMember
+argument_list|(
+argument|bool IsDefinition
+argument_list|,
+argument|const Metadata *Scope
+argument_list|,
+argument|const MDString *LinkageName
+argument_list|,
+argument|const DISubprogram *RHS
+argument_list|)
+block|{
+comment|// Check whether the LHS is eligible.
+if|if
+condition|(
+name|IsDefinition
+operator|||
+operator|!
+name|Scope
+operator|||
+operator|!
+name|LinkageName
+condition|)
+return|return
+name|false
+return|;
+name|auto
+operator|*
+name|CT
+operator|=
+name|dyn_cast_or_null
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+name|Scope
+operator|)
+expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+operator|!
+name|CT
+operator|||
+operator|!
+name|CT
+operator|->
+name|getRawIdentifier
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+end_if
+
+begin_comment
+comment|// Compare to the RHS.
+end_comment
+
+begin_return
+return|return
+name|IsDefinition
+operator|==
+name|RHS
+operator|->
+name|isDefinition
+argument_list|()
+operator|&&
+name|Scope
+operator|==
+name|RHS
+operator|->
+name|getRawScope
+argument_list|()
+operator|&&
+name|LinkageName
+operator|==
+name|RHS
+operator|->
+name|getRawLinkageName
+argument_list|()
+return|;
+end_return
+
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 operator|>
@@ -3829,7 +4402,8 @@ name|Metadata
 operator|*
 name|File
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|unsigned
@@ -3841,7 +4415,7 @@ argument|Metadata *Scope
 argument_list|,
 argument|Metadata *File
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|unsigned Line
 argument_list|)
@@ -3894,7 +4468,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -3929,7 +4503,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|Line
@@ -3975,29 +4549,43 @@ name|Metadata
 operator|*
 name|Scope
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|ConfigurationMacros
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|IncludePath
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|ISysRoot
 block|;
 name|MDNodeKeyImpl
 argument_list|(
-argument|Metadata *Scope
+name|Metadata
+operator|*
+name|Scope
 argument_list|,
-argument|StringRef Name
+name|MDString
+operator|*
+name|Name
 argument_list|,
-argument|StringRef ConfigurationMacros
+name|MDString
+operator|*
+name|ConfigurationMacros
 argument_list|,
-argument|StringRef IncludePath
+name|MDString
+operator|*
+name|IncludePath
 argument_list|,
-argument|StringRef ISysRoot
+name|MDString
+operator|*
+name|ISysRoot
 argument_list|)
 operator|:
 name|Scope
@@ -4045,7 +4633,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -4053,7 +4641,7 @@ name|ConfigurationMacros
 argument_list|(
 name|N
 operator|->
-name|getConfigurationMacros
+name|getRawConfigurationMacros
 argument_list|()
 argument_list|)
 block|,
@@ -4061,13 +4649,13 @@ name|IncludePath
 argument_list|(
 name|N
 operator|->
-name|getIncludePath
+name|getRawIncludePath
 argument_list|()
 argument_list|)
 block|,
 name|ISysRoot
 argument_list|(
-argument|N->getISysRoot()
+argument|N->getRawISysRoot()
 argument_list|)
 block|{}
 name|bool
@@ -4089,28 +4677,28 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|ConfigurationMacros
 operator|==
 name|RHS
 operator|->
-name|getConfigurationMacros
+name|getRawConfigurationMacros
 argument_list|()
 operator|&&
 name|IncludePath
 operator|==
 name|RHS
 operator|->
-name|getIncludePath
+name|getRawIncludePath
 argument_list|()
 operator|&&
 name|ISysRoot
 operator|==
 name|RHS
 operator|->
-name|getISysRoot
+name|getRawISysRoot
 argument_list|()
 return|;
 block|}
@@ -4147,7 +4735,8 @@ operator|<
 name|DITemplateTypeParameter
 operator|>
 block|{
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -4156,9 +4745,13 @@ name|Type
 block|;
 name|MDNodeKeyImpl
 argument_list|(
-argument|StringRef Name
+name|MDString
+operator|*
+name|Name
 argument_list|,
-argument|Metadata *Type
+name|Metadata
+operator|*
+name|Type
 argument_list|)
 operator|:
 name|Name
@@ -4183,7 +4776,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -4204,7 +4797,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|Type
@@ -4245,7 +4838,8 @@ block|{
 name|unsigned
 name|Tag
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -4260,7 +4854,7 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|unsigned Tag
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|Metadata *Type
 argument_list|,
@@ -4307,7 +4901,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -4343,7 +4937,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|Type
@@ -4396,10 +4990,12 @@ name|Metadata
 operator|*
 name|Scope
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|LinkageName
 block|;
 name|Metadata
@@ -4431,9 +5027,9 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
-argument|StringRef LinkageName
+argument|MDString *LinkageName
 argument_list|,
 argument|Metadata *File
 argument_list|,
@@ -4520,7 +5116,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -4528,7 +5124,7 @@ name|LinkageName
 argument_list|(
 name|N
 operator|->
-name|getLinkageName
+name|getRawLinkageName
 argument_list|()
 argument_list|)
 block|,
@@ -4604,14 +5200,14 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|LinkageName
 operator|==
 name|RHS
 operator|->
-name|getLinkageName
+name|getRawLinkageName
 argument_list|()
 operator|&&
 name|File
@@ -4711,7 +5307,8 @@ name|Metadata
 operator|*
 name|Scope
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -4735,7 +5332,7 @@ name|MDNodeKeyImpl
 argument_list|(
 argument|Metadata *Scope
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|Metadata *File
 argument_list|,
@@ -4803,7 +5400,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -4863,7 +5460,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|File
@@ -5021,7 +5618,8 @@ operator|<
 name|DIObjCProperty
 operator|>
 block|{
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|Metadata
@@ -5031,10 +5629,12 @@ block|;
 name|unsigned
 name|Line
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|GetterName
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|SetterName
 block|;
 name|unsigned
@@ -5046,15 +5646,15 @@ name|Type
 block|;
 name|MDNodeKeyImpl
 argument_list|(
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
 argument|Metadata *File
 argument_list|,
 argument|unsigned Line
 argument_list|,
-argument|StringRef GetterName
+argument|MDString *GetterName
 argument_list|,
-argument|StringRef SetterName
+argument|MDString *SetterName
 argument_list|,
 argument|unsigned Attributes
 argument_list|,
@@ -5108,7 +5708,7 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
@@ -5132,7 +5732,7 @@ name|GetterName
 argument_list|(
 name|N
 operator|->
-name|getGetterName
+name|getRawGetterName
 argument_list|()
 argument_list|)
 block|,
@@ -5140,7 +5740,7 @@ name|SetterName
 argument_list|(
 name|N
 operator|->
-name|getSetterName
+name|getRawSetterName
 argument_list|()
 argument_list|)
 block|,
@@ -5169,7 +5769,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|File
@@ -5190,14 +5790,14 @@ name|GetterName
 operator|==
 name|RHS
 operator|->
-name|getGetterName
+name|getRawGetterName
 argument_list|()
 operator|&&
 name|SetterName
 operator|==
 name|RHS
 operator|->
-name|getSetterName
+name|getRawSetterName
 argument_list|()
 operator|&&
 name|Attributes
@@ -5266,7 +5866,8 @@ block|;
 name|unsigned
 name|Line
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
 name|MDNodeKeyImpl
@@ -5279,7 +5880,7 @@ argument|Metadata *Entity
 argument_list|,
 argument|unsigned Line
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|)
 operator|:
 name|Tag
@@ -5349,7 +5950,7 @@ argument_list|)
 block|,
 name|Name
 argument_list|(
-argument|N->getName()
+argument|N->getRawName()
 argument_list|)
 block|{}
 name|bool
@@ -5392,7 +5993,7 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 return|;
 block|}
@@ -5435,10 +6036,12 @@ block|;
 name|unsigned
 name|Line
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Name
 block|;
-name|StringRef
+name|MDString
+operator|*
 name|Value
 block|;
 name|MDNodeKeyImpl
@@ -5447,9 +6050,9 @@ argument|unsigned MIType
 argument_list|,
 argument|unsigned Line
 argument_list|,
-argument|StringRef Name
+argument|MDString *Name
 argument_list|,
-argument|StringRef Value
+argument|MDString *Value
 argument_list|)
 operator|:
 name|MIType
@@ -5500,13 +6103,13 @@ name|Name
 argument_list|(
 name|N
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 argument_list|)
 block|,
 name|Value
 argument_list|(
-argument|N->getValue()
+argument|N->getRawValue()
 argument_list|)
 block|{}
 name|bool
@@ -5535,14 +6138,14 @@ name|Name
 operator|==
 name|RHS
 operator|->
-name|getName
+name|getRawName
 argument_list|()
 operator|&&
 name|Value
 operator|==
 name|RHS
 operator|->
-name|getValue
+name|getRawValue
 argument_list|()
 return|;
 block|}
@@ -5737,12 +6340,25 @@ name|NodeTy
 operator|>
 name|KeyTy
 expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|MDNodeSubsetEqualImpl
+operator|<
+name|NodeTy
+operator|>
+name|SubsetEqualTy
+expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 specifier|inline
 name|NodeTy
-operator|*
+modifier|*
 name|getEmptyKey
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|DenseMapInfo
@@ -5755,12 +6371,15 @@ name|getEmptyKey
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|NodeTy
-operator|*
+modifier|*
 name|getTombstoneKey
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|DenseMapInfo
@@ -5773,12 +6392,18 @@ name|getTombstoneKey
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|getHashValue
-argument_list|(
-argument|const KeyTy&Key
-argument_list|)
+parameter_list|(
+specifier|const
+name|KeyTy
+modifier|&
+name|Key
+parameter_list|)
 block|{
 return|return
 name|Key
@@ -5787,12 +6412,18 @@ name|getHashValue
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|getHashValue
-argument_list|(
-argument|const NodeTy *N
-argument_list|)
+parameter_list|(
+specifier|const
+name|NodeTy
+modifier|*
+name|N
+parameter_list|)
 block|{
 return|return
 name|KeyTy
@@ -5804,14 +6435,23 @@ name|getHashValue
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isEqual
-argument_list|(
-argument|const KeyTy&LHS
-argument_list|,
-argument|const NodeTy *RHS
-argument_list|)
+parameter_list|(
+specifier|const
+name|KeyTy
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|NodeTy
+modifier|*
+name|RHS
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5828,10 +6468,16 @@ condition|)
 return|return
 name|false
 return|;
-end_expr_stmt
-
-begin_return
 return|return
+name|SubsetEqualTy
+operator|::
+name|isSubsetEqual
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+argument_list|)
+operator|||
 name|LHS
 operator|.
 name|isKeyOf
@@ -5839,10 +6485,11 @@ argument_list|(
 name|RHS
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}   static
+specifier|static
 name|bool
 name|isEqual
 parameter_list|(
@@ -5857,10 +6504,39 @@ modifier|*
 name|RHS
 parameter_list|)
 block|{
-return|return
+if|if
+condition|(
 name|LHS
 operator|==
 name|RHS
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|RHS
+operator|==
+name|getEmptyKey
+argument_list|()
+operator|||
+name|RHS
+operator|==
+name|getTombstoneKey
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|SubsetEqualTy
+operator|::
+name|isSubsetEqual
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+argument_list|)
 return|;
 block|}
 end_function
@@ -6037,6 +6713,120 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// Multimap-like storage for metadata attachments for globals. This differs
+end_comment
+
+begin_comment
+comment|/// from MDAttachmentMap in that it allows multiple attachments per metadata
+end_comment
+
+begin_comment
+comment|/// kind.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MDGlobalAttachmentMap
+block|{
+struct|struct
+name|Attachment
+block|{
+name|unsigned
+name|MDKind
+decl_stmt|;
+name|TrackingMDNodeRef
+name|Node
+decl_stmt|;
+block|}
+struct|;
+name|SmallVector
+operator|<
+name|Attachment
+operator|,
+literal|1
+operator|>
+name|Attachments
+expr_stmt|;
+name|public
+label|:
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Attachments
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// Appends all attachments with the given ID to \c Result in insertion order.
+comment|/// If the global has no attachments with the given ID, or if ID is invalid,
+comment|/// leaves Result unchanged.
+name|void
+name|get
+argument_list|(
+name|unsigned
+name|ID
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MDNode
+operator|*
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+name|void
+name|insert
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|,
+name|MDNode
+modifier|&
+name|MD
+parameter_list|)
+function_decl|;
+name|void
+name|erase
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+comment|/// Appends all attachments for the global to \c Result, sorting by attachment
+comment|/// ID. Attachments with the same ID appear in insertion order. This function
+comment|/// does \em not clear \c Result.
+name|void
+name|getAll
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_decl_stmt
 name|class
 name|LLVMContextImpl
@@ -6074,6 +6864,9 @@ name|DiagnosticContext
 decl_stmt|;
 name|bool
 name|RespectDiagnosticFilters
+decl_stmt|;
+name|bool
+name|DiagnosticHotnessRequested
 decl_stmt|;
 name|LLVMContext
 operator|::
@@ -6135,6 +6928,8 @@ expr_stmt|;
 name|StringMap
 operator|<
 name|MDString
+operator|,
+name|BumpPtrAllocator
 operator|>
 name|MDStringCache
 expr_stmt|;
@@ -6180,16 +6975,30 @@ value|DenseSet<CLASS *, CLASS##Info> CLASS##s;
 include|#
 directive|include
 file|"llvm/IR/Metadata.def"
+comment|// Optional map for looking up composite types by identifier.
+name|Optional
+operator|<
+name|DenseMap
+operator|<
+specifier|const
+name|MDString
+operator|*
+operator|,
+name|DICompositeType
+operator|*
+operator|>>
+name|DITypeMap
+expr_stmt|;
 comment|// MDNodes may be uniqued or not uniqued.  When they're not uniqued, they
 comment|// aren't in the MDNodeSet, but they're still shared between objects, so no
-comment|// one object can destroy them.  This set allows us to at least destroy them
-comment|// on Context destruction.
-name|SmallPtrSet
+comment|// one object can destroy them.  Keep track of them here so we can delete
+comment|// them on context teardown.
+name|std
+operator|::
+name|vector
 operator|<
 name|MDNode
 operator|*
-operator|,
-literal|1
 operator|>
 name|DistinctMDNodes
 expr_stmt|;
@@ -6493,16 +7302,16 @@ name|MDAttachmentMap
 operator|>
 name|InstructionMetadata
 expr_stmt|;
-comment|/// Collection of per-function metadata used in this context.
+comment|/// Collection of per-GlobalObject metadata used in this context.
 name|DenseMap
 operator|<
 specifier|const
-name|Function
+name|GlobalObject
 operator|*
 operator|,
-name|MDAttachmentMap
+name|MDGlobalAttachmentMap
 operator|>
-name|FunctionMetadata
+name|GlobalObjectMetadata
 expr_stmt|;
 comment|/// DiscriminatorTable - This table maps file:line locations to an
 comment|/// integer representing the next DWARF path discriminator to assign to
@@ -6607,6 +7416,13 @@ name|string
 operator|>
 name|GCNames
 expr_stmt|;
+comment|/// Flag to indicate if Value (other than GlobalValue) retains their name or
+comment|/// not.
+name|bool
+name|DiscardValueNames
+init|=
+name|false
+decl_stmt|;
 name|LLVMContextImpl
 argument_list|(
 name|LLVMContext
@@ -6621,6 +7437,13 @@ expr_stmt|;
 comment|/// Destroy the ConstantArrays if they are not used.
 name|void
 name|dropTriviallyDeadConstantArrays
+parameter_list|()
+function_decl|;
+comment|/// \brief Access the object which manages optimization bisection for failure
+comment|/// analysis.
+name|OptBisect
+modifier|&
+name|getOptBisect
 parameter_list|()
 function_decl|;
 block|}

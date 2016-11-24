@@ -68,6 +68,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 comment|/// IPDBSourceFile defines an interface used to represent source files whose
 comment|/// information are stored in the PDB.
 name|class
@@ -133,8 +136,10 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|IPDBEnumSymbols
-operator|>
+name|IPDBEnumChildren
+operator|<
+name|PDBSymbolCompiland
+operator|>>
 name|getCompilands
 argument_list|()
 specifier|const
@@ -143,6 +148,7 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+block|}
 block|}
 end_decl_stmt
 

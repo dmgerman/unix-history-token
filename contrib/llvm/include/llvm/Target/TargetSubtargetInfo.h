@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ScheduleDAGMutation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
@@ -83,10 +89,19 @@ directive|include
 file|"llvm/Support/CodeGen.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|CallLowering
+decl_stmt|;
 name|class
 name|DataLayout
 decl_stmt|;
@@ -95,6 +110,9 @@ name|MachineFunction
 decl_stmt|;
 name|class
 name|MachineInstr
+decl_stmt|;
+name|class
+name|RegisterBankInfo
 decl_stmt|;
 name|class
 name|SDep
@@ -121,7 +139,7 @@ name|class
 name|TargetSchedModel
 decl_stmt|;
 name|class
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 decl_stmt|;
 struct_decl|struct
 name|MachineSchedPolicy
@@ -236,6 +254,7 @@ comment|// -- Instruction opcode and operand information
 comment|// -- Pipelines and scheduling information
 comment|// -- Stack frame information
 comment|// -- Selection DAG lowering information
+comment|// -- Call lowering information
 comment|//
 comment|// N.B. These objects may change during compilation. It's not safe to cache
 comment|// them between functions.
@@ -277,9 +296,21 @@ return|;
 block|}
 name|virtual
 decl|const
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 modifier|*
 name|getSelectionDAGInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|CallLowering
+modifier|*
+name|getCallLowering
 argument_list|()
 decl|const
 block|{
@@ -305,14 +336,27 @@ name|nullptr
 return|;
 block|}
 comment|/// getRegisterInfo - If register information is available, return it.  If
-comment|/// not, return null.  This is kept separate from RegInfo until RegInfo has
-comment|/// details of graph coloring register allocation removed from it.
+comment|/// not, return null.
 comment|///
 name|virtual
 decl|const
 name|TargetRegisterInfo
 modifier|*
 name|getRegisterInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// If the information for the register banks is available, return it.
+comment|/// Otherwise return nullptr.
+name|virtual
+decl|const
+name|RegisterBankInfo
+modifier|*
+name|getRegBankInfo
 argument_list|()
 decl|const
 block|{
@@ -426,14 +470,6 @@ name|MachineSchedPolicy
 block|&
 name|Policy
 block|,
-name|MachineInstr
-modifier|*
-name|begin
-block|,
-name|MachineInstr
-modifier|*
-name|end
-block|,
 name|unsigned
 name|NumRegionInstrs
 block|)
@@ -483,6 +519,16 @@ name|clear
 argument_list|()
 return|;
 block|}
+comment|// \brief Provide an ordered list of schedule DAG mutations for the post-RA
+comment|// scheduler.
+name|virtual
+name|void
+name|getPostRAMutations
+argument_list|(
+argument|std::vector<std::unique_ptr<ScheduleDAGMutation>>&Mutations
+argument_list|)
+specifier|const
+block|{   }
 comment|// For use with PostRAScheduling: get the minimum optimization level needed
 comment|// to enable post-RA scheduling.
 name|virtual

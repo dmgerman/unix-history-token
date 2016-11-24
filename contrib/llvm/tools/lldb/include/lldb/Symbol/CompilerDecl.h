@@ -180,15 +180,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//----------------------------------------------------------------------
-comment|// Object linked to the decl
-comment|//----------------------------------------------------------------------
-name|lldb
-operator|::
-name|VariableSP
-name|GetAsVariable
-argument_list|()
-expr_stmt|;
-comment|//----------------------------------------------------------------------
 comment|// Accessors
 comment|//----------------------------------------------------------------------
 name|TypeSystem

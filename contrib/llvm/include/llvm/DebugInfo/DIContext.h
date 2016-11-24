@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -79,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Object/ObjectFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Object/RelocVisitor.h"
 end_include
 
 begin_include
@@ -530,6 +518,8 @@ argument_list|(
 argument|raw_ostream&OS
 argument_list|,
 argument|DIDumpType DumpType = DIDT_All
+argument_list|,
+argument|bool DumpEH = false
 argument_list|)
 operator|=
 literal|0

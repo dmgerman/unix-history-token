@@ -155,7 +155,11 @@ comment|///     A language enumeration type that describes the main language
 comment|///     of this compile unit.
 comment|///
 comment|/// @param[in] is_optimized
-comment|///     true if this compile unit was compiled with optimization.
+comment|///     A value that can initialized with eLazyBoolYes, eLazyBoolNo
+comment|///     or eLazyBoolCalculate. If set to eLazyBoolCalculate, then
+comment|///     an extra call into SymbolVendor will be made to calculate if
+comment|///     the compile unit is optimized will be made when
+comment|///     CompileUnit::GetIsOptimized() is called.
 comment|///
 comment|/// @see lldb::LanguageType
 comment|//------------------------------------------------------------------
@@ -171,7 +175,7 @@ argument|lldb::user_id_t uid
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
-argument|bool is_optimized
+argument|lldb_private::LazyBool is_optimized
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -203,7 +207,11 @@ comment|///     A language enumeration type that describes the main language
 comment|///     of this compile unit.
 comment|///
 comment|/// @param[in] is_optimized
-comment|///     true if this compile unit was compiled with optimization.
+comment|///     A value that can initialized with eLazyBoolYes, eLazyBoolNo
+comment|///     or eLazyBoolCalculate. If set to eLazyBoolCalculate, then
+comment|///     an extra call into SymbolVendor will be made to calculate if
+comment|///     the compile unit is optimized will be made when
+comment|///     CompileUnit::GetIsOptimized() is called.
 comment|///
 comment|/// @see lldb::LanguageType
 comment|//------------------------------------------------------------------
@@ -219,7 +227,7 @@ argument|lldb::user_id_t uid
 argument_list|,
 argument|lldb::LanguageType language
 argument_list|,
-argument|bool is_optimized
+argument|lldb_private::LazyBool is_optimized
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -757,9 +765,11 @@ name|VariableListSP
 name|m_variables
 expr_stmt|;
 comment|///< Global and static variable list that will get parsed on demand.
-name|bool
+name|lldb_private
+operator|::
+name|LazyBool
 name|m_is_optimized
-decl_stmt|;
+expr_stmt|;
 comment|/// eLazyBoolYes if this compile unit was compiled with optimization.
 name|private
 label|:

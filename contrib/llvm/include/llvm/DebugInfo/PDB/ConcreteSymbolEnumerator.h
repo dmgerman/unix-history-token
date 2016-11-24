@@ -65,6 +65,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|namespace
+name|pdb
+block|{
 name|template
 operator|<
 name|typename
@@ -290,6 +293,7 @@ operator|>
 name|Enumerator
 block|; }
 expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

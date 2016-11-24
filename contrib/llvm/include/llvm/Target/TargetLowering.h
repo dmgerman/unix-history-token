@@ -196,10 +196,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BranchProbability
+decl_stmt|;
+name|class
 name|CallInst
 decl_stmt|;
 name|class
 name|CCState
+decl_stmt|;
+name|class
+name|CCValAssign
 decl_stmt|;
 name|class
 name|FastISel
@@ -227,6 +233,9 @@ name|MachineJumpTableInfo
 decl_stmt|;
 name|class
 name|MachineLoop
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
 decl_stmt|;
 name|class
 name|Mangler
@@ -734,6 +743,20 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target can handle a standalone remainder operation.
+name|virtual
+name|bool
+name|hasStandaloneRem
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Return true if sqrt(x) is as cheap or cheaper than 1 / rsqrt(x)
 name|bool
 name|isFsqrtCheap
@@ -800,8 +823,15 @@ return|return
 name|PredictableSelectIsExpensive
 return|;
 block|}
-comment|/// isLoadBitCastBeneficial() - Return true if the following transform
-comment|/// is beneficial.
+comment|/// If a branch or a select condition is skewed in one direction by more than
+comment|/// this factor, it is very likely to be predicted correctly.
+name|virtual
+name|BranchProbability
+name|getPredictableBranchThreshold
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Return true if the following transform is beneficial:
 comment|/// fold (conv (load x)) -> (load (conv*)x)
 comment|/// On architectures that don't natively support some vector loads
 comment|/// efficiently, casting the load to a smaller vector of larger types and
@@ -812,15 +842,98 @@ name|bool
 name|isLoadBitCastBeneficial
 argument_list|(
 name|EVT
-comment|/* Load */
+name|LoadVT
 argument_list|,
 name|EVT
-comment|/* Bitcast */
+name|BitcastVT
 argument_list|)
 decl|const
 block|{
+comment|// Don't do if we could do an indexed load on the original type, but not on
+comment|// the new one.
+if|if
+condition|(
+operator|!
+name|LoadVT
+operator|.
+name|isSimple
+argument_list|()
+operator|||
+operator|!
+name|BitcastVT
+operator|.
+name|isSimple
+argument_list|()
+condition|)
 return|return
 name|true
+return|;
+name|MVT
+name|LoadMVT
+init|=
+name|LoadVT
+operator|.
+name|getSimpleVT
+argument_list|()
+decl_stmt|;
+comment|// Don't bother doing this if it's just going to be promoted again later, as
+comment|// doing so might interfere with other combines.
+if|if
+condition|(
+name|getOperationAction
+argument_list|(
+name|ISD
+operator|::
+name|LOAD
+argument_list|,
+name|LoadMVT
+argument_list|)
+operator|==
+name|Promote
+operator|&&
+name|getTypeToPromoteTo
+argument_list|(
+name|ISD
+operator|::
+name|LOAD
+argument_list|,
+name|LoadMVT
+argument_list|)
+operator|==
+name|BitcastVT
+operator|.
+name|getSimpleVT
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
+comment|/// Return true if the following transform is beneficial:
+comment|/// (store (y (conv x)), y*)) -> (store x, (x*))
+name|virtual
+name|bool
+name|isStoreBitCastBeneficial
+argument_list|(
+name|EVT
+name|StoreVT
+argument_list|,
+name|EVT
+name|BitcastVT
+argument_list|)
+decl|const
+block|{
+comment|// Default to the same logic as loads.
+return|return
+name|isLoadBitCastBeneficial
+argument_list|(
+name|StoreVT
+argument_list|,
+name|BitcastVT
+argument_list|)
 return|;
 block|}
 comment|/// Return true if it is expected to be cheaper to do a store of a non-zero
@@ -867,6 +980,23 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if it is safe to transform an integer-domain bitwise operation
+comment|/// into the equivalent floating-point operation. This should be set to true
+comment|/// if the target has IEEE-754-compliant fabs/fneg operations for the input
+comment|/// type.
+name|virtual
+name|bool
+name|hasBitPreservingFPLogic
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Return if the target supports combining a
 comment|/// chain like:
 comment|/// \code
@@ -885,6 +1015,31 @@ specifier|const
 block|{
 return|return
 name|MaskAndBranchFoldingIsLegal
+return|;
+block|}
+comment|/// Return true if the target should transform:
+comment|/// (X& Y) == Y ---> (~X& Y) == 0
+comment|/// (X& Y) != Y ---> (~X& Y) != 0
+comment|///
+comment|/// This may be profitable if the target has a bitwise and-not operation that
+comment|/// sets comparison flags. A target may want to limit the transformation based
+comment|/// on the type of Y or if Y is a constant.
+comment|///
+comment|/// Note that the transform will not occur if Y is known to be a power-of-2
+comment|/// because a mask and compare of a single bit can be handled by inverting the
+comment|/// predicate, for example:
+comment|/// (X& 8) == 8 ---> (X& 8) != 0
+name|virtual
+name|bool
+name|hasAndNotCompare
+argument_list|(
+name|SDValue
+name|Y
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|/// \brief Return true if the target wants to use the optimization that
@@ -1834,6 +1989,97 @@ name|Promote
 operator|)
 return|;
 block|}
+comment|/// Return true if the specified operation is legal on this target or can be
+comment|/// made legal with custom lowering or using promotion. This is used to help
+comment|/// guide high-level lowering decisions.
+name|bool
+name|isOperationLegalOrCustomOrPromote
+argument_list|(
+name|unsigned
+name|Op
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+name|VT
+operator|==
+name|MVT
+operator|::
+name|Other
+operator|||
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|getOperationAction
+argument_list|(
+name|Op
+argument_list|,
+name|VT
+argument_list|)
+operator|==
+name|Legal
+operator|||
+name|getOperationAction
+argument_list|(
+name|Op
+argument_list|,
+name|VT
+argument_list|)
+operator|==
+name|Custom
+operator|||
+name|getOperationAction
+argument_list|(
+name|Op
+argument_list|,
+name|VT
+argument_list|)
+operator|==
+name|Promote
+operator|)
+return|;
+block|}
+comment|/// Return true if the specified operation is illegal but has a custom lowering
+comment|/// on that type. This is used to help guide high-level lowering
+comment|/// decisions.
+name|bool
+name|isOperationCustom
+argument_list|(
+name|unsigned
+name|Op
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+operator|!
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+operator|&&
+name|getOperationAction
+argument_list|(
+name|Op
+argument_list|,
+name|VT
+argument_list|)
+operator|==
+name|Custom
+operator|)
+return|;
+block|}
 comment|/// Return true if the specified operation is illegal on this target or
 comment|/// unlikely to be made legal with custom lowering. This is used to help guide
 comment|/// high-level lowering decisions.
@@ -1984,7 +2230,19 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
+name|unsigned
+name|Shift
+init|=
+literal|4
+operator|*
+name|ExtType
+decl_stmt|;
 return|return
+call|(
+name|LegalizeAction
+call|)
+argument_list|(
+operator|(
 name|LoadExtActions
 index|[
 name|ValI
@@ -1992,9 +2250,12 @@ index|]
 index|[
 name|MemI
 index|]
-index|[
-name|ExtType
-index|]
+operator|>>
+name|Shift
+operator|)
+operator|&
+literal|0xf
+argument_list|)
 return|;
 block|}
 comment|/// Return true if the specified load with extension is legal on this target.
@@ -2013,16 +2274,6 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ValVT
-operator|.
-name|isSimple
-argument_list|()
-operator|&&
-name|MemVT
-operator|.
-name|isSimple
-argument_list|()
-operator|&&
 name|getLoadExtAction
 argument_list|(
 name|ExtType
@@ -2052,17 +2303,6 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ValVT
-operator|.
-name|isSimple
-argument_list|()
-operator|&&
-name|MemVT
-operator|.
-name|isSimple
-argument_list|()
-operator|&&
-operator|(
 name|getLoadExtAction
 argument_list|(
 name|ExtType
@@ -2084,7 +2324,6 @@ name|MemVT
 argument_list|)
 operator|==
 name|Custom
-operator|)
 return|;
 block|}
 comment|/// Return how this store with truncation should be treated: either it is
@@ -2188,25 +2427,54 @@ argument_list|(
 name|ValVT
 argument_list|)
 operator|&&
-name|MemVT
-operator|.
-name|isSimple
-argument_list|()
-operator|&&
 name|getTruncStoreAction
 argument_list|(
 name|ValVT
-operator|.
-name|getSimpleVT
-argument_list|()
 argument_list|,
 name|MemVT
-operator|.
-name|getSimpleVT
-argument_list|()
 argument_list|)
 operator|==
 name|Legal
+return|;
+block|}
+comment|/// Return true if the specified store with truncation has solution on this
+comment|/// target.
+name|bool
+name|isTruncStoreLegalOrCustom
+argument_list|(
+name|EVT
+name|ValVT
+argument_list|,
+name|EVT
+name|MemVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|isTypeLegal
+argument_list|(
+name|ValVT
+argument_list|)
+operator|&&
+operator|(
+name|getTruncStoreAction
+argument_list|(
+name|ValVT
+argument_list|,
+name|MemVT
+argument_list|)
+operator|==
+name|Legal
+operator|||
+name|getTruncStoreAction
+argument_list|(
+name|ValVT
+argument_list|,
+name|MemVT
+argument_list|)
+operator|==
+name|Custom
+operator|)
 return|;
 block|}
 comment|/// Return how the indexed load should be treated: either it is legal, needs
@@ -2453,7 +2721,7 @@ name|VT
 operator|.
 name|SimpleTy
 operator|>>
-literal|4
+literal|3
 operator|)
 operator|<
 name|array_lengthof
@@ -3627,6 +3895,17 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|bool
+name|needsFixedCatchObjects
+argument_list|()
+specifier|const
+block|{
+name|report_fatal_error
+argument_list|(
+literal|"Funclet EH is not implemented for this target"
+argument_list|)
+block|;   }
 comment|/// Returns the target's jmp_buf size in bytes (if never set, the default is
 comment|/// 200)
 name|unsigned
@@ -3696,38 +3975,66 @@ return|return
 name|PrefLoopAlignment
 return|;
 block|}
-comment|/// Return whether the DAG builder should automatically insert fences and
-comment|/// reduce ordering for atomics.
-name|bool
-name|getInsertFencesForAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InsertFencesForAtomic
-return|;
-block|}
-comment|/// Return true if the target stores stack protector cookies at a fixed offset
-comment|/// in some non-standard address space, and populates the address space and
-comment|/// offset as appropriate.
+comment|/// If the target has a standard location for the stack protector guard,
+comment|/// returns the address of that location. Otherwise, returns nullptr.
+comment|/// DEPRECATED: please override useLoadStackGuardNode and customize
+comment|///             LOAD_STACK_GUARD, or customize @llvm.stackguard().
 name|virtual
-name|bool
-name|getStackCookieLocation
+name|Value
+modifier|*
+name|getIRStackGuard
 argument_list|(
-name|unsigned
+name|IRBuilder
+operator|<
+operator|>
 operator|&
-comment|/*AddressSpace*/
-argument_list|,
-name|unsigned
-operator|&
-comment|/*Offset*/
+name|IRB
 argument_list|)
 decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
+decl_stmt|;
+comment|/// Inserts necessary declarations for SSP (stack protection) purpose.
+comment|/// Should be used only when getIRStackGuard returns nullptr.
+name|virtual
+name|void
+name|insertSSPDeclarations
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return the variable that's previously inserted by insertSSPDeclarations,
+comment|/// if any, otherwise return nullptr. Should be used only when
+comment|/// getIRStackGuard returns nullptr.
+name|virtual
+name|Value
+modifier|*
+name|getSDagStackGuard
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// If the target has a standard stack protection check function that
+comment|/// performs validation and error handling, returns the function. Otherwise,
+comment|/// returns nullptr. Must be previously inserted by insertSSPDeclarations.
+comment|/// Should be used only when getIRStackGuard returns nullptr.
+name|virtual
+name|Value
+modifier|*
+name|getSSPStackGuardCheck
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// If the target has a standard location for the unsafe stack pointer,
 comment|/// returns the address of that location. Otherwise, returns nullptr.
 name|virtual
@@ -3819,6 +4126,53 @@ comment|/// @}
 comment|//===--------------------------------------------------------------------===//
 comment|/// \name Helpers for atomic expansion.
 comment|/// @{
+comment|/// Returns the maximum atomic operation size (in bits) supported by
+comment|/// the backend. Atomic operations greater than this size (as well
+comment|/// as ones that are not naturally aligned), will be expanded by
+comment|/// AtomicExpandPass into an __atomic_* library call.
+name|unsigned
+name|getMaxAtomicSizeInBitsSupported
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxAtomicSizeInBitsSupported
+return|;
+block|}
+comment|/// Returns the size of the smallest cmpxchg or ll/sc instruction
+comment|/// the backend supports.  Any smaller operations are widened in
+comment|/// AtomicExpandPass.
+comment|///
+comment|/// Note that *unlike* operations above the maximum size, atomic ops
+comment|/// are still natively supported below the minimum; they just
+comment|/// require a more complex expansion.
+name|unsigned
+name|getMinCmpXchgSizeInBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinCmpXchgSizeInBits
+return|;
+block|}
+comment|/// Whether AtomicExpandPass should automatically insert fences and reduce
+comment|/// ordering for this atomic. This should be true for most architectures with
+comment|/// weak memory ordering. Defaults to false.
+name|virtual
+name|bool
+name|shouldInsertFencesForAtomic
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Perform a load-linked operation on Addr, returning a "Value *" with the
 comment|/// corresponding pointee type. This may entail some non-trivial operations to
 comment|/// truncate or reconstruct types that will be illegal in the backend. See
@@ -3883,12 +4237,12 @@ expr_stmt|;
 block|}
 comment|/// Inserts in the IR a target-specific intrinsic specifying a fence.
 comment|/// It is called by AtomicExpandPass before expanding an
-comment|///   AtomicRMW/AtomicCmpXchg/AtomicStore/AtomicLoad.
+comment|///   AtomicRMW/AtomicCmpXchg/AtomicStore/AtomicLoad
+comment|///   if shouldInsertFencesForAtomic returns true.
 comment|/// RMW and CmpXchg set both IsStore and IsLoad to true.
 comment|/// This function should either return a nullptr, or a pointer to an IR-level
 comment|///   Instruction*. Even complex fence sequences can be represented by a
 comment|///   single Instruction* through an intrinsic to be lowered later.
-comment|/// Backends with !getInsertFencesForAtomic() should keep a no-op here.
 comment|/// Backends should override this method to produce target-specific intrinsic
 comment|///   for their fences.
 comment|/// FIXME: Please note that the default implementation here in terms of
@@ -3935,16 +4289,7 @@ decl|const
 block|{
 if|if
 condition|(
-operator|!
-name|getInsertFencesForAtomic
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-if|if
-condition|(
-name|isAtLeastRelease
+name|isReleaseOrStronger
 argument_list|(
 name|Ord
 argument_list|)
@@ -3988,16 +4333,7 @@ decl|const
 block|{
 if|if
 condition|(
-operator|!
-name|getInsertFencesForAtomic
-argument_list|()
-condition|)
-return|return
-name|nullptr
-return|;
-if|if
-condition|(
-name|isAtLeastAcquire
+name|isAcquireOrStronger
 argument_list|(
 name|Ord
 argument_list|)
@@ -4145,6 +4481,23 @@ return|return
 name|nullptr
 return|;
 block|}
+comment|/// Returns how the platform's atomic operations are extended (ZERO_EXTEND,
+comment|/// SIGN_EXTEND, or ANY_EXTEND).
+name|virtual
+name|ISD
+operator|::
+name|NodeType
+name|getExtendForAtomicOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ISD
+operator|::
+name|ZERO_EXTEND
+return|;
+block|}
+comment|/// @}
 comment|/// Returns true if we should normalize
 comment|/// select(N0&N1, X, Y) => select(N0, select(N1, X, Y), Y) and
 comment|/// select(N0|N1, X, Y) => select(N0, select(N1, X, Y, Y)) if it is likely
@@ -4655,11 +5008,27 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-name|LoadExtActions
-index|[
+name|assert
+argument_list|(
 operator|(
 name|unsigned
 operator|)
+name|Action
+operator|<
+literal|0x10
+operator|&&
+literal|"too many bits for bitfield array"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|Shift
+init|=
+literal|4
+operator|*
+name|ExtType
+decl_stmt|;
+name|LoadExtActions
+index|[
 name|ValVT
 operator|.
 name|SimpleTy
@@ -4669,11 +5038,35 @@ name|MemVT
 operator|.
 name|SimpleTy
 index|]
+operator|&=
+operator|~
+operator|(
+operator|(
+name|uint16_t
+operator|)
+literal|0xF
+operator|<<
+name|Shift
+operator|)
+expr_stmt|;
+name|LoadExtActions
 index|[
-name|ExtType
+name|ValVT
+operator|.
+name|SimpleTy
 index|]
-operator|=
+index|[
+name|MemVT
+operator|.
+name|SimpleTy
+index|]
+operator||=
+operator|(
+name|uint16_t
+operator|)
 name|Action
+operator|<<
+name|Shift
 expr_stmt|;
 block|}
 comment|/// Indicate that the specified truncating store does not work with the
@@ -5027,6 +5420,40 @@ operator|.
 name|SimpleTy
 expr_stmt|;
 block|}
+comment|/// Convenience method to set an operation to Promote and specify the type
+comment|/// in a single call.
+name|void
+name|setOperationPromotedToType
+parameter_list|(
+name|unsigned
+name|Opc
+parameter_list|,
+name|MVT
+name|OrigVT
+parameter_list|,
+name|MVT
+name|DestVT
+parameter_list|)
+block|{
+name|setOperationAction
+argument_list|(
+name|Opc
+argument_list|,
+name|OrigVT
+argument_list|,
+name|Promote
+argument_list|)
+expr_stmt|;
+name|AddPromotedToType
+argument_list|(
+name|Opc
+argument_list|,
+name|OrigVT
+argument_list|,
+name|DestVT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Targets should invoke this method for each target independent node that
 comment|/// they want to provide a custom DAG combiner for by implementing the
 comment|/// PerformDAGCombine virtual method.
@@ -5154,18 +5581,33 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// Set if the DAG builder should automatically insert fences and reduce the
-comment|/// order of atomic memory operations to Monotonic.
+comment|/// Set the maximum atomic operation size supported by the
+comment|/// backend. Atomic operations greater than this size (as well as
+comment|/// ones that are not naturally aligned), will be expanded by
+comment|/// AtomicExpandPass into an __atomic_* library call.
 name|void
-name|setInsertFencesForAtomic
+name|setMaxAtomicSizeInBitsSupported
 parameter_list|(
-name|bool
-name|fence
+name|unsigned
+name|SizeInBits
 parameter_list|)
 block|{
-name|InsertFencesForAtomic
+name|MaxAtomicSizeInBitsSupported
 operator|=
-name|fence
+name|SizeInBits
+expr_stmt|;
+block|}
+comment|// Sets the minimum cmpxchg or ll/sc size supported by the backend.
+name|void
+name|setMinCmpXchgSizeInBits
+parameter_list|(
+name|unsigned
+name|SizeInBits
+parameter_list|)
+block|{
+name|MinCmpXchgSizeInBits
+operator|=
+name|SizeInBits
 expr_stmt|;
 block|}
 name|public
@@ -6202,11 +6644,15 @@ comment|/// The preferred loop alignment.
 name|unsigned
 name|PrefLoopAlignment
 decl_stmt|;
-comment|/// Whether the DAG builder should automatically insert fences and reduce
-comment|/// ordering for atomics.  (This will be set for for most architectures with
-comment|/// weak memory ordering.)
-name|bool
-name|InsertFencesForAtomic
+comment|/// Size in bits of the maximum atomics size the backend supports.
+comment|/// Accesses larger than this will be expanded by AtomicExpandPass.
+name|unsigned
+name|MaxAtomicSizeInBitsSupported
+decl_stmt|;
+comment|/// Size in bits of the minimum cmpxchg or ll/sc operation the
+comment|/// backend supports.
+name|unsigned
+name|MinCmpXchgSizeInBits
 decl_stmt|;
 comment|/// If set to a physical register, this specifies the register that
 comment|/// llvm.savestack/llvm.restorestack should save and restore.
@@ -6302,8 +6748,9 @@ index|]
 decl_stmt|;
 comment|/// For each load extension type and each value type, keep a LegalizeAction
 comment|/// that indicates how instruction selection should deal with a load of a
-comment|/// specific value type and extension type.
-name|LegalizeAction
+comment|/// specific value type and extension type. Uses 4-bits to store the action
+comment|/// for each of the 4 load ext types.
+name|uint16_t
 name|LoadExtActions
 index|[
 name|MVT
@@ -6314,11 +6761,6 @@ index|[
 name|MVT
 operator|::
 name|LAST_VALUETYPE
-index|]
-index|[
-name|ISD
-operator|::
-name|LAST_LOADEXT_TYPE
 index|]
 decl_stmt|;
 comment|/// For each value type pair keep a LegalizeAction that indicates whether a
@@ -6616,7 +7058,7 @@ modifier|*
 name|emitPatchPoint
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -6690,6 +7132,11 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+name|bool
+name|isPositionIndependent
+argument_list|()
+specifier|const
 block|;
 comment|/// Returns true by value, base pointer and offset pointer and addressing mode
 comment|/// by reference if the node's address can be legally represented as
@@ -6844,7 +7291,7 @@ argument|SDValue&NewRHS
 argument_list|,
 argument|ISD::CondCode&CCCode
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|)
 specifier|const
 block|;
@@ -6870,11 +7317,27 @@ argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|bool isSigned
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|bool doesNotReturn = false
 argument_list|,
 argument|bool isReturnValueUsed = true
+argument_list|)
+specifier|const
+block|;
+comment|/// Check whether parameters to a call that are passed in callee saved
+comment|/// registers are the same as from the calling function.  This needs to be
+comment|/// checked for tail call eligibility.
+name|bool
+name|parametersInCSRMatch
+argument_list|(
+argument|const MachineRegisterInfo&MRI
+argument_list|,
+argument|const uint32_t *CallerPreservedMask
+argument_list|,
+argument|const SmallVectorImpl<CCValAssign>&ArgLocs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|)
 specifier|const
 block|;
@@ -6990,7 +7453,7 @@ argument|unsigned BitWidth
 argument_list|,
 argument|const APInt&Demanded
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|)
 block|;   }
 block|;
@@ -7229,6 +7692,31 @@ argument|const SDNode *N
 argument_list|)
 specifier|const
 block|;
+comment|/// Return a constant of type VT that contains a true value that respects
+comment|/// getBooleanContents()
+name|SDValue
+name|getConstTrueVal
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|const SDLoc&DL
+argument_list|)
+specifier|const
+block|;
+comment|/// Return if \p N is a True value when extended to \p VT.
+name|bool
+name|isExtendedTrueVal
+argument_list|(
+argument|const ConstantSDNode *N
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|bool Signed
+argument_list|)
+specifier|const
+block|;
 comment|/// Try to simplify a setcc built with the specified operands and cc. If it is
 comment|/// unable to simplify it, return a null SDValue.
 name|SDValue
@@ -7246,7 +7734,7 @@ argument|bool foldBooleans
 argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|)
 specifier|const
 block|;
@@ -7366,6 +7854,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target supports swifterror attribute. It optimizes
+comment|/// loads and stores to reading and writing a specific register.
+name|virtual
+name|bool
+name|supportSwiftError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Return true if the target supports that a subset of CSRs for the given
 comment|/// machine function is handled explicitly via copies.
 name|virtual
@@ -7454,7 +7954,7 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&
 comment|/*Ins*/
 argument_list|,
-argument|SDLoc
+argument|const SDLoc&
 comment|/*dl*/
 argument_list|,
 argument|SelectionDAG&
@@ -7520,6 +8020,16 @@ name|isReturned
 operator|:
 literal|1
 block|;
+name|bool
+name|isSwiftSelf
+operator|:
+literal|1
+block|;
+name|bool
+name|isSwiftError
+operator|:
+literal|1
+block|;
 name|uint16_t
 name|Alignment
 block|;
@@ -7562,6 +8072,16 @@ name|false
 argument_list|)
 block|,
 name|isReturned
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|isSwiftSelf
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|isSwiftError
 argument_list|(
 name|false
 argument_list|)
@@ -7633,6 +8153,11 @@ name|IsReturnValueUsed
 operator|:
 literal|1
 block|;
+name|bool
+name|IsConvergent
+operator|:
+literal|1
+block|;
 comment|// IsTailCall should be modified by implementations of
 comment|// TargetLowering::LowerCall that perform tail call conversions.
 name|bool
@@ -7694,6 +8219,14 @@ literal|32
 operator|>
 name|Ins
 block|;
+name|SmallVector
+operator|<
+name|SDValue
+block|,
+literal|4
+operator|>
+name|InVals
+block|;
 name|CallLoweringInfo
 argument_list|(
 name|SelectionDAG
@@ -7736,6 +8269,11 @@ argument_list|(
 name|true
 argument_list|)
 block|,
+name|IsConvergent
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|IsTailCall
 argument_list|(
 name|false
@@ -7768,12 +8306,12 @@ name|IsPatchPoint
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{     }
 name|CallLoweringInfo
 operator|&
 name|setDebugLoc
 argument_list|(
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|)
 block|{
 name|DL
@@ -7812,9 +8350,6 @@ argument_list|,
 argument|SDValue Target
 argument_list|,
 argument|ArgListTy&&ArgsList
-argument_list|,
-argument|unsigned FixedArgs = -
-literal|1
 argument_list|)
 block|{
 name|RetTy
@@ -7831,25 +8366,10 @@ name|CC
 block|;
 name|NumFixedArgs
 operator|=
-operator|(
-name|FixedArgs
-operator|==
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|-
-literal|1
-operator|)
-condition|?
 name|Args
 operator|.
 name|size
 argument_list|()
-else|:
-name|FixedArgs
-operator|)
 block|;
 name|Args
 operator|=
@@ -7903,6 +8423,28 @@ name|Call
 operator|.
 name|doesNotReturn
 argument_list|()
+operator|||
+operator|(
+operator|!
+name|Call
+operator|.
+name|isInvoke
+argument_list|()
+operator|&&
+name|isa
+operator|<
+name|UnreachableInst
+operator|>
+operator|(
+name|Call
+operator|.
+name|getInstruction
+argument_list|()
+operator|->
+name|getNextNode
+argument_list|()
+operator|)
+operator|)
 block|;
 name|IsVarArg
 operator|=
@@ -8059,6 +8601,22 @@ block|{
 name|IsReturnValueUsed
 operator|=
 operator|!
+name|Value
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CallLoweringInfo
+operator|&
+name|setConvergent
+argument_list|(
+argument|bool Value = true
+argument_list|)
+block|{
+name|IsConvergent
+operator|=
 name|Value
 block|;
 return|return
@@ -8229,7 +8787,7 @@ argument_list|,
 argument|const SmallVectorImpl<SDValue>&
 comment|/*OutVals*/
 argument_list|,
-argument|SDLoc
+argument|const SDLoc&
 comment|/*dl*/
 argument_list|,
 argument|SelectionDAG&
@@ -8312,14 +8870,14 @@ literal|"Named registers not implemented for this target"
 argument_list|)
 block|;   }
 comment|/// Return the type that should be used to zero or sign extend a
-comment|/// zeroext/signext integer argument or return value.  FIXME: Most C calling
-comment|/// convention requires the return type to be promoted, but this is not true
-comment|/// all the time, e.g. i1 on x86-64. It is also not necessary for non-C
-comment|/// calling conventions. The frontend should handle this and include all of
-comment|/// the necessary information.
+comment|/// zeroext/signext integer return value.  FIXME: Some C calling conventions
+comment|/// require the return type to be promoted, but this is not true all the time,
+comment|/// e.g. i1/i8/i16 on x86/x86_64. It is also not necessary for non-C calling
+comment|/// conventions. The frontend should handle this and include all of the
+comment|/// necessary information.
 name|virtual
 name|EVT
-name|getTypeForExtArgOrReturn
+name|getTypeForExtReturn
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
@@ -8403,7 +8961,7 @@ name|prepareVolatileOrAtomicLoad
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -9423,6 +9981,113 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Turn load of vector type into a load of the individual elements.
+end_comment
+
+begin_comment
+comment|/// \param LD load to expand
+end_comment
+
+begin_comment
+comment|/// \returns MERGE_VALUEs of the scalar loads with their chains.
+end_comment
+
+begin_decl_stmt
+name|SDValue
+name|scalarizeVectorLoad
+argument_list|(
+name|LoadSDNode
+operator|*
+name|LD
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Turn a store of a vector type into stores of the individual elements.
+end_comment
+
+begin_comment
+comment|/// \param ST Store with a vector value type
+end_comment
+
+begin_comment
+comment|/// \returns MERGE_VALUs of the individual store chains.
+end_comment
+
+begin_decl_stmt
+name|SDValue
+name|scalarizeVectorStore
+argument_list|(
+name|StoreSDNode
+operator|*
+name|ST
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Expands an unaligned load to 2 half-size loads for an integer, and
+end_comment
+
+begin_comment
+comment|/// possibly more for vectors.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|expandUnalignedLoad
+argument_list|(
+argument|LoadSDNode *LD
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Expands an unaligned store to 2 half-size stores for integer values, and
+end_comment
+
+begin_comment
+comment|/// possibly more for vectors.
+end_comment
+
+begin_decl_stmt
+name|SDValue
+name|expandUnalignedStore
+argument_list|(
+name|StoreSDNode
+operator|*
+name|ST
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -9473,7 +10138,7 @@ modifier|*
 name|EmitInstrWithCustomInserter
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -9506,7 +10171,7 @@ name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|SDNode
@@ -9555,6 +10220,42 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|SDValue
+name|simplifySetCCWithAnd
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+name|SDValue
+name|N0
+argument_list|,
+name|SDValue
+name|N1
+argument_list|,
+name|ISD
+operator|::
+name|CondCode
+name|Cond
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|,
+specifier|const
+name|SDLoc
+operator|&
+name|DL
 argument_list|)
 decl|const
 decl_stmt|;

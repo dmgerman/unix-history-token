@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"AliasAnalysisSummary.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -58,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
@@ -71,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -95,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<cmath>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits>
 end_include
 
 begin_include
@@ -125,13 +113,16 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// \brief An index into Stratified Sets.
+name|namespace
+name|cflaa
+block|{
+comment|/// An index into Stratified Sets.
 typedef|typedef
 name|unsigned
 name|StratifiedIndex
 typedef|;
-comment|// NOTE: ^ This can't be a short -- bootstrapping clang has a case where
-comment|// ~1M sets exist.
+comment|/// NOTE: ^ This can't be a short -- bootstrapping clang has a case where
+comment|/// ~1M sets exist.
 comment|// \brief Container of information related to a value in a StratifiedSet.
 struct|struct
 name|StratifiedInfo
@@ -139,56 +130,34 @@ block|{
 name|StratifiedIndex
 name|Index
 decl_stmt|;
-comment|// For field sensitivity, etc. we can tack attributes on to this struct.
+comment|/// For field sensitivity, etc. we can tack fields on here.
 block|}
 struct|;
-comment|// The number of attributes that StratifiedAttrs should contain. Attributes are
-comment|// described below, and 32 was an arbitrary choice because it fits nicely in 32
-comment|// bits (because we use a bitset for StratifiedAttrs).
-specifier|static
-specifier|const
-name|unsigned
-name|NumStratifiedAttrs
-init|=
-literal|32
-decl_stmt|;
-comment|// These are attributes that the users of StratifiedSets/StratifiedSetBuilders
-comment|// may use for various purposes. These also have the special property of that
-comment|// they are merged down. So, if set A is above set B, and one decides to set an
-comment|// attribute in set A, then the attribute will automatically be set in set B.
-typedef|typedef
-name|std
-operator|::
-name|bitset
-operator|<
-name|NumStratifiedAttrs
-operator|>
-name|StratifiedAttrs
-expr_stmt|;
-comment|// \brief A "link" between two StratifiedSets.
+comment|/// A "link" between two StratifiedSets.
 struct|struct
 name|StratifiedLink
 block|{
-comment|// \brief This is a value used to signify "does not exist" where
-comment|// the StratifiedIndex type is used. This is used instead of
-comment|// Optional<StratifiedIndex> because Optional<StratifiedIndex> would
-comment|// eat up a considerable amount of extra memory, after struct
-comment|// padding/alignment is taken into account.
+comment|/// \brief This is a value used to signify "does not exist" where the
+comment|/// StratifiedIndex type is used.
+comment|///
+comment|/// This is used instead of Optional<StratifiedIndex> because
+comment|/// Optional<StratifiedIndex> would eat up a considerable amount of extra
+comment|/// memory, after struct padding/alignment is taken into account.
 specifier|static
 specifier|const
 name|StratifiedIndex
 name|SetSentinel
 decl_stmt|;
-comment|// \brief The index for the set "above" current
+comment|/// The index for the set "above" current
 name|StratifiedIndex
 name|Above
 decl_stmt|;
-comment|// \brief The link for the set "below" current
+comment|/// The link for the set "below" current
 name|StratifiedIndex
 name|Below
 decl_stmt|;
-comment|// \brief Attributes for these StratifiedSets.
-name|StratifiedAttrs
+comment|/// Attributes for these StratifiedSets.
+name|AliasAttrs
 name|Attrs
 decl_stmt|;
 name|StratifiedLink
@@ -246,25 +215,25 @@ expr_stmt|;
 block|}
 block|}
 struct|;
-comment|// \brief These are stratified sets, as described in "Fast algorithms for
-comment|// Dyck-CFL-reachability with applications to Alias Analysis" by Zhang Q, Lyu M
-comment|// R, Yuan H, and Su Z. -- in short, this is meant to represent different sets
-comment|// of Value*s. If two Value*s are in the same set, or if both sets have
-comment|// overlapping attributes, then the Value*s are said to alias.
-comment|//
-comment|// Sets may be related by position, meaning that one set may be considered as
-comment|// above or below another. In CFL Alias Analysis, this gives us an indication
-comment|// of how two variables are related; if the set of variable A is below a set
-comment|// containing variable B, then at some point, a variable that has interacted
-comment|// with B (or B itself) was either used in order to extract the variable A, or
-comment|// was used as storage of variable A.
-comment|//
-comment|// Sets may also have attributes (as noted above). These attributes are
-comment|// generally used for noting whether a variable in the set has interacted with
-comment|// a variable whose origins we don't quite know (i.e. globals/arguments), or if
-comment|// the variable may have had operations performed on it (modified in a function
-comment|// call). All attributes that exist in a set A must exist in all sets marked as
-comment|// below set A.
+comment|/// \brief These are stratified sets, as described in "Fast algorithms for
+comment|/// Dyck-CFL-reachability with applications to Alias Analysis" by Zhang Q, Lyu M
+comment|/// R, Yuan H, and Su Z. -- in short, this is meant to represent different sets
+comment|/// of Value*s. If two Value*s are in the same set, or if both sets have
+comment|/// overlapping attributes, then the Value*s are said to alias.
+comment|///
+comment|/// Sets may be related by position, meaning that one set may be considered as
+comment|/// above or below another. In CFL Alias Analysis, this gives us an indication
+comment|/// of how two variables are related; if the set of variable A is below a set
+comment|/// containing variable B, then at some point, a variable that has interacted
+comment|/// with B (or B itself) was either used in order to extract the variable A, or
+comment|/// was used as storage of variable A.
+comment|///
+comment|/// Sets may also have attributes (as noted above). These attributes are
+comment|/// generally used for noting whether a variable in the set has interacted with
+comment|/// a variable whose origins we don't quite know (i.e. globals/arguments), or if
+comment|/// the variable may have had operations performed on it (modified in a function
+comment|/// call). All attributes that exist in a set A must exist in all sets marked as
+comment|/// below set A.
 name|template
 operator|<
 name|typename
@@ -277,7 +246,64 @@ name|public
 operator|:
 name|StratifiedSets
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
+comment|// TODO: Figure out how to make MSVC not call the copy ctor here, and delete
+comment|// it.
+comment|// Can't default these due to compile errors in MSVC2013
+name|StratifiedSets
+argument_list|(
+argument|StratifiedSets&&Other
+argument_list|)
+block|{
+operator|*
+name|this
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+argument_list|)
+block|; }
+name|StratifiedSets
+operator|&
+name|operator
+operator|=
+operator|(
+name|StratifiedSets
+operator|&&
+name|Other
+operator|)
+block|{
+name|Values
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+operator|.
+name|Values
+argument_list|)
+block|;
+name|Links
+operator|=
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+operator|.
+name|Links
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|StratifiedSets
 argument_list|(
 name|DenseMap
@@ -312,61 +338,6 @@ argument_list|(
 argument|std::move(Links)
 argument_list|)
 block|{}
-name|StratifiedSets
-argument_list|(
-argument|StratifiedSets<T>&&Other
-argument_list|)
-block|{
-operator|*
-name|this
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-argument_list|)
-block|; }
-name|StratifiedSets
-operator|&
-name|operator
-operator|=
-operator|(
-name|StratifiedSets
-operator|<
-name|T
-operator|>
-operator|&&
-name|Other
-operator|)
-block|{
-name|Values
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-operator|.
-name|Values
-argument_list|)
-block|;
-name|Links
-operator|=
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-operator|.
-name|Links
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|Optional
 operator|<
 name|StratifiedInfo
@@ -396,12 +367,9 @@ operator|.
 name|end
 argument_list|()
 condition|)
-block|{
 return|return
-name|NoneType
-argument_list|()
+name|None
 return|;
-block|}
 return|return
 name|Iter
 operator|->
@@ -410,12 +378,13 @@ return|;
 block|}
 specifier|const
 name|StratifiedLink
-operator|&
+modifier|&
 name|getLink
 argument_list|(
-argument|StratifiedIndex Index
+name|StratifiedIndex
+name|Index
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -424,7 +393,7 @@ argument_list|(
 name|Index
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Links
 index|[
@@ -433,15 +402,15 @@ index|]
 return|;
 block|}
 name|private
-operator|:
+label|:
 name|DenseMap
 operator|<
 name|T
-block|,
+operator|,
 name|StratifiedInfo
 operator|>
 name|Values
-block|;
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -449,13 +418,14 @@ operator|<
 name|StratifiedLink
 operator|>
 name|Links
-block|;
+expr_stmt|;
 name|bool
 name|inbounds
 argument_list|(
-argument|StratifiedIndex Idx
+name|StratifiedIndex
+name|Idx
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|Idx
@@ -466,89 +436,68 @@ name|size
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
-comment|// \brief Generic Builder class that produces StratifiedSets instances.
-comment|//
-comment|// The goal of this builder is to efficiently produce correct StratifiedSets
-comment|// instances. To this end, we use a few tricks:
-comment|//> Set chains (A method for linking sets together)
-comment|//> Set remaps (A method for marking a set as an alias [irony?] of another)
-comment|//
-comment|// ==== Set chains ====
-comment|// This builder has a notion of some value A being above, below, or with some
-comment|// other value B:
-comment|//> The `A above B` relationship implies that there is a reference edge going
-comment|//   from A to B. Namely, it notes that A can store anything in B's set.
-comment|//> The `A below B` relationship is the opposite of `A above B`. It implies
-comment|//   that there's a dereference edge going from A to B.
-comment|//> The `A with B` relationship states that there's an assignment edge going
-comment|//   from A to B, and that A and B should be treated as equals.
-comment|//
-comment|// As an example, take the following code snippet:
-comment|//
-comment|// %a = alloca i32, align 4
-comment|// %ap = alloca i32*, align 8
-comment|// %app = alloca i32**, align 8
-comment|// store %a, %ap
-comment|// store %ap, %app
-comment|// %aw = getelementptr %ap, 0
-comment|//
-comment|// Given this, the follow relations exist:
-comment|//   - %a below %ap& %ap above %a
-comment|//   - %ap below %app& %app above %ap
-comment|//   - %aw with %ap& %ap with %aw
-comment|//
-comment|// These relations produce the following sets:
-comment|//   [{%a}, {%ap, %aw}, {%app}]
-comment|//
-comment|// ...Which states that the only MayAlias relationship in the above program is
-comment|// between %ap and %aw.
-comment|//
-comment|// Life gets more complicated when we actually have logic in our programs. So,
-comment|// we either must remove this logic from our programs, or make consessions for
-comment|// it in our AA algorithms. In this case, we have decided to select the latter
-comment|// option.
-comment|//
-comment|// First complication: Conditionals
-comment|// Motivation:
-comment|//  %ad = alloca int, align 4
-comment|//  %a = alloca int*, align 8
-comment|//  %b = alloca int*, align 8
-comment|//  %bp = alloca int**, align 8
-comment|//  %c = call i1 @SomeFunc()
-comment|//  %k = select %c, %ad, %bp
-comment|//  store %ad, %a
-comment|//  store %b, %bp
-comment|//
-comment|// %k has 'with' edges to both %a and %b, which ordinarily would not be linked
-comment|// together. So, we merge the set that contains %a with the set that contains
-comment|// %b. We then recursively merge the set above %a with the set above %b, and
-comment|// the set below  %a with the set below %b, etc. Ultimately, the sets for this
-comment|// program would end up like: {%ad}, {%a, %b, %k}, {%bp}, where {%ad} is below
-comment|// {%a, %b, %c} is below {%ad}.
-comment|//
-comment|// Second complication: Arbitrary casts
-comment|// Motivation:
-comment|//  %ip = alloca int*, align 8
-comment|//  %ipp = alloca int**, align 8
-comment|//  %i = bitcast ipp to int
-comment|//  store %ip, %ipp
-comment|//  store %i, %ip
-comment|//
-comment|// This is impossible to construct with any of the rules above, because a set
-comment|// containing both {%i, %ipp} is supposed to exist, the set with %i is supposed
-comment|// to be below the set with %ip, and the set with %ip is supposed to be below
-comment|// the set with %ipp. Because we don't allow circular relationships like this,
-comment|// we merge all concerned sets into one. So, the above code would generate a
-comment|// single StratifiedSet: {%ip, %ipp, %i}.
-comment|//
-comment|// ==== Set remaps ====
-comment|// More of an implementation detail than anything -- when merging sets, we need
-comment|// to update the numbers of all of the elements mapped to those sets. Rather
-comment|// than doing this at each merge, we note in the BuilderLink structure that a
-comment|// remap has occurred, and use this information so we can defer renumbering set
-comment|// elements until build time.
+block|}
+empty_stmt|;
+comment|/// Generic Builder class that produces StratifiedSets instances.
+comment|///
+comment|/// The goal of this builder is to efficiently produce correct StratifiedSets
+comment|/// instances. To this end, we use a few tricks:
+comment|///> Set chains (A method for linking sets together)
+comment|///> Set remaps (A method for marking a set as an alias [irony?] of another)
+comment|///
+comment|/// ==== Set chains ====
+comment|/// This builder has a notion of some value A being above, below, or with some
+comment|/// other value B:
+comment|///> The `A above B` relationship implies that there is a reference edge
+comment|///   going from A to B. Namely, it notes that A can store anything in B's set.
+comment|///> The `A below B` relationship is the opposite of `A above B`. It implies
+comment|///   that there's a dereference edge going from A to B.
+comment|///> The `A with B` relationship states that there's an assignment edge going
+comment|///   from A to B, and that A and B should be treated as equals.
+comment|///
+comment|/// As an example, take the following code snippet:
+comment|///
+comment|/// %a = alloca i32, align 4
+comment|/// %ap = alloca i32*, align 8
+comment|/// %app = alloca i32**, align 8
+comment|/// store %a, %ap
+comment|/// store %ap, %app
+comment|/// %aw = getelementptr %ap, i32 0
+comment|///
+comment|/// Given this, the following relations exist:
+comment|///   - %a below %ap& %ap above %a
+comment|///   - %ap below %app& %app above %ap
+comment|///   - %aw with %ap& %ap with %aw
+comment|///
+comment|/// These relations produce the following sets:
+comment|///   [{%a}, {%ap, %aw}, {%app}]
+comment|///
+comment|/// ...Which state that the only MayAlias relationship in the above program is
+comment|/// between %ap and %aw.
+comment|///
+comment|/// Because LLVM allows arbitrary casts, code like the following needs to be
+comment|/// supported:
+comment|///   %ip = alloca i64, align 8
+comment|///   %ipp = alloca i64*, align 8
+comment|///   %i = bitcast i64** ipp to i64
+comment|///   store i64* %ip, i64** %ipp
+comment|///   store i64 %i, i64* %ip
+comment|///
+comment|/// Which, because %ipp ends up *both* above and below %ip, is fun.
+comment|///
+comment|/// This is solved by merging %i and %ipp into a single set (...which is the
+comment|/// only way to solve this, since their bit patterns are equivalent). Any sets
+comment|/// that ended up in between %i and %ipp at the time of merging (in this case,
+comment|/// the set containing %ip) also get conservatively merged into the set of %i
+comment|/// and %ipp. In short, the resulting StratifiedSet from the above code would be
+comment|/// {%ip, %ipp, %i}.
+comment|///
+comment|/// ==== Set remaps ====
+comment|/// More of an implementation detail than anything -- when merging sets, we need
+comment|/// to update the numbers of all of the elements mapped to those sets. Rather
+comment|/// than doing this at each merge, we note in the BuilderLink structure that a
+comment|/// remap has occurred, and use this information so we can defer renumbering set
+comment|/// elements until build time.
 name|template
 operator|<
 name|typename
@@ -557,9 +506,9 @@ operator|>
 name|class
 name|StratifiedSetsBuilder
 block|{
-comment|// \brief Represents a Stratified Set, with information about the Stratified
-comment|// Set above it, the set below it, and whether the current set has been
-comment|// remapped to another.
+comment|/// \brief Represents a Stratified Set, with information about the Stratified
+comment|/// Set above it, the set below it, and whether the current set has been
+comment|/// remapped to another.
 block|struct
 name|BuilderLink
 block|{
@@ -739,8 +688,7 @@ operator|.
 name|Above
 return|;
 block|}
-name|StratifiedAttrs
-operator|&
+name|AliasAttrs
 name|getAttrs
 argument_list|()
 block|{
@@ -758,38 +706,9 @@ name|Attrs
 return|;
 block|}
 name|void
-name|setAttr
-argument_list|(
-argument|unsigned index
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isRemapped
-argument_list|()
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|index
-operator|<
-name|NumStratifiedAttrs
-argument_list|)
-block|;
-name|Link
-operator|.
-name|Attrs
-operator|.
-name|set
-argument_list|(
-name|index
-argument_list|)
-block|;     }
-name|void
 name|setAttrs
 argument_list|(
-argument|const StratifiedAttrs&other
+argument|AliasAttrs Other
 argument_list|)
 block|{
 name|assert
@@ -803,7 +722,7 @@ name|Link
 operator|.
 name|Attrs
 operator||=
-name|other
+name|Other
 block|;     }
 name|bool
 name|isRemapped
@@ -818,7 +737,7 @@ operator|::
 name|SetSentinel
 return|;
 block|}
-comment|// \brief For initial remapping to another set
+comment|/// For initial remapping to another set
 name|void
 name|remapTo
 argument_list|(
@@ -851,7 +770,7 @@ return|return
 name|Remap
 return|;
 block|}
-comment|// \brief Should only be called when we're already remapped.
+comment|/// Should only be called when we're already remapped.
 name|void
 name|updateRemap
 argument_list|(
@@ -868,9 +787,9 @@ name|Remap
 operator|=
 name|Other
 block|;     }
-comment|// \brief Prefer the above functions to calling things directly on what's
-comment|// returned from this -- they guard against unexpected calls when the
-comment|// current BuilderLink is remapped.
+comment|/// Prefer the above functions to calling things directly on what's returned
+comment|/// from this -- they guard against unexpected calls when the current
+comment|/// BuilderLink is remapped.
 specifier|const
 name|StratifiedLink
 operator|&
@@ -891,9 +810,9 @@ name|StratifiedIndex
 name|Remap
 block|;   }
 block|;
-comment|// \brief This function performs all of the set unioning/value renumbering
-comment|// that we've been putting off, and generates a vector<StratifiedLink> that
-comment|// may be placed in a StratifiedSets instance.
+comment|/// \brief This function performs all of the set unioning/value renumbering
+comment|/// that we've been putting off, and generates a vector<StratifiedLink> that
+comment|/// may be placed in a StratifiedSets instance.
 name|void
 name|finalizeSets
 argument_list|(
@@ -924,9 +843,7 @@ operator|.
 name|isRemapped
 argument_list|()
 condition|)
-block|{
 continue|continue;
-block|}
 name|StratifiedIndex
 name|Number
 init|=
@@ -1132,8 +1049,8 @@ name|second
 expr_stmt|;
 block|}
 block|}
-comment|// \brief There's a guarantee in StratifiedLink where all bits set in a
-comment|// Link.externals will be set in all Link.externals "below" it.
+comment|/// \brief There's a guarantee in StratifiedLink where all bits set in a
+comment|/// Link.externals will be set in all Link.externals "below" it.
 specifier|static
 name|void
 name|propagateAttrs
@@ -1243,9 +1160,7 @@ argument_list|)
 operator|.
 name|second
 condition|)
-block|{
 continue|continue;
-block|}
 while|while
 condition|(
 name|Links
@@ -1302,8 +1217,8 @@ block|}
 block|}
 name|public
 operator|:
-comment|// \brief Builds a StratifiedSet from the information we've been given since
-comment|// either construction or the prior build() call.
+comment|/// Builds a StratifiedSet from the information we've been given since either
+comment|/// construction or the prior build() call.
 name|StratifiedSets
 operator|<
 name|T
@@ -1354,34 +1269,6 @@ argument_list|(
 name|StratLinks
 argument_list|)
 operator|)
-return|;
-block|}
-name|std
-operator|::
-name|size_t
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Values
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|std
-operator|::
-name|size_t
-name|numSets
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Links
-operator|.
-name|size
-argument_list|()
 return|;
 block|}
 name|bool
@@ -1435,16 +1322,22 @@ name|NewIndex
 argument_list|)
 return|;
 block|}
-comment|// \brief Restructures the stratified sets as necessary to make "ToAdd" in a
-comment|// set above "Main". There are some cases where this is not possible (see
-comment|// above), so we merge them such that ToAdd and Main are in the same set.
+comment|/// \brief Restructures the stratified sets as necessary to make "ToAdd" in a
+comment|/// set above "Main". There are some cases where this is not possible (see
+comment|/// above), so we merge them such that ToAdd and Main are in the same set.
 name|bool
 name|addAbove
-argument_list|(
-argument|const T&Main
-argument_list|,
-argument|const T&ToAdd
-argument_list|)
+parameter_list|(
+specifier|const
+name|T
+modifier|&
+name|Main
+parameter_list|,
+specifier|const
+name|T
+modifier|&
+name|ToAdd
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1453,16 +1346,16 @@ argument_list|(
 name|Main
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|auto
 name|Index
-operator|=
+init|=
 operator|*
 name|indexOf
 argument_list|(
 name|Main
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1481,7 +1374,7 @@ argument_list|)
 expr_stmt|;
 name|auto
 name|Above
-operator|=
+init|=
 name|linksAt
 argument_list|(
 name|Index
@@ -1489,7 +1382,7 @@ argument_list|)
 operator|.
 name|getAbove
 argument_list|()
-block|;
+decl_stmt|;
 return|return
 name|addAtMerging
 argument_list|(
@@ -1499,9 +1392,9 @@ name|Above
 argument_list|)
 return|;
 block|}
-comment|// \brief Restructures the stratified sets as necessary to make "ToAdd" in a
-comment|// set below "Main". There are some cases where this is not possible (see
-comment|// above), so we merge them such that ToAdd and Main are in the same set.
+comment|/// \brief Restructures the stratified sets as necessary to make "ToAdd" in a
+comment|/// set below "Main". There are some cases where this is not possible (see
+comment|/// above), so we merge them such that ToAdd and Main are in the same set.
 name|bool
 name|addBelow
 parameter_list|(
@@ -1610,64 +1503,6 @@ argument_list|)
 return|;
 block|}
 name|void
-name|noteAttribute
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Main
-parameter_list|,
-name|unsigned
-name|AttrNum
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|has
-argument_list|(
-name|Main
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|AttrNum
-operator|<
-name|StratifiedLink
-operator|::
-name|SetSentinel
-argument_list|)
-expr_stmt|;
-name|auto
-operator|*
-name|Info
-operator|=
-operator|*
-name|get
-argument_list|(
-name|Main
-argument_list|)
-expr_stmt|;
-name|auto
-operator|&
-name|Link
-operator|=
-name|linksAt
-argument_list|(
-name|Info
-operator|->
-name|Index
-argument_list|)
-expr_stmt|;
-name|Link
-operator|.
-name|setAttr
-argument_list|(
-name|AttrNum
-argument_list|)
-expr_stmt|;
-block|}
-name|void
 name|noteAttributes
 parameter_list|(
 specifier|const
@@ -1675,9 +1510,7 @@ name|T
 modifier|&
 name|Main
 parameter_list|,
-specifier|const
-name|StratifiedAttrs
-modifier|&
+name|AliasAttrs
 name|NewAttrs
 parameter_list|)
 block|{
@@ -1718,207 +1551,6 @@ name|NewAttrs
 argument_list|)
 expr_stmt|;
 block|}
-name|StratifiedAttrs
-name|getAttributes
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Main
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|has
-argument_list|(
-name|Main
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|auto
-operator|*
-name|Info
-operator|=
-operator|*
-name|get
-argument_list|(
-name|Main
-argument_list|)
-expr_stmt|;
-name|auto
-operator|*
-name|Link
-operator|=
-operator|&
-name|linksAt
-argument_list|(
-name|Info
-operator|->
-name|Index
-argument_list|)
-expr_stmt|;
-name|auto
-name|Attrs
-init|=
-name|Link
-operator|->
-name|getAttrs
-argument_list|()
-decl_stmt|;
-while|while
-condition|(
-name|Link
-operator|->
-name|hasAbove
-argument_list|()
-condition|)
-block|{
-name|Link
-operator|=
-operator|&
-name|linksAt
-argument_list|(
-name|Link
-operator|->
-name|getAbove
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|Attrs
-operator||=
-name|Link
-operator|->
-name|getAttrs
-argument_list|()
-expr_stmt|;
-block|}
-return|return
-name|Attrs
-return|;
-block|}
-name|bool
-name|getAttribute
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Main
-parameter_list|,
-name|unsigned
-name|AttrNum
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|AttrNum
-operator|<
-name|StratifiedLink
-operator|::
-name|SetSentinel
-argument_list|)
-expr_stmt|;
-name|auto
-name|Attrs
-init|=
-name|getAttributes
-argument_list|(
-name|Main
-argument_list|)
-decl_stmt|;
-return|return
-name|Attrs
-index|[
-name|AttrNum
-index|]
-return|;
-block|}
-comment|// \brief Gets the attributes that have been applied to the set that Main
-comment|// belongs to. It ignores attributes in any sets above the one that Main
-comment|// resides in.
-name|StratifiedAttrs
-name|getRawAttributes
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Main
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|has
-argument_list|(
-name|Main
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|auto
-operator|*
-name|Info
-operator|=
-operator|*
-name|get
-argument_list|(
-name|Main
-argument_list|)
-expr_stmt|;
-name|auto
-operator|&
-name|Link
-operator|=
-name|linksAt
-argument_list|(
-name|Info
-operator|->
-name|Index
-argument_list|)
-expr_stmt|;
-return|return
-name|Link
-operator|.
-name|getAttrs
-argument_list|()
-return|;
-block|}
-comment|// \brief Gets an attribute from the attributes that have been applied to the
-comment|// set that Main belongs to. It ignores attributes in any sets above the one
-comment|// that Main resides in.
-name|bool
-name|getRawAttribute
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Main
-parameter_list|,
-name|unsigned
-name|AttrNum
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|AttrNum
-operator|<
-name|StratifiedLink
-operator|::
-name|SetSentinel
-argument_list|)
-expr_stmt|;
-name|auto
-name|Attrs
-init|=
-name|getRawAttributes
-argument_list|(
-name|Main
-argument_list|)
-decl_stmt|;
-return|return
-name|Attrs
-index|[
-name|AttrNum
-index|]
-return|;
-block|}
 name|private
 label|:
 name|DenseMap
@@ -1937,8 +1569,7 @@ name|BuilderLink
 operator|>
 name|Links
 expr_stmt|;
-comment|// \brief Adds the given element at the given index, merging sets if
-comment|// necessary.
+comment|/// Adds the given element at the given index, merging sets if necessary.
 name|bool
 name|addAtMerging
 parameter_list|(
@@ -2038,8 +1669,8 @@ return|return
 name|false
 return|;
 block|}
-comment|// \brief Gets the BuilderLink at the given index, taking set remapping into
-comment|// account.
+comment|/// Gets the BuilderLink at the given index, taking set remapping into
+comment|/// account.
 name|BuilderLink
 modifier|&
 name|linksAt
@@ -2145,8 +1776,8 @@ operator|*
 name|Current
 return|;
 block|}
-comment|// \brief Merges two sets into one another. Assumes that these sets are not
-comment|// already one in the same
+comment|/// \brief Merges two sets into one another. Assumes that these sets are not
+comment|/// already one in the same.
 name|void
 name|merge
 parameter_list|(
@@ -2220,8 +1851,8 @@ name|Idx2
 argument_list|)
 expr_stmt|;
 block|}
-comment|// \brief Merges two sets assuming that the set at `Idx1` is unreachable from
-comment|// traversing above or below the set at `Idx2`.
+comment|/// \brief Merges two sets assuming that the set at `Idx1` is unreachable from
+comment|/// traversing above or below the set at `Idx2`.
 name|void
 name|mergeDirect
 parameter_list|(
@@ -2363,14 +1994,13 @@ argument_list|()
 condition|)
 block|{
 name|auto
-operator|&
 name|FromAttrs
-operator|=
+init|=
 name|LinksFrom
 operator|->
 name|getAttrs
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|LinksInto
 operator|->
 name|setAttrs
@@ -2458,6 +2088,16 @@ name|Number
 argument_list|)
 expr_stmt|;
 block|}
+name|LinksInto
+operator|->
+name|setAttrs
+argument_list|(
+name|LinksFrom
+operator|->
+name|getAttrs
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|LinksFrom
 operator|->
 name|remapTo
@@ -2468,9 +2108,9 @@ name|Number
 argument_list|)
 expr_stmt|;
 block|}
-comment|// \brief Checks to see if lowerIndex is at a level lower than upperIndex.
-comment|// If so, it will merge lowerIndex with upperIndex (and all of the sets
-comment|// between) and return true. Otherwise, it will return false.
+comment|/// Checks to see if lowerIndex is at a level lower than upperIndex. If so, it
+comment|/// will merge lowerIndex with upperIndex (and all of the sets between) and
+comment|/// return true. Otherwise, it will return false.
 name|bool
 name|tryMergeUpwards
 parameter_list|(
@@ -2702,8 +2342,7 @@ name|end
 argument_list|()
 condition|)
 return|return
-name|NoneType
-argument_list|()
+name|None
 return|;
 return|return
 operator|&
@@ -2745,8 +2384,7 @@ name|end
 argument_list|()
 condition|)
 return|return
-name|NoneType
-argument_list|()
+name|None
 return|;
 end_expr_stmt
 
@@ -2786,8 +2424,7 @@ name|hasValue
 argument_list|()
 condition|)
 return|return
-name|NoneType
-argument_list|()
+name|None
 return|;
 name|auto
 operator|*
@@ -2964,7 +2601,7 @@ block|}
 end_decl_stmt
 
 begin_endif
-unit|}; }
+unit|}; } }
 endif|#
 directive|endif
 end_endif

@@ -439,9 +439,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|// LoadLatency is the expected latency of load instructions.
-comment|//
-comment|// If MinLatency>= 0, this may be overriden for individual load opcodes by
-comment|// InstrItinerary OperandCycles.
 name|unsigned
 name|LoadLatency
 decl_stmt|;
@@ -456,7 +453,6 @@ comment|// HighLatency is the expected latency of "very high latency" operations
 comment|// See TargetInstrInfo::isHighLatencyDef().
 comment|// By default, this is set to an arbitrarily high number of cycles
 comment|// likely to have some impact on scheduling heuristics.
-comment|// If MinLatency>= 0, this may be overriden by InstrItinData OperandCycles.
 name|unsigned
 name|HighLatency
 decl_stmt|;

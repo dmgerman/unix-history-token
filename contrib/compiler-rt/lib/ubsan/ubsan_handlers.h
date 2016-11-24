@@ -410,13 +410,37 @@ struct|;
 comment|/// \brief Handle passing null pointer to function with nonnull attribute.
 name|RECOVERABLE
 argument_list|(
-argument|nonnull_arg
+name|nonnull_arg
 argument_list|,
-argument|NonNullArgData *Data
+name|NonNullArgData
+operator|*
+name|Data
 argument_list|)
-struct|struct
-name|CFIBadIcallData
+comment|/// \brief Known CFI check kinds.
+comment|/// Keep in sync with the enum of the same name in CodeGenFunction.h
+expr|enum
+name|CFITypeCheckKind
+operator|:
+name|unsigned
+name|char
 block|{
+name|CFITCK_VCall
+block|,
+name|CFITCK_NVCall
+block|,
+name|CFITCK_DerivedCast
+block|,
+name|CFITCK_UnrelatedCast
+block|,
+name|CFITCK_ICall
+block|, }
+expr_stmt|;
+struct|struct
+name|CFICheckFailData
+block|{
+name|CFITypeCheckKind
+name|CheckKind
+decl_stmt|;
 name|SourceLocation
 name|Loc
 decl_stmt|;
@@ -427,14 +451,16 @@ name|Type
 decl_stmt|;
 block|}
 struct|;
-comment|/// \brief Handle control flow integrity failure for indirect function calls.
+comment|/// \brief Handle control flow integrity failures.
 name|RECOVERABLE
 argument_list|(
-argument|cfi_bad_icall
+argument|cfi_check_fail
 argument_list|,
-argument|CFIBadIcallData *Data
+argument|CFICheckFailData *Data
 argument_list|,
 argument|ValueHandle Function
+argument_list|,
+argument|uptr VtableIsValid
 argument_list|)
 block|}
 end_decl_stmt
