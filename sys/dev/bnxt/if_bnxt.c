@@ -1210,7 +1210,7 @@ name|char
 name|bnxt_driver_version
 index|[]
 init|=
-literal|"https://github.com/Broadcom/freebsd-nxt/commits/bnxt-dev"
+literal|"FreeBSD base"
 decl_stmt|;
 end_decl_stmt
 
