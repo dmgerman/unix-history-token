@@ -1104,6 +1104,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|DDC_CTRL_LINE
+value|0x540
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDC_LINE_SCL_ENABLE
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDC_LINE_SDA_ENABLE
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDMI_ENABLE_DELAY
 value|50000
 end_define
@@ -2534,6 +2555,18 @@ argument_list|,
 name|DDC_CLOCK_M
 operator||
 name|DDC_CLOCK_N
+argument_list|)
+expr_stmt|;
+comment|/* Enable SDA/SCL */
+name|HDMI_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|DDC_CTRL_LINE
+argument_list|,
+name|DDC_LINE_SCL_ENABLE
+operator||
+name|DDC_LINE_SDA_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* Read EDID block */
