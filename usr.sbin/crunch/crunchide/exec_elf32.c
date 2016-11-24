@@ -1315,6 +1315,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|strtabshdr
+operator|==
+name|shstrtabshdr
+condition|)
+block|{
+name|weird
+operator|=
+literal|1
+expr_stmt|;
+name|weirdreason
+operator|=
+literal|"combined strtab and shstrtab not supported"
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|weirdreason
 operator|==
 name|NULL
