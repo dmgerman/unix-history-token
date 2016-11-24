@@ -1423,11 +1423,19 @@ operator|&=
 operator|~
 name|HN_FLAG_RXBUF_CONNECTED
 expr_stmt|;
-comment|/* 		 * Wait for the hypervisor to receive this NVS request. 		 */
+comment|/* 		 * Wait for the hypervisor to receive this NVS request. 		 * 		 * NOTE: 		 * The TX bufring will not be drained by the hypervisor, 		 * if the primary channel is revoked. 		 */
 while|while
 condition|(
 operator|!
 name|vmbus_chan_tx_empty
+argument_list|(
+name|sc
+operator|->
+name|hn_prichan
+argument_list|)
+operator|&&
+operator|!
+name|vmbus_chan_is_revoked
 argument_list|(
 name|sc
 operator|->
@@ -1614,11 +1622,19 @@ operator|&=
 operator|~
 name|HN_FLAG_CHIM_CONNECTED
 expr_stmt|;
-comment|/* 		 * Wait for the hypervisor to receive this NVS request. 		 */
+comment|/* 		 * Wait for the hypervisor to receive this NVS request. 		 * 		 * NOTE: 		 * The TX bufring will not be drained by the hypervisor, 		 * if the primary channel is revoked. 		 */
 while|while
 condition|(
 operator|!
 name|vmbus_chan_tx_empty
+argument_list|(
+name|sc
+operator|->
+name|hn_prichan
+argument_list|)
+operator|&&
+operator|!
+name|vmbus_chan_is_revoked
 argument_list|(
 name|sc
 operator|->
