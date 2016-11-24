@@ -221,27 +221,36 @@ name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
+name|BCM57311
+argument_list|,
+literal|"Broadcom BCM57311 NetXtreme-C 10Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57312
+argument_list|,
+literal|"Broadcom BCM57312 NetXtreme-C 10Gb/25Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57314
+argument_list|,
+literal|"Broadcom BCM57314 NetXtreme-C 10Gb/25Gb/40Gb/50Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
 name|BCM57402
 argument_list|,
 literal|"Broadcom BCM57402 NetXtreme-E 10Gb Ethernet Controller"
-argument_list|)
-block|,
-name|PVID
-argument_list|(
-name|BROADCOM_VENDOR_ID
-argument_list|,
-name|BCM57404
-argument_list|,
-literal|"Broadcom BCM57404 NetXtreme-E 10Gb/25Gb Ethernet Controller"
-argument_list|)
-block|,
-name|PVID
-argument_list|(
-name|BROADCOM_VENDOR_ID
-argument_list|,
-name|BCM57406
-argument_list|,
-literal|"Broadcom BCM57406 NetXtreme-E 10GBase-T Ethernet Controller"
 argument_list|)
 block|,
 name|PVID
@@ -257,9 +266,9 @@ name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
-name|BCM57407
+name|BCM57404
 argument_list|,
-literal|"Broadcom BCM57407 NetXtreme-E 10GBase-T Ethernet Controller"
+literal|"Broadcom BCM57404 NetXtreme-E 10Gb/25Gb Ethernet Controller"
 argument_list|)
 block|,
 name|PVID
@@ -275,9 +284,36 @@ name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
+name|BCM57406
+argument_list|,
+literal|"Broadcom BCM57406 NetXtreme-E 10GBase-T Ethernet Controller"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
 name|BCM57406_NPAR
 argument_list|,
 literal|"Broadcom BCM57406 NetXtreme-E Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57407
+argument_list|,
+literal|"Broadcom BCM57407 NetXtreme-E 10GBase-T Ethernet Controller"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57407_NPAR
+argument_list|,
+literal|"Broadcom BCM57407 NetXtreme-E Ethernet Partition"
 argument_list|)
 block|,
 name|PVID
@@ -293,18 +329,189 @@ name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
-name|BCM57304_VF
+name|BCM57412
 argument_list|,
-literal|"Broadcom BCM57304 NetXtreme-C Virtual Function"
+literal|"Broadcom BCM57412 NetXtreme-E 10Gb Ethernet"
 argument_list|)
 block|,
 name|PVID
 argument_list|(
 name|BROADCOM_VENDOR_ID
 argument_list|,
-name|BCM57404_VF
+name|BCM57412_NPAR1
 argument_list|,
-literal|"Broadcom BCM57404 NetXtreme-E Virtual Function"
+literal|"Broadcom BCM57412 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57412_NPAR2
+argument_list|,
+literal|"Broadcom BCM57412 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57414
+argument_list|,
+literal|"Broadcom BCM57414 NetXtreme-E 10Gb/25Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57414_NPAR1
+argument_list|,
+literal|"Broadcom BCM57414 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57414_NPAR2
+argument_list|,
+literal|"Broadcom BCM57414 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57416
+argument_list|,
+literal|"Broadcom BCM57416 NetXtreme-E 10GBase-T Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57416_NPAR1
+argument_list|,
+literal|"Broadcom BCM57416 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57416_NPAR2
+argument_list|,
+literal|"Broadcom BCM57416 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57416_SFP
+argument_list|,
+literal|"Broadcom BCM57416 NetXtreme-E 10Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57417
+argument_list|,
+literal|"Broadcom BCM57417 NetXtreme-E 10GBase-T Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57417_NPAR1
+argument_list|,
+literal|"Broadcom BCM57417 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57417_NPAR2
+argument_list|,
+literal|"Broadcom BCM57417 NetXtreme-E Ethernet Partition"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM57417_SFP
+argument_list|,
+literal|"Broadcom BCM57417 NetXtreme-E 10Gb/25Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|BCM58700
+argument_list|,
+literal|"Broadcom BCM58700 Nitro 1Gb/2.5Gb/10Gb Ethernet"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_C_VF1
+argument_list|,
+literal|"Broadcom NetXtreme-C Ethernet Virtual Function"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_C_VF2
+argument_list|,
+literal|"Broadcom NetXtreme-C Ethernet Virtual Function"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_C_VF3
+argument_list|,
+literal|"Broadcom NetXtreme-C Ethernet Virtual Function"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_E_VF1
+argument_list|,
+literal|"Broadcom NetXtreme-E Ethernet Virtual Function"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_E_VF2
+argument_list|,
+literal|"Broadcom NetXtreme-E Ethernet Virtual Function"
+argument_list|)
+block|,
+name|PVID
+argument_list|(
+name|BROADCOM_VENDOR_ID
+argument_list|,
+name|NETXTREME_E_VF3
+argument_list|,
+literal|"Broadcom NetXtreme-E Ethernet Virtual Function"
 argument_list|)
 block|,
 comment|/* required last entry */
@@ -3256,6 +3463,7 @@ name|softc
 operator|->
 name|scctx
 expr_stmt|;
+comment|/* TODO: Better way of detecting NPAR/VF is needed */
 switch|switch
 condition|(
 name|softc
@@ -3276,6 +3484,27 @@ case|:
 case|case
 name|BCM57406_NPAR
 case|:
+case|case
+name|BCM57407_NPAR
+case|:
+case|case
+name|BCM57412_NPAR1
+case|:
+case|case
+name|BCM57412_NPAR2
+case|:
+case|case
+name|BCM57414_NPAR1
+case|:
+case|case
+name|BCM57414_NPAR2
+case|:
+case|case
+name|BCM57416_NPAR1
+case|:
+case|case
+name|BCM57416_NPAR2
+case|:
 name|softc
 operator|->
 name|flags
@@ -3284,10 +3513,22 @@ name|BNXT_FLAG_NPAR
 expr_stmt|;
 break|break;
 case|case
-name|BCM57304_VF
+name|NETXTREME_C_VF1
 case|:
 case|case
-name|BCM57404_VF
+name|NETXTREME_C_VF2
+case|:
+case|case
+name|NETXTREME_C_VF3
+case|:
+case|case
+name|NETXTREME_E_VF1
+case|:
+case|case
+name|NETXTREME_E_VF2
+case|:
+case|case
+name|NETXTREME_E_VF3
 case|:
 name|softc
 operator|->
