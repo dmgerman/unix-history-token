@@ -42,13 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -258,6 +264,15 @@ decl_stmt|;
 name|struct
 name|hyperv_guid
 name|ch_guid_inst
+decl_stmt|;
+name|struct
+name|sx
+name|ch_orphan_lock
+decl_stmt|;
+name|struct
+name|vmbus_xact_ctx
+modifier|*
+name|ch_orphan_xact
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
