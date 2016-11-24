@@ -4815,6 +4815,16 @@ break|break;
 comment|/* 		 * For shared MSIX, all the virtqueues share the first 		 * interrupt. 		 */
 if|if
 condition|(
+operator|!
+name|sc
+operator|->
+name|vtpci_vqs
+index|[
+name|idx
+index|]
+operator|.
+name|vtv_no_intr
+operator|&&
 operator|(
 name|sc
 operator|->
