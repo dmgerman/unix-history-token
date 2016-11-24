@@ -274,6 +274,9 @@ name|vmbus_xact_ctx
 modifier|*
 name|ch_orphan_xact
 decl_stmt|;
+name|int
+name|ch_refs
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|ch_sysctl_ctx
