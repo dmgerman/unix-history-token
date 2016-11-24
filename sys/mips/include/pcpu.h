@@ -71,7 +71,7 @@ define|#
 directive|define
 name|PCPU_MD_MIPS32_FIELDS
 define|\
-value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[133]
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[193]
 end_define
 
 begin_endif

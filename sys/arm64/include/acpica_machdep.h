@@ -25,6 +25,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/_bus.h>
+end_include
+
 begin_comment
 comment|/* Only use the reduced hardware model */
 end_comment
@@ -97,6 +103,31 @@ specifier|const
 name|char
 modifier|*
 name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|acpi_generic_address
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|acpi_map_addr
+parameter_list|(
+name|struct
+name|acpi_generic_address
+modifier|*
+parameter_list|,
+name|bus_space_tag_t
+modifier|*
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+parameter_list|,
+name|bus_size_t
 parameter_list|)
 function_decl|;
 end_function_decl

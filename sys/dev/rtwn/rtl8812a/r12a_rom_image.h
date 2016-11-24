@@ -338,7 +338,20 @@ decl_stmt|;
 name|uint8_t
 name|reserved6
 index|[
-literal|35
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|string_12a
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* "Realtek " */
+name|uint8_t
+name|reserved7
+index|[
+literal|25
 index|]
 decl_stmt|;
 name|uint16_t
@@ -348,7 +361,7 @@ name|uint16_t
 name|pid_21a
 decl_stmt|;
 name|uint8_t
-name|reserved7
+name|reserved8
 index|[
 literal|3
 index|]
@@ -360,21 +373,20 @@ name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
 name|uint8_t
-name|reserved8
+name|reserved9
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* XXX check on RTL8812AU. */
 name|uint8_t
-name|string
+name|string_21a
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* "Realtek " */
 name|uint8_t
-name|reserved9
+name|reserved10
 index|[
 literal|2
 index|]
@@ -387,7 +399,7 @@ index|]
 decl_stmt|;
 comment|/* XXX variable length? */
 name|uint8_t
-name|reserved10
+name|reserved11
 index|[
 literal|208
 index|]

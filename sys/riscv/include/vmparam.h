@@ -234,7 +234,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*  * Enable superpage reservations: 1 level.  */
+comment|/*  * Disable superpage reservations.  */
 end_comment
 
 begin_ifndef
@@ -247,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|VM_NRESERVLEVEL
-value|1
+value|0
 end_define
 
 begin_endif

@@ -133,10 +133,6 @@ name|v_pdshortfalls
 decl_stmt|;
 comment|/* (p) page reclamation shortfalls */
 name|u_int
-name|v_tcached
-decl_stmt|;
-comment|/* (p) total pages cached */
-name|u_int
 name|v_dfree
 decl_stmt|;
 comment|/* (p) pages freed by daemon */
@@ -193,10 +189,6 @@ name|u_int
 name|v_laundry_count
 decl_stmt|;
 comment|/* (q) pages eligible for laundering */
-name|u_int
-name|v_cache_count
-decl_stmt|;
-comment|/* (f) pages on cache queue */
 name|u_int
 name|v_pageout_free_min
 decl_stmt|;
@@ -289,10 +281,6 @@ operator|>
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|)
 return|;
 block|}
@@ -320,10 +308,6 @@ operator|>
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|)
 return|;
 block|}
@@ -351,10 +335,6 @@ operator|>
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|)
 return|;
 block|}
@@ -379,15 +359,9 @@ name|vm_cnt
 operator|.
 name|v_free_target
 operator|-
-operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
-operator|)
 operator|)
 return|;
 block|}
@@ -411,10 +385,6 @@ operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 operator|<
 name|vm_pageout_wakeup_thresh
 operator|)

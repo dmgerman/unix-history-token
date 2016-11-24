@@ -3835,6 +3835,29 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|phandle_t
+name|jz4780_gpio_bus_get_node
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ofw_bus_get_node
+argument_list|(
+name|bus
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -3984,6 +4007,14 @@ argument_list|(
 name|pic_pre_ithread
 argument_list|,
 name|jz4780_gpio_pic_pre_ithread
+argument_list|)
+block|,
+comment|/* ofw_bus interface */
+name|DEVMETHOD
+argument_list|(
+name|ofw_bus_get_node
+argument_list|,
+name|jz4780_gpio_bus_get_node
 argument_list|)
 block|,
 name|DEVMETHOD_END

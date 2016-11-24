@@ -726,42 +726,50 @@ name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
 decl_stmt|;
+name|ACPI_TABLE_DESC
+modifier|*
+name|FadtDesc
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/*      * The FADT has multiple versions with different lengths,      * and it contains pointers to both the DSDT and FACS tables.      *      * Get a local copy of the FADT and convert it to a common format      * Map entire FADT, assumed to be smaller than one page.      */
-name|Length
+name|FadtDesc
 operator|=
+operator|&
 name|AcpiGbl_RootTableList
 operator|.
 name|Tables
 index|[
 name|AcpiGbl_FadtIndex
 index|]
-operator|.
-name|Length
 expr_stmt|;
-name|Table
+name|Status
 operator|=
-name|AcpiOsMapMemory
+name|AcpiTbGetTable
 argument_list|(
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|AcpiGbl_FadtIndex
-index|]
-operator|.
-name|Address
+name|FadtDesc
 argument_list|,
-name|Length
+operator|&
+name|Table
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|Table
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 return|return;
 block|}
+name|Length
+operator|=
+name|FadtDesc
+operator|->
+name|Length
+expr_stmt|;
 comment|/*      * Validate the FADT checksum before we copy the table. Ignore      * checksum error as we want to try to get the DSDT and FACS.      */
 operator|(
 name|void
@@ -782,11 +790,9 @@ name|Length
 argument_list|)
 expr_stmt|;
 comment|/* All done with the real FADT, unmap it */
-name|AcpiOsUnmapMemory
+name|AcpiTbPutTable
 argument_list|(
-name|Table
-argument_list|,
-name|Length
+name|FadtDesc
 argument_list|)
 expr_stmt|;
 comment|/* Obtain the DSDT and FACS tables via their addresses within the FADT */
@@ -1024,7 +1030,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*      * For ACPI 1.0 FADTs (revision 1), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable because of BIOS errors.      * The table length is instead used as the final word on the version.      *      * Note: FADT revision 3 is the ACPI 2.0 version of the FADT.      */
+comment|/*      * For ACPI 1.0 FADTs (revision 1 or 2), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable. Only the length can be      * trusted.      */
 if|if
 condition|(
 name|AcpiGbl_FADT
@@ -1033,7 +1039,7 @@ name|Header
 operator|.
 name|Length
 operator|<=
-name|ACPI_FADT_V3_SIZE
+name|ACPI_FADT_V2_SIZE
 condition|)
 block|{
 name|AcpiGbl_FADT

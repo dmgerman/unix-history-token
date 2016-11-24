@@ -1149,7 +1149,7 @@ name|rxs
 operator|!=
 name|NULL
 operator|)
-operator|&
+operator|&&
 operator|(
 name|rxs
 operator|->
@@ -1353,7 +1353,7 @@ name|rxs
 operator|!=
 name|NULL
 operator|)
-operator|&
+operator|&&
 operator|(
 name|rxs
 operator|->
@@ -1409,7 +1409,7 @@ name|rxs
 operator|!=
 name|NULL
 operator|)
-operator|&
+operator|&&
 operator|(
 name|rxs
 operator|->
@@ -1439,7 +1439,7 @@ name|rxs
 operator|!=
 name|NULL
 operator|)
-operator|&
+operator|&&
 operator|(
 name|rxs
 operator|->

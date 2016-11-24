@@ -751,8 +751,11 @@ name|UINT8
 modifier|*
 name|EndAml
 decl_stmt|;
-name|ACPI_SIZE
-name|Length
+name|UINT32
+name|BufferLength
+decl_stmt|;
+name|UINT32
+name|DeclaredBufferLength
 decl_stmt|;
 comment|/* This op must be a buffer */
 if|if
@@ -772,7 +775,7 @@ name|AE_TYPE
 operator|)
 return|;
 block|}
-comment|/* Get the ByteData list and length */
+comment|/*      * Get the declared length of the buffer.      * This is the nn in "Buffer (nn)"      */
 name|NextOp
 operator|=
 name|Op
@@ -800,6 +803,17 @@ name|AE_TYPE
 operator|)
 return|;
 block|}
+name|DeclaredBufferLength
+operator|=
+name|NextOp
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Size
+expr_stmt|;
+comment|/* Get the length of the raw initialization byte list */
 name|NextOp
 operator|=
 name|NextOp
@@ -828,19 +842,30 @@ name|Named
 operator|.
 name|Data
 expr_stmt|;
-name|Length
+name|BufferLength
 operator|=
-operator|(
-name|ACPI_SIZE
-operator|)
 name|NextOp
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Size
 expr_stmt|;
+comment|/*      * Not a template if declared buffer length != actual length of the      * intialization byte list. Because the resource macros will create      * a buffer of the exact required length (buffer length will be equal      * to the actual length).      */
+if|if
+condition|(
+name|DeclaredBufferLength
+operator|!=
+name|BufferLength
+condition|)
+block|{
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
+block|}
 comment|/* Walk the byte list, abort on any invalid descriptor type or length */
 name|Status
 operator|=
@@ -850,7 +875,7 @@ name|WalkState
 argument_list|,
 name|Aml
 argument_list|,
-name|Length
+name|BufferLength
 argument_list|,
 name|NULL
 argument_list|,
@@ -883,7 +908,7 @@ condition|(
 operator|(
 name|Aml
 operator|+
-name|Length
+name|BufferLength
 operator|-
 sizeof|sizeof
 argument_list|(

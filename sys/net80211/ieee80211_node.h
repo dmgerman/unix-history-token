@@ -230,6 +230,31 @@ decl_stmt|;
 comment|/* captured MESH ID ie */
 name|uint8_t
 modifier|*
+name|vhtcap_ie
+decl_stmt|;
+comment|/* captured VHTCAP ie */
+name|uint8_t
+modifier|*
+name|vhtopmode_ie
+decl_stmt|;
+comment|/* captured VHTOPMODE ie */
+name|uint8_t
+modifier|*
+name|vhtpwrenv_ie
+decl_stmt|;
+comment|/* captured VHTPWRENV ie */
+name|uint8_t
+modifier|*
+name|apchanrep_ie
+decl_stmt|;
+comment|/* captured APCHANREP ie */
+name|uint8_t
+modifier|*
+name|bssload_ie
+decl_stmt|;
+comment|/* captured BSSLOAD ie */
+name|uint8_t
+modifier|*
 name|spare
 index|[
 literal|4

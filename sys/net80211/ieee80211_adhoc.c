@@ -1660,7 +1660,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* 			 * Fake up a node for this newly 			 * discovered member of the IBSS. 			 */
+comment|/* 			 * Fake up a node for this newly discovered member 			 * of the IBSS. 			 * 			 * Note: This doesn't "upgrade" the node to 11n; 			 * that will happen after a probe request/response 			 * exchange. 			 */
 name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
@@ -3231,6 +3231,7 @@ operator|&
 name|scan
 argument_list|)
 condition|)
+block|{
 name|ni
 operator|=
 name|ieee80211_add_neighbor
@@ -3243,6 +3244,44 @@ operator|&
 name|scan
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Send a probe request so we announce 11n 					 * capabilities. 					 */
+name|ieee80211_send_probereq
+argument_list|(
+name|ni
+argument_list|,
+comment|/* node */
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|,
+comment|/* SA */
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+comment|/* DA */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|,
+comment|/* BSSID */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_essid
+argument_list|,
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_esslen
+argument_list|)
+expr_stmt|;
+comment|/* SSID */
+block|}
 else|else
 name|ni
 operator|=
@@ -3270,6 +3309,43 @@ operator|&
 name|scan
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Send a probe request so we announce 11n 				 * capabilities. 				 */
+name|ieee80211_send_probereq
+argument_list|(
+name|ni
+argument_list|,
+comment|/* node */
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|,
+comment|/* SA */
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+comment|/* DA */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_bssid
+argument_list|,
+comment|/* BSSID */
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_essid
+argument_list|,
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_esslen
+argument_list|)
+expr_stmt|;
+comment|/* SSID */
 block|}
 else|else
 block|{
@@ -3607,6 +3683,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Note: we don't benefit from stashing the probe request 		 * IEs away to use for IBSS negotiation, because we 		 * typically don't get all of the IEs. 		 */
 break|break;
 case|case
 name|IEEE80211_FC0_SUBTYPE_ACTION

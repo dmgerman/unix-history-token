@@ -368,6 +368,43 @@ decl_stmt|;
 name|uint64_t
 name|hn_csum_assist
 decl_stmt|;
+comment|/* Applied packet transmission aggregation limits. */
+name|int
+name|hn_agg_szmax
+decl_stmt|;
+name|short
+name|hn_agg_pktmax
+decl_stmt|;
+name|short
+name|hn_agg_align
+decl_stmt|;
+comment|/* Packet transmission aggregation states. */
+name|struct
+name|hn_txdesc
+modifier|*
+name|hn_agg_txd
+decl_stmt|;
+name|int
+name|hn_agg_szleft
+decl_stmt|;
+name|short
+name|hn_agg_pktleft
+decl_stmt|;
+name|struct
+name|rndis_packet_msg
+modifier|*
+name|hn_agg_prevpkt
+decl_stmt|;
+comment|/* Temporary stats for each sends. */
+name|int
+name|hn_stat_size
+decl_stmt|;
+name|short
+name|hn_stat_pkts
+decl_stmt|;
+name|short
+name|hn_stat_mcasts
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
@@ -416,6 +453,12 @@ name|hn_tx_chimney
 decl_stmt|;
 name|u_long
 name|hn_pkts
+decl_stmt|;
+name|u_long
+name|hn_sends
+decl_stmt|;
+name|u_long
+name|hn_flush_failed
 decl_stmt|;
 comment|/* Rarely used stuffs */
 name|struct
@@ -557,6 +600,13 @@ decl_stmt|;
 name|uint32_t
 name|hn_rx_filter
 decl_stmt|;
+comment|/* Packet transmission aggregation user settings. */
+name|int
+name|hn_agg_size
+decl_stmt|;
+name|int
+name|hn_agg_pkts
+decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
@@ -621,6 +671,15 @@ decl_stmt|;
 name|int
 name|hn_ndis_tso_sgmin
 decl_stmt|;
+name|uint32_t
+name|hn_rndis_agg_size
+decl_stmt|;
+name|uint32_t
+name|hn_rndis_agg_pkts
+decl_stmt|;
+name|uint32_t
+name|hn_rndis_agg_align
+decl_stmt|;
 name|int
 name|hn_rss_ind_size
 decl_stmt|;
@@ -669,6 +728,46 @@ define|#
 directive|define
 name|HN_FLAG_SYNTH_ATTACHED
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_NO_SLEEPING
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_NO_SLEEPING
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {						\ 	(sc)->hn_flags |= HN_FLAG_NO_SLEEPING;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_SLEEPING_OK
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|do {						\ 	(sc)->hn_flags&= ~HN_FLAG_NO_SLEEPING;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_CAN_SLEEP
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|(((sc)->hn_flags& HN_FLAG_NO_SLEEPING) == 0)
 end_define
 
 begin_define

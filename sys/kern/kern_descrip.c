@@ -2266,6 +2266,16 @@ name|p
 operator|->
 name|p_fd
 expr_stmt|;
+name|AUDIT_ARG_FD
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|AUDIT_ARG_CMD
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd

@@ -1196,7 +1196,17 @@ condition|(
 name|aw_sc
 operator|->
 name|clk
+operator|!=
+name|NULL
 condition|)
+block|{
+name|clk_disable
+argument_list|(
+name|aw_sc
+operator|->
+name|clk
+argument_list|)
+expr_stmt|;
 name|clk_release
 argument_list|(
 name|aw_sc
@@ -1204,6 +1214,7 @@ operator|->
 name|clk
 argument_list|)
 expr_stmt|;
+block|}
 name|a10_ehci_detach
 argument_list|(
 name|self
@@ -1466,6 +1477,15 @@ name|reg_value
 argument_list|)
 expr_stmt|;
 comment|/* Disable clock for USB */
+if|if
+condition|(
+name|aw_sc
+operator|->
+name|clk
+operator|!=
+name|NULL
+condition|)
+block|{
 name|clk_disable
 argument_list|(
 name|aw_sc
@@ -1480,6 +1500,7 @@ operator|->
 name|clk
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Assert reset */
 if|if
 condition|(

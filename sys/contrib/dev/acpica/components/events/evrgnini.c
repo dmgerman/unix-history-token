@@ -31,6 +31,12 @@ directive|include
 file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acinterp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1078,7 +1084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj       - Region we are initializing  *              AcpiNsLocked    - Is namespace locked?  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific initialization. For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition. This address is  *              required to perform an access to PCI config space.  *  * MUTEX:       Interpreter should be unlocked, because we may run the _REG  *              method for this region.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj       - Region we are initializing  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific initialization. For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition. This address is  *              required to perform an access to PCI config space.  *  * MUTEX:       Interpreter should be unlocked, because we may run the _REG  *              method for this region.  *  * NOTE:        Possible incompliance:  *              There is a behavior conflict in automatic _REG execution:  *              1. When the interpreter is evaluating a method, we can only  *                 automatically run _REG for the following case:  *                   Method(_REG, 2) {}  *                   OperationRegion (OPR1, 0x80, 0x1000010, 0x4)  *              2. When the interpreter is loading a table, we can also  *                 automatically run _REG for the following case:  *                   OperationRegion (OPR1, 0x80, 0x1000010, 0x4)  *                   Method(_REG, 2) {}  *              Though this may not be compliant to the de-facto standard, the  *              logic is kept in order not to trigger regressions. And keeping  *              this logic should be taken care by the caller of this function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1088,9 +1094,6 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
-parameter_list|,
-name|BOOLEAN
-name|AcpiNsLocked
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -1108,14 +1111,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|EvInitializeRegion
-argument_list|,
-name|AcpiNsLocked
 argument_list|)
 expr_stmt|;
 if|if
@@ -1286,47 +1284,25 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiEvAttachRegion
 argument_list|(
 name|HandlerObj
 argument_list|,
 name|RegionObj
 argument_list|,
-name|AcpiNsLocked
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/*                  * Tell all users that this region is usable by                  * running the _REG method                  */
-if|if
-condition|(
-name|AcpiNsLocked
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
+name|AcpiExExitInterpreter
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiEvExecuteRegMethod
 argument_list|(
 name|RegionObj
@@ -1334,33 +1310,9 @@ argument_list|,
 name|ACPI_REG_CONNECT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|AcpiNsLocked
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
+name|AcpiExEnterInterpreter
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1376,7 +1328,7 @@ operator|->
 name|Parent
 expr_stmt|;
 block|}
-comment|/* If we get here, there is no handler for this region */
+comment|/*      * If we get here, there is no handler for this region. This is not      * fatal because many regions get created before a handler is installed      * for said region.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1397,7 +1349,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_NOT_EXIST
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}

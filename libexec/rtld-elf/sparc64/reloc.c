@@ -4274,8 +4274,10 @@ parameter_list|(
 name|Elf_Auxinfo
 name|aux_info
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|AT_COUNT
+argument_list|)
 index|]
 name|__unused
 parameter_list|)

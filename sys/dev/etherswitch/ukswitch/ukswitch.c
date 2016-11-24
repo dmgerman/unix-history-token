@@ -198,6 +198,10 @@ name|phymask
 decl_stmt|;
 comment|/* PHYs we manage */
 name|int
+name|phyoffset
+decl_stmt|;
+comment|/* PHYs register offset */
+name|int
 name|numports
 decl_stmt|;
 comment|/* number of ports */
@@ -672,6 +676,10 @@ argument_list|, \
 name|BMSR_DEFCAPMASK
 argument_list|,
 name|phy
+operator|+
+name|sc
+operator|->
+name|phyoffset
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
@@ -840,6 +848,12 @@ literal|0x0f
 expr_stmt|;
 name|sc
 operator|->
+name|phyoffset
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
 name|cpuport
 operator|=
 operator|-
@@ -895,6 +909,29 @@ operator|&
 name|sc
 operator|->
 name|phymask
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"phyoffset"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|phyoffset
 argument_list|)
 expr_stmt|;
 operator|(

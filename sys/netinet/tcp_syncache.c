@@ -4939,7 +4939,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If timestamps were negotiated the reflected timestamp 	 * must be equal to what we actually sent in the SYN|ACK. 	 */
+comment|/* 	 * If timestamps were negotiated, the reflected timestamp 	 * must be equal to what we actually sent in the SYN|ACK 	 * except in the case of 0. Some boxes are known for sending 	 * broken timestamp replies during the 3whs (and potentially 	 * during the connection also). 	 * 	 * Accept the final ACK of 3whs with reflected timestamp of 0 	 * instead of sending a RST and deleting the syncache entry. 	 */
 if|if
 condition|(
 operator|(
@@ -4949,6 +4949,10 @@ name|to_flags
 operator|&
 name|TOF_TS
 operator|)
+operator|&&
+name|to
+operator|->
+name|to_tsecr
 operator|&&
 name|to
 operator|->

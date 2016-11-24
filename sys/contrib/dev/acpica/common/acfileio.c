@@ -209,7 +209,7 @@ operator|=
 name|AE_ERROR
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 name|fprintf
@@ -241,7 +241,7 @@ operator|=
 name|AE_BAD_HEADER
 expr_stmt|;
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 comment|/* Check for an non-binary file */
@@ -263,11 +263,13 @@ argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_TYPE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|Exit
+goto|;
 block|}
 comment|/* Read all tables within the file */
 while|while
@@ -314,11 +316,13 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-return|return
-operator|(
+name|Status
+operator|=
 name|AE_OK
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|Exit
+goto|;
 block|}
 elseif|else
 if|if
@@ -330,7 +334,7 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|ErrorExit
+name|Exit
 goto|;
 block|}
 comment|/* Print table header for iASL/disassembler only */
@@ -357,6 +361,25 @@ name|ACPI_NEW_TABLE_DESC
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TableDesc
+condition|)
+block|{
+name|AcpiOsFree
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Exit
+goto|;
+block|}
 name|TableDesc
 operator|->
 name|Table
@@ -440,7 +463,7 @@ operator|=
 name|ListHead
 expr_stmt|;
 block|}
-name|ErrorExit
+name|Exit
 label|:
 name|fclose
 argument_list|(

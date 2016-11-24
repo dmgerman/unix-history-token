@@ -818,10 +818,6 @@ operator|=
 name|vm_cnt
 operator|.
 name|v_free_count
-operator|+
-name|vm_cnt
-operator|.
-name|v_cache_count
 expr_stmt|;
 return|return
 operator|(
@@ -1362,16 +1358,6 @@ end_expr_stmt
 begin_expr_stmt
 name|VM_STATS_VM
 argument_list|(
-name|v_tcached
-argument_list|,
-literal|"Total pages cached"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VM_STATS_VM
-argument_list|(
 name|v_dfree
 argument_list|,
 literal|"Pages freed by pagedaemon"
@@ -1505,16 +1491,6 @@ argument_list|(
 name|v_laundry_count
 argument_list|,
 literal|"Pages eligible for laundering"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VM_STATS_VM
-argument_list|(
-name|v_cache_count
-argument_list|,
-literal|"Pages on cache queue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

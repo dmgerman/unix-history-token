@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pci_host_generic_fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcib_private.h>
 end_include
 
@@ -279,10 +285,10 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|generic_pcie_softc
+name|generic_pcie_fdt_softc
 argument_list|)
 argument_list|,
-name|generic_pcie_driver
+name|generic_pcie_fdt_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -431,7 +437,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|generic_pcie_softc
+name|generic_pcie_fdt_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -449,11 +455,15 @@ argument_list|,
 operator|&
 name|sc
 operator|->
+name|base
+operator|.
 name|ecam
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|base
+operator|.
 name|coherent
 operator|=
 literal|1

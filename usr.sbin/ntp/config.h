@@ -4650,7 +4650,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p8"
+value|"ntp 4.2.8p9"
 end_define
 
 begin_comment
@@ -4683,7 +4683,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p8"
+value|"4.2.8p9"
 end_define
 
 begin_comment
@@ -5416,7 +5416,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p8"
+value|"4.2.8p9"
 end_define
 
 begin_comment
@@ -6075,14 +6075,14 @@ begin_define
 define|#
 directive|define
 name|MKREPRO_DATE
-value|"Jun 03 2016"
+value|"Nov 22 2016"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKREPRO_TIME
-value|"06:34:37"
+value|"06:54:45"
 end_define
 
 end_unit

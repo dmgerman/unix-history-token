@@ -1064,6 +1064,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_NOREUSE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* VMIO data won't be reused */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_EXT
 value|0x0400
 end_define

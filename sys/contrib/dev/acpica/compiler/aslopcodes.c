@@ -523,6 +523,7 @@ operator|)
 return|;
 block|}
 else|else
+comment|/* 64-bit integer */
 block|{
 if|if
 condition|(
@@ -553,13 +554,19 @@ name|Op
 operator|->
 name|Asl
 operator|.
-name|AmlOpcode
-operator|=
-name|AML_DWORD_OP
+name|Value
+operator|.
+name|Integer
+operator|&=
+name|ACPI_UINT32_MAX
 expr_stmt|;
+comment|/* Now set the optimal integer size */
 return|return
 operator|(
-literal|4
+name|OpcSetOptimalIntegerSize
+argument_list|(
+name|Op
+argument_list|)
 operator|)
 return|;
 block|}

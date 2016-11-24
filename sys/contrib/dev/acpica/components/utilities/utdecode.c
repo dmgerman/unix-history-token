@@ -25,6 +25,12 @@ directive|include
 file|<contrib/dev/acpica/include/acnamesp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/amlcode.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1326,6 +1332,118 @@ comment|/* C0 and above are hardware-specific */
 return|return
 operator|(
 literal|"Hardware-Specific"
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetArgumentTypeName  *  * PARAMETERS:  ArgType             - an ARGP_* parser argument type  *  * RETURN:      Decoded ARGP_* type  *  * DESCRIPTION: Decode an ARGP_* parser type, as defined in the amlcode.h file,  *              and used in the acopcode.h file. For example, ARGP_TERMARG.  *              Used for debug only.  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ArgumentType
+index|[
+literal|20
+index|]
+init|=
+block|{
+comment|/* 00 */
+literal|"Unknown ARGP"
+block|,
+comment|/* 01 */
+literal|"ByteData"
+block|,
+comment|/* 02 */
+literal|"ByteList"
+block|,
+comment|/* 03 */
+literal|"CharList"
+block|,
+comment|/* 04 */
+literal|"DataObject"
+block|,
+comment|/* 05 */
+literal|"DataObjectList"
+block|,
+comment|/* 06 */
+literal|"DWordData"
+block|,
+comment|/* 07 */
+literal|"FieldList"
+block|,
+comment|/* 08 */
+literal|"Name"
+block|,
+comment|/* 09 */
+literal|"NameString"
+block|,
+comment|/* 0A */
+literal|"ObjectList"
+block|,
+comment|/* 0B */
+literal|"PackageLength"
+block|,
+comment|/* 0C */
+literal|"SuperName"
+block|,
+comment|/* 0D */
+literal|"Target"
+block|,
+comment|/* 0E */
+literal|"TermArg"
+block|,
+comment|/* 0F */
+literal|"TermList"
+block|,
+comment|/* 10 */
+literal|"WordData"
+block|,
+comment|/* 11 */
+literal|"QWordData"
+block|,
+comment|/* 12 */
+literal|"SimpleName"
+block|,
+comment|/* 13 */
+literal|"NameOrRef"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|AcpiUtGetArgumentTypeName
+parameter_list|(
+name|UINT32
+name|ArgType
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ArgType
+operator|>
+name|ARGP_MAX
+condition|)
+block|{
+return|return
+operator|(
+literal|"Unknown ARGP"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AcpiGbl_ArgumentType
+index|[
+name|ArgType
+index|]
 operator|)
 return|;
 block|}

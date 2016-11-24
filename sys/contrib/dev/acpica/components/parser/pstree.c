@@ -216,8 +216,10 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"PsAppendArg"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -225,7 +227,8 @@ operator|!
 name|Op
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* Get the info structure for this opcode */
 name|OpInfo
@@ -264,7 +267,8 @@ name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* Check if this opcode requires argument sub-objects */
 if|if
@@ -280,7 +284,8 @@ operator|)
 condition|)
 block|{
 comment|/* Has no linked argument objects */
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* Append the argument to the linked argument list */
 if|if
@@ -376,6 +381,8 @@ name|ArgListLength
 operator|++
 expr_stmt|;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 

@@ -42,13 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -260,6 +266,18 @@ name|hyperv_guid
 name|ch_guid_inst
 decl_stmt|;
 name|struct
+name|sx
+name|ch_orphan_lock
+decl_stmt|;
+name|struct
+name|vmbus_xact_ctx
+modifier|*
+name|ch_orphan_xact
+decl_stmt|;
+name|int
+name|ch_refs
+decl_stmt|;
+name|struct
 name|sysctl_ctx_list
 name|ch_sysctl_ctx
 decl_stmt|;
@@ -330,6 +348,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMBUS_CHAN_ST_REVOKED_SHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* sticky */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VMBUS_CHAN_ST_OPENED
 value|(1<< VMBUS_CHAN_ST_OPENED_SHIFT)
 end_define
@@ -353,6 +382,13 @@ define|#
 directive|define
 name|VMBUS_CHAN_ST_ONLIST
 value|(1<< VMBUS_CHAN_ST_ONLIST_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_ST_REVOKED
+value|(1<< VMBUS_CHAN_ST_REVOKED_SHIFT)
 end_define
 
 begin_struct_decl

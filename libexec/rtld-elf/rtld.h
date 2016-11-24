@@ -1650,8 +1650,10 @@ name|ifunc_init
 parameter_list|(
 name|Elf_Auxinfo
 index|[
-specifier|static
+name|__min_size
+argument_list|(
 name|AT_COUNT
+argument_list|)
 index|]
 parameter_list|)
 function_decl|;

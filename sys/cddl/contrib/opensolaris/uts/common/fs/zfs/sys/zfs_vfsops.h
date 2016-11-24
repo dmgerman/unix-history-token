@@ -341,10 +341,10 @@ name|zfsvfs_t
 modifier|*
 name|zfsvfs
 parameter_list|,
-specifier|const
-name|char
+name|struct
+name|dsl_dataset
 modifier|*
-name|osname
+name|ds
 parameter_list|)
 function_decl|;
 specifier|extern
