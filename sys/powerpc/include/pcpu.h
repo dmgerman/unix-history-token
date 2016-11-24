@@ -150,7 +150,7 @@ define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	vm_offset_t	pc_qmap_addr;					\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[165]
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	vm_offset_t	pc_qmap_addr;					\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[173]
 end_define
 
 begin_comment

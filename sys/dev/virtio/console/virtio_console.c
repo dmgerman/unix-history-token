@@ -4002,6 +4002,7 @@ name|len
 operator|>
 sizeof|sizeof
 argument_list|(
+operator|*
 name|control
 argument_list|)
 condition|)
@@ -4024,6 +4025,7 @@ name|len
 operator|-
 sizeof|sizeof
 argument_list|(
+operator|*
 name|control
 argument_list|)
 expr_stmt|;

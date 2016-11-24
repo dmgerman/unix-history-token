@@ -581,6 +581,62 @@ parameter_list|)
 value|(CPSW_ALE_OFFSET + 0x40 + ((p) * 0x04))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_NO_SA_UPDATE
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_NO_LEARN
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_INGRESS
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_DROP_UNTAGGED
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_FORWARD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_LEARN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_BLOCKED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALE_PORTCTL_DISABLED
+value|0
+end_define
+
 begin_comment
 comment|/* SL1 is at 0x0D80, SL2 is at 0x0DC0 */
 end_comment
