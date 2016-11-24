@@ -1343,7 +1343,7 @@ modifier|*
 name|lsop
 parameter_list|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -1495,7 +1495,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2366,7 +2366,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|INP_INFO_WLOCK_ASSERT
+name|INP_INFO_RLOCK_ASSERT
 argument_list|(
 operator|&
 name|V_tcbinfo

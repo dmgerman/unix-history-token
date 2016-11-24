@@ -330,7 +330,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4  * and IPv6 sockets.  In the case of TCP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields also require the global pcbinfo lock for the inpcb to be held,  * when modified, such as the global connection lists and hashes, as well as  * binding information (which affects which hash a connection is on).  This  * model means that connections can be looked up without holding the  * per-connection lock, which is important for performance when attempting to  * find the connection for a packet given its IP and port tuple.  Writing to  * these fields that write locks be held on both the inpcb and global locks.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  */
+comment|/*-  * struct inpcb captures the network layer state for TCP, UDP, and raw IPv4 and  * IPv6 sockets.  In the case of TCP and UDP, further per-connection state is  * hung off of inp_ppcb most of the time.  Almost all fields of struct inpcb  * are static after creation or protected by a per-inpcb rwlock, inp_lock.  A  * few fields are protected by multiple locks as indicated in the locking notes  * below.  For these fields, all of the listed locks must be write-locked for  * any modifications.  However, these fields can be safely read while any one of  * the listed locks are read-locked.  This model can permit greater concurrency  * for read operations.  For example, connections can be looked up while only  * holding a read lock on the global pcblist lock.  This is important for  * performance when attempting to find the connection for a packet given its IP  * and port tuple.  *  * One noteworthy exception is that the global pcbinfo lock follows a different  * set of rules in relation to the inp_list field.  Rather than being  * write-locked for modifications and read-locked for list iterations, it must  * be read-locked during modifications and write-locked during list iterations.  * This ensures that the relatively rare global list iterations safely walk a  * stable snapshot of connections while allowing more common list modifications  * to safely grab the pcblist lock just while adding or removing a connection  * from the global list.  *  * Key:  * (c) - Constant after initialization  * (g) - Protected by the pcbgroup lock  * (i) - Protected by the inpcb lock  * (p) - Protected by the pcbinfo lock for the inpcb  * (l) - Protected by the pcblist lock for the inpcb  * (h) - Protected by the pcbhash lock for the inpcb  * (s) - Protected by another subsystem's locks  * (x) - Undefined locking  *  * A few other notes:  *  * When a read lock is held, stability of the field is guaranteed; to write  * to a field, a write lock must generally be held.  *  * netinet/netinet6-layer code should not assume that the inp_socket pointer  * is safe to dereference without inp_lock being held, even for protocols  * other than TCP (where the inpcb persists during TIMEWAIT even after the  * socket has been freed), or there may be close(2)-related races.  *  * The inp_vflag field is overloaded, and would otherwise ideally be (c).  *  * TODO:  Currently only the TCP stack is leveraging the global pcbinfo lock  * read-lock usage during modification, this model can be applied to other  * protocols (especially SCTP).  */
 end_comment
 
 begin_struct
@@ -343,7 +343,7 @@ argument|inpcb
 argument_list|)
 name|inp_hash
 expr_stmt|;
-comment|/* (i/p) hash list */
+comment|/* (h/i) hash list */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
@@ -357,7 +357,9 @@ argument|inpcb
 argument_list|)
 name|inp_list
 expr_stmt|;
-comment|/* (i/p) list for all PCBs for proto */
+comment|/* (p/l) list for all PCBs for proto */
+comment|/* (p[w]) for list iteration */
+comment|/* (p[r]/l) for addition/removal */
 name|void
 modifier|*
 name|inp_ppcb
@@ -381,7 +383,7 @@ argument|inpcb
 argument_list|)
 name|inp_pcbgroup_wild
 expr_stmt|;
-comment|/* (g/i/p) group wildcard entry */
+comment|/* (g/i/h) group wildcard entry */
 name|struct
 name|socket
 modifier|*
@@ -454,7 +456,7 @@ name|struct
 name|in_conninfo
 name|inp_inc
 decl_stmt|;
-comment|/* (i/p) list for PCB's local port */
+comment|/* (i) list for PCB's local port */
 comment|/* MAC and IPSEC policy information. */
 name|struct
 name|label
@@ -532,13 +534,13 @@ argument|inpcb
 argument_list|)
 name|inp_portlist
 expr_stmt|;
-comment|/* (i/p) */
+comment|/* (i/h) */
 name|struct
 name|inpcbport
 modifier|*
 name|inp_phd
 decl_stmt|;
-comment|/* (i/p) head of this list */
+comment|/* (i/h) head of this list */
 define|#
 directive|define
 name|inp_zero_size
@@ -782,14 +784,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by two locks: ipi_lock and ipi_hash_lock,  * the former covering mutable global fields (such as the global pcb list),  * and the latter covering the hashed lookup tables.  The lock order is:  *  *    ipi_lock (before) inpcb locks (before) {ipi_hash_lock, pcbgroup locks}  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (h) Read using either ipi_hash_lock or inpcb lock; write requires both  * (p) Protected by one or more pcbgroup locks  * (x) Synchronisation properties poorly defined  */
+comment|/*-  * Global data structure for each high-level protocol (UDP, TCP, ...) in both  * IPv4 and IPv6.  Holds inpcb lists and information for managing them.  *  * Each pcbinfo is protected by three locks: ipi_lock, ipi_hash_lock and  * ipi_list_lock:  *  - ipi_lock covering the global pcb list stability during loop iteration,  *  - ipi_hash_lock covering the hashed lookup tables,  *  - ipi_list_lock covering mutable global fields (such as the global  *    pcb list)  *  * The lock order is:  *  *    ipi_lock (before)  *        inpcb locks (before)  *            ipi_list locks (before)  *                {ipi_hash_lock, pcbgroup locks}  *  * Locking key:  *  * (c) Constant or nearly constant after initialisation  * (g) Locked by ipi_lock  * (l) Locked by ipi_list_lock  * (h) Read using either ipi_hash_lock or inpcb lock; write requires both  * (p) Protected by one or more pcbgroup locks  * (x) Synchronisation properties poorly defined  */
 end_comment
 
 begin_struct
 struct|struct
 name|inpcbinfo
 block|{
-comment|/* 	 * Global lock protecting global inpcb list, inpcb count, etc. 	 */
+comment|/* 	 * Global lock protecting full inpcb list traversal 	 */
 name|struct
 name|rwlock
 name|ipi_lock
@@ -800,16 +802,16 @@ name|inpcbhead
 modifier|*
 name|ipi_listhead
 decl_stmt|;
-comment|/* (g) */
+comment|/* (g/l) */
 name|u_int
 name|ipi_count
 decl_stmt|;
-comment|/* (g) */
+comment|/* (l) */
 comment|/* 	 * Generation count -- incremented each time a connection is allocated 	 * or freed. 	 */
 name|u_quad_t
 name|ipi_gencnt
 decl_stmt|;
-comment|/* (g) */
+comment|/* (l) */
 comment|/* 	 * Fields associated with port lookup and allocation. 	 */
 name|u_short
 name|ipi_lastport
@@ -897,6 +899,11 @@ name|ipi_pspare
 index|[
 literal|2
 index|]
+decl_stmt|;
+comment|/* 	 * Global lock protecting global inpcb list, inpcb count, etc. 	 */
+name|struct
+name|rwlock
+name|ipi_list_lock
 decl_stmt|;
 block|}
 struct|;
@@ -1423,6 +1430,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_INFO_WLOCKED
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wowned(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_INFO_RUNLOCK
 parameter_list|(
 name|ipi
@@ -1478,6 +1495,143 @@ parameter_list|(
 name|ipi
 parameter_list|)
 value|rw_assert(&(ipi)->ipi_lock, RA_UNLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_LOCK_INIT
+parameter_list|(
+name|ipi
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|rw_init_flags(&(ipi)->ipi_list_lock, (d), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_LOCK_DESTROY
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_destroy(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_RLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_rlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_WLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_TRY_RLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_rlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_TRY_WLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_wlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_TRY_UPGRADE
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_upgrade(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_RUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_runlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_WUNLOCK
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_wunlock(&(ipi)->ipi_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_LOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+define|\
+value|rw_assert(&(ipi)->ipi_list_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_RLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+define|\
+value|rw_assert(&(ipi)->ipi_list_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_WLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+define|\
+value|rw_assert(&(ipi)->ipi_list_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_LIST_UNLOCK_ASSERT
+parameter_list|(
+name|ipi
+parameter_list|)
+define|\
+value|rw_assert(&(ipi)->ipi_list_lock, RA_UNLOCKED)
 end_define
 
 begin_define
