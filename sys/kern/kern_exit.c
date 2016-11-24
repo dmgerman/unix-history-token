@@ -4201,11 +4201,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -4661,9 +4656,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|PROC_SLOCK
@@ -5228,6 +5225,11 @@ index|[
 literal|0
 index|]
 operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|nfound
