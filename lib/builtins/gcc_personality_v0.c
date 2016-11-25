@@ -15,6 +15,42 @@ directive|include
 file|<unwind.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ARM_DWARF_EH__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__USING_SJLJ_EXCEPTIONS__
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * When building with older compilers (e.g. clang<3.9), it is possible that we  * have a version of unwind.h which does not provide the EHABI declarations  * which are quired for the C personality to conform to the specification.  In  * order to provide forward compatibility for such compilers, we re-declare the  * necessary interfaces in the helper to permit a standalone compilation of the  * builtins (which contains the C unwinding personality for historical reasons).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"unwind-ehabi-helpers.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Pointer encodings documented at:  *   http://refspecs.freestandards.org/LSB_1.3.0/gLSB/gLSB/ehframehdr.html  */
 end_comment
