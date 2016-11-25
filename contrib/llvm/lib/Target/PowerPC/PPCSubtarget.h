@@ -251,7 +251,7 @@ name|bool
 name|UseCRBits
 block|;
 name|bool
-name|UseSoftFloat
+name|HasHardFloat
 block|;
 name|bool
 name|IsPPC64
@@ -620,7 +620,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|UseSoftFloat
+operator|!
+name|HasHardFloat
 return|;
 block|}
 comment|/// use64BitRegs - Return true if in 64-bit mode or if we should use 64-bit
