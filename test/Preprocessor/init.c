@@ -7880,6 +7880,22 @@ comment|// ARMEABIHARDFP:#define __arm__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=armv6-unknown-cloudabi-eabihf< /dev/null | FileCheck -match-full-lines -check-prefix ARMV6-CLOUDABI %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARMV6-CLOUDABI:#define __CloudABI__ 1
+end_comment
+
+begin_comment
+comment|// ARMV6-CLOUDABI:#define __arm__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-netbsd-eabi< /dev/null | FileCheck -match-full-lines -check-prefix ARM-NETBSD %s
 end_comment
 

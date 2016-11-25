@@ -173,6 +173,14 @@ operator|*
 operator|>
 name|TemplateParameter
 expr_stmt|;
+name|NamedDecl
+modifier|*
+name|getAsNamedDecl
+parameter_list|(
+name|TemplateParameter
+name|P
+parameter_list|)
+function_decl|;
 comment|/// \brief Stores a list of template parameters for a TemplateDecl and its
 comment|/// derived classes.
 name|class
@@ -11039,8 +11047,71 @@ name|ASTDeclWriter
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+unit|};
+specifier|inline
+name|NamedDecl
+modifier|*
+name|getAsNamedDecl
+parameter_list|(
+name|TemplateParameter
+name|P
+parameter_list|)
+block|{
+if|if
+condition|(
+name|auto
+operator|*
+name|PD
+operator|=
+name|P
+operator|.
+name|dyn_cast
+operator|<
+name|TemplateTypeParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PD
+return|;
+if|if
+condition|(
+name|auto
+operator|*
+name|PD
+operator|=
+name|P
+operator|.
+name|dyn_cast
+operator|<
+name|NonTypeTemplateParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|PD
+return|;
+return|return
+name|P
+operator|.
+name|get
+operator|<
+name|TemplateTemplateParmDecl
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-unit|};  }
+unit|}
 comment|/* end of namespace clang */
 end_comment
 

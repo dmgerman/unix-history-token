@@ -416,6 +416,19 @@ name|int
 name|main
 parameter_list|()
 block|{
+comment|// CHECK: store atomic i32 1, i32* getelementptr inbounds ({ i32, i32 }, { i32, i32 }* @civ, i32 0, i32 1) monotonic,
+pragma|#
+directive|pragma
+name|omp
+name|atomic
+name|write
+name|__imag
+argument_list|(
+name|civ
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 comment|// CHECK: load i8, i8*
 comment|// CHECK: store atomic i8
 pragma|#
