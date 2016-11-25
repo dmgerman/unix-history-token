@@ -560,7 +560,7 @@ begin_define
 define|#
 directive|define
 name|ISS_DATA_DFSC_TLB_CONFLICT
-value|(0x28<< 0)
+value|(0x30<< 0)
 end_define
 
 begin_define
