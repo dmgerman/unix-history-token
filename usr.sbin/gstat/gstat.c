@@ -124,6 +124,8 @@ name|flag_a
 decl_stmt|,
 name|flag_b
 decl_stmt|,
+name|flag_B
+decl_stmt|,
 name|flag_c
 decl_stmt|,
 name|flag_d
@@ -131,6 +133,8 @@ decl_stmt|,
 name|flag_o
 decl_stmt|,
 name|flag_p
+decl_stmt|,
+name|flag_s
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +154,7 @@ name|PRINTMSG
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {						\ 		if (flag_b&& !loop)					\ 			printf(__VA_ARGS__);				\ 		else if (!flag_b)					\ 			printw(__VA_ARGS__);				\ 	} while(0)
+value|do {						\ 		if ((flag_b&& !loop) || (flag_B))			\ 			printf(__VA_ARGS__);				\ 		else if (!flag_b)					\ 			printw(__VA_ARGS__);				\ 	} while(0)
 end_define
 
 begin_function_decl
@@ -298,7 +302,7 @@ name|long
 name|double
 name|ld
 index|[
-literal|13
+literal|16
 index|]
 decl_stmt|;
 name|uint64_t
@@ -371,7 +375,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abdcf:I:op"
+literal|"abBdcf:I:ops"
 argument_list|)
 operator|)
 operator|!=
@@ -395,6 +399,18 @@ break|break;
 case|case
 literal|'b'
 case|:
+name|flag_b
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|flag_B
+operator|=
+literal|1
+expr_stmt|;
 name|flag_b
 operator|=
 literal|1
@@ -578,6 +594,14 @@ case|case
 literal|'p'
 case|:
 name|flag_p
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|flag_s
 operator|=
 literal|1
 expr_stmt|;
@@ -953,6 +977,11 @@ argument_list|(
 name|sq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_b
+condition|)
 name|move
 argument_list|(
 literal|0
@@ -1122,6 +1151,24 @@ argument_list|(
 literal|" L(q)  ops/s   "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_s
+condition|)
+block|{
+name|PRINTMSG
+argument_list|(
+literal|" r/s     kB   kBps   ms/r   "
+argument_list|)
+expr_stmt|;
+name|PRINTMSG
+argument_list|(
+literal|" w/s     kB   kBps   ms/w   "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|PRINTMSG
 argument_list|(
 literal|" r/s   kBps   ms/r   "
@@ -1132,15 +1179,28 @@ argument_list|(
 literal|" w/s   kBps   ms/w   "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag_d
 condition|)
+block|{
+if|if
+condition|(
+name|flag_s
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" d/s     kB   kBps   ms/d   "
+argument_list|)
+expr_stmt|;
+else|else
 name|PRINTMSG
 argument_list|(
 literal|" d/s   kBps   ms/d   "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag_o
@@ -1518,6 +1578,30 @@ index|[
 literal|12
 index|]
 argument_list|,
+name|DSM_KB_PER_TRANSFER_READ
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|13
+index|]
+argument_list|,
+name|DSM_KB_PER_TRANSFER_WRITE
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|14
+index|]
+argument_list|,
+name|DSM_KB_PER_TRANSFER_FREE
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|15
+index|]
+argument_list|,
 name|DSM_NONE
 argument_list|)
 expr_stmt|;
@@ -1574,6 +1658,23 @@ operator|)
 name|ld
 index|[
 literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag_s
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|13
 index|]
 argument_list|)
 expr_stmt|;
@@ -1638,6 +1739,23 @@ operator|)
 name|ld
 index|[
 literal|4
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag_s
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|14
 index|]
 argument_list|)
 expr_stmt|;
@@ -1707,6 +1825,23 @@ operator|)
 name|ld
 index|[
 literal|8
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag_s
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|15
 index|]
 argument_list|)
 expr_stmt|;
@@ -2019,9 +2154,20 @@ operator|!
 name|loop
 condition|)
 break|break;
+if|if
+condition|(
+operator|!
+name|flag_B
+condition|)
 name|loop
 operator|=
 literal|0
+expr_stmt|;
+else|else
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 name|usleep
 argument_list|(
@@ -2348,7 +2494,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gstat [-abcdp] [-f filter] [-I interval]\n"
+literal|"usage: gstat [-abBcdps] [-f filter] [-I interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
