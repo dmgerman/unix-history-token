@@ -4024,7 +4024,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Register valid pins as interrupt sources. */
+comment|/* 	 * Reprogram pins to handle special case pins (such as NMI and 	 * SMI) and register valid pins as interrupt sources. 	 */
 name|intr_register_pic
 argument_list|(
 operator|&
@@ -4057,6 +4057,24 @@ operator|,
 name|pin
 operator|++
 control|)
+block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
+name|ioapic_program_intpin
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|icu_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pin
@@ -4073,6 +4091,7 @@ operator|->
 name|io_intsrc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
