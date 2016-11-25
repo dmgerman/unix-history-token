@@ -365,11 +365,16 @@ argument|vmbus_channel
 argument_list|)
 name|vmbus_chans
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEW_PCIB
 comment|/* The list of usable MMIO ranges for PCIe pass-through */
 name|struct
 name|pcib_host_resources
 name|vmbus_mmio_res
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
