@@ -1587,6 +1587,11 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|&&
+name|td
+operator|==
+operator|&
+name|thread0
 condition|)
 name|panic
 argument_list|(
