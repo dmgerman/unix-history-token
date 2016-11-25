@@ -1954,6 +1954,19 @@ name|chan
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Connect the bufrings, both RX and TX, to this channel. 	 */
+name|KASSERT
+argument_list|(
+name|chan
+operator|->
+name|ch_bufring_gpadl
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"bufring GPADL is still connected"
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vmbus_chan_gpadl_connect
