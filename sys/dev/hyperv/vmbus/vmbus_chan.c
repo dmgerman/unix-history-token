@@ -144,7 +144,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vmbus_chan_close_internal
 parameter_list|(
 name|struct
@@ -3395,7 +3395,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vmbus_chan_close_internal
 parameter_list|(
 name|struct
@@ -3490,7 +3490,11 @@ name|ch_id
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Free this channel's sysctl tree attached to its device's 	 * sysctl tree. 	 */
 name|sysctl_ctx_free
@@ -3556,6 +3560,10 @@ name|chan
 operator|->
 name|ch_id
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
 expr_stmt|;
 goto|goto
 name|disconnect
@@ -3685,6 +3693,11 @@ name|ch_bufring
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 			 * Give caller a hint that the bufring GPADL is 			 * still connected. 			 */
+name|error
+operator|=
+name|EISCONN
+expr_stmt|;
 block|}
 name|chan
 operator|->
@@ -3722,6 +3735,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
