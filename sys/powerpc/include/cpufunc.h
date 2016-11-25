@@ -166,7 +166,7 @@ name|register_t
 name|value
 parameter_list|)
 block|{
-asm|__asm __volatile ("mtsrin %0,%1" :: "r"(value), "r"(va));
+asm|__asm __volatile ("mtsrin %0,%1; isync" :: "r"(value), "r"(va));
 block|}
 end_function
 
