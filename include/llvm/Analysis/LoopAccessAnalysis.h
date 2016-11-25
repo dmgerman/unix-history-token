@@ -1010,13 +1010,15 @@ name|Value
 operator|>
 name|PointerValue
 expr_stmt|;
-comment|/// Holds the pointer value at the beginning of the loop.
+comment|/// Holds the smallest byte address accessed by the pointer throughout all
+comment|/// iterations of the loop.
 specifier|const
 name|SCEV
 modifier|*
 name|Start
 decl_stmt|;
-comment|/// Holds the pointer value at the end of the loop.
+comment|/// Holds the largest byte address accessed by the pointer throughout all
+comment|/// iterations of the loop, plus 1.
 specifier|const
 name|SCEV
 modifier|*

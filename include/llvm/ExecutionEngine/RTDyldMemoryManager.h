@@ -247,7 +247,7 @@ name|Size
 parameter_list|)
 function|override
 block|{
-name|registerEHFramesInProcess
+name|deregisterEHFramesInProcess
 argument_list|(
 name|Addr
 argument_list|,
