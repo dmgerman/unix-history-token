@@ -2528,6 +2528,12 @@ name|replay
 operator|!=
 name|NULL
 condition|)
+block|{
+name|SECASVAR_LOCK
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
 name|kdebug_secreplay
 argument_list|(
 name|sav
@@ -2535,6 +2541,12 @@ operator|->
 name|replay
 argument_list|)
 expr_stmt|;
+name|SECASVAR_UNLOCK
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sav
@@ -2622,11 +2634,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" secreplay{ count=%u wsize=%u seq=%u lastseq=%u"
+literal|" secreplay{ count=%u bitmap_size=%u wsize=%u seq=%u lastseq=%u"
 argument_list|,
 name|rpl
 operator|->
 name|count
+argument_list|,
+name|rpl
+operator|->
+name|bitmap_size
 argument_list|,
 name|rpl
 operator|->
@@ -2672,7 +2688,9 @@ name|len
 operator|<
 name|rpl
 operator|->
-name|wsize
+name|bitmap_size
+operator|*
+literal|4
 condition|;
 name|len
 operator|++

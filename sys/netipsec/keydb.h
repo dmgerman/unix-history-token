@@ -32,6 +32,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipsec/key_var.h>
 end_include
 
@@ -500,7 +506,7 @@ value|(SAV_ISCTR((_sav)) || SAV_ISGCM((_sav)))
 end_define
 
 begin_comment
-comment|/* replay prevention */
+comment|/* Replay prevention, protected by SECASVAR_LOCK:  *  (m) locked by mtx  *  (c) read only except during creation / free  */
 end_comment
 
 begin_struct
@@ -510,26 +516,32 @@ block|{
 name|u_int32_t
 name|count
 decl_stmt|;
+comment|/* (m) */
 name|u_int
 name|wsize
 decl_stmt|;
-comment|/* window size, i.g. 4 bytes */
+comment|/* (c) window size, i.g. 4 bytes */
 name|u_int32_t
 name|seq
 decl_stmt|;
-comment|/* used by sender */
+comment|/* (m) used by sender */
 name|u_int32_t
 name|lastseq
 decl_stmt|;
-comment|/* used by receiver */
-name|caddr_t
+comment|/* (m) used by receiver */
+name|u_int32_t
+modifier|*
 name|bitmap
 decl_stmt|;
-comment|/* used by receiver */
+comment|/* (m) used by receiver */
+name|u_int
+name|bitmap_size
+decl_stmt|;
+comment|/* (c) size of the bitmap array */
 name|int
 name|overflow
 decl_stmt|;
-comment|/* overflow flag */
+comment|/* (m) overflow flag */
 block|}
 struct|;
 end_struct

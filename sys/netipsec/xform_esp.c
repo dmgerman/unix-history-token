@@ -3763,6 +3763,11 @@ block|{
 name|u_int32_t
 name|replay
 decl_stmt|;
+name|SECASVAR_LOCK
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REGRESSION
@@ -3790,6 +3795,11 @@ operator|->
 name|replay
 operator|->
 name|count
+argument_list|)
+expr_stmt|;
+name|SECASVAR_UNLOCK
+argument_list|(
+name|sav
 argument_list|)
 expr_stmt|;
 name|bcopy

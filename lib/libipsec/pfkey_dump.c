@@ -787,6 +787,11 @@ name|sadb_sens
 modifier|*
 name|m_sens
 decl_stmt|;
+name|struct
+name|sadb_x_sa_replay
+modifier|*
+name|m_sa_replay
+decl_stmt|;
 comment|/* check pfkey message. */
 if|if
 condition|(
@@ -980,6 +985,18 @@ operator|)
 name|mhp
 index|[
 name|SADB_EXT_SENSITIVITY
+index|]
+expr_stmt|;
+name|m_sa_replay
+operator|=
+operator|(
+expr|struct
+name|sadb_x_sa_replay
+operator|*
+operator|)
+name|mhp
+index|[
+name|SADB_X_EXT_SA_REPLAY
 index|]
 expr_stmt|;
 comment|/* source address */
@@ -1286,6 +1303,16 @@ name|m_sa2
 operator|->
 name|sadb_x_sa2_sequence
 argument_list|,
+name|m_sa_replay
+condition|?
+operator|(
+name|m_sa_replay
+operator|->
+name|sadb_x_sa_replay_replay
+operator|>>
+literal|3
+operator|)
+else|:
 name|m_sa
 operator|->
 name|sadb_sa_replay

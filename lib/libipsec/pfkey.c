@@ -7300,6 +7300,9 @@ case|:
 case|case
 name|SADB_X_EXT_SA2
 case|:
+case|case
+name|SADB_X_EXT_SA_REPLAY
+case|:
 name|mhp
 index|[
 name|ext

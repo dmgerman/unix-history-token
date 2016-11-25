@@ -4324,6 +4324,11 @@ operator|->
 name|replay
 condition|)
 block|{
+name|SECASVAR_LOCK
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sav
@@ -4346,6 +4351,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|SECASVAR_UNLOCK
+argument_list|(
+name|sav
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -4426,6 +4436,11 @@ operator|->
 name|replay
 operator|->
 name|count
+argument_list|)
+expr_stmt|;
+name|SECASVAR_UNLOCK
+argument_list|(
+name|sav
 argument_list|)
 expr_stmt|;
 block|}

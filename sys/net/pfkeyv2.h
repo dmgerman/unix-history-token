@@ -844,6 +844,44 @@ argument_list|)
 assert|;
 end_assert
 
+begin_comment
+comment|/* Additional large replay window support  */
+end_comment
+
+begin_struct
+struct|struct
+name|sadb_x_sa_replay
+block|{
+name|u_int16_t
+name|sadb_x_sa_replay_len
+decl_stmt|;
+name|u_int16_t
+name|sadb_x_sa_replay_exttype
+decl_stmt|;
+name|u_int32_t
+name|sadb_x_sa_replay_replay
+decl_stmt|;
+comment|/* in packets */
+block|}
+struct|;
+end_struct
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sadb_x_sa_replay
+argument_list|)
+operator|==
+literal|8
+argument_list|,
+literal|"struct size mismatch"
+argument_list|)
+assert|;
+end_assert
+
 begin_define
 define|#
 directive|define
@@ -1052,8 +1090,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SADB_X_EXT_SA_REPLAY
+value|26
+end_define
+
+begin_comment
+comment|/* Replay window override. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SADB_EXT_MAX
-value|25
+value|26
 end_define
 
 begin_define
