@@ -2216,6 +2216,14 @@ name|ENXIO
 expr_stmt|;
 name|failed
 label|:
+name|sysctl_ctx_free
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_sysctl_ctx
+argument_list|)
+expr_stmt|;
 name|vmbus_chan_clear_chmap
 argument_list|(
 name|chan
