@@ -122,6 +122,10 @@ begin_struct
 struct|struct
 name|arc4_s
 block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
 name|u_int8_t
 name|i
 decl_stmt|,
@@ -139,11 +143,11 @@ decl_stmt|;
 name|time_t
 name|t_reseed
 decl_stmt|;
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
