@@ -1736,7 +1736,9 @@ name|ch_id
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|br
@@ -2180,7 +2182,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|vmbus_chan_printf
 argument_list|(
 name|chan
@@ -2192,9 +2193,10 @@ operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|vmbus_chan_printf
@@ -2255,7 +2257,9 @@ name|VMBUS_CHAN_ST_OPENED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
