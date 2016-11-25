@@ -187,6 +187,15 @@ argument|bool&is_hit
 argument_list|)
 name|override
 block|;
+name|uint8_t
+operator|*
+name|ReturnFPOffset
+argument_list|(
+argument|uint8_t reg_index
+argument_list|,
+argument|uint32_t byte_offset
+argument_list|)
+block|;
 name|Error
 name|GetWatchpointHitIndex
 argument_list|(
@@ -262,26 +271,23 @@ block|;
 name|protected
 operator|:
 name|Error
-name|DoReadRegisterValue
+name|Read_SR_Config
 argument_list|(
 argument|uint32_t offset
 argument_list|,
-argument|const char* reg_name
+argument|const char *reg_name
 argument_list|,
 argument|uint32_t size
 argument_list|,
 argument|RegisterValue&value
 argument_list|)
-name|override
 block|;
 name|Error
-name|DoWriteRegisterValue
+name|ReadRegisterRaw
 argument_list|(
-argument|uint32_t offset
+argument|uint32_t reg_index
 argument_list|,
-argument|const char* reg_name
-argument_list|,
-argument|const RegisterValue&value
+argument|RegisterValue&value
 argument_list|)
 name|override
 block|;
@@ -292,6 +298,15 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|void* watch_readback
 argument_list|)
+block|;
+name|Error
+name|WriteRegisterRaw
+argument_list|(
+argument|uint32_t reg_index
+argument_list|,
+argument|const RegisterValue&value
+argument_list|)
+name|override
 block|;
 name|Error
 name|DoWriteWatchPointRegisterValue
