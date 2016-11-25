@@ -375,6 +375,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/*  * vmbus_chan_open_br()  * Return values:  * 0			Succeeded.  * EISCONN		Failed, and the memory passed through 'br' is still  *			connected.  Callers must _not_ free the the memory  *			passed through 'br', if this error happens.  * other values		Failed.  The memory passed through 'br' is no longer  *			connected.  Callers are free to do anything with the  *			memory passed through 'br'.  */
+end_comment
+
 begin_function_decl
 name|int
 name|vmbus_chan_open

@@ -1621,6 +1621,34 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|==
+name|EISCONN
+condition|)
+block|{
+comment|/* 			 * XXX 			 * The bufring GPADL is still connected; abandon 			 * this bufring, instead of having mysterious 			 * crash or trashed data later on. 			 */
+name|vmbus_chan_printf
+argument_list|(
+name|chan
+argument_list|,
+literal|"chan%u bufring GPADL "
+literal|"is still connected upon channel open error; "
+literal|"leak %d bytes memory\n"
+argument_list|,
+name|chan
+operator|->
+name|ch_id
+argument_list|,
+name|txbr_size
+operator|+
+name|rxbr_size
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hyperv_dmamem_free
 argument_list|(
 operator|&
@@ -1633,6 +1661,7 @@ operator|->
 name|ch_bufring
 argument_list|)
 expr_stmt|;
+block|}
 name|chan
 operator|->
 name|ch_bufring
@@ -2264,6 +2293,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|error1
+decl_stmt|;
+name|error1
+operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|chan
@@ -2273,6 +2307,17 @@ operator|->
 name|ch_bufring_gpadl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error1
+condition|)
+block|{
+comment|/* 			 * Give caller a hint that the bufring GPADL is still 			 * connected. 			 */
+name|error
+operator|=
+name|EISCONN
+expr_stmt|;
+block|}
 name|chan
 operator|->
 name|ch_bufring_gpadl
