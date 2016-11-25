@@ -3640,8 +3640,15 @@ condition|(
 name|chan
 operator|->
 name|ch_bufring_gpadl
+operator|!=
+literal|0
 condition|)
 block|{
+name|int
+name|error1
+decl_stmt|;
+name|error1
+operator|=
 name|vmbus_chan_gpadl_disconnect
 argument_list|(
 name|chan
@@ -3651,6 +3658,31 @@ operator|->
 name|ch_bufring_gpadl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error1
+condition|)
+block|{
+comment|/* 			 * XXX 			 * The bufring GPADL is still connected; abandon 			 * this bufring, instead of having mysterious 			 * crash or trashed data later on. 			 */
+name|vmbus_chan_printf
+argument_list|(
+name|chan
+argument_list|,
+literal|"chan%u bufring GPADL "
+literal|"is still connected after close\n"
+argument_list|,
+name|chan
+operator|->
+name|ch_id
+argument_list|)
+expr_stmt|;
+name|chan
+operator|->
+name|ch_bufring
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|chan
 operator|->
 name|ch_bufring_gpadl
