@@ -3557,7 +3557,9 @@ operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|disconnect
+goto|;
 block|}
 name|req
 operator|=
@@ -3614,26 +3616,27 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|disconnect
+goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|vmbus_chan_printf
 argument_list|(
 name|chan
 argument_list|,
-literal|"close chan%u\n"
+literal|"chan%u closed\n"
 argument_list|,
 name|chan
 operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-block|}
+name|disconnect
+label|:
 comment|/* 	 * Disconnect the TX+RX bufrings from this channel. 	 */
 if|if
 condition|(
