@@ -2224,6 +2224,8 @@ condition|(
 name|chan
 operator|->
 name|ch_bufring_gpadl
+operator|!=
+literal|0
 condition|)
 block|{
 name|vmbus_chan_gpadl_disconnect
@@ -2416,11 +2418,6 @@ name|vmbus_gpadl_alloc
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-operator|*
-name|gpadl0
-operator|=
-name|gpadl
 expr_stmt|;
 comment|/* 	 * Connect this GPADL to the target channel. 	 * 	 * NOTE: 	 * Since each message can only hold small set of page 	 * addresses, several messages may be required to 	 * complete the connection. 	 */
 if|if
@@ -2778,8 +2775,12 @@ return|return
 name|EIO
 return|;
 block|}
-else|else
-block|{
+comment|/* Done; commit the GPADL id. */
+operator|*
+name|gpadl0
+operator|=
+name|gpadl
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -2796,7 +2797,6 @@ operator|->
 name|ch_id
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 literal|0
