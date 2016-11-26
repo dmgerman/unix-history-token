@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bhnd_sprom_parser.h"
+file|"bhnd_nvram_store.h"
 end_include
 
 begin_expr_stmt
@@ -100,25 +100,11 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
-name|bhnd_resource
+name|bhnd_nvram_store
 modifier|*
-name|sprom_res
+name|store
 decl_stmt|;
-comment|/**< SPROM resource */
-name|int
-name|sprom_rid
-decl_stmt|;
-comment|/**< SPROM RID */
-name|struct
-name|bhnd_sprom
-name|shadow
-decl_stmt|;
-comment|/**< SPROM shadow */
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
-comment|/**< SPROM shadow mutex */
+comment|/**< nvram store */
 block|}
 struct|;
 end_struct

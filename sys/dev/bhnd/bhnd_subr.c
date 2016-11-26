@@ -3892,7 +3892,7 @@ argument_list|,
 operator|&
 name|larg
 argument_list|,
-name|BHND_NVRAM_TYPE_CSTR
+name|BHND_NVRAM_TYPE_STRING
 argument_list|)
 expr_stmt|;
 if|if

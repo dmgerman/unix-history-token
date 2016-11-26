@@ -15,6 +15,48 @@ directive|define
 name|_BHND_NVRAM_BHND_NVRAM_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_comment
 comment|/**  * NVRAM data sources supported by bhnd(4) devices.  */
 end_comment
@@ -40,94 +82,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/** Supported NVRAM formats. */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|BHND_NVRAM_FMT_BCM
-init|=
-literal|0
-block|,
-comment|/**< Broadcom NUL-delimited key=value pairs */
-name|BHND_NVRAM_FMT_TLV
-init|=
-literal|1
-block|,
-comment|/**< CFE TLV encoding, as used on WGT634U */
-name|BHND_NVRAM_FMT_BTXT
-init|=
-literal|2
-block|,
-comment|/**< Broadcom board text file. This is used 					     to provide external NVRAM data for some 					     fullmac WiFi devices. */
-name|BHND_NVRAM_FMT_SPROM
-init|=
-literal|3
-block|,
-comment|/**< SPROM/OTP-specific encoding used by 					     Broadcom network adapters */
-name|BHND_NVRAM_FMT_CIS
-init|=
-literal|4
-block|,
-comment|/**< A mostly CIS-compatible encoding used 					     on some Broadcom network adapters */
-name|BHND_NVRAM_FMT_UNKNOWN
-init|=
-literal|5
-comment|/**< Unknown or unrecognized format */
-block|}
-name|bhnd_nvram_format
-typedef|;
-end_typedef
-
-begin_comment
-comment|/** bhnd_nvram_type bit flags */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|BHND_NVRAM_TF_SIGNED
-init|=
-operator|(
-literal|1
-operator|<<
-literal|7
-operator|)
-block|, }
-enum|;
-end_enum
-
-begin_define
-define|#
-directive|define
-name|BHND_NVRAM_TYPE_ID_MASK
-value|0xF
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_NVRAM_TYPE_FLAGS_MASK
-value|0x70
-end_define
-
-begin_define
-define|#
-directive|define
-name|BHND_NVRAM_TYPE_ID
-parameter_list|(
-name|_id
-parameter_list|,
-name|_flags
-parameter_list|)
-define|\
-value|(((_id)& BHND_NVRAM_TYPE_ID_MASK) |	\ 	    ((_flags)& BHND_NVRAM_TYPE_FLAGS_MASK))
-end_define
-
-begin_comment
-comment|/** Supported NVRAM data types */
+comment|/**  * NVRAM data types.  *   * @internal  *   * All primitive (non-array) constants should be representable as a 4-bit  * integer (e.g. 0-15) to support SPROM_OPCODE_TYPE_IMM encoding as used by  * nvram_map_gen.awk.  */
 end_comment
 
 begin_typedef
@@ -136,117 +91,193 @@ enum|enum
 block|{
 name|BHND_NVRAM_TYPE_UINT8
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|0
-argument_list|,
-literal|0
-argument_list|)
 block|,
 comment|/**< unsigned 8-bit integer */
 name|BHND_NVRAM_TYPE_UINT16
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|1
-argument_list|,
-literal|0
-argument_list|)
 block|,
 comment|/**< unsigned 16-bit integer */
 name|BHND_NVRAM_TYPE_UINT32
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|2
-argument_list|,
-literal|0
-argument_list|)
 block|,
 comment|/**< unsigned 32-bit integer */
+name|BHND_NVRAM_TYPE_UINT64
+init|=
+literal|3
+block|,
+comment|/**< signed 64-bit integer */
 name|BHND_NVRAM_TYPE_INT8
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|4
-argument_list|,
-name|BHND_NVRAM_TF_SIGNED
-argument_list|)
 block|,
 comment|/**< signed 8-bit integer */
 name|BHND_NVRAM_TYPE_INT16
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|5
-argument_list|,
-name|BHND_NVRAM_TF_SIGNED
-argument_list|)
 block|,
 comment|/**< signed 16-bit integer */
 name|BHND_NVRAM_TYPE_INT32
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|6
-argument_list|,
-name|BHND_NVRAM_TF_SIGNED
-argument_list|)
 block|,
 comment|/**< signed 32-bit integer */
+name|BHND_NVRAM_TYPE_INT64
+init|=
+literal|7
+block|,
+comment|/**< signed 64-bit integer */
 name|BHND_NVRAM_TYPE_CHAR
 init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
-literal|7
-argument_list|,
-name|BHND_NVRAM_TF_SIGNED
-argument_list|)
-block|,
-comment|/**< ASCII character */
-name|BHND_NVRAM_TYPE_CSTR
-init|=
-name|BHND_NVRAM_TYPE_ID
-argument_list|(
 literal|8
-argument_list|,
-literal|0
-argument_list|)
 block|,
-comment|/**< NUL-terminated C string */
+comment|/**< ASCII/UTF-8 character */
+name|BHND_NVRAM_TYPE_STRING
+init|=
+literal|9
+block|,
+comment|/**< ASCII/UTF-8 NUL-terminated 						     string */
+comment|/* 10-15 reserved for primitive (non-array) types */
+name|BHND_NVRAM_TYPE_UINT8_ARRAY
+init|=
+literal|16
+block|,
+comment|/**< array of uint8 integers */
+name|BHND_NVRAM_TYPE_UINT16_ARRAY
+init|=
+literal|17
+block|,
+comment|/**< array of uint16 integers */
+name|BHND_NVRAM_TYPE_UINT32_ARRAY
+init|=
+literal|18
+block|,
+comment|/**< array of uint32 integers */
+name|BHND_NVRAM_TYPE_UINT64_ARRAY
+init|=
+literal|19
+block|,
+comment|/**< array of uint64 integers */
+name|BHND_NVRAM_TYPE_INT8_ARRAY
+init|=
+literal|20
+block|,
+comment|/**< array of int8 integers */
+name|BHND_NVRAM_TYPE_INT16_ARRAY
+init|=
+literal|21
+block|,
+comment|/**< array of int16 integers */
+name|BHND_NVRAM_TYPE_INT32_ARRAY
+init|=
+literal|22
+block|,
+comment|/**< array of int32 integers */
+name|BHND_NVRAM_TYPE_INT64_ARRAY
+init|=
+literal|23
+block|,
+comment|/**< array of int64 integers */
+name|BHND_NVRAM_TYPE_CHAR_ARRAY
+init|=
+literal|24
+block|,
+comment|/**< array of ASCII/UTF-8 						     characters */
+name|BHND_NVRAM_TYPE_STRING_ARRAY
+init|=
+literal|25
+block|,
+comment|/**< array of ASCII/UTF-8 						     NUL-terminated strings */
 block|}
 name|bhnd_nvram_type
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|BHND_NVRAM_TYPE_ID_MASK
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|BHND_NVRAM_TYPE_FLAGS_MASK
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|BHND_NVRAM_TYPE_ID
-end_undef
-
-begin_define
-define|#
-directive|define
-name|BHND_NVRAM_SIGNED_TYPE
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|bhnd_nvram_string_array_next
 parameter_list|(
-name|_type
+specifier|const
+name|char
+modifier|*
+name|inp
+parameter_list|,
+name|size_t
+name|ilen
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prev
 parameter_list|)
-define|\
-value|(((_type)& BHND_NVRAM_TF_SIGNED) == BHND_NVRAM_TF_SIGNED)
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_nvram_is_signed_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_nvram_is_unsigned_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_nvram_is_int_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|bhnd_nvram_is_array_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_nvram_type
+name|bhnd_nvram_base_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|bhnd_nvram_type_name
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
