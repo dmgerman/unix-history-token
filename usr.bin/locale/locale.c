@@ -1872,11 +1872,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|prt_keywords
+operator|||
 name|argc
 operator|>
 literal|0
 condition|)
-block|{
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -1884,6 +1885,13 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
 while|while
 condition|(
 name|argc
