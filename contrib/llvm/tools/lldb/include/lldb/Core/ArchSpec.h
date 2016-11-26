@@ -819,6 +819,18 @@ operator|<
 name|kNumCores
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Return a string representing target application ABI.
+comment|///
+comment|/// @return A string representing target application ABI.
+comment|//------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetTargetABI
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|TripleVendorWasSpecified
 argument_list|()
@@ -1326,6 +1338,15 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
+name|void
+name|SetFlags
+argument_list|(
+name|std
+operator|::
+name|string
+name|elf_abi
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|bool

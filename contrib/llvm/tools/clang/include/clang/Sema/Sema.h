@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclTemplate.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -3751,7 +3757,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Retrieve the current lambda scope info, if any.
+comment|/// Retrieve the current lambda scope info, if any.
+end_comment
+
+begin_comment
+comment|/// \param IgnoreCapturedRegions true if should find the top-most lambda scope
+end_comment
+
+begin_comment
+comment|/// info ignoring all inner captured regions scope infos.
 end_comment
 
 begin_expr_stmt
@@ -3760,7 +3774,9 @@ operator|::
 name|LambdaScopeInfo
 operator|*
 name|getCurLambda
-argument_list|()
+argument_list|(
+argument|bool IgnoreCapturedRegions = false
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -31522,10 +31538,10 @@ comment|/// the declaration we're instantiating (e.g., a CXXRecordDecl).
 name|TemplateInstantiation
 block|,
 comment|/// We are instantiating a default argument for a template
-comment|/// parameter. The Entity is the template, and
-comment|/// TemplateArgs/NumTemplateArguments provides the template
-comment|/// arguments as specified.
-comment|/// FIXME: Use a TemplateArgumentList
+comment|/// parameter. The Entity is the template parameter whose argument is
+comment|/// being instantiated, the Template is the template, and the
+comment|/// TemplateArgs/NumTemplateArguments provide the template arguments as
+comment|/// specified.
 name|DefaultTemplateArgumentInstantiation
 block|,
 comment|/// We are instantiating a default argument for a function.
@@ -31825,6 +31841,28 @@ operator|,
 literal|16
 operator|>
 name|ActiveTemplateInstantiations
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Specializations whose definitions are currently being instantiated.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Decl
+operator|*
+operator|,
+name|unsigned
+operator|>>
+name|InstantiatingSpecializations
 expr_stmt|;
 end_expr_stmt
 
@@ -32240,6 +32278,8 @@ argument|Sema&SemaRef
 argument_list|,
 argument|SourceLocation PointOfInstantiation
 argument_list|,
+argument|TemplateParameter Param
+argument_list|,
 argument|TemplateDecl *Template
 argument_list|,
 argument|ArrayRef<TemplateArgument> TemplateArgs
@@ -32247,8 +32287,8 @@ argument_list|,
 argument|SourceRange InstantiationRange = SourceRange()
 argument_list|)
 empty_stmt|;
-comment|/// \brief Note that we are instantiating a default argument in a
-comment|/// template-id.
+comment|/// \brief Note that we are substituting either explicitly-specified or
+comment|/// deduced template arguments during function template argument deduction.
 name|InstantiatingTemplate
 argument_list|(
 argument|Sema&SemaRef
@@ -32391,6 +32431,17 @@ return|return
 name|Invalid
 return|;
 block|}
+comment|/// \brief Determine whether we are already instantiating this
+comment|/// specialization in some surrounding active instantiation.
+name|bool
+name|isAlreadyInstantiating
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AlreadyInstantiating
+return|;
+block|}
 name|private
 label|:
 name|Sema
@@ -32399,6 +32450,9 @@ name|SemaRef
 decl_stmt|;
 name|bool
 name|Invalid
+decl_stmt|;
+name|bool
+name|AlreadyInstantiating
 decl_stmt|;
 name|bool
 name|SavedInNonInstantiationSFINAEContext
