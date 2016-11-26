@@ -2481,11 +2481,10 @@ expr_stmt|;
 name|lapic_et
 operator|.
 name|et_quality
-operator|-=
-literal|200
+operator|=
+literal|100
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|(
