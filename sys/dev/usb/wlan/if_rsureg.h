@@ -2436,7 +2436,7 @@ value|0x03
 define|#
 directive|define
 name|R92S_TXDW1_QSEL_H2C
-value|0x1f
+value|0x13
 define|#
 directive|define
 name|R92S_TXDW1_NONQOS
