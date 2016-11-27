@@ -5369,13 +5369,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The page allocation request can came from consumers which already 	 * hold the free page queue mutex, like vm_page_insert() in 	 * vm_page_cache(). 	 */
-name|mtx_lock_flags
+comment|/* 	 * Allocate a page if the number of free pages exceeds the minimum 	 * for the request class. 	 */
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
-argument_list|,
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5415,7 +5413,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Allocate from the free queue if the number of free pages 		 * exceeds the minimum for the request class. 		 */
+comment|/* 		 * Can we allocate the page from a reservation? 		 */
 if|#
 directive|if
 name|VM_NRESERVLEVEL
@@ -5459,6 +5457,7 @@ condition|)
 endif|#
 directive|endif
 block|{
+comment|/* 			 * If not, allocate it from the free page queues. 			 */
 name|m
 operator|=
 name|vm_phys_alloc_pages
@@ -6780,12 +6779,10 @@ operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
 comment|/* 	 * Do not allocate reserved pages unless the req has asked for it. 	 */
-name|mtx_lock_flags
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
-argument_list|,
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
