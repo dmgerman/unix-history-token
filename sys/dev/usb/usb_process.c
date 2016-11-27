@@ -613,7 +613,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* end if messages - check if anyone is waiting for sync */
+comment|/* end of messages - check if anyone is waiting for sync */
 if|if
 condition|(
 name|up
