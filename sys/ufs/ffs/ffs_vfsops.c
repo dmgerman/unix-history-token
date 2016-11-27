@@ -634,6 +634,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|error1
+decl_stmt|,
 name|flags
 decl_stmt|;
 name|uint64_t
@@ -2196,6 +2198,12 @@ name|fspec
 argument_list|)
 operator|)
 return|;
+comment|/* 		 * Must not call namei() while owning busy ref. 		 */
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible disk device. 	 */
 name|NDINIT
@@ -2216,9 +2224,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|namei
@@ -2226,7 +2231,41 @@ argument_list|(
 operator|&
 name|ndp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_UPDATE
 operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Unmount does not start if MNT_UPDATE is set.  Mount 		 * update busies mp before setting MNT_UPDATE.  We 		 * must be able to retain our busy ref succesfully, 		 * without sleep. 		 */
+name|error1
+operator|=
+name|vfs_busy
+argument_list|(
+name|mp
+argument_list|,
+name|MBF_NOWAIT
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|error1
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
