@@ -3235,11 +3235,11 @@ name|sc_calibrating
 range|:
 literal|1
 decl_stmt|,
-name|sc_scanning
+name|sc_active_scan
 range|:
 literal|1
 decl_stmt|,
-name|sc_scan_pass
+name|sc_extra_scan
 range|:
 literal|1
 decl_stmt|;
