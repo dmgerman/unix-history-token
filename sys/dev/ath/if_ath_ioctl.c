@@ -1259,6 +1259,19 @@ name|data
 argument_list|)
 operator|)
 return|;
+case|case
+name|SIOCGATHBTCOEX
+case|:
+return|return
+operator|(
+name|ath_btcoex_ioctl
+argument_list|(
+name|sc
+argument_list|,
+name|data
+argument_list|)
+operator|)
+return|;
 default|default:
 comment|/* 		 * This signals the net80211 layer that we didn't handle this 		 * ioctl. 		 */
 return|return
