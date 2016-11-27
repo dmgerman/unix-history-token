@@ -367,7 +367,7 @@ argument_list|(
 name|macaddr
 argument_list|)
 argument_list|,
-name|BHND_NVRAM_TYPE_UINT8
+name|BHND_NVRAM_TYPE_UINT8_ARRAY
 argument_list|)
 expr_stmt|;
 if|if

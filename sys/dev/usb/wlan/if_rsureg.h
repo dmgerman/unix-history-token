@@ -2436,7 +2436,7 @@ value|0x03
 define|#
 directive|define
 name|R92S_TXDW1_QSEL_H2C
-value|0x1f
+value|0x13
 define|#
 directive|define
 name|R92S_TXDW1_NONQOS
@@ -3235,11 +3235,11 @@ name|sc_calibrating
 range|:
 literal|1
 decl_stmt|,
-name|sc_scanning
+name|sc_active_scan
 range|:
 literal|1
 decl_stmt|,
-name|sc_scan_pass
+name|sc_extra_scan
 range|:
 literal|1
 decl_stmt|;

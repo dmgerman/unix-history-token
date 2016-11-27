@@ -4637,6 +4637,8 @@ condition|(
 name|i
 operator|<
 name|num
+operator|&&
+name|iter
 condition|)
 block|{
 name|powers

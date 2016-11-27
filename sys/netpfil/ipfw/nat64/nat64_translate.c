@@ -6306,7 +6306,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ICMP6_TIME_EXCEED_TRANSIT
+name|ICMP6_TIME_EXCEEDED
 case|:
 name|type
 operator|=
@@ -6314,7 +6314,9 @@ name|ICMP_TIMXCEED
 expr_stmt|;
 name|code
 operator|=
-name|ICMP_TIMXCEED_INTRANS
+name|icmp6
+operator|->
+name|icmp6_code
 expr_stmt|;
 break|break;
 case|case

@@ -9799,6 +9799,11 @@ name|Files
 operator|=
 name|NULL
 expr_stmt|;
+operator|*
+name|nextp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* open the configuration file */
 if|if
 condition|(
