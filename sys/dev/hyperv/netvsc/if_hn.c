@@ -7759,12 +7759,12 @@ argument_list|,
 operator|(
 literal|"channel mismatch, on chan%u, should be chan%u"
 operator|,
-name|vmbus_chan_subidx
+name|vmbus_chan_id
 argument_list|(
 name|chan
 argument_list|)
 operator|,
-name|vmbus_chan_subidx
+name|vmbus_chan_id
 argument_list|(
 name|txr
 operator|->
@@ -20685,15 +20685,10 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chan%u subidx%u "
-literal|"bufring is connected after being closed\n"
+literal|"chan%u bufring is connected "
+literal|"after being closed\n"
 argument_list|,
 name|vmbus_chan_id
-argument_list|(
-name|chan
-argument_list|)
-argument_list|,
-name|vmbus_chan_subidx
 argument_list|(
 name|chan
 argument_list|)
@@ -20718,14 +20713,9 @@ name|sc
 operator|->
 name|hn_ifp
 argument_list|,
-literal|"chan%u subidx%u close failed: %d\n"
+literal|"chan%u close failed: %d\n"
 argument_list|,
 name|vmbus_chan_id
-argument_list|(
-name|chan
-argument_list|)
-argument_list|,
-name|vmbus_chan_subidx
 argument_list|(
 name|chan
 argument_list|)
