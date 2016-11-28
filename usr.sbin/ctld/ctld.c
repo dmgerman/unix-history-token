@@ -1937,6 +1937,11 @@ name|error
 label|:
 name|free
 argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
