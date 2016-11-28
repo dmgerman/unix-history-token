@@ -1142,6 +1142,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Can't use chimney sending buffer; done! 		 */
 name|if_printf
 argument_list|(
 name|sc
@@ -1151,6 +1152,24 @@ argument_list|,
 literal|"zero chimney sending buffer "
 literal|"section size\n"
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|hn_chim_szmax
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|hn_chim_cnt
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_CHIM_CONNECTED
 expr_stmt|;
 return|return
 operator|(
@@ -1750,6 +1769,12 @@ operator|->
 name|hn_chim_bmap
 operator|=
 name|NULL
+expr_stmt|;
+name|sc
+operator|->
+name|hn_chim_bmap_cnt
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -2535,11 +2560,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|hn_nvs_disconn_rxbuf
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0

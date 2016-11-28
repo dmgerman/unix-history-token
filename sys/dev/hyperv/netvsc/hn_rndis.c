@@ -4739,7 +4739,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Configure NDIS offload settings. 	 * XXX no offloading, if error happened? 	 */
+comment|/* 	 * Configure NDIS offload settings. 	 */
 name|hn_rndis_conf_offload
 argument_list|(
 name|sc
