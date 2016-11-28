@@ -495,7 +495,11 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* Don't put a break delimiter if this comment is a one-liner */
+comment|/*      * Don't put a break delimiter if this is a one-liner that won't wrap.      */
+if|if
+condition|(
+name|break_delim
+condition|)
 for|for
 control|(
 name|t_ptr
@@ -542,6 +546,23 @@ operator|==
 literal|'/'
 condition|)
 block|{
+if|if
+condition|(
+name|adj_max_col
+operator|>=
+name|count_spaces_until
+argument_list|(
+name|ps
+operator|.
+name|com_col
+argument_list|,
+name|buf_ptr
+argument_list|,
+name|t_ptr
+operator|+
+literal|2
+argument_list|)
+condition|)
 name|break_delim
 operator|=
 name|false

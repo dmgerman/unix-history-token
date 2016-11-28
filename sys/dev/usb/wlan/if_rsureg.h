@@ -182,6 +182,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92S_MAR
+value|(R92S_MACIDSETTING + 0x010)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92S_GP
 value|0x01e0
 end_define

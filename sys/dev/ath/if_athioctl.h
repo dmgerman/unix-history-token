@@ -1346,6 +1346,17 @@ name|SPECTRAL_CONTROL_DISABLE_AT_RESET
 value|9
 end_define
 
+begin_comment
+comment|/*  * Bluetooth coexistence control parameters  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGATHBTCOEX
+value|_IOWR('i', 152, struct ath_diag)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -864,6 +864,8 @@ operator|.
 name|tos
 operator|>=
 name|STACKSIZE
+operator|-
+literal|1
 condition|)
 name|errx
 argument_list|(

@@ -378,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|ISS_DATA_DFSC_MASK
-value|(0x1f<< 0)
+value|(0x3f<< 0)
 end_define
 
 begin_define

@@ -9799,10 +9799,10 @@ name|Files
 operator|=
 name|NULL
 expr_stmt|;
-operator|*
 name|nextp
 operator|=
-name|NULL
+operator|&
+name|Files
 expr_stmt|;
 comment|/* open the configuration file */
 if|if

@@ -227,5 +227,12 @@ name|period
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|strpfx
+value|33
+end_define
+
 end_unit
 

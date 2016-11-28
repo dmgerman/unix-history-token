@@ -1709,7 +1709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the target power mode.  *  * If this is called during a point in time where  * the hardware is being programmed elsewhere, it will  * simply store it away and update it when all current  * uses of the hardware are completed.  */
+comment|/*  * Set the target power mode.  *  * If this is called during a point in time where  * the hardware is being programmed elsewhere, it will  * simply store it away and update it when all current  * uses of the hardware are completed.  *  * If the chip is going into network sleep or power off, then  * we will wait until all uses of the chip are done before  * going into network sleep or power off.  *  * If the chip is being programmed full-awake, then immediately  * program it full-awake so we can actually stay awake rather than  * the chip potentially going to sleep underneath us.  */
 end_comment
 
 begin_function
@@ -1723,6 +1723,9 @@ name|sc
 parameter_list|,
 name|int
 name|power_state
+parameter_list|,
+name|int
+name|selfgen
 parameter_list|,
 specifier|const
 name|char
@@ -1738,19 +1741,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_target_powerstate
-operator|=
-name|power_state
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_PWRSAVE
 argument_list|,
-literal|"%s: (%s:%d) state=%d, refcnt=%d\n"
+literal|"%s: (%s:%d) state=%d, refcnt=%d, target=%d, cur=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1763,15 +1760,36 @@ argument_list|,
 name|sc
 operator|->
 name|sc_powersave_refcnt
+argument_list|,
+name|sc
+operator|->
+name|sc_target_powerstate
+argument_list|,
+name|sc
+operator|->
+name|sc_cur_powerstate
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_target_powerstate
+operator|=
+name|power_state
+expr_stmt|;
+comment|/* 	 * Don't program the chip into network sleep if the chip 	 * is being programmed elsewhere. 	 * 	 * However, if the chip is being programmed /awake/, force 	 * the chip awake so we stay awake. 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|sc_powersave_refcnt
 operator|==
 literal|0
+operator|||
+name|power_state
+operator|==
+name|HAL_PM_AWAKE
+operator|)
 operator|&&
 name|power_state
 operator|!=
@@ -1798,6 +1816,8 @@ expr_stmt|;
 comment|/* 		 * If the NIC is force-awake, then set the 		 * self-gen frame state appropriately. 		 * 		 * If the nic is in network sleep or full-sleep, 		 * we let the above call leave the self-gen 		 * state as "sleep". 		 */
 if|if
 condition|(
+name|selfgen
+operator|&&
 name|sc
 operator|->
 name|sc_cur_powerstate
@@ -1963,6 +1983,7 @@ operator|->
 name|sc_powersave_refcnt
 operator|++
 expr_stmt|;
+comment|/* 	 * Only do the power state change if we're not programming 	 * it elsewhere. 	 */
 if|if
 condition|(
 name|power_state
@@ -5540,6 +5561,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_FULL_SLEEP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ATH_UNLOCK
@@ -5624,6 +5647,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop things cleanly. 	 */
@@ -7869,6 +7894,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ATH_UNLOCK
@@ -9045,6 +9072,7 @@ operator|&
 name|HAL_INT_TSFOOR
 condition|)
 block|{
+comment|/* out of range beacon - wake the chip up, 			 * but don't modify self-gen frame config */
 name|device_printf
 argument_list|(
 name|sc
@@ -9061,6 +9089,25 @@ operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
+expr_stmt|;
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_setpower
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -9405,10 +9452,19 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * There's no need to keep the hardware awake during the call 	 * to av_bmiss(). 	 */
+comment|/* 	 * Keep the hardware awake if it's asleep (and leave self-gen 	 * frame config alone) until the next beacon, so we can resync 	 * against the next beacon. 	 * 	 * This handles three common beacon miss cases in STA powersave mode - 	 * (a) the beacon TBTT isnt a multiple of bintval; 	 * (b) the beacon was missed; and 	 * (c) the beacons are being delayed because the AP is busy and 	 *     isn't reliably able to meet its TBTT. 	 */
 name|ATH_LOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_setpower
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ath_power_restore_power_state
@@ -9419,6 +9475,17 @@ expr_stmt|;
 name|ATH_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_BEACON
+argument_list|,
+literal|"%s: forced awake; force syncbeacon=1\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to force a beacon resync. 	 */
@@ -9815,6 +9882,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop anything previously setup.  This is safe 	 * whether this is the first time through or not. 	 */
@@ -21402,6 +21471,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ATH_UNLOCK
@@ -21963,6 +22034,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_AWAKE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Finally, start any timers and the task q thread 		 * (in case we didn't go through SCAN state). 		 */
@@ -22153,6 +22226,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_NETWORK_SLEEP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -24023,6 +24098,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|HAL_PM_FULL_SLEEP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
