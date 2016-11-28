@@ -1285,7 +1285,7 @@ argument_list|(
 literal|"sysconf pages"
 argument_list|)
 expr_stmt|;
-name|psize
+name|pages
 operator|=
 literal|1
 expr_stmt|;
