@@ -3781,7 +3781,7 @@ operator|&
 name|HAL_BEACON_PERIOD
 expr_stmt|;
 block|}
-comment|/* 	 * Note: rounding up to the next intval can cause problems. 	 * 	 * In STA mode with powersave enabled, beacons are only received 	 * whenever the beacon timer fires to wake up the hardware. 	 * Now, if this is rounded up to the next intval, it assumes 	 * that the AP has started transmitting beacons at TSF values that 	 * are multiples of intval, versus say being 25 TU off. 	 * 	 * I'm not sure why nexttbtt is rounded up to the intval. 	 * If we sync against a beacon that is way out, we should 	 * take a beacon miss and re-sync against the next beacon. 	 * 	 * So for now - don't round up if we're in STA mode. 	 * Maybe later (when someone eventually does powersave+IBSS, 	 * powersave+MBSS) this can be flipped on for those too. 	 */
+comment|/* 	 * Note: rounding up to the next intval can cause problems with 	 * bad APs when we're in powersave mode. 	 * 	 * In STA mode with powersave enabled, beacons are only received 	 * whenever the beacon timer fires to wake up the hardware. 	 * Now, if this is rounded up to the next intval, it assumes 	 * that the AP has started transmitting beacons at TSF values that 	 * are multiples of intval, versus say being 25 TU off. 	 * 	 * The specification (802.11-2012 10.1.3.2 - Beacon Generation in 	 * Infrastructure Networks) requires APs be beaconing at a 	 * mutiple of intval.  So, if bintval=100, then we shouldn't 	 * get beacons at intervals other than around multiples of 100. 	 */
 if|if
 condition|(
 name|nexttbtt
@@ -3793,20 +3793,7 @@ name|nexttbtt
 operator|=
 name|intval
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|ic
-operator|->
-name|ic_opmode
-operator|!=
-name|IEEE80211_M_STA
-operator|)
-operator|&&
-name|intval
-condition|)
-comment|/* NB: can be 0 for monitor mode */
+else|else
 name|nexttbtt
 operator|=
 name|roundup
