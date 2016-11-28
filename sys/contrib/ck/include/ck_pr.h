@@ -135,11 +135,35 @@ name|__arm__
 argument_list|)
 end_elif
 
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
+end_if
+
 begin_include
 include|#
 directive|include
 file|"gcc/arm/ck_pr.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"gcc/arm/ck_pr_armv4.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_elif
 elif|#
