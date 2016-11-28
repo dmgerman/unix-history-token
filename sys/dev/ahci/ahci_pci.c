@@ -299,11 +299,31 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x06011b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM1060"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06021b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM1060"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x06111b21
 block|,
 literal|0x00
 block|,
-literal|"ASMedia ASM2106"
+literal|"ASMedia ASM1061"
 block|,
 literal|0
 block|}
@@ -313,7 +333,57 @@ literal|0x06121b21
 block|,
 literal|0x00
 block|,
-literal|"ASMedia ASM1061"
+literal|"ASMedia ASM1062"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06201b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM106x"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06211b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM106x"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06221b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM106x"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06241b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM106x"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06251b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM106x"
 block|,
 literal|0
 block|}
