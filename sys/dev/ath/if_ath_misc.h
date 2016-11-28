@@ -538,6 +538,9 @@ parameter_list|,
 name|int
 name|power_state
 parameter_list|,
+name|int
+name|selfgen
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -626,8 +629,10 @@ parameter_list|(
 name|sc
 parameter_list|,
 name|ps
+parameter_list|,
+name|sg
 parameter_list|)
-value|_ath_power_setpower(sc, ps, __FILE__, __LINE__)
+value|_ath_power_setpower(sc, ps, sg, \ 	    __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -639,7 +644,7 @@ name|sc
 parameter_list|,
 name|ps
 parameter_list|)
-value|_ath_power_set_selfgen(sc, ps, __FILE__, __LINE__)
+value|_ath_power_set_selfgen(sc, ps, \ 	    __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -651,6 +656,7 @@ name|sc
 parameter_list|,
 name|ps
 parameter_list|)
+define|\
 value|_ath_power_set_power_state(sc, ps, __FILE__, __LINE__)
 end_define
 
@@ -661,6 +667,7 @@ name|ath_power_restore_power_state
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|_ath_power_restore_power_state(sc, __FILE__, __LINE__)
 end_define
 
