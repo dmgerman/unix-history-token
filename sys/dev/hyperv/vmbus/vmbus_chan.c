@@ -2410,11 +2410,17 @@ decl_stmt|;
 name|uint64_t
 name|page_id
 decl_stmt|;
-comment|/* 	 * Reset GPADL, so that the result would consistent, if error 	 * happened later on. 	 */
+name|KASSERT
+argument_list|(
 operator|*
 name|gpadl0
-operator|=
+operator|==
 literal|0
+argument_list|,
+operator|(
+literal|"GPADL is not zero"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Preliminary checks. 	 */
 name|KASSERT
@@ -2996,6 +3002,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|gpadl
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"GPADL is zero"
+operator|)
+argument_list|)
+expr_stmt|;
 name|mh
 operator|=
 name|vmbus_msghc_get
