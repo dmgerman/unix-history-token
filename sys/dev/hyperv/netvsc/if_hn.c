@@ -4021,6 +4021,24 @@ name|sc
 operator|->
 name|hn_rndis_agg_size
 expr_stmt|;
+comment|/* NOTE: We only aggregate packets using chimney sending buffers. */
+if|if
+condition|(
+name|size
+operator|>
+operator|(
+name|uint32_t
+operator|)
+name|sc
+operator|->
+name|hn_chim_szmax
+condition|)
+name|size
+operator|=
+name|sc
+operator|->
+name|hn_chim_szmax
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -4058,24 +4076,6 @@ condition|)
 name|size
 operator|=
 name|INT_MAX
-expr_stmt|;
-comment|/* NOTE: We only aggregate packets using chimney sending buffers. */
-if|if
-condition|(
-name|size
-operator|>
-operator|(
-name|uint32_t
-operator|)
-name|sc
-operator|->
-name|hn_chim_szmax
-condition|)
-name|size
-operator|=
-name|sc
-operator|->
-name|hn_chim_szmax
 expr_stmt|;
 comment|/* 	 * Setup aggregation packet count. 	 */
 if|if
