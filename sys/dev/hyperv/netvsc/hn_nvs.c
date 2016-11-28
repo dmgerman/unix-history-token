@@ -173,7 +173,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
@@ -185,7 +185,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
@@ -1318,7 +1318,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hn_nvs_disconn_rxbuf
 parameter_list|(
 name|struct
@@ -1401,11 +1401,23 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+comment|/* 			 * Fine for a revoked channel, since the hypervisor 			 * does not drain TX bufring for a revoked channel. 			 */
+if|if
+condition|(
+operator|!
+name|vmbus_chan_is_revoked
+argument_list|(
+name|sc
+operator|->
+name|hn_prichan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_RXBUF_REF
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -1494,11 +1506,12 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_RXBUF_REF
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -1507,17 +1520,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hn_nvs_disconn_chim
 parameter_list|(
 name|struct
@@ -1600,11 +1608,23 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+comment|/* 			 * Fine for a revoked channel, since the hypervisor 			 * does not drain TX bufring for a revoked channel. 			 */
+if|if
+condition|(
+operator|!
+name|vmbus_chan_is_revoked
+argument_list|(
+name|sc
+operator|->
+name|hn_prichan
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_CHIM_REF
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -1693,11 +1713,12 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+name|sc
+operator|->
+name|hn_flags
+operator||=
+name|HN_FLAG_CHIM_REF
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -1731,11 +1752,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
