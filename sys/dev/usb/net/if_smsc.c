@@ -371,6 +371,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_endif
@@ -3283,6 +3284,25 @@ argument_list|(
 name|sc
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|smsc_setmacaddress
+argument_list|(
+name|sc
+argument_list|,
+name|IF_LLADDR
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|)
+condition|)
+name|smsc_dbg_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"setting MAC address failed\n"
 argument_list|)
 expr_stmt|;
 if|if
