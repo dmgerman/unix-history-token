@@ -595,6 +595,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|struct
+name|vmbus_message
+modifier|*
+name|vmbus_msghc_poll_result
+parameter_list|(
+name|struct
+name|vmbus_softc
+modifier|*
+parameter_list|,
+name|struct
+name|vmbus_msghc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vmbus_msghc_wakeup
 parameter_list|(
