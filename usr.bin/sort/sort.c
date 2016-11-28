@@ -1229,12 +1229,6 @@ name|pages
 decl_stmt|,
 name|psize
 decl_stmt|;
-name|pages
-operator|=
-name|psize
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|defined
