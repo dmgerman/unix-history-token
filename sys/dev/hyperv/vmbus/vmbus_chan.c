@@ -2410,6 +2410,12 @@ decl_stmt|;
 name|uint64_t
 name|page_id
 decl_stmt|;
+comment|/* 	 * Reset GPADL, so that the result would consistent, if error 	 * happened later on. 	 */
+operator|*
+name|gpadl0
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Preliminary checks. 	 */
 name|KASSERT
 argument_list|(
