@@ -2763,7 +2763,8 @@ specifier|static
 name|int
 name|hn_tx_agg_pkts
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
