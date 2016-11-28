@@ -1653,8 +1653,6 @@ parameter_list|(
 name|struct
 name|hn_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4440,9 +4438,6 @@ name|struct
 name|hn_softc
 modifier|*
 name|sc
-parameter_list|,
-name|int
-name|nchan
 parameter_list|)
 block|{
 name|struct
@@ -4457,7 +4452,15 @@ name|hn_rss
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|nchan
 decl_stmt|;
+name|nchan
+operator|=
+name|sc
+operator|->
+name|hn_rx_ring_inuse
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|nchan
@@ -14081,10 +14084,6 @@ expr_stmt|;
 name|hn_rss_ind_fixup
 argument_list|(
 name|sc
-argument_list|,
-name|sc
-operator|->
-name|hn_rx_ring_inuse
 argument_list|)
 expr_stmt|;
 name|error
@@ -21616,7 +21615,7 @@ goto|goto
 name|back
 goto|;
 block|}
-comment|/* 	 * Attach the sub-channels. 	 */
+comment|/* 	 * Attach the sub-channels. 	 * 	 * NOTE: hn_set_ring_inuse() _must_ have been called. 	 */
 name|error
 operator|=
 name|hn_attach_subchans
@@ -21745,12 +21744,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * # of usable channels may be changed, so we have to 		 * make sure that all entries in RSS indirect table 		 * are valid. 		 */
+comment|/* 		 * # of usable channels may be changed, so we have to 		 * make sure that all entries in RSS indirect table 		 * are valid. 		 * 		 * NOTE: hn_set_ring_inuse() _must_ have been called. 		 */
 name|hn_rss_ind_fixup
 argument_list|(
 name|sc
-argument_list|,
-name|nchan
 argument_list|)
 expr_stmt|;
 block|}
