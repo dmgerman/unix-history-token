@@ -7710,6 +7710,17 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * SYNC CACHE offset define  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MR_CAN_HANDLE_SYNC_CACHE_OFFSET
+value|0X01000000
+end_define
+
+begin_comment
 comment|/*  * FW reports the maximum of number of commands that it can accept (maximum  * commands that can be outstanding) at any time. The driver must report a  * lower number to the mid layer because it can issue a few internal commands  * itself (E.g, AEN, abort cmd, IOCTLs etc). The number of commands it needs  * is shown below  */
 end_comment
 
@@ -10227,6 +10238,12 @@ name|reset_in_progress
 decl_stmt|;
 name|u_int32_t
 name|reset_count
+decl_stmt|;
+name|u_int32_t
+name|block_sync_cache
+decl_stmt|;
+name|u_int8_t
+name|fw_sync_cache_support
 decl_stmt|;
 name|mrsas_atomic_t
 name|target_reset_outstanding

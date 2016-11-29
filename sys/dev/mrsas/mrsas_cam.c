@@ -2385,6 +2385,13 @@ index|]
 operator|)
 operator|==
 name|SYNCHRONIZE_CACHE
+operator|&&
+operator|(
+operator|!
+name|sc
+operator|->
+name|fw_sync_cache_support
+operator|)
 condition|)
 block|{
 name|ccb
