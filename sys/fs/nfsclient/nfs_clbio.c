@@ -369,14 +369,12 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* XXX */
 name|cred
 operator|=
 name|curthread
 operator|->
 name|td_ucred
 expr_stmt|;
-comment|/* XXX */
 name|nmp
 operator|=
 name|VFSTONFS

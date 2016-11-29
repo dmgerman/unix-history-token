@@ -332,32 +332,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Ifdef for FreeBSD-current merged buffer cache. It is unfortunate that these  * calls are not in getblk() and brelse() so that they would not be necessary  * here.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B_VMIO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|vfs_busy_pages
-parameter_list|(
-name|bp
-parameter_list|,
-name|f
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|vop_read_t
