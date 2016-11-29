@@ -3436,6 +3436,13 @@ return|return
 name|ret_val
 return|;
 block|}
+else|else
+name|sc
+operator|->
+name|aen_cmd
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 name|cmd
