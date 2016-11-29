@@ -3637,6 +3637,12 @@ name|XPT_DEV_ADVINFO
 expr_stmt|;
 name|cdai
 operator|.
+name|flags
+operator|=
+name|CDAI_FLAG_NONE
+expr_stmt|;
+name|cdai
+operator|.
 name|buftype
 operator|=
 name|CDAI_TYPE_SCSI_DEVID
