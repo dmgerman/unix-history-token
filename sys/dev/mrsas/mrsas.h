@@ -5489,6 +5489,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MR_EVT_CTRL_PROP_CHANGED
+value|0x012f
+end_define
+
+begin_define
+define|#
+directive|define
 name|MR_EVT_CTRL_HOST_BUS_SCAN_REQUESTED
 value|0x0152
 end_define
