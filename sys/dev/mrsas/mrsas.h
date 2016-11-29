@@ -10005,6 +10005,9 @@ name|MAX_LOGICAL_DRIVES_EXT
 index|]
 decl_stmt|;
 name|u_int8_t
+name|mrsas_gen3_ctrl
+decl_stmt|;
+name|u_int8_t
 name|secure_jbod_support
 decl_stmt|;
 name|u_int8_t
