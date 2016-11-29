@@ -6616,6 +6616,14 @@ condition|(
 name|sc
 operator|->
 name|remove_in_progress
+operator|||
+operator|(
+name|sc
+operator|->
+name|adprecovery
+operator|==
+name|MRSAS_HW_CRITICAL_ERROR
+operator|)
 condition|)
 block|{
 name|mrsas_dprint
@@ -6624,7 +6632,8 @@ name|sc
 argument_list|,
 name|MRSAS_INFO
 argument_list|,
-literal|"Driver remove or shutdown called.\n"
+literal|"Either driver remove or shutdown called or "
+literal|"HW is in unrecoverable critical error state.\n"
 argument_list|)
 expr_stmt|;
 return|return
