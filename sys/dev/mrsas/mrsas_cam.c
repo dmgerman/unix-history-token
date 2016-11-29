@@ -3424,7 +3424,7 @@ name|u_int32_t
 operator|)
 name|MRSAS_ULONG_MAX
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 operator|(

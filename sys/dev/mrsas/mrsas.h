@@ -4732,7 +4732,14 @@ begin_define
 define|#
 directive|define
 name|MRSAS_MAX_MFI_CMDS
-value|32
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRSAS_MAX_IOCTL_CMDS
+value|3
 end_define
 
 begin_comment
