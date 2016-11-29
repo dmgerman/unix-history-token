@@ -6929,6 +6929,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return a bitmask of ACL types in an archive entry ACL list  */
+end_comment
+
+begin_function
+name|int
+name|archive_entry_acl_types
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+name|entry
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|&
+name|entry
+operator|->
+name|acl
+operator|)
+operator|->
+name|acl_types
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return a count of entries matching "want_type".  */
 end_comment
 

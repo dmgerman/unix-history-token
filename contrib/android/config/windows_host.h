@@ -1197,14 +1197,6 @@ comment|/* #undef HAVE_LIBLZMA */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `lzmadec' library (-llzmadec). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBLZMADEC */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `lzo2' library (-llzo2). */
 end_comment
 

@@ -109,6 +109,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_STRUCT_XVFSCONF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_ACL_H
 value|1
 end_define

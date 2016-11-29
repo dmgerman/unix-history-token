@@ -2271,6 +2271,16 @@ name|int
 comment|/* flags */
 parameter_list|)
 function_decl|;
+comment|/* Return bitmask of ACL types in an archive entry */
+name|__LA_DECL
+name|int
+name|archive_entry_acl_types
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Return a count of entries matching 'want_type' */
 name|__LA_DECL
 name|int
