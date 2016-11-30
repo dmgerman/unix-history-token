@@ -20517,7 +20517,7 @@ name|u
 operator|.
 name|basicvirtual
 operator|.
-name|mode_pkd
+name|mode_keymode
 operator|=
 name|cpu_to_be32
 argument_list|(
@@ -20568,7 +20568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t4_config_vi_rss - configure per VI RSS settings  *	@adapter: the adapter  *	@mbox: mbox to use for the FW command  *	@viid: the VI id  *	@flags: RSS flags  *	@defq: id of the default RSS queue for the VI.  *  *	Configures VI-specific RSS properties.  */
+comment|/**  *	t4_config_vi_rss - configure per VI RSS settings  *	@adapter: the adapter  *	@mbox: mbox to use for the FW command  *	@viid: the VI id  *	@flags: RSS flags  *	@defq: id of the default RSS queue for the VI.  *	@skeyidx: RSS secret key table index for non-global mode  *	@skey: RSS vf_scramble key for VI.  *  *	Configures VI-specific RSS properties.  */
 end_comment
 
 begin_function
@@ -20594,6 +20594,14 @@ parameter_list|,
 name|unsigned
 name|int
 name|defq
+parameter_list|,
+name|unsigned
+name|int
+name|skeyidx
+parameter_list|,
+name|unsigned
+name|int
+name|skey
 parameter_list|)
 block|{
 name|struct
@@ -20662,6 +20670,35 @@ name|V_FW_RSS_VI_CONFIG_CMD_DEFAULTQ
 argument_list|(
 name|defq
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|c
+operator|.
+name|u
+operator|.
+name|basicvirtual
+operator|.
+name|secretkeyidx_pkd
+operator|=
+name|cpu_to_be32
+argument_list|(
+name|V_FW_RSS_VI_CONFIG_CMD_SECRETKEYIDX
+argument_list|(
+name|skeyidx
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|c
+operator|.
+name|u
+operator|.
+name|basicvirtual
+operator|.
+name|secretkeyxor
+operator|=
+name|cpu_to_be32
+argument_list|(
+name|skey
 argument_list|)
 expr_stmt|;
 return|return
@@ -21207,6 +21244,8 @@ name|adap
 argument_list|,
 name|A_TP_RSS_CONFIG_VRT
 argument_list|,
+name|vrt
+operator||
 name|V_KEYWRADDRX
 argument_list|(
 name|idx
@@ -21229,6 +21268,8 @@ name|adap
 argument_list|,
 name|A_TP_RSS_CONFIG_VRT
 argument_list|,
+name|vrt
+operator||
 name|V_KEYWRADDR
 argument_list|(
 name|idx
@@ -25514,9 +25555,13 @@ literal|"CR4_QSFP"
 block|,
 literal|"CR_QSFP"
 block|,
-literal|"CR2_QSFP"
+literal|"CR_SFP28"
 block|,
 literal|"SFP28"
+block|,
+literal|"KR_SFP28"
+block|,
+literal|"CR2_QSFP"
 block|, 	}
 decl_stmt|;
 if|if
