@@ -4170,6 +4170,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|nmk
 operator|->
 name|worker_ctx
@@ -4486,6 +4489,9 @@ argument_list|(
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ctx
 operator|->
