@@ -196,7 +196,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"could not set audit mask"
+literal|"could not calculate audit mask"
 argument_list|)
 expr_stmt|;
 comment|/* Set the audit info for the user. */
