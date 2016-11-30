@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -144,6 +150,15 @@ name|sockaddr_in
 name|ia_sockmask
 decl_stmt|;
 comment|/* reserve space for general netmask */
+name|struct
+name|callout
+name|ia_garp_timer
+decl_stmt|;
+comment|/* timer for retransmitting GARPs */
+name|int
+name|ia_garp_count
+decl_stmt|;
+comment|/* count of retransmitted GARPs */
 block|}
 struct|;
 end_struct
