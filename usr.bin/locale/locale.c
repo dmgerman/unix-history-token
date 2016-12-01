@@ -153,6 +153,7 @@ begin_function_decl
 name|int
 name|kwval_lookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -173,6 +174,7 @@ begin_function_decl
 name|void
 name|showdetails
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -223,6 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all_locales
 init|=
@@ -231,6 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all_charmaps
 init|=
@@ -239,6 +243,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prt_categories
 init|=
@@ -247,6 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prt_keywords
 init|=
@@ -254,15 +260,9 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|more_params
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|_lcinfo
 block|{
@@ -491,6 +491,8 @@ value|(KW_ZERO+22)
 end_define
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|_kwinfo
 block|{
@@ -1653,6 +1655,7 @@ value|(nitems(kwinfo))
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1960,10 +1963,6 @@ operator|++
 control|)
 name|showdetails
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|kwinfo
 index|[
 name|i
@@ -2090,6 +2089,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|s1
@@ -2099,6 +2099,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|s2
@@ -2236,7 +2237,10 @@ name|sl_add
 argument_list|(
 name|charmaps
 argument_list|,
+name|strdup
+argument_list|(
 literal|"US-ASCII"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* sort the list */
@@ -2493,7 +2497,10 @@ name|sl_add
 argument_list|(
 name|locales
 argument_list|,
+name|strdup
+argument_list|(
 literal|"POSIX"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2511,7 +2518,10 @@ name|sl_add
 argument_list|(
 name|locales
 argument_list|,
+name|strdup
+argument_list|(
 literal|"C"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* make output nicer, sort the list */
@@ -3193,6 +3203,7 @@ begin_function
 name|int
 name|kwval_lookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|kwname
@@ -3337,6 +3348,7 @@ begin_function
 name|void
 name|showdetails
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|kw
