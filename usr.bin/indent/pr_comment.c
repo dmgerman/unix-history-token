@@ -1097,6 +1097,14 @@ index|]
 operator|!=
 literal|' '
 operator|&&
+name|e_com
+index|[
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\t'
+operator|&&
 operator|!
 name|ps
 operator|.
