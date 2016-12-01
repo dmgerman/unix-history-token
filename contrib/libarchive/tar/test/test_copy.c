@@ -1265,7 +1265,7 @@ block|{
 name|int
 name|r
 decl_stmt|;
-comment|/* NOTE: for proper operation on cygwin-1.5 and windows, the 	 * length of the name of the directory below, "plain", must be 	 * less than or equal to the lengthe of the name of the original 	 * directory, "original"  This restriction derives from the 	 * extremely limited pathname lengths on those platforms. 	 */
+comment|/* NOTE: for proper operation on cygwin-1.5 and windows, the 	 * length of the name of the directory below, "plain", must be 	 * less than or equal to the length of the name of the original 	 * directory, "original"  This restriction derives from the 	 * extremely limited pathname lengths on those platforms. 	 */
 name|assertMakeDir
 argument_list|(
 literal|"plain"
@@ -1389,7 +1389,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-comment|/* NOTE: for proper operation on cygwin-1.5 and windows, the 	 * length of the name of the directory below, "ustar", must be 	 * less than or equal to the lengthe of the name of the original 	 * directory, "original"  This restriction derives from the 	 * extremely limited pathname lengths on those platforms. 	 */
+comment|/* NOTE: for proper operation on cygwin-1.5 and windows, the 	 * length of the name of the directory below, "ustar", must be 	 * less than or equal to the length of the name of the original 	 * directory, "original"  This restriction derives from the 	 * extremely limited pathname lengths on those platforms. 	 */
 name|assertMakeDir
 argument_list|(
 name|target

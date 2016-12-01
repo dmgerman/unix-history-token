@@ -1737,6 +1737,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Validate number field  *  * Flags:  * 1 - allow double \0 at field end  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1749,6 +1753,9 @@ name|p_field
 parameter_list|,
 name|size_t
 name|i_size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|unsigned
@@ -1817,7 +1824,7 @@ block|{
 case|case
 literal|' '
 case|:
-comment|/* skip any leading spaces and trailing space*/
+comment|/* skip any leading spaces and trailing space */
 if|if
 condition|(
 name|octal_found
@@ -1837,7 +1844,7 @@ break|break;
 case|case
 literal|'\0'
 case|:
-comment|/* null is allowed only at the end */
+comment|/* 				 * null should be allowed only at the end 				 * 				 * Perl Archive::Tar terminates some fields 				 * with two nulls. We must allow this to stay 				 * compatible. 				 */
 if|if
 condition|(
 name|i
@@ -1847,6 +1854,24 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|flags
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+name|i
+operator|!=
+name|i_size
+operator|-
+literal|2
+condition|)
 return|return
 literal|0
 return|;
@@ -2196,7 +2221,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* 6 bits of variation in an 8-bit field leaves 2 bits. */
-comment|/* 	 * Check format of mode/uid/gid/mtime/size/rdevmajor/rdevminor fields. 	 * These are usually octal numbers but GNU tar encodes "big" values as 	 * base256 and leading zeroes are sometimes replaced by spaces. 	 * Even the null terminator is sometimes omitted. Anyway, must be checked 	 * to avoid false positives. 	 */
+comment|/* 	 * Check format of mode/uid/gid/mtime/size/rdevmajor/rdevminor fields. 	 * These are usually octal numbers but GNU tar encodes "big" values as 	 * base256 and leading zeroes are sometimes replaced by spaces. 	 * Even the null terminator is sometimes omitted. Anyway, must be 	 * checked to avoid false positives. 	 * 	 * Perl Archive::Tar does not follow the spec and terminates mode, uid, 	 * gid, rdevmajor and rdevminor with a double \0. For compatibility 	 * reasons we allow this deviation. 	 */
 if|if
 condition|(
 name|bid
@@ -2216,6 +2241,8 @@ name|header
 operator|->
 name|mode
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2232,6 +2259,8 @@ name|header
 operator|->
 name|uid
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2248,6 +2277,8 @@ name|header
 operator|->
 name|gid
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2264,6 +2295,8 @@ name|header
 operator|->
 name|mtime
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -2280,6 +2313,8 @@ name|header
 operator|->
 name|size
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -2296,6 +2331,8 @@ name|header
 operator|->
 name|rdevmajor
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -2312,6 +2349,8 @@ name|header
 operator|->
 name|rdevminor
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
