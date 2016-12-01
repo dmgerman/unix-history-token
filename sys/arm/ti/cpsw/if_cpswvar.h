@@ -37,14 +37,14 @@ begin_define
 define|#
 directive|define
 name|CPSW_MIIBUS_RETRIES
-value|5
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPSW_MIIBUS_DELAY
-value|1000
+value|100
 end_define
 
 begin_define
