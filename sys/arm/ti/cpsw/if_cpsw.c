@@ -9156,11 +9156,7 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|sc
-operator|->
-name|rx
-operator|.
-name|active_queue_len
+name|added
 argument_list|)
 expr_stmt|;
 if|if
