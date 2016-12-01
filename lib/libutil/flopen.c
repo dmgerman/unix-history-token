@@ -54,7 +54,7 @@ file|<libutil.h>
 end_include
 
 begin_comment
-comment|/*  * Reliably open and lock a file.  *  * DO NOT, UNDER PAIN OF DEATH, modify this code without first reading the  * revision history and discussing your changes with<des@freebsd.org>.  * Don't be fooled by the code's apparent simplicity; there would be no  * need for this function if it was as easy to get right as you think.  */
+comment|/*  * Reliably open and lock a file.  *  * Please do not modify this code without first reading the revision history  * and discussing your changes with<des@freebsd.org>.  Don't be fooled by the  * code's apparent simplicity; there would be no need for this function if it  * was easy to get right.  */
 end_comment
 
 begin_function
@@ -366,46 +366,11 @@ literal|1
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DONT_EVEN_THINK_ABOUT_IT
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-operator|!=
+comment|/* 		 * The following change is provided as a specific example to 		 * avoid. 		 */
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|serrno
-operator|=
-name|errno
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|serrno
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
+block|if (fcntl(fd, F_SETFD, FD_CLOEXEC) != 0) { 			serrno = errno; 			(void)close(fd); 			errno = serrno; 			return (-1); 		}
 endif|#
 directive|endif
 return|return
