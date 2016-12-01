@@ -1112,6 +1112,7 @@ name|com_st
 operator|==
 literal|'\t'
 condition|)
+comment|/* consider original indentation in 					 * case this is a box comment */
 name|com_st
 operator|++
 operator|,
@@ -1119,7 +1120,6 @@ name|target
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* ? */
 while|while
 condition|(
 name|target
