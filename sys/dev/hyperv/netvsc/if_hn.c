@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_hn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -36,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_hn.h"
+file|"opt_rss.h"
 end_include
 
 begin_include
@@ -194,6 +200,23 @@ include|#
 directive|include
 file|<net/rndis.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -550,6 +573,29 @@ define|\
 value|roundup2((m)->m_pkthdr.len + HN_RNDIS_PKT_LEN, (align))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HN_RING_IDX2CPU
+parameter_list|(
+name|sc
+parameter_list|,
+name|idx
+parameter_list|)
+value|rss_getcpu((idx) % rss_getnumbuckets())
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -561,6 +607,11 @@ name|idx
 parameter_list|)
 value|(((sc)->hn_cpu + (idx)) % mp_ncpus)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1188,6 +1239,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1207,6 +1264,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1651,6 +1713,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1662,6 +1730,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2843,6 +2916,12 @@ begin_comment
 comment|/* shared TX taskqueues */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSS
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2935,6 +3014,15 @@ literal|0xfa
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !RSS */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -4331,6 +4419,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSS
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -4460,6 +4554,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !RSS */
+end_comment
 
 begin_function
 specifier|static
@@ -5125,6 +5228,23 @@ operator|=
 name|mp_ncpus
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+name|ring_cnt
+operator|>
+name|rss_getnumbuckets
+argument_list|()
+condition|)
+name|ring_cnt
+operator|=
+name|rss_getnumbuckets
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|tx_ring_cnt
 operator|=
 name|hn_tx_ring_cnt
@@ -5533,6 +5653,10 @@ argument_list|,
 literal|"RSS indirect entry count"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RSS
+comment|/* 	 * Don't allow RSS key/indirect table changes, if RSS is defined. 	 */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -5587,6 +5711,8 @@ argument_list|,
 literal|"RSS indirect table"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
@@ -13926,6 +14052,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSS
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -14196,6 +14328,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !RSS */
+end_comment
 
 begin_function
 specifier|static
@@ -19881,6 +20022,45 @@ argument_list|)
 operator|!=
 name|M_HASHTYPE_NONE
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|RSS
+name|uint32_t
+name|bid
+decl_stmt|;
+if|if
+condition|(
+name|rss_hash2bucket
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|flowid
+argument_list|,
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+operator|&
+name|bid
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|idx
+operator|=
+name|bid
+operator|%
+name|sc
+operator|->
+name|hn_tx_ring_inuse
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|idx
 operator|=
 name|m
@@ -19893,6 +20073,7 @@ name|sc
 operator|->
 name|hn_tx_ring_inuse
 expr_stmt|;
+block|}
 name|txr
 operator|=
 operator|&
@@ -21786,6 +21967,18 @@ argument_list|,
 literal|"setup default RSS key\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|rss_getkey
+argument_list|(
+name|rss
+operator|->
+name|rss_key
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|memcpy
 argument_list|(
 name|rss
@@ -21802,6 +21995,8 @@ name|rss_key
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|hn_flags
@@ -21852,6 +22047,28 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
+name|uint32_t
+name|subidx
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|subidx
+operator|=
+name|rss_get_indirection_to_bucket
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|subidx
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 name|rss
 operator|->
 name|rss_ind
@@ -21859,10 +22076,11 @@ index|[
 name|i
 index|]
 operator|=
-name|i
+name|subidx
 operator|%
 name|nchan
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|hn_flags
@@ -22098,6 +22316,39 @@ name|hn_rx_ring_inuse
 operator|=
 name|ring_cnt
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+name|sc
+operator|->
+name|hn_rx_ring_inuse
+operator|!=
+name|rss_getnumbuckets
+argument_list|()
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|hn_ifp
+argument_list|,
+literal|"# of RX rings (%d) does not match "
+literal|"# of RSS buckets (%d)\n"
+argument_list|,
+name|sc
+operator|->
+name|hn_rx_ring_inuse
+argument_list|,
+name|rss_getnumbuckets
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|bootverbose
