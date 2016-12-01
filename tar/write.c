@@ -2709,7 +2709,7 @@ name|bsdtar
 operator|->
 name|diskreader
 decl_stmt|;
-comment|/* 		 * This tricky code here is to correctly read the cotents 		 * of the entry because the disk reader bsdtar->diskreader 		 * is pointing at does not have any information about the 		 * entry by this time and using archive_read_data_block() 		 * with the disk reader consequently must fail. And we 		 * have to re-open the entry to read the contents. 		 */
+comment|/* 		 * This tricky code here is to correctly read the contents 		 * of the entry because the disk reader bsdtar->diskreader 		 * is pointing at does not have any information about the 		 * entry by this time and using archive_read_data_block() 		 * with the disk reader consequently must fail. And we 		 * have to re-open the entry to read the contents. 		 */
 comment|/* TODO: Work with -C option as well. */
 name|r
 operator|=

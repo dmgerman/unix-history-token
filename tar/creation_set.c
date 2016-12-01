@@ -1334,7 +1334,7 @@ name|i
 decl_stmt|,
 name|r
 decl_stmt|;
-comment|/* Release previos filters. */
+comment|/* Release previous filters. */
 name|_cleanup_filters
 argument_list|(
 name|old_filters
@@ -1425,7 +1425,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Put previos filters back. */
+comment|/* Put previous filters back. */
 name|cset
 operator|->
 name|filters

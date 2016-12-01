@@ -697,7 +697,7 @@ decl_stmt|,
 modifier|*
 name|fp2
 decl_stmt|;
-comment|/* 	 * Preparre tests. 	 * Create directories and files. 	 */
+comment|/* 	 * Prepare tests. 	 * Create directories and files. 	 */
 name|assertMakeDir
 argument_list|(
 literal|"tmp"
