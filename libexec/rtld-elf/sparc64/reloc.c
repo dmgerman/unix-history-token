@@ -3167,7 +3167,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|const Obj_Entry *defobj; 	const Elf_Rela *relalim; 	const Elf_Rela *rela; 	const Elf_Sym *def; 	Elf_Addr *where; 	Elf_Addr value;  	relalim = (const Elf_Rela *)((char *)obj->pltrela + obj->pltrelasize); 	for (rela = obj->pltrela; rela< relalim; rela++) { 		if (rela->r_addend == 0) 			continue; 		assert(ELF64_R_TYPE_ID(rela->r_info) == R_SPARC_JMP_SLOT); 		where = (Elf_Addr *)(obj->relocbase + rela->r_offset); 		def = find_symdef(ELF_R_SYM(rela->r_info), obj,&defobj, 		    true, NULL, lockstate); 		value = (Elf_Addr)(defobj->relocbase + def->st_value); 		*where = value; 	}
+block|const Obj_Entry *defobj; 	const Elf_Rela *relalim; 	const Elf_Rela *rela; 	const Elf_Sym *def; 	Elf_Addr *where; 	Elf_Addr value;  	relalim = (const Elf_Rela *)((char *)obj->pltrela + obj->pltrelasize); 	for (rela = obj->pltrela; rela< relalim; rela++) { 		if (rela->r_addend == 0) 			continue; 		assert(ELF64_R_TYPE_ID(rela->r_info) == R_SPARC_JMP_SLOT); 		where = (Elf_Addr *)(obj->relocbase + rela->r_offset); 		def = find_symdef(ELF_R_SYM(rela->r_info), obj,&defobj, 		    SYMLOOK_IN_PLT, NULL, lockstate); 		value = (Elf_Addr)(defobj->relocbase + def->st_value); 		*where = value; 	}
 endif|#
 directive|endif
 return|return
