@@ -561,6 +561,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|process_newconn
+parameter_list|(
+name|struct
+name|iw_cm_id
+modifier|*
+name|parent_cm_id
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|child_so
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

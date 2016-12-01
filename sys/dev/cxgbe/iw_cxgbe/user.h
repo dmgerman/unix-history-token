@@ -48,6 +48,10 @@ decl_stmt|;
 name|__u32
 name|qid_mask
 decl_stmt|;
+name|__u32
+name|reserved
+decl_stmt|;
+comment|/* explicit padding (optional for i386) */
 block|}
 struct|;
 end_struct

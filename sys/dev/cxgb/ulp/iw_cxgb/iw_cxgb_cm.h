@@ -790,7 +790,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|iwch_create_listen
+name|iwch_create_listen_ep
 parameter_list|(
 name|struct
 name|iw_cm_id
@@ -804,8 +804,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|iwch_destroy_listen
+name|void
+name|iwch_destroy_listen_ep
 parameter_list|(
 name|struct
 name|iw_cm_id
