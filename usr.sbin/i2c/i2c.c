@@ -1425,7 +1425,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write offset"
+literal|"ioctl: error writing offset"
 expr_stmt|;
 goto|goto
 name|err1
@@ -1539,7 +1539,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write"
+literal|"ioctl: error writing"
 expr_stmt|;
 goto|goto
 name|err1
@@ -1596,7 +1596,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write offset"
+literal|"ioctl: error writing offset"
 expr_stmt|;
 goto|goto
 name|err1
@@ -1683,7 +1683,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write"
+literal|"ioctl: error writing"
 expr_stmt|;
 goto|goto
 name|err1
@@ -1786,7 +1786,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write"
+literal|"ioctl: error writing"
 expr_stmt|;
 goto|goto
 name|err1
@@ -1886,7 +1886,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|err_msg
 argument_list|)
@@ -2121,7 +2121,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"ioctl: error when write offset"
+literal|"ioctl: error writing offset"
 expr_stmt|;
 goto|goto
 name|err1
@@ -2166,7 +2166,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"error sending stop condtion\n"
+literal|"error sending stop condtion"
 expr_stmt|;
 goto|goto
 name|err2
@@ -2301,7 +2301,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"error sending stop condtion\n"
+literal|"error sending stop condtion"
 expr_stmt|;
 goto|goto
 name|err2
@@ -2411,7 +2411,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|err_msg
 argument_list|)
