@@ -26,26 +26,9 @@ block|{
 name|uintptr_t
 name|rt_root
 decl_stmt|;
-name|uint8_t
-name|rt_flags
-decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|RT_INSERT_INPROG
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|RT_TRIE_MODIFIED
-value|0x02
-end_define
 
 begin_ifdef
 ifdef|#
