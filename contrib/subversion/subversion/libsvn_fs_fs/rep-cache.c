@@ -114,6 +114,18 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|SVN_ERR_CLOSE
+parameter_list|(
+name|x
+parameter_list|,
+name|db
+parameter_list|)
+value|do                                       \ {                                                                     \   svn_error_t *svn__err = (x);                                        \   if (svn__err)                                                       \     return svn_error_compose_create(svn__err, svn_sqlite__close(db)); \ } while (0)
+end_define
+
 begin_escape
 end_escape
 
@@ -303,7 +315,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
+name|SVN_ERR_CLOSE
 argument_list|(
 name|svn_sqlite__read_schema_version
 argument_list|(
@@ -314,6 +326,8 @@ name|sdb
 argument_list|,
 name|pool
 argument_list|)
+argument_list|,
+name|sdb
 argument_list|)
 expr_stmt|;
 if|if
@@ -324,7 +338,7 @@ name|REP_CACHE_SCHEMA_FORMAT
 condition|)
 block|{
 comment|/* Must be 0 -- an uninitialized (no schema) database. Create          the schema. Results in schema version of 1.  */
-name|SVN_ERR
+name|SVN_ERR_CLOSE
 argument_list|(
 name|svn_sqlite__exec_statements
 argument_list|(
@@ -332,6 +346,8 @@ name|sdb
 argument_list|,
 name|STMT_CREATE_SCHEMA
 argument_list|)
+argument_list|,
+name|sdb
 argument_list|)
 expr_stmt|;
 block|}
@@ -398,6 +414,60 @@ argument_list|(
 literal|"Couldn't open rep-cache database"
 argument_list|)
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__close_rep_cache
+parameter_list|(
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|)
+block|{
+name|fs_fs_data_t
+modifier|*
+name|ffd
+init|=
+name|fs
+operator|->
+name|fsap_data
+decl_stmt|;
+if|if
+condition|(
+name|ffd
+operator|->
+name|rep_cache_db
+condition|)
+block|{
+name|SVN_ERR
+argument_list|(
+name|svn_sqlite__close
+argument_list|(
+name|ffd
+operator|->
+name|rep_cache_db
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ffd
+operator|->
+name|rep_cache_db
+operator|=
+name|NULL
+expr_stmt|;
+name|ffd
+operator|->
+name|rep_cache_db_opened
+operator|=
+literal|0
+expr_stmt|;
+block|}
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 end_function

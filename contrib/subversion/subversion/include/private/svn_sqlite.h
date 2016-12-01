@@ -1074,6 +1074,11 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
+comment|/* Backported version of SVN_ERR_SQLITE_ROLLBACK_FAILED. */
+define|#
+directive|define
+name|SVN_SQLITE__ERR_ROLLBACK_FAILED
+value|(SVN_ERR_MISC_CATEGORY_START + 44)
 ifdef|#
 directive|ifdef
 name|__cplusplus
