@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -7274,6 +7280,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HN_USE_TXDESC_BUFRING */
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -7284,6 +7294,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|buf_ring_enqueue
 argument_list|(
 name|txr
@@ -7295,6 +7307,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !HN_USE_TXDESC_BUFRING */
 return|return
 literal|1
 return|;
@@ -7420,6 +7433,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|HN_USE_TXDESC_BUFRING
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -7432,6 +7448,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* HN_USE_TXDESC_BUFRING */
 name|KASSERT
 argument_list|(
 name|txd
@@ -16752,6 +16771,9 @@ operator|->
 name|hn_tx_sysctl_tree
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -16774,6 +16796,8 @@ argument_list|,
 literal|"# of available TX descs"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HN_IFSTART_SUPPORT
