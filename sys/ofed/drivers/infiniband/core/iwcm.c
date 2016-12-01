@@ -1561,6 +1561,10 @@ expr_stmt|;
 name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
+name|remote
+operator|=
+name|NULL
+expr_stmt|;
 name|soaccept
 argument_list|(
 name|so
