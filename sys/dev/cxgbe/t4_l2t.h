@@ -108,6 +108,16 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* next hop IP or IPv6 address */
+name|uint32_t
+name|iqid
+decl_stmt|;
+comment|/* iqid for reply to write_l2e */
+name|struct
+name|sge_wrq
+modifier|*
+name|wrq
+decl_stmt|;
+comment|/* queue to use for write_l2e */
 name|struct
 name|ifnet
 modifier|*
@@ -281,10 +291,6 @@ begin_function_decl
 name|int
 name|t4_write_l2e
 parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
 name|struct
 name|l2t_entry
 modifier|*

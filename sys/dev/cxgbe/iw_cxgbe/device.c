@@ -1083,11 +1083,6 @@ name|iwarp_softc
 operator|=
 name|iwsc
 expr_stmt|;
-name|c4iw_cm_init_cpl
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|rc
 operator|=
 operator|-
