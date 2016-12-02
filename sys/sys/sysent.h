@@ -837,6 +837,20 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* separate initialization vector so it can be used in a substructure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSENT_INIT_VALS
+parameter_list|(
+name|_syscallname
+parameter_list|)
+value|{			\ 	.sy_narg = (sizeof(struct _syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)&sys_##_syscallname,		\ 	.sy_auevent = SYS_AUE_##_syscallname,			\ 	.sy_systrace_args_func = NULL,				\ 	.sy_entry = 0,						\ 	.sy_return = 0,						\ 	.sy_flags = 0,						\ 	.sy_thrcnt = 0						\ }
+end_define
+
 begin_define
 define|#
 directive|define
@@ -845,7 +859,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& sys_##syscallname,	       		\ 	SYS_AUE_##syscallname					\ }
+value|static struct sysent syscallname##_sysent = SYSENT_INIT_VALS(syscallname);
 end_define
 
 begin_define
