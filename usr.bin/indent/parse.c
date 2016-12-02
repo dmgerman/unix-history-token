@@ -289,6 +289,7 @@ operator|.
 name|else_if
 condition|)
 comment|/* "else if ..." */
+comment|/* 		 * Note that the stack pointer here is decremented, effectively 		 * reducing "else if" to "if". This saves a lot of stack space 		 * in case of a long "if-else-if ... else-if" sequence. 		 */
 name|ps
 operator|.
 name|i_l_follow
@@ -300,6 +301,7 @@ index|[
 name|ps
 operator|.
 name|tos
+operator|--
 index|]
 expr_stmt|;
 comment|/* the rest is the same as for dolit and forstmt */
