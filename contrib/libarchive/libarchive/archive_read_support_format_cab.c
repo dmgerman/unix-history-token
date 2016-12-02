@@ -2830,7 +2830,7 @@ operator|==
 literal|'Z'
 condition|)
 block|{
-comment|/* This is an executable?  Must be self-extracting... 	*/
+comment|/* This is an executable?  Must be self-extracting... */
 name|err
 operator|=
 name|cab_skip_sfx
@@ -2849,6 +2849,7 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* Re-read header after processing the SFX. */
 if|if
 condition|(
 operator|(
@@ -2858,11 +2859,7 @@ name|__archive_read_ahead
 argument_list|(
 name|a
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
+literal|42
 argument_list|,
 name|NULL
 argument_list|)
