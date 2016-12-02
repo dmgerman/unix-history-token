@@ -234,5 +234,12 @@ name|strpfx
 value|33
 end_define
 
+begin_define
+define|#
+directive|define
+name|storage
+value|34
+end_define
+
 end_unit
 

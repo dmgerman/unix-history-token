@@ -4219,9 +4219,19 @@ name|copy_id
 goto|;
 comment|/* move the token into line */
 case|case
+name|storage
+case|:
+name|prefix_blankline_requested
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|copy_id
+goto|;
+case|case
 name|decl
 case|:
-comment|/* we have a declaration type (int, register, 				 * etc.) */
+comment|/* we have a declaration type (int, etc.) */
 name|parse
 argument_list|(
 name|decl
