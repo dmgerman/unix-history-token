@@ -1083,10 +1083,12 @@ name|ypldap_addr
 modifier|*
 name|h
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|hints
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
