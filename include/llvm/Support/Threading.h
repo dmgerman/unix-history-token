@@ -96,15 +96,15 @@ file|<functional>
 end_include
 
 begin_comment
-comment|// We use std::call_once on all Unix platforms except for NetBSD with
+comment|// std::call_once from libc++ is used on all Unix platforms. Other
 end_comment
 
 begin_comment
-comment|// libstdc++. That platform has a bug they are working to fix, and they'll
+comment|// implementations like libstdc++ are known to have problems on NetBSD,
 end_comment
 
 begin_comment
-comment|// remove the NetBSD checks once fixed.
+comment|// OpenBSD and PowerPC.
 end_comment
 
 begin_if
@@ -115,6 +115,12 @@ argument_list|(
 name|LLVM_ON_UNIX
 argument_list|)
 operator|&&
+operator|(
+name|defined
+argument_list|(
+name|_LIBCPP_VERSION
+argument_list|)
+operator|||
 expr|\
 operator|!
 operator|(
@@ -122,19 +128,18 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
-name|_LIBCPP_VERSION
+name|__OpenBSD__
 argument_list|)
-operator|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|__ppc__
 argument_list|)
+operator|)
+operator|)
 end_if
 
 begin_define
