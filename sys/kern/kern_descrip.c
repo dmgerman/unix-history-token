@@ -8173,7 +8173,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kern.maxfiles limit exceeded by uid %i, "
+literal|"kern.maxfiles limit exceeded by uid %i, (%s) "
 literal|"please see tuning(7).\n"
 argument_list|,
 name|td
@@ -8181,6 +8181,12 @@ operator|->
 name|td_ucred
 operator|->
 name|cr_ruid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
 block|}
