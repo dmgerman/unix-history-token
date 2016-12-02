@@ -4,127 +4,27 @@ comment|// REQUIRES: mips-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple mips-unknown-linux-gnu -emit-llvm %s -o - \
+comment|// RUN: %clang_cc1 -triple mips-unknown-linux-gnu -emit-llvm %s \
 end_comment
 
 begin_comment
-comment|// RUN:   | FileCheck %s
+comment|// RUN:            -target-feature +msa -target-feature +fp64 \
 end_comment
 
-begin_typedef
-typedef|typedef
-name|signed
-name|char
-name|v16i8
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
+begin_comment
+comment|// RUN:            -mfloat-abi hard -o - | FileCheck %s
+end_comment
 
-begin_typedef
-typedef|typedef
-name|signed
-name|short
-name|v8i16
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|signed
-name|int
-name|v4i32
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|signed
-name|long
-name|long
-name|v2i64
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|v16u8
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|v8u16
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|v4u32
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|v2u64
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
+begin_include
+include|#
+directive|include
+file|<msa.h>
+end_include
 
 begin_typedef
 typedef|typedef
 name|__fp16
 name|v8f16
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|float
-name|v4f32
-name|__attribute__
-typedef|((
-name|vector_size
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|double
-name|v2f64
 name|__attribute__
 typedef|((
 name|vector_size
@@ -657,7 +557,7 @@ literal|0
 decl_stmt|;
 name|v16i8_r
 operator|=
-name|__builtin_msa_add_a_b
+name|__msa_add_a_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -667,7 +567,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.add.a.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_add_a_h
+name|__msa_add_a_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -677,7 +577,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.add.a.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_add_a_w
+name|__msa_add_a_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -687,7 +587,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.add.a.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_add_a_d
+name|__msa_add_a_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -697,7 +597,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.add.a.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_adds_a_b
+name|__msa_adds_a_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -707,7 +607,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.adds.a.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_adds_a_h
+name|__msa_adds_a_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -717,7 +617,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.adds.a.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_adds_a_w
+name|__msa_adds_a_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -727,7 +627,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.adds.a.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_adds_a_d
+name|__msa_adds_a_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -737,7 +637,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.adds.a.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_adds_s_b
+name|__msa_adds_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -747,7 +647,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.adds.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_adds_s_h
+name|__msa_adds_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -757,7 +657,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.adds.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_adds_s_w
+name|__msa_adds_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -767,7 +667,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.adds.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_adds_s_d
+name|__msa_adds_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -777,7 +677,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.adds.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_adds_u_b
+name|__msa_adds_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -787,7 +687,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.adds.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_adds_u_h
+name|__msa_adds_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -797,7 +697,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.adds.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_adds_u_w
+name|__msa_adds_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -807,7 +707,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.adds.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_adds_u_d
+name|__msa_adds_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -817,7 +717,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.adds.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_addv_b
+name|__msa_addv_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -827,7 +727,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.addv.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_addv_h
+name|__msa_addv_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -837,7 +737,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.addv.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_addv_w
+name|__msa_addv_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -847,7 +747,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.addv.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_addv_d
+name|__msa_addv_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -857,7 +757,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.addv.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_addv_b
+name|__msa_addv_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -867,7 +767,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.addv.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_addv_h
+name|__msa_addv_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -877,7 +777,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.addv.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_addv_w
+name|__msa_addv_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -887,7 +787,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.addv.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_addv_d
+name|__msa_addv_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -897,7 +797,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.addv.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_addvi_b
+name|__msa_addvi_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -907,7 +807,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.addvi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_addvi_h
+name|__msa_addvi_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -917,7 +817,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.addvi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_addvi_w
+name|__msa_addvi_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -927,7 +827,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.addvi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_addvi_d
+name|__msa_addvi_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -937,7 +837,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.addvi.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_addvi_b
+name|__msa_addvi_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -947,7 +847,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.addvi.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_addvi_h
+name|__msa_addvi_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -957,7 +857,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.addvi.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_addvi_w
+name|__msa_addvi_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -967,7 +867,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.addvi.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_addvi_d
+name|__msa_addvi_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -977,7 +877,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.addvi.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_and_v
+name|__msa_and_v
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -987,7 +887,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.and.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_and_v
+name|__msa_and_v
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -997,7 +897,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.and.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_and_v
+name|__msa_and_v
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1007,7 +907,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.and.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_and_v
+name|__msa_and_v
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1017,7 +917,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.and.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1027,7 +927,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1037,7 +937,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v4i32_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1047,7 +947,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v2i64_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1057,7 +957,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v16u8_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -1067,7 +967,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -1077,7 +977,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v4u32_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -1087,7 +987,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v2u64_r
 operator|=
-name|__builtin_msa_andi_b
+name|__msa_andi_b
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -1097,7 +997,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.andi.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_asub_s_b
+name|__msa_asub_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1107,7 +1007,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.asub.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_asub_s_h
+name|__msa_asub_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1117,7 +1017,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.asub.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_asub_s_w
+name|__msa_asub_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1127,7 +1027,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.asub.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_asub_s_d
+name|__msa_asub_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1137,7 +1037,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.asub.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_asub_u_b
+name|__msa_asub_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -1147,7 +1047,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.asub.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_asub_u_h
+name|__msa_asub_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -1157,7 +1057,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.asub.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_asub_u_w
+name|__msa_asub_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -1167,7 +1067,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.asub.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_asub_u_d
+name|__msa_asub_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -1177,7 +1077,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.asub.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ave_s_b
+name|__msa_ave_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1187,7 +1087,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ave.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ave_s_h
+name|__msa_ave_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1197,7 +1097,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ave.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ave_s_w
+name|__msa_ave_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1207,7 +1107,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ave.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ave_s_d
+name|__msa_ave_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1217,7 +1117,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ave.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_ave_u_b
+name|__msa_ave_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -1227,7 +1127,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ave.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_ave_u_h
+name|__msa_ave_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -1237,7 +1137,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ave.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_ave_u_w
+name|__msa_ave_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -1247,7 +1147,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ave.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_ave_u_d
+name|__msa_ave_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -1257,7 +1157,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ave.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_aver_s_b
+name|__msa_aver_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1267,7 +1167,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.aver.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_aver_s_h
+name|__msa_aver_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1277,7 +1177,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.aver.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_aver_s_w
+name|__msa_aver_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1287,7 +1187,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.aver.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_aver_s_d
+name|__msa_aver_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1297,7 +1197,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.aver.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_aver_u_b
+name|__msa_aver_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -1307,7 +1207,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.aver.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_aver_u_h
+name|__msa_aver_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -1317,7 +1217,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.aver.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_aver_u_w
+name|__msa_aver_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -1327,7 +1227,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.aver.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_aver_u_d
+name|__msa_aver_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -1337,7 +1237,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.aver.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bclr_b
+name|__msa_bclr_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1347,7 +1247,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bclr.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bclr_h
+name|__msa_bclr_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1357,7 +1257,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bclr.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bclr_w
+name|__msa_bclr_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1367,7 +1267,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bclr.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bclr_d
+name|__msa_bclr_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1377,27 +1277,27 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bclr.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bclri_b
+name|__msa_bclri_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bclri.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bclri_h
+name|__msa_bclri_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+literal|8
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bclri.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bclri_w
+name|__msa_bclri_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1407,7 +1307,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bclri.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bclri_d
+name|__msa_bclri_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1417,7 +1317,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bclri.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_binsl_b
+name|__msa_binsl_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1429,7 +1329,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.binsl.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_binsl_h
+name|__msa_binsl_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -1441,7 +1341,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.binsl.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_binsl_w
+name|__msa_binsl_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1453,7 +1353,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.binsl.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_binsl_d
+name|__msa_binsl_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1465,31 +1365,31 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.binsl.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_binsli_b
+name|__msa_binsli_b
 argument_list|(
 name|v16i8_r
 argument_list|,
 name|v16i8_a
 argument_list|,
-literal|25
+literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.binsli.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_binsli_h
+name|__msa_binsli_h
 argument_list|(
 name|v8i16_r
 argument_list|,
 name|v8i16_a
 argument_list|,
-literal|25
+literal|8
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.binsli.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_binsli_w
+name|__msa_binsli_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1501,7 +1401,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.binsli.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_binsli_d
+name|__msa_binsli_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1513,7 +1413,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.binsli.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_binsr_b
+name|__msa_binsr_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1525,7 +1425,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.binsr.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_binsr_h
+name|__msa_binsr_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -1537,7 +1437,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.binsr.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_binsr_w
+name|__msa_binsr_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1549,7 +1449,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.binsr.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_binsr_d
+name|__msa_binsr_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1561,31 +1461,31 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.binsr.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_binsri_b
+name|__msa_binsri_b
 argument_list|(
 name|v16i8_r
 argument_list|,
 name|v16i8_a
 argument_list|,
-literal|25
+literal|5
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.binsri.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_binsri_h
+name|__msa_binsri_h
 argument_list|(
 name|v8i16_r
 argument_list|,
 name|v8i16_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.binsri.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_binsri_w
+name|__msa_binsri_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1597,7 +1497,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.binsri.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_binsri_d
+name|__msa_binsri_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1609,7 +1509,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.binsri.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bmnz_v
+name|__msa_bmnz_v
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1621,7 +1521,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmnz.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bmnz_v
+name|__msa_bmnz_v
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -1633,7 +1533,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmnz.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bmnz_v
+name|__msa_bmnz_v
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1645,7 +1545,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmnz.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bmnz_v
+name|__msa_bmnz_v
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1657,7 +1557,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmnz.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bmnzi_b
+name|__msa_bmnzi_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1669,7 +1569,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bmnzi.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bmz_v
+name|__msa_bmz_v
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1681,7 +1581,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmz.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bmz_v
+name|__msa_bmz_v
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -1693,7 +1593,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmz.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bmz_v
+name|__msa_bmz_v
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1705,7 +1605,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmz.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bmz_v
+name|__msa_bmz_v
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1717,7 +1617,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bmz.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bmzi_b
+name|__msa_bmzi_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1729,7 +1629,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bmzi.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bneg_b
+name|__msa_bneg_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1739,7 +1639,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bneg.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bneg_h
+name|__msa_bneg_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1749,7 +1649,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bneg.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bneg_w
+name|__msa_bneg_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1759,7 +1659,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bneg.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bneg_d
+name|__msa_bneg_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1769,27 +1669,27 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bneg.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bnegi_b
+name|__msa_bnegi_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+literal|6
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bnegi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bnegi_h
+name|__msa_bnegi_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+literal|14
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bnegi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bnegi_w
+name|__msa_bnegi_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1799,7 +1699,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bnegi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bnegi_d
+name|__msa_bnegi_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1809,7 +1709,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bnegi.d(
 name|int_r
 operator|=
-name|__builtin_msa_bnz_b
+name|__msa_test_bnz_b
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1817,7 +1717,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bnz.b(
 name|int_r
 operator|=
-name|__builtin_msa_bnz_h
+name|__msa_test_bnz_h
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1825,7 +1725,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bnz.h(
 name|int_r
 operator|=
-name|__builtin_msa_bnz_w
+name|__msa_test_bnz_w
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1833,7 +1733,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bnz.w(
 name|int_r
 operator|=
-name|__builtin_msa_bnz_d
+name|__msa_test_bnz_d
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1841,7 +1741,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bnz.d(
 name|int_r
 operator|=
-name|__builtin_msa_bnz_v
+name|__msa_test_bnz_v
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1849,7 +1749,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bnz.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bsel_v
+name|__msa_bsel_v
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1861,7 +1761,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bsel.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bsel_v
+name|__msa_bsel_v
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -1873,7 +1773,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bsel.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bsel_v
+name|__msa_bsel_v
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -1885,7 +1785,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bsel.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bsel_v
+name|__msa_bsel_v
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -1897,7 +1797,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.bsel.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bseli_b
+name|__msa_bseli_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -1909,7 +1809,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bseli.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bset_b
+name|__msa_bset_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -1919,7 +1819,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bset.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bset_h
+name|__msa_bset_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -1929,7 +1829,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bset.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bset_w
+name|__msa_bset_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1939,7 +1839,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bset.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bset_d
+name|__msa_bset_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1949,27 +1849,27 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bset.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_bseti_b
+name|__msa_bseti_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+literal|5
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.bseti.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_bseti_h
+name|__msa_bseti_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.bseti.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_bseti_w
+name|__msa_bseti_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -1979,7 +1879,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.bseti.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_bseti_d
+name|__msa_bseti_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -1989,7 +1889,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.bseti.d(
 name|int_r
 operator|=
-name|__builtin_msa_bz_b
+name|__msa_test_bz_b
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -1997,7 +1897,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bz.b(
 name|int_r
 operator|=
-name|__builtin_msa_bz_h
+name|__msa_test_bz_h
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -2005,7 +1905,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bz.h(
 name|int_r
 operator|=
-name|__builtin_msa_bz_w
+name|__msa_test_bz_w
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -2013,7 +1913,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bz.w(
 name|int_r
 operator|=
-name|__builtin_msa_bz_d
+name|__msa_test_bz_d
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -2021,7 +1921,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bz.d(
 name|int_r
 operator|=
-name|__builtin_msa_bz_v
+name|__msa_test_bz_v
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -2029,7 +1929,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.bz.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ceq_b
+name|__msa_ceq_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2039,7 +1939,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ceq.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ceq_h
+name|__msa_ceq_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2049,7 +1949,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ceq.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ceq_w
+name|__msa_ceq_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2059,7 +1959,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ceq.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ceq_d
+name|__msa_ceq_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2069,47 +1969,49 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ceq.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ceqi_b
+name|__msa_ceqi_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+operator|-
+literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ceqi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ceqi_h
+name|__msa_ceqi_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+operator|-
+literal|12
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ceqi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ceqi_w
+name|__msa_ceqi_w
 argument_list|(
 name|v4i32_a
 argument_list|,
-literal|25
+literal|14
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ceqi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ceqi_d
+name|__msa_ceqi_d
 argument_list|(
 name|v2i64_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ceqi.d(
 name|int_r
 operator|=
-name|__builtin_msa_cfcmsa
+name|__msa_cfcmsa
 argument_list|(
 literal|1
 argument_list|)
@@ -2117,7 +2019,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.cfcmsa(
 name|v16i8_r
 operator|=
-name|__builtin_msa_cle_s_b
+name|__msa_cle_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2127,7 +2029,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.cle.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_cle_s_h
+name|__msa_cle_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2137,7 +2039,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.cle.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_cle_s_w
+name|__msa_cle_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2147,7 +2049,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.cle.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_cle_s_d
+name|__msa_cle_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2157,7 +2059,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.cle.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_cle_u_b
+name|__msa_cle_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2167,7 +2069,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.cle.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_cle_u_h
+name|__msa_cle_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2177,7 +2079,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.cle.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_cle_u_w
+name|__msa_cle_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2187,7 +2089,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.cle.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_cle_u_d
+name|__msa_cle_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -2197,47 +2099,47 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.cle.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_clei_s_b
+name|__msa_clei_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+literal|12
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clei.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_clei_s_h
+name|__msa_clei_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+literal|13
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clei.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_clei_s_w
+name|__msa_clei_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
-literal|25
+literal|14
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clei.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_clei_s_d
+name|__msa_clei_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clei.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_clei_u_b
+name|__msa_clei_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2247,7 +2149,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clei.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_clei_u_h
+name|__msa_clei_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2257,7 +2159,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clei.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_clei_u_w
+name|__msa_clei_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2267,7 +2169,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clei.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_clei_u_d
+name|__msa_clei_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -2277,7 +2179,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clei.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_clt_s_b
+name|__msa_clt_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2287,7 +2189,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clt.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_clt_s_h
+name|__msa_clt_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2297,7 +2199,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clt.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_clt_s_w
+name|__msa_clt_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2307,7 +2209,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clt.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_clt_s_d
+name|__msa_clt_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2317,7 +2219,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clt.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_clt_u_b
+name|__msa_clt_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2327,7 +2229,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clt.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_clt_u_h
+name|__msa_clt_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2337,7 +2239,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clt.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_clt_u_w
+name|__msa_clt_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2347,7 +2249,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clt.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_clt_u_d
+name|__msa_clt_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -2357,47 +2259,47 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clt.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_clti_s_b
+name|__msa_clti_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clti.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_clti_s_h
+name|__msa_clti_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clti.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_clti_s_w
+name|__msa_clti_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clti.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_clti_s_d
+name|__msa_clti_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
-literal|25
+literal|15
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clti.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_clti_u_b
+name|__msa_clti_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2407,7 +2309,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.clti.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_clti_u_h
+name|__msa_clti_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2417,7 +2319,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.clti.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_clti_u_w
+name|__msa_clti_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2427,7 +2329,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.clti.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_clti_u_d
+name|__msa_clti_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -2437,7 +2339,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.clti.u.d(
 name|int_r
 operator|=
-name|__builtin_msa_copy_s_b
+name|__msa_copy_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2447,7 +2349,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.s.b(
 name|int_r
 operator|=
-name|__builtin_msa_copy_s_h
+name|__msa_copy_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2457,7 +2359,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.s.h(
 name|int_r
 operator|=
-name|__builtin_msa_copy_s_w
+name|__msa_copy_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2467,7 +2369,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.s.w(
 name|ll_r
 operator|=
-name|__builtin_msa_copy_s_d
+name|__msa_copy_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2477,7 +2379,7 @@ expr_stmt|;
 comment|// CHECK: call i64 @llvm.mips.copy.s.d(
 name|int_r
 operator|=
-name|__builtin_msa_copy_u_b
+name|__msa_copy_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2487,7 +2389,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.u.b(
 name|int_r
 operator|=
-name|__builtin_msa_copy_u_h
+name|__msa_copy_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2497,7 +2399,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.u.h(
 name|int_r
 operator|=
-name|__builtin_msa_copy_u_w
+name|__msa_copy_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2507,7 +2409,7 @@ expr_stmt|;
 comment|// CHECK: call i32 @llvm.mips.copy.u.w(
 name|ll_r
 operator|=
-name|__builtin_msa_copy_u_d
+name|__msa_copy_u_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2525,7 +2427,7 @@ expr_stmt|;
 comment|// CHECK: call void @llvm.mips.ctcmsa(
 name|v16i8_r
 operator|=
-name|__builtin_msa_div_s_b
+name|__msa_div_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2535,7 +2437,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.div.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_div_s_h
+name|__msa_div_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2545,7 +2447,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.div.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_div_s_w
+name|__msa_div_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2555,7 +2457,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.div.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_div_s_d
+name|__msa_div_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -2565,7 +2467,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.div.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_div_u_b
+name|__msa_div_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2575,7 +2477,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.div.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_div_u_h
+name|__msa_div_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2585,7 +2487,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.div.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_div_u_w
+name|__msa_div_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2595,7 +2497,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.div.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_div_u_d
+name|__msa_div_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -2605,7 +2507,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.div.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_dotp_s_h
+name|__msa_dotp_s_h
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -2615,7 +2517,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dotp.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_dotp_s_w
+name|__msa_dotp_s_w
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -2625,7 +2527,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dotp.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_dotp_s_d
+name|__msa_dotp_s_d
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -2635,7 +2537,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dotp.s.d(
 name|v8u16_r
 operator|=
-name|__builtin_msa_dotp_u_h
+name|__msa_dotp_u_h
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -2645,7 +2547,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dotp.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_dotp_u_w
+name|__msa_dotp_u_w
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -2655,7 +2557,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dotp.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_dotp_u_d
+name|__msa_dotp_u_d
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -2665,7 +2567,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dotp.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_dpadd_s_h
+name|__msa_dpadd_s_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -2677,7 +2579,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dpadd.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_dpadd_s_w
+name|__msa_dpadd_s_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -2689,7 +2591,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dpadd.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_dpadd_s_d
+name|__msa_dpadd_s_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -2701,7 +2603,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dpadd.s.d(
 name|v8u16_r
 operator|=
-name|__builtin_msa_dpadd_u_h
+name|__msa_dpadd_u_h
 argument_list|(
 name|v8u16_r
 argument_list|,
@@ -2713,7 +2615,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dpadd.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_dpadd_u_w
+name|__msa_dpadd_u_w
 argument_list|(
 name|v4u32_r
 argument_list|,
@@ -2725,7 +2627,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dpadd.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_dpadd_u_d
+name|__msa_dpadd_u_d
 argument_list|(
 name|v2u64_r
 argument_list|,
@@ -2737,7 +2639,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dpadd.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_dpsub_s_h
+name|__msa_dpsub_s_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -2749,7 +2651,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dpsub.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_dpsub_s_w
+name|__msa_dpsub_s_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -2761,7 +2663,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dpsub.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_dpsub_s_d
+name|__msa_dpsub_s_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -2773,7 +2675,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dpsub.s.d(
 name|v8u16_r
 operator|=
-name|__builtin_msa_dpsub_u_h
+name|__msa_dpsub_u_h
 argument_list|(
 name|v8u16_r
 argument_list|,
@@ -2785,7 +2687,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.dpsub.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_dpsub_u_w
+name|__msa_dpsub_u_w
 argument_list|(
 name|v4u32_r
 argument_list|,
@@ -2797,7 +2699,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.dpsub.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_dpsub_u_d
+name|__msa_dpsub_u_d
 argument_list|(
 name|v2u64_r
 argument_list|,
@@ -2809,7 +2711,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.dpsub.u.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fadd_w
+name|__msa_fadd_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2819,7 +2721,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fadd.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fadd_d
+name|__msa_fadd_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2829,7 +2731,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fadd.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcaf_w
+name|__msa_fcaf_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2839,7 +2741,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcaf.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcaf_d
+name|__msa_fcaf_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2849,7 +2751,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcaf.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fceq_w
+name|__msa_fceq_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2859,7 +2761,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fceq.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fceq_d
+name|__msa_fceq_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2869,7 +2771,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fceq.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fclass_w
+name|__msa_fclass_w
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -2877,7 +2779,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fclass.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fclass_d
+name|__msa_fclass_d
 argument_list|(
 name|v2f64_a
 argument_list|)
@@ -2885,7 +2787,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fclass.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcle_w
+name|__msa_fcle_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2895,7 +2797,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcle.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcle_d
+name|__msa_fcle_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2905,7 +2807,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcle.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fclt_w
+name|__msa_fclt_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2915,7 +2817,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fclt.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fclt_d
+name|__msa_fclt_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2925,7 +2827,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fclt.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcne_w
+name|__msa_fcne_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2935,7 +2837,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcne.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcne_d
+name|__msa_fcne_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2945,7 +2847,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcne.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcor_w
+name|__msa_fcor_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2955,7 +2857,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcor.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcor_d
+name|__msa_fcor_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2965,7 +2867,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcor.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcueq_w
+name|__msa_fcueq_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2975,7 +2877,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcueq.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcueq_d
+name|__msa_fcueq_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -2985,7 +2887,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcueq.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcule_w
+name|__msa_fcule_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -2995,7 +2897,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcule.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcule_d
+name|__msa_fcule_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3005,7 +2907,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcule.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcult_w
+name|__msa_fcult_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3015,7 +2917,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcult.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcult_d
+name|__msa_fcult_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3025,7 +2927,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcult.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcun_w
+name|__msa_fcun_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3035,7 +2937,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcun.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcun_d
+name|__msa_fcun_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3045,7 +2947,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcun.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fcune_w
+name|__msa_fcune_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3055,7 +2957,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fcune.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fcune_d
+name|__msa_fcune_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3065,7 +2967,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fcune.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fdiv_w
+name|__msa_fdiv_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3075,7 +2977,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fdiv.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fdiv_d
+name|__msa_fdiv_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3085,7 +2987,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fdiv.d(
 name|v8f16_r
 operator|=
-name|__builtin_msa_fexdo_h
+name|__msa_fexdo_h
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3095,7 +2997,7 @@ expr_stmt|;
 comment|// CHECK: call<8 x half> @llvm.mips.fexdo.h(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fexdo_w
+name|__msa_fexdo_w
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3105,7 +3007,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fexdo.w(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fexp2_w
+name|__msa_fexp2_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3115,7 +3017,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fexp2.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fexp2_d
+name|__msa_fexp2_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3125,7 +3027,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fexp2.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fexupl_w
+name|__msa_fexupl_w
 argument_list|(
 name|v8f16_a
 argument_list|)
@@ -3133,7 +3035,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fexupl.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fexupl_d
+name|__msa_fexupl_d
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3141,7 +3043,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fexupl.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fexupr_w
+name|__msa_fexupr_w
 argument_list|(
 name|v8f16_a
 argument_list|)
@@ -3149,7 +3051,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.fexupr.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fexupr_d
+name|__msa_fexupr_d
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3157,7 +3059,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fexupr.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_ffint_s_w
+name|__msa_ffint_s_w
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -3165,7 +3067,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.ffint.s.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_ffint_s_d
+name|__msa_ffint_s_d
 argument_list|(
 name|v2i64_a
 argument_list|)
@@ -3173,7 +3075,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.ffint.s.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_ffint_u_w
+name|__msa_ffint_u_w
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -3181,7 +3083,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.ffint.u.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_ffint_u_d
+name|__msa_ffint_u_d
 argument_list|(
 name|v2i64_a
 argument_list|)
@@ -3189,7 +3091,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.ffint.u.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_ffql_w
+name|__msa_ffql_w
 argument_list|(
 name|v8i16_a
 argument_list|)
@@ -3197,7 +3099,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.ffql.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_ffql_d
+name|__msa_ffql_d
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -3205,7 +3107,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.ffql.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_ffqr_w
+name|__msa_ffqr_w
 argument_list|(
 name|v8i16_a
 argument_list|)
@@ -3213,7 +3115,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float> @llvm.mips.ffqr.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_ffqr_d
+name|__msa_ffqr_d
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -3221,7 +3123,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.ffqr.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_fill_b
+name|__msa_fill_b
 argument_list|(
 literal|3
 argument_list|)
@@ -3229,7 +3131,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.fill.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_fill_h
+name|__msa_fill_h
 argument_list|(
 literal|3
 argument_list|)
@@ -3237,7 +3139,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.fill.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fill_w
+name|__msa_fill_w
 argument_list|(
 literal|3
 argument_list|)
@@ -3245,7 +3147,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.fill.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fill_d
+name|__msa_fill_d
 argument_list|(
 literal|3
 argument_list|)
@@ -3253,35 +3155,23 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.fill.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_flog2_w
+name|__msa_flog2_w
 argument_list|(
-name|v8f16_a
+name|v4f32_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.flog2.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_flog2_d
+name|__msa_flog2_d
 argument_list|(
-name|v4f32_a
+name|v2f64_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.flog2.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmadd_w
-argument_list|(
-name|v8f16_r
-argument_list|,
-name|v8f16_a
-argument_list|,
-name|v8f16_b
-argument_list|)
-expr_stmt|;
-comment|// CHECK: call<4 x float>  @llvm.mips.fmadd.w(
-name|v2f64_r
-operator|=
-name|__builtin_msa_fmadd_d
+name|__msa_fmadd_w
 argument_list|(
 name|v4f32_r
 argument_list|,
@@ -3290,10 +3180,22 @@ argument_list|,
 name|v4f32_b
 argument_list|)
 expr_stmt|;
+comment|// CHECK: call<4 x float>  @llvm.mips.fmadd.w(
+name|v2f64_r
+operator|=
+name|__msa_fmadd_d
+argument_list|(
+name|v2f64_r
+argument_list|,
+name|v2f64_a
+argument_list|,
+name|v2f64_b
+argument_list|)
+expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmadd.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmax_w
+name|__msa_fmax_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3303,7 +3205,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fmax.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fmax_d
+name|__msa_fmax_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3313,7 +3215,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmax.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmax_a_w
+name|__msa_fmax_a_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3323,7 +3225,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fmax.a.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fmax_a_d
+name|__msa_fmax_a_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3333,7 +3235,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmax.a.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmin_w
+name|__msa_fmin_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3343,7 +3245,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fmin.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fmin_d
+name|__msa_fmin_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3353,7 +3255,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmin.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmin_a_w
+name|__msa_fmin_a_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3363,7 +3265,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fmin.a.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fmin_a_d
+name|__msa_fmin_a_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3373,19 +3275,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmin.a.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmsub_w
-argument_list|(
-name|v8f16_r
-argument_list|,
-name|v8f16_a
-argument_list|,
-name|v8f16_b
-argument_list|)
-expr_stmt|;
-comment|// CHECK: call<4 x float>  @llvm.mips.fmsub.w(
-name|v2f64_r
-operator|=
-name|__builtin_msa_fmsub_d
+name|__msa_fmsub_w
 argument_list|(
 name|v4f32_r
 argument_list|,
@@ -3394,10 +3284,22 @@ argument_list|,
 name|v4f32_b
 argument_list|)
 expr_stmt|;
+comment|// CHECK: call<4 x float>  @llvm.mips.fmsub.w(
+name|v2f64_r
+operator|=
+name|__msa_fmsub_d
+argument_list|(
+name|v2f64_r
+argument_list|,
+name|v2f64_a
+argument_list|,
+name|v2f64_b
+argument_list|)
+expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmsub.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fmul_w
+name|__msa_fmul_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3407,7 +3309,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fmul.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fmul_d
+name|__msa_fmul_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3417,55 +3319,55 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fmul.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_frint_w
+name|__msa_frint_w
 argument_list|(
-name|v8f16_a
+name|v4f32_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.frint.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_frint_d
+name|__msa_frint_d
 argument_list|(
-name|v4f32_a
+name|v2f64_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.frint.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_frcp_w
+name|__msa_frcp_w
 argument_list|(
-name|v8f16_a
+name|v4f32_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.frcp.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_frcp_d
+name|__msa_frcp_d
 argument_list|(
-name|v4f32_a
+name|v2f64_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.frcp.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_frsqrt_w
+name|__msa_frsqrt_w
 argument_list|(
-name|v8f16_a
+name|v4f32_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.frsqrt.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_frsqrt_d
+name|__msa_frsqrt_d
 argument_list|(
-name|v4f32_a
+name|v2f64_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.frsqrt.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fseq_w
+name|__msa_fseq_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3475,7 +3377,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fseq.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fseq_d
+name|__msa_fseq_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3485,7 +3387,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fseq.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsaf_w
+name|__msa_fsaf_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3495,7 +3397,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsaf.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsaf_d
+name|__msa_fsaf_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3505,7 +3407,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsaf.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsle_w
+name|__msa_fsle_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3515,7 +3417,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsle.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsle_d
+name|__msa_fsle_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3525,7 +3427,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsle.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fslt_w
+name|__msa_fslt_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3535,7 +3437,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fslt.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fslt_d
+name|__msa_fslt_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3545,7 +3447,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fslt.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsne_w
+name|__msa_fsne_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3555,7 +3457,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsne.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsne_d
+name|__msa_fsne_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3565,7 +3467,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsne.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsor_w
+name|__msa_fsor_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3575,7 +3477,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsor.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsor_d
+name|__msa_fsor_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3585,23 +3487,23 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsor.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fsqrt_w
+name|__msa_fsqrt_w
 argument_list|(
-name|v8f16_a
+name|v4f32_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fsqrt.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fsqrt_d
+name|__msa_fsqrt_d
 argument_list|(
-name|v4f32_a
+name|v2f64_a
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fsqrt.d(
 name|v4f32_r
 operator|=
-name|__builtin_msa_fsub_w
+name|__msa_fsub_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3611,7 +3513,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x float>  @llvm.mips.fsub.w(
 name|v2f64_r
 operator|=
-name|__builtin_msa_fsub_d
+name|__msa_fsub_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3621,7 +3523,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x double> @llvm.mips.fsub.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsueq_w
+name|__msa_fsueq_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3631,7 +3533,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsueq.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsueq_d
+name|__msa_fsueq_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3641,7 +3543,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsueq.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsule_w
+name|__msa_fsule_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3651,7 +3553,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsule.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsule_d
+name|__msa_fsule_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3661,7 +3563,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsule.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsult_w
+name|__msa_fsult_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3671,7 +3573,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsult.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsult_d
+name|__msa_fsult_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3681,7 +3583,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsult.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsun_w
+name|__msa_fsun_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3691,7 +3593,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsun.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsun_d
+name|__msa_fsun_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3701,7 +3603,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsun.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_fsune_w
+name|__msa_fsune_w
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3711,7 +3613,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.fsune.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_fsune_d
+name|__msa_fsune_d
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3721,7 +3623,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.fsune.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ftint_s_w
+name|__msa_ftint_s_w
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3729,7 +3631,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.ftint.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ftint_s_d
+name|__msa_ftint_s_d
 argument_list|(
 name|v2f64_a
 argument_list|)
@@ -3737,7 +3639,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.ftint.s.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ftint_u_w
+name|__msa_ftint_u_w
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3745,7 +3647,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.ftint.u.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ftint_u_d
+name|__msa_ftint_u_d
 argument_list|(
 name|v2f64_a
 argument_list|)
@@ -3753,7 +3655,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.ftint.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ftq_h
+name|__msa_ftq_h
 argument_list|(
 name|v4f32_a
 argument_list|,
@@ -3763,7 +3665,7 @@ expr_stmt|;
 comment|// CHECK: call<8 x i16> @llvm.mips.ftq.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ftq_w
+name|__msa_ftq_w
 argument_list|(
 name|v2f64_a
 argument_list|,
@@ -3773,7 +3675,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.ftq.w(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ftrunc_s_w
+name|__msa_ftrunc_s_w
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3781,7 +3683,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.ftrunc.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ftrunc_s_d
+name|__msa_ftrunc_s_d
 argument_list|(
 name|v2f64_a
 argument_list|)
@@ -3789,7 +3691,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.ftrunc.s.d(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ftrunc_u_w
+name|__msa_ftrunc_u_w
 argument_list|(
 name|v4f32_a
 argument_list|)
@@ -3797,7 +3699,7 @@ expr_stmt|;
 comment|// CHECK: call<4 x i32> @llvm.mips.ftrunc.u.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ftrunc_u_d
+name|__msa_ftrunc_u_d
 argument_list|(
 name|v2f64_a
 argument_list|)
@@ -3805,7 +3707,7 @@ expr_stmt|;
 comment|// CHECK: call<2 x i64> @llvm.mips.ftrunc.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_hadd_s_h
+name|__msa_hadd_s_h
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -3815,7 +3717,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.hadd.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_hadd_s_w
+name|__msa_hadd_s_w
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -3825,7 +3727,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.hadd.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_hadd_s_d
+name|__msa_hadd_s_d
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -3835,7 +3737,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.hadd.s.d(
 name|v8u16_r
 operator|=
-name|__builtin_msa_hadd_u_h
+name|__msa_hadd_u_h
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -3845,7 +3747,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.hadd.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_hadd_u_w
+name|__msa_hadd_u_w
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -3855,7 +3757,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.hadd.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_hadd_u_d
+name|__msa_hadd_u_d
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -3865,7 +3767,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.hadd.u.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_hsub_s_h
+name|__msa_hsub_s_h
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -3875,7 +3777,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.hsub.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_hsub_s_w
+name|__msa_hsub_s_w
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -3885,7 +3787,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.hsub.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_hsub_s_d
+name|__msa_hsub_s_d
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -3895,7 +3797,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.hsub.s.d(
 name|v8u16_r
 operator|=
-name|__builtin_msa_hsub_u_h
+name|__msa_hsub_u_h
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -3905,7 +3807,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.hsub.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_hsub_u_w
+name|__msa_hsub_u_w
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -3915,7 +3817,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.hsub.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_hsub_u_d
+name|__msa_hsub_u_d
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -3925,7 +3827,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.hsub.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ilvev_b
+name|__msa_ilvev_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -3935,7 +3837,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ilvev.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ilvev_h
+name|__msa_ilvev_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -3945,7 +3847,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ilvev.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ilvev_w
+name|__msa_ilvev_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -3955,7 +3857,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ilvev.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ilvev_d
+name|__msa_ilvev_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -3965,7 +3867,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ilvev.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ilvl_b
+name|__msa_ilvl_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -3975,7 +3877,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ilvl.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ilvl_h
+name|__msa_ilvl_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -3985,7 +3887,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ilvl.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ilvl_w
+name|__msa_ilvl_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -3995,7 +3897,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ilvl.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ilvl_d
+name|__msa_ilvl_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4005,7 +3907,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ilvl.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ilvod_b
+name|__msa_ilvod_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4015,7 +3917,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ilvod.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ilvod_h
+name|__msa_ilvod_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4025,7 +3927,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ilvod.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ilvod_w
+name|__msa_ilvod_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4035,7 +3937,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ilvod.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ilvod_d
+name|__msa_ilvod_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4045,7 +3947,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ilvod.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ilvr_b
+name|__msa_ilvr_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4055,7 +3957,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ilvr.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ilvr_h
+name|__msa_ilvr_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4065,7 +3967,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ilvr.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ilvr_w
+name|__msa_ilvr_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4075,7 +3977,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ilvr.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ilvr_d
+name|__msa_ilvr_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4085,7 +3987,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ilvr.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_insert_b
+name|__msa_insert_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -4097,7 +3999,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.insert.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_insert_h
+name|__msa_insert_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4109,7 +4011,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.insert.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_insert_w
+name|__msa_insert_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4121,7 +4023,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.insert.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_insert_d
+name|__msa_insert_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -4133,7 +4035,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.insert.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_insve_b
+name|__msa_insve_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -4145,7 +4047,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.insve.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_insve_h
+name|__msa_insve_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4157,7 +4059,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.insve.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_insve_w
+name|__msa_insve_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4169,7 +4071,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.insve.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_insve_d
+name|__msa_insve_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -4181,51 +4083,51 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.insve.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ld_b
+name|__msa_ld_b
 argument_list|(
 operator|&
 name|v16i8_a
 argument_list|,
-literal|1
+literal|16
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ld.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ld_h
+name|__msa_ld_h
 argument_list|(
 operator|&
 name|v8i16_a
 argument_list|,
-literal|2
+literal|32
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ld.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ld_w
+name|__msa_ld_w
 argument_list|(
 operator|&
 name|v4i32_a
 argument_list|,
-literal|4
+literal|48
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ld.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ld_d
+name|__msa_ld_d
 argument_list|(
 operator|&
 name|v2i64_a
 argument_list|,
-literal|8
+literal|96
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ld.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ldi_b
+name|__msa_ldi_b
 argument_list|(
 literal|3
 argument_list|)
@@ -4233,7 +4135,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.ldi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ldi_h
+name|__msa_ldi_h
 argument_list|(
 literal|3
 argument_list|)
@@ -4241,7 +4143,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.ldi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ldi_w
+name|__msa_ldi_w
 argument_list|(
 literal|3
 argument_list|)
@@ -4249,7 +4151,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.ldi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ldi_d
+name|__msa_ldi_d
 argument_list|(
 literal|3
 argument_list|)
@@ -4257,7 +4159,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.ldi.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_madd_q_h
+name|__msa_madd_q_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4269,7 +4171,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.madd.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_madd_q_w
+name|__msa_madd_q_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4281,7 +4183,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.madd.q.w(
 name|v8i16_r
 operator|=
-name|__builtin_msa_maddr_q_h
+name|__msa_maddr_q_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4293,7 +4195,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.maddr.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_maddr_q_w
+name|__msa_maddr_q_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4305,7 +4207,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.maddr.q.w(
 name|v16i8_r
 operator|=
-name|__builtin_msa_maddv_b
+name|__msa_maddv_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -4317,7 +4219,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.maddv.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_maddv_h
+name|__msa_maddv_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4329,7 +4231,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.maddv.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_maddv_w
+name|__msa_maddv_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4341,7 +4243,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.maddv.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_maddv_d
+name|__msa_maddv_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -4353,7 +4255,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.maddv.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_max_a_b
+name|__msa_max_a_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4363,7 +4265,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.max.a.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_max_a_h
+name|__msa_max_a_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4373,7 +4275,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.max.a.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_max_a_w
+name|__msa_max_a_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4383,7 +4285,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.max.a.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_max_a_d
+name|__msa_max_a_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4393,7 +4295,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.max.a.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_max_s_b
+name|__msa_max_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4403,7 +4305,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.max.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_max_s_h
+name|__msa_max_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4413,7 +4315,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.max.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_max_s_w
+name|__msa_max_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4423,7 +4325,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.max.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_max_s_d
+name|__msa_max_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4433,7 +4335,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.max.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_max_u_b
+name|__msa_max_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -4443,7 +4345,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.max.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_max_u_h
+name|__msa_max_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -4453,7 +4355,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.max.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_max_u_w
+name|__msa_max_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -4463,7 +4365,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.max.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_max_u_d
+name|__msa_max_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -4473,7 +4375,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.max.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_maxi_s_b
+name|__msa_maxi_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4483,7 +4385,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.maxi.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_maxi_s_h
+name|__msa_maxi_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4493,7 +4395,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.maxi.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_maxi_s_w
+name|__msa_maxi_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4503,7 +4405,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.maxi.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_maxi_s_d
+name|__msa_maxi_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4513,7 +4415,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.maxi.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_maxi_u_b
+name|__msa_maxi_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -4523,7 +4425,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.maxi.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_maxi_u_h
+name|__msa_maxi_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -4533,7 +4435,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.maxi.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_maxi_u_w
+name|__msa_maxi_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -4543,7 +4445,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.maxi.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_maxi_u_d
+name|__msa_maxi_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -4553,7 +4455,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.maxi.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_min_a_b
+name|__msa_min_a_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4563,7 +4465,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.min.a.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_min_a_h
+name|__msa_min_a_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4573,7 +4475,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.min.a.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_min_a_w
+name|__msa_min_a_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4583,7 +4485,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.min.a.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_min_a_d
+name|__msa_min_a_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4593,7 +4495,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.min.a.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_min_s_b
+name|__msa_min_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4603,7 +4505,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.min.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_min_s_h
+name|__msa_min_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4613,7 +4515,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.min.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_min_s_w
+name|__msa_min_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4623,7 +4525,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.min.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_min_s_d
+name|__msa_min_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4633,7 +4535,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.min.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_min_u_b
+name|__msa_min_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -4643,7 +4545,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.min.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_min_u_h
+name|__msa_min_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -4653,7 +4555,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.min.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_min_u_w
+name|__msa_min_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -4663,7 +4565,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.min.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_min_u_d
+name|__msa_min_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -4673,7 +4575,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.min.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_mini_s_b
+name|__msa_mini_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4683,7 +4585,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.mini.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_mini_s_h
+name|__msa_mini_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4693,7 +4595,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mini.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_mini_s_w
+name|__msa_mini_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4703,7 +4605,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mini.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_mini_s_d
+name|__msa_mini_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4713,7 +4615,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.mini.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_mini_u_b
+name|__msa_mini_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -4723,7 +4625,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.mini.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_mini_u_h
+name|__msa_mini_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -4733,7 +4635,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mini.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_mini_u_w
+name|__msa_mini_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -4743,7 +4645,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mini.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_mini_u_d
+name|__msa_mini_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -4753,7 +4655,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.mini.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_mod_s_b
+name|__msa_mod_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4763,7 +4665,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.mod.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_mod_s_h
+name|__msa_mod_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4773,7 +4675,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mod.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_mod_s_w
+name|__msa_mod_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4783,7 +4685,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mod.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_mod_s_d
+name|__msa_mod_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -4793,7 +4695,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.mod.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_mod_u_b
+name|__msa_mod_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -4803,7 +4705,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.mod.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_mod_u_h
+name|__msa_mod_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -4813,7 +4715,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mod.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_mod_u_w
+name|__msa_mod_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -4823,7 +4725,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mod.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_mod_u_d
+name|__msa_mod_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -4833,7 +4735,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.mod.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_move_v
+name|__msa_move_v
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -4841,7 +4743,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.move.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_msub_q_h
+name|__msa_msub_q_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4853,7 +4755,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.msub.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_msub_q_w
+name|__msa_msub_q_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4865,7 +4767,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.msub.q.w(
 name|v8i16_r
 operator|=
-name|__builtin_msa_msubr_q_h
+name|__msa_msubr_q_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4877,7 +4779,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.msubr.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_msubr_q_w
+name|__msa_msubr_q_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4889,7 +4791,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.msubr.q.w(
 name|v16i8_r
 operator|=
-name|__builtin_msa_msubv_b
+name|__msa_msubv_b
 argument_list|(
 name|v16i8_r
 argument_list|,
@@ -4901,7 +4803,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.msubv.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_msubv_h
+name|__msa_msubv_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -4913,7 +4815,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.msubv.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_msubv_w
+name|__msa_msubv_w
 argument_list|(
 name|v4i32_r
 argument_list|,
@@ -4925,7 +4827,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.msubv.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_msubv_d
+name|__msa_msubv_d
 argument_list|(
 name|v2i64_r
 argument_list|,
@@ -4937,7 +4839,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.msubv.d(
 name|v8i16_r
 operator|=
-name|__builtin_msa_mul_q_h
+name|__msa_mul_q_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4947,7 +4849,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mul.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_mul_q_w
+name|__msa_mul_q_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4957,7 +4859,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mul.q.w(
 name|v8i16_r
 operator|=
-name|__builtin_msa_mulr_q_h
+name|__msa_mulr_q_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4967,7 +4869,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mulr.q.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_mulr_q_w
+name|__msa_mulr_q_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -4977,7 +4879,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mulr.q.w(
 name|v16i8_r
 operator|=
-name|__builtin_msa_mulv_b
+name|__msa_mulv_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -4987,7 +4889,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.mulv.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_mulv_h
+name|__msa_mulv_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -4997,7 +4899,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.mulv.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_mulv_w
+name|__msa_mulv_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5007,7 +4909,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.mulv.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_mulv_d
+name|__msa_mulv_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5017,7 +4919,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.mulv.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_nloc_b
+name|__msa_nloc_b
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -5025,7 +4927,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.nloc.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_nloc_h
+name|__msa_nloc_h
 argument_list|(
 name|v8i16_a
 argument_list|)
@@ -5033,7 +4935,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.nloc.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_nloc_w
+name|__msa_nloc_w
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -5041,7 +4943,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.nloc.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_nloc_d
+name|__msa_nloc_d
 argument_list|(
 name|v2i64_a
 argument_list|)
@@ -5049,7 +4951,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.nloc.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_nlzc_b
+name|__msa_nlzc_b
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -5057,7 +4959,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.nlzc.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_nlzc_h
+name|__msa_nlzc_h
 argument_list|(
 name|v8i16_a
 argument_list|)
@@ -5065,7 +4967,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.nlzc.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_nlzc_w
+name|__msa_nlzc_w
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -5073,7 +4975,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.nlzc.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_nlzc_d
+name|__msa_nlzc_d
 argument_list|(
 name|v2i64_a
 argument_list|)
@@ -5081,7 +4983,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.nlzc.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_nor_v
+name|__msa_nor_v
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5091,7 +4993,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nor.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_nor_v
+name|__msa_nor_v
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5101,7 +5003,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nor.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_nor_v
+name|__msa_nor_v
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5111,7 +5013,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nor.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_nor_v
+name|__msa_nor_v
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5121,7 +5023,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nor.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5131,7 +5033,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5141,7 +5043,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v4i32_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5151,7 +5053,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v2i64_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5161,7 +5063,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v16u8_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -5171,7 +5073,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -5181,7 +5083,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v4u32_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -5191,7 +5093,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v2u64_r
 operator|=
-name|__builtin_msa_nori_b
+name|__msa_nori_b
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -5201,7 +5103,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.nori.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_or_v
+name|__msa_or_v
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5211,7 +5113,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.or.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_or_v
+name|__msa_or_v
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5221,7 +5123,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.or.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_or_v
+name|__msa_or_v
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5231,7 +5133,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.or.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_or_v
+name|__msa_or_v
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5241,7 +5143,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.or.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5251,7 +5153,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5261,7 +5163,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v4i32_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5271,7 +5173,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v2i64_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5281,7 +5183,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v16u8_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -5291,7 +5193,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -5301,7 +5203,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v4u32_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -5311,7 +5213,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v2u64_r
 operator|=
-name|__builtin_msa_ori_b
+name|__msa_ori_b
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -5321,7 +5223,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.ori.b(
 name|v16i8_r
 operator|=
-name|__builtin_msa_pckev_b
+name|__msa_pckev_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5331,7 +5233,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.pckev.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_pckev_h
+name|__msa_pckev_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5341,7 +5243,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.pckev.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_pckev_w
+name|__msa_pckev_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5351,7 +5253,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.pckev.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_pckev_d
+name|__msa_pckev_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5361,7 +5263,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.pckev.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_pckod_b
+name|__msa_pckod_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5371,7 +5273,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.pckod.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_pckod_h
+name|__msa_pckod_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5381,7 +5283,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.pckod.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_pckod_w
+name|__msa_pckod_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5391,7 +5293,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.pckod.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_pckod_d
+name|__msa_pckod_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5401,7 +5303,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.pckod.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_pcnt_b
+name|__msa_pcnt_b
 argument_list|(
 name|v16i8_a
 argument_list|)
@@ -5409,7 +5311,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.pcnt.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_pcnt_h
+name|__msa_pcnt_h
 argument_list|(
 name|v8i16_a
 argument_list|)
@@ -5417,7 +5319,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.pcnt.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_pcnt_w
+name|__msa_pcnt_w
 argument_list|(
 name|v4i32_a
 argument_list|)
@@ -5425,7 +5327,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.pcnt.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_pcnt_d
+name|__msa_pcnt_d
 argument_list|(
 name|v2i64_a
 argument_list|)
@@ -5433,7 +5335,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.pcnt.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sat_s_b
+name|__msa_sat_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5443,7 +5345,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sat.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sat_s_h
+name|__msa_sat_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5453,7 +5355,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sat.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sat_s_w
+name|__msa_sat_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5463,7 +5365,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sat.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sat_s_d
+name|__msa_sat_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5473,7 +5375,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sat.s.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sat_u_b
+name|__msa_sat_u_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5483,7 +5385,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sat.u.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sat_u_h
+name|__msa_sat_u_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5493,7 +5395,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sat.u.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sat_u_w
+name|__msa_sat_u_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5503,7 +5405,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sat.u.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sat_u_d
+name|__msa_sat_u_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5513,7 +5415,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sat.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_shf_b
+name|__msa_shf_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5523,7 +5425,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.shf.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_shf_h
+name|__msa_shf_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5533,7 +5435,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.shf.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_shf_w
+name|__msa_shf_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5543,67 +5445,67 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.shf.w(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sld_b
+name|__msa_sld_b
 argument_list|(
 name|v16i8_r
 argument_list|,
 name|v16i8_a
 argument_list|,
-literal|10
+literal|7
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sld.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sld_h
+name|__msa_sld_h
 argument_list|(
 name|v8i16_r
 argument_list|,
 name|v8i16_a
 argument_list|,
-literal|10
+literal|5
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sld.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sld_w
+name|__msa_sld_w
 argument_list|(
 name|v4i32_r
 argument_list|,
 name|v4i32_a
 argument_list|,
-literal|10
+literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sld.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sld_d
+name|__msa_sld_d
 argument_list|(
 name|v2i64_r
 argument_list|,
 name|v2i64_a
 argument_list|,
-literal|10
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sld.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sldi_b
+name|__msa_sldi_b
 argument_list|(
 name|v16i8_r
 argument_list|,
 name|v16i8_a
 argument_list|,
-literal|3
+literal|7
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sldi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sldi_h
+name|__msa_sldi_h
 argument_list|(
 name|v8i16_r
 argument_list|,
@@ -5615,31 +5517,31 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sldi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sldi_w
+name|__msa_sldi_w
 argument_list|(
 name|v4i32_r
 argument_list|,
 name|v4i32_a
 argument_list|,
-literal|3
+literal|2
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sldi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sldi_d
+name|__msa_sldi_d
 argument_list|(
 name|v2i64_r
 argument_list|,
 name|v2i64_a
 argument_list|,
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sldi.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sll_b
+name|__msa_sll_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5649,7 +5551,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sll.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sll_h
+name|__msa_sll_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5659,7 +5561,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sll.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sll_w
+name|__msa_sll_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5669,7 +5571,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sll.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sll_d
+name|__msa_sll_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5679,7 +5581,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sll.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_slli_b
+name|__msa_slli_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5689,7 +5591,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.slli.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_slli_h
+name|__msa_slli_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5699,7 +5601,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.slli.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_slli_w
+name|__msa_slli_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5709,7 +5611,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.slli.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_slli_d
+name|__msa_slli_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5719,7 +5621,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.slli.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_splat_b
+name|__msa_splat_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5729,7 +5631,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.splat.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_splat_h
+name|__msa_splat_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5739,7 +5641,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.splat.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_splat_w
+name|__msa_splat_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5749,7 +5651,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.splat.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_splat_d
+name|__msa_splat_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5759,7 +5661,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.splat.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_splati_b
+name|__msa_splati_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5769,7 +5671,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.splati.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_splati_h
+name|__msa_splati_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5779,7 +5681,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.splati.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_splati_w
+name|__msa_splati_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5789,17 +5691,17 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.splati.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_splati_d
+name|__msa_splati_d
 argument_list|(
 name|v2i64_a
 argument_list|,
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.splati.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_sra_b
+name|__msa_sra_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5809,7 +5711,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.sra.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_sra_h
+name|__msa_sra_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5819,7 +5721,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.sra.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_sra_w
+name|__msa_sra_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5829,7 +5731,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.sra.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_sra_d
+name|__msa_sra_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5839,7 +5741,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.sra.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srai_b
+name|__msa_srai_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5849,7 +5751,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srai.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srai_h
+name|__msa_srai_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5859,7 +5761,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srai.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srai_w
+name|__msa_srai_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5869,7 +5771,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srai.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srai_d
+name|__msa_srai_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5879,7 +5781,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srai.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srar_b
+name|__msa_srar_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5889,7 +5791,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srar.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srar_h
+name|__msa_srar_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5899,7 +5801,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srar.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srar_w
+name|__msa_srar_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5909,7 +5811,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srar.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srar_d
+name|__msa_srar_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5919,7 +5821,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srar.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srari_b
+name|__msa_srari_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5929,7 +5831,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srari.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srari_h
+name|__msa_srari_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5939,7 +5841,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srari.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srari_w
+name|__msa_srari_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5949,7 +5851,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srari.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srari_d
+name|__msa_srari_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5959,7 +5861,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srari.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srl_b
+name|__msa_srl_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -5969,7 +5871,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srl.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srl_h
+name|__msa_srl_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -5979,7 +5881,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srl.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srl_w
+name|__msa_srl_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -5989,7 +5891,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srl.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srl_d
+name|__msa_srl_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -5999,7 +5901,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srl.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srli_b
+name|__msa_srli_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6009,7 +5911,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srli.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srli_h
+name|__msa_srli_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6019,7 +5921,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srli.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srli_w
+name|__msa_srli_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6029,7 +5931,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srli.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srli_d
+name|__msa_srli_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6039,7 +5941,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srli.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srlr_b
+name|__msa_srlr_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6049,7 +5951,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srlr.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srlr_h
+name|__msa_srlr_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6059,7 +5961,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srlr.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srlr_w
+name|__msa_srlr_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6069,7 +5971,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srlr.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srlr_d
+name|__msa_srlr_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6079,7 +5981,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srlr.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_srlri_b
+name|__msa_srlri_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6089,7 +5991,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.srlri.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_srlri_h
+name|__msa_srlri_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6099,7 +6001,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.srlri.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_srlri_w
+name|__msa_srlri_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6109,7 +6011,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.srlri.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_srlri_d
+name|__msa_srlri_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6117,53 +6019,53 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.srlri.d(
-name|__builtin_msa_st_b
+name|__msa_st_b
 argument_list|(
 name|v16i8_b
 argument_list|,
 operator|&
 name|v16i8_a
 argument_list|,
-literal|1
+literal|16
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call void @llvm.mips.st.b(
-name|__builtin_msa_st_h
+name|__msa_st_h
 argument_list|(
 name|v8i16_b
 argument_list|,
 operator|&
 name|v8i16_a
 argument_list|,
-literal|2
+literal|32
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call void @llvm.mips.st.h(
-name|__builtin_msa_st_w
+name|__msa_st_w
 argument_list|(
 name|v4i32_b
 argument_list|,
 operator|&
 name|v4i32_a
 argument_list|,
-literal|4
+literal|48
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call void @llvm.mips.st.w(
-name|__builtin_msa_st_d
+name|__msa_st_d
 argument_list|(
 name|v2i64_b
 argument_list|,
 operator|&
 name|v2i64_a
 argument_list|,
-literal|8
+literal|96
 argument_list|)
 expr_stmt|;
 comment|// CHECK: call void @llvm.mips.st.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_subs_s_b
+name|__msa_subs_s_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6173,7 +6075,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subs.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_subs_s_h
+name|__msa_subs_s_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6183,7 +6085,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subs.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_subs_s_w
+name|__msa_subs_s_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6193,7 +6095,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subs.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_subs_s_d
+name|__msa_subs_s_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6203,7 +6105,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subs.s.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_subs_u_b
+name|__msa_subs_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -6213,7 +6115,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subs.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_subs_u_h
+name|__msa_subs_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -6223,7 +6125,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subs.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_subs_u_w
+name|__msa_subs_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -6233,7 +6135,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subs.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_subs_u_d
+name|__msa_subs_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -6243,7 +6145,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subs.u.d(
 name|v16u8_r
 operator|=
-name|__builtin_msa_subsus_u_b
+name|__msa_subsus_u_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -6253,7 +6155,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subsus.u.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_subsus_u_h
+name|__msa_subsus_u_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -6263,7 +6165,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subsus.u.h(
 name|v4u32_r
 operator|=
-name|__builtin_msa_subsus_u_w
+name|__msa_subsus_u_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -6273,7 +6175,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subsus.u.w(
 name|v2u64_r
 operator|=
-name|__builtin_msa_subsus_u_d
+name|__msa_subsus_u_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -6283,7 +6185,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subsus.u.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_subsuu_s_b
+name|__msa_subsuu_s_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -6293,7 +6195,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subsuu.s.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_subsuu_s_h
+name|__msa_subsuu_s_h
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -6303,7 +6205,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subsuu.s.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_subsuu_s_w
+name|__msa_subsuu_s_w
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -6313,7 +6215,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subsuu.s.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_subsuu_s_d
+name|__msa_subsuu_s_d
 argument_list|(
 name|v2u64_a
 argument_list|,
@@ -6323,7 +6225,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subsuu.s.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_subv_b
+name|__msa_subv_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6333,7 +6235,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subv.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_subv_h
+name|__msa_subv_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6343,7 +6245,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subv.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_subv_w
+name|__msa_subv_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6353,7 +6255,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subv.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_subv_d
+name|__msa_subv_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6363,7 +6265,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subv.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_subvi_b
+name|__msa_subvi_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6373,7 +6275,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.subvi.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_subvi_h
+name|__msa_subvi_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6383,7 +6285,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.subvi.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_subvi_w
+name|__msa_subvi_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6393,7 +6295,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.subvi.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_subvi_d
+name|__msa_subvi_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6403,7 +6305,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.subvi.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_vshf_b
+name|__msa_vshf_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6415,7 +6317,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8>  @llvm.mips.vshf.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_vshf_h
+name|__msa_vshf_h
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6427,7 +6329,7 @@ expr_stmt|;
 comment|// CHECK: call<8  x i16> @llvm.mips.vshf.h(
 name|v4i32_r
 operator|=
-name|__builtin_msa_vshf_w
+name|__msa_vshf_w
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6439,7 +6341,7 @@ expr_stmt|;
 comment|// CHECK: call<4  x i32> @llvm.mips.vshf.w(
 name|v2i64_r
 operator|=
-name|__builtin_msa_vshf_d
+name|__msa_vshf_d
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6451,7 +6353,7 @@ expr_stmt|;
 comment|// CHECK: call<2  x i64> @llvm.mips.vshf.d(
 name|v16i8_r
 operator|=
-name|__builtin_msa_xor_v
+name|__msa_xor_v
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6461,7 +6363,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xor.v(
 name|v8i16_r
 operator|=
-name|__builtin_msa_xor_v
+name|__msa_xor_v
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6471,7 +6373,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xor.v(
 name|v4i32_r
 operator|=
-name|__builtin_msa_xor_v
+name|__msa_xor_v
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6481,7 +6383,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xor.v(
 name|v2i64_r
 operator|=
-name|__builtin_msa_xor_v
+name|__msa_xor_v
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6491,7 +6393,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xor.v(
 name|v16i8_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v16i8_a
 argument_list|,
@@ -6501,7 +6403,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v8i16_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v8i16_a
 argument_list|,
@@ -6511,7 +6413,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v4i32_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v4i32_a
 argument_list|,
@@ -6521,7 +6423,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v2i64_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v2i64_a
 argument_list|,
@@ -6531,7 +6433,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v16u8_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v16u8_a
 argument_list|,
@@ -6541,7 +6443,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v8u16_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v8u16_a
 argument_list|,
@@ -6551,7 +6453,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v4u32_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v4u32_a
 argument_list|,
@@ -6561,7 +6463,7 @@ expr_stmt|;
 comment|// CHECK: call<16 x i8> @llvm.mips.xori.b(
 name|v2u64_r
 operator|=
-name|__builtin_msa_xori_b
+name|__msa_xori_b
 argument_list|(
 name|v2u64_a
 argument_list|,
