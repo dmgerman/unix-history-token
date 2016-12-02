@@ -691,6 +691,12 @@ if|if
 condition|(
 name|ps
 operator|.
+name|tos
+operator|>
+literal|0
+operator|&&
+name|ps
+operator|.
 name|p_stack
 index|[
 name|ps
