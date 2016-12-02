@@ -45570,6 +45570,23 @@ end_function_decl
 
 begin_function_decl
 name|bool
+name|SemaBuiltinConstantArgMultiple
+parameter_list|(
+name|CallExpr
+modifier|*
+name|TheCall
+parameter_list|,
+name|int
+name|ArgNum
+parameter_list|,
+name|unsigned
+name|Multiple
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
 name|SemaBuiltinARMSpecialReg
 parameter_list|(
 name|unsigned
