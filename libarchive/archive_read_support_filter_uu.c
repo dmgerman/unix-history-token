@@ -3016,6 +3016,7 @@ operator|==
 literal|6
 condition|)
 block|{
+comment|/* "begin " */
 if|if
 condition|(
 operator|!
@@ -3243,6 +3244,7 @@ literal|30
 operator|)
 return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|l
@@ -3250,6 +3252,7 @@ operator|==
 literal|13
 condition|)
 block|{
+comment|/* "begin-base64 " */
 while|while
 condition|(
 name|len
