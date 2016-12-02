@@ -15248,9 +15248,12 @@ name|c_arg
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Callers only want to know if the callout was cancelled and 	 * not draining or stopped. 	 */
 return|return
 operator|(
 name|rval
+operator|>
+literal|0
 operator|)
 return|;
 block|}
