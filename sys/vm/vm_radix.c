@@ -1032,7 +1032,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Initialize the UMA slab zone.  * Until vm_radix_prealloc() is called, the zone will be served by the  * UMA boot-time pre-allocated pool of pages.  */
+comment|/*  * Initialize the UMA slab zone.  */
 end_comment
 
 begin_function
