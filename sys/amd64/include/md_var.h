@@ -388,6 +388,33 @@ name|dumperinfo
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Returns the maximum physical address that can be used with the  * current system.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|vm_paddr_t
+name|cpu_getmaxphyaddr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+literal|1ULL
+operator|<<
+name|cpu_maxphyaddr
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 modifier|*
