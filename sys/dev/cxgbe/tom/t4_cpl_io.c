@@ -9309,6 +9309,9 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|struct
 name|adapter
 modifier|*
@@ -9318,6 +9321,8 @@ name|iq
 operator|->
 name|adapter
 decl_stmt|;
+endif|#
+directive|endif
 specifier|const
 name|struct
 name|cpl_set_tcb_rpl
