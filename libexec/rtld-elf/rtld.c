@@ -1763,25 +1763,6 @@ name|weak
 name|_DYNAMIC
 end_pragma
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RTLD_IS_DYNAMIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RTLD_IS_DYNAMIC
-parameter_list|()
-value|(&_DYNAMIC != NULL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|dlclose
@@ -10341,12 +10322,6 @@ name|mapbase
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|RTLD_IS_DYNAMIC
-argument_list|()
-condition|)
-block|{
 name|objtmp
 operator|.
 name|dynamic
@@ -10401,7 +10376,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Temporarily put the dynamic linker entry into the object list, so 	 * that symbols can be found. 	 */
+comment|/*      * Temporarily put the dynamic linker entry into the object list, so      * that symbols can be found.      */
 name|relocate_objects
 argument_list|(
 operator|&
@@ -10417,7 +10392,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|ehdr
 operator|=
 operator|(
