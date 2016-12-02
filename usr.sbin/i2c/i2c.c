@@ -1873,7 +1873,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"error sending stop condtion\n"
+literal|"error sending stop condition\n"
 argument_list|)
 expr_stmt|;
 name|err2
@@ -2166,7 +2166,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"error sending stop condtion"
+literal|"error sending stop condition"
 expr_stmt|;
 goto|goto
 name|err2
@@ -2301,7 +2301,7 @@ condition|)
 block|{
 name|err_msg
 operator|=
-literal|"error sending stop condtion"
+literal|"error sending stop condition"
 expr_stmt|;
 goto|goto
 name|err2
@@ -2398,7 +2398,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"error sending stop condtion\n"
+literal|"error sending stop condition\n"
 argument_list|)
 expr_stmt|;
 name|err2
