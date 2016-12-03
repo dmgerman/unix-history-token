@@ -1315,6 +1315,7 @@ parameter_list|(
 name|AUTH
 modifier|*
 name|auth
+name|__unused
 parameter_list|)
 block|{
 comment|/* what the heck am I supposed to do??? */
@@ -2211,6 +2212,7 @@ parameter_list|,
 name|void
 modifier|*
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 comment|/* LINTED pointer alignment */
