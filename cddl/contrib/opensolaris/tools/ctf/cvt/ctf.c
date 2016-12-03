@@ -103,19 +103,6 @@ name|RES_BUF_CHUNK_SIZE
 value|(64 * 1024)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ntypes
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The number of types. */
-end_comment
-
 begin_struct
 struct|struct
 name|ctf_buf
@@ -5957,25 +5944,6 @@ name|ml_size
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ctm
-operator|->
-name|ctm_type
-operator|>
-name|ntypes
-condition|)
-block|{
-name|parseterminate
-argument_list|(
-literal|"Invalid member type ctm_type=%d"
-argument_list|,
-name|ctm
-operator|->
-name|ctm_type
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 else|else
@@ -6099,25 +6067,6 @@ name|ml_size
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|ctlm
-operator|->
-name|ctlm_type
-operator|>
-name|ntypes
-condition|)
-block|{
-name|parseterminate
-argument_list|(
-literal|"Invalid lmember type ctlm_type=%d"
-argument_list|,
-name|ctlm
-operator|->
-name|ctlm_type
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 operator|*
@@ -6704,19 +6653,20 @@ modifier|*
 name|tdarr
 decl_stmt|;
 name|int
-name|idx
-decl_stmt|,
-name|i
-decl_stmt|;
 name|ntypes
-operator|=
+init|=
 name|count_types
 argument_list|(
 name|h
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|,
+name|i
+decl_stmt|;
 comment|/* shudder */
 name|tdarr
 operator|=
