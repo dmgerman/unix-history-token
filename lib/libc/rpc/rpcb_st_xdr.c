@@ -73,7 +73,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -93,7 +93,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -280,7 +280,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -300,7 +300,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -320,7 +320,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcproc
 argument_list|(
 name|xdrs
 argument_list|,
@@ -557,7 +557,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -577,7 +577,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -597,7 +597,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcproc
 argument_list|(
 name|xdrs
 argument_list|,
@@ -817,7 +817,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -837,7 +837,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -857,7 +857,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcproc
 argument_list|(
 name|xdrs
 argument_list|,

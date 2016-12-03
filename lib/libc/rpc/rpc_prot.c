@@ -406,7 +406,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -427,7 +427,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -551,7 +551,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -572,7 +572,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -902,7 +902,7 @@ operator|)
 name|prm_direction
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -916,7 +916,7 @@ name|cb_rpcvers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
