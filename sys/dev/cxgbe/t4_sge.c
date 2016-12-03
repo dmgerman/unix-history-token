@@ -10269,6 +10269,11 @@ name|pidx
 operator|)
 expr_stmt|;
 block|}
+name|wrq
+operator|->
+name|tx_wrs_copied
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|available
@@ -20427,6 +20432,26 @@ operator|->
 name|tx_wrs_copied
 argument_list|,
 literal|"# of work requests (copied)"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UQUAD
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tx_wrs_sspace"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|wrq
+operator|->
+name|tx_wrs_ss
+argument_list|,
+literal|"# of work requests (copied from scratch space)"
 argument_list|)
 expr_stmt|;
 return|return
