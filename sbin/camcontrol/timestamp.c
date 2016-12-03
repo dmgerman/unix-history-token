@@ -1390,6 +1390,8 @@ name|c
 decl_stmt|;
 name|uint64_t
 name|ts
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
