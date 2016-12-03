@@ -344,7 +344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the simplified interface to the client rpc layer.  * The client handle is not destroyed here and is reused for  * the future calls to same prog, vers, host and nettype combination.  *  * The total time available is 25 seconds.  */
+comment|/*  * This is the simplified interface to the client rpc layer.  * The client handle is not destroyed here and is reused for  * the future calls to same prog, vers, host and nettype combination.  *  * The total time available is 25 seconds.  *  * host    - host name   * prognum - program number   * versnum - version number   * procnum - procedure number   * inproc, outproc -  in/out XDR procedures   * in, out - recv/send data   * nettype - nettype  */
 end_comment
 
 begin_function
@@ -352,64 +352,45 @@ name|enum
 name|clnt_stat
 name|rpc_call
 parameter_list|(
-name|host
-parameter_list|,
-name|prognum
-parameter_list|,
-name|versnum
-parameter_list|,
-name|procnum
-parameter_list|,
-name|inproc
-parameter_list|,
-name|in
-parameter_list|,
-name|outproc
-parameter_list|,
-name|out
-parameter_list|,
-name|nettype
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|;
-comment|/* host name */
+parameter_list|,
+specifier|const
 name|rpcprog_t
 name|prognum
-decl_stmt|;
-comment|/* program number */
+parameter_list|,
+specifier|const
 name|rpcvers_t
 name|versnum
-decl_stmt|;
-comment|/* version number */
+parameter_list|,
+specifier|const
 name|rpcproc_t
 name|procnum
-decl_stmt|;
-comment|/* procedure number */
+parameter_list|,
+specifier|const
 name|xdrproc_t
 name|inproc
-decl_stmt|,
-name|outproc
-decl_stmt|;
-comment|/* in/out XDR procedures */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|xdrproc_t
+name|outproc
+parameter_list|,
 name|char
 modifier|*
 name|out
-decl_stmt|;
-comment|/* recv/send data */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
-comment|/* nettype */
+parameter_list|)
 block|{
 name|struct
 name|rpc_call_private

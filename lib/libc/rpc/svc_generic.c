@@ -173,70 +173,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The highest level interface for server creation.  * It tries for all the nettokens in that particular class of token  * and returns the number of handles it can create and/or find.  *  * It creates a link list of all the handles it could create.  * If svc_create() is called multiple times, it uses the handle  * created earlier instead of creating a new handle every time.  */
+comment|/*  * The highest level interface for server creation.  * It tries for all the nettokens in that particular class of token  * and returns the number of handles it can create and/or find.  *  * It creates a link list of all the handles it could create.  * If svc_create() is called multiple times, it uses the handle  * created earlier instead of creating a new handle every time.  *  * prognum - Program number  * versnum - Version number  * nettype - Networktype token  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|svc_create
-argument_list|(
-name|dispatch
-argument_list|,
-name|prognum
-argument_list|,
-name|versnum
-argument_list|,
-name|nettype
-argument_list|)
+parameter_list|(
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|dispatch
-argument_list|)
-argument_list|(
-expr|struct
+function_decl|)
+parameter_list|(
+name|struct
 name|svc_req
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|SVCXPRT
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|,
 name|rpcprog_t
 name|prognum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Program number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|rpcvers_t
 name|versnum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Version number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Networktype token */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 struct|struct
 name|xlist
@@ -528,75 +496,43 @@ name|num
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * The high level interface to svc_tli_create().  * It tries to create a server for "nconf" and registers the service  * with the rpcbind. It calls svc_tli_create();  */
+comment|/*  * The high level interface to svc_tli_create().  * It tries to create a server for "nconf" and registers the service  * with the rpcbind. It calls svc_tli_create();  *  * prognum - Program number  * versnum - Version number  * ncofn   - Netconfig structure for the network  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|SVCXPRT
 modifier|*
 name|svc_tp_create
-argument_list|(
-name|dispatch
-argument_list|,
-name|prognum
-argument_list|,
-name|versnum
-argument_list|,
-name|nconf
-argument_list|)
+parameter_list|(
 name|void
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|dispatch
-argument_list|)
-argument_list|(
-expr|struct
+function_decl|)
+parameter_list|(
+name|struct
 name|svc_req
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|SVCXPRT
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|,
 name|rpcprog_t
 name|prognum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Program number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|rpcvers_t
 name|versnum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Version number */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 specifier|const
 name|struct
 name|netconfig
 modifier|*
 name|nconf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Netconfig structure for the network */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|SVCXPRT
 modifier|*
@@ -730,10 +666,10 @@ name|xprt
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * If fd is RPC_ANYFD, then it opens a fd for the given transport  * provider (nconf cannot be NULL then). If the t_state is T_UNBND and  * bindaddr is NON-NULL, it performs a t_bind using the bindaddr. For  * NULL bindadr and Connection oriented transports, the value of qlen  * is set to 8.  *  * If sendsz or recvsz are zero, their default values are chosen.  */
+comment|/*  * If fd is RPC_ANYFD, then it opens a fd for the given transport  * provider (nconf cannot be NULL then). If the t_state is T_UNBND and  * bindaddr is NON-NULL, it performs a t_bind using the bindaddr. For  * NULL bindadr and Connection oriented transports, the value of qlen  * is set to 8.  *  * If sendsz or recvsz are zero, their default values are chosen.  *  * fd       - Connection end point  * nconf    - Netconfig struct for nettoken  * bindaddr - Local bind address  * sendsz   - Max sendsize  * recvxz   - Max recvsize  */
 end_comment
 
 begin_function
@@ -741,42 +677,27 @@ name|SVCXPRT
 modifier|*
 name|svc_tli_create
 parameter_list|(
-name|fd
-parameter_list|,
-name|nconf
-parameter_list|,
-name|bindaddr
-parameter_list|,
-name|sendsz
-parameter_list|,
-name|recvsz
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
-comment|/* Connection end point */
+parameter_list|,
 specifier|const
 name|struct
 name|netconfig
 modifier|*
 name|nconf
-decl_stmt|;
-comment|/* Netconfig struct for nettoken */
+parameter_list|,
 specifier|const
 name|struct
 name|t_bind
 modifier|*
 name|bindaddr
-decl_stmt|;
-comment|/* Local bind address */
+parameter_list|,
 name|u_int
 name|sendsz
-decl_stmt|;
-comment|/* Max sendsize */
+parameter_list|,
 name|u_int
 name|recvsz
-decl_stmt|;
-comment|/* Max recvsize */
+parameter_list|)
 block|{
 name|SVCXPRT
 modifier|*

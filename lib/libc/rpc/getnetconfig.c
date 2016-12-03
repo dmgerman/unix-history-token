@@ -511,7 +511,9 @@ specifier|static
 name|int
 modifier|*
 name|__nc_error
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -646,7 +648,9 @@ begin_function
 name|void
 modifier|*
 name|setnetconfig
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|netconfig_vars
@@ -814,12 +818,10 @@ name|netconfig
 modifier|*
 name|getnetconfig
 parameter_list|(
-name|handlep
-parameter_list|)
 name|void
 modifier|*
 name|handlep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netconfig_vars
@@ -1389,12 +1391,10 @@ begin_function
 name|int
 name|endnetconfig
 parameter_list|(
-name|handlep
-parameter_list|)
 name|void
 modifier|*
 name|handlep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netconfig_vars
@@ -1626,13 +1626,11 @@ name|netconfig
 modifier|*
 name|getnetconfigent
 parameter_list|(
-name|netid
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|netid
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -2045,13 +2043,11 @@ begin_function
 name|void
 name|freenetconfigent
 parameter_list|(
-name|netconfigp
-parameter_list|)
 name|struct
 name|netconfig
 modifier|*
 name|netconfigp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2086,7 +2082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse line and stuff it in a struct netconfig  * Typical line might look like:  *	udp tpi_cots vb inet udp /dev/udp /usr/lib/ip.so,/usr/local/ip.so  *  * We return -1 if any of the tokens don't parse, or malloc fails.  *  * Note that we modify stringp (putting NULLs after tokens) and  * we set the ncp's string field pointers to point to these tokens within  * stringp.  */
+comment|/*  * Parse line and stuff it in a struct netconfig  * Typical line might look like:  *	udp tpi_cots vb inet udp /dev/udp /usr/lib/ip.so,/usr/local/ip.so  *  * We return -1 if any of the tokens don't parse, or malloc fails.  *  * Note that we modify stringp (putting NULLs after tokens) and  * we set the ncp's string field pointers to point to these tokens within  * stringp.  *  * stringp - string to parse  * ncp     - where to put results  */
 end_comment
 
 begin_function
@@ -2094,21 +2090,15 @@ specifier|static
 name|int
 name|parse_ncp
 parameter_list|(
-name|stringp
-parameter_list|,
-name|ncp
-parameter_list|)
 name|char
 modifier|*
 name|stringp
-decl_stmt|;
-comment|/* string to parse */
+parameter_list|,
 name|struct
 name|netconfig
 modifier|*
 name|ncp
-decl_stmt|;
-comment|/* where to put results */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2630,7 +2620,9 @@ begin_function
 name|char
 modifier|*
 name|nc_sperror
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2724,13 +2716,11 @@ begin_function
 name|void
 name|nc_perror
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -2758,13 +2748,11 @@ name|netconfig
 modifier|*
 name|dup_ncp
 parameter_list|(
-name|ncp
-parameter_list|)
 name|struct
 name|netconfig
 modifier|*
 name|ncp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netconfig

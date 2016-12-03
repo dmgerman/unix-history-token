@@ -247,81 +247,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * For simplified, easy to use kind of rpc interfaces.  * nettype indicates the type of transport on which the service will be  * listening. Used for conservation of the system resource. Only one  * handle is created for all the services (actually one of each netid)  * and same xdrbuf is used for same netid. The size of the arguments  * is also limited by the recvsize for that transport, even if it is  * a COTS transport. This may be wrong, but for cases like these, they  * should not use the simplified interfaces like this.  */
+comment|/*  * For simplified, easy to use kind of rpc interfaces.  * nettype indicates the type of transport on which the service will be  * listening. Used for conservation of the system resource. Only one  * handle is created for all the services (actually one of each netid)  * and same xdrbuf is used for same netid. The size of the arguments  * is also limited by the recvsize for that transport, even if it is  * a COTS transport. This may be wrong, but for cases like these, they  * should not use the simplified interfaces like this.  *  * prognum - program number  * versnum - version number  * procnum - procedure number  * progname - Server routine  * inproc, outproc - in/out XDR procedures  * nettype - nettype  */
 end_comment
 
 begin_function
 name|int
 name|rpc_reg
 parameter_list|(
-name|prognum
-parameter_list|,
-name|versnum
-parameter_list|,
-name|procnum
-parameter_list|,
-name|progname
-parameter_list|,
-name|inproc
-parameter_list|,
-name|outproc
-parameter_list|,
-name|nettype
-parameter_list|)
 name|rpcprog_t
 name|prognum
-decl_stmt|;
-comment|/* program number */
+parameter_list|,
 name|rpcvers_t
 name|versnum
-decl_stmt|;
-comment|/* version number */
+parameter_list|,
 name|rpcproc_t
 name|procnum
-decl_stmt|;
-comment|/* procedure number */
-function|char *
-parameter_list|(
-function|*progname
-end_function
-
-begin_expr_stmt
-unit|)
-operator|(
+parameter_list|,
 name|char
-operator|*
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Server routine */
-end_comment
-
-begin_decl_stmt
+modifier|*
+function_decl|(
+modifier|*
+name|progname
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+parameter_list|,
 name|xdrproc_t
 name|inproc
-decl_stmt|,
+parameter_list|,
+name|xdrproc_t
 name|outproc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in/out XDR procedures */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nettype */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|netconfig
@@ -987,7 +949,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The universal handler for the services registered using registerrpc.  * It handles both the connectionless and the connection oriented cases.  */
@@ -998,19 +960,15 @@ specifier|static
 name|void
 name|universal
 parameter_list|(
-name|rqstp
-parameter_list|,
-name|transp
-parameter_list|)
 name|struct
 name|svc_req
 modifier|*
 name|rqstp
-decl_stmt|;
+parameter_list|,
 name|SVCXPRT
 modifier|*
 name|transp
-decl_stmt|;
+parameter_list|)
 block|{
 name|rpcprog_t
 name|prog

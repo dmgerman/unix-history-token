@@ -865,79 +865,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * rpc_broadcast_exp()  *  * prog      - program number  * vers      - version number  * proc      - procedure number  * xargs     - xdr routine for args  * argsp     - pointer to args  * xresults  - xdr routine for results  * resultsp  - pointer to results  * eachresult - call with each result obtained  * inittime  - how long to wait initially  * waittime  - maximum time to wait  * nettype   - transport type  */
+end_comment
+
 begin_function
 name|enum
 name|clnt_stat
 name|rpc_broadcast_exp
 parameter_list|(
-name|prog
-parameter_list|,
-name|vers
-parameter_list|,
-name|proc
-parameter_list|,
-name|xargs
-parameter_list|,
-name|argsp
-parameter_list|,
-name|xresults
-parameter_list|,
-name|resultsp
-parameter_list|,
-name|eachresult
-parameter_list|,
-name|inittime
-parameter_list|,
-name|waittime
-parameter_list|,
-name|nettype
-parameter_list|)
 name|rpcprog_t
 name|prog
-decl_stmt|;
-comment|/* program number */
+parameter_list|,
 name|rpcvers_t
 name|vers
-decl_stmt|;
-comment|/* version number */
+parameter_list|,
 name|rpcproc_t
 name|proc
-decl_stmt|;
-comment|/* procedure number */
+parameter_list|,
 name|xdrproc_t
 name|xargs
-decl_stmt|;
-comment|/* xdr routine for args */
+parameter_list|,
 name|caddr_t
 name|argsp
-decl_stmt|;
-comment|/* pointer to args */
+parameter_list|,
 name|xdrproc_t
 name|xresults
-decl_stmt|;
-comment|/* xdr routine for results */
+parameter_list|,
 name|caddr_t
 name|resultsp
-decl_stmt|;
-comment|/* pointer to results */
+parameter_list|,
 name|resultproc_t
 name|eachresult
-decl_stmt|;
-comment|/* call with each result obtained */
+parameter_list|,
 name|int
 name|inittime
-decl_stmt|;
-comment|/* how long to wait initially */
+parameter_list|,
 name|int
 name|waittime
-decl_stmt|;
-comment|/* maximum time to wait */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
-comment|/* transport type */
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -2996,67 +2967,44 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * rpc_broadcast()  *  * prog       - program number   * vers       - version number   * proc       - procedure number   * xargs      - xdr routine for args   * argsp      - pointer to args   * xresults   - xdr routine for results   * resultsp   - pointer to results   * eachresult - call with each result obtained   * nettype    - transport type   */
+end_comment
+
 begin_function
 name|enum
 name|clnt_stat
 name|rpc_broadcast
 parameter_list|(
-name|prog
-parameter_list|,
-name|vers
-parameter_list|,
-name|proc
-parameter_list|,
-name|xargs
-parameter_list|,
-name|argsp
-parameter_list|,
-name|xresults
-parameter_list|,
-name|resultsp
-parameter_list|,
-name|eachresult
-parameter_list|,
-name|nettype
-parameter_list|)
 name|rpcprog_t
 name|prog
-decl_stmt|;
-comment|/* program number */
+parameter_list|,
 name|rpcvers_t
 name|vers
-decl_stmt|;
-comment|/* version number */
+parameter_list|,
 name|rpcproc_t
 name|proc
-decl_stmt|;
-comment|/* procedure number */
+parameter_list|,
 name|xdrproc_t
 name|xargs
-decl_stmt|;
-comment|/* xdr routine for args */
+parameter_list|,
 name|caddr_t
 name|argsp
-decl_stmt|;
-comment|/* pointer to args */
+parameter_list|,
 name|xdrproc_t
 name|xresults
-decl_stmt|;
-comment|/* xdr routine for results */
+parameter_list|,
 name|caddr_t
 name|resultsp
-decl_stmt|;
-comment|/* pointer to results */
+parameter_list|,
 name|resultproc_t
 name|eachresult
-decl_stmt|;
-comment|/* call with each result obtained */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|nettype
-decl_stmt|;
-comment|/* transport type */
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat

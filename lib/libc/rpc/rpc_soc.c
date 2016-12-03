@@ -1304,7 +1304,9 @@ begin_function
 name|SVCXPRT
 modifier|*
 name|svcraw_create
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|svc_raw_create

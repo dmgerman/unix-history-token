@@ -808,40 +808,25 @@ specifier|static
 name|void
 name|add_cache
 parameter_list|(
-name|host
-parameter_list|,
-name|netid
-parameter_list|,
-name|taddr
-parameter_list|,
-name|uaddr
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|,
-decl|*
-name|netid
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|uaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|netid
+parameter_list|,
 name|struct
 name|netbuf
 modifier|*
 name|taddr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|char
+modifier|*
+name|uaddr
+parameter_list|)
 block|{
 name|struct
 name|address_cache
@@ -1234,7 +1219,7 @@ name|rpcbaddr_cache_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine will return a client handle that is connected to the  * rpcbind. If targaddr is non-NULL, the "universal address" of the  * host will be stored in *targaddr; the caller is responsible for  * freeing this string.  * On error, returns NULL and free's everything.  */
@@ -2024,7 +2009,9 @@ specifier|static
 name|CLIENT
 modifier|*
 name|local_rpcb
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CLIENT
 modifier|*
@@ -5293,7 +5280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rpcbinder remote-call-service interface.  * This routine is used to call the rpcbind remote call service  * which will look up a service program in the address maps, and then  * remotely call that routine with the given parameters. This allows  * programs to do a lookup and call in one step. */
+comment|/*  * rpcbinder remote-call-service interface.  * This routine is used to call the rpcbind remote call service  * which will look up a service program in the address maps, and then  * remotely call that routine with the given parameters. This allows  * programs to do a lookup and call in one step.  *  * nconf    -Netconfig structure  * host     - Remote host name  * proc     - Remote proc identifiers  * xdrargs, xdrres;  XDR routines  * argsp, resp - Argument and Result  * tout     - Timeout value for this call  * addr_ptr - Preallocated netbuf address  */
 end_comment
 
 begin_function
@@ -5301,75 +5288,48 @@ name|enum
 name|clnt_stat
 name|rpcb_rmtcall
 parameter_list|(
-name|nconf
-parameter_list|,
-name|host
-parameter_list|,
-name|prog
-parameter_list|,
-name|vers
-parameter_list|,
-name|proc
-parameter_list|,
-name|xdrargs
-parameter_list|,
-name|argsp
-parameter_list|,
-name|xdrres
-parameter_list|,
-name|resp
-parameter_list|,
-name|tout
-parameter_list|,
-name|addr_ptr
-parameter_list|)
 specifier|const
 name|struct
 name|netconfig
 modifier|*
 name|nconf
-decl_stmt|;
-comment|/* Netconfig structure */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|;
-comment|/* Remote host name */
+parameter_list|,
 name|rpcprog_t
 name|prog
-decl_stmt|;
+parameter_list|,
 name|rpcvers_t
 name|vers
-decl_stmt|;
+parameter_list|,
 name|rpcproc_t
 name|proc
-decl_stmt|;
-comment|/* Remote proc identifiers */
+parameter_list|,
 name|xdrproc_t
 name|xdrargs
-decl_stmt|,
-name|xdrres
-decl_stmt|;
-comment|/* XDR routines */
+parameter_list|,
 name|caddr_t
 name|argsp
-decl_stmt|,
+parameter_list|,
+name|xdrproc_t
+name|xdrres
+parameter_list|,
+name|caddr_t
 name|resp
-decl_stmt|;
-comment|/* Argument and Result */
+parameter_list|,
 name|struct
 name|timeval
 name|tout
-decl_stmt|;
-comment|/* Timeout value for this call */
+parameter_list|,
 specifier|const
 name|struct
 name|netbuf
 modifier|*
 name|addr_ptr
-decl_stmt|;
-comment|/* Preallocated netbuf address */
+parameter_list|)
 block|{
 name|CLIENT
 modifier|*
