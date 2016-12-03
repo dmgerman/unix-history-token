@@ -246,6 +246,20 @@ name|svc_head
 struct|;
 end_struct
 
+begin_decl_stmt
+name|SVCXPRT
+modifier|*
+modifier|*
+name|__svc_xports
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__svc_maxrec
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|struct
