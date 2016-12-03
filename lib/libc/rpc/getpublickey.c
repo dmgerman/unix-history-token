@@ -132,7 +132,14 @@ function_decl|(
 modifier|*
 name|__getpublickey_LOCAL
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 init|=
 literal|0
 function_decl|;
