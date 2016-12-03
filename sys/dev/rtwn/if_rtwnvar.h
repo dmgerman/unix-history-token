@@ -607,7 +607,7 @@ decl_stmt|;
 name|uint8_t
 name|keys_bmap
 index|[
-name|roundup2
+name|howmany
 argument_list|(
 name|RTWN_CAM_ENTRY_LIMIT
 argument_list|,
