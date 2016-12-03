@@ -15332,27 +15332,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Init host async commands ring. */
-name|sc
-operator|->
-name|cmdq
-operator|.
-name|cur
-operator|=
-name|sc
-operator|->
-name|cmdq
-operator|.
-name|next
-operator|=
-name|sc
-operator|->
-name|cmdq
-operator|.
-name|queued
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Reset power management state. */
 name|rsu_write_1
 argument_list|(
