@@ -5998,6 +5998,40 @@ block|}
 end_function
 
 begin_comment
+comment|/* Skip SIZE bytes from the PLAIN representation RS. */
+end_comment
+
+begin_function
+specifier|static
+name|svn_error_t
+modifier|*
+name|skip_plain_window
+parameter_list|(
+name|rep_state_t
+modifier|*
+name|rs
+parameter_list|,
+name|apr_size_t
+name|size
+parameter_list|)
+block|{
+comment|/* Update RS. */
+name|rs
+operator|->
+name|current
+operator|+=
+operator|(
+name|apr_off_t
+operator|)
+name|size
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Get the undeltified window that is a result of combining all deltas    from the current desired representation identified in *RB with its    base representation.  Store the window in *RESULT. */
 end_comment
 
@@ -6247,7 +6281,11 @@ operator|->
 name|src_state
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+comment|/* Even if we don't need the source rep now, we still must keep            * its read offset in sync with what we might need for the next            * window. */
+if|if
+condition|(
 name|window
 operator|->
 name|src_ops
@@ -6273,6 +6311,22 @@ name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|SVN_ERR
+argument_list|(
+name|skip_plain_window
+argument_list|(
+name|rb
+operator|->
+name|src_state
+argument_list|,
+name|window
+operator|->
+name|sview_len
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Combine this window with the current one. */
 name|new_pool
 operator|=

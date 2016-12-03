@@ -22,7 +22,7 @@ file|"fs.h"
 end_include
 
 begin_comment
-comment|/* Possibly pack the repository at PATH.  This just take full shards, and    combines all the revision files into a single one, with a manifest header.    If given, NOTIFY_FUNC will be called with NOTIFY_BATON to report progress.    Use optional CANCEL_FUNC/CANCEL_BATON for cancellation support.     Existing filesystem references need not change.  */
+comment|/* Possibly pack the repository at PATH.  This just take full shards, and    combines all the revision files into a single one, with a manifest header    when required by the repository format.     MAX_MEM limits the size of in-memory data structures needed for reordering    items in format 7 repositories.  0 means use the built-in default.     If given, NOTIFY_FUNC will be called with NOTIFY_BATON to report progress.    Use optional CANCEL_FUNC/CANCEL_BATON for cancellation support.     Existing filesystem references need not change.  */
 end_comment
 
 begin_function_decl
@@ -33,6 +33,9 @@ parameter_list|(
 name|svn_fs_t
 modifier|*
 name|fs
+parameter_list|,
+name|apr_size_t
+name|max_mem
 parameter_list|,
 name|svn_fs_pack_notify_t
 name|notify_func

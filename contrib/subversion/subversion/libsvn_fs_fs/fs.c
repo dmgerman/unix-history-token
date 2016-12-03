@@ -1639,6 +1639,8 @@ name|svn_fs_fs__pack
 argument_list|(
 name|fs
 argument_list|,
+literal|0
+argument_list|,
 name|notify_func
 argument_list|,
 name|notify_baton
