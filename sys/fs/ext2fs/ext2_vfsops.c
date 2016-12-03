@@ -2731,7 +2731,8 @@ name|ronly
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|u_long
 name|size
 decl_stmt|;
 name|int32_t
