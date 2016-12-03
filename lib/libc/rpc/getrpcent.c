@@ -4799,6 +4799,7 @@ name|rpcent
 modifier|*
 name|getrpcbyname
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
