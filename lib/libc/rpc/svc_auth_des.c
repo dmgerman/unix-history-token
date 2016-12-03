@@ -269,7 +269,9 @@ begin_function_decl
 specifier|static
 name|void
 name|cache_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -281,7 +283,17 @@ begin_function_decl
 specifier|static
 name|short
 name|cache_spot
-parameter_list|()
+parameter_list|(
+name|des_block
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -307,7 +319,10 @@ begin_function_decl
 specifier|static
 name|void
 name|invalidate
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1654,7 +1669,9 @@ begin_function
 specifier|static
 name|void
 name|cache_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1744,7 +1761,9 @@ begin_function
 specifier|static
 name|short
 name|cache_victim
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

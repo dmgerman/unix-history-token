@@ -3097,7 +3097,9 @@ begin_function
 specifier|static
 name|bool_t
 name|__rpcbind_is_up
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|netconfig
