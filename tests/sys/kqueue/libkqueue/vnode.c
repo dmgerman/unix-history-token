@@ -40,7 +40,7 @@ name|char
 modifier|*
 name|testfile
 init|=
-literal|"/tmp/kqueue-test.tmp"
+literal|"./kqueue-test.tmp"
 decl_stmt|;
 name|struct
 name|kevent
@@ -53,7 +53,7 @@ argument_list|)
 expr_stmt|;
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 expr_stmt|;
 name|vnode_fd
@@ -223,7 +223,7 @@ if|if
 condition|(
 name|unlink
 argument_list|(
-literal|"/tmp/kqueue-test.tmp"
+literal|"./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -328,7 +328,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"echo hello>> /tmp/kqueue-test.tmp"
+literal|"echo hello>> ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -453,7 +453,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -628,7 +628,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"mv /tmp/kqueue-test.tmp /tmp/kqueue-test2.tmp"
+literal|"mv ./kqueue-test.tmp ./kqueue-test2.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -722,7 +722,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"mv /tmp/kqueue-test2.tmp /tmp/kqueue-test.tmp"
+literal|"mv ./kqueue-test2.tmp ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -935,7 +935,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -990,7 +990,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -1174,7 +1174,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0
@@ -1274,7 +1274,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"touch /tmp/kqueue-test.tmp"
+literal|"touch ./kqueue-test.tmp"
 argument_list|)
 operator|<
 literal|0

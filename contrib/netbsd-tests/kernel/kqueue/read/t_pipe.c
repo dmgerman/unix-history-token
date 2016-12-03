@@ -235,8 +235,11 @@ operator|)
 name|printf
 argument_list|(
 literal|"kevent num %d flags: %#x, fflags: %#x, data: "
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 literal|"%"
-name|PRId64
+name|PRIdPTR
 literal|"\n"
 argument_list|,
 name|n
@@ -263,6 +266,47 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+literal|"%"
+name|PRId64
+literal|"\n"
+operator|,
+name|n
+operator|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|flags
+operator|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|fflags
+operator|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|data
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|RL
 argument_list|(
 name|n
@@ -285,6 +329,9 @@ name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|buffer
 index|[
 name|n
@@ -292,6 +339,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -302,6 +352,9 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -310,17 +363,13 @@ argument_list|(
 literal|"pipe: successful end\n"
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_macro
-name|ATF_TP_ADD_TCS
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_block
+begin_expr_stmt
+unit|}  ATF_TP_ADD_TCS
+operator|(
+name|tp
+operator|)
 block|{
 name|ATF_TP_ADD_TC
 argument_list|(
@@ -328,13 +377,13 @@ name|tp
 argument_list|,
 name|pipe
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|atf_no_error
 argument_list|()
 return|;
 block|}
-end_block
+end_expr_stmt
 
 end_unit
 

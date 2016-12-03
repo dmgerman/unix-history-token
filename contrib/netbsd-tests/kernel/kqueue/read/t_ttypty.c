@@ -390,6 +390,31 @@ operator|)
 name|printf
 argument_list|(
 literal|"kevent num %d filt %d flags: %#x, fflags: %#x, "
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+literal|"data: %"
+name|PRIdPTR
+literal|"\n"
+argument_list|,
+name|n
+argument_list|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|filter
+argument_list|,
+name|event
+index|[
+literal|0
+index|]
+operator|.
+name|flags
+argument_list|,
+else|#
+directive|else
 literal|"data: %"
 name|PRId64
 literal|"\n"
@@ -410,6 +435,8 @@ index|]
 operator|.
 name|flags
 argument_list|,
+endif|#
+directive|endif
 name|event
 index|[
 literal|0
