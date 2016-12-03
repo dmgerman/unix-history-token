@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: h_macros.h,v 1.9 2013/05/17 15:42:09 christos Exp $ */
+comment|/* $NetBSD: h_macros.h,v 1.12 2016/08/04 11:49:07 jakllsch Exp $ */
 end_comment
 
 begin_comment
@@ -111,6 +111,7 @@ value|0)
 end_define
 
 begin_decl_stmt
+name|__dead
 specifier|static
 name|__inline
 name|__printflike
@@ -245,11 +246,10 @@ name|sb
 operator|++
 operator|=
 operator|(
+name|uint16_t
+operator|)
 name|random
 argument_list|()
-operator|&
-literal|0xffff
-operator|)
 expr_stmt|;
 name|len
 operator|-=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_siginfo.c,v 1.24 2014/11/04 00:20:19 justin Exp $ */
+comment|/* $NetBSD: t_siginfo.c,v 1.30 2015/12/22 14:25:58 christos Exp $ */
 end_comment
 
 begin_comment
@@ -108,17 +108,27 @@ directive|include
 file|<float.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_FENV
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<fenv.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__HAVE_FENV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ieeefp.h>
+end_include
+
+begin_comment
+comment|/* only need for ARM Cortex/Neon hack */
+end_comment
 
 begin_elif
 elif|#
@@ -1450,6 +1460,33 @@ argument_list|(
 literal|"Test not valid on powerpc"
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+operator|!
+name|__SOFTFP__
+comment|/* 	 * Some NEON fpus do not implement IEEE exception handling, 	 * skip these tests if running on them and compiled for 	 * hard float. 	 */
+if|if
+condition|(
+literal|0
+operator|==
+name|fpsetmask
+argument_list|(
+name|fpsetmask
+argument_list|(
+name|FP_X_INV
+argument_list|)
+argument_list|)
+condition|)
+name|atf_tc_skip
+argument_list|(
+literal|"FPU does not implement exception handling"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -1496,7 +1533,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FENV
+name|__HAVE_FENV
 name|feenableexcept
 argument_list|(
 name|FE_ALL_EXCEPT
@@ -1752,7 +1789,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FENV
+name|__HAVE_FENV
 name|feenableexcept
 argument_list|(
 name|FE_ALL_EXCEPT
@@ -2133,6 +2170,11 @@ name|defined
 argument_list|(
 name|__alpha__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 name|int
 name|rv
 decl_stmt|,
@@ -2178,11 +2220,28 @@ literal|0
 condition|)
 name|atf_tc_skip
 argument_list|(
-literal|"SIGBUS signal not enabled for unaligned accesses"
+literal|"No SIGBUS signal for unaligned accesses"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* m68k (except sun2) never issue SIGBUS (PR lib/49653) */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|MACHINE_ARCH
+argument_list|,
+literal|"m68k"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|atf_tc_skip
+argument_list|(
+literal|"No SIGBUS signal for unaligned accesses"
+argument_list|)
+expr_stmt|;
 name|sa
 operator|.
 name|sa_flags

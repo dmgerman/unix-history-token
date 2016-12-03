@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_fmod.c,v 1.2 2014/02/27 17:26:02 joerg Exp $ */
+comment|/* $NetBSD: t_fmod.c,v 1.3 2015/01/03 14:23:53 gson Exp $ */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"isqemu.h"
 end_include
 
 begin_expr_stmt
@@ -67,6 +73,21 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+name|isQEMU
+argument_list|()
+condition|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"PR misc/44767"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_CHECK
 argument_list|(
 name|fmodf

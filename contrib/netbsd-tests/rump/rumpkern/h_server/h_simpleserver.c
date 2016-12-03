@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: h_simpleserver.c,v 1.3 2011/01/14 13:23:15 pooka Exp $	*/
+comment|/*	$NetBSD: h_simpleserver.c,v 1.4 2016/01/25 12:21:42 pooka Exp $	*/
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include

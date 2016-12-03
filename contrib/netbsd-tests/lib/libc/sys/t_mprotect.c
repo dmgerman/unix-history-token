@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: t_mprotect.c,v 1.3 2011/07/20 22:53:44 jym Exp $ */
+comment|/* $NetBSD: t_mprotect.c,v 1.4 2016/05/28 14:34:49 christos Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: t_mprotect.c,v 1.3 2011/07/20 22:53:44 jym Exp $"
+literal|"$NetBSD: t_mprotect.c,v 1.4 2016/05/28 14:34:49 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -248,22 +248,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
 name|rv
-operator|!=
+operator|==
 literal|0
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|paxset
-argument_list|(
-literal|1
-argument_list|,
-literal|1
-argument_list|)
 return|;
 block|}
 end_function
@@ -723,6 +711,28 @@ case|:
 default|default:
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|paxinit
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|pax_enabled
+operator|==
+literal|1
+operator|&&
+name|pax_global
+operator|==
+literal|1
+condition|)
+name|atf_tc_skip
+argument_list|(
+literal|"PaX MPROTECT restrictions enabled"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Map a page read/write and copy a trivial assembly function inside. 	 * We will then change the mapping rights: 	 * - first by setting the execution right, and check that we can 	 *   call the code found in the allocated page. 	 * - second by removing the execution right. This should generate 	 *   a SIGSEGV on architectures that can enforce --x permissions. 	 */
 name|map
 operator|=
@@ -1049,10 +1059,17 @@ name|rv
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|paxinit
 argument_list|()
-operator|!=
-name|true
+operator|||
+operator|!
+name|paxset
+argument_list|(
+literal|1
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 return|return;
 comment|/* 	 * As noted in the original PaX documentation [1], 	 * the following restrictions should apply: 	 * 	 *   (1) creating executable anonymous mappings 	 * 	 *   (2) creating executable/writable file mappings 	 * 	 *   (3) making a non-executable mapping executable 	 * 	 *   (4) making an executable/read-only file mapping 	 *       writable except for performing relocations 	 *       on an ET_DYN ELF file (non-PIC shared library) 	 * 	 *  The following will test only the case (3). 	 * 	 * [1] http://pax.grsecurity.net/docs/mprotect.txt 	 * 	 *     (Sun Apr 3 11:06:53 EEST 2011.) 	 */
