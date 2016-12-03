@@ -3192,7 +3192,7 @@ name|svn_cmdline_printf
 argument_list|(
 name|pool
 argument_list|,
-literal|"%-10ld"
+literal|"%ld"
 argument_list|,
 name|rev
 argument_list|)

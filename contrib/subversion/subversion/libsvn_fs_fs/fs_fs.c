@@ -1545,6 +1545,11 @@ name|max_files_per_dir
 operator|=
 literal|0
 expr_stmt|;
+operator|*
+name|use_log_addressing
+operator|=
+name|FALSE
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;

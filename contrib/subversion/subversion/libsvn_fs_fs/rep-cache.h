@@ -58,6 +58,16 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* Close the rep cache database associated with FS. */
+name|svn_error_t
+modifier|*
+name|svn_fs_fs__close_rep_cache
+parameter_list|(
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|)
+function_decl|;
 comment|/* Set *EXISTS to TRUE iff the rep-cache DB file exists. */
 name|svn_error_t
 modifier|*
