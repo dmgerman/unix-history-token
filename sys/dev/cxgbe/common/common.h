@@ -1088,14 +1088,32 @@ name|unsigned
 name|int
 name|fw_vers
 decl_stmt|;
+comment|/* firmware version */
+name|unsigned
+name|int
+name|bs_vers
+decl_stmt|;
+comment|/* bootstrap version */
 name|unsigned
 name|int
 name|tp_vers
 decl_stmt|;
+comment|/* TP microcode version */
 name|unsigned
 name|int
-name|exprom_vers
+name|er_vers
 decl_stmt|;
+comment|/* expansion ROM version */
+name|unsigned
+name|int
+name|scfg_vers
+decl_stmt|;
+comment|/* Serial Configuration version */
+name|unsigned
+name|int
+name|vpd_vers
+decl_stmt|;
+comment|/* VPD version */
 name|unsigned
 name|short
 name|mtus
@@ -2507,6 +2525,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|t4_get_bs_version
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|u32
+modifier|*
+name|vers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|t4_get_tp_version
 parameter_list|(
 name|struct
@@ -2533,6 +2567,50 @@ parameter_list|,
 name|u32
 modifier|*
 name|vers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_get_scfg_version
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|u32
+modifier|*
+name|vers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_get_vpd_version
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|,
+name|u32
+modifier|*
+name|vers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|t4_get_version_info
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl
