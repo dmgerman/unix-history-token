@@ -1109,6 +1109,14 @@ name|nevents
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+return|return;
 name|log_err
 argument_list|(
 literal|1
@@ -1116,6 +1124,7 @@ argument_list|,
 literal|"kevent"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nevents
