@@ -2237,7 +2237,7 @@ block|{
 comment|/* does not get the address or the arguments */
 if|if
 condition|(
-name|xdr_u_int32_t
+name|xdr_rpcprog
 argument_list|(
 name|xdrs
 argument_list|,
@@ -2249,7 +2249,7 @@ name|rmt_prog
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcvers
 argument_list|(
 name|xdrs
 argument_list|,
@@ -2261,7 +2261,7 @@ name|rmt_vers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_int32_t
+name|xdr_rpcproc
 argument_list|(
 name|xdrs
 argument_list|,
