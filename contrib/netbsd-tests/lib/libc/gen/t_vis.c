@@ -697,6 +697,20 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/* Begin FreeBSD: ^/stable/10 doesn't have VIS_NOLOCALE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIS_NOLOCALE
+end_ifdef
+
+begin_comment
+comment|/* End FreeBSD */
+end_comment
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -933,6 +947,23 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* Begin FreeBSD: ^/stable/10 doesn't have VIS_NOLOCALE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIS_NOLOCALE */
+end_comment
+
+begin_comment
+comment|/* End FreeBSD */
+end_comment
+
 begin_macro
 name|ATF_TP_ADD_TCS
 argument_list|(
@@ -970,6 +1001,11 @@ argument_list|,
 name|strunvis_hex
 argument_list|)
 expr_stmt|;
+comment|/* Begin FreeBSD: ^/stable/10 doesn't have VIS_NOLOCALE */
+ifdef|#
+directive|ifdef
+name|VIS_NOLOCALE
+comment|/* End FreeBSD */
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -977,6 +1013,11 @@ argument_list|,
 name|strvis_locale
 argument_list|)
 expr_stmt|;
+comment|/* Begin FreeBSD: ^/stable/10 doesn't have VIS_NOLOCALE */
+endif|#
+directive|endif
+comment|/* VIS_NOLOCALE */
+comment|/* End FreeBSD */
 return|return
 name|atf_no_error
 argument_list|()
