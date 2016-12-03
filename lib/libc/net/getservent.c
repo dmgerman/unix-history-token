@@ -2079,7 +2079,7 @@ if|if
 condition|(
 name|proto
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strcmp
 argument_list|(
@@ -2113,7 +2113,7 @@ if|if
 condition|(
 name|proto
 operator|==
-literal|0
+name|NULL
 operator|||
 name|strcmp
 argument_list|(

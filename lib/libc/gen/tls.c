@@ -1293,7 +1293,7 @@ name|sp
 expr_stmt|;
 name|phdr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|phent
 operator|=
@@ -1366,7 +1366,7 @@ if|if
 condition|(
 name|phdr
 operator|==
-literal|0
+name|NULL
 operator|||
 name|phent
 operator|!=

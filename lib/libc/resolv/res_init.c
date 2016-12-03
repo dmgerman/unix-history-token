@@ -1306,7 +1306,7 @@ operator|*
 name|pp
 operator|++
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 define|#
@@ -1801,7 +1801,7 @@ operator|*
 name|pp
 operator|++
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|havesearch
 operator|=
