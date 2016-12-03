@@ -966,7 +966,7 @@ init|=
 name|authunix_create_default
 argument_list|()
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|void
