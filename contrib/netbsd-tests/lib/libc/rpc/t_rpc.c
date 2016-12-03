@@ -119,6 +119,33 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SKIPXI
+parameter_list|(
+name|ev
+parameter_list|,
+name|msg
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	atf_tc_skip(msg, __VA_ARGS__);			\ 	return ev;					\ } while(
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -1027,6 +1054,9 @@ argument_list|,
 name|transp
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ERRX
 argument_list|(
 name|EXIT_FAILURE
@@ -1036,6 +1066,21 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+block|{
+name|SKIPXI
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Cannot create server %d"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 operator|(
@@ -1731,6 +1776,20 @@ argument_list|,
 literal|"Checks svc tcp (select)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1787,6 +1846,20 @@ argument_list|,
 literal|"Checks svc udp (select)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1843,6 +1916,20 @@ argument_list|,
 literal|"Checks svc tcp (poll)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1899,6 +1986,20 @@ argument_list|,
 literal|"Checks svc udp (poll)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
