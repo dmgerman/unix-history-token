@@ -1276,7 +1276,7 @@ comment|/*  * Find the mapped address for program, version.  * Calls the rpcbind
 end_comment
 
 begin_comment
-unit|int rpcb_getaddr(program, version, nconf, address, host) 	rpcprog_t program; 	rpcvers_t version; 	const struct netconfig *nconf; 	struct netbuf *address; 	const char *host; { 	struct netbuf *na;  	if ((na = __rpcb_findaddr_timed(program, version, 	    (struct netconfig *) nconf, (char *) host, 	    (CLIENT **) NULL, (struct timeval *) NULL)) == NULL) 		return (FALSE);  	if (na->len> address->maxlen) {
+unit|bool_t rpcb_getaddr(program, version, nconf, address, host) 	rpcprog_t program; 	rpcvers_t version; 	const struct netconfig *nconf; 	struct netbuf *address; 	const char *host; { 	struct netbuf *na;  	if ((na = __rpcb_findaddr_timed(program, version, 	    (struct netconfig *) nconf, (char *) host, 	    (CLIENT **) NULL, (struct timeval *) NULL)) == NULL) 		return (FALSE);  	if (na->len> address->maxlen) {
 comment|/* Too long address */
 end_comment
 
