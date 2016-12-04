@@ -1559,12 +1559,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_UNUSED25
+name|MNTK_NULL_NOCACHE
 value|0x20000000
 end_define
 
 begin_comment
-comment|/*  --available-- */
+comment|/* auto disable cache for nullfs 					      mounts over this fs */
 end_comment
 
 begin_define
