@@ -500,6 +500,14 @@ literal|"Realtek ALC899"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC1150
+block|,
+literal|0
+block|,
+literal|"Realtek ALC1150"
+block|}
+block|,
+block|{
 name|HDA_CODEC_AD1882
 block|,
 literal|0
