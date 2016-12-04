@@ -13336,9 +13336,9 @@ name|pte
 argument_list|)
 argument_list|,
 name|mode
+argument_list|)
 operator|<<
 name|PTE_MAS2_SHIFT
-argument_list|)
 expr_stmt|;
 name|tlb0_flush_entry
 argument_list|(
