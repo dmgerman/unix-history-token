@@ -22,7 +22,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	size_t sz = sizeof(t);						\ 	xmallctl(n, v,&sz, NULL, 0);					\ } while (0)
+value|do {						\ 	size_t sz = sizeof(t);						\ 	xmallctl(n, (void *)v,&sz, NULL, 0);				\ } while (0)
 end_define
 
 begin_define
@@ -38,7 +38,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {					\ 	size_t mib[6];							\ 	size_t miblen = sizeof(mib) / sizeof(size_t);			\ 	size_t sz = sizeof(t);						\ 	xmallctlnametomib(n, mib,&miblen);				\ 	mib[2] = (i);							\ 	xmallctlbymib(mib, miblen, v,&sz, NULL, 0);			\ } while (0)
+value|do {					\ 	size_t mib[6];							\ 	size_t miblen = sizeof(mib) / sizeof(size_t);			\ 	size_t sz = sizeof(t);						\ 	xmallctlnametomib(n, mib,&miblen);				\ 	mib[2] = (i);							\ 	xmallctlbymib(mib, miblen, (void *)v,&sz, NULL, 0);		\ } while (0)
 end_define
 
 begin_define
@@ -56,7 +56,7 @@ name|v
 parameter_list|,
 name|t
 parameter_list|)
-value|do {				\ 	size_t mib[6];							\ 	size_t miblen = sizeof(mib) / sizeof(size_t);			\ 	size_t sz = sizeof(t);						\ 	xmallctlnametomib(n, mib,&miblen);				\ 	mib[2] = (i);							\ 	mib[4] = (j);							\ 	xmallctlbymib(mib, miblen, v,&sz, NULL, 0);			\ } while (0)
+value|do {				\ 	size_t mib[6];							\ 	size_t miblen = sizeof(mib) / sizeof(size_t);			\ 	size_t sz = sizeof(t);						\ 	xmallctlnametomib(n, mib,&miblen);				\ 	mib[2] = (i);							\ 	mib[4] = (j);							\ 	xmallctlbymib(mib, miblen, (void *)v,&sz, NULL, 0);		\ } while (0)
 end_define
 
 begin_comment
@@ -3143,7 +3143,7 @@ name|m
 parameter_list|,
 name|c
 parameter_list|)
-value|{				\ 	bool bv2;							\ 	if (je_mallctl("opt."#n, (void *)&bv,&bsz, NULL, 0) == 0&&	\ 	    je_mallctl(#m,&bv2,&bsz, NULL, 0) == 0) {			\ 		if (json) {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "\t\t\t\""#n"\": %s%s\n", bv ? "true" :	\ 			    "false", (c));				\ 		} else {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": %s ("#m": %s)\n", bv ? "true"	\ 			    : "false", bv2 ? "true" : "false");		\ 		}							\ 	}								\ }
+value|{				\ 	bool bv2;							\ 	if (je_mallctl("opt."#n, (void *)&bv,&bsz, NULL, 0) == 0&&	\ 	    je_mallctl(#m,&bv2, (void *)&bsz, NULL, 0) == 0) {		\ 		if (json) {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "\t\t\t\""#n"\": %s%s\n", bv ? "true" :	\ 			    "false", (c));				\ 		} else {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": %s ("#m": %s)\n", bv ? "true"	\ 			    : "false", bv2 ? "true" : "false");		\ 		}							\ 	}								\ }
 define|#
 directive|define
 name|OPT_WRITE_UNSIGNED
@@ -3184,7 +3184,7 @@ name|m
 parameter_list|,
 name|c
 parameter_list|)
-value|{				\ 	ssize_t ssv2;							\ 	if (je_mallctl("opt."#n, (void *)&ssv,&sssz, NULL, 0) == 0&&	\ 	    je_mallctl(#m,&ssv2,&sssz, NULL, 0) == 0) {		\ 		if (json) {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "\t\t\t\""#n"\": %zd%s\n", ssv, (c));	\ 		} else {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": %zd ("#m": %zd)\n",		\ 			    ssv, ssv2);					\ 		}							\ 	}								\ }
+value|{				\ 	ssize_t ssv2;							\ 	if (je_mallctl("opt."#n, (void *)&ssv,&sssz, NULL, 0) == 0&&	\ 	    je_mallctl(#m, (void *)&ssv2,&sssz, NULL, 0) == 0) {	\ 		if (json) {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "\t\t\t\""#n"\": %zd%s\n", ssv, (c));	\ 		} else {						\ 			malloc_cprintf(write_cb, cbopaque,		\ 			    "  opt."#n": %zd ("#m": %zd)\n",		\ 			    ssv, ssv2);					\ 		}							\ 	}								\ }
 define|#
 directive|define
 name|OPT_WRITE_CHAR_P
@@ -5022,12 +5022,20 @@ name|je_mallctl
 argument_list|(
 literal|"epoch"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|epoch
 argument_list|,
 operator|&
 name|u64sz
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|epoch
 argument_list|,

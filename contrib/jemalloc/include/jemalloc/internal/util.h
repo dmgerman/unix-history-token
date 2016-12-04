@@ -227,6 +227,12 @@ begin_comment
 comment|/* Junk fill patterns. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_ALLOC_JUNK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -234,12 +240,28 @@ name|JEMALLOC_ALLOC_JUNK
 value|((uint8_t)0xa5)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|JEMALLOC_FREE_JUNK
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|JEMALLOC_FREE_JUNK
 value|((uint8_t)0x5a)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Wrap a cpp argument that contains commas such that it isn't broken up into  * multiple arguments.  */

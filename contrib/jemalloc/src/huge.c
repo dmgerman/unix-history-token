@@ -265,6 +265,9 @@ name|extent_node_t
 modifier|*
 name|node
 decl_stmt|;
+name|size_t
+name|sn
+decl_stmt|;
 name|bool
 name|is_zeroed
 decl_stmt|;
@@ -427,6 +430,9 @@ argument_list|,
 name|alignment
 argument_list|,
 operator|&
+name|sn
+argument_list|,
+operator|&
 name|is_zeroed
 argument_list|)
 operator|)
@@ -463,6 +469,8 @@ name|ret
 argument_list|,
 name|usize
 argument_list|,
+name|sn
+argument_list|,
 name|is_zeroed
 argument_list|,
 name|true
@@ -489,6 +497,8 @@ argument_list|,
 name|ret
 argument_list|,
 name|usize
+argument_list|,
+name|sn
 argument_list|)
 expr_stmt|;
 name|idalloctm
@@ -1366,6 +1376,11 @@ argument_list|,
 name|oldsize
 argument_list|,
 name|usize
+argument_list|,
+name|extent_node_sn_get
+argument_list|(
+name|node
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2244,6 +2259,11 @@ name|node
 argument_list|)
 argument_list|,
 name|extent_node_size_get
+argument_list|(
+name|node
+argument_list|)
+argument_list|,
+name|extent_node_sn_get
 argument_list|(
 name|node
 argument_list|)

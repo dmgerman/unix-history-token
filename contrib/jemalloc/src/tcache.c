@@ -2838,7 +2838,10 @@ operator|<
 literal|0
 operator|||
 operator|(
-literal|1U
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|opt_lg_tcache_max
 operator|)
@@ -2853,7 +2856,10 @@ elseif|else
 if|if
 condition|(
 operator|(
-literal|1U
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|opt_lg_tcache_max
 operator|)
@@ -2868,7 +2874,10 @@ else|else
 name|tcache_maxclass
 operator|=
 operator|(
-literal|1U
+name|ZU
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|opt_lg_tcache_max
 operator|)

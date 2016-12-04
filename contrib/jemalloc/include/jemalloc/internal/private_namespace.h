@@ -268,6 +268,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|arena_extent_sn_next
+value|JEMALLOC_N(arena_extent_sn_next)
+end_define
+
+begin_define
+define|#
+directive|define
 name|arena_get
 value|JEMALLOC_N(arena_get)
 end_define
@@ -1542,6 +1549,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|extent_node_sn_get
+value|JEMALLOC_N(extent_node_sn_get)
+end_define
+
+begin_define
+define|#
+directive|define
+name|extent_node_sn_set
+value|JEMALLOC_N(extent_node_sn_set)
+end_define
+
+begin_define
+define|#
+directive|define
 name|extent_node_zeroed_get
 value|JEMALLOC_N(extent_node_zeroed_get)
 end_define
@@ -1689,134 +1710,134 @@ end_define
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_destroy
-value|JEMALLOC_N(extent_tree_szad_destroy)
+name|extent_tree_szsnad_destroy
+value|JEMALLOC_N(extent_tree_szsnad_destroy)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_destroy_recurse
-value|JEMALLOC_N(extent_tree_szad_destroy_recurse)
+name|extent_tree_szsnad_destroy_recurse
+value|JEMALLOC_N(extent_tree_szsnad_destroy_recurse)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_empty
-value|JEMALLOC_N(extent_tree_szad_empty)
+name|extent_tree_szsnad_empty
+value|JEMALLOC_N(extent_tree_szsnad_empty)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_first
-value|JEMALLOC_N(extent_tree_szad_first)
+name|extent_tree_szsnad_first
+value|JEMALLOC_N(extent_tree_szsnad_first)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_insert
-value|JEMALLOC_N(extent_tree_szad_insert)
+name|extent_tree_szsnad_insert
+value|JEMALLOC_N(extent_tree_szsnad_insert)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_iter
-value|JEMALLOC_N(extent_tree_szad_iter)
+name|extent_tree_szsnad_iter
+value|JEMALLOC_N(extent_tree_szsnad_iter)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_iter_recurse
-value|JEMALLOC_N(extent_tree_szad_iter_recurse)
+name|extent_tree_szsnad_iter_recurse
+value|JEMALLOC_N(extent_tree_szsnad_iter_recurse)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_iter_start
-value|JEMALLOC_N(extent_tree_szad_iter_start)
+name|extent_tree_szsnad_iter_start
+value|JEMALLOC_N(extent_tree_szsnad_iter_start)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_last
-value|JEMALLOC_N(extent_tree_szad_last)
+name|extent_tree_szsnad_last
+value|JEMALLOC_N(extent_tree_szsnad_last)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_new
-value|JEMALLOC_N(extent_tree_szad_new)
+name|extent_tree_szsnad_new
+value|JEMALLOC_N(extent_tree_szsnad_new)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_next
-value|JEMALLOC_N(extent_tree_szad_next)
+name|extent_tree_szsnad_next
+value|JEMALLOC_N(extent_tree_szsnad_next)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_nsearch
-value|JEMALLOC_N(extent_tree_szad_nsearch)
+name|extent_tree_szsnad_nsearch
+value|JEMALLOC_N(extent_tree_szsnad_nsearch)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_prev
-value|JEMALLOC_N(extent_tree_szad_prev)
+name|extent_tree_szsnad_prev
+value|JEMALLOC_N(extent_tree_szsnad_prev)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_psearch
-value|JEMALLOC_N(extent_tree_szad_psearch)
+name|extent_tree_szsnad_psearch
+value|JEMALLOC_N(extent_tree_szsnad_psearch)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_remove
-value|JEMALLOC_N(extent_tree_szad_remove)
+name|extent_tree_szsnad_remove
+value|JEMALLOC_N(extent_tree_szsnad_remove)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_reverse_iter
-value|JEMALLOC_N(extent_tree_szad_reverse_iter)
+name|extent_tree_szsnad_reverse_iter
+value|JEMALLOC_N(extent_tree_szsnad_reverse_iter)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_reverse_iter_recurse
-value|JEMALLOC_N(extent_tree_szad_reverse_iter_recurse)
+name|extent_tree_szsnad_reverse_iter_recurse
+value|JEMALLOC_N(extent_tree_szsnad_reverse_iter_recurse)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_reverse_iter_start
-value|JEMALLOC_N(extent_tree_szad_reverse_iter_start)
+name|extent_tree_szsnad_reverse_iter_start
+value|JEMALLOC_N(extent_tree_szsnad_reverse_iter_start)
 end_define
 
 begin_define
 define|#
 directive|define
-name|extent_tree_szad_search
-value|JEMALLOC_N(extent_tree_szad_search)
+name|extent_tree_szsnad_search
+value|JEMALLOC_N(extent_tree_szsnad_search)
 end_define
 
 begin_define
@@ -2767,8 +2788,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|pages_huge
+value|JEMALLOC_N(pages_huge)
+end_define
+
+begin_define
+define|#
+directive|define
 name|pages_map
 value|JEMALLOC_N(pages_map)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pages_nohuge
+value|JEMALLOC_N(pages_nohuge)
 end_define
 
 begin_define

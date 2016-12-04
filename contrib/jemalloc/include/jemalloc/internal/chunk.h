@@ -277,6 +277,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -318,6 +322,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -352,6 +360,9 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
+name|size_t
+name|sn
+parameter_list|,
 name|bool
 name|committed
 parameter_list|)
@@ -380,6 +391,9 @@ name|chunk
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|,
 name|bool
 name|zeroed
