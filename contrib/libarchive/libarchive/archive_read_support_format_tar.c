@@ -1815,33 +1815,7 @@ operator|++
 name|i
 expr_stmt|;
 block|}
-comment|/* Must be at least one octal digit. */
-if|if
-condition|(
-name|i
-operator|>=
-name|i_size
-operator|||
-name|p_field
-index|[
-name|i
-index|]
-operator|<
-literal|'0'
-operator|||
-name|p_field
-index|[
-name|i
-index|]
-operator|>
-literal|'7'
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-comment|/* Skip remaining octal digits. */
+comment|/* Skip octal digits. */
 while|while
 condition|(
 name|i
