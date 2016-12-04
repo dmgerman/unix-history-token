@@ -2222,6 +2222,10 @@ name|R92S_RXDW0_SHIFT_S
 value|24
 define|#
 directive|define
+name|R92S_RXDW0_PHYST
+value|0x04000000
+define|#
+directive|define
 name|R92S_RXDW0_DECRYPTED
 value|0x08000000
 name|uint32_t
