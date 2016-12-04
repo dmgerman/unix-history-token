@@ -3636,6 +3636,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_NVIDIATEGRA30
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA114
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0022)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA124
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0028)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA210
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0029)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_NVIDIAMCP67
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0067)
 end_define
