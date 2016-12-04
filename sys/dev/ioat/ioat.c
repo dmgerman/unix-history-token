@@ -2602,6 +2602,9 @@ literal|1024
 argument_list|,
 literal|0x0
 argument_list|,
+operator|(
+name|bus_addr_t
+operator|)
 name|BUS_SPACE_MAXADDR_40BIT
 argument_list|,
 name|BUS_SPACE_MAXADDR
