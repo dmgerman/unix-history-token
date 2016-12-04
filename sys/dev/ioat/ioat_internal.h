@@ -1554,6 +1554,9 @@ name|uint32_t
 name|head
 decl_stmt|;
 name|uint32_t
+name|acq_head
+decl_stmt|;
+name|uint32_t
 name|tail
 decl_stmt|;
 name|uint32_t

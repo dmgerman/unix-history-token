@@ -343,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|MRSAS_VERSION
-value|"06.709.07.00-fbsd"
+value|"06.712.04.00-fbsd"
 end_define
 
 begin_define
@@ -808,7 +808,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPI2_FUNCTION_SCSI_TASK_MGMT
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_REQ_DESCRIPT_FLAGS_HIGH_PRIORITY
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_REQ_DESCRIPT_FLAGS_FP_IO
 value|(0x06)
 end_define
 
@@ -1266,6 +1280,368 @@ name|MPI2_POINTER
 name|pMpi2ScsiIoCdb_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/****************************************************************************  *  *  SCSI Task Management messages  *   ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*SCSI Task Management Request Message */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_SCSI_TASK_MANAGE_REQUEST
+block|{
+name|u_int16_t
+name|DevHandle
+decl_stmt|;
+comment|/*0x00 */
+name|u_int8_t
+name|ChainOffset
+decl_stmt|;
+comment|/*0x02 */
+name|u_int8_t
+name|Function
+decl_stmt|;
+comment|/*0x03 */
+name|u_int8_t
+name|Reserved1
+decl_stmt|;
+comment|/*0x04 */
+name|u_int8_t
+name|TaskType
+decl_stmt|;
+comment|/*0x05 */
+name|u_int8_t
+name|Reserved2
+decl_stmt|;
+comment|/*0x06 */
+name|u_int8_t
+name|MsgFlags
+decl_stmt|;
+comment|/*0x07 */
+name|u_int8_t
+name|VP_ID
+decl_stmt|;
+comment|/*0x08 */
+name|u_int8_t
+name|VF_ID
+decl_stmt|;
+comment|/*0x09 */
+name|u_int16_t
+name|Reserved3
+decl_stmt|;
+comment|/*0x0A */
+name|u_int8_t
+name|LUN
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/*0x0C */
+name|u_int32_t
+name|Reserved4
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/*0x14 */
+name|u_int16_t
+name|TaskMID
+decl_stmt|;
+comment|/*0x30 */
+name|u_int16_t
+name|Reserved5
+decl_stmt|;
+comment|/*0x32 */
+block|}
+name|MPI2_SCSI_TASK_MANAGE_REQUEST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*SCSI Task Management Reply Message */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_SCSI_TASK_MANAGE_REPLY
+block|{
+name|u_int16_t
+name|DevHandle
+decl_stmt|;
+comment|/*0x00 */
+name|u_int8_t
+name|MsgLength
+decl_stmt|;
+comment|/*0x02 */
+name|u_int8_t
+name|Function
+decl_stmt|;
+comment|/*0x03 */
+name|u_int8_t
+name|ResponseCode
+decl_stmt|;
+comment|/*0x04 */
+name|u_int8_t
+name|TaskType
+decl_stmt|;
+comment|/*0x05 */
+name|u_int8_t
+name|Reserved1
+decl_stmt|;
+comment|/*0x06 */
+name|u_int8_t
+name|MsgFlags
+decl_stmt|;
+comment|/*0x07 */
+name|u_int8_t
+name|VP_ID
+decl_stmt|;
+comment|/*0x08 */
+name|u_int8_t
+name|VF_ID
+decl_stmt|;
+comment|/*0x09 */
+name|u_int16_t
+name|Reserved2
+decl_stmt|;
+comment|/*0x0A */
+name|u_int16_t
+name|Reserved3
+decl_stmt|;
+comment|/*0x0C */
+name|u_int16_t
+name|IOCStatus
+decl_stmt|;
+comment|/*0x0E */
+name|u_int32_t
+name|IOCLogInfo
+decl_stmt|;
+comment|/*0x10 */
+name|u_int32_t
+name|TerminationCount
+decl_stmt|;
+comment|/*0x14 */
+name|u_int32_t
+name|ResponseInfo
+decl_stmt|;
+comment|/*0x18 */
+block|}
+name|MPI2_SCSI_TASK_MANAGE_REPLY
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MR_TM_REQUEST
+block|{
+name|char
+name|request
+index|[
+literal|128
+index|]
+decl_stmt|;
+block|}
+name|MR_TM_REQUEST
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MR_TM_REPLY
+block|{
+name|char
+name|reply
+index|[
+literal|128
+index|]
+decl_stmt|;
+block|}
+name|MR_TM_REPLY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* SCSI Task Management Request Message */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MR_TASK_MANAGE_REQUEST
+block|{
+comment|/*To be type casted to struct MPI2_SCSI_TASK_MANAGE_REQUEST */
+name|MR_TM_REQUEST
+name|TmRequest
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|u_int32_t
+name|isTMForLD
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|isTMForPD
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|reserved1
+range|:
+literal|30
+decl_stmt|;
+name|u_int32_t
+name|reserved2
+decl_stmt|;
+block|}
+name|tmReqFlags
+struct|;
+name|MR_TM_REPLY
+name|TMReply
+decl_stmt|;
+block|}
+name|uTmReqReply
+union|;
+block|}
+name|MR_TASK_MANAGE_REQUEST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* TaskType values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_ABORT_TASK
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_ABRT_TASK_SET
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_LOGICAL_UNIT_RESET
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_CLEAR_TASK_SET
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_QUERY_TASK
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_CLR_ACA
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_QRY_TASK_SET
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_TASKTYPE_QRY_ASYNC_EVENT
+value|(0x0A)
+end_define
+
+begin_comment
+comment|/* ResponseCode values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_COMPLETE
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_INVALID_FRAME
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_NOT_SUPPORTED
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_FAILED
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_SUCCEEDED
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_INVALID_LUN
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_TM_OVERLAPPED_TAG
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SCSITASKMGMT_RSP_IO_QUEUED_ON_IOC
+value|(0x80)
+end_define
 
 begin_comment
 comment|/*  * RAID SCSI IO Request Message Total SGE count will be one less than  * _MPI2_SCSI_IO_REQUEST  */
@@ -2319,6 +2695,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MR_DCMD_PD_MFI_TASK_MGMT
+value|0x0200e100
+end_define
+
+begin_define
+define|#
+directive|define
 name|MRSAS_MAX_PD_CHANNELS
 value|1
 end_define
@@ -2377,6 +2760,13 @@ define|#
 directive|define
 name|VD_EXT_DEBUG
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TM_DEBUG
+value|1
 end_define
 
 begin_comment
@@ -2596,9 +2986,14 @@ range|:
 literal|1
 decl_stmt|;
 name|u_int32_t
+name|tmCapable
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
 name|reserved4
 range|:
-literal|7
+literal|6
 decl_stmt|;
 block|}
 name|capability
@@ -3283,10 +3678,25 @@ decl_stmt|;
 name|u_int16_t
 name|devHandle
 decl_stmt|;
+struct|struct
+block|{
+name|u_int8_t
+name|tmCapable
+range|:
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|reserved
+range|:
+literal|7
+decl_stmt|;
+block|}
+name|capability
+struct|;
 name|u_int8_t
 name|reserved
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
@@ -4732,7 +5142,14 @@ begin_define
 define|#
 directive|define
 name|MRSAS_MAX_MFI_CMDS
-value|32
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRSAS_MAX_IOCTL_CMDS
+value|3
 end_define
 
 begin_comment
@@ -5287,6 +5704,9 @@ name|mrsas_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|boolean_t
+name|tmCapable
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|mrsas_mpt_cmd
@@ -5477,6 +5897,13 @@ define|#
 directive|define
 name|MR_EVT_LD_OFFLINE
 value|0x00fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|MR_EVT_CTRL_PROP_CHANGED
+value|0x012f
 end_define
 
 begin_define
@@ -7283,6 +7710,17 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * SYNC CACHE offset define  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MR_CAN_HANDLE_SYNC_CACHE_OFFSET
+value|0X01000000
+end_define
+
+begin_comment
 comment|/*  * FW reports the maximum of number of commands that it can accept (maximum  * commands that can be outstanding) at any time. The driver must report a  * lower number to the mid layer because it can issue a few internal commands  * itself (E.g, AEN, abort cmd, IOCTLs etc). The number of commands it needs  * is shown below  */
 end_comment
 
@@ -8894,13 +9332,9 @@ name|FW_FAULT_OCR
 init|=
 literal|0
 block|,
-name|SCSIIO_TIMEOUT_OCR
-init|=
-literal|1
-block|,
 name|MFI_DCMD_TIMEOUT_OCR
 init|=
-literal|2
+literal|1
 block|, }
 enum|;
 end_enum
@@ -9805,6 +10239,27 @@ decl_stmt|;
 name|u_int32_t
 name|reset_count
 decl_stmt|;
+name|u_int32_t
+name|block_sync_cache
+decl_stmt|;
+name|u_int8_t
+name|fw_sync_cache_support
+decl_stmt|;
+name|mrsas_atomic_t
+name|target_reset_outstanding
+decl_stmt|;
+define|#
+directive|define
+name|MRSAS_MAX_TM_TARGETS
+value|(MRSAS_MAX_PD + MRSAS_MAX_LD_IDS)
+name|struct
+name|mrsas_mpt_cmd
+modifier|*
+name|target_reset_pool
+index|[
+name|MRSAS_MAX_TM_TARGETS
+index|]
+decl_stmt|;
 name|bus_dma_tag_t
 name|jbodmap_tag
 index|[
@@ -9996,6 +10451,9 @@ name|log_to_span
 index|[
 name|MAX_LOGICAL_DRIVES_EXT
 index|]
+decl_stmt|;
+name|u_int8_t
+name|mrsas_gen3_ctrl
 decl_stmt|;
 name|u_int8_t
 name|secure_jbod_support

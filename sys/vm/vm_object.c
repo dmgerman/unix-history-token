@@ -719,14 +719,6 @@ literal|0
 expr_stmt|;
 name|object
 operator|->
-name|rtree
-operator|.
-name|rt_flags
-operator|=
-literal|0
-expr_stmt|;
-name|object
-operator|->
 name|paging_in_progress
 operator|=
 literal|0

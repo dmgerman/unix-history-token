@@ -5825,9 +5825,14 @@ case|case
 name|svn_wc_conflict_choose_mine_full
 case|:
 block|{
+comment|/* In case of selecting to resolve the conflict choosing the full              own file, allow the text conflict resolution to just take the              existing local file if no merged file was present (case: binary              file conflicts do not generate a locally merge file).           */
 name|install_from_abspath
 operator|=
 name|mine_abspath
+condition|?
+name|mine_abspath
+else|:
+name|local_abspath
 expr_stmt|;
 break|break;
 block|}
@@ -5849,6 +5854,35 @@ name|svn_diff_conflict_display_latest
 else|:
 name|svn_diff_conflict_display_modified
 decl_stmt|;
+if|if
+condition|(
+name|mine_abspath
+operator|==
+name|NULL
+condition|)
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_WC_CONFLICT_RESOLVER_FAILURE
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Conflict on '%s' cannot be resolved to "
+literal|"'theirs-conflict' or 'mine-conflict' "
+literal|"because a merged version of the file "
+literal|"cannot be created."
+argument_list|)
+argument_list|,
+name|svn_dirent_local_style
+argument_list|(
+name|local_abspath
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+return|;
 name|SVN_ERR
 argument_list|(
 name|merge_showing_conflicts

@@ -2914,6 +2914,14 @@ parameter_list|,
 name|unsigned
 name|int
 name|defq
+parameter_list|,
+name|unsigned
+name|int
+name|skeyidx
+parameter_list|,
+name|unsigned
+name|int
+name|skey
 parameter_list|)
 function_decl|;
 end_function_decl

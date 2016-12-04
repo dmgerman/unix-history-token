@@ -584,7 +584,8 @@ decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
-name|hn_tx_taskq
+modifier|*
+name|hn_tx_taskqs
 decl_stmt|;
 name|struct
 name|sysctl_oid

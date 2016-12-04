@@ -3127,6 +3127,11 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If STR is a all-zero checksum, CHECKSUM will be NULL and REP already      contains the correct value. */
+if|if
+condition|(
+name|checksum
+condition|)
 name|memcpy
 argument_list|(
 name|rep
@@ -3207,6 +3212,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* We do have a valid SHA1 but it might be all 0.      We cannot be sure where that came from (Alas! legacy), so let's not      claim we know the SHA1 in that case. */
 name|rep
 operator|->
 name|has_sha1
@@ -3215,6 +3221,11 @@ name|checksum
 operator|!=
 name|NULL
 expr_stmt|;
+comment|/* If STR is a all-zero checksum, CHECKSUM will be NULL and REP already      contains the correct value. */
+if|if
+condition|(
+name|checksum
+condition|)
 name|memcpy
 argument_list|(
 name|rep

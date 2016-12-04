@@ -1342,7 +1342,7 @@ argument_list|,
 name|SVN_VA_NULL
 argument_list|)
 argument_list|,
-name|SVN_CACHE__MEMBUFFER_DEFAULT_PRIORITY
+name|SVN_CACHE__MEMBUFFER_HIGH_PRIORITY
 argument_list|,
 name|fs
 argument_list|,
@@ -2653,7 +2653,7 @@ argument_list|,
 name|SVN_VA_NULL
 argument_list|)
 argument_list|,
-literal|0
+name|SVN_CACHE__MEMBUFFER_HIGH_PRIORITY
 argument_list|,
 name|fs
 argument_list|,

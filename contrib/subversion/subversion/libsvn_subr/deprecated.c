@@ -6210,6 +6210,9 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_KEYCHAIN_SERVICES
 name|svn_auth__get_keychain_simple_provider
 argument_list|(
 name|provider
@@ -6217,6 +6220,17 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|svn_auth__get_dummmy_simple_provider
+argument_list|(
+name|provider
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6234,6 +6248,9 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SVN_HAVE_KEYCHAIN_SERVICES
 name|svn_auth__get_keychain_ssl_client_cert_pw_provider
 argument_list|(
 name|provider
@@ -6241,6 +6258,18 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* Not really the right type of dummy provider, but doesn't throw NULL      errors as just returning NULL would */
+name|svn_auth__get_dummmy_simple_provider
+argument_list|(
+name|provider
+argument_list|,
+name|pool
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

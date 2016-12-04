@@ -778,7 +778,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|pci_host_generic_alloc_resource
+name|pci_host_generic_core_alloc_resource
 argument_list|(
 name|dev
 argument_list|,

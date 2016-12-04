@@ -110,6 +110,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct
+struct|struct
+name|arm_gic_fdt_softc
+block|{
+name|struct
+name|arm_gic_softc
+name|base
+decl_stmt|;
+name|pcell_t
+name|addr_cells
+decl_stmt|;
+name|pcell_t
+name|size_cells
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|device_probe_t
@@ -320,7 +338,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|arm_gic_softc
+name|arm_gic_fdt_softc
 argument_list|)
 argument_list|,
 name|arm_gic_driver
@@ -446,7 +464,7 @@ ifdef|#
 directive|ifdef
 name|INTRNG
 name|struct
-name|arm_gic_softc
+name|arm_gic_fdt_softc
 modifier|*
 name|sc
 init|=
@@ -590,6 +608,8 @@ if|if
 condition|(
 name|sc
 operator|->
+name|base
+operator|.
 name|gic_res
 index|[
 literal|2
@@ -624,6 +644,8 @@ name|dev
 argument_list|,
 name|sc
 operator|->
+name|base
+operator|.
 name|gic_res
 index|[
 literal|2
@@ -640,6 +662,8 @@ argument_list|,
 operator|&
 name|sc
 operator|->
+name|base
+operator|.
 name|gic_intrhand
 argument_list|)
 condition|)
@@ -783,7 +807,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|arm_gic_softc
+name|arm_gic_fdt_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -900,6 +924,8 @@ operator|)
 return|;
 name|sc
 operator|->
+name|base
+operator|.
 name|nranges
 operator|=
 name|nbase_ranges
@@ -925,6 +951,8 @@ if|if
 condition|(
 name|sc
 operator|->
+name|base
+operator|.
 name|nranges
 operator|==
 literal|0
@@ -936,18 +964,24 @@ operator|)
 return|;
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 operator|=
 name|malloc
 argument_list|(
 name|sc
 operator|->
+name|base
+operator|.
 name|nranges
 operator|*
 sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 literal|0
@@ -995,6 +1029,8 @@ name|i
 operator|<
 name|sc
 operator|->
+name|base
+operator|.
 name|nranges
 condition|;
 name|i
@@ -1003,6 +1039,8 @@ control|)
 block|{
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1030,6 +1068,8 @@ control|)
 block|{
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1041,6 +1081,8 @@ literal|32
 expr_stmt|;
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1057,6 +1099,8 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1082,6 +1126,8 @@ control|)
 block|{
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1093,6 +1139,8 @@ literal|32
 expr_stmt|;
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1109,6 +1157,8 @@ expr_stmt|;
 block|}
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1136,6 +1186,8 @@ control|)
 block|{
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1147,6 +1199,8 @@ literal|32
 expr_stmt|;
 name|sc
 operator|->
+name|base
+operator|.
 name|ranges
 index|[
 name|i
@@ -1173,6 +1227,8 @@ return|return
 operator|(
 name|sc
 operator|->
+name|base
+operator|.
 name|nranges
 operator|)
 return|;
@@ -1189,7 +1245,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|arm_gic_softc
+name|arm_gic_fdt_softc
 modifier|*
 name|sc
 decl_stmt|;

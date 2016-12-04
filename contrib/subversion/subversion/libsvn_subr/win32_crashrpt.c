@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|FORMAT_PTR
-value|"0x%08x"
+value|"0x%08Ix"
 end_define
 
 begin_elif
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|FORMAT_PTR
-value|"0x%016I64x"
+value|"0x%016Ix"
 end_define
 
 begin_endif
@@ -571,6 +571,9 @@ name|log_file
 argument_list|,
 name|FORMAT_PTR
 argument_list|,
+operator|(
+name|UINT_PTR
+operator|)
 name|module
 operator|.
 name|BaseOfImage
@@ -1014,17 +1017,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Formats the value at address based on the specified basic type  * (char, int, long ...). */
+comment|/* Writes the value at address based on the specified basic type  * (char, int, long ...) to LOG_FILE. */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|format_basic_type
+name|write_basic_type
 parameter_list|(
-name|char
+name|FILE
 modifier|*
-name|buf
+name|log_file
 parameter_list|,
 name|DWORD
 name|basic_type
@@ -1045,9 +1048,9 @@ block|{
 case|case
 literal|1
 case|:
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"0x%02x"
 argument_list|,
@@ -1067,9 +1070,9 @@ break|break;
 case|case
 literal|2
 case|:
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"0x%04x"
 argument_list|,
@@ -1114,9 +1117,9 @@ argument_list|,
 literal|32
 argument_list|)
 condition|)
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"\"%.31s\""
 argument_list|,
@@ -1131,9 +1134,9 @@ name|address
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 name|FORMAT_PTR
 argument_list|,
@@ -1150,9 +1153,9 @@ case|case
 literal|6
 case|:
 comment|/* btInt */
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1169,9 +1172,9 @@ case|case
 literal|8
 case|:
 comment|/* btFloat */
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"%f"
 argument_list|,
@@ -1185,9 +1188,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 name|FORMAT_PTR
 argument_list|,
@@ -1212,9 +1215,9 @@ operator|==
 literal|8
 condition|)
 comment|/* btFloat */
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"%lf"
 argument_list|,
@@ -1227,9 +1230,9 @@ name|address
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"0x%016I64X"
 argument_list|,
@@ -1244,9 +1247,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|sprintf
+name|fprintf
 argument_list|(
-name|buf
+name|log_file
 argument_list|,
 literal|"[unhandled type 0x%08x of length "
 name|FORMAT_PTR
@@ -1254,6 +1257,9 @@ literal|"]"
 argument_list|,
 name|basic_type
 argument_list|,
+operator|(
+name|UINT_PTR
+operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -1263,17 +1269,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Formats the value at address based on the type (pointer, user defined,  * basic type). */
+comment|/* Writes the value at address based on the type (pointer, user defined,  * basic type) to LOG_FILE. */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|format_value
+name|write_value
 parameter_list|(
-name|char
+name|FILE
 modifier|*
-name|value_str
+name|log_file
 parameter_list|,
 name|DWORD64
 name|mod_base
@@ -1399,15 +1405,18 @@ name|ptr
 operator|==
 literal|0
 condition|)
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"(%s) "
 name|FORMAT_PTR
 argument_list|,
 name|type_name
 argument_list|,
+operator|(
+name|UINT_PTR
+operator|)
 operator|(
 name|DWORD_PTR
 operator|*
@@ -1422,9 +1431,9 @@ name|ptr
 operator|==
 literal|1
 condition|)
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"(%s *) "
 name|FORMAT_PTR
@@ -1440,9 +1449,9 @@ name|value_addr
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"(%s **) "
 name|FORMAT_PTR
@@ -1464,9 +1473,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"[no symbol tag]"
 argument_list|)
@@ -1510,9 +1519,9 @@ operator|==
 literal|1
 condition|)
 block|{
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 name|FORMAT_PTR
 literal|" \"%s\""
@@ -1543,9 +1552,9 @@ operator|>=
 literal|1
 condition|)
 block|{
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 name|FORMAT_PTR
 argument_list|,
@@ -1576,9 +1585,9 @@ name|bt
 argument_list|)
 condition|)
 block|{
-name|format_basic_type
+name|write_basic_type
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 name|bt
 argument_list|,
@@ -1594,9 +1603,9 @@ case|case
 literal|12
 case|:
 comment|/* SymTagEnum */
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1613,9 +1622,9 @@ case|case
 literal|13
 case|:
 comment|/* SymTagFunctionType */
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 name|FORMAT_PTR
 argument_list|,
@@ -1629,9 +1638,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|sprintf
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
 argument_list|,
 literal|"[unhandled tag: %d]"
 argument_list|,
@@ -1758,14 +1767,6 @@ operator|)
 operator|->
 name|log_params
 decl_stmt|;
-name|char
-name|value_str
-index|[
-literal|256
-index|]
-init|=
-literal|""
-decl_stmt|;
 comment|/* get the variable's data */
 if|if
 condition|(
@@ -1823,8 +1824,6 @@ argument_list|(
 name|log_file
 argument_list|,
 literal|", "
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 else|else
@@ -1832,9 +1831,27 @@ name|last_nr_of_frame
 operator|=
 name|nr_of_frame
 expr_stmt|;
-name|format_value
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
+argument_list|,
+literal|"%.*s="
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sym_info
+operator|->
+name|NameLen
+argument_list|,
+name|sym_info
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+name|write_value
+argument_list|(
+name|log_file
 argument_list|,
 name|sym_info
 operator|->
@@ -1849,26 +1866,6 @@ name|void
 operator|*
 operator|)
 name|var_data
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|log_file
-argument_list|,
-literal|"%.*s=%s"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|sym_info
-operator|->
-name|NameLen
-argument_list|,
-name|sym_info
-operator|->
-name|Name
-argument_list|,
-name|value_str
 argument_list|)
 expr_stmt|;
 block|}
@@ -1884,9 +1881,27 @@ operator|&
 name|SYMFLAG_LOCAL
 condition|)
 block|{
-name|format_value
+name|fprintf
 argument_list|(
-name|value_str
+name|log_file
+argument_list|,
+literal|"        %.*s = "
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sym_info
+operator|->
+name|NameLen
+argument_list|,
+name|sym_info
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+name|write_value
+argument_list|(
+name|log_file
 argument_list|,
 name|sym_info
 operator|->
@@ -1907,20 +1922,7 @@ name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
-literal|"        %.*s = %s\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|sym_info
-operator|->
-name|NameLen
-argument_list|,
-name|sym_info
-operator|->
-name|Name
-argument_list|,
-name|value_str
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

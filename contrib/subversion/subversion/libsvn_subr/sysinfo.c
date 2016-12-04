@@ -5219,6 +5219,18 @@ case|:
 return|return
 literal|"Yosemite"
 return|;
+case|case
+literal|11
+case|:
+return|return
+literal|"El Capitan"
+return|;
+case|case
+literal|12
+case|:
+return|return
+literal|"Sierra"
+return|;
 block|}
 return|return
 name|NULL

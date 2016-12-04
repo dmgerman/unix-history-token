@@ -58,14 +58,6 @@ parameter_list|)
 value|rtld_dynamic_addr()
 end_define
 
-begin_define
-define|#
-directive|define
-name|RTLD_IS_DYNAMIC
-parameter_list|()
-value|(rtld_dynamic_addr() != NULL)
-end_define
-
 begin_function_decl
 name|Elf_Addr
 name|reloc_jmpslot

@@ -801,7 +801,7 @@ name|HWPSTATE_DEBUG
 argument_list|(
 name|dev
 argument_list|,
-literal|"result  P%d-state on cpu%d\n"
+literal|"result: P%d-state on cpu%d\n"
 argument_list|,
 operator|(
 name|int
@@ -1555,7 +1555,17 @@ name|HWPSTATE_DEBUG
 argument_list|(
 name|dev
 argument_list|,
-literal|"msr and acpi _PSS count mismatch.\n"
+literal|"MSR (%jd) and ACPI _PSS (%d)"
+literal|" count mismatch\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|msr
+argument_list|,
+name|sc
+operator|->
+name|cfnum
 argument_list|)
 expr_stmt|;
 name|error
@@ -1826,7 +1836,8 @@ name|HWPSTATE_DEBUG
 argument_list|(
 name|dev
 argument_list|,
-literal|"get_info_from_msr: AMD family 0x%02x CPU's are not implemented yet. sorry.\n"
+literal|"get_info_from_msr: AMD family"
+literal|" 0x%02x CPUs are not supported yet\n"
 argument_list|,
 name|family
 argument_list|)

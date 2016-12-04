@@ -365,6 +365,10 @@ block|,
 name|CAM_CMD_EPC
 init|=
 literal|0x00000027
+block|,
+name|CAM_CMD_TIMESTAMP
+init|=
+literal|0x00000028
 block|}
 name|cam_cmdmask
 typedef|;
@@ -1174,6 +1178,16 @@ block|,
 name|CAM_ARG_NONE
 block|,
 literal|"c:dDeHp:Pr:sS:T:"
+block|}
+block|,
+block|{
+literal|"timestamp"
+block|,
+name|CAM_CMD_TIMESTAMP
+block|,
+name|CAM_ARG_NONE
+block|,
+literal|"f:mrsUT:"
 block|}
 block|,
 endif|#
@@ -40805,6 +40819,9 @@ literal|"                              [-o rep_opts] [-P print_opts]\n"
 literal|"        camcontrol epc        [dev_id][generic_args]<-c cmd> [-d] [-D] [-e]\n"
 literal|"                              [-H] [-p power_cond] [-P] [-r rst_src] [-s]\n"
 literal|"                              [-S power_src] [-T timer]\n"
+literal|"        camcontrol timestamp  [dev_id][generic_args]<-r [-f format|-m|-U]>|\n"
+literal|"<-s<-f format -T time | -U>>\n"
+literal|"                              \n"
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -40862,6 +40879,7 @@ literal|"attrib      send the SCSI READ or WRITE ATTRIBUTE commands\n"
 literal|"opcodes     send the SCSI REPORT SUPPORTED OPCODES command\n"
 literal|"zone        manage Zoned Block (Shingled) devices\n"
 literal|"epc         send ATA Extended Power Conditions commands\n"
+literal|"timestamp   report or set the device's timestamp\n"
 literal|"help        this message\n"
 literal|"Device Identifiers:\n"
 literal|"bus:target        specify the bus and target, lun defaults to 0\n"
@@ -41053,6 +41071,17 @@ literal|"-r rst_src        restore settings from: default, saved (restore)\n"
 literal|"-s                save mode (timer, state, restore)\n"
 literal|"-S power_src      set power source: battery, nonbattery (source)\n"
 literal|"-T timer          set timer, seconds, .1 sec resolution (timer)\n"
+literal|"timestamp arguments:\n"
+literal|"-r                report the timestamp of the device\n"
+literal|"-f format         report the timestamp of the device with the given\n"
+literal|"                  strftime(3) format string\n"
+literal|"-m                report the timestamp of the device as milliseconds since\n"
+literal|"                  January 1st, 1970\n"
+literal|"-U                report the time with UTC instead of the local time zone\n"
+literal|"-s                set the timestamp of the device\n"
+literal|"-f format         the format of the time string passed into strptime(3)\n"
+literal|"-T time           the time value passed into strptime(3)\n"
+literal|"-U                set the timestamp of the device to UTC time\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -42508,6 +42537,31 @@ case|:
 name|error
 operator|=
 name|epc
+argument_list|(
+name|cam_dev
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|combinedopt
+argument_list|,
+name|retry_count
+argument_list|,
+name|timeout
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_VERBOSE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAM_CMD_TIMESTAMP
+case|:
+name|error
+operator|=
+name|timestamp
 argument_list|(
 name|cam_dev
 argument_list|,

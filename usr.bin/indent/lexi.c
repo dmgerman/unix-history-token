@@ -103,12 +103,23 @@ name|alphanum
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|undef
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|opchar
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -137,6 +148,12 @@ name|specials
 index|[]
 init|=
 block|{
+block|{
+literal|"auto"
+block|,
+literal|10
+block|}
+block|,
 block|{
 literal|"break"
 block|,
@@ -194,7 +211,7 @@ block|,
 block|{
 literal|"extern"
 block|,
-literal|4
+literal|10
 block|}
 block|,
 block|{
@@ -248,7 +265,7 @@ block|,
 block|{
 literal|"register"
 block|,
-literal|4
+literal|10
 block|}
 block|,
 block|{
@@ -272,7 +289,7 @@ block|,
 block|{
 literal|"static"
 block|,
-literal|4
+literal|10
 block|}
 block|,
 block|{
@@ -290,7 +307,7 @@ block|,
 block|{
 literal|"typedef"
 block|,
-literal|4
+literal|10
 block|}
 block|,
 block|{
@@ -1518,6 +1535,15 @@ operator|(
 name|sp_nparen
 operator|)
 return|;
+case|case
+literal|10
+case|:
+comment|/* storage class specifier */
+return|return
+operator|(
+name|storage
+operator|)
+return|;
 default|default:
 comment|/* all others are treated like any other 				 * identifier */
 return|return
@@ -1600,6 +1626,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|in_decl
+condition|)
 name|ps
 operator|.
 name|in_parameter_declaration

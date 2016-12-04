@@ -4767,6 +4767,14 @@ operator|->
 name|chan_idx
 argument_list|)
 expr_stmt|;
+name|ioat
+operator|->
+name|acq_head
+operator|=
+name|ioat
+operator|->
+name|head
+expr_stmt|;
 block|}
 end_function
 
@@ -4909,6 +4917,17 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ioat
+operator|->
+name|acq_head
+operator|!=
+name|ioat
+operator|->
+name|head
+condition|)
+block|{
 name|ioat_write_2
 argument_list|(
 name|ioat
@@ -4951,6 +4970,7 @@ argument_list|,
 name|ioat
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|mtx_unlock
 argument_list|(

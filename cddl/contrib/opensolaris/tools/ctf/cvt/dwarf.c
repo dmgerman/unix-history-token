@@ -2857,30 +2857,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-comment|/* Check for bogus gcc DW_AT_byte_size attribute */
-if|if
-condition|(
-name|uval
-operator|==
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dwarf.c:%s() working around bogus -1 DW_AT_byte_size\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|uval
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|tdp
 operator|->
 name|t_size
@@ -3299,30 +3275,6 @@ argument_list|,
 name|DW_ATTR_REQ
 argument_list|)
 expr_stmt|;
-comment|/* Check for bogus gcc DW_AT_byte_size attribute */
-if|if
-condition|(
-name|uval
-operator|==
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dwarf.c:%s() working around bogus -1 DW_AT_byte_size\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|uval
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|tdp
 operator|->
 name|t_size
@@ -3875,10 +3827,6 @@ decl_stmt|,
 name|bitsz
 decl_stmt|,
 name|bitoff
-decl_stmt|,
-name|maxsz
-init|=
-literal|0
 decl_stmt|;
 if|#
 directive|if
@@ -4135,23 +4083,6 @@ argument_list|,
 name|DW_AT_type
 argument_list|)
 expr_stmt|;
-name|debug
-argument_list|(
-literal|3
-argument_list|,
-literal|"die_sou_create(): ml_type = %p t_id = %d\n"
-argument_list|,
-name|ml
-operator|->
-name|ml_type
-argument_list|,
-name|ml
-operator|->
-name|ml_type
-operator|->
-name|t_id
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|die_mem_offset
@@ -4347,21 +4278,6 @@ name|ml
 operator|->
 name|ml_next
 expr_stmt|;
-comment|/* Find the size of the largest member to work around a gcc 		 * bug.  See GCC Bugzilla 35998. 		 */
-if|if
-condition|(
-name|maxsz
-operator|<
-name|ml
-operator|->
-name|ml_size
-condition|)
-name|maxsz
-operator|=
-name|ml
-operator|->
-name|ml_size
-expr_stmt|;
 block|}
 do|while
 condition|(
@@ -4379,35 +4295,6 @@ operator|!=
 name|NULL
 condition|)
 do|;
-comment|/* See if we got a bogus DW_AT_byte_size.  GCC will sometimes 	 * emit this. 	 */
-if|if
-condition|(
-name|sz
-operator|==
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dwarf.c:%s() working around bogus -1 DW_AT_byte_size\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|tdp
-operator|->
-name|t_size
-operator|=
-name|maxsz
-operator|/
-literal|8
-expr_stmt|;
-comment|/* maxsz is in bits, t_size is bytes */
-block|}
 comment|/* 	 * GCC will attempt to eliminate unused types, thus decreasing the 	 * size of the emitted dwarf.  That is, if you declare a foo_t in your 	 * header, include said header in your source file, and neglect to 	 * actually use (directly or indirectly) the foo_t in the source file, 	 * the foo_t won't make it into the emitted DWARF.  So, at least, goes 	 * the theory. 	 * 	 * Occasionally, it'll emit the DW_TAG_structure_type for the foo_t, 	 * and then neglect to emit the members.  Strangely, the loner struct 	 * tag will always be followed by a proper nested declaration of 	 * something else.  This is clearly a bug, but we're not going to have 	 * time to get it fixed before this goo goes back, so we'll have to work 	 * around it.  If we see a no-membered struct with a nested declaration 	 * (i.e. die_child of the struct tag won't be null), we'll ignore it. 	 * Being paranoid, we won't simply remove it from the hash.  Instead, 	 * we'll decline to create an iidesc for it, thus ensuring that this 	 * type won't make it into the output file.  To be safe, we'll also 	 * change the name. 	 */
 if|if
 condition|(
@@ -4862,9 +4749,6 @@ name|t_intr
 operator|->
 name|intr_nbits
 operator|!=
-operator|(
-name|int
-operator|)
 name|ml
 operator|->
 name|ml_size
@@ -6379,30 +6263,6 @@ argument_list|,
 name|DW_ATTR_REQ
 argument_list|)
 expr_stmt|;
-comment|/* Check for bogus gcc DW_AT_byte_size attribute */
-if|if
-condition|(
-name|sz
-operator|==
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dwarf.c:%s() working around bogus -1 DW_AT_byte_size\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|sz
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|tdp

@@ -1397,7 +1397,9 @@ literal|0xff
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1447,7 +1449,9 @@ name|err
 operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1793,7 +1797,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2268,7 +2274,9 @@ name|fs
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2368,7 +2376,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
 operator|(
@@ -2929,7 +2939,9 @@ operator|<
 literal|0xf0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2945,7 +2957,9 @@ operator|!=
 name|SECSIZ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2975,7 +2989,9 @@ literal|1
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|fs
 operator|->
@@ -3030,7 +3046,9 @@ operator|!=
 literal|2
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3051,7 +3069,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 else|else
@@ -3075,7 +3095,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3095,7 +3117,9 @@ operator|>
 literal|16
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3117,7 +3141,9 @@ operator|<
 name|LOCLUS
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -3139,7 +3165,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|fs
 operator|->
@@ -3205,7 +3233,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3216,7 +3246,9 @@ operator|>
 name|sc
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -3242,7 +3274,9 @@ operator|<
 name|LOCLUS
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|fs
 operator|->
@@ -3302,7 +3336,9 @@ operator|=
 name|sc
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3422,7 +3458,9 @@ operator|>
 literal|255
 condition|)
 return|return
+operator|(
 name|ENAMETOOLONG
+operator|)
 return|;
 name|memcpy
 argument_list|(
@@ -3456,7 +3494,9 @@ name|FA_DIR
 operator|)
 condition|)
 return|return
+operator|(
 name|ENOTDIR
+operator|)
 return|;
 if|if
 condition|(
@@ -3484,7 +3524,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 operator|*
@@ -3493,7 +3535,9 @@ operator|=
 name|de
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3604,7 +3648,9 @@ operator|+
 name|ent
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -3691,7 +3737,9 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 for|for
 control|(
@@ -3734,7 +3782,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 for|for
 control|(
@@ -3764,7 +3814,9 @@ operator|.
 name|name
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -4016,7 +4068,9 @@ operator|.
 name|de
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -4048,7 +4102,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 if|if
 condition|(
@@ -4064,7 +4120,9 @@ condition|)
 break|break;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -4546,7 +4604,9 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 name|n
+operator|)
 return|;
 name|size
 operator|=
@@ -4560,7 +4620,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|size
+operator|)
 return|;
 block|}
 end_function
@@ -4612,10 +4674,13 @@ name|c
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|fatend
 argument_list|(
 name|fs
@@ -4629,6 +4694,7 @@ name|n
 else|:
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4987,6 +5053,7 @@ name|c
 parameter_list|)
 block|{
 return|return
+operator|(
 name|c
 operator|>
 operator|(
@@ -5003,6 +5070,7 @@ condition|?
 literal|0xfff7U
 else|:
 literal|0xffffff7
+operator|)
 operator|)
 return|;
 block|}
@@ -5108,7 +5176,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 name|offset
 operator|+=
@@ -5165,7 +5235,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 name|offset
 operator|+=
@@ -5206,11 +5278,15 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

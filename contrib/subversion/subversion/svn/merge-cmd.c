@@ -370,6 +370,29 @@ argument_list|)
 return|;
 if|if
 condition|(
+name|svn_path_is_url
+argument_list|(
+name|targetpath
+argument_list|)
+condition|)
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_CL_ARG_PARSING_ERROR
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"Merge target '%s' must be a local path "
+literal|"but looks like a URL"
+argument_list|)
+argument_list|,
+name|targetpath
+argument_list|)
+return|;
+if|if
+condition|(
 name|opt_state
 operator|->
 name|verbose

@@ -429,6 +429,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_comment
 comment|/*  * Not all systems boot from the first CPU in the device tree. To work around  * this we need to find which CPU we have booted from so when we later  * enable the secondary CPUs we skip this one.  */
 end_comment
@@ -442,6 +448,11 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

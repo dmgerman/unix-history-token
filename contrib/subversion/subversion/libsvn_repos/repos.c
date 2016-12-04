@@ -2079,7 +2079,7 @@ literal|"# the exit code of the hook program is ignored.  The hook program"
 name|NL
 literal|"# can use the 'svnlook' utility to examine the paths in the repository"
 name|NL
-literal|"# but since the hook is invoked asyncronously the newly-created locks"
+literal|"# but since the hook is invoked asynchronously the newly-created locks"
 name|NL
 literal|"# may no longer be present."
 name|NL

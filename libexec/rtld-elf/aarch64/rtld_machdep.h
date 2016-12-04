@@ -49,14 +49,6 @@ define|\
 value|({									\ 	Elf_Addr _dynamic_addr;						\ 	asm volatile("adr	%0, _DYNAMIC" : "=&r"(_dynamic_addr));	\ 	(const Elf_Dyn *)_dynamic_addr;					\ })
 end_define
 
-begin_define
-define|#
-directive|define
-name|RTLD_IS_DYNAMIC
-parameter_list|()
-value|(1)
-end_define
-
 begin_function_decl
 name|Elf_Addr
 name|reloc_jmpslot

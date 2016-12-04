@@ -578,7 +578,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|pci_host_generic_attach
+name|pci_host_generic_core_attach
 argument_list|(
 name|dev
 argument_list|)
@@ -1694,7 +1694,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|pci_host_generic_alloc_resource
+name|pci_host_generic_core_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
@@ -1732,7 +1732,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|pci_host_generic_alloc_resource
+name|pci_host_generic_core_alloc_resource
 argument_list|(
 name|dev
 argument_list|,

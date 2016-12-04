@@ -168,13 +168,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INTRNG
-comment|/* FDT child data */
-name|pcell_t
-name|addr_cells
-decl_stmt|;
-name|pcell_t
-name|size_cells
-decl_stmt|;
 name|int
 name|nranges
 decl_stmt|;

@@ -1112,6 +1112,7 @@ name|com_st
 operator|==
 literal|'\t'
 condition|)
+comment|/* consider original indentation in 					 * case this is a box comment */
 name|com_st
 operator|++
 operator|,
@@ -1119,7 +1120,6 @@ name|target
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* ? */
 while|while
 condition|(
 name|target
@@ -1395,6 +1395,14 @@ name|ps
 operator|.
 name|p_l_follow
 expr_stmt|;
+if|if
+condition|(
+name|ps
+operator|.
+name|paren_level
+operator|>
+literal|0
+condition|)
 name|paren_target
 operator|=
 operator|-
@@ -1779,6 +1787,12 @@ name|p
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|-
+name|in_buffer
+operator|>
+literal|2
+operator|&&
 name|p
 index|[
 operator|-

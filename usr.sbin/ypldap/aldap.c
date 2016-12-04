@@ -5032,7 +5032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a LDAP value  * notes:  *	the argument u should be a NULL terminated sequence of ASCII bytes.  */
+comment|/*  * Parse a LDAP value  * notes:  *	the argument p should be a NUL-terminated sequence of ASCII bytes.  */
 end_comment
 
 begin_function
