@@ -149,6 +149,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|pmap_mapdev_attr
+parameter_list|(
+name|vm_paddr_t
+name|addr
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|,
+name|int
+name|attr
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"%s is not implemented yet!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_struct_decl
 struct_decl|struct
 name|pcb
