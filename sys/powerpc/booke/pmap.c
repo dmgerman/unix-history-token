@@ -14983,7 +14983,7 @@ argument|<< (ilog2(size)& ~
 literal|1
 argument|); 		tlb1_set_entry(tlb1_map_base, pa_base, sz, 		    _TLB_ENTRY_SHARED | _TLB_ENTRY_IO); 		size -= sz; 		pa_base += sz; 		tlb1_map_base += sz; 	} while (size>
 literal|0
-argument|);  	return (va); }  void pmap_track_page(pmap_t pmap, vm_offset_t va) { 	vm_paddr_t pa; 	vm_page_t page; 	struct pv_entry *pve;  	va&= ~PAGE_MASK; 	pa = pmap_kextract(va);  	rw_wlock(&pvh_global_lock); 	PMAP_LOCK(pmap); 	page = PHYS_TO_VM_PAGE(pa);  	TAILQ_FOREACH(pve,&page->md.pv_list, pv_link) { 		if ((pmap == pve->pv_pmap)&& (va == pve->pv_va)) { 			goto out; 		} 	} 	page->md.pv_tracked = true; 	pv_insert(pmap, va, page); out: 	PMAP_UNLOCK(pmap); 	rw_wunlock(&pvh_global_lock); }
+argument|);  	return (va); }  void pmap_track_page(pmap_t pmap, vm_offset_t va) { 	vm_paddr_t pa; 	vm_page_t page; 	struct pv_entry *pve;  	va = trunc_page(va); 	pa = pmap_kextract(va);  	rw_wlock(&pvh_global_lock); 	PMAP_LOCK(pmap); 	page = PHYS_TO_VM_PAGE(pa);  	TAILQ_FOREACH(pve,&page->md.pv_list, pv_link) { 		if ((pmap == pve->pv_pmap)&& (va == pve->pv_va)) { 			goto out; 		} 	} 	page->md.pv_tracked = true; 	pv_insert(pmap, va, page); out: 	PMAP_UNLOCK(pmap); 	rw_wunlock(&pvh_global_lock); }
 comment|/*  * Setup MAS4 defaults.  * These values are loaded to MAS0-2 on a TLB miss.  */
 argument|static void set_mas4_defaults(void) { 	uint32_t mas4;
 comment|/* Defaults: TLB0, PID0, TSIZED=4K */
