@@ -1600,6 +1600,8 @@ operator|-
 literal|1
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
