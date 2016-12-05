@@ -2770,16 +2770,6 @@ name|always_keepalive
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VIID_SMACIDX
-parameter_list|(
-name|v
-parameter_list|)
-value|(((unsigned int)(v)& 0x7f)<< 1)
-end_define
-
 begin_comment
 comment|/*  * socket so could be a listening socket too.  */
 end_comment
@@ -2946,12 +2936,9 @@ name|opt0
 operator||=
 name|V_SMAC_SEL
 argument_list|(
-name|VIID_SMACIDX
-argument_list|(
 name|vi
 operator|->
-name|viid
-argument_list|)
+name|smt_idx
 argument_list|)
 expr_stmt|;
 name|opt0

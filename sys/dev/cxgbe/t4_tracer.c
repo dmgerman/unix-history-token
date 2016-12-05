@@ -418,6 +418,17 @@ literal|5
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+literal|"t6nex"
+argument_list|,
+literal|5
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2301,6 +2312,9 @@ name|SIOCSIFMEDIA
 case|:
 case|case
 name|SIOCGIFMEDIA
+case|:
+case|case
+name|SIOCGIFXMEDIA
 case|:
 name|sx_xlock
 argument_list|(
