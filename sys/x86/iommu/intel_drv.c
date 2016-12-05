@@ -460,6 +460,15 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|AcpiPutTable
+argument_list|(
+operator|(
+name|ACPI_TABLE_HEADER
+operator|*
+operator|)
+name|dmartbl
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -796,6 +805,15 @@ literal|"\020\001INTR_REMAP\002X2APIC_OPT_OUT"
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiPutTable
+argument_list|(
+operator|(
+name|ACPI_TABLE_HEADER
+operator|*
+operator|)
+name|dmartbl
+argument_list|)
+expr_stmt|;
 name|dmar_iterate_tbl
 argument_list|(
 name|dmar_count_iter
