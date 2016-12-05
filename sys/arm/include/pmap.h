@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_PMAP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
 begin_if
 if|#
 directive|if
