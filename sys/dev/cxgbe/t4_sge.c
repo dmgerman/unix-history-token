@@ -9829,15 +9829,6 @@ name|INET6
 argument_list|)
 if|if
 condition|(
-name|cpl
-operator|->
-name|l2info
-operator|&
-name|htobe32
-argument_list|(
-name|F_RXF_LRO
-argument_list|)
-operator|&&
 name|iq
 operator|->
 name|flags
