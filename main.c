@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.56 2016/03/25 00:16:28 Jung-uk.Kim Exp $ */
+comment|/* $Id: main.c,v 1.57 2016/12/02 18:44:44 tom Exp $ */
 end_comment
 
 begin_include
@@ -541,6 +541,12 @@ name|token_table
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|error_verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -596,6 +602,15 @@ end_decl_stmt
 begin_comment
 comment|/* default is no backtracking */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|initial_action
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
