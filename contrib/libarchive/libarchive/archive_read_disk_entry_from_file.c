@@ -3222,7 +3222,7 @@ operator|&
 name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
 condition|)
 block|{
-comment|/* 			 * acl_get_entry_type_np() falis with non-NFSv4 ACLs 			 */
+comment|/* 			 * acl_get_entry_type_np() fails with non-NFSv4 ACLs 			 */
 if|if
 condition|(
 name|acl_get_entry_type_np
@@ -5868,7 +5868,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* When something error happens, it is better we 			 * should return ARCHIVE_OK because an earlier 			 * version(<2.6.28) cannot perfom FS_IOC_FIEMAP. */
+comment|/* When something error happens, it is better we 			 * should return ARCHIVE_OK because an earlier 			 * version(<2.6.28) cannot perform FS_IOC_FIEMAP. */
 goto|goto
 name|exit_setup_sparse_fiemap
 goto|;
@@ -6701,7 +6701,7 @@ operator|==
 name|size
 condition|)
 break|break;
-comment|/* This is not spase. */
+comment|/* This is not sparse. */
 name|archive_entry_sparse_add_entry
 argument_list|(
 name|entry

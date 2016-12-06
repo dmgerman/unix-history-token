@@ -277,7 +277,7 @@ name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* A command line includes space characer. */
+comment|/* A command line includes space character. */
 name|assert
 argument_list|(
 operator|(
@@ -359,7 +359,7 @@ name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* A command line includes space characer: pattern 2.*/
+comment|/* A command line includes space character: pattern 2.*/
 name|assert
 argument_list|(
 operator|(
@@ -441,7 +441,7 @@ name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* A command line includes space characer: pattern 3.*/
+comment|/* A command line includes space character: pattern 3.*/
 name|assert
 argument_list|(
 operator|(
@@ -523,7 +523,7 @@ name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* A command line includes space characer: pattern 4.*/
+comment|/* A command line includes space character: pattern 4.*/
 name|assert
 argument_list|(
 operator|(

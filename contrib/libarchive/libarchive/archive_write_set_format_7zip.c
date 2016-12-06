@@ -723,7 +723,7 @@ decl_stmt|;
 name|size_t
 name|wbuff_remaining
 decl_stmt|;
-comment|/* 	 * The list of the file entries which has its contents is used to 	 * manage struct file objects. 	 * We use 'next' a menber of struct file to chain. 	 */
+comment|/* 	 * The list of the file entries which has its contents is used to 	 * manage struct file objects. 	 * We use 'next' (a member of struct file) to chain. 	 */
 struct|struct
 block|{
 name|struct
