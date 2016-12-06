@@ -117,6 +117,12 @@ name|struct
 name|gic_redists
 name|gic_redists
 decl_stmt|;
+name|uint32_t
+name|gic_pidr2
+decl_stmt|;
+name|u_int
+name|gic_bus
+decl_stmt|;
 name|u_int
 name|gic_nirqs
 decl_stmt|;

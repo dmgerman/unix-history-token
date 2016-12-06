@@ -449,6 +449,12 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|sc
+operator|->
+name|gic_bus
+operator|=
+name|GIC_BUS_FDT
+expr_stmt|;
 comment|/* 	 * Recover number of the Re-Distributor regions. 	 */
 if|if
 condition|(

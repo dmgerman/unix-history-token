@@ -229,6 +229,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GICR_PIDR2_ARCH_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICR_PIDR2_ARCH_MASK
 value|0xF0
 end_define
@@ -236,15 +243,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|GICR_PIDR2_ARCH
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)& GICR_PIDR2_ARCH_MASK)>> GICR_PIDR2_ARCH_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICR_PIDR2_ARCH_GICv3
-value|0x30
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|GICR_PIDR2_ARCH_GICv4
-value|0x40
+value|0x4
 end_define
 
 begin_define
