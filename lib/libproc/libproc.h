@@ -405,6 +405,27 @@ name|PR_MODEL_LP64
 value|2
 end_define
 
+begin_struct
+struct|struct
+name|proc_handle_public
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|proc_getpid
+parameter_list|(
+name|phdl
+parameter_list|)
+value|(((struct proc_handle_public *)(phdl))->pid)
+end_define
+
 begin_comment
 comment|/* Function prototype definitions. */
 end_comment
@@ -701,17 +722,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|proc_getmodel
-parameter_list|(
-name|struct
-name|proc_handle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pid_t
-name|proc_getpid
 parameter_list|(
 name|struct
 name|proc_handle

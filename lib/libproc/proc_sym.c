@@ -969,9 +969,10 @@ name|kves
 operator|=
 name|kinfo_getvmmap
 argument_list|(
+name|proc_getpid
+argument_list|(
 name|p
-operator|->
-name|pid
+argument_list|)
 argument_list|,
 operator|&
 name|cnt

@@ -294,6 +294,8 @@ argument_list|)
 expr_stmt|;
 name|phdl
 operator|->
+name|public
+operator|.
 name|pid
 operator|=
 name|pid
@@ -573,9 +575,10 @@ name|ptrace
 argument_list|(
 name|PT_ATTACH
 argument_list|,
+name|proc_getpid
+argument_list|(
 name|phdl
-operator|->
-name|pid
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,

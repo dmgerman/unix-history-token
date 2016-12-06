@@ -49,10 +49,11 @@ begin_struct
 struct|struct
 name|proc_handle
 block|{
-name|pid_t
-name|pid
+name|struct
+name|proc_handle_public
+name|public
 decl_stmt|;
-comment|/* Process ID. */
+comment|/* Public fields. */
 name|int
 name|flags
 decl_stmt|;
