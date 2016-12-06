@@ -481,22 +481,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|prmap_t
-modifier|*
-name|proc_obj2map
-parameter_list|(
-name|struct
-name|proc_handle
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|proc_iter_objs
 parameter_list|(

@@ -123,7 +123,7 @@ name|l
 parameter_list|,
 name|o
 parameter_list|)
-value|proc_obj2map((p), (o))
+value|proc_name2map(p, o)
 end_define
 
 begin_define
