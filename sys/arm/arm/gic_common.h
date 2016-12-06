@@ -44,6 +44,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GICD_TYPER_I_NUM
+parameter_list|(
+name|n
+parameter_list|)
+value|((((n)& 0x1F) + 1) * 32)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICD_IIDR
 value|0x0008
 end_define
@@ -183,6 +193,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GICD_I_MASK
+parameter_list|(
+name|n
+parameter_list|)
+value|(1ul<< ((n)& 0x1f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_I_PER_ISENABLERn
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICD_ICENABLER
 parameter_list|(
 name|n
@@ -253,6 +280,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GICD_I_PER_IPRIORITYn
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICD_ITARGETSR
 parameter_list|(
 name|n
@@ -277,6 +311,13 @@ end_define
 begin_comment
 comment|/* v1 ICDICFR */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GICD_I_PER_ICFGRn
+value|16
+end_define
 
 begin_comment
 comment|/* First bit is a polarity bit (0 - low, 1 - high) */
