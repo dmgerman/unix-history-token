@@ -4871,11 +4871,13 @@ name|argv
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"failure allocating argument space"
+argument_list|)
+expr_stmt|;
 operator|*
 name|argv
 operator|++
@@ -4985,11 +4987,13 @@ name|argv
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"failure allocating argument space"
+argument_list|)
+expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
@@ -5011,6 +5015,9 @@ literal|10
 index|]
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 operator|*
 name|cpp
 operator|++
@@ -5018,6 +5025,16 @@ operator|=
 name|strdup
 argument_list|(
 name|val
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"failure allocating argument space"
 argument_list|)
 expr_stmt|;
 operator|*
