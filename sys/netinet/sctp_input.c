@@ -729,7 +729,7 @@ goto|goto
 name|outnow
 goto|;
 block|}
-comment|/* 	 * We are only accepting if we have a socket with positive 	 * so_qlimit. 	 */
+comment|/* We are only accepting if we have a socket with positive 	 * so_qlimit. */
 if|if
 condition|(
 operator|(
@@ -3798,7 +3798,7 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 		 * put it in the bucket in the vtag hash of assoc's for the 		 * system 		 */
+comment|/* put it in the bucket in the vtag hash of assoc's for the 		 * system */
 name|LIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -3927,7 +3927,7 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 		 * put it in the bucket in the vtag hash of assoc's for the 		 * system 		 */
+comment|/* put it in the bucket in the vtag hash of assoc's for the 		 * system */
 name|LIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -5001,7 +5001,7 @@ argument_list|,
 name|SCTP_STATE_SHUTDOWN_PENDING
 argument_list|)
 expr_stmt|;
-comment|/* 			 * notify upper layer that peer has initiated a 			 * shutdown 			 */
+comment|/* notify upper layer that peer has initiated a 			 * shutdown */
 name|sctp_ulp_notify
 argument_list|(
 name|SCTP_NOTIFY_PEER_SHUTDOWN
@@ -14491,7 +14491,7 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Pull it from the incomplete queue and wake the 			 * guy 			 */
+comment|/* Pull it from the incomplete queue and wake the 			 * guy */
 if|#
 directive|if
 name|defined
@@ -15547,7 +15547,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * JRS - Use the congestion control given in the pluggable 		 * CC module 		 */
+comment|/* JRS - Use the congestion control given in the pluggable 		 * CC module */
 name|stcb
 operator|->
 name|asoc
@@ -17012,7 +17012,7 @@ operator|.
 name|max_send_times
 condition|)
 block|{
-comment|/* 			 * Only retransmit if we KNOW we wont destroy the 			 * tcb 			 */
+comment|/* Only retransmit if we KNOW we wont destroy the 			 * tcb */
 name|sctp_send_hb
 argument_list|(
 name|stcb
@@ -18252,7 +18252,7 @@ operator|==
 name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
 condition|)
 block|{
-comment|/* 					 * Set it up so we don't stop 					 * retransmitting 					 */
+comment|/* Set it up so we don't stop 					 * retransmitting */
 name|asoc
 operator|->
 name|stream_reset_outstanding
@@ -24325,7 +24325,7 @@ block|}
 block|}
 block|}
 comment|/* end if !SCTP_COOKIE_ECHO */
-comment|/* 	 * process all control chunks... 	 */
+comment|/* process all 				 * control chunks... */
 if|if
 condition|(
 operator|(
@@ -25806,7 +25806,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* 			 * EY - nr_sack:  If the received chunk is an 			 * nr_sack chunk 			 */
+comment|/* EY - nr_sack:  If the received chunk is an 			 * nr_sack chunk */
 case|case
 name|SCTP_NR_SELECTIVE_ACK
 case|:

@@ -2857,7 +2857,7 @@ name|struct
 name|sctp_cc_functions
 name|cc_functions
 decl_stmt|;
-comment|/* 	 * JRS - value to store the currently loaded congestion control 	 * module 	 */
+comment|/* JRS - value to store the currently loaded congestion control 	 * module */
 name|uint32_t
 name|congestion_control_module
 decl_stmt|;

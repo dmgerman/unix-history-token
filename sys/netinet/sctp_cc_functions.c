@@ -754,7 +754,7 @@ name|net
 operator|->
 name|lastsa
 expr_stmt|;
-comment|/* 						 * lastsa>>3;  we don't need 						 * to devide ... 						 */
+comment|/* lastsa>>3;  we don't need 						 * to devide ... */
 if|if
 condition|(
 name|srtt
@@ -767,7 +767,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 						 * Short Version => Equal to 						 * Contel Version MBe 						 */
+comment|/* Short Version => Equal to 						 * Contel Version MBe */
 name|net
 operator|->
 name|ssthresh
@@ -2371,7 +2371,7 @@ operator|.
 name|ret_from_eq
 condition|)
 block|{
-comment|/* 				 * Switch over to CA if we are less 				 * aggressive 				 */
+comment|/* Switch over to CA if we are less 				 * aggressive */
 name|net
 operator|->
 name|ssthresh
@@ -4417,7 +4417,7 @@ block|{
 name|uint64_t
 name|nbw
 decl_stmt|;
-comment|/* 			 * At this point our bw_bytes has been updated by 			 * incoming sack information. 			 *  			 * But our bw may not yet be set. 			 *  			 */
+comment|/* 			 * At this point our bw_bytes has been updated by 			 * incoming sack information. 			 * 			 * But our bw may not yet be set. 			 * 			 */
 if|if
 condition|(
 operator|(
@@ -4825,7 +4825,7 @@ break|break;
 case|case
 name|SCTP_CMT_RPV2
 case|:
-comment|/* 						 * lastsa>>3;  we don't need 						 * to divide ... 						 */
+comment|/* lastsa>>3;  we don't need 						 * to divide ... */
 name|srtt
 operator|=
 name|net
@@ -5288,7 +5288,7 @@ break|break;
 case|case
 name|SCTP_CMT_RPV2
 case|:
-comment|/* 						 * lastsa>>3;  we don't need 						 * to divide ... 						 */
+comment|/* lastsa>>3;  we don't need 						 * to divide ... */
 name|srtt
 operator|=
 name|net
@@ -6227,7 +6227,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Further tuning down required over the drastic 			 * original cut 			 */
+comment|/* Further tuning down required over the drastic 			 * original cut */
 name|net
 operator|->
 name|ssthresh
@@ -6330,7 +6330,7 @@ name|net
 operator|->
 name|mtu
 expr_stmt|;
-comment|/* 				 * here back off the timer as well, to slow 				 * us down 				 */
+comment|/* here back off the timer as well, to slow 				 * us down */
 name|net
 operator|->
 name|RTO
@@ -7593,7 +7593,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Using 0 means that the value of RFC 4960 				 * is used. 				 */
+comment|/* Using 0 means that the value of RFC 4960 				 * is used. */
 name|cwnd
 operator|=
 name|min
@@ -7680,7 +7680,7 @@ operator|>
 name|cwnd
 condition|)
 block|{
-comment|/* 				 * Only set if we are not a timeout (i.e. 				 * down to 1 mtu) 				 */
+comment|/* Only set if we are not a timeout (i.e. 				 * down to 1 mtu) */
 name|net
 operator|->
 name|cwnd
@@ -11416,7 +11416,7 @@ operator|.
 name|htcp_ca
 argument_list|)
 expr_stmt|;
-comment|/* 	 * add slowly fading memory for maxRTT to accommodate routing 	 * changes etc 	 */
+comment|/* add slowly fading memory for maxRTT to accommodate routing 	 * changes etc */
 if|if
 condition|(
 name|minRTT
