@@ -106,6 +106,31 @@ value|6
 end_define
 
 begin_comment
+comment|/* Flags for proc_attach(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATTACH_FORCE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATTACH_RDONLY
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATTACH_NOSTOP
+value|0x04
+end_define
+
+begin_comment
 comment|/* Reason values for proc_detach(). */
 end_comment
 
