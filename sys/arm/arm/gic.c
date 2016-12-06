@@ -183,6 +183,12 @@ directive|include
 file|<arm/arm/gic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/arm/gic_common.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -213,186 +219,6 @@ end_comment
 begin_comment
 comment|/* Distributor Registers */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_CTLR
-value|0x000
-end_define
-
-begin_comment
-comment|/* v1 ICDDCR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_TYPER
-value|0x004
-end_define
-
-begin_comment
-comment|/* v1 ICDICTR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_IIDR
-value|0x008
-end_define
-
-begin_comment
-comment|/* v1 ICDIIDR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_IGROUPR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0080 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDISER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ISENABLER
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0100 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDISER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICENABLER
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0180 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDICER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ISPENDR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0200 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDISPR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICPENDR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0280 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDICPR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICACTIVER
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0380 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDABR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_IPRIORITYR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0400 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDIPR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ITARGETSR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0800 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDIPTR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0C00 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDICFR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_SGIR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0F00 + ((n) * 4))
-end_define
-
-begin_comment
-comment|/* v1 ICDSGIR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_SGI_TARGET_SHIFT
-value|16
-end_define
 
 begin_comment
 comment|/* CPU Registers */
@@ -517,56 +343,6 @@ name|_sc
 parameter_list|)
 define|\
 value|((_sc->typer& GICD_TYPER_SECURITYEXT) == GICD_TYPER_SECURITYEXT)
-end_define
-
-begin_comment
-comment|/* First bit is a polarity bit (0 - low, 1 - high) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_LOW
-value|(0<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_HIGH
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_MASK
-value|0x1
-end_define
-
-begin_comment
-comment|/* Second bit is a trigger bit (0 - level, 1 - edge) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_LVL
-value|(0<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_EDGE
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_MASK
-value|0x2
 end_define
 
 begin_ifndef
@@ -997,8 +773,6 @@ argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 name|irq
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -1037,8 +811,6 @@ argument_list|,
 name|GICD_ICENABLER
 argument_list|(
 name|irq
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -1222,8 +994,6 @@ argument_list|,
 name|GICD_IPRIORITYR
 argument_list|(
 name|irq
-operator|>>
-literal|2
 argument_list|)
 argument_list|,
 literal|0
@@ -1259,8 +1029,6 @@ argument_list|,
 name|GICD_IGROUPR
 argument_list|(
 name|irq
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 literal|0
@@ -1434,8 +1202,6 @@ argument_list|,
 name|GICD_IPRIORITYR
 argument_list|(
 name|i
-operator|>>
-literal|2
 argument_list|)
 argument_list|,
 literal|0
@@ -1471,8 +1237,6 @@ argument_list|,
 name|GICD_IGROUPR
 argument_list|(
 name|i
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 literal|0
@@ -1517,8 +1281,6 @@ argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|27
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -1539,8 +1301,6 @@ argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|29
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -1561,8 +1321,6 @@ argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 literal|30
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -2568,31 +2326,25 @@ name|dev
 argument_list|,
 literal|"pn 0x%x, arch 0x%x, rev 0x%x, implementer 0x%x irqs %u\n"
 argument_list|,
+name|GICD_IIDR_PROD
+argument_list|(
 name|icciidr
-operator|>>
-literal|20
+argument_list|)
 argument_list|,
-operator|(
+name|GICD_IIDR_VAR
+argument_list|(
 name|icciidr
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xF
+argument_list|)
 argument_list|,
-operator|(
+name|GICD_IIDR_REV
+argument_list|(
 name|icciidr
-operator|>>
-literal|12
-operator|)
-operator|&
-literal|0xf
+argument_list|)
 argument_list|,
-operator|(
+name|GICD_IIDR_IMPL
+argument_list|(
 name|icciidr
-operator|&
-literal|0xfff
-operator|)
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -2624,8 +2376,6 @@ argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|i
-operator|>>
-literal|4
 argument_list|)
 argument_list|,
 name|GIC_DEFAULT_ICFGR_INIT
@@ -2657,8 +2407,6 @@ argument_list|,
 name|GICD_ICENABLER
 argument_list|(
 name|i
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 literal|0xFFFFFFFF
@@ -2721,8 +2469,6 @@ argument_list|,
 name|GICD_IPRIORITYR
 argument_list|(
 name|i
-operator|>>
-literal|2
 argument_list|)
 argument_list|,
 literal|0
@@ -2742,8 +2488,6 @@ argument_list|,
 name|GICD_ITARGETSR
 argument_list|(
 name|i
-operator|>>
-literal|2
 argument_list|)
 argument_list|,
 name|mask
@@ -2781,8 +2525,6 @@ argument_list|,
 name|GICD_IGROUPR
 argument_list|(
 name|i
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 literal|0
@@ -3687,8 +3429,6 @@ argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
-operator|>>
-literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3819,8 +3559,6 @@ argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
-operator|>>
-literal|4
 argument_list|)
 argument_list|,
 name|reg
@@ -5491,9 +5229,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|GICD_SGIR
-argument_list|(
-literal|0
-argument_list|)
 argument_list|,
 name|val
 operator||
@@ -5805,8 +5540,6 @@ argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
-operator|>>
-literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5937,8 +5670,6 @@ argument_list|,
 name|GICD_ICFGR
 argument_list|(
 name|irq
-operator|>>
-literal|4
 argument_list|)
 argument_list|,
 name|reg
@@ -6003,8 +5734,6 @@ argument_list|,
 name|GICD_ICENABLER
 argument_list|(
 name|irq
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -6071,8 +5800,6 @@ argument_list|,
 name|GICD_ISENABLER
 argument_list|(
 name|irq
-operator|>>
-literal|5
 argument_list|)
 argument_list|,
 operator|(
@@ -6164,9 +5891,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|GICD_SGIR
-argument_list|(
-literal|0
-argument_list|)
 argument_list|,
 name|val
 operator||
