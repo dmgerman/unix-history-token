@@ -313,6 +313,17 @@ block|,
 name|aarch64_cloudabi64_fetch_args
 block|,
 name|aarch64_cloudabi64_fetch_retval
+block|,
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
+name|aarch64_cloudabi64
+operator|.
+name|extra_syscalls
+argument_list|)
+block|,
+block|{
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
