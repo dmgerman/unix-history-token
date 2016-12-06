@@ -53,6 +53,28 @@ end_struct_decl
 
 begin_struct
 struct|struct
+name|symtab
+block|{
+name|Elf_Data
+modifier|*
+name|data
+decl_stmt|;
+name|u_int
+name|nsyms
+decl_stmt|;
+name|u_int
+modifier|*
+name|index
+decl_stmt|;
+name|u_long
+name|stridx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|file_info
 block|{
 name|Elf
@@ -64,6 +86,18 @@ name|fd
 decl_stmt|;
 name|u_int
 name|refs
+decl_stmt|;
+name|GElf_Ehdr
+name|ehdr
+decl_stmt|;
+comment|/* Symbol tables, sorted by value. */
+name|struct
+name|symtab
+name|dynsymtab
+decl_stmt|;
+name|struct
+name|symtab
+name|symtab
 decl_stmt|;
 block|}
 struct|;
