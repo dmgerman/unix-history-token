@@ -7683,7 +7683,7 @@ name|group_keys
 argument_list|)
 argument_list|,
 operator|(
-literal|"keyix %d> %d\n"
+literal|"keyix %u> %zu\n"
 operator|,
 name|k
 operator|->
