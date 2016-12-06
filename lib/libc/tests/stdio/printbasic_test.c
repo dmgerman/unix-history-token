@@ -587,9 +587,9 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-name|S_ULONGMAX
+name|S_ULLONGMAX
 argument_list|,
-literal|"%lu"
+literal|"%llu"
 argument_list|,
 name|ULLONG_MAX
 argument_list|)
@@ -608,7 +608,7 @@ name|testfmt
 argument_list|(
 name|S_UINT32MAX
 argument_list|,
-literal|"%lu"
+literal|"%u"
 argument_list|,
 name|UINT32_MAX
 argument_list|)
