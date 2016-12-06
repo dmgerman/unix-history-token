@@ -36,7 +36,7 @@ begin_define
 define|#
 directive|define
 name|_JB_SIGMASK
-value|21
+value|22
 end_define
 
 begin_comment
