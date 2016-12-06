@@ -2786,6 +2786,11 @@ operator|++
 name|cp
 control|)
 block|{
+if|#
+directive|if
+name|CHAR_MIN
+operator|!=
+literal|0
 if|if
 condition|(
 operator|*
@@ -2795,6 +2800,8 @@ literal|0
 condition|)
 break|break;
 comment|/* garbage input */
+endif|#
+directive|endif
 name|len
 operator|=
 name|snprintf
