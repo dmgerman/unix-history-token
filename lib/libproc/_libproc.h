@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libelf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rtld_db.h>
 end_include
 
@@ -44,6 +50,40 @@ struct_decl|struct
 name|procstat
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|file_info
+block|{
+name|Elf
+modifier|*
+name|elf
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|u_int
+name|refs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|map_info
+block|{
+name|prmap_t
+name|map
+decl_stmt|;
+name|struct
+name|file_info
+modifier|*
+name|file
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -75,26 +115,26 @@ modifier|*
 name|rdap
 decl_stmt|;
 comment|/* librtld_db agent */
-name|rd_loadobj_t
-modifier|*
-name|rdobjs
-decl_stmt|;
-comment|/* Array of loaded objects. */
-name|size_t
-name|rdobjsz
-decl_stmt|;
-comment|/* Array size. */
-name|size_t
-name|nobjs
-decl_stmt|;
-comment|/* Num. objects currently loaded. */
-name|rd_loadobj_t
-modifier|*
-name|rdexec
-decl_stmt|;
-comment|/* rdobj for program executable. */
 name|struct
-name|lwpstatus
+name|map_info
+modifier|*
+name|mappings
+decl_stmt|;
+comment|/* File mappings for proc. */
+name|size_t
+name|maparrsz
+decl_stmt|;
+comment|/* Map array size. */
+name|size_t
+name|nmappings
+decl_stmt|;
+comment|/* Number of mappings. */
+name|prmap_t
+modifier|*
+name|exec_map
+decl_stmt|;
+comment|/* Executable text mapping. */
+name|lwpstatus_t
 name|lwps
 decl_stmt|;
 comment|/* Process status. */
@@ -107,7 +147,7 @@ comment|/* libprocstat handle. */
 name|char
 name|execpath
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Path to program executable. */
