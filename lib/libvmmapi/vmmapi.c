@@ -1092,6 +1092,12 @@ name|ctx
 operator|->
 name|lowmem
 operator|&&
+name|len
+operator|<=
+name|ctx
+operator|->
+name|lowmem
+operator|&&
 name|gaddr
 operator|+
 name|len
@@ -1134,6 +1140,12 @@ if|if
 condition|(
 name|gaddr
 operator|<
+name|ctx
+operator|->
+name|highmem
+operator|&&
+name|len
+operator|<=
 name|ctx
 operator|->
 name|highmem
