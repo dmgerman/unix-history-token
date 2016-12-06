@@ -19742,9 +19742,6 @@ case|case
 name|FW_PORT_TYPE_CR_QSFP
 case|:
 case|case
-name|FW_PORT_TYPE_CR_SFP28
-case|:
-case|case
 name|FW_PORT_TYPE_SFP28
 case|:
 case|case
