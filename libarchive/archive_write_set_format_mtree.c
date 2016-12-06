@@ -10829,7 +10829,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add "./" prefiex. 	 * NOTE: If the pathname does not have a path separator, we have 	 * to add "./" to the head of the pathename because mtree reader 	 * will suppose that it is v1(a.k.a classic) mtree format and 	 * change the directory unexpectedly and so it will make a wrong 	 * path. 	 */
+comment|/* 	 * Add "./" prefix. 	 * NOTE: If the pathname does not have a path separator, we have 	 * to add "./" to the head of the pathname because mtree reader 	 * will suppose that it is v1(a.k.a classic) mtree format and 	 * change the directory unexpectedly and so it will make a wrong 	 * path. 	 */
 if|if
 condition|(
 name|strcmp

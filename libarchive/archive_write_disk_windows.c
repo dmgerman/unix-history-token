@@ -637,7 +637,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Default mode for dirs created automatically (will be modified by umask).  * Note that POSIX specifies 0777 for implicity-created dirs, "modified  * by the process' file creation mask."  */
+comment|/*  * Default mode for dirs created automatically (will be modified by umask).  * Note that POSIX specifies 0777 for implicitly-created dirs, "modified  * by the process' file creation mask."  */
 end_comment
 
 begin_define
@@ -2024,7 +2024,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * A full-pathname pointig a network drive 	 * like "\\<server-name>\<share-name>\file".  	 */
+comment|/* 	 * A full-pathname pointing to a network drive 	 * like "\\<server-name>\<share-name>\file".  	 */
 if|if
 condition|(
 name|wnp

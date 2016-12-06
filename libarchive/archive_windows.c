@@ -3632,7 +3632,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * If there is no backslach chars, return the original. 	 */
+comment|/* 	 * If there is no backslash chars, return the original. 	 */
 if|if
 condition|(
 operator|!
