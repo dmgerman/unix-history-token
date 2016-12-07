@@ -283,6 +283,8 @@ specifier|const
 name|struct
 name|vmbus_channel
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2253,9 +2255,11 @@ operator|!=
 name|NULL
 condition|)
 break|break;
-name|DELAY
+name|pause
 argument_list|(
-literal|1000
+literal|"rchopen"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2277,9 +2281,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|DELAY
+name|pause
 argument_list|(
-literal|1000
+literal|"chopen"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3005,6 +3011,9 @@ name|struct
 name|vmbus_channel
 modifier|*
 name|chan
+parameter_list|,
+name|bool
+name|can_sleep
 parameter_list|)
 block|{
 define|#
@@ -3041,7 +3050,18 @@ operator|(
 name|true
 operator|)
 return|;
-comment|/* Not sure about the context; use busy-wait. */
+if|if
+condition|(
+name|can_sleep
+condition|)
+name|pause
+argument_list|(
+literal|"wchrev"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|DELAY
 argument_list|(
 literal|1000
@@ -3201,6 +3221,8 @@ condition|(
 name|vmbus_chan_wait_revoke
 argument_list|(
 name|chan
+argument_list|,
+name|true
 argument_list|)
 condition|)
 block|{
