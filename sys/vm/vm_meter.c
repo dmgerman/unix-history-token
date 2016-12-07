@@ -1616,11 +1616,7 @@ name|v_cache_count
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|u_int
-operator|*
-operator|)
-name|NULL
+name|SYSCTL_NULL_UINT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -1640,11 +1636,7 @@ name|v_tcached
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|(
-name|u_int
-operator|*
-operator|)
-name|NULL
+name|SYSCTL_NULL_UINT_PTR
 argument_list|,
 literal|0
 argument_list|,
