@@ -392,7 +392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "fMissing" from endian.h */
+comment|/* "Missing" from endian.h */
 end_comment
 
 begin_function
