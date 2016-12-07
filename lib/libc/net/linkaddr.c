@@ -610,7 +610,7 @@ modifier|*
 name|out
 decl_stmt|;
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|in
 decl_stmt|,
@@ -701,7 +701,7 @@ name|in
 operator|=
 operator|(
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|)
 name|sdl
@@ -737,7 +737,7 @@ name|in
 operator|!=
 operator|(
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|)
 name|sdl
@@ -786,13 +786,9 @@ operator|=
 name|hexlist
 index|[
 name|i
-operator|&
-literal|0xf
-index|]
-expr_stmt|;
-name|i
-operator|>>=
+operator|>>
 literal|4
+index|]
 expr_stmt|;
 operator|*
 name|out
@@ -801,6 +797,8 @@ operator|=
 name|hexlist
 index|[
 name|i
+operator|&
+literal|0xf
 index|]
 expr_stmt|;
 name|rem
@@ -827,7 +825,7 @@ name|i
 index|]
 expr_stmt|;
 name|rem
-operator|++
+operator|--
 expr_stmt|;
 block|}
 block|}
