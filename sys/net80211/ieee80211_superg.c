@@ -4018,10 +4018,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Note: this comlock acquisition LORs with the node lock:  *  * 1: sta_join1 -> NODE_LOCK -> node_free -> node_cleanup -> ff_node_cleanup -> COM_LOCK  * 2: TBD  */
-end_comment
-
 begin_function
 name|void
 name|ieee80211_ff_node_cleanup
