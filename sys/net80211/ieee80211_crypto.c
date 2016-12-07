@@ -1950,7 +1950,7 @@ operator|(
 operator|-
 literal|1
 operator|)
-operator|:
+return|;
 block|}
 end_function
 
