@@ -1522,7 +1522,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 operator|>=
 name|newcnt
 condition|)
@@ -1556,7 +1556,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -1574,7 +1574,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -1596,7 +1596,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2138,7 +2138,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -2149,7 +2149,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -9898,7 +9898,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -15376,7 +15376,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/* Find where it was sent to if possible. */
@@ -15401,7 +15401,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -15436,7 +15436,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tsn
 argument_list|)
@@ -16254,7 +16254,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -16272,7 +16272,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tsn
 argument_list|)
@@ -16316,7 +16316,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -16648,7 +16648,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/* restart the timer */
@@ -16725,7 +16725,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -17268,7 +17268,7 @@ index|[
 name|temp
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -17307,7 +17307,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -20790,7 +20790,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -20803,14 +20803,14 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|oldstrm
 index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 expr_stmt|;
 name|stcb
 operator|->
@@ -21000,7 +21000,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -21013,7 +21013,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;

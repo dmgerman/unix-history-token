@@ -1010,19 +1010,19 @@ struct|struct
 name|sctp_data_chunkrec
 block|{
 name|uint32_t
-name|TSN_seq
+name|tsn
 decl_stmt|;
 comment|/* the TSN of this transmit */
 name|uint32_t
-name|stream_seq
+name|mid
 decl_stmt|;
-comment|/* the stream sequence number of this transmit */
+comment|/* the message identifier of this transmit */
 name|uint16_t
-name|stream_number
+name|sid
 decl_stmt|;
 comment|/* the stream number of this guy */
 name|uint32_t
-name|payloadtype
+name|ppid
 decl_stmt|;
 name|uint32_t
 name|context
@@ -1042,7 +1042,7 @@ name|timetodrop
 decl_stmt|;
 comment|/* time we drop it from queue */
 name|uint32_t
-name|fsn_num
+name|fsn
 decl_stmt|;
 comment|/* Fragment Sequence Number */
 name|uint8_t
@@ -1236,10 +1236,6 @@ name|uint16_t
 name|sinfo_stream
 decl_stmt|;
 comment|/* off the wire */
-name|uint32_t
-name|sinfo_ssn
-decl_stmt|;
-comment|/* off the wire */
 name|uint16_t
 name|sinfo_flags
 decl_stmt|;
@@ -1270,7 +1266,7 @@ decl_stmt|;
 comment|/* our assoc id */
 comment|/* Non sinfo stuff */
 name|uint32_t
-name|msg_id
+name|mid
 decl_stmt|;
 comment|/* Fragment Index */
 name|uint32_t
@@ -1445,7 +1441,7 @@ name|uint16_t
 name|sinfo_flags
 decl_stmt|;
 name|uint16_t
-name|stream
+name|sid
 decl_stmt|;
 name|uint16_t
 name|act_flags
@@ -1502,11 +1498,11 @@ name|sctp_readhead
 name|uno_inqueue
 decl_stmt|;
 name|uint32_t
-name|last_sequence_delivered
+name|last_mid_delivered
 decl_stmt|;
 comment|/* used for re-order */
 name|uint16_t
-name|stream_no
+name|sid
 decl_stmt|;
 name|uint8_t
 name|delivery_started
@@ -1776,7 +1772,7 @@ name|uint32_t
 name|next_mid_unordered
 decl_stmt|;
 name|uint16_t
-name|stream_no
+name|sid
 decl_stmt|;
 name|uint8_t
 name|last_msg_incomplete

@@ -1460,11 +1460,11 @@ operator|&&
 operator|(
 name|strqt
 operator|->
-name|stream_no
+name|sid
 operator|<
 name|strq
 operator|->
-name|stream_no
+name|sid
 operator|)
 condition|)
 block|{
@@ -4852,7 +4852,7 @@ name|strmout
 index|[
 name|sp
 operator|->
-name|stream
+name|sid
 index|]
 expr_stmt|;
 block|}

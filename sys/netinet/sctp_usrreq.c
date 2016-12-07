@@ -539,7 +539,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}

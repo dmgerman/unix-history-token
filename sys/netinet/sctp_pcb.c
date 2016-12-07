@@ -21891,9 +21891,13 @@ operator|<<
 literal|16
 operator|)
 operator||
+operator|(
 name|sq
 operator|->
-name|sinfo_ssn
+name|mid
+operator|&
+literal|0x0000ffff
+operator|)
 expr_stmt|;
 name|sctp_ulp_notify
 argument_list|(
@@ -23034,7 +23038,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -23052,7 +23056,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -23074,7 +23078,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -23227,7 +23231,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -23245,7 +23249,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -23267,7 +23271,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -31666,7 +31670,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|asoc
 operator|->
@@ -31957,7 +31961,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|asoc
 operator|->

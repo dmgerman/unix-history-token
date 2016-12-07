@@ -1958,7 +1958,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -1978,7 +1978,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|asoc
 operator|->
@@ -2006,7 +2006,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -2024,7 +2024,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -2045,7 +2045,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -2064,7 +2064,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|state
@@ -2085,7 +2085,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|outqueue
@@ -2234,7 +2234,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -2597,7 +2597,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -2626,7 +2626,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 name|recovery_cnt
@@ -2717,7 +2717,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|chk
 operator|->
@@ -2997,7 +2997,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 name|tsnlast
@@ -3008,7 +3008,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 if|if
 condition|(
@@ -3028,7 +3028,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|chk
 operator|->
@@ -3125,7 +3125,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -3319,7 +3319,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 block|}
@@ -3818,7 +3818,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
