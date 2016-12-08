@@ -16722,6 +16722,10 @@ operator|.
 name|new_set
 operator|==
 literal|0
+operator|&&
+name|do_set
+operator|==
+literal|0
 condition|)
 block|{
 name|exitval
