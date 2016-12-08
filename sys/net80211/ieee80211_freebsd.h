@@ -3136,6 +3136,13 @@ name|IEEE80211_F_SURVEY_NOISE_DBM
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_SURVEY_TSC
+value|0x00000008
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_channel_survey
@@ -3149,8 +3156,11 @@ decl_stmt|;
 name|uint32_t
 name|s_time_busy
 decl_stmt|;
-name|int
+name|int32_t
 name|s_noise
+decl_stmt|;
+name|uint64_t
+name|s_tsc
 decl_stmt|;
 block|}
 struct|;
