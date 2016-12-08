@@ -251,6 +251,9 @@ decl_stmt|;
 name|vm_map_entry_t
 name|entry
 decl_stmt|;
+name|int
+name|map_generation
+decl_stmt|;
 name|bool
 name|lookup_still_valid
 decl_stmt|;
@@ -1165,8 +1168,6 @@ decl_stmt|;
 name|int
 name|locked
 decl_stmt|,
-name|map_generation
-decl_stmt|,
 name|nera
 decl_stmt|,
 name|result
@@ -1324,6 +1325,8 @@ name|result
 operator|)
 return|;
 block|}
+name|fs
+operator|.
 name|map_generation
 operator|=
 name|fs
@@ -3549,6 +3552,8 @@ name|map
 operator|->
 name|timestamp
 operator|!=
+name|fs
+operator|.
 name|map_generation
 condition|)
 block|{
