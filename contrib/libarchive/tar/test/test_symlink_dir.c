@@ -129,6 +129,29 @@ argument_list|,
 literal|"abcde"
 argument_list|)
 expr_stmt|;
+name|assertMakeDir
+argument_list|(
+literal|"source/dir4"
+argument_list|,
+literal|0755
+argument_list|)
+expr_stmt|;
+name|assertMakeFile
+argument_list|(
+literal|"source/dir4/file3"
+argument_list|,
+literal|0755
+argument_list|,
+literal|"abcdef"
+argument_list|)
+expr_stmt|;
+name|assertMakeHardlink
+argument_list|(
+literal|"source/dir4/file4"
+argument_list|,
+literal|"source/dir4/file3"
+argument_list|)
+expr_stmt|;
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -136,6 +159,19 @@ argument_list|,
 name|systemf
 argument_list|(
 literal|"%s -cf test.tar -C source dir dir2 dir3 file file2"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Second archive with hardlinks */
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s -cf test2.tar -C source dir4"
 argument_list|,
 name|testprog
 argument_list|)
@@ -433,7 +469,32 @@ name|testprog
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* dest2/dir symlink should be followed */
+comment|/* "dir4" is a symlink to existing "real_dir" */
+if|if
+condition|(
+name|canSymlink
+argument_list|()
+condition|)
+name|assertMakeSymlink
+argument_list|(
+literal|"dest2/dir4"
+argument_list|,
+literal|"real_dir"
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
+literal|0
+argument_list|,
+name|systemf
+argument_list|(
+literal|"%s -xPf test2.tar -C dest2"
+argument_list|,
+name|testprog
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* dest2/dir and dest2/dir4 symlinks should be followed */
 if|if
 condition|(
 name|canSymlink
@@ -443,6 +504,13 @@ block|{
 name|assertIsSymlink
 argument_list|(
 literal|"dest2/dir"
+argument_list|,
+literal|"real_dir"
+argument_list|)
+expr_stmt|;
+name|assertIsSymlink
+argument_list|(
+literal|"dest2/dir4"
 argument_list|,
 literal|"real_dir"
 argument_list|)
@@ -534,6 +602,14 @@ literal|"dest2/file2"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* dest2/dir4/file3 and dest2/dir4/file4 should be hard links */
+name|assertIsHardlink
+argument_list|(
+literal|"dest2/dir4/file3"
+argument_list|,
+literal|"dest2/dir4/file4"
 argument_list|)
 expr_stmt|;
 block|}
