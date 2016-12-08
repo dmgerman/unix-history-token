@@ -2141,7 +2141,7 @@ argument_list|(
 name|rh
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Either we hit the root or couldn't find any match, 	 * Which basically means 	 * "caint get there frm here" 	 */
+comment|/* 	 * Either we hit the root or could not find any match, 	 * which basically means: "cannot get there from here". 	 */
 name|miss
 label|:
 name|V_rtstat
