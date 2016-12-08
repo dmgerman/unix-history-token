@@ -196,34 +196,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|R92S_GP
-value|0x01e0
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92S_GPIO_CTRL
-value|(R92S_GP + 0x00c)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92S_GPIO_IO_SEL
-value|(R92S_GP + 0x00e)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R92S_MAC_PINMUX_CTRL
-value|(R92S_GP + 0x011)
-end_define
-
-begin_define
-define|#
-directive|define
 name|R92S_SECURITY
 value|0x0240
 end_define
@@ -247,6 +219,34 @@ define|#
 directive|define
 name|R92S_CAMREAD
 value|(R92S_SECURITY + 0x008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_GP
+value|0x02e0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_GPIO_CTRL
+value|(R92S_GP + 0x00c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_GPIO_IO_SEL
+value|(R92S_GP + 0x00e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_MAC_PINMUX_CTRL
+value|(R92S_GP + 0x011)
 end_define
 
 begin_define
