@@ -2642,21 +2642,30 @@ begin_define
 define|#
 directive|define
 name|pci_pool_destroy
-value|dma_pool_destroy
+parameter_list|(
+modifier|...
+parameter_list|)
+value|dma_pool_destroy(__VA_ARGS__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pci_pool_alloc
-value|dma_pool_alloc
+parameter_list|(
+modifier|...
+parameter_list|)
+value|dma_pool_alloc(__VA_ARGS__)
 end_define
 
 begin_define
 define|#
 directive|define
 name|pci_pool_free
-value|dma_pool_free
+parameter_list|(
+modifier|...
+parameter_list|)
+value|dma_pool_free(__VA_ARGS__)
 end_define
 
 begin_define
