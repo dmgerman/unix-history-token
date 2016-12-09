@@ -123,6 +123,48 @@ parameter_list|)
 value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		counter_u64_zero((a)[i]);			\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * counter(9) based rate checking.  */
+end_comment
+
+begin_struct
+struct|struct
+name|counter_rate
+block|{
+name|counter_u64_t
+name|cr_rate
+decl_stmt|;
+comment|/* Events since last second */
+specifier|volatile
+name|int
+name|cr_lock
+decl_stmt|;
+comment|/* Lock to clean the struct */
+name|int
+name|cr_ticks
+decl_stmt|;
+comment|/* Ticks on last clean */
+name|int
+name|cr_over
+decl_stmt|;
+comment|/* Over limit since cr_ticks? */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int64_t
+name|counter_ratecheck
+parameter_list|(
+name|struct
+name|counter_rate
+modifier|*
+parameter_list|,
+name|int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
