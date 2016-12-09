@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|GFP_TEMPORARY
-value|0
+value|M_NOWAIT
 end_define
 
 begin_function
