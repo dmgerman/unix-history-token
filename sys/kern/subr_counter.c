@@ -446,7 +446,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-name|atomic_cmpset_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|cr
