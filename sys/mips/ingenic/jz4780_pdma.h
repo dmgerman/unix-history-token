@@ -66,6 +66,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DRT_AUTO
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Auto-request. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PDMA_DCS
 parameter_list|(
 name|n
@@ -80,6 +91,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DCS_DES8
+value|(1<< 30)
+end_define
+
+begin_comment
+comment|/* Descriptor 8 Word. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCS_AR
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Address Error. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCS_TT
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Transfer Terminate. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCS_HLT
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* DMA halt. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCS_CTE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Channel transfer enable. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PDMA_DCM
 parameter_list|(
 name|n
@@ -89,6 +155,219 @@ end_define
 
 begin_comment
 comment|/* Channel n Command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_SAI
+value|(1<< 23)
+end_define
+
+begin_comment
+comment|/* Source Address Increment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_DAI
+value|(1<< 22)
+end_define
+
+begin_comment
+comment|/* Destination Address Increment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_SP_S
+value|14
+end_define
+
+begin_comment
+comment|/* Source port width. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_SP_M
+value|(0x3<< DCM_SP_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_SP_1
+value|(0x1<< DCM_SP_S)
+end_define
+
+begin_comment
+comment|/* 1 byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_SP_2
+value|(0x2<< DCM_SP_S)
+end_define
+
+begin_comment
+comment|/* 2 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_SP_4
+value|(0x0<< DCM_SP_S)
+end_define
+
+begin_comment
+comment|/* 4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_DP_S
+value|12
+end_define
+
+begin_comment
+comment|/* Destination port width. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_DP_M
+value|(0x3<< DCM_DP_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_DP_1
+value|(0x1<< DCM_DP_S)
+end_define
+
+begin_comment
+comment|/* 1 byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_DP_2
+value|(0x2<< DCM_DP_S)
+end_define
+
+begin_comment
+comment|/* 2 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_DP_4
+value|(0x0<< DCM_DP_S)
+end_define
+
+begin_comment
+comment|/* 4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_S
+value|8
+end_define
+
+begin_comment
+comment|/* Transfer Data Size of a data unit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_M
+value|(0x7<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_1
+value|(0x1<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_2
+value|(0x2<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_4
+value|(0x0<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_16
+value|(0x3<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_32
+value|(0x4<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_64
+value|(0x5<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TSZ_128
+value|(0x6<< DCM_TSZ_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCM_TIE
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Transfer Interrupt Enable (TIE). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCM_LINK
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Descriptor Link Enable. */
 end_comment
 
 begin_define
@@ -132,6 +411,71 @@ end_define
 
 begin_comment
 comment|/* DMA Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAC_FMSC
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAC_INTCC_S
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAC_INTCC_M
+value|(0x1f<< DMAC_INTCC_S)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAC_INTCE
+value|(1<< 16)
+end_define
+
+begin_comment
+comment|/* Permit INTC_IRQ to be bound to one of programmable channel. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAC_HLT
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Global halt status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAC_AR
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Global address error status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAC_DMAE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Enable DMA. */
 end_comment
 
 begin_define
