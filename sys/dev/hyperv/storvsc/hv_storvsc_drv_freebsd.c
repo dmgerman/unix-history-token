@@ -9319,6 +9319,18 @@ name|resp_buf_len
 decl_stmt|,
 name|data_len
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|resp_buf
+init|=
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|csio
+operator|->
+name|data_ptr
+decl_stmt|;
 name|struct
 name|scsi_inquiry_data
 modifier|*
@@ -9340,18 +9352,6 @@ name|vm_srb
 operator|->
 name|transfer_len
 expr_stmt|;
-name|uint8_t
-modifier|*
-name|resp_buf
-init|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|csio
-operator|->
-name|data_ptr
-decl_stmt|;
 comment|/* Get the available buffer length */
 name|resp_buf_len
 operator|=
