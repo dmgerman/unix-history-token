@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1595,11 +1601,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD11
+end_ifdef
 
 begin_comment
 comment|/*  * Provide compatibility sysctls for the benefit of old utilities which exit  * with an error if they cannot be found.  */
