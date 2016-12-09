@@ -666,7 +666,7 @@ argument_list|)
 expr_stmt|;
 name|rle
 operator|=
-name|_pci_get_rle
+name|linux_pci_get_rle
 argument_list|(
 name|pdev
 argument_list|,
@@ -678,6 +678,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rle
+operator|!=
+name|NULL
 condition|)
 name|pdev
 operator|->
