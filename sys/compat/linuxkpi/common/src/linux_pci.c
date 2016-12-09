@@ -698,7 +698,7 @@ name|dev
 operator|.
 name|irq
 operator|=
-literal|255
+name|LINUX_IRQ_INVALID
 expr_stmt|;
 name|pdev
 operator|->
