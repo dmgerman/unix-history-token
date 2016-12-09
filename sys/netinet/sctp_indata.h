@@ -69,10 +69,10 @@ name|uint32_t
 name|context
 parameter_list|,
 name|uint16_t
-name|stream_no
+name|sid
 parameter_list|,
 name|uint32_t
-name|stream_seq
+name|mid
 parameter_list|,
 name|uint8_t
 name|flags
@@ -102,9 +102,7 @@ name|tsn
 parameter_list|,
 name|ppid
 parameter_list|,
-name|stream_no
-parameter_list|,
-name|stream_seq
+name|sid
 parameter_list|,
 name|flags
 parameter_list|,
@@ -112,9 +110,9 @@ name|dm
 parameter_list|,
 name|tfsn
 parameter_list|,
-name|msgid
+name|mid
 parameter_list|)
-value|do { \ 	if (_ctl) { \ 		atomic_add_int(&((net)->ref_count), 1); \ 		memset(_ctl, 0, sizeof(struct sctp_queued_to_read)); \ 		(_ctl)->sinfo_stream = stream_no; \ 		(_ctl)->sinfo_ssn = stream_seq; \ 		TAILQ_INIT(&_ctl->reasm); \ 		(_ctl)->top_fsn = tfsn; \ 		(_ctl)->msg_id = msgid; \ 		(_ctl)->sinfo_flags = (flags<< 8); \ 		(_ctl)->sinfo_ppid = ppid; \ 		(_ctl)->sinfo_context = context; \ 		(_ctl)->fsn_included = 0xffffffff; \ 		(_ctl)->top_fsn = 0xffffffff; \ 		(_ctl)->sinfo_tsn = tsn; \ 		(_ctl)->sinfo_cumtsn = tsn; \ 		(_ctl)->sinfo_assoc_id = sctp_get_associd((in_it)); \ 		(_ctl)->whoFrom = net; \ 		(_ctl)->data = dm; \ 		(_ctl)->stcb = (in_it); \ 		(_ctl)->port_from = (in_it)->rport; \ 	} \ } while (0)
+value|do { \ 	if (_ctl) { \ 		atomic_add_int(&((net)->ref_count), 1); \ 		memset(_ctl, 0, sizeof(struct sctp_queued_to_read)); \ 		(_ctl)->sinfo_stream = sid; \ 		TAILQ_INIT(&_ctl->reasm); \ 		(_ctl)->top_fsn = tfsn; \ 		(_ctl)->mid = mid; \ 		(_ctl)->sinfo_flags = (flags<< 8); \ 		(_ctl)->sinfo_ppid = ppid; \ 		(_ctl)->sinfo_context = context; \ 		(_ctl)->fsn_included = 0xffffffff; \ 		(_ctl)->top_fsn = 0xffffffff; \ 		(_ctl)->sinfo_tsn = tsn; \ 		(_ctl)->sinfo_cumtsn = tsn; \ 		(_ctl)->sinfo_assoc_id = sctp_get_associd((in_it)); \ 		(_ctl)->whoFrom = net; \ 		(_ctl)->data = dm; \ 		(_ctl)->stcb = (in_it); \ 		(_ctl)->port_from = (in_it)->rport; \ 	} \ } while (0)
 end_define
 
 begin_function_decl

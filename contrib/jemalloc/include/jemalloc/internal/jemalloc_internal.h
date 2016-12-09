@@ -1202,7 +1202,7 @@ parameter_list|,
 name|alignment
 parameter_list|)
 define|\
-value|((void *)((uintptr_t)(a)& (-(alignment))))
+value|((void *)((uintptr_t)(a)& ((~(alignment)) + 1)))
 comment|/* Return the offset between a and the nearest aligned address at or below a. */
 define|#
 directive|define
@@ -1224,7 +1224,7 @@ parameter_list|,
 name|alignment
 parameter_list|)
 define|\
-value|(((s) + (alignment - 1))& (-(alignment)))
+value|(((s) + (alignment - 1))& ((~(alignment)) + 1))
 comment|/* Declare a variable-length array. */
 if|#
 directive|if

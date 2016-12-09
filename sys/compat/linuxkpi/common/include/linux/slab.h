@@ -90,7 +90,7 @@ name|size
 parameter_list|,
 name|flags
 parameter_list|)
-value|kmalloc((size), (flags) | M_ZERO)
+value|kmalloc((size), M_ZERO | ((flags) ? (flags) : M_NOWAIT))
 end_define
 
 begin_define
@@ -207,9 +207,60 @@ parameter_list|)
 value|kmalloc(size, GFP_KERNEL)
 end_define
 
+begin_comment
+comment|/*  * Prefix some functions with linux_ to avoid namespace conflict  * with the OpenSolaris code in the kernel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kmem_cache
+value|linux_kmem_cache
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_cache_create
+parameter_list|(
+modifier|...
+parameter_list|)
+value|linux_kmem_cache_create(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_cache_alloc
+parameter_list|(
+modifier|...
+parameter_list|)
+value|linux_kmem_cache_alloc(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_cache_free
+parameter_list|(
+modifier|...
+parameter_list|)
+value|linux_kmem_cache_free(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_cache_destroy
+parameter_list|(
+modifier|...
+parameter_list|)
+value|linux_kmem_cache_destroy(__VA_ARGS__)
+end_define
+
 begin_struct
 struct|struct
-name|kmem_cache
+name|linux_kmem_cache
 block|{
 name|uma_zone_t
 name|cache_zone
@@ -239,7 +290,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|kmem_ctor
+name|linux_kmem_ctor
 parameter_list|(
 name|void
 modifier|*
@@ -289,7 +340,7 @@ specifier|inline
 name|struct
 name|kmem_cache
 modifier|*
-name|kmem_cache_create
+name|linux_kmem_cache_create
 parameter_list|(
 name|char
 modifier|*
@@ -364,7 +415,7 @@ name|size
 argument_list|,
 name|ctor
 condition|?
-name|kmem_ctor
+name|linux_kmem_ctor
 else|:
 name|NULL
 argument_list|,
@@ -396,7 +447,7 @@ specifier|static
 specifier|inline
 name|void
 modifier|*
-name|kmem_cache_alloc
+name|linux_kmem_cache_alloc
 parameter_list|(
 name|struct
 name|kmem_cache
@@ -428,7 +479,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|kmem_cache_free
+name|linux_kmem_cache_free
 parameter_list|(
 name|struct
 name|kmem_cache
@@ -456,7 +507,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|kmem_cache_destroy
+name|linux_kmem_cache_destroy
 parameter_list|(
 name|struct
 name|kmem_cache

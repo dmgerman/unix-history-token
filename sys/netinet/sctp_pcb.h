@@ -1059,7 +1059,7 @@ name|struct
 name|sctpladdr
 name|sctp_addr_list
 decl_stmt|;
-comment|/* 	 * used for source address selection rotation when we are subset 	 * bound 	 */
+comment|/* used for source address selection rotation when we are subset 	 * bound */
 name|struct
 name|sctp_laddr
 modifier|*

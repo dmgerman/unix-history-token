@@ -255,6 +255,10 @@ name|int
 name|nerror
 decl_stmt|;
 comment|/* Number of calls that returned with error */
+name|bool
+name|unknown
+decl_stmt|;
+comment|/* Unknown system call */
 block|}
 struct|;
 end_struct
@@ -265,12 +269,13 @@ name|syscall
 modifier|*
 name|get_syscall
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|threadinfo
 modifier|*
 parameter_list|,
-name|int
-name|nargs
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

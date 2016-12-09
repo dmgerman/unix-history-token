@@ -315,7 +315,7 @@ name|chunk_hooks
 parameter_list|,
 name|extent_tree_t
 modifier|*
-name|chunks_szad
+name|chunks_szsnad
 parameter_list|,
 name|extent_tree_t
 modifier|*
@@ -330,6 +330,9 @@ name|chunk
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|,
 name|bool
 name|zeroed
@@ -889,7 +892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do first-best-fit chunk selection, i.e. select the lowest chunk that best  * fits.  */
+comment|/*  * Do first-best-fit chunk selection, i.e. select the oldest/lowest chunk that  * best fits.  */
 end_comment
 
 begin_function
@@ -904,11 +907,7 @@ name|arena
 parameter_list|,
 name|extent_tree_t
 modifier|*
-name|chunks_szad
-parameter_list|,
-name|extent_tree_t
-modifier|*
-name|chunks_ad
+name|chunks_szsnad
 parameter_list|,
 name|size_t
 name|size
@@ -938,6 +937,8 @@ name|NULL
 argument_list|,
 name|size
 argument_list|,
+literal|0
+argument_list|,
 name|false
 argument_list|,
 name|false
@@ -945,9 +946,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|extent_tree_szad_nsearch
+name|extent_tree_szsnad_nsearch
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 operator|&
 name|key
@@ -977,7 +978,7 @@ name|chunk_hooks
 parameter_list|,
 name|extent_tree_t
 modifier|*
-name|chunks_szad
+name|chunks_szsnad
 parameter_list|,
 name|extent_tree_t
 modifier|*
@@ -995,6 +996,10 @@ name|size
 parameter_list|,
 name|size_t
 name|alignment
+parameter_list|,
+name|size_t
+modifier|*
+name|sn
 parameter_list|,
 name|bool
 modifier|*
@@ -1030,6 +1035,23 @@ name|committed
 decl_stmt|;
 name|assert
 argument_list|(
+name|CHUNK_CEILING
+argument_list|(
+name|size
+argument_list|)
+operator|==
+name|size
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|alignment
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|new_addr
 operator|==
 name|NULL
@@ -1037,6 +1059,16 @@ operator|||
 name|alignment
 operator|==
 name|chunksize
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|CHUNK_ADDR2BASE
+argument_list|(
+name|new_addr
+argument_list|)
+operator|==
+name|new_addr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Cached chunks use the node linkage embedded in their headers, in 	 * which case dalloc_node is true, and new_addr is non-NULL because 	 * we're operating on a specific chunk. 	 */
@@ -1051,17 +1083,14 @@ argument_list|)
 expr_stmt|;
 name|alloc_size
 operator|=
-name|CHUNK_CEILING
-argument_list|(
-name|s2u
-argument_list|(
 name|size
 operator|+
+name|CHUNK_CEILING
+argument_list|(
 name|alignment
+argument_list|)
 operator|-
 name|chunksize
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* Beware size_t wrap-around. */
 if|if
@@ -1115,6 +1144,8 @@ name|new_addr
 argument_list|,
 name|alloc_size
 argument_list|,
+literal|0
+argument_list|,
 name|false
 argument_list|,
 name|false
@@ -1139,9 +1170,7 @@ name|chunk_first_best_fit
 argument_list|(
 name|arena
 argument_list|,
-name|chunks_szad
-argument_list|,
-name|chunks_ad
+name|chunks_szsnad
 argument_list|,
 name|alloc_size
 argument_list|)
@@ -1258,6 +1287,14 @@ operator|+
 name|leadsize
 operator|)
 expr_stmt|;
+operator|*
+name|sn
+operator|=
+name|extent_node_sn_get
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|zeroed
 operator|=
 name|extent_node_zeroed_get
@@ -1340,9 +1377,9 @@ operator|)
 return|;
 block|}
 comment|/* Remove node from the tree. */
-name|extent_tree_szad_remove
+name|extent_tree_szsnad_remove
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -1378,9 +1415,9 @@ argument_list|,
 name|leadsize
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_insert
+name|extent_tree_szsnad_insert
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -1473,7 +1510,7 @@ name|arena
 argument_list|,
 name|chunk_hooks
 argument_list|,
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|chunks_ad
 argument_list|,
@@ -1484,6 +1521,9 @@ argument_list|,
 name|size
 operator|+
 name|trailsize
+argument_list|,
+operator|*
+name|sn
 argument_list|,
 name|zeroed
 argument_list|,
@@ -1538,7 +1578,7 @@ name|arena
 argument_list|,
 name|chunk_hooks
 argument_list|,
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|chunks_ad
 argument_list|,
@@ -1549,6 +1589,9 @@ argument_list|,
 name|size
 operator|+
 name|trailsize
+argument_list|,
+operator|*
+name|sn
 argument_list|,
 name|zeroed
 argument_list|,
@@ -1585,14 +1628,17 @@ operator|)
 argument_list|,
 name|trailsize
 argument_list|,
+operator|*
+name|sn
+argument_list|,
 name|zeroed
 argument_list|,
 name|committed
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_insert
+name|extent_tree_szsnad_insert
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -1659,7 +1705,7 @@ name|arena
 argument_list|,
 name|chunk_hooks
 argument_list|,
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|chunks_ad
 argument_list|,
@@ -1668,6 +1714,9 @@ argument_list|,
 name|ret
 argument_list|,
 name|size
+argument_list|,
+operator|*
+name|sn
 argument_list|,
 name|zeroed
 argument_list|,
@@ -2098,6 +2147,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -2163,7 +2216,7 @@ argument_list|,
 operator|&
 name|arena
 operator|->
-name|chunks_szad_cached
+name|chunks_szsnad_cached
 argument_list|,
 operator|&
 name|arena
@@ -2177,6 +2230,8 @@ argument_list|,
 name|size
 argument_list|,
 name|alignment
+argument_list|,
+name|sn
 argument_list|,
 name|zero
 argument_list|,
@@ -2451,6 +2506,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -2513,7 +2572,7 @@ argument_list|,
 operator|&
 name|arena
 operator|->
-name|chunks_szad_retained
+name|chunks_szsnad_retained
 argument_list|,
 operator|&
 name|arena
@@ -2527,6 +2586,8 @@ argument_list|,
 name|size
 argument_list|,
 name|alignment
+argument_list|,
+name|sn
 argument_list|,
 name|zero
 argument_list|,
@@ -2586,6 +2647,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -2623,6 +2688,8 @@ argument_list|,
 name|size
 argument_list|,
 name|alignment
+argument_list|,
+name|sn
 argument_list|,
 name|zero
 argument_list|,
@@ -2701,6 +2768,14 @@ operator|(
 name|NULL
 operator|)
 return|;
+operator|*
+name|sn
+operator|=
+name|arena_extent_sn_next
+argument_list|(
+name|arena
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|config_valgrind
@@ -2746,7 +2821,7 @@ name|chunk_hooks
 parameter_list|,
 name|extent_tree_t
 modifier|*
-name|chunks_szad
+name|chunks_szsnad
 parameter_list|,
 name|extent_tree_t
 modifier|*
@@ -2761,6 +2836,9 @@ name|chunk
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|,
 name|bool
 name|zeroed
@@ -2846,6 +2924,8 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|false
 argument_list|,
 name|false
@@ -2913,10 +2993,10 @@ name|ind
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Coalesce chunk with the following address range.  This does 		 * not change the position within chunks_ad, so only 		 * remove/insert from/into chunks_szad. 		 */
-name|extent_tree_szad_remove
+comment|/* 		 * Coalesce chunk with the following address range.  This does 		 * not change the position within chunks_ad, so only 		 * remove/insert from/into chunks_szsnad. 		 */
+name|extent_tree_szsnad_remove
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -2949,6 +3029,22 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sn
+operator|<
+name|extent_node_sn_get
+argument_list|(
+name|node
+argument_list|)
+condition|)
+name|extent_node_sn_set
+argument_list|(
+name|node
+argument_list|,
+name|sn
+argument_list|)
+expr_stmt|;
 name|extent_node_zeroed_set
 argument_list|(
 name|node
@@ -2962,9 +3058,9 @@ operator|!
 name|unzeroed
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_insert
+name|extent_tree_szsnad_insert
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -3036,6 +3132,8 @@ name|chunk
 argument_list|,
 name|size
 argument_list|,
+name|sn
+argument_list|,
 operator|!
 name|unzeroed
 argument_list|,
@@ -3049,9 +3147,9 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_insert
+name|extent_tree_szsnad_insert
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -3137,10 +3235,10 @@ name|ind
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Coalesce chunk with the previous address range.  This does 		 * not change the position within chunks_ad, so only 		 * remove/insert node from/into chunks_szad. 		 */
-name|extent_tree_szad_remove
+comment|/* 		 * Coalesce chunk with the previous address range.  This does 		 * not change the position within chunks_ad, so only 		 * remove/insert node from/into chunks_szsnad. 		 */
+name|extent_tree_szsnad_remove
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|prev
 argument_list|)
@@ -3161,9 +3259,9 @@ argument_list|,
 name|cache
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_remove
+name|extent_tree_szsnad_remove
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -3202,6 +3300,28 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|extent_node_sn_get
+argument_list|(
+name|prev
+argument_list|)
+operator|<
+name|extent_node_sn_get
+argument_list|(
+name|node
+argument_list|)
+condition|)
+name|extent_node_sn_set
+argument_list|(
+name|node
+argument_list|,
+name|extent_node_sn_get
+argument_list|(
+name|prev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|extent_node_zeroed_set
 argument_list|(
 name|node
@@ -3217,9 +3337,9 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|extent_tree_szad_insert
+name|extent_tree_szsnad_insert
 argument_list|(
-name|chunks_szad
+name|chunks_szsnad
 argument_list|,
 name|node
 argument_list|)
@@ -3281,6 +3401,9 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
+name|size_t
+name|sn
+parameter_list|,
 name|bool
 name|committed
 parameter_list|)
@@ -3331,7 +3454,7 @@ argument_list|,
 operator|&
 name|arena
 operator|->
-name|chunks_szad_cached
+name|chunks_szsnad_cached
 argument_list|,
 operator|&
 name|arena
@@ -3343,6 +3466,8 @@ argument_list|,
 name|chunk
 argument_list|,
 name|size
+argument_list|,
+name|sn
 argument_list|,
 name|false
 argument_list|,
@@ -3455,6 +3580,9 @@ name|chunk
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|,
 name|bool
 name|zeroed
@@ -3615,7 +3743,7 @@ argument_list|,
 operator|&
 name|arena
 operator|->
-name|chunks_szad_retained
+name|chunks_szsnad_retained
 argument_list|,
 operator|&
 name|arena
@@ -3627,6 +3755,8 @@ argument_list|,
 name|chunk
 argument_list|,
 name|size
+argument_list|,
+name|sn
 argument_list|,
 name|zeroed
 argument_list|,

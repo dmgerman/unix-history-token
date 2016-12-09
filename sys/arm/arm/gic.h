@@ -168,6 +168,12 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|INTRNG
+name|uint32_t
+name|gic_iidr
+decl_stmt|;
+name|u_int
+name|gic_bus
+decl_stmt|;
 name|int
 name|nranges
 decl_stmt|;

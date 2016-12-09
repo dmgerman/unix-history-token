@@ -298,7 +298,7 @@ begin_define
 define|#
 directive|define
 name|BANDLIM_MAX
-value|6
+value|7
 end_define
 
 begin_endif

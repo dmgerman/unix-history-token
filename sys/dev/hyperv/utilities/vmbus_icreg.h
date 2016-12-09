@@ -345,7 +345,7 @@ name|uint64_t
 name|ic_vmtime
 decl_stmt|;
 name|uint64_t
-name|ic_rtt
+name|ic_sent_tc
 decl_stmt|;
 name|uint8_t
 name|ic_tsflags
@@ -370,41 +370,12 @@ name|VMBUS_ICMSG_TS_FLAG_SAMPLE
 value|0x02
 end_define
 
-begin_comment
-comment|/* XXX consolidate w/ hyperv */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|VMBUS_ICMSG_TS_BASE
 value|116444736000000000ULL
 end_define
-
-begin_define
-define|#
-directive|define
-name|VMBUS_ICMSG_TS_FACTOR
-value|100ULL
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NANOSEC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NANOSEC
-value|1000000000ULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

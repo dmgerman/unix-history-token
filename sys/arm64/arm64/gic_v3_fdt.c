@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/gic_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gic_v3_reg.h"
 end_include
 
@@ -448,6 +454,12 @@ operator|->
 name|dev
 operator|=
 name|dev
+expr_stmt|;
+name|sc
+operator|->
+name|gic_bus
+operator|=
+name|GIC_BUS_FDT
 expr_stmt|;
 comment|/* 	 * Recover number of the Re-Distributor regions. 	 */
 if|if

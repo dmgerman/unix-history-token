@@ -2526,11 +2526,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the specified index from the tree.  * Panics if the key is not present.  */
+comment|/*  * Remove the specified index from the trie, and return the value stored at  * that index.  If the index is not present, return NULL.  */
 end_comment
 
 begin_function
-name|void
+name|vm_page_t
 name|vm_radix_remove
 parameter_list|(
 name|struct
@@ -2588,13 +2588,11 @@ name|pindex
 operator|!=
 name|index
 condition|)
-name|panic
-argument_list|(
-literal|"%s: invalid key found"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|vm_radix_setroot
 argument_list|(
 name|rtree
@@ -2602,7 +2600,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|m
+operator|)
+return|;
 block|}
 name|parent
 operator|=
@@ -2620,11 +2622,11 @@ name|rnode
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"vm_radix_remove: impossible to locate the key"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|slot
 operator|=
 name|vm_radix_slot
@@ -2669,13 +2671,11 @@ name|pindex
 operator|!=
 name|index
 condition|)
-name|panic
-argument_list|(
-literal|"%s: invalid key found"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|rnode
 operator|->
 name|rn_child
@@ -2698,7 +2698,11 @@ name|rn_count
 operator|>
 literal|1
 condition|)
-break|break;
+return|return
+operator|(
+name|m
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -2820,7 +2824,11 @@ argument_list|(
 name|rnode
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|m
+operator|)
+return|;
 block|}
 name|parent
 operator|=

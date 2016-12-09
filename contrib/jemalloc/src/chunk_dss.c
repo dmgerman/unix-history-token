@@ -615,6 +615,11 @@ name|cpad
 argument_list|,
 name|cpad_size
 argument_list|,
+name|arena_extent_sn_next
+argument_list|(
+name|arena
+argument_list|)
+argument_list|,
 name|false
 argument_list|,
 name|true

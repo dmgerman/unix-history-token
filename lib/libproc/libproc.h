@@ -106,6 +106,31 @@ value|6
 end_define
 
 begin_comment
+comment|/* Flags for proc_attach(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATTACH_FORCE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATTACH_RDONLY
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATTACH_NOSTOP
+value|0x04
+end_define
+
+begin_comment
 comment|/* Reason values for proc_detach(). */
 end_comment
 
@@ -405,6 +430,27 @@ name|PR_MODEL_LP64
 value|2
 end_define
 
+begin_struct
+struct|struct
+name|proc_handle_public
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|proc_getpid
+parameter_list|(
+name|phdl
+parameter_list|)
+value|(((struct proc_handle_public *)(phdl))->pid)
+end_define
+
 begin_comment
 comment|/* Function prototype definitions. */
 end_comment
@@ -455,22 +501,6 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|prmap_t
-modifier|*
-name|proc_obj2map
-parameter_list|(
-name|struct
-name|proc_handle
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -710,17 +740,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|pid_t
-name|proc_getpid
-parameter_list|(
-name|struct
-name|proc_handle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|proc_wstatus
 parameter_list|(
@@ -923,7 +942,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_LIBPROC_H_ */
+comment|/* _LIBPROC_H_ */
 end_comment
 
 end_unit

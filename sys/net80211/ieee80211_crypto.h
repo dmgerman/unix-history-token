@@ -806,6 +806,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ieee80211_crypto_get_key_wepidx
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_key
+modifier|*
+name|k
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint8_t
 name|ieee80211_crypto_get_keyid
 parameter_list|(

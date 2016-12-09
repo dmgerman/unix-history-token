@@ -409,6 +409,10 @@ comment|/* 	 * A pointer to the arena that owns the chunk is stored within the n
 name|extent_node_t
 name|node
 decl_stmt|;
+comment|/* 	 * True if memory could be backed by transparent huge pages.  This is 	 * only directly relevant to Linux, since it is the only supported 	 * platform on which jemalloc interacts with explicit transparent huge 	 * page controls. 	 */
+name|bool
+name|hugepage
+decl_stmt|;
 comment|/* 	 * Map of pages within chunk that keeps track of free/large/small.  The 	 * first map_bias entries are omitted, since the chunk header does not 	 * need to be tracked in the map.  This omission saves a header page 	 * for common chunk sizes (e.g. 4 MiB). 	 */
 name|arena_chunk_map_bits_t
 name|map_bits
@@ -571,6 +575,10 @@ argument|extent_node_t
 argument_list|)
 name|achunks
 expr_stmt|;
+comment|/* Extent serial number generator state. */
+name|size_t
+name|extent_sn_next
+decl_stmt|;
 comment|/* 	 * In order to avoid rapid chunk allocation/deallocation when an arena 	 * oscillates right on the cusp of needing a new chunk, cache the most 	 * recently freed chunk.  The spare is left in the arena's chunk trees 	 * until it is deleted. 	 * 	 * There is one spare chunk per arena, rather than one spare total, in 	 * order to avoid interactions between multiple threads that could make 	 * a single spare inadequate. 	 */
 name|arena_chunk_t
 modifier|*
@@ -616,13 +624,13 @@ name|huge_mtx
 decl_stmt|;
 comment|/* 	 * Trees of chunks that were previously allocated (trees differ only in 	 * node ordering).  These are used when allocating chunks, in an attempt 	 * to re-use address space.  Depending on function, different tree 	 * orderings are needed, which is why there are two trees with the same 	 * contents. 	 */
 name|extent_tree_t
-name|chunks_szad_cached
+name|chunks_szsnad_cached
 decl_stmt|;
 name|extent_tree_t
 name|chunks_ad_cached
 decl_stmt|;
 name|extent_tree_t
-name|chunks_szad_retained
+name|chunks_szsnad_retained
 decl_stmt|;
 name|extent_tree_t
 name|chunks_ad_retained
@@ -955,6 +963,10 @@ parameter_list|,
 name|size_t
 name|alignment
 parameter_list|,
+name|size_t
+modifier|*
+name|sn
+parameter_list|,
 name|bool
 modifier|*
 name|zero
@@ -980,6 +992,9 @@ name|chunk
 parameter_list|,
 name|size_t
 name|usize
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1030,6 +1045,9 @@ name|oldsize
 parameter_list|,
 name|size_t
 name|usize
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1901,6 +1919,17 @@ name|arena
 parameter_list|,
 name|bool
 name|internal
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|arena_extent_sn_next
+parameter_list|(
+name|arena_t
+modifier|*
+name|arena
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -148,13 +148,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_HV_TIME_REF_COUNT
-value|0x40000020
-end_define
-
-begin_define
-define|#
-directive|define
 name|MSR_HV_SCONTROL
 value|0x40000080
 end_define
@@ -385,84 +378,7 @@ value|0x40000003
 end_define
 
 begin_comment
-comment|/* EAX: features */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_TIME_REFCNT
-value|0x0002
-end_define
-
-begin_comment
-comment|/* MSR_HV_TIME_REF_COUNT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_SYNIC
-value|0x0004
-end_define
-
-begin_comment
-comment|/* MSRs for SynIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_SYNTIMER
-value|0x0008
-end_define
-
-begin_comment
-comment|/* MSRs for SynTimer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_APIC
-value|0x0010
-end_define
-
-begin_comment
-comment|/* MSR_HV_{EOI,ICR,TPR} */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_HYPERCALL
-value|0x0020
-end_define
-
-begin_comment
-comment|/* MSR_HV_GUEST_OS_ID 						 * MSR_HV_HYPERCALL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_VP_INDEX
-value|0x0040
-end_define
-
-begin_comment
-comment|/* MSR_HV_VP_INDEX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPUID_HV_MSR_GUEST_IDLE
-value|0x0400
-end_define
-
-begin_comment
-comment|/* MSR_HV_GUEST_IDLE */
+comment|/* EAX: features include/hyperv.h CPUID_HV_MSR */
 end_comment
 
 begin_comment

@@ -4205,29 +4205,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_MSGID_GT
+name|SCTP_MID_GT
 parameter_list|(
-name|o
+name|i
 parameter_list|,
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((o == 1) ? SCTP_UINT16_GT((uint16_t)a, (uint16_t)b) : SCTP_UINT32_GT(a, b))
+value|(((i) == 1) ? SCTP_UINT32_GT(a, b) : SCTP_UINT16_GT((uint16_t)a, (uint16_t)b))
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_MSGID_GE
+name|SCTP_MID_GE
 parameter_list|(
-name|o
+name|i
 parameter_list|,
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((o == 1) ? SCTP_UINT16_GE((uint16_t)a, (uint16_t)b) : SCTP_UINT32_GE(a, b))
+value|(((i) == 1) ? SCTP_UINT32_GE(a, b) : SCTP_UINT16_GE((uint16_t)a, (uint16_t)b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MID_EQ
+parameter_list|(
+name|i
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((i) == 1) ? a == b : (uint16_t)a == (uint16_t)b)
 end_define
 
 begin_comment

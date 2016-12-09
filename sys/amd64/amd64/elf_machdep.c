@@ -792,6 +792,9 @@ case|:
 case|case
 name|R_X86_64_32S
 case|:
+case|case
+name|R_X86_64_PLT32
+case|:
 name|addend
 operator|=
 operator|*
@@ -932,6 +935,10 @@ case|case
 name|R_X86_64_PC32
 case|:
 comment|/* S + A - P */
+case|case
+name|R_X86_64_PLT32
+case|:
+comment|/* L + A - P, L is PLT location for 					   the symbol, which we treat as S */
 name|error
 operator|=
 name|lookup

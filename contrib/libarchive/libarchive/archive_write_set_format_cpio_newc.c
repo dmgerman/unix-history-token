@@ -1178,7 +1178,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-comment|/* Make sure the path separators in pahtname, hardlink and symlink 	 * are all slash '/', not the Windows path separator '\'. */
+comment|/* Make sure the path separators in pathname, hardlink and symlink 	 * are all slash '/', not the Windows path separator '\'. */
 name|entry_main
 operator|=
 name|__la_win_entry_in_posix_pathseparator

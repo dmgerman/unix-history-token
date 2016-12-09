@@ -111,6 +111,12 @@ directive|ifndef
 name|__sparc64__
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|atomic_cas_32
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|uint32_t
@@ -130,6 +136,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|atomic_cas_64
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|uint64_t
@@ -148,6 +165,11 @@ name|newval
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -556,6 +578,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|atomic_cas_ptr
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -686,6 +714,11 @@ end_endif
 begin_comment
 comment|/* !defined(COMPAT_32BIT)&& defined(__LP64__) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

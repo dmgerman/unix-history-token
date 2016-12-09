@@ -2006,6 +2006,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC1150
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0900)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALCXXXX
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0xffff)
 end_define
@@ -3624,6 +3631,34 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAGTX570
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0018)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA30
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0020)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA114
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0022)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA124
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0028)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIATEGRA210
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0029)
 end_define
 
 begin_define

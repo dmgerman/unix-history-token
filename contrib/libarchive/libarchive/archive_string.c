@@ -11418,7 +11418,7 @@ index|[
 name|ch
 index|]
 expr_stmt|;
-comment|/* Invalide sequence or there are not plenty bytes. */
+comment|/* Invalid sequence or there are not plenty bytes. */
 if|if
 condition|(
 operator|(
@@ -11892,7 +11892,7 @@ goto|goto
 name|invalid_sequence
 goto|;
 block|}
-comment|/* The code point larger than 0x10FFFF is not leagal 	 * Unicode values. */
+comment|/* The code point larger than 0x10FFFF is not legal 	 * Unicode values. */
 if|if
 condition|(
 name|wc
@@ -11964,7 +11964,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* Any of Surrogate pair is not leagal Unicode values. */
+comment|/* Any of Surrogate pair is not legal Unicode values. */
 if|if
 condition|(
 name|cnt
@@ -12207,7 +12207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a Unicode code point to a single UTF-8 sequence.  *  * NOTE:This function does not check if the Unicode is leagal or not.  * Please you definitely check it before calling this.  */
+comment|/*  * Convert a Unicode code point to a single UTF-8 sequence.  *  * NOTE:This function does not check if the Unicode is legal or not.  * Please you definitely check it before calling this.  */
 end_comment
 
 begin_function
@@ -12705,7 +12705,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above culculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not leagal Unicode 	 * values. 	 */
+comment|/* 	 * Surrogate pair values(0xd800 through 0xdfff) are only 	 * used by UTF-16, so, after above culculation, the code 	 * must not be surrogate values, and Unicode has no codes 	 * larger than 0x10ffff. Thus, those are not legal Unicode 	 * values. 	 */
 if|if
 condition|(
 name|IS_SURROGATE_PAIR_LA

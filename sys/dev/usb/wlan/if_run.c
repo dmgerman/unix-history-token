@@ -357,6 +357,139 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_enum
+enum|enum
+block|{
+name|RUN_DEBUG_XMIT
+init|=
+literal|0x00000001
+block|,
+comment|/* basic xmit operation */
+name|RUN_DEBUG_XMIT_DESC
+init|=
+literal|0x00000002
+block|,
+comment|/* xmit descriptors */
+name|RUN_DEBUG_RECV
+init|=
+literal|0x00000004
+block|,
+comment|/* basic recv operation */
+name|RUN_DEBUG_RECV_DESC
+init|=
+literal|0x00000008
+block|,
+comment|/* recv descriptors */
+name|RUN_DEBUG_STATE
+init|=
+literal|0x00000010
+block|,
+comment|/* 802.11 state transitions */
+name|RUN_DEBUG_RATE
+init|=
+literal|0x00000020
+block|,
+comment|/* rate adaptation */
+name|RUN_DEBUG_USB
+init|=
+literal|0x00000040
+block|,
+comment|/* usb requests */
+name|RUN_DEBUG_FIRMWARE
+init|=
+literal|0x00000080
+block|,
+comment|/* firmware(9) loading debug */
+name|RUN_DEBUG_BEACON
+init|=
+literal|0x00000100
+block|,
+comment|/* beacon handling */
+name|RUN_DEBUG_INTR
+init|=
+literal|0x00000200
+block|,
+comment|/* ISR */
+name|RUN_DEBUG_TEMP
+init|=
+literal|0x00000400
+block|,
+comment|/* temperature calibration */
+name|RUN_DEBUG_ROM
+init|=
+literal|0x00000800
+block|,
+comment|/* various ROM info */
+name|RUN_DEBUG_KEY
+init|=
+literal|0x00001000
+block|,
+comment|/* crypto keys management */
+name|RUN_DEBUG_TXPWR
+init|=
+literal|0x00002000
+block|,
+comment|/* dump Tx power values */
+name|RUN_DEBUG_RSSI
+init|=
+literal|0x00004000
+block|,
+comment|/* dump RSSI lookups */
+name|RUN_DEBUG_RESET
+init|=
+literal|0x00008000
+block|,
+comment|/* initialization progress */
+name|RUN_DEBUG_CALIB
+init|=
+literal|0x00010000
+block|,
+comment|/* calibration progress */
+name|RUN_DEBUG_CMD
+init|=
+literal|0x00010000
+block|,
+comment|/* command queue */
+name|RUN_DEBUG_ANY
+init|=
+literal|0xffffffff
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|RUN_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_m
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	if (run_debug& (_m))				\ 		device_printf((_sc)->sc_dev, __VA_ARGS__);	\ } while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RUN_DPRINTF
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_m
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do { (void) _sc; } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -6231,8 +6364,12 @@ name|cmdq_run
 operator|=
 name|RUN_CMDQ_GO
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"rvp_id=%d bmap=%x rvp_cnt=%d\n"
 argument_list|,
 name|rvp
@@ -6390,8 +6527,12 @@ name|sc
 operator|->
 name|rvp_cnt
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"vap=%p rvp_id=%d bmap=%x rvp_cnt=%d\n"
 argument_list|,
 name|vap
@@ -6494,9 +6635,11 @@ name|pending
 operator|--
 control|)
 block|{
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|6
+name|sc
+argument_list|,
+name|RUN_DEBUG_CMD
 argument_list|,
 literal|"cmdq_exec=%d pending=%d\n"
 argument_list|,
@@ -7464,9 +7607,11 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|1
+name|sc
+argument_list|,
+name|RUN_DEBUG_USB
 argument_list|,
 literal|"Control request failed, %s (retrying)\n"
 argument_list|,
@@ -10342,8 +10487,12 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_TXPWR
+argument_list|,
 literal|"chan %d: power1=%d, power2=%d\n"
 argument_list|,
 name|rt2860_rf2850
@@ -10583,8 +10732,12 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_TXPWR
+argument_list|,
 literal|"chan %d: power1=%d, power2=%d\n"
 argument_list|,
 name|rt2860_rf2850
@@ -10684,8 +10837,12 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EFUSE_CTRL=0x%08x\n"
 argument_list|,
 name|tmp
@@ -10723,8 +10880,12 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EEPROM rev=%d, FAE=%d\n"
 argument_list|,
 name|val
@@ -10895,8 +11056,12 @@ name|val
 operator|>>
 literal|8
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"BBP%d=0x%02x\n"
 argument_list|,
 name|sc
@@ -10981,8 +11146,12 @@ name|val
 operator|>>
 literal|8
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"RF%d=0x%02x\n"
 argument_list|,
 name|sc
@@ -11048,8 +11217,12 @@ literal|0xff
 else|:
 literal|0
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EEPROM freq offset %d\n"
 argument_list|,
 name|sc
@@ -11211,8 +11384,12 @@ literal|0x5627
 expr_stmt|;
 comment|/* differs from RT2860 */
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EEPROM LED mode=0x%02x, LEDs=0x%04x/0x%04x/0x%04x\n"
 argument_list|,
 name|sc
@@ -11290,11 +11467,6 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"invalid EEPROM antenna info, using default\n"
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
 literal|"invalid EEPROM antenna info, using default\n"
 argument_list|)
 expr_stmt|;
@@ -11448,8 +11620,12 @@ operator|&
 literal|0xf
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EEPROM RF rev=0x%04x chains=%dT%dR\n"
 argument_list|,
 name|sc
@@ -11476,8 +11652,12 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"EEPROM CFG 0x%04x\n"
 argument_list|,
 name|val
@@ -11687,8 +11867,14 @@ operator|-
 name|delta_5ghz
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+operator||
+name|RUN_DEBUG_TXPWR
+argument_list|,
 literal|"power compensation=%d (2GHz), %d (5GHz)\n"
 argument_list|,
 name|delta_2ghz
@@ -11793,8 +11979,14 @@ argument_list|,
 name|delta_5ghz
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+operator||
+name|RUN_DEBUG_TXPWR
+argument_list|,
 literal|"ridx %d: power 20MHz=0x%08x, 40MHz/2GHz=0x%08x, "
 literal|"40MHz/5GHz=0x%08x\n"
 argument_list|,
@@ -11947,8 +12139,12 @@ operator|&
 literal|0x7
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"tx mixer gain=%u (2GHz)\n"
 argument_list|,
 name|sc
@@ -12092,8 +12288,12 @@ name|val
 operator|&
 literal|0x7
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"tx mixer gain=%u (5GHz)\n"
 argument_list|,
 name|sc
@@ -12219,8 +12419,12 @@ operator|==
 literal|0xff
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"invalid LNA for channel group %d\n"
 argument_list|,
 literal|2
@@ -12262,8 +12466,12 @@ operator|==
 literal|0xff
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+argument_list|,
 literal|"invalid LNA for channel group %d\n"
 argument_list|,
 literal|3
@@ -12321,8 +12529,14 @@ operator|>
 literal|10
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+operator||
+name|RUN_DEBUG_RSSI
+argument_list|,
 literal|"invalid RSSI%d offset: %d (2GHz)\n"
 argument_list|,
 name|ant
@@ -12369,8 +12583,14 @@ operator|>
 literal|10
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_ROM
+operator||
+name|RUN_DEBUG_RSSI
+argument_list|,
 literal|"invalid RSSI%d offset: %d (5GHz)\n"
 argument_list|,
 name|ant
@@ -12626,8 +12846,12 @@ name|fix_ridx
 operator|=
 name|ridx
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RATE
+argument_list|,
 literal|"rate=%d, fix_ridx=%d\n"
 argument_list|,
 name|rate
@@ -12750,8 +12974,12 @@ name|vap
 operator|->
 name|iv_state
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"%s -> %s\n"
 argument_list|,
 name|ieee80211_state_name
@@ -13208,11 +13436,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|6
+name|sc
 argument_list|,
-literal|"undefined case\n"
+name|RUN_DEBUG_STATE
+argument_list|,
+literal|"undefined state\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13605,8 +13835,12 @@ if|if
 condition|(
 name|error
 condition|)
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"WME update failed\n"
 argument_list|)
 expr_stmt|;
@@ -13799,16 +14033,22 @@ name|RT2860_MODE_AES_CCMP
 expr_stmt|;
 break|break;
 default|default:
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
+argument_list|,
 literal|"undefined case\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|1
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
 argument_list|,
 literal|"associd=%x, keyix=%d, mode=%x, type=%s, tx=%s, rx=%s\n"
 argument_list|,
@@ -14398,8 +14638,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -14573,8 +14817,12 @@ name|IEEE80211_KEY_GROUP
 condition|)
 block|{
 comment|/* remove group key */
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
+argument_list|,
 literal|"removing group key\n"
 argument_list|)
 expr_stmt|;
@@ -14616,8 +14864,12 @@ block|}
 else|else
 block|{
 comment|/* remove pairwise key */
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
+argument_list|,
 literal|"removing key for wcid %x\n"
 argument_list|,
 name|k
@@ -14743,8 +14995,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_KEY
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -15076,9 +15332,11 @@ operator|&
 name|stat
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|4
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"tx stat 0x%08x\n"
 argument_list|,
@@ -15231,9 +15489,11 @@ name|retry
 expr_stmt|;
 block|}
 block|}
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|3
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"count=%d\n"
 argument_list|,
@@ -15494,9 +15754,11 @@ operator|.
 name|fail
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|3
+name|sc
+argument_list|,
+name|RUN_DEBUG_RATE
 argument_list|,
 literal|"retrycnt=%d success=%d failcnt=%d\n"
 argument_list|,
@@ -15606,9 +15868,11 @@ index|[
 name|RUN_TXCNT
 index|]
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|3
+name|sc
+argument_list|,
+name|RUN_DEBUG_RATE
 argument_list|,
 literal|"retrycnt=%d txcnt=%d success=%d\n"
 argument_list|,
@@ -15666,9 +15930,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|3
+name|sc
+argument_list|,
+name|RUN_DEBUG_RATE
 argument_list|,
 literal|"ridx=%d\n"
 argument_list|,
@@ -15915,8 +16181,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 decl_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|cnt
@@ -15977,8 +16247,12 @@ name|cmdq_task
 argument_list|)
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"new assoc isnew=%d associd=%x addr=%s\n"
 argument_list|,
 name|isnew
@@ -16151,8 +16425,14 @@ operator|.
 name|ctl_ridx
 expr_stmt|;
 block|}
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+operator||
+name|RUN_DEBUG_RATE
+argument_list|,
 literal|"rate=0x%02x ridx=%d ctl_ridx=%d\n"
 argument_list|,
 name|rs
@@ -16225,8 +16505,14 @@ name|mgt_ridx
 operator|=
 name|ridx
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_STATE
+operator||
+name|RUN_DEBUG_RATE
+argument_list|,
 literal|"rate=%d, mgmt_ridx=%d\n"
 argument_list|,
 name|rate
@@ -16509,8 +16795,14 @@ operator|>=
 name|rx_tstamp
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+operator||
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"ibss merge, tsf %ju tstamp %ju\n"
 argument_list|,
 operator|(
@@ -16687,8 +16979,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+argument_list|,
 literal|"bad RXWI length %u> %u\n"
 argument_list|,
 name|len
@@ -16754,8 +17050,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+argument_list|,
 literal|"%s error.\n"
 argument_list|,
 operator|(
@@ -16836,9 +17136,11 @@ operator|&
 name|RT2860_RX_L2PAD
 condition|)
 block|{
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|8
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
 argument_list|,
 literal|"received RT2860_RX_L2PAD frame\n"
 argument_list|)
@@ -16908,8 +17210,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+argument_list|,
 literal|"MIC error. Someone is lying.\n"
 argument_list|)
 expr_stmt|;
@@ -17409,9 +17715,11 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|15
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
 argument_list|,
 literal|"rx done, actlen=%d\n"
 argument_list|,
@@ -17441,8 +17749,14 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV_DESC
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"xfer too short %d\n"
 argument_list|,
 name|xferlen
@@ -17505,8 +17819,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+operator||
+name|RUN_DEBUG_RECV_DESC
+argument_list|,
 literal|"could not allocate mbuf - idle with stall\n"
 argument_list|)
 expr_stmt|;
@@ -17712,8 +18032,14 @@ literal|0
 operator|)
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV_DESC
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"bad DMA length %u\n"
 argument_list|,
 name|dmalen
@@ -17735,8 +18061,14 @@ operator|)
 name|xferlen
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV_DESC
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"bad DMA length %u> %d\n"
 argument_list|,
 name|dmalen
@@ -17819,8 +18151,12 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV_DESC
+argument_list|,
 literal|"could not allocate mbuf\n"
 argument_list|)
 expr_stmt|;
@@ -18094,12 +18430,15 @@ block|{
 case|case
 name|USB_ST_TRANSFERRED
 case|:
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|11
+name|sc
 argument_list|,
-literal|"transfer complete: %d "
-literal|"bytes @ index %d\n"
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
+literal|"transfer complete: %d bytes @ index %d\n"
 argument_list|,
 name|actlen
 argument_list|,
@@ -18216,8 +18555,14 @@ operator|>
 name|RUN_MAX_TXSZ
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT_DESC
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"data overflow, %u bytes\n"
 argument_list|,
 name|m
@@ -18445,11 +18790,15 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|11
+name|sc
 argument_list|,
-literal|"sending frame len=%u/%u  @ index %d\n"
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
+literal|"sending frame len=%u/%u @ index %d\n"
 argument_list|,
 name|m
 operator|->
@@ -18490,8 +18839,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"USB transfer error, %s\n"
 argument_list|,
 name|usbd_errstr
@@ -18597,8 +18952,14 @@ operator|->
 name|cmdq_store
 argument_list|)
 decl_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_USB
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -19409,9 +19770,11 @@ name|RT2860_TX_QSEL_EDCA
 else|:
 name|RT2860_TX_QSEL_HCCA
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|8
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"qos %d\tqid %d\ttid %d\tqflags %x\n"
 argument_list|,
@@ -19613,9 +19976,11 @@ operator|<
 literal|3
 condition|)
 block|{
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|10
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"tx ring %d is full\n"
 argument_list|,
@@ -19853,9 +20218,11 @@ operator|->
 name|cmdq_store
 argument_list|)
 decl_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|6
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
@@ -19923,9 +20290,11 @@ name|qid
 index|]
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|8
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"sending data frame len=%d rate=%d qid=%d\n"
 argument_list|,
@@ -20299,9 +20668,11 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|10
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"sending mgt frame len=%d rate=%d\n"
 argument_list|,
@@ -20685,8 +21056,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+argument_list|,
 literal|"could not allocate mbuf\n"
 argument_list|)
 expr_stmt|;
@@ -20845,9 +21220,11 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|1
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"sending prot len=%u rate=%u\n"
 argument_list|,
@@ -21122,8 +21499,12 @@ literal|0
 condition|)
 block|{
 comment|/* let caller free mbuf */
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+argument_list|,
 literal|"sending raw frame, but tx ring is full\n"
 argument_list|)
 expr_stmt|;
@@ -21279,9 +21660,11 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|10
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
 argument_list|,
 literal|"sending raw frame len=%u rate=%u\n"
 argument_list|,
@@ -21419,8 +21802,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+argument_list|,
 literal|"mgt tx failed\n"
 argument_list|)
 expr_stmt|;
@@ -21452,8 +21839,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+argument_list|,
 literal|"tx with param failed\n"
 argument_list|)
 expr_stmt|;
@@ -28563,8 +28954,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -28944,8 +29339,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -29171,8 +29570,14 @@ operator|==
 name|IEEE80211_S_SCAN
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_USB
+operator||
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"timeout caused by scan\n"
 argument_list|)
 expr_stmt|;
@@ -29184,8 +29589,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_USB
+operator||
+name|RUN_DEBUG_STATE
+argument_list|,
 literal|"timeout by unknown cause\n"
 argument_list|)
 expr_stmt|;
@@ -29224,9 +29635,11 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DPRINTFN
+name|RUN_DPRINTF
 argument_list|(
-literal|3
+name|sc
+argument_list|,
+name|RUN_DEBUG_RESET
 argument_list|,
 literal|"debug reg %08x\n"
 argument_list|,
@@ -29260,8 +29673,12 @@ operator|)
 operator|)
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RESET
+argument_list|,
 literal|"CTS-to-self livelock detected\n"
 argument_list|)
 expr_stmt|;
@@ -29348,8 +29765,12 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_RECV
+argument_list|,
 literal|"%s promiscuous mode\n"
 argument_list|,
 operator|(
@@ -29458,8 +29879,12 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"rvp_id=%d ic_opmode=%d\n"
 argument_list|,
 name|RUN_VAP
@@ -29574,8 +29999,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"Enabling TSF failed. undefined opmode\n"
 argument_list|)
 expr_stmt|;
@@ -30176,8 +30605,12 @@ operator|->
 name|cmdq_store
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_BEACON
+argument_list|,
 literal|"cmdq_store=%d\n"
 argument_list|,
 name|i
@@ -36173,8 +36606,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_RESET
+argument_list|,
 literal|"Cannot read Tx queue count\n"
 argument_list|)
 expr_stmt|;
@@ -36191,8 +36630,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_RESET
+argument_list|,
 literal|"All Tx cleared\n"
 argument_list|)
 expr_stmt|;
@@ -36212,8 +36657,14 @@ name|ntries
 operator|>=
 literal|100
 condition|)
-name|DPRINTF
+name|RUN_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RUN_DEBUG_XMIT
+operator||
+name|RUN_DEBUG_RESET
+argument_list|,
 literal|"There are still pending Tx\n"
 argument_list|)
 expr_stmt|;

@@ -729,7 +729,7 @@ goto|goto
 name|outnow
 goto|;
 block|}
-comment|/* 	 * We are only accepting if we have a socket with positive 	 * so_qlimit. 	 */
+comment|/* We are only accepting if we have a socket with positive 	 * so_qlimit. */
 if|if
 condition|(
 operator|(
@@ -1522,7 +1522,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 operator|>=
 name|newcnt
 condition|)
@@ -1556,7 +1556,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -1574,7 +1574,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -1596,7 +1596,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2138,7 +2138,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -2149,7 +2149,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -3798,7 +3798,7 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 		 * put it in the bucket in the vtag hash of assoc's for the 		 * system 		 */
+comment|/* put it in the bucket in the vtag hash of assoc's for the 		 * system */
 name|LIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -3927,7 +3927,7 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 		 * put it in the bucket in the vtag hash of assoc's for the 		 * system 		 */
+comment|/* put it in the bucket in the vtag hash of assoc's for the 		 * system */
 name|LIST_INSERT_HEAD
 argument_list|(
 name|head
@@ -5001,7 +5001,7 @@ argument_list|,
 name|SCTP_STATE_SHUTDOWN_PENDING
 argument_list|)
 expr_stmt|;
-comment|/* 			 * notify upper layer that peer has initiated a 			 * shutdown 			 */
+comment|/* notify upper layer that peer has initiated a 			 * shutdown */
 name|sctp_ulp_notify
 argument_list|(
 name|SCTP_NOTIFY_PEER_SHUTDOWN
@@ -9898,7 +9898,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -14491,7 +14491,7 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Pull it from the incomplete queue and wake the 			 * guy 			 */
+comment|/* Pull it from the incomplete queue and wake the 			 * guy */
 if|#
 directive|if
 name|defined
@@ -15376,7 +15376,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/* Find where it was sent to if possible. */
@@ -15401,7 +15401,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -15436,7 +15436,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tsn
 argument_list|)
@@ -15547,7 +15547,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * JRS - Use the congestion control given in the pluggable 		 * CC module 		 */
+comment|/* JRS - Use the congestion control given in the pluggable 		 * CC module */
 name|stcb
 operator|->
 name|asoc
@@ -16254,7 +16254,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -16272,7 +16272,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tsn
 argument_list|)
@@ -16316,7 +16316,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tsn
 condition|)
@@ -16648,7 +16648,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/* restart the timer */
@@ -16725,7 +16725,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -17012,7 +17012,7 @@ operator|.
 name|max_send_times
 condition|)
 block|{
-comment|/* 			 * Only retransmit if we KNOW we wont destroy the 			 * tcb 			 */
+comment|/* Only retransmit if we KNOW we wont destroy the 			 * tcb */
 name|sctp_send_hb
 argument_list|(
 name|stcb
@@ -17268,7 +17268,7 @@ index|[
 name|temp
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -17307,7 +17307,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -18252,7 +18252,7 @@ operator|==
 name|SCTP_STREAM_RESET_RESULT_IN_PROGRESS
 condition|)
 block|{
-comment|/* 					 * Set it up so we don't stop 					 * retransmitting 					 */
+comment|/* Set it up so we don't stop 					 * retransmitting */
 name|asoc
 operator|->
 name|stream_reset_outstanding
@@ -20790,7 +20790,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -20803,14 +20803,14 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|oldstrm
 index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 expr_stmt|;
 name|stcb
 operator|->
@@ -21000,7 +21000,7 @@ index|[
 name|i
 index|]
 operator|.
-name|stream_no
+name|sid
 operator|=
 name|i
 expr_stmt|;
@@ -21013,7 +21013,7 @@ index|[
 name|i
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 literal|0xffffffff
 expr_stmt|;
@@ -24325,7 +24325,7 @@ block|}
 block|}
 block|}
 comment|/* end if !SCTP_COOKIE_ECHO */
-comment|/* 	 * process all control chunks... 	 */
+comment|/* process all 				 * control chunks... */
 if|if
 condition|(
 operator|(
@@ -25806,7 +25806,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* 			 * EY - nr_sack:  If the received chunk is an 			 * nr_sack chunk 			 */
+comment|/* EY - nr_sack:  If the received chunk is an 			 * nr_sack chunk */
 case|case
 name|SCTP_NR_SELECTIVE_ACK
 case|:

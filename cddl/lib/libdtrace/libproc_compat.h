@@ -17,6 +17,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PGRAB_RDONLY
+value|PATTACH_RDONLY
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRAB_FORCE
+value|PATTACH_FORCE
+end_define
+
+begin_define
+define|#
+directive|define
 name|Psetrun
 parameter_list|(
 name|p
@@ -123,7 +137,7 @@ name|l
 parameter_list|,
 name|o
 parameter_list|)
-value|proc_obj2map((p), (o))
+value|proc_name2map(p, o)
 end_define
 
 begin_define

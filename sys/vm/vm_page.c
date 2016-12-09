@@ -4571,7 +4571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The object must be locked.  The page must be locked if it is managed.  */
+comment|/*  *	vm_page_remove:  *  *	Removes the specified page from its containing object, but does not  *	invalidate any backing storage.  *  *	The object must be locked.  The page must be locked if it is managed.  */
 end_comment
 
 begin_function
@@ -4584,6 +4584,9 @@ parameter_list|)
 block|{
 name|vm_object_t
 name|object
+decl_stmt|;
+name|vm_page_t
+name|mrem
 decl_stmt|;
 if|if
 condition|(
@@ -4632,7 +4635,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now remove from the object's list of backed pages. 	 */
+name|mrem
+operator|=
 name|vm_radix_remove
 argument_list|(
 operator|&
@@ -4645,6 +4649,22 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mrem
+operator|==
+name|m
+argument_list|,
+operator|(
+literal|"removed page %p, expected page %p"
+operator|,
+name|mrem
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now remove from the object's list of backed pages. 	 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&

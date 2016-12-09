@@ -25555,13 +25555,11 @@ literal|"CR4_QSFP"
 block|,
 literal|"CR_QSFP"
 block|,
-literal|"CR_SFP28"
+literal|"CR2_QSFP"
 block|,
 literal|"SFP28"
 block|,
 literal|"KR_SFP28"
-block|,
-literal|"CR2_QSFP"
 block|, 	}
 decl_stmt|;
 if|if

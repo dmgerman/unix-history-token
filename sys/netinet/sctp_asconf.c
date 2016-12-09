@@ -7919,7 +7919,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* while */
-comment|/* 	 * if there are any "sent" params still on the queue, these are 	 * implicitly "success", or "failed" (if we got an error back) ... 	 * so process these appropriately 	 *  	 * we assume that the correlation_id's are monotonically increasing 	 * beginning from 1 and that we don't have *that* many outstanding 	 * at any given time 	 */
+comment|/* 	 * if there are any "sent" params still on the queue, these are 	 * implicitly "success", or "failed" (if we got an error back) ... 	 * so process these appropriately 	 * 	 * we assume that the correlation_id's are monotonically increasing 	 * beginning from 1 and that we don't have *that* many outstanding 	 * at any given time 	 */
 if|if
 condition|(
 name|last_error_id
@@ -10711,7 +10711,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * we want to find the sequences which consist of ADD -> DEL -> ADD 	 * or DEL -> ADD 	 */
+comment|/* we want to find the sequences which consist of ADD -> DEL -> ADD 	 * or DEL -> ADD */
 if|if
 condition|(
 name|add_cnt
@@ -10979,7 +10979,7 @@ argument_list|)
 operator|)
 condition|)
 continue|continue;
-comment|/* 					 * found a valid local v4 address to 					 * use 					 */
+comment|/* found a valid local v4 address to 					 * use */
 if|if
 condition|(
 name|addr_locked
@@ -11056,7 +11056,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-comment|/* 						 * we skip unspecifed 						 * addresses 						 */
+comment|/* we skip unspecifed 						 * addresses */
 continue|continue;
 block|}
 if|if
@@ -11146,7 +11146,7 @@ argument_list|)
 operator|)
 condition|)
 continue|continue;
-comment|/* 					 * found a valid local v6 address to 					 * use 					 */
+comment|/* found a valid local v6 address to 					 * use */
 if|if
 condition|(
 name|addr_locked

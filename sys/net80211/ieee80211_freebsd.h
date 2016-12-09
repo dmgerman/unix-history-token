@@ -2799,6 +2799,34 @@ begin_comment
 comment|/* This is a short-GI frame */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_CCK
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_OFDM
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_HT
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RX_F_VHT
+value|0x00008000
+end_define
+
 begin_comment
 comment|/* Channel width */
 end_comment
@@ -2924,7 +2952,7 @@ comment|/* number of RX chains involved */
 name|uint8_t
 name|c_rate
 decl_stmt|;
-comment|/* legacy + 11n rate code */
+comment|/* legacy; 11n rate code; VHT MCS */
 comment|/* 32 bits */
 name|uint16_t
 name|c_freq
@@ -2966,9 +2994,13 @@ name|c_phytype
 decl_stmt|;
 comment|/* PHY type, FW flags above */
 name|uint8_t
+name|c_vhtnss
+decl_stmt|;
+comment|/* VHT - number of spatial streams */
+name|uint8_t
 name|c_pad2
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -3082,6 +3114,57 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_SURVEY_TIME
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_SURVEY_TIME_BUSY
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_SURVEY_NOISE_DBM
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_F_SURVEY_TSC
+value|0x00000008
+end_define
+
+begin_struct
+struct|struct
+name|ieee80211_channel_survey
+block|{
+name|uint32_t
+name|s_flags
+decl_stmt|;
+name|uint32_t
+name|s_time
+decl_stmt|;
+name|uint32_t
+name|s_time_busy
+decl_stmt|;
+name|int32_t
+name|s_noise
+decl_stmt|;
+name|uint64_t
+name|s_tsc
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

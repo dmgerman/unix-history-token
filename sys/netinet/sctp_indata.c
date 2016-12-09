@@ -421,10 +421,10 @@ name|uint32_t
 name|context
 parameter_list|,
 name|uint16_t
-name|stream_no
+name|sid
 parameter_list|,
 name|uint32_t
-name|stream_seq
+name|mid
 parameter_list|,
 name|uint8_t
 name|flags
@@ -477,13 +477,7 @@ name|read_queue_e
 operator|->
 name|sinfo_stream
 operator|=
-name|stream_no
-expr_stmt|;
-name|read_queue_e
-operator|->
-name|sinfo_ssn
-operator|=
-name|stream_seq
+name|sid
 expr_stmt|;
 name|read_queue_e
 operator|->
@@ -527,6 +521,12 @@ name|sctp_get_associd
 argument_list|(
 name|stcb
 argument_list|)
+expr_stmt|;
+name|read_queue_e
+operator|->
+name|mid
+operator|=
+name|mid
 expr_stmt|;
 name|read_queue_e
 operator|->
@@ -1681,7 +1681,7 @@ name|q
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Only one stream can be here in old style 				 * -- abort 				 */
+comment|/* Only one stream can be here in old style 				 * -- abort */
 return|return
 operator|(
 operator|-
@@ -1805,15 +1805,19 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|SCTP_TSN_GT
+name|SCTP_MID_GT
 argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|at
 operator|->
-name|msg_id
+name|mid
 argument_list|,
 name|control
 operator|->
-name|msg_id
+name|mid
 argument_list|)
 condition|)
 block|{
@@ -1853,13 +1857,20 @@ block|}
 elseif|else
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|at
 operator|->
-name|msg_id
-operator|==
+name|mid
+argument_list|,
 name|control
 operator|->
-name|msg_id
+name|mid
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * Gak, He sent me a duplicate msg id 				 * number?? return -1 to abort. 				 */
@@ -2021,7 +2032,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|chk
 operator|->
@@ -2029,7 +2040,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|,
 name|chk
 operator|->
@@ -2037,7 +2048,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|chk
 operator|->
@@ -2045,7 +2056,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_seq
+name|mid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2074,7 +2085,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|chk
 operator|->
@@ -2082,7 +2093,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|,
 name|chk
 operator|->
@@ -2090,7 +2101,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 operator|(
 name|uint16_t
@@ -2101,7 +2112,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_seq
+name|mid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2292,7 +2303,7 @@ modifier|*
 name|need_reasm
 parameter_list|)
 block|{
-comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream usage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 *  	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and ssn 2 	 * with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 *  	 */
+comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream usage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 * 	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and 	 * ssn 2 with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 * 	 */
 name|struct
 name|sctp_queued_to_read
 modifier|*
@@ -2337,10 +2348,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|SCTP_MSGID_GT
+name|SCTP_MID_GT
 argument_list|(
 operator|(
-operator|!
 name|asoc
 operator|->
 name|idata_supported
@@ -2348,11 +2358,11 @@ operator|)
 argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|)
 condition|)
 block|{
@@ -2365,11 +2375,11 @@ literal|"Duplicate S-SEQ: %u delivered: %u from peer, Abort association\n"
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|)
 expr_stmt|;
 name|protocol_error
@@ -2387,6 +2397,13 @@ argument_list|,
 name|next_instrm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|asoc
+operator|->
+name|idata_supported
+condition|)
+block|{
 name|snprintf
 argument_list|(
 name|msg
@@ -2396,11 +2413,11 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Delivered SSN=%4.4x, got TSN=%8.8x, SID=%4.4x, SSN=%4.4x"
+literal|"Delivered MID=%8.8x, got TSN=%8.8x, SID=%4.4x, MID=%8.8x"
 argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|,
 name|control
 operator|->
@@ -2412,9 +2429,47 @@ name|sinfo_stream
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+literal|"Delivered SSN=%4.4x, got TSN=%8.8x, SID=%4.4x, SSN=%4.4x"
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|strm
+operator|->
+name|last_mid_delivered
+argument_list|,
+name|control
+operator|->
+name|sinfo_tsn
+argument_list|,
+name|control
+operator|->
+name|sinfo_stream
+argument_list|,
+operator|(
+name|uint16_t
+operator|)
+name|control
+operator|->
+name|mid
+argument_list|)
+expr_stmt|;
+block|}
 name|op_err
 operator|=
 name|sctp_generate_cause
@@ -2505,17 +2560,24 @@ name|nxt_todel
 operator|=
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
 expr_stmt|;
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|nxt_todel
-operator|==
+argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
+argument_list|)
 condition|)
 block|{
 if|#
@@ -2649,7 +2711,7 @@ argument_list|)
 expr_stmt|;
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|++
 expr_stmt|;
 name|sctp_mark_non_revokable
@@ -2701,19 +2763,24 @@ name|nxt_todel
 operator|=
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|nxt_todel
-operator|==
+argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
-operator|)
+name|mid
+argument_list|)
 operator|&&
 operator|(
 operator|(
@@ -2796,7 +2863,7 @@ literal|0
 expr_stmt|;
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|++
 expr_stmt|;
 comment|/* 				 * We ignore the return of deliver_data here 				 * since we always can hold the chunk on the 				 * d-queue. And we have a finite number that 				 * can be delivered from the strq. 				 */
@@ -2858,11 +2925,18 @@ block|}
 elseif|else
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|nxt_todel
-operator|==
+argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
+argument_list|)
 condition|)
 block|{
 operator|*
@@ -2921,11 +2995,11 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Queue to str msg_id: %u duplicate"
+literal|"Queue to str MID: %u duplicate"
 argument_list|,
 name|control
 operator|->
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|sctp_clean_up_control
@@ -3434,11 +3508,11 @@ name|sinfo_stream
 expr_stmt|;
 name|nc
 operator|->
-name|sinfo_ssn
+name|mid
 operator|=
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -3458,11 +3532,11 @@ name|top_fsn
 expr_stmt|;
 name|nc
 operator|->
-name|msg_id
+name|mid
 operator|=
 name|control
 operator|->
-name|msg_id
+name|mid
 expr_stmt|;
 name|nc
 operator|->
@@ -3644,7 +3718,7 @@ name|int
 name|inp_read_lock_held
 parameter_list|)
 block|{
-comment|/* 	 * Special handling for the old un-ordered data chunk. All the 	 * chunks/TSN's go to msg_id 0. So we have to do the old style 	 * watching to see if we have it all. If you return one, no other 	 * control entries on the un-ordered queue will be looked at. In 	 * theory there should be no others entries in reality, unless the 	 * guy is sending both unordered NDATA and unordered DATA... 	 */
+comment|/* 	 * Special handling for the old un-ordered data chunk. All the 	 * chunks/TSN's go to mid 0. So we have to do the old style watching 	 * to see if we have it all. If you return one, no other control 	 * entries on the un-ordered queue will be looked at. In theory 	 * there should be no others entries in reality, unless the guy is 	 * sending both unordered NDATA and unordered DATA... 	 */
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -3718,7 +3792,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|==
 name|fsn
 condition|)
@@ -3884,7 +3958,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|nc
 operator|->
@@ -3904,7 +3978,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|payloadtype
+name|ppid
 expr_stmt|;
 name|nc
 operator|->
@@ -3916,7 +3990,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|sctp_mark_non_revokable
 argument_list|(
@@ -3928,7 +4002,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 name|tchk
@@ -4003,7 +4077,7 @@ name|reasm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 					 * Now lets add it to the queue 					 * after removing control 					 */
+comment|/* Now lets add it to the queue 					 * after removing control */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4165,7 +4239,7 @@ name|reasm
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Switch to the new guy and 					 * continue 					 */
+comment|/* Switch to the new guy and 					 * continue */
 name|control
 operator|=
 name|nc
@@ -4367,7 +4441,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 if|if
@@ -4396,7 +4470,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -4404,7 +4478,7 @@ name|fsn_included
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Easy way the start of a new guy beyond 				 * the lowest 				 */
+comment|/* Easy way the start of a new guy beyond 				 * the lowest */
 goto|goto
 name|place_chunk
 goto|;
@@ -4418,7 +4492,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|==
 name|control
 operator|->
@@ -4432,7 +4506,7 @@ name|pdapi_started
 operator|)
 condition|)
 block|{
-comment|/* 				 * Ok this should not happen, if it does we 				 * started the pd-api on the higher TSN 				 * (since the equals part is a TSN failure 				 * it must be that). 				 *  				 * We are completly hosed in that case since I 				 * have no way to recover. This really will 				 * only happen if we can get more TSN's 				 * higher before the pd-api-point. 				 */
+comment|/* 				 * Ok this should not happen, if it does we 				 * started the pd-api on the higher TSN 				 * (since the equals part is a TSN failure 				 * it must be that). 				 * 				 * We are completly hosed in that case since 				 * I have no way to recover. This really 				 * will only happen if we can get more TSN's 				 * higher before the pd-api-point. 				 */
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -4504,7 +4578,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|chk
 operator|->
@@ -4512,7 +4586,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|=
 name|tmp
 expr_stmt|;
@@ -4533,7 +4607,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|chk
 operator|->
@@ -4541,7 +4615,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|=
 name|tmp
 expr_stmt|;
@@ -4562,7 +4636,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|payloadtype
+name|ppid
 expr_stmt|;
 name|chk
 operator|->
@@ -4570,7 +4644,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|payloadtype
+name|ppid
 operator|=
 name|tmp
 expr_stmt|;
@@ -4599,7 +4673,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|control
 operator|->
@@ -4611,7 +4685,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|control
 operator|->
@@ -4623,7 +4697,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|payloadtype
+name|ppid
 expr_stmt|;
 name|control
 operator|->
@@ -4643,7 +4717,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 name|chk
@@ -4693,7 +4767,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|chk
 operator|->
@@ -4701,7 +4775,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 condition|)
 block|{
@@ -4745,7 +4819,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|==
 name|chk
 operator|->
@@ -4753,7 +4827,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 condition|)
 block|{
 comment|/* 			 * They sent a duplicate fsn number. This really 			 * should not happen since the FSN is a TSN and it 			 * should have been dropped earlier. 			 */
@@ -4808,7 +4882,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -4993,7 +5067,7 @@ name|end_added
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|,
 name|control
 operator|->
@@ -5224,13 +5298,20 @@ return|;
 block|}
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
-operator|==
+name|last_mid_delivered
+argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Ok the guy at the top was being partially delivered 		 * completed, so we remove it. Note the pd_api flag was 		 * taken off when the chunk was merged on in 		 * sctp_queue_data_for_reasm below. 		 */
@@ -5257,7 +5338,7 @@ name|end_added
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|,
 name|control
 operator|->
@@ -5269,7 +5350,7 @@ name|fsn_included
 argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|)
 expr_stmt|;
 if|if
@@ -5409,7 +5490,7 @@ operator|->
 name|pd_api_started
 condition|)
 block|{
-comment|/* 		 * Can't add more must have gotten an un-ordered above being 		 * partially delivered. 		 */
+comment|/* Can't add more must have gotten an un-ordered above being 		 * partially delivered. */
 return|return
 operator|(
 literal|0
@@ -5422,7 +5503,7 @@ name|next_to_del
 operator|=
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
 expr_stmt|;
@@ -5445,7 +5526,7 @@ name|end_added
 argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|,
 name|control
 operator|->
@@ -5469,13 +5550,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|control
 operator|->
-name|sinfo_ssn
-operator|==
+name|mid
+argument_list|,
 name|next_to_del
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|control
@@ -5574,7 +5660,7 @@ operator|==
 name|SCTP_DATA_NOT_FRAG
 condition|)
 block|{
-comment|/* 				 * A singleton now slipping through - mark 				 * it non-revokable too 				 */
+comment|/* A singleton now slipping through - mark 				 * it non-revokable too */
 name|sctp_mark_non_revokable
 argument_list|(
 name|asoc
@@ -5595,7 +5681,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Check if we can defer adding until its 				 * all there 				 */
+comment|/* Check if we can defer adding until its 				 * all there */
 if|if
 condition|(
 operator|(
@@ -5613,7 +5699,7 @@ name|pd_api_started
 operator|)
 condition|)
 block|{
-comment|/* 					 * Don't need it or cannot add more 					 * (one being delivered that way) 					 */
+comment|/* Don't need it or cannot add more 					 * (one being delivered that way) */
 goto|goto
 name|out
 goto|;
@@ -5671,7 +5757,7 @@ expr_stmt|;
 block|}
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|next_to_del
 expr_stmt|;
@@ -5826,7 +5912,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|asoc
 operator|->
@@ -5853,7 +5939,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 name|chk
@@ -6303,7 +6389,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 if|if
@@ -6347,7 +6433,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 name|control
 operator|->
@@ -6367,7 +6453,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 name|chk
@@ -6419,7 +6505,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -6439,7 +6525,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|control
@@ -6452,7 +6538,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 expr_stmt|;
 block|}
 if|if
@@ -6480,7 +6566,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|control
@@ -6516,11 +6602,11 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
+comment|/* We have already delivered up to 					 * this so its a dup */
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -6568,7 +6654,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -6618,11 +6704,11 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
+comment|/* We have already delivered up to 					 * this so its a dup */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
@@ -6635,7 +6721,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -6660,7 +6746,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 			 * validate not beyond top FSN if we have seen last 			 * one 			 */
+comment|/* validate not beyond top FSN if we have seen last 			 * one */
 if|if
 condition|(
 name|SCTP_TSN_GT
@@ -6671,7 +6757,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -6691,7 +6777,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|control
 operator|->
@@ -6729,7 +6815,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -6751,7 +6837,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|chk
 operator|->
@@ -6759,7 +6845,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 condition|)
 block|{
@@ -6776,7 +6862,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -6818,7 +6904,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|==
 name|chk
 operator|->
@@ -6826,10 +6912,10 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 condition|)
 block|{
-comment|/* 				 * Gak, He sent me a duplicate str seq 				 * number 				 */
+comment|/* Gak, He sent me a duplicate str seq 				 * number */
 comment|/* 				 * foo bar, I guess I will just free this 				 * new guy, should we abort too? FIX ME 				 * MAYBE? Or it COULD be that the SSN's have 				 * wrapped. Maybe I should compare to TSN 				 * somehow... sigh for now just blow away 				 * the chunk! 				 */
 name|SCTPDBG
 argument_list|(
@@ -6843,7 +6929,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|sctp_abort_in_reasm
@@ -6884,7 +6970,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|)
 expr_stmt|;
 name|asoc
@@ -6956,7 +7042,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|==
 name|next_fsn
 condition|)
@@ -6978,7 +7064,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 argument_list|,
 name|next_fsn
 argument_list|,
@@ -7143,13 +7229,13 @@ modifier|*
 name|strm
 parameter_list|,
 name|uint32_t
-name|msg_id
+name|mid
 parameter_list|,
 name|int
 name|ordered
 parameter_list|,
 name|int
-name|old
+name|idata_supported
 parameter_list|)
 block|{
 name|struct
@@ -7173,11 +7259,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|idata_supported
+argument_list|,
 name|control
 operator|->
-name|msg_id
-operator|==
-name|msg_id
+name|mid
+argument_list|,
+name|mid
+argument_list|)
 condition|)
 block|{
 break|break;
@@ -7188,25 +7279,9 @@ else|else
 block|{
 if|if
 condition|(
-name|old
+name|idata_supported
 condition|)
 block|{
-name|control
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|strm
-operator|->
-name|uno_inqueue
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|control
-operator|)
-return|;
-block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|control
@@ -7218,15 +7293,34 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|SCTP_MID_EQ
+argument_list|(
+name|idata_supported
+argument_list|,
 name|control
 operator|->
-name|msg_id
-operator|==
-name|msg_id
+name|mid
+argument_list|,
+name|mid
+argument_list|)
 condition|)
 block|{
 break|break;
 block|}
+block|}
+block|}
+else|else
+block|{
+name|control
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|strm
+operator|->
+name|uno_inqueue
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 return|return
@@ -7314,7 +7408,7 @@ name|fsn
 decl_stmt|,
 name|gap
 decl_stmt|,
-name|msg_id
+name|mid
 decl_stmt|;
 name|struct
 name|mbuf
@@ -7330,7 +7424,7 @@ init|=
 literal|0
 decl_stmt|;
 name|uint16_t
-name|strmno
+name|sid
 decl_stmt|;
 name|struct
 name|mbuf
@@ -7351,7 +7445,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|uint32_t
-name|protocol_id
+name|ppid
 decl_stmt|;
 name|uint8_t
 name|chunk_flags
@@ -7376,9 +7470,6 @@ name|int
 name|created_control
 init|=
 literal|0
-decl_stmt|;
-name|uint8_t
-name|old_data
 decl_stmt|;
 name|chk
 operator|=
@@ -7447,7 +7538,7 @@ operator|.
 name|tsn
 argument_list|)
 expr_stmt|;
-name|msg_id
+name|mid
 operator|=
 name|ntohl
 argument_list|(
@@ -7455,10 +7546,10 @@ name|nch
 operator|->
 name|dp
 operator|.
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
-name|protocol_id
+name|ppid
 operator|=
 name|nch
 operator|->
@@ -7466,7 +7557,7 @@ name|dp
 operator|.
 name|ppid_fsn
 operator|.
-name|protocol_id
+name|ppid
 expr_stmt|;
 if|if
 condition|(
@@ -7495,10 +7586,6 @@ name|ppid_fsn
 operator|.
 name|fsn
 argument_list|)
-expr_stmt|;
-name|old_data
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -7542,13 +7629,13 @@ operator|.
 name|tsn
 argument_list|)
 expr_stmt|;
-name|protocol_id
+name|ppid
 operator|=
 name|ch
 operator|->
 name|dp
 operator|.
-name|protocol_id
+name|ppid
 expr_stmt|;
 name|clen
 operator|=
@@ -7562,7 +7649,7 @@ name|fsn
 operator|=
 name|tsn
 expr_stmt|;
-name|msg_id
+name|mid
 operator|=
 call|(
 name|uint32_t
@@ -7574,17 +7661,13 @@ name|ch
 operator|->
 name|dp
 operator|.
-name|stream_sequence
+name|ssn
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|nch
 operator|=
 name|NULL
-expr_stmt|;
-name|old_data
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|chunk_flags
@@ -8018,7 +8101,7 @@ return|;
 block|}
 comment|/* 	 * Now before going further we see if there is room. If NOT then we 	 * MAY let one through only IF this TSN is the one we are waiting 	 * for on a partial delivery API. 	 */
 comment|/* Is the stream valid? */
-name|strmno
+name|sid
 operator|=
 name|ntohs
 argument_list|(
@@ -8026,12 +8109,12 @@ name|ch
 operator|->
 name|dp
 operator|.
-name|stream_id
+name|sid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strmno
+name|sid
 operator|>=
 name|asoc
 operator|->
@@ -8138,7 +8221,7 @@ name|ch
 operator|->
 name|dp
 operator|.
-name|stream_id
+name|sid
 expr_stmt|;
 name|cause
 operator|->
@@ -8229,7 +8312,7 @@ name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 expr_stmt|;
 comment|/* 	 * If its a fragmented message, lets see if we can find the control 	 * on the reassembly queues. 	 */
@@ -8270,7 +8353,7 @@ argument_list|)
 argument_list|,
 literal|"FSN zero for MID=%8.8x, but flags=%2.2x"
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
 name|chunk_flags
 argument_list|)
@@ -8285,11 +8368,13 @@ name|sctp_find_reasm_entry
 argument_list|(
 name|strm
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
 name|ordered
 argument_list|,
-name|old_data
+name|asoc
+operator|->
+name|idata_supported
 argument_list|)
 expr_stmt|;
 name|SCTPDBG
@@ -8328,11 +8413,11 @@ condition|(
 name|ordered
 operator|&&
 operator|(
-name|msg_id
+name|mid
 operator|!=
 name|control
 operator|->
-name|sinfo_ssn
+name|mid
 operator|)
 condition|)
 block|{
@@ -8347,7 +8432,7 @@ argument_list|)
 argument_list|,
 literal|"Reassembly problem (MID=%8.8x)"
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|err_out
@@ -8412,7 +8497,7 @@ name|SCTP_DATA_UNORDERED
 operator|)
 condition|)
 block|{
-comment|/* 				 * We can't have a switched order with an 				 * unordered chunk 				 */
+comment|/* We can't have a switched order with an 				 * unordered chunk */
 name|snprintf
 argument_list|(
 name|msg
@@ -8453,7 +8538,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 * We can't have a switched unordered with a 				 * ordered chunk 				 */
+comment|/* We can't have a switched unordered with a 				 * ordered chunk */
 name|snprintf
 argument_list|(
 name|msg
@@ -8488,22 +8573,20 @@ if|if
 condition|(
 name|ordered
 operator|||
-operator|(
-name|old_data
-operator|==
-literal|0
-operator|)
+name|asoc
+operator|->
+name|idata_supported
 condition|)
 block|{
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk_flags: 0x%x dup detected on msg_id: %u\n"
+literal|"chunk_flags: 0x%x dup detected on MID: %u\n"
 argument_list|,
 name|chunk_flags
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -8517,7 +8600,7 @@ argument_list|)
 argument_list|,
 literal|"Duplicate MID=%8.8x detected."
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8925,7 +9008,7 @@ index|]
 operator|.
 name|strm
 operator|=
-name|strmno
+name|sid
 expr_stmt|;
 name|asoc
 operator|->
@@ -8938,7 +9021,7 @@ index|]
 operator|.
 name|seq
 operator|=
-name|msg_id
+name|mid
 expr_stmt|;
 name|asoc
 operator|->
@@ -9045,20 +9128,22 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|SCTP_MSGID_GE
+name|SCTP_MID_GE
 argument_list|(
-name|old_data
+name|asoc
+operator|->
+name|idata_supported
 argument_list|,
 name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 condition|)
 block|{
@@ -9069,18 +9154,55 @@ name|SCTP_DEBUG_INDATA1
 argument_list|,
 literal|"EVIL/Broken-Dup S-SEQ: %u delivered: %u from peer, Abort!\n"
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
 name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|asoc
+operator|->
+name|idata_supported
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+literal|"Delivered MID=%8.8x, got TSN=%8.8x, SID=%4.4x, MID=%8.8x"
+argument_list|,
+name|asoc
+operator|->
+name|strmin
+index|[
+name|sid
+index|]
+operator|.
+name|last_mid_delivered
+argument_list|,
+name|tsn
+argument_list|,
+name|sid
+argument_list|,
+name|mid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|snprintf
 argument_list|(
 name|msg
@@ -9092,22 +9214,29 @@ argument_list|)
 argument_list|,
 literal|"Delivered SSN=%4.4x, got TSN=%8.8x, SID=%4.4x, SSN=%4.4x"
 argument_list|,
+operator|(
+name|uint16_t
+operator|)
 name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|,
 name|tsn
 argument_list|,
-name|strmno
+name|sid
 argument_list|,
-name|msg_id
+operator|(
+name|uint16_t
+operator|)
+name|mid
 argument_list|)
 expr_stmt|;
+block|}
 name|op_err
 operator|=
 name|sctp_generate_cause
@@ -9444,11 +9573,9 @@ name|net
 argument_list|,
 name|tsn
 argument_list|,
-name|protocol_id
+name|ppid
 argument_list|,
-name|strmno
-argument_list|,
-name|msg_id
+name|sid
 argument_list|,
 name|chunk_flags
 argument_list|,
@@ -9456,7 +9583,7 @@ name|NULL
 argument_list|,
 name|fsn
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 if|if
@@ -9534,13 +9661,13 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"chunk_flags: 0x%x ordered: %d msgid: %u control: %p\n"
+literal|"chunk_flags: 0x%x ordered: %d MID: %u control: %p\n"
 argument_list|,
 name|chunk_flags
 argument_list|,
 name|ordered
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
 name|control
 argument_list|)
@@ -9571,23 +9698,25 @@ literal|0
 operator|)
 operator|||
 operator|(
-call|(
-name|uint16_t
-call|)
+name|SCTP_MID_EQ
 argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 operator|.
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
+argument_list|,
+name|mid
 argument_list|)
-operator|==
-name|msg_id
 operator|&&
 name|TAILQ_EMPTY
 argument_list|(
@@ -9596,7 +9725,7 @@ name|asoc
 operator|->
 name|strmin
 index|[
-name|strmno
+name|sid
 index|]
 operator|.
 name|inqueue
@@ -9639,11 +9768,11 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Injecting control: %p to be read (msg_id: %u)\n"
+literal|"Injecting control: %p to be read (MID: %u)\n"
 argument_list|,
 name|control
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|sctp_add_to_readq
@@ -9684,7 +9813,7 @@ block|{
 comment|/* for ordered, bump what we delivered */
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|++
 expr_stmt|;
 block|}
@@ -9709,9 +9838,9 @@ name|stcb
 argument_list|,
 name|tsn
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
-name|strmno
+name|sid
 argument_list|,
 name|SCTP_STR_LOG_FROM_EXPRS_DEL
 argument_list|)
@@ -9783,7 +9912,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|=
 name|tsn
 expr_stmt|;
@@ -9799,7 +9928,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|fsn_num
+name|fsn
 operator|=
 name|fsn
 expr_stmt|;
@@ -9809,9 +9938,9 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_seq
+name|mid
 operator|=
-name|msg_id
+name|mid
 expr_stmt|;
 name|chk
 operator|->
@@ -9819,9 +9948,9 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 operator|=
-name|strmno
+name|sid
 expr_stmt|;
 name|chk
 operator|->
@@ -9829,9 +9958,9 @@ name|rec
 operator|.
 name|data
 operator|.
-name|payloadtype
+name|ppid
 operator|=
-name|protocol_id
+name|ppid
 expr_stmt|;
 name|chk
 operator|->
@@ -9889,13 +10018,13 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Building ck: %p for control: %p to be read (msg_id: %u)\n"
+literal|"Building ck: %p for control: %p to be read (MID: %u)\n"
 argument_list|,
 name|chk
 argument_list|,
 name|control
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|atomic_add_int
@@ -9998,7 +10127,7 @@ operator|==
 name|SCTP_DATA_NOT_FRAG
 condition|)
 block|{
-comment|/* 		 * Special check for when streams are resetting. We could be 		 * more smart about this and check the actual stream to see 		 * if it is not being reset.. that way we would not create a 		 * HOLB when amongst streams being reset and those not being 		 * reset. 		 *  		 */
+comment|/* 		 * Special check for when streams are resetting. We could be 		 * more smart about this and check the actual stream to see 		 * if it is not being reset.. that way we would not create a 		 * HOLB when amongst streams being reset and those not being 		 * reset. 		 * 		 */
 if|if
 condition|(
 operator|(
@@ -10153,11 +10282,11 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Unordered data to be read control: %p msg_id: %u\n"
+literal|"Unordered data to be read control: %p MID: %u\n"
 argument_list|,
 name|control
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|sctp_mark_non_revokable
@@ -10200,11 +10329,11 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Queue control: %p for reordering msg_id: %u\n"
+literal|"Queue control: %p for reordering MID: %u\n"
 argument_list|,
 name|control
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|sctp_queue_data_to_stream
@@ -10260,11 +10389,11 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
 argument_list|,
-literal|"Queue data to stream for reasm control: %p msg_id: %u\n"
+literal|"Queue data to stream for reasm control: %p MID: %u\n"
 argument_list|,
 name|control
 argument_list|,
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|sctp_queue_data_for_reasm
@@ -10386,9 +10515,9 @@ name|stcb
 argument_list|,
 name|tsn
 argument_list|,
-name|msg_id
+name|mid
 argument_list|,
-name|strmno
+name|sid
 argument_list|,
 name|SCTP_STR_LOG_FROM_MARK_TSN
 argument_list|)
@@ -11235,7 +11364,7 @@ modifier|*
 name|stcb
 parameter_list|)
 block|{
-comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 *  	 * When you first glance at this you might think that all entries that 	 * make up the position of the cum-ack would be in the nr-mapping 	 * array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
+comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 * 	 * When you first glance at this you might think that all entries 	 * that make up the position of the cum-ack would be in the 	 * nr-mapping array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -12070,6 +12199,14 @@ decl_stmt|;
 name|uint32_t
 name|highest_tsn
 decl_stmt|;
+name|int
+name|is_a_gap
+decl_stmt|;
+name|sctp_slide_mapping_arrays
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|asoc
 operator|=
 operator|&
@@ -12107,6 +12244,20 @@ operator|->
 name|highest_tsn_inside_map
 expr_stmt|;
 block|}
+comment|/* Is there a gap now? */
+name|is_a_gap
+operator|=
+name|SCTP_TSN_GT
+argument_list|(
+name|highest_tsn
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|cumulative_tsn
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now we need to see if we need to queue a sack or just start the 	 * timer (if allowed). 	 */
 if|if
 condition|(
@@ -12179,6 +12330,11 @@ name|primary_destination
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_a_gap
+condition|)
+block|{
 name|sctp_send_sack
 argument_list|(
 name|stcb
@@ -12187,25 +12343,9 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
-name|int
-name|is_a_gap
-decl_stmt|;
-comment|/* is there a gap now ? */
-name|is_a_gap
-operator|=
-name|SCTP_TSN_GT
-argument_list|(
-name|highest_tsn
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|cumulative_tsn
-argument_list|)
-expr_stmt|;
 comment|/* 		 * CMT DAC algorithm: increase number of packets received 		 * since last ack 		 */
 name|stcb
 operator|->
@@ -12344,7 +12484,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * CMT DAC algorithm: With CMT, delay acks 				 * even in the face of 				 *  				 * reordering. Therefore, if acks that do not 				 * have to be sent because of the above 				 * reasons, will be delayed. That is, acks 				 * that would have been sent due to gap 				 * reports will be delayed with DAC. Start 				 * the delayed ack timer. 				 */
+comment|/* 				 * CMT DAC algorithm: With CMT, delay acks 				 * even in the face of 				 * 				 * reordering. Therefore, if acks that do 				 * not have to be sent because of the above 				 * reasons, will be delayed. That is, acks 				 * that would have been sent due to gap 				 * reports will be delayed with DAC. Start 				 * the delayed ack timer. 				 */
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_RECV
@@ -13260,7 +13400,7 @@ case|case
 name|SCTP_ASCONF
 case|:
 block|{
-comment|/* 					 * Now, what do we do with KNOWN 					 * chunks that are NOT in the right 					 * place? 					 *  					 * For now, I do nothing but ignore 					 * them. We may later want to add 					 * sysctl stuff to switch out and do 					 * either an ABORT() or possibly 					 * process them. 					 */
+comment|/* 					 * Now, what do we do with KNOWN 					 * chunks that are NOT in the right 					 * place? 					 * 					 * For now, I do nothing but ignore 					 * them. We may later want to add 					 * sysctl stuff to switch out and do 					 * either an ABORT() or possibly 					 * process them. 					 */
 name|struct
 name|mbuf
 modifier|*
@@ -13477,7 +13617,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* else skip this bad chunk and 					 * continue... */
+comment|/* else skip this bad chunk and 				  * continue... */
 break|break;
 block|}
 comment|/* switch of chunk type */
@@ -13852,7 +13992,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|tp1
 operator|->
@@ -13904,7 +14044,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|tp1
 operator|->
@@ -13923,7 +14063,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|theTSN
 condition|)
@@ -13958,7 +14098,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 operator|*
 name|biggest_newly_acked_tsn
@@ -13974,7 +14114,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/*- 						 * CMT: SFR algo (and HTNA) - set 						 * saw_newack to 1 for dest being 						 * newly acked. update 						 * this_sack_highest_newack if 						 * appropriate. 						 */
@@ -14008,7 +14148,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -14030,7 +14170,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/*- 						 * CMT DAC algo: also update 						 * this_sack_lowest_newack 						 */
@@ -14065,7 +14205,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -14084,7 +14224,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/*- 						 * CMT: CUCv2 algorithm. If (rtx-)pseudo-cumack for corresp 						 * dest is being acked, then we have a new (rtx-)pseudo-cumack. Set 						 * new_(rtx_)pseudo_cumack to TRUE so that the cwnd for this dest can be 						 * updated. Also trigger search for the next expected (rtx-)pseudo-cumack. 						 * Separate pseudo_cumack trackers for first transmissions and 						 * retransmissions. 						 */
@@ -14096,7 +14236,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tp1
 operator|->
@@ -14160,7 +14300,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|SCTP_CWND_LOG_FROM_SACK
 argument_list|)
@@ -14174,7 +14314,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|tp1
 operator|->
@@ -14237,7 +14377,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|frag_strt
 argument_list|,
@@ -14287,7 +14427,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -14460,7 +14600,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|stcb
 operator|->
@@ -14482,7 +14622,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 if|if
@@ -14613,7 +14753,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -14633,7 +14773,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -14655,7 +14795,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14676,7 +14816,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -14697,7 +14837,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|state
@@ -14720,7 +14860,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|outqueue
@@ -14749,7 +14889,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 							 * sa_ignore 							 * NO_NULL_CHK 							 */
+comment|/* sa_ignore 							 * NO_NULL_CHK */
 name|sctp_free_bufspace
 argument_list|(
 name|stcb
@@ -14785,7 +14925,7 @@ block|}
 block|}
 break|break;
 block|}
-comment|/* if (tp1->TSN_seq == theTSN) */
+comment|/* if (tp1->tsn == theTSN) */
 if|if
 condition|(
 name|SCTP_TSN_GT
@@ -14796,7 +14936,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|theTSN
 argument_list|)
@@ -15286,7 +15426,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|cumack
 argument_list|)
@@ -15303,7 +15443,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|biggest_tsn_acked
 argument_list|)
@@ -15378,7 +15518,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -15429,7 +15569,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -15569,7 +15709,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 comment|/* CMT DAC algo: finding out if SACK is a mixed SACK */
@@ -15679,7 +15819,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -15699,7 +15839,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|biggest_tsn_acked
 argument_list|)
@@ -15801,7 +15941,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|asoc
 operator|->
@@ -15879,7 +16019,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -15924,7 +16064,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -15992,7 +16132,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -16018,7 +16158,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16118,7 +16258,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16190,7 +16330,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -16216,7 +16356,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16258,7 +16398,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|biggest_tsn_newly_acked
 argument_list|)
@@ -16290,7 +16430,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16358,7 +16498,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -16384,7 +16524,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16467,7 +16607,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -16594,7 +16734,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * Has it been retransmitted tv_sec times? - 				 * we store the retran count there. 				 */
+comment|/* Has it been retransmitted tv_sec times? - 				 * we store the retran count there. */
 if|if
 condition|(
 name|tp1
@@ -16648,7 +16788,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 			 * SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); 			 */
+comment|/* SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); */
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -16667,7 +16807,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|tp1
 operator|->
@@ -16732,7 +16872,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 					 * JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() 					 */
+comment|/* JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() */
 name|alt
 operator|=
 name|sctp_find_alternate_net
@@ -16747,7 +16887,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() 					 */
+comment|/* JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() */
 comment|/* sa_ignore NO_NULL_CHK */
 name|alt
 operator|=
@@ -16847,7 +16987,7 @@ name|tot_retrans
 operator|++
 expr_stmt|;
 comment|/* mark the sending seq for possible subsequent FR's */
-comment|/* 			 * SCTP_PRINTF("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.TSN_seq); 			 */
+comment|/* 			 * SCTP_PRINTF("Marking TSN for FR new value %x\n", 			 * (uint32_t)tpi->rec.data.tsn); 			 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -16903,7 +17043,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 block|}
 if|if
@@ -17123,7 +17263,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -17267,7 +17407,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|asoc
 operator|->
@@ -17285,7 +17425,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|a_adv
 operator|=
@@ -17301,7 +17441,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|==
 name|asoc
 operator|->
@@ -17443,7 +17583,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|chk
 operator|->
@@ -17654,7 +17794,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 return|return;
@@ -17756,7 +17896,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -18146,7 +18286,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|+
 literal|1
 expr_stmt|;
@@ -18315,7 +18455,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -18393,7 +18533,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -18490,7 +18630,7 @@ name|whoTo
 operator|->
 name|RTO
 operator|=
-comment|/* 								 * sa_ignore 								 * NO_NULL_CH 								 * K 								 */
+comment|/* 								 * sa_ignore 								 * NO_NULL_CHK 								 */
 name|sctp_calculate_rto
 argument_list|(
 name|stcb
@@ -18594,7 +18734,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|SCTP_CWND_LOG_FROM_SACK
 argument_list|)
@@ -18672,7 +18812,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -18690,7 +18830,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -18712,7 +18852,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -18732,7 +18872,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -18751,7 +18891,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|state
@@ -18772,7 +18912,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|outqueue
@@ -18855,7 +18995,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -19182,7 +19322,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* 						 * release the alternate, 						 * primary is good 						 */
+comment|/* release the alternate, 						 * primary is good */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -19627,7 +19767,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
+comment|/* In window probes we must assure a timer 				 * is still running there */
 name|net
 operator|->
 name|window_probe
@@ -20852,7 +20992,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|+
 literal|1
 expr_stmt|;
@@ -20916,7 +21056,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 operator|(
 name|void
@@ -21268,7 +21408,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 condition|)
 block|{
@@ -21376,7 +21516,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -21442,7 +21582,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 expr_stmt|;
 name|tp1
 operator|->
@@ -21593,7 +21733,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -21627,7 +21767,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|SCTP_CWND_LOG_FROM_SACK
 argument_list|)
@@ -21952,7 +22092,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|cum_ack
 argument_list|)
@@ -21981,7 +22121,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -21999,7 +22139,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -22021,7 +22161,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -22041,7 +22181,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|chunks_on_queues
@@ -22060,7 +22200,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|state
@@ -22081,7 +22221,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|stream_number
+name|sid
 index|]
 operator|.
 name|outqueue
@@ -22213,7 +22353,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 literal|0
 argument_list|,
@@ -22514,7 +22654,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Check for revoked fragments: 	 *  	 * if Previous sack - Had no frags then we can't have any revoked if 	 * Previous sack - Had frag's then - If we now have frags aka 	 * num_seg> 0 call sctp_check_for_revoked() to tell if peer revoked 	 * some of them. else - The peer revoked all ACKED fragments, since 	 * we had some before and now we have NONE. 	 */
+comment|/* 	 * Check for revoked fragments: 	 * 	 * if Previous sack - Had no frags then we can't have any revoked if 	 * Previous sack - Had frag's then - If we now have frags aka 	 * num_seg> 0 call sctp_check_for_revoked() to tell if peer revoked 	 * some of them. else - The peer revoked all ACKED fragments, since 	 * we had some before and now we have NONE. 	 */
 if|if
 condition|(
 name|num_seg
@@ -22616,7 +22756,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|)
 expr_stmt|;
 block|}
@@ -22784,7 +22924,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* 						 * release the alternate, 						 * primary is good 						 */
+comment|/* release the alternate, 						 * primary is good */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -23834,7 +23974,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
+comment|/* In window probes we must assure a timer 				 * is still running there */
 if|if
 condition|(
 operator|!
@@ -24353,14 +24493,12 @@ modifier|*
 name|asoc
 decl_stmt|;
 name|uint32_t
-name|tt
+name|mid
 decl_stmt|;
 name|int
 name|need_reasm_check
 init|=
 literal|0
-decl_stmt|,
-name|old
 decl_stmt|;
 name|asoc
 operator|=
@@ -24369,31 +24507,12 @@ name|stcb
 operator|->
 name|asoc
 expr_stmt|;
-name|tt
+name|mid
 operator|=
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 expr_stmt|;
-if|if
-condition|(
-name|asoc
-operator|->
-name|idata_supported
-condition|)
-block|{
-name|old
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|old
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* 	 * First deliver anything prior to and including the stream no that 	 * came in. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
@@ -24408,15 +24527,17 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|SCTP_MSGID_GE
+name|SCTP_MID_GE
 argument_list|(
-name|old
+name|asoc
+operator|->
+name|idata_supported
 argument_list|,
-name|tt
+name|mid
 argument_list|,
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|)
 condition|)
 block|{
@@ -24587,14 +24708,14 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 					 * Make it so this is next to 					 * deliver, we restore later 					 */
+comment|/* Make it so this is next to 					 * deliver, we restore later */
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
 operator|-
 literal|1
 expr_stmt|;
@@ -24638,24 +24759,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SCTP_MSGID_GT
+name|SCTP_MID_GT
 argument_list|(
-name|old
+name|asoc
+operator|->
+name|idata_supported
 argument_list|,
-name|tt
+name|mid
 argument_list|,
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|)
 condition|)
 block|{
 comment|/* Restore the next to deliver unless we are ahead */
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
-name|tt
+name|mid
 expr_stmt|;
 block|}
 if|if
@@ -24674,11 +24797,11 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * now we must deliver things in queue the normal way  if any are 	 * now ready. 	 */
-name|tt
+name|mid
 operator|=
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
 expr_stmt|;
@@ -24695,11 +24818,18 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|tt
-operator|==
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
+name|mid
+argument_list|,
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
+argument_list|)
 condition|)
 block|{
 if|if
@@ -24819,11 +24949,11 @@ expr_stmt|;
 comment|/* deliver it to at least the delivery-q */
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
 expr_stmt|;
 if|if
 condition|(
@@ -24866,11 +24996,11 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
-name|tt
+name|mid
 operator|=
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|+
 literal|1
 expr_stmt|;
@@ -24885,14 +25015,14 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 					 * Make it so this is next to 					 * deliver 					 */
+comment|/* Make it so this is next to 					 * deliver */
 name|strmin
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
 operator|-
 literal|1
 expr_stmt|;
@@ -24954,13 +25084,10 @@ name|uint16_t
 name|stream
 parameter_list|,
 name|uint32_t
-name|seq
+name|mid
 parameter_list|,
 name|int
 name|ordered
-parameter_list|,
-name|int
-name|old
 parameter_list|,
 name|uint32_t
 name|cumtsn
@@ -25006,14 +25133,13 @@ name|sctp_find_reasm_entry
 argument_list|(
 name|strm
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
-name|seq
+name|mid
 argument_list|,
 name|ordered
 argument_list|,
-name|old
+name|asoc
+operator|->
+name|idata_supported
 argument_list|)
 expr_stmt|;
 if|if
@@ -25028,7 +25154,10 @@ return|return;
 block|}
 if|if
 condition|(
-name|old
+operator|!
+name|asoc
+operator|->
+name|idata_supported
 operator|&&
 operator|!
 name|ordered
@@ -25059,7 +25188,10 @@ block|{
 comment|/* Purge hanging chunks */
 if|if
 condition|(
-name|old
+operator|!
+name|asoc
+operator|->
+name|idata_supported
 operator|&&
 operator|(
 name|ordered
@@ -25078,7 +25210,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 argument_list|,
 name|cumtsn
 argument_list|)
@@ -25423,7 +25555,7 @@ name|offset
 parameter_list|)
 block|{
 comment|/* The pr-sctp fwd tsn */
-comment|/* 	 * here we will perform all the data receiver side steps for 	 * processing FwdTSN, as required in by pr-sctp draft: 	 *  	 * Assume we get FwdTSN(x): 	 *  	 * 1) update local cumTSN to x 2) try to further advance cumTSN to x + 	 * others we have 3) examine and update re-ordering queue on 	 * pr-in-streams 4) clean up re-assembly queue 5) Send a sack to 	 * report where we are. 	 */
+comment|/* 	 * here we will perform all the data receiver side steps for 	 * processing FwdTSN, as required in by pr-sctp draft: 	 * 	 * Assume we get FwdTSN(x): 	 * 	 * 1) update local cumTSN to x 2) try to further advance cumTSN to x 	 * + others we have 3) examine and update re-ordering queue on 	 * pr-in-streams 4) clean up re-assembly queue 5) Send a sack to 	 * report where we are. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -25871,8 +26003,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|1
-argument_list|,
 name|new_cum_tsn
 argument_list|)
 expr_stmt|;
@@ -25910,18 +26040,17 @@ name|int
 name|num_str
 decl_stmt|;
 name|uint32_t
-name|sequence
+name|mid
+decl_stmt|,
+name|cur_mid
 decl_stmt|;
 name|uint16_t
-name|stream
+name|sid
 decl_stmt|;
 name|uint16_t
 name|ordered
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|int
-name|old
 decl_stmt|;
 name|struct
 name|sctp_strseq
@@ -25969,10 +26098,6 @@ expr|struct
 name|sctp_strseq_mid
 argument_list|)
 expr_stmt|;
-name|old
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -25985,10 +26110,6 @@ argument_list|(
 expr|struct
 name|sctp_strseq
 argument_list|)
-expr_stmt|;
-name|old
-operator|=
-literal|1
 expr_stmt|;
 block|}
 for|for
@@ -26056,22 +26177,22 @@ condition|)
 block|{
 break|break;
 block|}
-name|stream
+name|sid
 operator|=
 name|ntohs
 argument_list|(
 name|stseq_m
 operator|->
-name|stream
+name|sid
 argument_list|)
 expr_stmt|;
-name|sequence
+name|mid
 operator|=
 name|ntohl
 argument_list|(
 name|stseq_m
 operator|->
-name|msg_id
+name|mid
 argument_list|)
 expr_stmt|;
 name|flags
@@ -26149,16 +26270,16 @@ condition|)
 block|{
 break|break;
 block|}
-name|stream
+name|sid
 operator|=
 name|ntohs
 argument_list|(
 name|stseq
 operator|->
-name|stream
+name|sid
 argument_list|)
 expr_stmt|;
-name|sequence
+name|mid
 operator|=
 operator|(
 name|uint32_t
@@ -26167,7 +26288,7 @@ name|ntohs
 argument_list|(
 name|stseq
 operator|->
-name|sequence
+name|ssn
 argument_list|)
 expr_stmt|;
 name|ordered
@@ -26180,7 +26301,7 @@ comment|/* now process */
 comment|/* 			 * Ok we now look for the stream/seq on the read 			 * queue where its not all delivered. If we find it 			 * we transmute the read entry into a PDI_ABORTED. 			 */
 if|if
 condition|(
-name|stream
+name|sid
 operator|>=
 name|asoc
 operator|->
@@ -26197,7 +26318,7 @@ name|asoc
 operator|->
 name|str_of_pdapi
 operator|==
-name|stream
+name|sid
 operator|)
 operator|&&
 operator|(
@@ -26205,7 +26326,7 @@ name|asoc
 operator|->
 name|ssn_of_pdapi
 operator|==
-name|sequence
+name|mid
 operator|)
 condition|)
 block|{
@@ -26224,39 +26345,29 @@ name|asoc
 operator|->
 name|strmin
 index|[
-name|stream
+name|sid
 index|]
 expr_stmt|;
-if|if
-condition|(
+for|for
+control|(
+name|cur_mid
+operator|=
+name|strm
+operator|->
+name|last_mid_delivered
+init|;
+name|SCTP_MID_GE
+argument_list|(
 name|asoc
 operator|->
 name|idata_supported
-operator|==
-literal|0
-condition|)
-block|{
-name|uint16_t
-name|strm_at
-decl_stmt|;
-for|for
-control|(
-name|strm_at
-operator|=
-name|strm
-operator|->
-name|last_sequence_delivered
-init|;
-name|SCTP_MSGID_GE
-argument_list|(
-literal|1
 argument_list|,
-name|sequence
+name|mid
 argument_list|,
-name|strm_at
+name|cur_mid
 argument_list|)
 condition|;
-name|strm_at
+name|cur_mid
 operator|++
 control|)
 block|{
@@ -26266,63 +26377,15 @@ name|stcb
 argument_list|,
 name|asoc
 argument_list|,
-name|stream
+name|sid
 argument_list|,
-name|strm_at
+name|cur_mid
 argument_list|,
 name|ordered
-argument_list|,
-name|old
 argument_list|,
 name|new_cum_tsn
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|uint32_t
-name|strm_at
-decl_stmt|;
-for|for
-control|(
-name|strm_at
-operator|=
-name|strm
-operator|->
-name|last_sequence_delivered
-init|;
-name|SCTP_MSGID_GE
-argument_list|(
-literal|0
-argument_list|,
-name|sequence
-argument_list|,
-name|strm_at
-argument_list|)
-condition|;
-name|strm_at
-operator|++
-control|)
-block|{
-name|sctp_flush_reassm_for_str_seq
-argument_list|(
-name|stcb
-argument_list|,
-name|asoc
-argument_list|,
-name|stream
-argument_list|,
-name|strm_at
-argument_list|,
-name|ordered
-argument_list|,
-name|old
-argument_list|,
-name|new_cum_tsn
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|TAILQ_FOREACH
 argument_list|(
@@ -26340,22 +26403,29 @@ name|ctl
 operator|->
 name|sinfo_stream
 operator|==
-name|stream
+name|sid
 operator|)
 operator|&&
 operator|(
+name|SCTP_MID_EQ
+argument_list|(
+name|asoc
+operator|->
+name|idata_supported
+argument_list|,
 name|ctl
 operator|->
-name|sinfo_ssn
-operator|==
-name|sequence
+name|mid
+argument_list|,
+name|mid
+argument_list|)
 operator|)
 condition|)
 block|{
 name|str_seq
 operator|=
 operator|(
-name|stream
+name|sid
 operator|<<
 literal|16
 operator|)
@@ -26363,7 +26433,7 @@ operator||
 operator|(
 literal|0x0000ffff
 operator|&
-name|sequence
+name|mid
 operator|)
 expr_stmt|;
 name|ctl
@@ -26508,18 +26578,20 @@ name|ctl
 operator|->
 name|sinfo_stream
 operator|==
-name|stream
+name|sid
 operator|)
 operator|&&
-name|SCTP_MSGID_GT
+name|SCTP_MID_GT
 argument_list|(
-name|old
+name|asoc
+operator|->
+name|idata_supported
 argument_list|,
 name|ctl
 operator|->
-name|sinfo_ssn
+name|mid
 argument_list|,
-name|sequence
+name|mid
 argument_list|)
 condition|)
 block|{
@@ -26529,24 +26601,26 @@ block|}
 block|}
 if|if
 condition|(
-name|SCTP_MSGID_GT
+name|SCTP_MID_GT
 argument_list|(
-name|old
+name|asoc
+operator|->
+name|idata_supported
 argument_list|,
-name|sequence
+name|mid
 argument_list|,
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 argument_list|)
 condition|)
 block|{
 comment|/* Update the sequence number */
 name|strm
 operator|->
-name|last_sequence_delivered
+name|last_mid_delivered
 operator|=
-name|sequence
+name|mid
 expr_stmt|;
 block|}
 comment|/* now kick the stream the new way */

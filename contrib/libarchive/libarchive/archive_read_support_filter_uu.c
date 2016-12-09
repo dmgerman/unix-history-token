@@ -4030,6 +4030,38 @@ name|ST_UUEND
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|total
+operator|==
+literal|0
+operator|&&
+name|ravail
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* There is nothing more to read, fail */
+name|archive_set_error
+argument_list|(
+operator|&
+name|self
+operator|->
+name|archive
+operator|->
+name|archive
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"Missing format data"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 comment|/* 			 * Save remaining data which does not contain 			 * NL('\n','\r'). 			 */
 if|if
 condition|(
@@ -4340,7 +4372,7 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* Get length of undecoded bytes of curent line. */
+comment|/* Get length of undecoded bytes of current line. */
 name|l
 operator|=
 name|UUDECODE

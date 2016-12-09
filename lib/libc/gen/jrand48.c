@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rand48.h"
 end_include
 
@@ -42,8 +48,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+call|(
+name|int32_t
+call|)
+argument_list|(
 operator|(
-name|long
+operator|(
+name|uint32_t
 operator|)
 name|xseed
 index|[
@@ -52,14 +63,16 @@ index|]
 operator|<<
 literal|16
 operator|)
-operator|+
+operator||
 operator|(
-name|long
+name|uint32_t
 operator|)
 name|xseed
 index|[
 literal|1
 index|]
+argument_list|)
+operator|)
 return|;
 block|}
 end_function

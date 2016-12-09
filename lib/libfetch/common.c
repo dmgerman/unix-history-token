@@ -1333,11 +1333,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|fetch_info
-argument_list|(
-literal|"resolved"
-argument_list|)
-expr_stmt|;
 comment|/* resolve client address */
 name|bindaddr
 operator|=

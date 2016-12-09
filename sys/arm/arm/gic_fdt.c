@@ -83,6 +83,12 @@ directive|include
 file|<arm/arm/gic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arm/arm/gic_common.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -484,6 +490,19 @@ directive|endif
 name|int
 name|err
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INTRNG
+name|sc
+operator|->
+name|base
+operator|.
+name|gic_bus
+operator|=
+name|GIC_BUS_FDT
+expr_stmt|;
+endif|#
+directive|endif
 name|err
 operator|=
 name|arm_gic_attach

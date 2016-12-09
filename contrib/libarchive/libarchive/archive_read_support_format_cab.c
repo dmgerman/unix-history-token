@@ -163,7 +163,7 @@ comment|/* The length how many bytes we can copy decoded code from 	 * the windo
 name|int
 name|copy_len
 decl_stmt|;
-comment|/* Translation reversal for x86 proccessor CALL byte sequence(E8). 	 * This is used for LZX only. */
+comment|/* Translation reversal for x86 processor CALL byte sequence(E8). 	 * This is used for LZX only. */
 name|uint32_t
 name|translation_size
 decl_stmt|;
@@ -7572,7 +7572,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: I suspect there is a bug in makecab.exe because, in rare 	 * case, compressed bytes are still remaining regardless we have 	 * gotten all uncompressed bytes, which size is recoded in CFDATA, 	 * as much as we need, and we have to use the garbage so as to 	 * correctly compute the sum of CFDATA accordingly. 	 */
+comment|/* 	 * Note: I suspect there is a bug in makecab.exe because, in rare 	 * case, compressed bytes are still remaining regardless we have 	 * gotten all uncompressed bytes, which size is recorded in CFDATA, 	 * as much as we need, and we have to use the garbage so as to 	 * correctly compute the sum of CFDATA accordingly. 	 */
 if|if
 condition|(
 name|cfdata
@@ -8458,7 +8458,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Translation reversal of x86 proccessor CALL byte sequence(E8). 	 */
+comment|/* 	 * Translation reversal of x86 processor CALL byte sequence(E8). 	 */
 name|lzx_translation
 argument_list|(
 operator|&
@@ -11132,7 +11132,7 @@ modifier|*
 name|br
 parameter_list|)
 block|{
-comment|/*  * x86 proccessor family can read misaligned data without an access error.  */
+comment|/*  * x86 processor family can read misaligned data without an access error.  */
 name|int
 name|n
 init|=

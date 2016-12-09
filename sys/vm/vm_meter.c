@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1594,6 +1600,61 @@ literal|"VM pages affected by fork() by kernel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD11
+end_ifdef
+
+begin_comment
+comment|/*  * Provide compatibility sysctls for the benefit of old utilities which exit  * with an error if they cannot be found.  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_cache_count
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|SYSCTL_NULL_UINT_PTR
+argument_list|,
+literal|0
+argument_list|,
+literal|"Dummy for compatibility"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_tcached
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|SYSCTL_NULL_UINT_PTR
+argument_list|,
+literal|0
+argument_list|,
+literal|"Dummy for compatibility"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -117,12 +117,9 @@ begin_comment
 comment|/*  * Registers (v2/v3)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GICD_CTLR
-value|(0x0000)
-end_define
+begin_comment
+comment|/* GICD_CTLR */
+end_comment
 
 begin_define
 define|#
@@ -152,12 +149,9 @@ name|GICD_CTLR_RWP
 value|(1<< 31)
 end_define
 
-begin_define
-define|#
-directive|define
-name|GICD_TYPER
-value|(0x0004)
-end_define
+begin_comment
+comment|/* GICD_TYPER */
+end_comment
 
 begin_define
 define|#
@@ -167,137 +161,6 @@ parameter_list|(
 name|n
 parameter_list|)
 value|((((n)>> 19)& 0x1F) + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_TYPER_I_NUM
-parameter_list|(
-name|n
-parameter_list|)
-value|((((n)& 0x1F) + 1) * 32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ISENABLER
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0100 + (((n)>> 5) * 4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_I_PER_ISENABLERn
-value|(32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICENABLER
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0180 + (((n)>> 5) * 4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_IPRIORITYR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0400 + (((n)>> 2) * 4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_I_PER_IPRIORITYn
-value|(4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_I_MASK
-parameter_list|(
-name|n
-parameter_list|)
-value|(1<< ((n) % 32))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x0C00 + (((n)>> 4) * 4))
-end_define
-
-begin_comment
-comment|/* First bit is a polarity bit (0 - low, 1 - high) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_LOW
-value|(0<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_HIGH
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_POL_MASK
-value|(0x1)
-end_define
-
-begin_comment
-comment|/* Second bit is a trigger bit (0 - level, 1 - edge) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_LVL
-value|(0<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_EDGE
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_ICFGR_TRIG_MASK
-value|(0x2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GICD_I_PER_ICFGRn
-value|(16)
 end_define
 
 begin_comment
@@ -317,29 +180,96 @@ end_define
 begin_define
 define|#
 directive|define
+name|GICD_PIDR4
+value|0xFFD0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR5
+value|0xFFD4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR6
+value|0xFFD8
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR7
+value|0xFFDC
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR0
+value|0xFFE0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR1
+value|0xFFE4
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICD_PIDR2
-value|(0xFFE8)
+value|0xFFE8
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICR_PIDR2_ARCH_SHIFT
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|GICR_PIDR2_ARCH_MASK
-value|(0xF0)
+value|0xF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICR_PIDR2_ARCH
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)& GICR_PIDR2_ARCH_MASK)>> GICR_PIDR2_ARCH_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GICR_PIDR2_ARCH_GICv3
-value|(0x30)
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|GICR_PIDR2_ARCH_GICv4
-value|(0x40)
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|GICD_PIDR3
+value|0xFFEC
 end_define
 
 begin_comment

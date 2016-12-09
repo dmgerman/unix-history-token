@@ -58,6 +58,10 @@ comment|/* Total region size. */
 name|size_t
 name|en_size
 decl_stmt|;
+comment|/* 	 * Serial number (potentially non-unique). 	 * 	 * In principle serial numbers can wrap around on 32-bit systems if 	 * JEMALLOC_MUNMAP is defined, but as long as comparison functions fall 	 * back on address comparison for equal serial numbers, stable (if 	 * imperfect) ordering is maintained. 	 * 	 * Serial numbers may not be unique even in the absence of wrap-around, 	 * e.g. when splitting an extent and assigning the same serial number to 	 * both resulting adjacent extents. 	 */
+name|size_t
+name|en_sn
+decl_stmt|;
 comment|/* 	 * The zeroed flag is used by chunk recycling code to track whether 	 * memory is zero-filled. 	 */
 name|bool
 name|en_zeroed
@@ -87,12 +91,12 @@ name|cc_link
 expr_stmt|;
 union|union
 block|{
-comment|/* Linkage for the size/address-ordered tree. */
+comment|/* Linkage for the size/sn/address-ordered tree. */
 name|rb_node
 argument_list|(
 argument|extent_node_t
 argument_list|)
-name|szad_link
+name|szsnad_link
 expr_stmt|;
 comment|/* Linkage for arena's achunks, huge, and node_cache lists. */
 name|ql_elm
@@ -147,7 +151,7 @@ begin_macro
 name|rb_proto
 argument_list|(
 argument_list|,
-argument|extent_tree_szad_
+argument|extent_tree_szsnad_
 argument_list|,
 argument|extent_tree_t
 argument_list|,
@@ -221,6 +225,18 @@ end_function_decl
 begin_function_decl
 name|size_t
 name|extent_node_size_get
+parameter_list|(
+specifier|const
+name|extent_node_t
+modifier|*
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|extent_node_sn_get
 parameter_list|(
 specifier|const
 name|extent_node_t
@@ -325,6 +341,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|extent_node_sn_set
+parameter_list|(
+name|extent_node_t
+modifier|*
+name|node
+parameter_list|,
+name|size_t
+name|sn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|extent_node_zeroed_set
 parameter_list|(
 name|extent_node_t
@@ -398,6 +428,9 @@ name|addr
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|size_t
+name|sn
 parameter_list|,
 name|bool
 name|zeroed
@@ -530,6 +563,27 @@ operator|(
 name|node
 operator|->
 name|en_size
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|JEMALLOC_INLINE
+name|size_t
+name|extent_node_sn_get
+parameter_list|(
+specifier|const
+name|extent_node_t
+modifier|*
+name|node
+parameter_list|)
+block|{
+return|return
+operator|(
+name|node
+operator|->
+name|en_sn
 operator|)
 return|;
 block|}
@@ -699,6 +753,28 @@ end_function
 begin_function
 name|JEMALLOC_INLINE
 name|void
+name|extent_node_sn_set
+parameter_list|(
+name|extent_node_t
+modifier|*
+name|node
+parameter_list|,
+name|size_t
+name|sn
+parameter_list|)
+block|{
+name|node
+operator|->
+name|en_sn
+operator|=
+name|sn
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|JEMALLOC_INLINE
+name|void
 name|extent_node_zeroed_set
 parameter_list|(
 name|extent_node_t
@@ -805,6 +881,9 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
+name|size_t
+name|sn
+parameter_list|,
 name|bool
 name|zeroed
 parameter_list|,
@@ -831,6 +910,13 @@ argument_list|(
 name|node
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|extent_node_sn_set
+argument_list|(
+name|node
+argument_list|,
+name|sn
 argument_list|)
 expr_stmt|;
 name|extent_node_zeroed_set

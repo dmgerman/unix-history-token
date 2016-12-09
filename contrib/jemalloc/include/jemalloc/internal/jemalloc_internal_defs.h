@@ -103,16 +103,6 @@ name|JEMALLOC_HAVE_BUILTIN_CLZ
 end_define
 
 begin_comment
-comment|/*  * Defined if madvise(2) is available.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JEMALLOC_HAVE_MADVISE
-end_define
-
-begin_comment
 comment|/*  * Defined if os_unfair_lock_*() functions are available, as provided by Darwin.  */
 end_comment
 
@@ -129,13 +119,13 @@ comment|/* #undef JEMALLOC_OSSPIN */
 end_comment
 
 begin_comment
-comment|/* Defined if syscall(2) is available. */
+comment|/* Defined if syscall(2) is usable. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|JEMALLOC_HAVE_SYSCALL
+name|JEMALLOC_USE_SYSCALL
 end_define
 
 begin_comment
@@ -154,6 +144,16 @@ begin_define
 define|#
 directive|define
 name|JEMALLOC_HAVE_ISSETUGID
+end_define
+
+begin_comment
+comment|/* Defined if pthread_atfork(3) is available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_PTHREAD_ATFORK
 end_define
 
 begin_comment
@@ -500,11 +500,17 @@ comment|/* #undef JEMALLOC_PROC_SYS_VM_OVERCOMMIT_MEMORY */
 end_comment
 
 begin_comment
-comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_DONTNEED) : On Linux, this immediately discards pages,  *                                 such that new pages will be demand-zeroed if  *                                 the address region is later touched.  *   madvise(..., MADV_FREE) : On FreeBSD and Darwin, this marks pages as being  *                             unused, such that they will be discarded rather  *                             than swapped out.  */
+comment|/* Defined if madvise(2) is available. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|JEMALLOC_HAVE_MADVISE
+end_define
+
 begin_comment
-comment|/* #undef JEMALLOC_PURGE_MADVISE_DONTNEED */
+comment|/*  * Methods for purging unused pages differ between operating systems.  *  *   madvise(..., MADV_FREE) : This marks pages as being unused, such that they  *                             will be discarded rather than swapped out.  *   madvise(..., MADV_DONTNEED) : This immediately discards pages, such that  *                                 new pages will be demand-zeroed if the  *                                 address region is later touched.  */
 end_comment
 
 begin_define
@@ -512,6 +518,20 @@ define|#
 directive|define
 name|JEMALLOC_PURGE_MADVISE_FREE
 end_define
+
+begin_define
+define|#
+directive|define
+name|JEMALLOC_PURGE_MADVISE_DONTNEED
+end_define
+
+begin_comment
+comment|/*  * Defined if transparent huge pages are supported via the MADV_[NO]HUGEPAGE  * arguments to madvise(2).  */
+end_comment
+
+begin_comment
+comment|/* #undef JEMALLOC_THP */
+end_comment
 
 begin_comment
 comment|/* Define if operating system has alloca.h header. */

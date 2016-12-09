@@ -4279,6 +4279,42 @@ define|\
 value|if (CONF_MATCH(n)) {				\ 				if (CONF_MATCH_VALUE("true"))		\ 					o = true;			\ 				else if (CONF_MATCH_VALUE("false"))	\ 					o = false;			\ 				else {					\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				}					\ 				if (cont)				\ 					continue;			\ 			}
 define|#
 directive|define
+name|CONF_MIN_no
+parameter_list|(
+name|um
+parameter_list|,
+name|min
+parameter_list|)
+value|false
+define|#
+directive|define
+name|CONF_MIN_yes
+parameter_list|(
+name|um
+parameter_list|,
+name|min
+parameter_list|)
+value|((um)< (min))
+define|#
+directive|define
+name|CONF_MAX_no
+parameter_list|(
+name|um
+parameter_list|,
+name|max
+parameter_list|)
+value|false
+define|#
+directive|define
+name|CONF_MAX_yes
+parameter_list|(
+name|um
+parameter_list|,
+name|max
+parameter_list|)
+value|((um)> (max))
+define|#
+directive|define
 name|CONF_HANDLE_T_U
 parameter_list|(
 name|t
@@ -4291,10 +4327,14 @@ name|min
 parameter_list|,
 name|max
 parameter_list|,
+name|check_min
+parameter_list|,
+name|check_max
+parameter_list|,
 name|clip
 parameter_list|)
 define|\
-value|if (CONF_MATCH(n)) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (clip) {			\ 					if ((min) != 0&& um< (min))	\ 						o = (t)(min);		\ 					else if (um> (max))		\ 						o = (t)(max);		\ 					else				\ 						o = (t)um;		\ 				} else {				\ 					if (((min) != 0&& um< (min))	\ 					    || um> (max)) {		\ 						malloc_conf_error(	\ 						    "Out-of-range "	\ 						    "conf value",	\ 						    k, klen, v, vlen);	\ 					} else				\ 						o = (t)um;		\ 				}					\ 				continue;				\ 			}
+value|if (CONF_MATCH(n)) {				\ 				uintmax_t um;				\ 				char *end;				\ 									\ 				set_errno(0);				\ 				um = malloc_strtoumax(v,&end, 0);	\ 				if (get_errno() != 0 || (uintptr_t)end -\ 				    (uintptr_t)v != vlen) {		\ 					malloc_conf_error(		\ 					    "Invalid conf value",	\ 					    k, klen, v, vlen);		\ 				} else if (clip) {			\ 					if (CONF_MIN_##check_min(um,	\ 					    (min)))			\ 						o = (t)(min);		\ 					else if (CONF_MAX_##check_max(	\ 					    um, (max)))			\ 						o = (t)(max);		\ 					else				\ 						o = (t)um;		\ 				} else {				\ 					if (CONF_MIN_##check_min(um,	\ 					    (min)) ||			\ 					    CONF_MAX_##check_max(um,	\ 					    (max))) {			\ 						malloc_conf_error(	\ 						    "Out-of-range "	\ 						    "conf value",	\ 						    k, klen, v, vlen);	\ 					} else				\ 						o = (t)um;		\ 				}					\ 				continue;				\ 			}
 define|#
 directive|define
 name|CONF_HANDLE_UNSIGNED
@@ -4307,10 +4347,14 @@ name|min
 parameter_list|,
 name|max
 parameter_list|,
+name|check_min
+parameter_list|,
+name|check_max
+parameter_list|,	\
 name|clip
 parameter_list|)
 define|\
-value|CONF_HANDLE_T_U(unsigned, o, n, min, max, clip)
+value|CONF_HANDLE_T_U(unsigned, o, n, min, max,	\ 			    check_min, check_max, clip)
 define|#
 directive|define
 name|CONF_HANDLE_SIZE_T
@@ -4323,10 +4367,14 @@ name|min
 parameter_list|,
 name|max
 parameter_list|,
+name|check_min
+parameter_list|,
+name|check_max
+parameter_list|,
 name|clip
 parameter_list|)
 define|\
-value|CONF_HANDLE_T_U(size_t, o, n, min, max, clip)
+value|CONF_HANDLE_T_U(size_t, o, n, min, max,		\ 			    check_min, check_max, clip)
 define|#
 directive|define
 name|CONF_HANDLE_SSIZE_T
@@ -4378,6 +4426,10 @@ argument|(sizeof(size_t)<<
 literal|3
 argument|) -
 literal|1
+argument_list|,
+argument|yes
+argument_list|,
+argument|yes
 argument_list|,
 argument|true
 argument_list|)
@@ -4504,6 +4556,10 @@ argument_list|,
 literal|1
 argument_list|,
 argument|UINT_MAX
+argument_list|,
+argument|yes
+argument_list|,
+argument|no
 argument_list|,
 argument|false
 argument_list|)
@@ -4818,6 +4874,10 @@ literal|0
 argument_list|,
 argument|SIZE_T_MAX
 argument_list|,
+argument|no
+argument_list|,
+argument|no
+argument_list|,
 argument|false
 argument_list|)
 name|CONF_HANDLE_BOOL
@@ -4981,8 +5041,12 @@ literal|0
 argument_list|,
 argument|(sizeof(uint64_t)<<
 literal|3
-argument|) -
+argument|) 				    -
 literal|1
+argument_list|,
+argument|no
+argument_list|,
+argument|yes
 argument_list|,
 argument|true
 argument_list|)
@@ -5051,7 +5115,28 @@ directive|undef
 name|CONF_MATCH
 undef|#
 directive|undef
+name|CONF_MATCH_VALUE
+undef|#
+directive|undef
 name|CONF_HANDLE_BOOL
+undef|#
+directive|undef
+name|CONF_MIN_no
+undef|#
+directive|undef
+name|CONF_MIN_yes
+undef|#
+directive|undef
+name|CONF_MAX_no
+undef|#
+directive|undef
+name|CONF_MAX_yes
+undef|#
+directive|undef
+name|CONF_HANDLE_T_U
+undef|#
+directive|undef
+name|CONF_HANDLE_UNSIGNED
 undef|#
 directive|undef
 name|CONF_HANDLE_SIZE_T
@@ -5413,18 +5498,23 @@ expr_stmt|;
 if|#
 directive|if
 operator|(
+name|defined
+argument_list|(
+name|JEMALLOC_HAVE_PTHREAD_ATFORK
+argument_list|)
+operator|&&
 operator|!
 name|defined
 argument_list|(
 name|JEMALLOC_MUTEX_INIT_CB
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|JEMALLOC_ZONE
 argument_list|)
-expr|\
 operator|&&
 operator|!
 name|defined
@@ -5432,6 +5522,7 @@ argument_list|(
 name|_WIN32
 argument_list|)
 operator|&&
+expr|\
 operator|!
 name|defined
 argument_list|(
@@ -8598,7 +8689,7 @@ argument_list|)
 expr_stmt|;
 name|JEMALLOC_VALGRIND_REALLOC
 argument_list|(
-name|true
+name|maybe
 argument_list|,
 name|tsdn
 argument_list|,
@@ -8606,7 +8697,7 @@ name|ret
 argument_list|,
 name|usize
 argument_list|,
-name|true
+name|maybe
 argument_list|,
 name|ptr
 argument_list|,
@@ -8614,7 +8705,7 @@ name|old_usize
 argument_list|,
 name|old_rzsize
 argument_list|,
-name|true
+name|maybe
 argument_list|,
 name|false
 argument_list|)
@@ -11264,7 +11355,7 @@ argument_list|)
 expr_stmt|;
 name|JEMALLOC_VALGRIND_REALLOC
 argument_list|(
-name|true
+name|maybe
 argument_list|,
 name|tsd_tsdn
 argument_list|(
@@ -11275,7 +11366,7 @@ name|p
 argument_list|,
 name|usize
 argument_list|,
-name|false
+name|no
 argument_list|,
 name|ptr
 argument_list|,
@@ -11283,7 +11374,7 @@ name|old_usize
 argument_list|,
 name|old_rzsize
 argument_list|,
-name|false
+name|no
 argument_list|,
 name|zero
 argument_list|)
@@ -12003,7 +12094,7 @@ expr_stmt|;
 block|}
 name|JEMALLOC_VALGRIND_REALLOC
 argument_list|(
-name|false
+name|no
 argument_list|,
 name|tsd_tsdn
 argument_list|(
@@ -12014,7 +12105,7 @@ name|ptr
 argument_list|,
 name|usize
 argument_list|,
-name|false
+name|no
 argument_list|,
 name|ptr
 argument_list|,
@@ -12022,7 +12113,7 @@ name|old_usize
 argument_list|,
 name|old_rzsize
 argument_list|,
-name|false
+name|no
 argument_list|,
 name|zero
 argument_list|)

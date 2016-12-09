@@ -7461,11 +7461,12 @@ operator|=
 operator|*
 name|rxkeyix
 operator|=
-name|k
-operator|-
+name|ieee80211_crypto_get_key_wepidx
+argument_list|(
 name|vap
-operator|->
-name|iv_nw_keys
+argument_list|,
+name|k
+argument_list|)
 expr_stmt|;
 block|}
 else|else

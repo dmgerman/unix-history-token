@@ -479,20 +479,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
-name|pmap_mapdev_attr
-parameter_list|(
-name|vm_paddr_t
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|boolean_t
 name|pmap_page_is_mapped
 parameter_list|(

@@ -49,20 +49,6 @@ name|PR_KLC
 value|0x0002
 end_define
 
-begin_define
-define|#
-directive|define
-name|PGRAB_RDONLY
-value|O_RDONLY
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGRAB_FORCE
-value|0
-end_define
-
 begin_empty
 empty|#include_next<libproc.h>
 end_empty

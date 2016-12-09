@@ -219,7 +219,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|JEMALLOC_HAVE_SYSCALL
+name|JEMALLOC_USE_SYSCALL
 argument_list|)
 operator|&&
 name|defined
@@ -1018,8 +1018,18 @@ name|neg
 condition|)
 name|ret
 operator|=
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|-
+operator|(
+operator|(
+name|intmax_t
+operator|)
 name|ret
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

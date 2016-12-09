@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/gic_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm64/arm64/gic_v3_reg.h>
 end_include
 

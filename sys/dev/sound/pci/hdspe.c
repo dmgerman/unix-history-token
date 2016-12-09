@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012-2016 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -424,21 +424,14 @@ name|p
 parameter_list|)
 block|{
 name|struct
-name|sc_info
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|sc_info
-operator|*
-operator|)
-name|p
-decl_stmt|;
-name|struct
 name|sc_pcminfo
 modifier|*
 name|scp
+decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
 decl_stmt|;
 name|device_t
 modifier|*
@@ -446,14 +439,25 @@ name|devlist
 decl_stmt|;
 name|int
 name|devcount
-decl_stmt|,
+decl_stmt|;
+name|int
 name|status
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|err
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|sc_info
+operator|*
+operator|)
+name|p
+expr_stmt|;
 name|snd_mtxlock
 argument_list|(
 name|sc
@@ -586,10 +590,24 @@ name|int
 name|error
 parameter_list|)
 block|{
+name|struct
+name|sc_info
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|sc_info
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|struct sc_info *sc = (struct sc_info *)arg; 	device_printf(sc->dev, "hdspe_dmapsetmap()\n");
+block|device_printf(sc->dev, "hdspe_dmapsetmap()\n");
 endif|#
 directive|endif
 block|}
@@ -1187,7 +1205,9 @@ literal|"RME HDSPe AIO"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|PCI_REVISION_RAYDAT
@@ -1200,7 +1220,9 @@ literal|"RME HDSPe RayDAT"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1341,7 +1363,9 @@ name|settings_register
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1356,9 +1380,9 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|sc_info
+name|hdspe_channel
 modifier|*
-name|sc
+name|chan_map
 decl_stmt|;
 name|struct
 name|sc_pcminfo
@@ -1366,9 +1390,9 @@ modifier|*
 name|scp
 decl_stmt|;
 name|struct
-name|hdspe_channel
+name|sc_info
 modifier|*
-name|chan_map
+name|sc
 decl_stmt|;
 name|uint32_t
 name|rev
@@ -1458,7 +1482,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 comment|/* Allocate resources. */
@@ -1482,7 +1508,9 @@ literal|"Unable to allocate system resources.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 if|if
@@ -1495,7 +1523,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 for|for
 control|(
@@ -1708,7 +1738,9 @@ literal|"Can't detach: softc is null.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|err
@@ -1819,7 +1851,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

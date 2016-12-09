@@ -1344,12 +1344,12 @@ name|advertising
 decl_stmt|;
 comment|/* advertised capabilities */
 name|unsigned
-name|short
+name|int
 name|requested_speed
 decl_stmt|;
 comment|/* speed user has requested */
 name|unsigned
-name|short
+name|int
 name|speed
 decl_stmt|;
 comment|/* actual link speed */

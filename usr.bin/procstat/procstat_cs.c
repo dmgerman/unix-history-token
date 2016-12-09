@@ -128,7 +128,7 @@ name|hflag
 condition|)
 name|xo_emit
 argument_list|(
-literal|"{T:/%5s %6s %-16s %-16s %2s %4s %-7s}\n"
+literal|"{T:/%5s %6s %-19s %-19s %2s %4s %-7s}\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -219,7 +219,7 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:command/%-16s/%s} "
+literal|"{:command/%-19s/%s} "
 argument_list|,
 name|strlen
 argument_list|(
@@ -237,37 +237,12 @@ argument_list|)
 expr_stmt|;
 name|xo_emit
 argument_list|(
-literal|"{:thread_name/%-16s/%s} "
+literal|"{:thread_name/%-19s/%s} "
 argument_list|,
-operator|(
-name|strlen
+name|kinfo_proc_thread_name
 argument_list|(
 name|kipp
-operator|->
-name|ki_tdname
 argument_list|)
-operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|kipp
-operator|->
-name|ki_comm
-argument_list|,
-name|kipp
-operator|->
-name|ki_tdname
-argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|)
-condition|?
-name|kipp
-operator|->
-name|ki_tdname
-else|:
-literal|"-"
 argument_list|)
 expr_stmt|;
 if|if

@@ -121,7 +121,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|vm_page_t
 name|vm_radix_remove
 parameter_list|(
 name|struct
