@@ -388,9 +388,7 @@ literal|0
 decl_stmt|;
 name|MDRange
 argument_list|()
-operator|=
-expr|default
-expr_stmt|;
+block|{}
 name|explicit
 name|MDRange
 argument_list|(
