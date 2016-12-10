@@ -246,6 +246,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs_zfs_zfetch
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_idistance
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfetch_max_idistance
+argument_list|,
+literal|0
+argument_list|,
+literal|"Max bytes to prefetch indirects for per stream"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs_zfetch
