@@ -5182,7 +5182,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Limiting %s from %ld to %d packets/sec\n"
+literal|"Limiting %s from %jd to %d packets/sec\n"
 argument_list|,
 name|V_icmp_rates
 index|[
@@ -5191,6 +5191,9 @@ index|]
 operator|.
 name|descr
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|pps
 argument_list|,
 name|V_icmplim
