@@ -1382,6 +1382,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+init|=
+name|NULL
 decl_stmt|;
 name|intmax_t
 name|id
