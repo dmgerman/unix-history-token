@@ -761,7 +761,7 @@ name|dp
 argument_list|,
 literal|"L.ROOT-SERVERS.NET."
 argument_list|,
-literal|"2001:500:3::42"
+literal|"2001:500:9f::42"
 argument_list|)
 condition|)
 goto|goto
