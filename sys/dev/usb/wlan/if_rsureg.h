@@ -2909,7 +2909,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RX_LIST_COUNT
-value|100
+value|1
 end_define
 
 begin_define
@@ -2923,7 +2923,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RXBUFSZ
-value|(8 * 1024)
+value|(30 * 1024)
 end_define
 
 begin_define
