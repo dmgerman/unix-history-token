@@ -196,6 +196,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92S_TIMECTRL
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_TSFTR
+value|(R92S_TIMECTRL + 0x000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92S_SECURITY
 value|0x0240
 end_define
@@ -2584,7 +2598,7 @@ name|uint32_t
 name|rxdw4
 decl_stmt|;
 name|uint32_t
-name|rxdw5
+name|tsf_low
 decl_stmt|;
 block|}
 name|__packed
@@ -3189,6 +3203,9 @@ name|struct
 name|ieee80211_radiotap_header
 name|wr_ihdr
 decl_stmt|;
+name|uint64_t
+name|wr_tsft
+decl_stmt|;
 name|uint8_t
 name|wr_flags
 decl_stmt|;
@@ -3218,7 +3235,7 @@ define|#
 directive|define
 name|RSU_RX_RADIOTAP_PRESENT
 define|\
-value|(1<< IEEE80211_RADIOTAP_FLAGS |	\ 	 1<< IEEE80211_RADIOTAP_RATE |		\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |	\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)
+value|(1<< IEEE80211_RADIOTAP_TSFT |		\ 	 1<< IEEE80211_RADIOTAP_FLAGS |	\ 	 1<< IEEE80211_RADIOTAP_RATE |		\ 	 1<< IEEE80211_RADIOTAP_CHANNEL |	\ 	 1<< IEEE80211_RADIOTAP_DBM_ANTSIGNAL)
 end_define
 
 begin_struct
