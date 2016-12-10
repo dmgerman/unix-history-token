@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kerneldump.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -147,13 +153,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCSKERNELDUMP
+name|DIOCSKERNELDUMP_FREEBSD11
 value|_IOW('d', 133, u_int)
 end_define
-
-begin_comment
-comment|/* Set/Clear kernel dumps */
-end_comment
 
 begin_comment
 comment|/* 	 * Enable/Disable (the argument is boolean) the device for kernel 	 * core dumps. 	 */
@@ -317,6 +319,44 @@ directive|define
 name|DIOCZONECMD
 value|_IOWR('d', 143, struct disk_zone_args)
 end_define
+
+begin_struct
+struct|struct
+name|diocskerneldump_arg
+block|{
+name|uint8_t
+name|kda_enable
+decl_stmt|;
+name|uint8_t
+name|kda_encryption
+decl_stmt|;
+name|uint8_t
+name|kda_key
+index|[
+name|KERNELDUMP_KEY_MAX_SIZE
+index|]
+decl_stmt|;
+name|uint32_t
+name|kda_encryptedkeysize
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|kda_encryptedkey
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DIOCSKERNELDUMP
+value|_IOW('d', 144, struct diocskerneldump_arg)
+end_define
+
+begin_comment
+comment|/* 	 * Enable/Disable the device for kernel core dumps. 	 */
+end_comment
 
 begin_endif
 endif|#

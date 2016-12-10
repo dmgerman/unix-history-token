@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -386,6 +392,14 @@ condition|(
 name|cmd
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD11
+case|case
+name|DIOCSKERNELDUMP_FREEBSD11
+case|:
+endif|#
+directive|endif
 case|case
 name|DIOCSKERNELDUMP
 case|:
@@ -398,6 +412,14 @@ argument_list|,
 name|NULL
 argument_list|,
 name|td
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

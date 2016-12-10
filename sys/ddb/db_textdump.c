@@ -1706,6 +1706,11 @@ modifier|*
 name|di
 parameter_list|)
 block|{
+name|struct
+name|kerneldumpcrypto
+modifier|*
+name|kdc
+decl_stmt|;
 name|off_t
 name|dumplen
 decl_stmt|,
@@ -1768,6 +1773,19 @@ name|textdump_error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Disable EKCD because we don't provide encrypted textdumps. 	 */
+name|kdc
+operator|=
+name|di
+operator|->
+name|kdc
+expr_stmt|;
+name|di
+operator|->
+name|kdc
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Position the start of the dump so that we'll write the kernel dump 	 * trailer immediately before the end of the partition, and then work 	 * our way back.  We will rewrite this header later to reflect the 	 * true size if things go well. 	 */
 name|textdump_offset
 operator|=
@@ -1794,6 +1812,8 @@ argument_list|,
 name|TEXTDUMPMAGIC
 argument_list|,
 name|KERNELDUMP_TEXT_VERSION
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1892,6 +1912,8 @@ name|KERNELDUMP_TEXT_VERSION
 argument_list|,
 name|dumplen
 argument_list|,
+literal|0
+argument_list|,
 name|TEXTDUMP_BLOCKSIZE
 argument_list|)
 expr_stmt|;
@@ -1987,6 +2009,13 @@ expr_stmt|;
 name|textdump_pending
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Restore EKCD status. 	 */
+name|di
+operator|->
+name|kdc
+operator|=
+name|kdc
 expr_stmt|;
 block|}
 end_function
