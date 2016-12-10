@@ -45,12 +45,12 @@ name|int
 modifier|*
 name|symbolsin
 decl_stmt|;
-comment|/* Table of leaf symbols count in 					   each level */
+comment|/* Table of leaf symbols count in each 					 * level */
 name|int
 modifier|*
 name|inodesin
 decl_stmt|;
-comment|/* Table of internal nodes count in 					   each level */
+comment|/* Table of internal nodes count in 					 * each level */
 name|char
 modifier|*
 name|symbol
@@ -66,7 +66,7 @@ modifier|*
 modifier|*
 name|tree
 decl_stmt|;
-comment|/* Decoding huffman tree (pointers to 					   first symbol of each tree level */
+comment|/* Decoding huffman tree (pointers to 					 * first symbol of each tree level */
 name|off_t
 name|uncompressed_size
 decl_stmt|;
@@ -358,7 +358,7 @@ argument_list|,
 name|PACK_HEADER_LENGTH
 argument_list|)
 expr_stmt|;
-comment|/* Obtain uncompressed length (bytes 2,3,4,5)*/
+comment|/* Obtain uncompressed length (bytes 2,3,4,5) */
 name|unpackd
 operator|->
 name|uncompressed_size
