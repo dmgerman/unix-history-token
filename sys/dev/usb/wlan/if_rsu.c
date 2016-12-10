@@ -229,19 +229,6 @@ directive|include
 file|"usbdevs.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|USB_DEBUG_VAR
-value|rsu_debug
-end_define
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_debug.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -449,6 +436,13 @@ define|#
 directive|define
 name|RSU_DEBUG_KEY
 value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSU_DEBUG_USB
+value|0x00001000
 end_define
 
 begin_decl_stmt
@@ -3770,16 +3764,20 @@ operator|==
 name|USB_ERR_NOT_CONFIGURED
 condition|)
 break|break;
-name|DPRINTFN
+name|RSU_DPRINTF
 argument_list|(
-literal|1
+name|sc
 argument_list|,
-literal|"Control request failed, %s (retrying)\n"
+name|RSU_DEBUG_USB
+argument_list|,
+literal|"Control request failed, %s (retries left: %d)\n"
 argument_list|,
 name|usbd_errstr
 argument_list|(
 name|err
 argument_list|)
+argument_list|,
+name|ntries
 argument_list|)
 expr_stmt|;
 name|rsu_ms_delay
@@ -6431,8 +6429,8 @@ name|USB_DEBUG
 if|if
 condition|(
 name|rsu_debug
-operator|>=
-literal|5
+operator|&
+name|RSU_DEBUG_RESET
 condition|)
 block|{
 comment|/* Dump ROM content. */
@@ -6912,11 +6910,13 @@ operator|&
 name|R92S_GPIO_WPS
 operator|)
 condition|)
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
-operator|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_CALIB
+argument_list|,
 literal|"WPS PBC is pushed\n"
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11251,8 +11251,12 @@ operator|->
 name|iv_max_aid
 condition|)
 block|{
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_ANY
+argument_list|,
 literal|"Assoc ID overflow\n"
 argument_list|)
 expr_stmt|;
@@ -12302,9 +12306,11 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: could not allocate RX mbuf\n"
+literal|"%s: could not allocate RX mbuf, totlen %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|totlen
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -13309,8 +13315,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_RX
+argument_list|,
 literal|"xfer too short %d\n"
 argument_list|,
 name|len
@@ -17093,8 +17103,12 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|DPRINTF
+name|RSU_DPRINTF
 argument_list|(
+name|sc
+argument_list|,
+name|RSU_DEBUG_FW
+argument_list|,
 literal|"FW V%d %02x-%02x %02x:%02x\n"
 argument_list|,
 name|le16toh
