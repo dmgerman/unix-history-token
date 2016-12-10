@@ -1426,6 +1426,13 @@ name|do_utc
 init|=
 literal|0
 decl_stmt|;
+define|#
+directive|define
+name|FREE
+parameter_list|(
+name|x
+parameter_list|)
+value|do {	\ 	free(x);	\ 	x = NULL;	\ } while(0)
 while|while
 condition|(
 operator|(
@@ -1519,6 +1526,11 @@ block|{
 name|single_arg
 operator|++
 expr_stmt|;
+name|FREE
+argument_list|(
+name|format_string
+argument_list|)
+expr_stmt|;
 name|format_string
 operator|=
 name|strdup
@@ -1555,6 +1567,11 @@ case|:
 block|{
 name|single_arg
 operator|++
+expr_stmt|;
+name|FREE
+argument_list|(
+name|format_string
+argument_list|)
 expr_stmt|;
 name|format_string
 operator|=
@@ -1598,6 +1615,11 @@ block|}
 case|case
 literal|'T'
 case|:
+name|FREE
+argument_list|(
+name|timestamp_string
+argument_list|)
+expr_stmt|;
 name|timestamp_string
 operator|=
 name|strdup
@@ -1631,6 +1653,9 @@ default|default:
 break|break;
 block|}
 block|}
+undef|#
+directive|undef
+name|FREE
 if|if
 condition|(
 name|action
