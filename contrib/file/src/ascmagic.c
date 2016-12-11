@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: ascmagic.c,v 1.95 2016/05/03 16:10:37 christos Exp $"
+literal|"@(#)$File: ascmagic.c,v 1.97 2016/06/27 20:56:25 christos Exp $"
 argument_list|)
 end_macro
 
@@ -605,7 +605,9 @@ name|MAGIC_EXTENSION
 operator|)
 operator|)
 condition|)
-return|return
+block|{
+name|rv
+operator|=
 name|rv
 operator|==
 operator|-
@@ -614,7 +616,11 @@ condition|?
 literal|0
 else|:
 literal|1
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 if|if
 condition|(

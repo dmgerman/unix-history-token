@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.178 2016/03/31 17:51:12 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.180 2016/07/20 11:27:08 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -593,7 +593,7 @@ begin_define
 define|#
 directive|define
 name|MAXstring
-value|64
+value|96
 end_define
 
 begin_comment
@@ -611,14 +611,14 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|13
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|FILE_MAGICSIZE
-value|312
+value|344
 end_define
 
 begin_define
@@ -1112,7 +1112,7 @@ name|FILE_UNUSED_2
 value|0x10
 define|#
 directive|define
-name|FILE_UNUSED_3
+name|FILE_OPSIGNED
 value|0x20
 define|#
 directive|define

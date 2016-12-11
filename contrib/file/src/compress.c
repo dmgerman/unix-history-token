@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.97 2016/05/13 23:02:28 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.100 2016/10/24 18:02:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -574,6 +574,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|zstd_args
+index|[]
+init|=
+block|{
+literal|"zstd"
+block|,
+literal|"-cd"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|private
 specifier|const
@@ -708,11 +726,27 @@ name|lz4_args
 block|}
 block|,
 comment|/* LZ4 */
+block|{
+literal|"\x28\xB5\x2F\xFD"
+block|,
+literal|4
+block|,
+name|zstd_args
+block|}
+block|,
+comment|/* zstd */
 ifdef|#
 directive|ifdef
 name|ZLIBSUPPORT
 block|{
+name|RCAST
+argument_list|(
+specifier|const
+name|void
+operator|*
+argument_list|,
 name|zlibcmp
+argument_list|)
 block|,
 literal|0
 block|,
@@ -1071,7 +1105,7 @@ condition|)
 name|zm
 operator|=
 operator|(
-name|CAST
+name|RCAST
 argument_list|(
 name|int
 argument_list|(
@@ -1843,13 +1877,19 @@ name|rv
 expr_stmt|;
 name|buf
 operator|=
-operator|(
-operator|(
+name|CAST
+argument_list|(
 name|char
 operator|*
-operator|)
+argument_list|,
+name|CCAST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|buf
-operator|)
+argument_list|)
+argument_list|)
 operator|+
 name|rv
 expr_stmt|;
@@ -2653,6 +2693,15 @@ argument_list|,
 name|z
 operator|.
 name|msg
+condition|?
+name|z
+operator|.
+name|msg
+else|:
+name|zError
+argument_list|(
+name|rc
+argument_list|)
 argument_list|,
 name|bytes_max
 argument_list|)
