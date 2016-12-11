@@ -24703,9 +24703,11 @@ name|no_user_data_cause
 operator|->
 name|tsn
 operator|=
+name|htonl
+argument_list|(
 name|tsn
+argument_list|)
 expr_stmt|;
-comment|/* tsn is passed in as NBO */
 block|}
 return|return
 operator|(
