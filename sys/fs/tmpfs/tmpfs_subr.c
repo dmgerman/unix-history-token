@@ -6155,7 +6155,8 @@ operator|==
 name|VM_PAGER_OK
 condition|)
 block|{
-name|vm_page_deactivate
+comment|/* 					 * Since the page was not resident, 					 * and therefore not recently 					 * accessed, immediately enqueue it 					 * for asynchronous laundering.  The 					 * current operation is not regarded 					 * as an access. 					 */
+name|vm_page_launder
 argument_list|(
 name|m
 argument_list|)
