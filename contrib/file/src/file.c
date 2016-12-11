@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.171 2016/05/17 15:52:45 christos Exp $"
+literal|"@(#)$File: file.c,v 1.172 2016/10/24 15:21:07 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1884,6 +1884,11 @@ argument_list|(
 name|flags
 argument_list|)
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|e
+decl_stmt|;
 if|if
 condition|(
 name|magic
@@ -1951,6 +1956,33 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|e
+operator|=
+name|magic_error
+argument_list|(
+name|magic
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: %s\n"
+argument_list|,
+name|progname
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 name|magic
 return|;

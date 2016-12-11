@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: readelf.c,v 1.127 2015/11/18 12:29:29 christos Exp $"
+literal|"@(#)$File: readelf.c,v 1.128 2016/10/04 21:43:10 christos Exp $"
 argument_list|)
 end_macro
 
@@ -2103,11 +2103,11 @@ name|NT_GNU_BUILD_ID
 operator|&&
 operator|(
 name|descsz
-operator|==
-literal|16
+operator|>=
+literal|4
 operator|||
 name|descsz
-operator|==
+operator|<=
 literal|20
 operator|)
 condition|)
@@ -2118,6 +2118,11 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|btype
+decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
@@ -2126,6 +2131,42 @@ name|flags
 operator||=
 name|FLAGS_DID_BUILD_ID
 expr_stmt|;
+switch|switch
+condition|(
+name|descsz
+condition|)
+block|{
+case|case
+literal|8
+case|:
+name|btype
+operator|=
+literal|"xxHash"
+expr_stmt|;
+break|break;
+case|case
+literal|16
+case|:
+name|btype
+operator|=
+literal|"md5/uuid"
+expr_stmt|;
+break|break;
+case|case
+literal|20
+case|:
+name|btype
+operator|=
+literal|"sha1"
+expr_stmt|;
+break|break;
+default|default:
+name|btype
+operator|=
+literal|"unknown"
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|file_printf
@@ -2134,13 +2175,7 @@ name|ms
 argument_list|,
 literal|", BuildID[%s]="
 argument_list|,
-name|descsz
-operator|==
-literal|16
-condition|?
-literal|"md5/uuid"
-else|:
-literal|"sha1"
+name|btype
 argument_list|)
 operator|==
 operator|-

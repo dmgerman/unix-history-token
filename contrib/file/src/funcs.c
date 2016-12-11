@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: funcs.c,v 1.89 2016/03/21 15:56:53 christos Exp $"
+literal|"@(#)$File: funcs.c,v 1.90 2016/10/19 20:51:17 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1237,6 +1237,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|m
 operator|=
 name|file_softmagic
@@ -1368,6 +1369,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 comment|/* try text properties */
 if|if
