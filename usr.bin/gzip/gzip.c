@@ -218,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|BZIP2_MAGIC
-value|"\102\132\150"
+value|"BZh"
 end_define
 
 begin_endif
