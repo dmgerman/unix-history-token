@@ -779,6 +779,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92S_RCR_TCP_OFFLD_EN
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92S_RCR_ENMBID
 value|0x08000000
 end_define
@@ -3689,6 +3696,10 @@ range|:
 literal|1
 decl_stmt|,
 name|sc_vap_is_running
+range|:
+literal|1
+decl_stmt|,
+name|sc_rx_checksum_enable
 range|:
 literal|1
 decl_stmt|,
