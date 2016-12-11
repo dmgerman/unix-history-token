@@ -762,6 +762,8 @@ name|pf_state
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -774,6 +776,8 @@ parameter_list|(
 name|struct
 name|pf_state
 modifier|*
+parameter_list|,
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3142,6 +3146,8 @@ argument_list|(
 name|st
 argument_list|,
 name|PFSYNC_S_IACK
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|pfsync_push
@@ -8180,6 +8186,9 @@ name|struct
 name|pf_state
 modifier|*
 name|st
+decl_stmt|,
+modifier|*
+name|st_next
 decl_stmt|;
 name|struct
 name|pfsync_upd_req_item
@@ -8498,13 +8507,15 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|st
 argument_list|,
 argument|&sc->sc_qs[q]
 argument_list|,
 argument|sync_list
+argument_list|,
+argument|st_next
 argument_list|)
 block|{
 name|KASSERT
@@ -9158,6 +9169,8 @@ argument_list|(
 name|st
 argument_list|,
 name|PFSYNC_S_INS
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|PFSYNC_UNLOCK
@@ -9758,10 +9771,14 @@ name|sc
 init|=
 name|V_pfsyncif
 decl_stmt|;
-name|int
+name|bool
 name|sync
 init|=
-literal|0
+name|false
+decl_stmt|,
+name|ref
+init|=
+name|true
 decl_stmt|;
 name|PF_STATE_LOCK_ASSERT
 argument_list|(
@@ -9808,6 +9825,8 @@ condition|)
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|PFSYNC_UNLOCK
@@ -9889,7 +9908,7 @@ name|sc_maxupdates
 condition|)
 name|sync
 operator|=
-literal|1
+name|true
 expr_stmt|;
 block|}
 break|break;
@@ -9899,8 +9918,15 @@ case|:
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
+name|ref
+operator|=
+name|false
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|PFSYNC_S_NONE
 case|:
@@ -9909,6 +9935,8 @@ argument_list|(
 name|st
 argument_list|,
 name|PFSYNC_S_UPD_C
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|st
@@ -10155,6 +10183,11 @@ name|sc
 init|=
 name|V_pfsyncif
 decl_stmt|;
+name|bool
+name|ref
+init|=
+name|true
+decl_stmt|;
 name|PF_STATE_LOCK_ASSERT
 argument_list|(
 name|st
@@ -10185,6 +10218,8 @@ condition|)
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|PFSYNC_UNLOCK
@@ -10210,8 +10245,15 @@ case|:
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
+name|ref
+operator|=
+name|false
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|PFSYNC_S_NONE
 case|:
@@ -10220,6 +10262,8 @@ argument_list|(
 name|st
 argument_list|,
 name|PFSYNC_S_UPD
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|pfsync_push
@@ -10278,6 +10322,11 @@ name|sc
 init|=
 name|V_pfsyncif
 decl_stmt|;
+name|bool
+name|ref
+init|=
+name|true
+decl_stmt|;
 name|PFSYNC_LOCK
 argument_list|(
 name|sc
@@ -10318,6 +10367,8 @@ condition|)
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|PFSYNC_UNLOCK
@@ -10365,6 +10416,8 @@ comment|/* We never got to tell the world so just forget about it. */
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10380,9 +10433,15 @@ case|:
 name|pfsync_q_del
 argument_list|(
 name|st
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHROUGH to putting it on the del list */
+name|ref
+operator|=
+name|false
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|PFSYNC_S_NONE
 case|:
@@ -10391,6 +10450,8 @@ argument_list|(
 name|st
 argument_list|,
 name|PFSYNC_S_DEL
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10552,6 +10613,9 @@ name|st
 parameter_list|,
 name|int
 name|q
+parameter_list|,
+name|bool
+name|ref
 parameter_list|)
 block|{
 name|struct
@@ -10696,6 +10760,10 @@ name|sync_state
 operator|=
 name|q
 expr_stmt|;
+if|if
+condition|(
+name|ref
+condition|)
 name|pf_ref_state
 argument_list|(
 name|st
@@ -10713,6 +10781,9 @@ name|struct
 name|pf_state
 modifier|*
 name|st
+parameter_list|,
+name|bool
+name|unref
 parameter_list|)
 block|{
 name|struct
@@ -10781,6 +10852,10 @@ name|sync_state
 operator|=
 name|PFSYNC_S_NONE
 expr_stmt|;
+if|if
+condition|(
+name|unref
+condition|)
 name|pf_release_state
 argument_list|(
 name|st
