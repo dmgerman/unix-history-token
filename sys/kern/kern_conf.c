@@ -6232,6 +6232,17 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+name|dev
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|dev
