@@ -700,16 +700,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Intent is that lookup_cap_dotdot becomes unconditionally enabled,  * but it defaults to the disabled state until verification efforts  * are complete.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
 name|lookup_cap_dotdot
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -739,7 +735,7 @@ specifier|static
 name|int
 name|lookup_cap_dotdot_nonlocal
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
