@@ -32,6 +32,31 @@ begin_comment
 comment|/* Zero based divider. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLK_DIV_WITH_TABLE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Table to lookup the real value */
+end_comment
+
+begin_struct
+struct|struct
+name|clk_div_table
+block|{
+name|uint32_t
+name|value
+decl_stmt|;
+name|uint32_t
+name|divider
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|clk_div_def
@@ -64,6 +89,12 @@ name|int
 name|div_flags
 decl_stmt|;
 comment|/* Divider-specific flags */
+name|struct
+name|clk_div_table
+modifier|*
+name|div_table
+decl_stmt|;
+comment|/* Divider table */
 block|}
 struct|;
 end_struct
