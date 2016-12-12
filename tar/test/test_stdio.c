@@ -363,6 +363,11 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/* TODO: Verify xvf.err */
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 'xvf -' should generate list on stderr, empty stdout. */
 name|r
 operator|=

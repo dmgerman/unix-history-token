@@ -257,6 +257,11 @@ literal|"test6.err"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Note: It's not possible to verify at this level that blocks 	 * are getting written with the 	 */
+name|free
+argument_list|(
+name|testprog_ustar
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

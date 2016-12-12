@@ -128,6 +128,11 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|errfile
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
