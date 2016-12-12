@@ -862,6 +862,8 @@ name|sc
 argument_list|,
 name|GICD_ITARGETSR
 argument_list|(
+literal|4
+operator|*
 name|i
 argument_list|)
 argument_list|)
