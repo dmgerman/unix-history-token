@@ -3234,6 +3234,19 @@ comment|/*  * Extended API for IPv6 FIB support.  */
 end_comment
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|ip6_tryforward
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|in6_rtredirect
 parameter_list|(
