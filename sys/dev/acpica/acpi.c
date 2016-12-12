@@ -6234,10 +6234,23 @@ name|ad
 operator|->
 name|ad_rl
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|ACPI_DEVICE_INFO
 modifier|*
 name|devinfo
 decl_stmt|;
+endif|#
+directive|endif
 name|rman_res_t
 name|end
 decl_stmt|;
@@ -6265,6 +6278,17 @@ literal|0
 operator|)
 return|;
 comment|/*      * Ignore most resources for PCI root bridges.  Some BIOSes      * incorrectly enumerate the memory ranges they decode as plain      * memory resources instead of as ResourceProducer ranges.  Other      * BIOSes incorrectly list system resource entries for I/O ranges      * under the PCI bridge.  Do allow the one known-correct case on      * x86 of a PCI bridge claiming the I/O ports used for PCI config      * access.      */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 if|if
 condition|(
 name|type
@@ -6305,17 +6329,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -6329,8 +6342,6 @@ operator|==
 name|CONF1_ADDR_PORT
 operator|)
 condition|)
-endif|#
-directive|endif
 block|{
 name|AcpiOsFree
 argument_list|(
@@ -6351,6 +6362,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* If the resource is already allocated, fail. */
 if|if
 condition|(
