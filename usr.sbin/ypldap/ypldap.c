@@ -2940,10 +2940,12 @@ directive|warning
 warning|disabling privilege revocation in debug mode
 endif|#
 directive|endif
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|tv
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
