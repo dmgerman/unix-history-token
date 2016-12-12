@@ -1212,7 +1212,7 @@ name|fault_taskqueue
 operator|=
 name|taskqueue_create_fast
 argument_list|(
-literal|"dmar"
+literal|"dmarff"
 argument_list|,
 name|M_WAITOK
 argument_list|,
