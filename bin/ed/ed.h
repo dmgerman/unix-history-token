@@ -424,7 +424,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((b) != NULL) { \ 		if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} else { \ 		if ((ts = (char *) malloc(ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
+value|if ((i)> (n)) { \ 	size_t ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((b) != NULL) { \ 		if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} else { \ 		if ((ts = (char *) malloc(ti += max((i), MINBUFSZ))) == NULL) { \ 			fprintf(stderr, "%s\n", strerror(errno)); \ 			errmsg = "out of memory"; \ 			SPL0(); \ 			return err; \ 		} \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
 end_define
 
 begin_else
@@ -454,7 +454,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if ((i)> (n)) { \ 	int ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 		fprintf(stderr, "%s\n", strerror(errno)); \ 		errmsg = "out of memory"; \ 		SPL0(); \ 		return err; \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
+value|if ((i)> (n)) { \ 	size_t ti = (n); \ 	char *ts; \ 	SPL1(); \ 	if ((ts = (char *) realloc((b), ti += max((i), MINBUFSZ))) == NULL) { \ 		fprintf(stderr, "%s\n", strerror(errno)); \ 		errmsg = "out of memory"; \ 		SPL0(); \ 		return err; \ 	} \ 	(n) = ti; \ 	(b) = ts; \ 	SPL0(); \ }
 end_define
 
 begin_endif

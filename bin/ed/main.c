@@ -6496,7 +6496,7 @@ index|[]
 init|=
 literal|"ed.hup"
 decl_stmt|;
-name|int
+name|size_t
 name|n
 decl_stmt|;
 if|if

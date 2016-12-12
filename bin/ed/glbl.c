@@ -685,7 +685,7 @@ operator|>
 name|active_size
 condition|)
 block|{
-name|int
+name|size_t
 name|ti
 init|=
 name|active_size
