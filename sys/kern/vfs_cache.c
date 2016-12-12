@@ -10841,7 +10841,7 @@ name|fdp
 operator|->
 name|fd_cdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|cdir
 argument_list|)
@@ -10852,7 +10852,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|rdir
 argument_list|)
