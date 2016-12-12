@@ -1435,7 +1435,7 @@ name|fd_cdir
 operator|=
 name|rootvnode
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|rootvnode
 argument_list|)
@@ -1456,7 +1456,7 @@ name|fd_rdir
 operator|=
 name|rootvnode
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|rootvnode
 argument_list|)
@@ -8358,7 +8358,7 @@ name|newfdp
 operator|->
 name|fd_cdir
 condition|)
-name|VREF
+name|vrefact
 argument_list|(
 name|newfdp
 operator|->
@@ -8379,7 +8379,7 @@ name|newfdp
 operator|->
 name|fd_rdir
 condition|)
-name|VREF
+name|vrefact
 argument_list|(
 name|newfdp
 operator|->
@@ -8400,7 +8400,7 @@ name|newfdp
 operator|->
 name|fd_jdir
 condition|)
-name|VREF
+name|vrefact
 argument_list|(
 name|newfdp
 operator|->
@@ -12570,7 +12570,7 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vref
+name|vrefact
 argument_list|(
 operator|*
 name|vpp
@@ -12762,7 +12762,7 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|vref
+name|vrefact
 argument_list|(
 operator|*
 name|vpp
@@ -14081,7 +14081,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|vp
 argument_list|)
@@ -14101,7 +14101,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VREF
+name|vrefact
 argument_list|(
 name|vp
 argument_list|)
@@ -14309,7 +14309,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -14333,7 +14333,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -14357,7 +14357,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -14396,7 +14396,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -14426,7 +14426,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -14481,7 +14481,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|newdp
 argument_list|)
@@ -16216,7 +16216,7 @@ name|tracevp
 operator|!=
 name|NULL
 condition|)
-name|vref
+name|vrefact
 argument_list|(
 name|tracevp
 argument_list|)
@@ -16234,7 +16234,7 @@ name|textvp
 operator|!=
 name|NULL
 condition|)
-name|vref
+name|vrefact
 argument_list|(
 name|textvp
 argument_list|)
@@ -16277,7 +16277,7 @@ name|cttyvp
 operator|!=
 name|NULL
 condition|)
-name|vref
+name|vrefact
 argument_list|(
 name|cttyvp
 argument_list|)
@@ -16423,7 +16423,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|fdp
 operator|->
@@ -16454,7 +16454,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|fdp
 operator|->
@@ -16485,7 +16485,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|fdp
 operator|->
@@ -17010,7 +17010,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|vref
+name|vrefact
 argument_list|(
 name|vp
 argument_list|)
@@ -17704,7 +17704,7 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-name|vref
+name|vrefact
 argument_list|(
 name|fdp
 operator|->
