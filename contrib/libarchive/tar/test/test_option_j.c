@@ -92,7 +92,9 @@ argument_list|(
 literal|"bzip2 is not supported on this platform"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|failure
 argument_list|(
@@ -106,8 +108,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|assertEmptyFile
 argument_list|(
 literal|"archive.err"
@@ -138,6 +147,13 @@ argument_list|,
 literal|"BZh9"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

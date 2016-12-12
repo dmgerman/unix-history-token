@@ -92,7 +92,9 @@ argument_list|(
 literal|"lzop is not supported on this platform"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|failure
 argument_list|(
@@ -106,8 +108,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an lzma signature. */
 name|p
 operator|=
@@ -133,6 +142,13 @@ argument_list|,
 literal|"\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a"
 argument_list|,
 literal|9
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

@@ -98,7 +98,9 @@ literal|"This version of bsdtar was compiled "
 literal|"without xz support"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|failure
 argument_list|(
@@ -112,8 +114,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an xz signature. */
 name|p
 operator|=
@@ -139,6 +148,13 @@ argument_list|,
 literal|"\xFD\x37\x7A\x58\x5A\x00"
 argument_list|,
 literal|6
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

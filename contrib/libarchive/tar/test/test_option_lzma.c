@@ -112,8 +112,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an lzma signature. */
 name|p
 operator|=
@@ -139,6 +146,13 @@ argument_list|,
 literal|"\x5d\00\00"
 argument_list|,
 literal|3
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

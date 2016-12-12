@@ -98,7 +98,9 @@ literal|"This version of bsdtar was compiled "
 literal|"without lz4 support"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* POSIX permits different handling of the spawnp 		 * system call used to launch the subsidiary 		 * program: */
 comment|/* Some systems fail immediately to spawn the new process. */
@@ -124,7 +126,9 @@ literal|"This version of bsdtar uses an external lz4 program "
 literal|"but no such program is available on this system."
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* Some systems successfully spawn the new process, 		 * but fail to exec a program within that process. 		 * This results in failure at the first attempt to 		 * write. */
 if|if
@@ -149,7 +153,9 @@ literal|"This version of bsdtar uses an external lz4 program "
 literal|"but no such program is available on this system."
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|failure
 argument_list|(
@@ -165,8 +171,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an lz4 signature. */
 name|p
 operator|=
@@ -192,6 +205,13 @@ argument_list|,
 literal|"\x04\x22\x4d\x18"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
