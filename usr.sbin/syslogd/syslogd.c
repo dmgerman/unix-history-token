@@ -12701,9 +12701,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-name|int
-name|reject
-decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -13136,10 +13133,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|reject
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|IN6_ARE_MASKED_ADDR_EQUAL
@@ -13161,16 +13154,6 @@ name|sin6_addr
 argument_list|)
 operator|!=
 literal|0
-condition|)
-block|{
-operator|++
-name|reject
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|reject
 condition|)
 block|{
 name|dprintf
