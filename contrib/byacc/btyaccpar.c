@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file generated automatically using  * @Id: skel2c,v 1.3 2014/04/06 19:48:04 tom Exp @  */
+comment|/* This file generated automatically using  * @Id: skel2c,v 1.4 2016/06/07 00:26:09 tom Exp @  */
 end_comment
 
 begin_comment
-comment|/* @Id: btyaccpar.skel,v 1.3 2016/06/06 23:35:55 Tom.Shields Exp @ */
+comment|/* @Id: btyaccpar.skel,v 1.5 2016/12/02 22:02:28 tom Exp @ */
 end_comment
 
 begin_include
@@ -518,11 +518,11 @@ literal|""
 block|,
 literal|"/* Current position at lexical token queue */"
 block|,
-literal|"static short  *yylexp = 0;"
+literal|"static YYINT  *yylexp = 0;"
 block|,
 literal|""
 block|,
-literal|"static short  *yylexemes = 0;"
+literal|"static YYINT  *yylexemes = 0;"
 block|,
 literal|"#endif /* YYBTYACC */"
 block|,
@@ -641,11 +641,11 @@ literal|""
 block|,
 literal|"    /* Current position at lexical token queue */"
 block|,
-literal|"    static short  *yylexp = 0;"
+literal|"    static YYINT  *yylexp = 0;"
 block|,
 literal|""
 block|,
-literal|"    static short  *yylexemes = 0;"
+literal|"    static YYINT  *yylexemes = 0;"
 block|,
 literal|"#endif /* YYBTYACC */"
 block|,
@@ -1022,6 +1022,20 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|body_3
+index|[]
+init|=
+block|{
 if|#
 directive|if
 name|defined
@@ -1135,13 +1149,13 @@ literal|""
 block|,
 literal|"                s += YYLVQUEUEGROWTH;"
 block|,
-literal|"                if ((yylexemes = (short *)   realloc(yylexemes, s * sizeof(short))) == NULL) goto yyenomem;"
+literal|"                if ((yylexemes = realloc(yylexemes, s * sizeof(YYINT))) == NULL) goto yyenomem;"
 block|,
-literal|"                if ((yylvals   = (YYSTYPE *) realloc(yylvals, s * sizeof(YYSTYPE))) == NULL) goto yyenomem;"
+literal|"                if ((yylvals   = realloc(yylvals, s * sizeof(YYSTYPE))) == NULL) goto yyenomem;"
 block|,
 literal|"#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)"
 block|,
-literal|"                if ((yylpsns   = (YYLTYPE *) realloc(yylpsns, s * sizeof(YYLTYPE))) == NULL) goto yyenomem;"
+literal|"                if ((yylpsns   = realloc(yylpsns, s * sizeof(YYLTYPE))) == NULL) goto yyenomem;"
 block|,
 literal|"#endif"
 block|,
@@ -1161,7 +1175,7 @@ literal|"                yylexp  = yylexemes + p;"
 block|,
 literal|"            }"
 block|,
-literal|"            *yylexp = (short) YYLEX;"
+literal|"            *yylexp = (YYINT) YYLEX;"
 block|,
 literal|"            *yylvp++ = yylval;"
 block|,
@@ -1390,7 +1404,7 @@ literal|"                if (!yylexemes)"
 block|,
 literal|"                {"
 block|,
-literal|"                    yylexemes = (short *) malloc((YYLVQUEUEGROWTH) * sizeof(short));"
+literal|"                    yylexemes = malloc((YYLVQUEUEGROWTH) * sizeof(YYINT));"
 block|,
 literal|"                    if (yylexemes == NULL) goto yyenomem;"
 block|,
@@ -1438,7 +1452,7 @@ literal|"                        *yylpe++ = yylloc;"
 block|,
 literal|"#endif"
 block|,
-literal|"                        *yylexp  = (short) yychar;"
+literal|"                        *yylexp  = (YYINT) yychar;"
 block|,
 literal|"                        yychar   = YYEMPTY;"
 block|,
@@ -2275,17 +2289,17 @@ literal|""
 block|,
 literal|"                    s += YYLVQUEUEGROWTH;"
 block|,
-literal|"                    if ((yylexemes = (short *)   realloc(yylexemes, s * sizeof(short))) == NULL)"
+literal|"                    if ((yylexemes = realloc(yylexemes, s * sizeof(YYINT))) == NULL)"
 block|,
 literal|"                        goto yyenomem;"
 block|,
-literal|"                    if ((yylvals   = (YYSTYPE *) realloc(yylvals, s * sizeof(YYSTYPE))) == NULL)"
+literal|"                    if ((yylvals   = realloc(yylvals, s * sizeof(YYSTYPE))) == NULL)"
 block|,
 literal|"                        goto yyenomem;"
 block|,
 literal|"#if defined(YYLTYPE) || defined(YYLTYPE_IS_DECLARED)"
 block|,
-literal|"                    if ((yylpsns   = (YYLTYPE *) realloc(yylpsns, s * sizeof(YYLTYPE))) == NULL)"
+literal|"                    if ((yylpsns   = realloc(yylpsns, s * sizeof(YYLTYPE))) == NULL)"
 block|,
 literal|"                        goto yyenomem;"
 block|,
@@ -2307,7 +2321,7 @@ literal|"                    yylexp  = yylexemes + p;"
 block|,
 literal|"                }"
 block|,
-literal|"                *yylexp = (short) YYLEX;"
+literal|"                *yylexp = (YYINT) YYLEX;"
 block|,
 literal|"                *yylvp++ = yylval;"
 block|,
