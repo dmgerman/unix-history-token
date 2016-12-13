@@ -5738,7 +5738,7 @@ condition|(
 name|ret
 condition|)
 goto|goto
-name|unpin
+name|unlock
 goto|;
 name|pinned
 operator|=
@@ -6010,6 +6010,13 @@ name|VM_PAGER_OK
 operator|)
 return|;
 name|unpin
+label|:
+name|i915_gem_object_unpin
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
+name|unlock
 label|:
 name|DRM_UNLOCK
 argument_list|(
