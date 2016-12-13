@@ -149,7 +149,9 @@ begin_function
 specifier|static
 name|void
 name|aml8726_fixup_busfreq
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|phandle_t
 name|node

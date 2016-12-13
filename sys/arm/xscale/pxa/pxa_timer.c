@@ -950,7 +950,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_timer_get_oscr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1000,7 +1002,9 @@ end_function
 begin_function
 name|uint32_t
 name|pxa_timer_get_ossr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1050,7 +1054,9 @@ end_function
 begin_function
 name|void
 name|pxa_timer_watchdog_enable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bus_space_write_4
 argument_list|(
@@ -1073,7 +1079,9 @@ end_function
 begin_function
 name|void
 name|pxa_timer_watchdog_disable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bus_space_write_4
 argument_list|(
