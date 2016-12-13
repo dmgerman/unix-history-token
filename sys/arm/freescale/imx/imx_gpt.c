@@ -395,6 +395,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"fsl,imx6dl-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"fsl,imx6q-gpt"
 block|,
 literal|1
