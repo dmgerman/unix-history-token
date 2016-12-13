@@ -464,7 +464,7 @@ modifier|*
 name|attr
 parameter_list|)
 block|{
-name|sysctl_add_oid
+name|SYSCTL_ADD_OID
 argument_list|(
 name|NULL
 argument_list|,
@@ -669,7 +669,7 @@ name|attr
 operator|++
 control|)
 block|{
-name|sysctl_add_oid
+name|SYSCTL_ADD_OID
 argument_list|(
 name|NULL
 argument_list|,
