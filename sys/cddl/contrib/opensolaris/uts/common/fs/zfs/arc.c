@@ -464,6 +464,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|lotsfree
+value|zfs_arc_free_target
+end_define
+
 begin_comment
 comment|/* Absolute min for arc min / max is 16MB. */
 end_comment
@@ -14820,15 +14827,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|long
-name|needfree
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -14951,39 +14949,6 @@ name|FMR_NEEDFREE
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Cooperate with pagedaemon when it's time for it to scan 	 * and reclaim some pages. 	 */
-name|n
-operator|=
-name|PAGESIZE
-operator|*
-operator|(
-operator|(
-name|int64_t
-operator|)
-name|freemem
-operator|-
-name|zfs_arc_free_target
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|<
-name|lowest
-condition|)
-block|{
-name|lowest
-operator|=
-name|n
-expr_stmt|;
-name|r
-operator|=
-name|FMR_LOTSFREE
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|illumos
 comment|/* 	 * check that we're out of range of the pageout scanner.  It starts to 	 * schedule paging if freemem is less than lotsfree and needfree. 	 * lotsfree is the high-water mark for pageout, and needfree is the 	 * number of needed free pages.  We add extra pages here to make sure 	 * the scanner doesn't start up while we're freeing memory. 	 */
 name|n
 operator|=
@@ -15015,6 +14980,9 @@ operator|=
 name|FMR_LOTSFREE
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * check to make sure that swapfs has enough space so that anon 	 * reservations can still succeed. anon_resvmem() checks that the 	 * availrmem is greater than swapfs_minfree, and the number of reserved 	 * swap pages.  We also add a bit of extra here just to prevent 	 * circumstances from getting really dire. 	 */
 name|n
 operator|=
@@ -15741,15 +15709,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|needfree
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * We're either no longer overflowing, or we 			 * can't evict anything more, so we should wake 			 * up any threads before we go to sleep. 			 */
 name|cv_broadcast
 argument_list|(
@@ -23231,16 +23190,6 @@ name|mutex_enter
 argument_list|(
 operator|&
 name|arc_reclaim_lock
-argument_list|)
-expr_stmt|;
-comment|/* XXX: Memory deficit should be passed as argument. */
-name|needfree
-operator|=
-name|btoc
-argument_list|(
-name|arc_c
-operator|>>
-name|arc_shrink_shift
 argument_list|)
 expr_stmt|;
 name|DTRACE_PROBE
