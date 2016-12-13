@@ -422,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" at cs %d\n"
+literal|" at cs %d"
 argument_list|,
 name|devi
 operator|->
@@ -431,7 +431,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" mode %d"
+literal|" mode %d\n"
 argument_list|,
 name|devi
 operator|->
