@@ -147,6 +147,7 @@ begin_function_decl
 name|int
 name|kwval_lookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -167,6 +168,7 @@ begin_function_decl
 name|void
 name|showdetails
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -217,6 +219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all_locales
 init|=
@@ -225,6 +228,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all_charmaps
 init|=
@@ -233,6 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prt_categories
 init|=
@@ -241,6 +246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prt_keywords
 init|=
@@ -248,15 +254,9 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|more_params
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|_lcinfo
 block|{
@@ -485,6 +485,8 @@ value|(KW_ZERO+22)
 end_define
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|_kwinfo
 block|{
@@ -1647,6 +1649,7 @@ value|(sizeof(kwinfo)/sizeof(kwinfo[0]))
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1960,10 +1963,6 @@ operator|++
 control|)
 name|showdetails
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|kwinfo
 index|[
 name|i
@@ -2090,6 +2089,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|s1
@@ -2099,6 +2099,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|s2
@@ -2236,7 +2237,10 @@ name|sl_add
 argument_list|(
 name|charmaps
 argument_list|,
+name|strdup
+argument_list|(
 literal|"US-ASCII"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* sort the list */
@@ -2493,7 +2497,10 @@ name|sl_add
 argument_list|(
 name|locales
 argument_list|,
+name|strdup
+argument_list|(
 literal|"POSIX"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2511,7 +2518,10 @@ name|sl_add
 argument_list|(
 name|locales
 argument_list|,
+name|strdup
+argument_list|(
 literal|"C"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* make output nicer, sort the list */
@@ -2745,6 +2755,9 @@ modifier|*
 name|cp
 decl_stmt|;
 name|size_t
+name|roff
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|rval
@@ -2753,6 +2766,10 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|roff
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2769,65 +2786,69 @@ operator|++
 name|cp
 control|)
 block|{
-name|char
-name|group
-index|[
-sizeof|sizeof
-argument_list|(
-literal|"127;"
-argument_list|)
-index|]
-decl_stmt|;
+if|#
+directive|if
+name|CHAR_MIN
+operator|!=
+literal|0
+if|if
+condition|(
+operator|*
+name|cp
+operator|<
+literal|0
+condition|)
+break|break;
+comment|/* garbage input */
+endif|#
+directive|endif
+name|len
+operator|=
 name|snprintf
 argument_list|(
-name|group
+operator|&
+name|rval
+index|[
+name|roff
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|group
+name|rval
 argument_list|)
+operator|-
+name|roff
 argument_list|,
-literal|"%hhd;"
+literal|"%u;"
 argument_list|,
 operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
-name|strlcat
-argument_list|(
-name|rval
-argument_list|,
-name|group
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rval
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|len
+operator|<
+literal|0
+operator|||
+operator|(
+name|unsigned
+operator|)
 name|len
 operator|>=
 sizeof|sizeof
 argument_list|(
 name|rval
 argument_list|)
-condition|)
-block|{
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|rval
-argument_list|)
 operator|-
-literal|1
-expr_stmt|;
+name|roff
+condition|)
 break|break;
-block|}
+comment|/* insufficient space for output */
+name|roff
+operator|+=
+name|len
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -2835,14 +2856,19 @@ name|cp
 operator|==
 name|CHAR_MAX
 condition|)
-block|{
 break|break;
+comment|/* special termination */
 block|}
-block|}
-comment|/* Remove the trailing ';'. */
+comment|/* Truncate at the last successfully snprintf()ed semicolon. */
+if|if
+condition|(
+name|roff
+operator|!=
+literal|0
+condition|)
 name|rval
 index|[
-name|len
+name|roff
 operator|-
 literal|1
 index|]
@@ -2851,7 +2877,11 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
+operator|&
 name|rval
+index|[
+literal|0
+index|]
 operator|)
 return|;
 block|}
@@ -3180,6 +3210,7 @@ begin_function
 name|int
 name|kwval_lookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|kwname
@@ -3324,6 +3355,7 @@ begin_function
 name|void
 name|showdetails
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|kw
