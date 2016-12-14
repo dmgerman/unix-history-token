@@ -117,6 +117,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1392,6 +1398,13 @@ define|#
 directive|define
 name|OHCI_PREQUPPER
 value|0x120
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_PREQUPPER_MAX
+value|0xffff0000
 end_define
 
 begin_define
@@ -5476,8 +5489,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|tcode
@@ -5587,11 +5598,6 @@ operator|&
 name|FWOHCI_DBCH_FULL
 condition|)
 return|return;
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|db_tr
 operator|=
 name|dbch
@@ -6613,11 +6619,6 @@ operator|->
 name|top
 operator|=
 name|db_tr
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -11441,6 +11442,9 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
+name|uintmax_t
+name|prequpper
+decl_stmt|;
 name|uint32_t
 name|node_id
 decl_stmt|,
@@ -11635,14 +11639,65 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-comment|/* 0 to 4GB region */
+name|prequpper
+operator|=
+operator|(
+operator|(
+name|uintmax_t
+operator|)
+name|Maxmem
+operator|<<
+name|PAGE_SHIFT
+operator|)
+operator|>>
+literal|16
+expr_stmt|;
+if|if
+condition|(
+name|prequpper
+operator|>
+name|OHCI_PREQUPPER_MAX
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"Physical memory size of 0x%jx exceeds "
+literal|"fire wire address space.  Limiting dma "
+literal|"to memory below 0x%jx\n"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|Maxmem
+operator|<<
+name|PAGE_SHIFT
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|OHCI_PREQUPPER_MAX
+operator|<<
+literal|16
+argument_list|)
+expr_stmt|;
+name|prequpper
+operator|=
+name|OHCI_PREQUPPER_MAX
+expr_stmt|;
+block|}
 name|OWRITE
 argument_list|(
 name|sc
 argument_list|,
 name|OHCI_PREQUPPER
 argument_list|,
-literal|0x10000
+name|prequpper
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 if|if
@@ -13444,8 +13499,6 @@ name|uint32_t
 name|stat
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|w
 init|=
 literal|0
@@ -13480,11 +13533,6 @@ literal|0
 block|dump_db(sc, dmach);
 endif|#
 directive|endif
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -13736,11 +13784,6 @@ condition|)
 name|FW_GUNLOCK
 argument_list|(
 name|fc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
