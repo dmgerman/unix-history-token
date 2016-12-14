@@ -11645,6 +11645,50 @@ argument_list|,
 literal|0x10000
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OREAD
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_PREQUPPER
+argument_list|)
+operator|!=
+operator|(
+name|prequpper
+operator|&
+literal|0xffffffff
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"PhysicalUpperBound register is not "
+literal|"implemented.  Physical memory access "
+literal|"is limited to the first 4GB\n"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"PhysicalUpperBound = 0x%08x\n"
+argument_list|,
+name|OREAD
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_PREQUPPER
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Set ATRetries register */
 name|OWRITE
