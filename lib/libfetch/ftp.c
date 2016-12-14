@@ -3855,6 +3855,9 @@ name|bindaddr
 operator|!=
 literal|'\0'
 operator|&&
+operator|(
+name|e
+operator|=
 name|fetch_bind
 argument_list|(
 name|sd
@@ -3865,11 +3868,12 @@ name|ss_family
 argument_list|,
 name|bindaddr
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 goto|goto
-name|sysouch
+name|ouch
 goto|;
 if|if
 condition|(

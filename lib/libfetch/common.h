@@ -248,6 +248,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|addrinfo
+modifier|*
+name|fetch_resolve
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fetch_bind
 parameter_list|(
