@@ -199,16 +199,16 @@ begin_comment
 comment|/*  * ivars codes  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|smbus_ivars
+block|{
 name|SMBUS_IVAR_ADDR
-value|0x1
-end_define
-
-begin_comment
+block|,
 comment|/* slave address of the device */
-end_comment
+block|}
+enum|;
+end_enum
 
 begin_function_decl
 name|int
@@ -273,14 +273,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_char
-name|smbus_get_addr
+begin_define
+define|#
+directive|define
+name|SMBUS_ACCESSOR
 parameter_list|(
-name|device_t
+name|var
+parameter_list|,
+name|ivar
+parameter_list|,
+name|type
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|__BUS_ACCESSOR(smbus, var, SMBUS, ivar, type)
+end_define
+
+begin_macro
+name|SMBUS_ACCESSOR
+argument_list|(
+argument|addr
+argument_list|,
+argument|ADDR
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_undef
+undef|#
+directive|undef
+name|SMBUS_ACCESSOR
+end_undef
 
 begin_decl_stmt
 specifier|extern
