@@ -783,6 +783,11 @@ name|char
 modifier|*
 name|oid_descr
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|oid_label
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1172,9 +1177,11 @@ parameter_list|,
 name|fmt
 parameter_list|,
 name|descr
+parameter_list|,
+name|label
 parameter_list|)
 define|\
-value|struct sysctl_oid id = {					\ 		.oid_parent = (parent_child_head),			\ 		.oid_children = SLIST_HEAD_INITIALIZER(&id.oid_children), \ 		.oid_number = (nbr),					\ 		.oid_kind = (kind),					\ 		.oid_arg1 = (a1),					\ 		.oid_arg2 = (a2),					\ 		.oid_name = (name),					\ 		.oid_handler = (handler),				\ 		.oid_fmt = (fmt),					\ 		.oid_descr = __DESCR(descr)				\ 	};								\ 	DATA_SET(sysctl_set, id)
+value|struct sysctl_oid id = {					\ 		.oid_parent = (parent_child_head),			\ 		.oid_children = SLIST_HEAD_INITIALIZER(&id.oid_children), \ 		.oid_number = (nbr),					\ 		.oid_kind = (kind),					\ 		.oid_arg1 = (a1),					\ 		.oid_arg2 = (a2),					\ 		.oid_name = (name),					\ 		.oid_handler = (handler),				\ 		.oid_fmt = (fmt),					\ 		.oid_descr = __DESCR(descr),				\ 		.oid_label = (label),					\ 	};								\ 	DATA_SET(sysctl_set, id)
 end_define
 
 begin_comment
@@ -1205,7 +1212,36 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static SYSCTL_OID_RAW(sysctl__##parent##_##name, \ 	SYSCTL_CHILDREN(&sysctl__##parent), \ 	nbr, #name, kind, a1, a2, handler, fmt, descr)
+value|SYSCTL_OID_WITH_LABEL(parent, nbr, name, kind, a1, a2,		\ 	    handler, fmt, descr, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_OID_WITH_LABEL
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|,
+name|label
+parameter_list|)
+define|\
+value|static SYSCTL_OID_RAW(sysctl__##parent##_##name,			\ 	SYSCTL_CHILDREN(&sysctl__##parent),				\ 	nbr, #name, kind, a1, a2, handler, fmt, descr, label)
 end_define
 
 begin_comment
@@ -1234,9 +1270,11 @@ parameter_list|,
 name|fmt
 parameter_list|,
 name|descr
+parameter_list|,
+name|label
 parameter_list|)
 define|\
-value|SYSCTL_OID_RAW(sysctl__##parent##_##name, \ 	SYSCTL_CHILDREN(&sysctl__##parent),	\ 	nbr, #name, kind, a1, a2, handler, fmt, descr)
+value|SYSCTL_OID_RAW(sysctl__##parent##_##name, \ 	SYSCTL_CHILDREN(&sysctl__##parent),	\ 	nbr, #name, kind, a1, a2, handler, fmt, descr, label)
 end_define
 
 begin_define
@@ -1265,7 +1303,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, __DESCR(descr), NULL)
 end_define
 
 begin_comment
@@ -1288,7 +1326,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID_RAW(sysctl___##name,&sysctl__children,	\ 	    nbr, #name, CTLTYPE_NODE|(access), NULL, 0,		\ 	    handler, "N", descr);				\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE)
+value|SYSCTL_OID_RAW(sysctl___##name,&sysctl__children,	\ 	    nbr, #name, CTLTYPE_NODE|(access), NULL, 0,		\ 	    handler, "N", descr, NULL);				\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE)
 end_define
 
 begin_comment
@@ -1313,7 +1351,30 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID_GLOBAL(parent, nbr, name, CTLTYPE_NODE|(access),	\ 	    NULL, 0, handler, "N", descr);				\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE)
+value|SYSCTL_NODE_WITH_LABEL(parent, nbr, name, access, handler, descr, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_NODE_WITH_LABEL
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|,
+name|label
+parameter_list|)
+define|\
+value|SYSCTL_OID_GLOBAL(parent, nbr, name, CTLTYPE_NODE|(access),	\ 	    NULL, 0, handler, "N", descr, label);			\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE)
 end_define
 
 begin_define
@@ -1336,7 +1397,32 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	\ 	    NULL, 0, handler, "N", __DESCR(descr));			\ })
+value|SYSCTL_ADD_NODE_WITH_LABEL(ctx, parent, nbr, name, access, \ 	    handler, descr, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_NODE_WITH_LABEL
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|,
+name|label
+parameter_list|)
+define|\
+value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	\ 	    NULL, 0, handler, "N", __DESCR(descr), label);		\ })
 end_define
 
 begin_define
@@ -1357,7 +1443,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE);	\ 	sysctl_add_oid(ctx,&sysctl__children, nbr, name,		\ 	    CTLTYPE_NODE|(access),					\ 	    NULL, 0, handler, "N", __DESCR(descr));			\ })
+value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE);	\ 	sysctl_add_oid(ctx,&sysctl__children, nbr, name,		\ 	    CTLTYPE_NODE|(access),					\ 	    NULL, 0, handler, "N", __DESCR(descr), NULL);		\ })
 end_define
 
 begin_comment
@@ -1409,7 +1495,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	char *__arg = (arg);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_STRING);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|(access),	\ 	    __arg, len, sysctl_handle_string, "A", __DESCR(descr));	\ })
+value|({									\ 	char *__arg = (arg);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_STRING);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|(access),	\ 	    __arg, len, sysctl_handle_string, "A", __DESCR(descr),	\ 	    NULL); \ })
 end_define
 
 begin_comment
@@ -1468,7 +1554,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	bool *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0);				\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_bool, "CU", __DESCR(descr));	\ })
+value|({									\ 	bool *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0);				\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_bool, "CU", __DESCR(descr),	\ 	    NULL);							\ })
 end_define
 
 begin_comment
@@ -1527,7 +1613,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int8_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S8);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_8, "C", __DESCR(descr));	\ })
+value|({									\ 	int8_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S8);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_8, "C", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1586,7 +1672,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uint8_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U8);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_8, "CU", __DESCR(descr));	\ })
+value|({									\ 	uint8_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U8);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_8, "CU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1645,7 +1731,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int16_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S16);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S16 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_16, "S", __DESCR(descr));	\ })
+value|({									\ 	int16_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S16);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S16 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_16, "S", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1704,7 +1790,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uint16_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U16);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U16 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_16, "SU", __DESCR(descr));	\ })
+value|({									\ 	uint16_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U16);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U16 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_16, "SU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1763,7 +1849,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int32_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S32);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S32 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_32, "I", __DESCR(descr));	\ })
+value|({									\ 	int32_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S32);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S32 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_32, "I", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1822,7 +1908,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uint32_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U32);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U32 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_32, "IU", __DESCR(descr));	\ })
+value|({									\ 	uint32_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U32);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U32 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_32, "IU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1881,7 +1967,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int64_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_64, "Q", __DESCR(descr));	\ })
+value|({									\ 	int64_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_64, "Q", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1940,7 +2026,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uint64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_64, "QU", __DESCR(descr));	\ })
+value|({									\ 	uint64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_64, "QU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -1974,7 +2060,32 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_int, "I", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT)&& \ 	    sizeof(int) == sizeof(*(ptr)))
+value|SYSCTL_INT_WITH_LABEL(parent, nbr, name, access, ptr, val, descr, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_INT_WITH_LABEL
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|,
+name|label
+parameter_list|)
+define|\
+value|SYSCTL_OID_WITH_LABEL(parent, nbr, name,			\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_int, "I", descr, label);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT)&& \ 	    sizeof(int) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1999,7 +2110,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_int, "I", __DESCR(descr));	\ })
+value|({									\ 	int *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_int, "I", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2058,7 +2169,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	unsigned *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_UINT);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_int, "IU", __DESCR(descr));	\ })
+value|({									\ 	unsigned *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_UINT);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, val, sysctl_handle_int, "IU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2115,7 +2226,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	long *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_LONG);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_long, "L", __DESCR(descr));		\ })
+value|({									\ 	long *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_LONG);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_long, "L", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2172,7 +2283,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	unsigned long *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_ULONG);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_long, "LU", __DESCR(descr));	\ })
+value|({									\ 	unsigned long *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_ULONG);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_long, "LU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2229,7 +2340,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	int64_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_64, "Q", __DESCR(descr));		\ })
+value|({									\ 	int64_t *__ptr = (ptr);						\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_64, "Q", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_define
@@ -2282,7 +2393,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uint64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_64, "QU", __DESCR(descr));		\ })
+value|({									\ 	uint64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_64, "QU", __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2309,7 +2420,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	struct sysctl_oid *__ret;					\ 	CTASSERT((sizeof(uint64_t) == sizeof(*(ptr)) ||			\ 	    sizeof(unsigned) == sizeof(*(ptr)))&&			\ 	    ((access)& CTLTYPE) == 0);					\ 	if (sizeof(uint64_t) == sizeof(*(ptr))) {			\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_64, "QU",			\ 		    __DESCR(descr));					\ 	} else {							\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_int, "IU",			\ 		    __DESCR(descr));					\ 	}								\ 	__ret;								\ })
+value|({									\ 	struct sysctl_oid *__ret;					\ 	CTASSERT((sizeof(uint64_t) == sizeof(*(ptr)) ||			\ 	    sizeof(unsigned) == sizeof(*(ptr)))&&			\ 	    ((access)& CTLTYPE) == 0);					\ 	if (sizeof(uint64_t) == sizeof(*(ptr))) {			\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_64, "QU",			\ 		    __DESCR(descr), NULL);				\ 	} else {							\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_int, "IU",			\ 		    __DESCR(descr), NULL);				\ 	}								\ 	__ret;								\ })
 end_define
 
 begin_comment
@@ -2357,7 +2468,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr));	\ })
+value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_counter_u64, "QU", __DESCR(descr),	\ 	    NULL);							\ })
 end_define
 
 begin_comment
@@ -2409,7 +2520,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, len, sysctl_handle_counter_u64_array, "S",		\ 	    __DESCR(descr));						\ })
+value|({									\ 	counter_u64_t *__ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_OPAQUE | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, len, sysctl_handle_counter_u64_array, "S",		\ 	    __DESCR(descr), NULL);					\ })
 end_define
 
 begin_comment
@@ -2465,7 +2576,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	\ 	    ptr, len, sysctl_handle_opaque, fmt, __DESCR(descr));	\ })
+value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	\ 	    ptr, len, sysctl_handle_opaque, fmt, __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2517,7 +2628,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	\ 	    (ptr), sizeof(struct type),					\ 	    sysctl_handle_opaque, "S," #type, __DESCR(descr));		\ })
+value|({									\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_OPAQUE);	\ 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	\ 	    (ptr), sizeof(struct type),					\ 	    sysctl_handle_opaque, "S," #type, __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2577,7 +2688,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	CTASSERT(((access)& CTLTYPE) != 0);				\ 	sysctl_add_oid(ctx, parent, nbr, name, (access),		\ 	    (ptr), (arg), (handler), (fmt), __DESCR(descr));		\ })
+value|({									\ 	CTASSERT(((access)& CTLTYPE) != 0);				\ 	sysctl_add_oid(ctx, parent, nbr, name, (access),		\ 	    (ptr), (arg), (handler), (fmt), __DESCR(descr), NULL);	\ })
 end_define
 
 begin_comment
@@ -2625,7 +2736,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uma_zone_t __ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_uma_zone_max, "I", __DESCR(descr));	\ })
+value|({									\ 	uma_zone_t __ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\ 	    __ptr, 0, sysctl_handle_uma_zone_max, "I", __DESCR(descr),	\ 	    NULL);							\ })
 end_define
 
 begin_comment
@@ -2673,7 +2784,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	uma_zone_t __ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | CTLFLAG_RD | (access),	\ 	    __ptr, 0, sysctl_handle_uma_zone_cur, "I", __DESCR(descr));	\ })
+value|({									\ 	uma_zone_t __ptr = (ptr);					\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);		\ 	sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | CTLFLAG_RD | (access),	\ 	    __ptr, 0, sysctl_handle_uma_zone_cur, "I", __DESCR(descr),	\ 	    NULL);							\ })
 end_define
 
 begin_comment
@@ -4590,6 +4701,11 @@ specifier|const
 name|char
 modifier|*
 name|descr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|label
 parameter_list|)
 function_decl|;
 end_function_decl
