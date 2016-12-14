@@ -288,6 +288,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fn_name
@@ -314,6 +315,7 @@ decl_stmt|;
 name|c_db_sym_t
 name|sym
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|symname
@@ -345,20 +347,10 @@ name|db_symbol_values
 argument_list|(
 name|sym
 argument_list|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|symname
 argument_list|,
-operator|(
-name|db_expr_t
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
