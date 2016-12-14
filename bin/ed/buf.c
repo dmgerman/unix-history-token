@@ -201,7 +201,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|fread
 argument_list|(
 name|sfbuf
@@ -215,7 +214,6 @@ name|len
 argument_list|,
 name|sfp
 argument_list|)
-operator|)
 operator|!=
 name|len
 condition|)
@@ -434,7 +432,6 @@ block|}
 comment|/* assert: SPL1() */
 if|if
 condition|(
-operator|(
 name|fwrite
 argument_list|(
 name|cs
@@ -448,7 +445,6 @@ name|len
 argument_list|,
 name|sfp
 argument_list|)
-operator|)
 operator|!=
 name|len
 condition|)
