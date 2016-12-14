@@ -2799,9 +2799,11 @@ parameter_list|(
 name|name
 parameter_list|,
 name|desc
+parameter_list|,
+name|label
 parameter_list|)
 define|\
-value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	    SYSCTL_NULL_INT_PTR, 1, desc)
+value|SYSCTL_INT_WITH_LABEL(_kern_features, OID_AUTO, name,		\ 	    CTLFLAG_RD | CTLFLAG_CAPRD, SYSCTL_NULL_INT_PTR, 1, desc, "feature")
 end_define
 
 begin_endif
