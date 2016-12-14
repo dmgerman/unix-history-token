@@ -5859,6 +5859,13 @@ name|malloc
 operator|=
 name|type
 expr_stmt|;
+name|xfer
+operator|->
+name|tl
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|xfer
 return|;
