@@ -109,6 +109,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPUID_HV_MSR_REFERENCE_TSC
+value|0x0200
+end_define
+
+begin_comment
+comment|/* MSR_HV_REFERENCE_TSC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPUID_HV_MSR_GUEST_IDLE
 value|0x0400
 end_define
