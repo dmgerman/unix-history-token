@@ -7077,7 +7077,7 @@ operator|<
 name|nvl_len
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We don't want to unmount& remount the dataset when changing 		 * its canmount property.  We only use the changelist logic to 		 * unmount when setting canmount=off for a mounted filesystem 		 * or when setting canmount=on for an unmounted filesystem. 		 * For all other changes to canmount property the filesystem 		 * remains the same. 		 */
+comment|/* 		 * We don't want to unmount& remount the dataset when changing 		 * its canmount property to 'on' or 'noauto'.  We only use 		 * the changelist logic to unmount when setting canmount=off. 		 */
 if|if
 condition|(
 name|prop
@@ -7092,23 +7092,6 @@ argument_list|)
 operator|==
 name|ZFS_CANMOUNT_OFF
 operator|&&
-name|zfs_is_mounted
-argument_list|(
-name|zhp
-argument_list|,
-name|NULL
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|fnvpair_value_uint64
-argument_list|(
-name|elem
-argument_list|)
-operator|==
-name|ZFS_CANMOUNT_ON
-operator|&&
-operator|!
 name|zfs_is_mounted
 argument_list|(
 name|zhp
