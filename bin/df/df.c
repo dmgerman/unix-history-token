@@ -1090,6 +1090,8 @@ argument_list|,
 name|mntpt
 argument_list|,
 name|MNT_RDONLY
+operator||
+name|MNT_NOEXEC
 argument_list|,
 operator|&
 name|mdev
