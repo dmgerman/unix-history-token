@@ -305,11 +305,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|object
 operator|->
 name|cred
@@ -321,11 +316,6 @@ operator|->
 name|charge
 operator|=
 name|size
-expr_stmt|;
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|object
-argument_list|)
 expr_stmt|;
 block|}
 return|return
