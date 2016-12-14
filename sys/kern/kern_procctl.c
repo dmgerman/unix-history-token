@@ -1178,7 +1178,11 @@ operator|->
 name|rk_flags
 operator|&
 operator|~
+operator|(
 name|REAPER_KILL_CHILDREN
+operator||
+name|REAPER_KILL_SUBTREE
+operator|)
 operator|)
 operator|!=
 literal|0
