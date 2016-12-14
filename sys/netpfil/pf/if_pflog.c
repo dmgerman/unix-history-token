@@ -987,6 +987,7 @@ name|hdr
 operator|.
 name|subrulenr
 operator|=
+operator|-
 literal|1
 expr_stmt|;
 block|}
