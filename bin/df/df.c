@@ -84,11 +84,22 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MOUNT_CHAR_DEVS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufsmount.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -418,6 +429,12 @@ name|thousands
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MOUNT_CHAR_DEVS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -425,6 +442,11 @@ name|ufs_args
 name|mdev
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -463,10 +485,16 @@ name|char
 modifier|*
 name|fstype
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MOUNT_CHAR_DEVS
 name|char
 modifier|*
 name|mntpath
-decl_stmt|,
+decl_stmt|;
+endif|#
+directive|endif
+name|char
 modifier|*
 name|mntpt
 decl_stmt|;
@@ -959,6 +987,9 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|MOUNT_CHAR_DEVS
 block|}
 elseif|else
 if|if
@@ -1180,6 +1211,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 name|mntpt
