@@ -5767,7 +5767,7 @@ argument_list|)
 argument_list|,
 literal|"feature-barrier"
 argument_list|,
-literal|"%lu"
+literal|"%d"
 argument_list|,
 operator|&
 name|feature_barrier
@@ -5804,7 +5804,7 @@ argument_list|)
 argument_list|,
 literal|"feature-flush-cache"
 argument_list|,
-literal|"%lu"
+literal|"%d"
 argument_list|,
 operator|&
 name|feature_flush
