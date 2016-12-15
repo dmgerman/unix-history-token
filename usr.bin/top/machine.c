@@ -4452,7 +4452,7 @@ name|cmdbuf
 argument_list|,
 name|cmdlen
 argument_list|,
-literal|"%s{%s}"
+literal|"%s{%s%s}"
 argument_list|,
 name|pp
 operator|->
@@ -4461,6 +4461,10 @@ argument_list|,
 name|pp
 operator|->
 name|ki_tdname
+argument_list|,
+name|pp
+operator|->
+name|ki_moretdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4545,7 +4549,7 @@ name|cmdbuf
 argument_list|,
 name|cmdlen
 argument_list|,
-literal|"[%s{%s}]"
+literal|"[%s{%s%s}]"
 argument_list|,
 name|pp
 operator|->
@@ -4554,6 +4558,10 @@ argument_list|,
 name|pp
 operator|->
 name|ki_tdname
+argument_list|,
+name|pp
+operator|->
+name|ki_moretdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4831,7 +4839,7 @@ name|cmdbuf
 argument_list|,
 name|cmdlen
 argument_list|,
-literal|"%s (%s){%s}"
+literal|"%s (%s){%s%s}"
 argument_list|,
 name|argbuf
 argument_list|,
@@ -4842,6 +4850,10 @@ argument_list|,
 name|pp
 operator|->
 name|ki_tdname
+argument_list|,
+name|pp
+operator|->
+name|ki_moretdname
 argument_list|)
 expr_stmt|;
 else|else
@@ -4888,13 +4900,17 @@ name|cmdbuf
 argument_list|,
 name|cmdlen
 argument_list|,
-literal|"%s{%s}"
+literal|"%s{%s%s}"
 argument_list|,
 name|argbuf
 argument_list|,
 name|pp
 operator|->
 name|ki_tdname
+argument_list|,
+name|pp
+operator|->
+name|ki_moretdname
 argument_list|)
 expr_stmt|;
 else|else

@@ -50,6 +50,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|kinfo_proc_thread_name
+parameter_list|(
+specifier|const
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|procstat_args
 parameter_list|(

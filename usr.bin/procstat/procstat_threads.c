@@ -101,7 +101,7 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %6s %-16s %-16s %2s %4s %-7s %-9s\n"
+literal|"%5s %6s %-19s %-19s %2s %4s %-7s %-9s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -194,7 +194,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-16s "
+literal|"%-19s "
 argument_list|,
 name|strlen
 argument_list|(
@@ -212,37 +212,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-16s "
+literal|"%-19s "
 argument_list|,
-operator|(
-name|strlen
+name|kinfo_proc_thread_name
 argument_list|(
 name|kipp
-operator|->
-name|ki_tdname
 argument_list|)
-operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|kipp
-operator|->
-name|ki_comm
-argument_list|,
-name|kipp
-operator|->
-name|ki_tdname
-argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|)
-condition|?
-name|kipp
-operator|->
-name|ki_tdname
-else|:
-literal|"-"
 argument_list|)
 expr_stmt|;
 if|if

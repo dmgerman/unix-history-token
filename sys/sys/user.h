@@ -695,11 +695,22 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* login class */
+name|char
+name|ki_moretdname
+index|[
+name|MAXCOMLEN
+operator|-
+name|TDNAMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* more thread name */
 comment|/* 	 * When adding new variables, take space for char-strings from the 	 * front of ki_sparestrings, and ints from the end of ki_spareints. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|char
 name|ki_sparestrings
 index|[
-literal|50
+literal|46
 index|]
 decl_stmt|;
 comment|/* spare string space */
