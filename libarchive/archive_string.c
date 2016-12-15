@@ -9576,7 +9576,7 @@ name|HAVE_ICONV
 end_if
 
 begin_comment
-comment|/*  * Return -1 if conversion failes.  */
+comment|/*  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -10115,7 +10115,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Translate a string from a some CodePage to an another CodePage by  * Windows APIs, and copy the result. Return -1 if conversion failes.  */
+comment|/*  * Translate a string from a some CodePage to an another CodePage by  * Windows APIs, and copy the result. Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -16773,7 +16773,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Convert a UTF-16BE/LE string to current locale and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a UTF-16BE/LE string to current locale and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -17488,7 +17488,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -18030,7 +18030,7 @@ comment|/*  * Do the best effort for conversions.  * We cannot handle UTF-16BE c
 end_comment
 
 begin_comment
-comment|/*  * Convert a UTF-16BE string to current locale and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a UTF-16BE string to current locale and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function
@@ -18322,7 +18322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion failes.  */
+comment|/*  * Convert a current locale string to UTF-16BE/LE and copy the result.  * Return -1 if conversion fails.  */
 end_comment
 
 begin_function

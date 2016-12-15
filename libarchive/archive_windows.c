@@ -4043,6 +4043,14 @@ sizeof|sizeof
 argument_list|(
 name|doserrors
 argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|doserrors
+index|[
+literal|0
+index|]
+argument_list|)
 condition|;
 name|i
 operator|++

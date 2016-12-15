@@ -859,7 +859,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check if the paltform completely supports the string conversion. */
+comment|/* Check if the platform completely supports the string conversion. */
 name|a
 operator|=
 name|archive_write_new
@@ -1071,7 +1071,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check if the paltform completely supports the string conversion. */
+comment|/* Check if the platform completely supports the string conversion. */
 name|a
 operator|=
 name|archive_write_new
@@ -1274,7 +1274,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check if the paltform completely supports the string conversion. */
+comment|/* Check if the platform completely supports the string conversion. */
 name|a
 operator|=
 name|archive_write_new
@@ -1487,7 +1487,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check if the paltform completely supports the string conversion. */
+comment|/* Check if the platform completely supports the string conversion. */
 name|a
 operator|=
 name|archive_write_new

@@ -535,11 +535,6 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a
@@ -849,11 +844,6 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a

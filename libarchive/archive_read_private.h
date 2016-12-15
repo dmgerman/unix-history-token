@@ -1015,17 +1015,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|__archive_read_close_filters
-parameter_list|(
-name|struct
-name|archive_read
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|archive_read_extract
 modifier|*

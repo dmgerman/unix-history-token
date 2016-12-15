@@ -8267,8 +8267,10 @@ expr|struct
 name|archive_write_disk
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -8287,19 +8289,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|a
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|archive
@@ -11962,10 +11951,9 @@ specifier|static
 name|void
 name|cleanup_pathname_win
 parameter_list|(
-name|struct
-name|archive_write_disk
+name|char
 modifier|*
-name|a
+name|path
 parameter_list|)
 block|{
 name|wchar_t
@@ -12023,9 +12011,7 @@ for|for
 control|(
 name|p
 operator|=
-name|a
-operator|->
-name|name
+name|path
 init|;
 operator|*
 name|p
@@ -12141,9 +12127,7 @@ return|return;
 comment|/* 	 * Convert path separator in wide-character. 	 */
 name|p
 operator|=
-name|a
-operator|->
-name|name
+name|path
 expr_stmt|;
 while|while
 condition|(
@@ -12316,7 +12300,7 @@ name|__CYGWIN__
 argument_list|)
 name|cleanup_pathname_win
 argument_list|(
-name|a
+name|path
 argument_list|)
 expr_stmt|;
 endif|#

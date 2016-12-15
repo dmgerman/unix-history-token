@@ -476,7 +476,7 @@ name|int
 name|max_filesystem_id
 decl_stmt|;
 name|int
-name|allocated_filesytem
+name|allocated_filesystem
 decl_stmt|;
 name|HANDLE
 name|entry_fh
@@ -1635,8 +1635,10 @@ expr|struct
 name|archive_read_disk
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1655,19 +1657,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|a
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|archive
@@ -6287,7 +6276,7 @@ operator|==
 name|dev
 condition|)
 block|{
-comment|/* There is the filesytem ID we've already generated. */
+comment|/* There is the filesystem ID we've already generated. */
 name|t
 operator|->
 name|current_filesystem_id
@@ -6315,7 +6304,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * There is a new filesytem, we generate a new ID for. 	 */
+comment|/* 	 * There is a new filesystem, we generate a new ID for. 	 */
 name|fid
 operator|=
 name|t
@@ -6331,7 +6320,7 @@ name|max_filesystem_id
 operator|>
 name|t
 operator|->
-name|allocated_filesytem
+name|allocated_filesystem
 condition|)
 block|{
 name|size_t
@@ -6406,7 +6395,7 @@ name|p
 expr_stmt|;
 name|t
 operator|->
-name|allocated_filesytem
+name|allocated_filesystem
 operator|=
 operator|(
 name|int
@@ -7113,20 +7102,9 @@ name|te
 decl_stmt|;
 name|te
 operator|=
-name|malloc
+name|calloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|te
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|te
-argument_list|,
-literal|0
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7624,20 +7602,9 @@ name|t
 decl_stmt|;
 name|t
 operator|=
-name|malloc
+name|calloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|t
-argument_list|,
-literal|0
+literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(

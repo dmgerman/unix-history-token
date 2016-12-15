@@ -1516,7 +1516,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* If there's a matching entry already in the list, overwrite it. */
+comment|/* 	 * If there's a matching entry already in the list, overwrite it. 	 * NFSv4 entries may be repeated and are not overwritten. 	 * 	 * TODO: compare names of no id is provided (needs more rework) 	 */
 name|ap
 operator|=
 name|acl
@@ -1536,6 +1536,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|(
+name|type
+operator|&
+name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
 name|ap
 operator|->
 name|type
@@ -1605,8 +1615,10 @@ expr|struct
 name|archive_acl_entry
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1625,19 +1637,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|ap
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|aq

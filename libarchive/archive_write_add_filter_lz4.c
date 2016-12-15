@@ -2678,7 +2678,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The buffer is not compressed. The commpressed size was 		 * bigger than its uncompressed size. */
+comment|/* The buffer is not compressed. The compressed size was 		 * bigger than its uncompressed size. */
 name|archive_le32enc
 argument_list|(
 name|data
@@ -3149,7 +3149,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The buffer is not compressed. The commpressed size was 		 * bigger than its uncompressed size. */
+comment|/* The buffer is not compressed. The compressed size was 		 * bigger than its uncompressed size. */
 name|archive_le32enc
 argument_list|(
 name|data
