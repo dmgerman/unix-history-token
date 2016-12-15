@@ -57,12 +57,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_pageout.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -402,28 +396,14 @@ begin_define
 define|#
 directive|define
 name|freemem
-value|(long)vm_cnt.v_free_count
-end_define
-
-begin_define
-define|#
-directive|define
-name|desfree
-value|(long)vm_cnt.v_free_target
+value|vm_cnt.v_free_count
 end_define
 
 begin_define
 define|#
 directive|define
 name|minfree
-value|(long)vm_cnt.v_free_min
-end_define
-
-begin_define
-define|#
-directive|define
-name|needfree
-value|(long)vm_pageout_deficit
+value|vm_cnt.v_free_min
 end_define
 
 begin_define
