@@ -160,10 +160,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 specifier|static
 name|vm_object_t
@@ -385,10 +381,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
 
 begin_function
 specifier|static
