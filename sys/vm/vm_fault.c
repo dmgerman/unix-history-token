@@ -276,6 +276,9 @@ decl_stmt|;
 name|int
 name|lookup_still_valid
 decl_stmt|;
+name|int
+name|map_generation
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -1169,9 +1172,6 @@ name|is_first_object_locked
 decl_stmt|,
 name|wired
 decl_stmt|;
-name|int
-name|map_generation
-decl_stmt|;
 name|vm_object_t
 name|next_object
 decl_stmt|;
@@ -1330,6 +1330,8 @@ name|result
 operator|)
 return|;
 block|}
+name|fs
+operator|.
 name|map_generation
 operator|=
 name|fs
@@ -3523,6 +3525,8 @@ name|map
 operator|->
 name|timestamp
 operator|!=
+name|fs
+operator|.
 name|map_generation
 condition|)
 block|{
