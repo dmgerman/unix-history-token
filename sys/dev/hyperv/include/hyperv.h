@@ -15,6 +15,12 @@ directive|define
 name|_HYPERV_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -24,13 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
+file|<sys/systm.h>
 end_include
 
 begin_define
@@ -160,6 +160,86 @@ name|HYPERV_TIMER_FREQ
 value|(NANOSEC / HYPERV_TIMER_NS_FACTOR)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HYPERV_REFTSC_DEVNAME
+value|"hv_tsc"
+end_define
+
+begin_comment
+comment|/*  * Hyper-V Reference TSC  */
+end_comment
+
+begin_struct
+struct|struct
+name|hyperv_reftsc
+block|{
+specifier|volatile
+name|uint32_t
+name|tsc_seq
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+name|tsc_rsvd1
+decl_stmt|;
+specifier|volatile
+name|uint64_t
+name|tsc_scale
+decl_stmt|;
+specifier|volatile
+name|int64_t
+name|tsc_ofs
+decl_stmt|;
+block|}
+name|__packed
+name|__aligned
+argument_list|(
+name|PAGE_SIZE
+argument_list|)
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|hyperv_reftsc
+argument_list|)
+operator|==
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|hyperv_guid
@@ -208,6 +288,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* CPUID_HV_MSR_ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

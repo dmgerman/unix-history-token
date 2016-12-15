@@ -537,53 +537,6 @@ value|0x40000006
 end_define
 
 begin_comment
-comment|/*  * Hyper-V Reference TSC  */
-end_comment
-
-begin_struct
-struct|struct
-name|hyperv_reftsc
-block|{
-specifier|volatile
-name|uint32_t
-name|tsc_seq
-decl_stmt|;
-specifier|volatile
-name|uint32_t
-name|tsc_rsvd1
-decl_stmt|;
-specifier|volatile
-name|uint64_t
-name|tsc_scale
-decl_stmt|;
-specifier|volatile
-name|int64_t
-name|tsc_ofs
-decl_stmt|;
-block|}
-name|__packed
-name|__aligned
-argument_list|(
-name|PAGE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hyperv_reftsc
-argument_list|)
-operator|==
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Hyper-V Monitor Notification Facility  */
 end_comment
 
