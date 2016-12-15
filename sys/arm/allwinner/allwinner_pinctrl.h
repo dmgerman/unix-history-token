@@ -45,6 +45,12 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|uint8_t
+name|eint_func
+decl_stmt|;
+name|uint8_t
+name|eint_num
+decl_stmt|;
 block|}
 struct|;
 end_struct
