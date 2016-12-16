@@ -151,13 +151,6 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|platform_lastaddr_t
-name|bcm2835_lastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|platform_late_init_t
 name|bcm2835_late_init
 decl_stmt|;
@@ -169,24 +162,6 @@ name|platform_cpu_reset_t
 name|bcm2835_cpu_reset
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|vm_offset_t
-name|bcm2835_lastaddr
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-block|{
-return|return
-operator|(
-name|devmap_lastaddr
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -410,13 +385,6 @@ argument_list|)
 block|,
 name|PLATFORMMETHOD
 argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|bcm2835_lastaddr
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
 name|platform_late_init
 argument_list|,
 name|bcm2835_late_init
@@ -473,13 +441,6 @@ argument_list|(
 name|platform_devmap_init
 argument_list|,
 name|bcm2836_devmap_init
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|bcm2835_lastaddr
 argument_list|)
 block|,
 name|PLATFORMMETHOD

@@ -77,24 +77,6 @@ directive|include
 file|"platform_if.h"
 end_include
 
-begin_function
-specifier|static
-name|vm_offset_t
-name|virt_lastaddr
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-block|{
-return|return
-operator|(
-name|devmap_lastaddr
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Set up static device mappings.  */
 end_comment
@@ -136,13 +118,6 @@ argument_list|(
 name|platform_devmap_init
 argument_list|,
 name|virt_devmap_init
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|virt_lastaddr
 argument_list|)
 block|,
 ifdef|#
@@ -222,13 +197,6 @@ argument_list|(
 name|platform_devmap_init
 argument_list|,
 name|gem5_devmap_init
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|virt_lastaddr
 argument_list|)
 block|,
 name|PLATFORMMETHOD_END

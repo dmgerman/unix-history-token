@@ -159,13 +159,6 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|platform_lastaddr_t
-name|ti_lastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|platform_cpu_reset_t
 name|ti_plat_cpu_reset
 decl_stmt|;
@@ -263,24 +256,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-specifier|static
-name|vm_offset_t
-name|ti_lastaddr
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-block|{
-return|return
-operator|(
-name|devmap_lastaddr
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Construct static devmap entries to map out the most frequently used  * peripherals using 1mb section mappings.  */
@@ -480,13 +455,6 @@ argument_list|)
 block|,
 name|PLATFORMMETHOD
 argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|ti_lastaddr
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
 name|platform_cpu_reset
 argument_list|,
 name|ti_plat_cpu_reset
@@ -565,13 +533,6 @@ argument_list|(
 name|platform_devmap_init
 argument_list|,
 name|ti_am335x_devmap_init
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|ti_lastaddr
 argument_list|)
 block|,
 name|PLATFORMMETHOD

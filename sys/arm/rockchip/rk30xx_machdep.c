@@ -109,13 +109,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|platform_lastaddr_t
-name|rk30xx_lastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|platform_devmap_init_t
 name|rk30xx_devmap_init
 decl_stmt|;
@@ -134,24 +127,6 @@ name|platform_cpu_reset_t
 name|rk30xx_cpu_reset
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|vm_offset_t
-name|rk30xx_lastaddr
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-block|{
-return|return
-operator|(
-name|devmap_lastaddr
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -253,13 +228,6 @@ name|rk30xx_methods
 index|[]
 init|=
 block|{
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|rk30xx_lastaddr
-argument_list|)
-block|,
 name|PLATFORMMETHOD
 argument_list|(
 name|platform_devmap_init

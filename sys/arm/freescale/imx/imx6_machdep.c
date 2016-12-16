@@ -148,13 +148,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|platform_lastaddr_t
-name|imx6_lastaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|platform_late_init_t
 name|imx6_late_init
 decl_stmt|;
@@ -483,24 +476,6 @@ name|gicxref
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|vm_offset_t
-name|imx6_lastaddr
-parameter_list|(
-name|platform_t
-name|plat
-parameter_list|)
-block|{
-return|return
-operator|(
-name|devmap_lastaddr
-argument_list|()
-operator|)
-return|;
 block|}
 end_function
 
@@ -900,13 +875,6 @@ argument_list|(
 name|platform_attach
 argument_list|,
 name|imx6_attach
-argument_list|)
-block|,
-name|PLATFORMMETHOD
-argument_list|(
-name|platform_lastaddr
-argument_list|,
-name|imx6_lastaddr
 argument_list|)
 block|,
 name|PLATFORMMETHOD
