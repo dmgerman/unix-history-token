@@ -1992,9 +1992,10 @@ name|bcm_spi_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|uint32_t
 name|cs
-decl_stmt|,
+decl_stmt|;
+name|int
 name|err
 decl_stmt|;
 name|sc
@@ -2045,10 +2046,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cs
-operator|<
-literal|0
-operator|||
 name|cs
 operator|>
 literal|2
