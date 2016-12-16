@@ -93,33 +93,11 @@ directive|include
 file|<sys/sched.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/smp.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -14077,6 +14055,26 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|pmap_sync_icache_one
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+name|mips_icache_sync_all
+argument_list|()
+expr_stmt|;
+name|mips_dcache_wbinv_all
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|pmap_sync_icache
 parameter_list|(
@@ -14089,7 +14087,19 @@ parameter_list|,
 name|vm_size_t
 name|sz
 parameter_list|)
-block|{ }
+block|{
+name|smp_rendezvous
+argument_list|(
+name|NULL
+argument_list|,
+name|pmap_sync_icache_one
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
