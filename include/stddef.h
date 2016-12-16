@@ -168,7 +168,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__GCC_MAX_ALIGN_T
+name|_GCC_MAX_ALIGN_T
 end_define
 
 begin_endif
