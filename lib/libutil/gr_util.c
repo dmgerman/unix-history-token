@@ -623,7 +623,7 @@ name|mkostemp
 argument_list|(
 name|tempname
 argument_list|,
-name|O_SYNC
+literal|0
 argument_list|)
 operator|)
 operator|==
