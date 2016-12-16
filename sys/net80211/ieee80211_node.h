@@ -783,6 +783,34 @@ index|[
 name|WME_NUM_TID
 index|]
 decl_stmt|;
+comment|/* VHT state */
+name|uint32_t
+name|ni_vhtcap
+decl_stmt|;
+name|uint32_t
+name|ni_vhtinfo
+decl_stmt|;
+name|struct
+name|ieee80211_vht_mcs_info
+name|ni_vht_mcsinfo
+decl_stmt|;
+name|uint8_t
+name|ni_vht_chan1
+decl_stmt|;
+comment|/* 20/40/80/160 - VHT chan1 */
+name|uint8_t
+name|ni_vht_chan2
+decl_stmt|;
+comment|/* 80+80 - VHT chan2 */
+name|uint16_t
+name|ni_vht_pad1
+decl_stmt|;
+name|uint32_t
+name|ni_vht_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
 comment|/* fast-frames state */
 name|struct
 name|mbuf
