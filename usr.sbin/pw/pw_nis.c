@@ -238,6 +238,11 @@ literal|"pw_copy()"
 argument_list|)
 expr_stmt|;
 block|}
+name|fsync
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|tfd
