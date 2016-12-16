@@ -9562,6 +9562,16 @@ operator||
 name|IFM_IEEE80211_11G
 argument_list|)
 return|;
+case|case
+name|IEEE80211_MODE_VHT_2GHZ
+case|:
+case|case
+name|IEEE80211_MODE_VHT_5GHZ
+case|:
+comment|/* XXX TODO: need to figure out mapping for VHT rates */
+return|return
+name|IFM_AUTO
+return|;
 block|}
 return|return
 name|IFM_AUTO
@@ -9661,6 +9671,10 @@ operator|-
 literal|1
 block|,
 comment|/* IFM_IEEE80211_MCS */
+operator|-
+literal|1
+block|,
+comment|/* IFM_IEEE80211_VHT */
 block|}
 decl_stmt|;
 return|return
@@ -9852,6 +9866,16 @@ argument_list|)
 condition|)
 return|return
 literal|'G'
+return|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_VHT
+argument_list|(
+name|c
+argument_list|)
+condition|)
+return|return
+literal|'v'
 return|;
 if|if
 condition|(
