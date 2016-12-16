@@ -204,6 +204,9 @@ decl_stmt|;
 name|int
 name|ad_flags
 decl_stmt|;
+name|int
+name|ad_cls_class
+decl_stmt|;
 comment|/* Resources */
 name|struct
 name|resource_list
