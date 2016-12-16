@@ -1359,7 +1359,7 @@ name|pintr
 decl_stmt|,
 name|mintr
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 name|phandle_t

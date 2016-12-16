@@ -3189,6 +3189,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|&=
+operator|~
 name|clear_mask
 expr_stmt|;
 name|val

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu-v6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -93,6 +99,18 @@ begin_include
 include|#
 directive|include
 file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/platformvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/rockchip/rk30xx_mp.h>
 end_include
 
 begin_define
@@ -265,9 +283,9 @@ end_function
 
 begin_macro
 unit|}  void
-name|platform_mp_setmaxid
+name|rk30xx_mp_setmaxid
 argument_list|(
-argument|void
+argument|platform_t plat
 argument_list|)
 end_macro
 
@@ -357,9 +375,10 @@ end_block
 
 begin_function
 name|void
-name|platform_mp_start_ap
+name|rk30xx_mp_start_ap
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|bus_space_handle_t

@@ -3637,7 +3637,7 @@ name|fp
 operator|->
 name|f_vnode
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|vp
 argument_list|)

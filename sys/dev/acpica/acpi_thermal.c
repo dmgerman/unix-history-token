@@ -1207,7 +1207,7 @@ name|sc
 operator|->
 name|tz_sysctl_tree
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_NODE_WITH_LABEL
 argument_list|(
 operator|&
 name|sc
@@ -1228,6 +1228,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|,
+literal|"thermal_zone"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC

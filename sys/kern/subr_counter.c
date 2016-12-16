@@ -499,6 +499,16 @@ name|cr_ticks
 operator|=
 name|now
 expr_stmt|;
+if|if
+condition|(
+name|val
+operator|<=
+name|limit
+condition|)
+name|val
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|atomic_store_rel_int
 argument_list|(

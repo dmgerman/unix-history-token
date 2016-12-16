@@ -214,6 +214,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"allwinner,sun7i-a20-mmc"
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

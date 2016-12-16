@@ -1460,8 +1460,7 @@ name|newdiff
 operator|=
 name|diff
 operator|=
-operator|~
-literal|0
+name|val
 expr_stmt|;
 for|for
 control|(
@@ -1497,8 +1496,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|newdiff
 operator|<
+operator|(
+name|uintmax_t
+operator|)
 name|diff
 condition|)
 block|{

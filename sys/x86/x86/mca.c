@@ -2205,6 +2205,9 @@ condition|(
 name|mode
 operator|==
 name|CMCI
+operator|&&
+operator|!
+name|cold
 condition|)
 name|taskqueue_enqueue
 argument_list|(
@@ -3003,6 +3006,10 @@ argument_list|)
 argument_list|,
 literal|"mca taskq"
 argument_list|)
+expr_stmt|;
+comment|/* CMCIs during boot may have claimed items from the freelist. */
+name|mca_fill_freelist
+argument_list|()
 expr_stmt|;
 block|}
 end_function

@@ -172,7 +172,9 @@ end_function
 begin_function
 name|void
 name|cpu_reset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

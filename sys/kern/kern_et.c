@@ -243,7 +243,7 @@ name|et
 operator|->
 name|et_sysctl
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_NODE_WITH_LABEL
 argument_list|(
 name|NULL
 argument_list|,
@@ -263,6 +263,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"event timer description"
+argument_list|,
+literal|"eventtimer"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT

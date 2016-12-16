@@ -5072,7 +5072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  *  *	The objects must be locked.  */
+comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  *  *	The objects must be locked.  */
 end_comment
 
 begin_function
@@ -7722,7 +7722,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* 			 * The page is reserved but not yet allocated.  In 			 * other words, it is still cached or free.  Extend 			 * the current run by one page. 			 */
+comment|/* 			 * The page is reserved but not yet allocated.  In 			 * other words, it is still free.  Extend the current 			 * run by one page. 			 */
 name|run_ext
 operator|=
 literal|1
@@ -7744,7 +7744,7 @@ operator|<
 name|VM_NFREEORDER
 condition|)
 block|{
-comment|/* 			 * The page is enqueued in the physical memory 			 * allocator's cache/free page queues.  Moreover, it 			 * is the first page in a power-of-two-sized run of 			 * contiguous cache/free pages.  Add these pages to 			 * the end of the current run, and jump ahead. 			 */
+comment|/* 			 * The page is enqueued in the physical memory 			 * allocator's free page queues.  Moreover, it is the 			 * first page in a power-of-two-sized run of 			 * contiguous free pages.  Add these pages to the end 			 * of the current run, and jump ahead. 			 */
 name|run_ext
 operator|=
 literal|1
@@ -7760,7 +7760,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Skip the page for one of the following reasons: (1) 			 * It is enqueued in the physical memory allocator's 			 * cache/free page queues.  However, it is not the 			 * first page in a run of contiguous cache/free pages. 			 * (This case rarely occurs because the scan is 			 * performed in ascending order.) (2) It is not 			 * reserved, and it is transitioning from free to 			 * allocated.  (Conversely, the transition from 			 * allocated to free for managed pages is blocked by 			 * the page lock.) (3) It is allocated but not 			 * contained by an object and not wired, e.g., 			 * allocated by Xen's balloon driver. 			 */
+comment|/* 			 * Skip the page for one of the following reasons: (1) 			 * It is enqueued in the physical memory allocator's 			 * free page queues.  However, it is not the first 			 * page in a run of contiguous free pages.  (This case 			 * rarely occurs because the scan is performed in 			 * ascending order.) (2) It is not reserved, and it is 			 * transitioning from free to allocated.  (Conversely, 			 * the transition from allocated to free for managed 			 * pages is blocked by the page lock.) (3) It is 			 * allocated but not contained by an object and not 			 * wired, e.g., allocated by Xen's balloon driver. 			 */
 name|run_ext
 operator|=
 literal|0
@@ -8645,7 +8645,7 @@ operator|<
 name|VM_NFREEORDER
 condition|)
 block|{
-comment|/* 				 * The page is enqueued in the physical memory 				 * allocator's cache/free page queues. 				 * Moreover, it is the first page in a power- 				 * of-two-sized run of contiguous cache/free 				 * pages.  Jump ahead to the last page within 				 * that run, and continue from there. 				 */
+comment|/* 				 * The page is enqueued in the physical memory 				 * allocator's free page queues.  Moreover, it 				 * is the first page in a power-of-two-sized 				 * run of contiguous free pages.  Jump ahead 				 * to the last page within that run, and 				 * continue from there. 				 */
 name|m
 operator|+=
 operator|(
@@ -8845,7 +8845,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  *	vm_page_reclaim_contig:  *  *	Reclaim allocated, contiguous physical memory satisfying the specified  *	conditions by relocating the virtual pages using that physical memory.  *	Returns true if reclamation is successful and false otherwise.  Since  *	relocation requires the allocation of physical pages, reclamation may  *	fail due to a shortage of cache/free pages.  When reclamation fails,  *	callers are expected to perform VM_WAIT before retrying a failed  *	allocation operation, e.g., vm_page_alloc_contig().  *  *	The caller must always specify an allocation class through "req".  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	The optional allocation flags are ignored.  *  *	"npages" must be greater than zero.  Both "alignment" and "boundary"  *	must be a power of two.  */
+comment|/*  *	vm_page_reclaim_contig:  *  *	Reclaim allocated, contiguous physical memory satisfying the specified  *	conditions by relocating the virtual pages using that physical memory.  *	Returns true if reclamation is successful and false otherwise.  Since  *	relocation requires the allocation of physical pages, reclamation may  *	fail due to a shortage of free pages.  When reclamation fails, callers  *	are expected to perform VM_WAIT before retrying a failed allocation  *	operation, e.g., vm_page_alloc_contig().  *  *	The caller must always specify an allocation class through "req".  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	The optional allocation flags are ignored.  *  *	"npages" must be greater than zero.  Both "alignment" and "boundary"  *	must be a power of two.  */
 end_comment
 
 begin_function
@@ -8952,7 +8952,7 @@ name|req_class
 operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
-comment|/* 	 * Return if the number of cached and free pages cannot satisfy the 	 * requested allocation. 	 */
+comment|/* 	 * Return if the number of free pages cannot satisfy the requested 	 * allocation. 	 */
 name|count
 operator|=
 name|vm_cnt
@@ -9950,7 +9950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq() and vm_page_cache().  This  *	routine is called when a page has been added to the cache or free  *	queues.  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_free_wakeup:  *  *	Helper routine for vm_page_free_toq().  This routine is called  *	when a page is added to the free queues.  *  *	The page queues must be locked.  */
 end_comment
 
 begin_function
@@ -10220,7 +10220,7 @@ argument_list|,
 name|VM_MEMATTR_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Insert the page into the physical memory allocator's 		 * cache/free page queues. 		 */
+comment|/* 		 * Insert the page into the physical memory allocator's free 		 * page queues. 		 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -10570,7 +10570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound  * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally noreuse is FALSE, resulting in LRU operation.  noreuse is set  * to TRUE if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  In  * practice this is implemented by inserting the page at the head of the  * queue, using a marker page to guide FIFO insertion ordering.  *  * The page must be locked.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Normally, "noreuse" is FALSE, resulting in LRU ordering of the inactive  * queue.  However, setting "noreuse" to TRUE will accelerate the specified  * page's reclamation, but it will not unmap the page from any address space.  * This is implemented by inserting the page near the head of the inactive  * queue, using a marker page to guide FIFO insertion ordering.  *  * The page must be locked.  */
 end_comment
 
 begin_function
@@ -11005,7 +11005,7 @@ name|advice
 operator|==
 name|MADV_FREE
 condition|)
-comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page as freeable as we can without 		 * actually taking the step of unmapping it. 		 */
+comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * without first paging it out.  MADV_FREE pages are often 		 * quickly reused by malloc(3), so we do not do anything that 		 * would result in a page fault on a later access. 		 */
 name|vm_page_undirty
 argument_list|(
 name|m

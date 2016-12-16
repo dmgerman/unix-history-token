@@ -2120,8 +2120,6 @@ name|cmd
 parameter_list|)
 block|{
 name|int
-name|cs
-decl_stmt|,
 name|err
 decl_stmt|;
 name|struct
@@ -2131,6 +2129,8 @@ name|sc
 decl_stmt|;
 name|uint32_t
 name|reg
+decl_stmt|,
+name|cs
 decl_stmt|;
 name|sc
 operator|=
@@ -2180,10 +2180,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cs
-operator|<
-literal|0
-operator|||
 name|cs
 operator|>
 name|sc

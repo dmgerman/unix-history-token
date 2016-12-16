@@ -848,6 +848,26 @@ name|uint8_t
 name|ic_txstream
 decl_stmt|;
 comment|/* # TX streams */
+comment|/* VHT information */
+name|uint32_t
+name|ic_vhtcaps
+decl_stmt|;
+comment|/* VHT capabilities */
+name|uint32_t
+name|ic_vhtextcaps
+decl_stmt|;
+comment|/* VHT extended capabilities (TODO) */
+name|struct
+name|ieee80211_vht_mcs_info
+name|iv_vht_mcsinfo
+decl_stmt|;
+comment|/* Support TX/RX VHT MCS */
+name|uint32_t
+name|ic_vht_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 comment|/* optional state for Atheros SuperG protocol extensions */
 name|struct
 name|ieee80211_superg
@@ -1708,6 +1728,29 @@ name|int
 name|iv_inact_probe
 decl_stmt|;
 comment|/* inactive probe time */
+comment|/* VHT flags */
+name|uint32_t
+name|iv_flags_vht
+decl_stmt|;
+comment|/* VHT state flags */
+name|uint32_t
+name|iv_vhtcaps
+decl_stmt|;
+comment|/* VHT capabilities */
+name|uint32_t
+name|iv_vhtextcaps
+decl_stmt|;
+comment|/* VHT extended capabilities (TODO) */
+name|struct
+name|ieee80211_vht_mcs_info
+name|iv_vht_mcsinfo
+decl_stmt|;
+name|uint32_t
+name|iv_vht_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|int
 name|iv_des_nssid
 decl_stmt|;

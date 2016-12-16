@@ -1270,7 +1270,8 @@ name|mode
 index|[
 literal|4
 index|]
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|cs
 decl_stmt|;
 name|KASSERT
@@ -1350,10 +1351,6 @@ expr_stmt|;
 comment|/* 	 * PSCDEC = 0 has a range of 0..3 for chip select.  We 	 * don't support PSCDEC = 1 which has a range of 0..15. 	 */
 if|if
 condition|(
-name|cs
-operator|<
-literal|0
-operator|||
 name|cs
 operator|>
 literal|3

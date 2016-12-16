@@ -129,6 +129,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Recreate the file with a single "b" */
 name|assertMakeFile
 argument_list|(
@@ -222,6 +227,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Copy the file to the "copy" dir with -u (force) */
 name|r
 operator|=
@@ -264,6 +274,11 @@ argument_list|,
 literal|"b"
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

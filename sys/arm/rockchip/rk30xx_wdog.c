@@ -736,7 +736,9 @@ end_function
 begin_function
 name|void
 name|rk30_wd_watchdog_reset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bus_space_handle_t
 name|bsh

@@ -169,6 +169,35 @@ name|evdev_rcpt_mask
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Sysmouse protocol does not support horizontal wheel movement reporting.  * To overcome this limitation different drivers use different sysmouse proto  * extensions. Set kern.evdev.sysmouse_t_axis to tell sysmouse evdev driver  * which protocol extension is used.  * 0 - do not extract horizontal wheel movement (default).  * 1 - ums(4) horizontal wheel encoding. T-axis is mapped to buttons 6 and 7  * 2 - psm(4) wheels encoding: z = 1,-1 - vert. wheel, z = 2,-2 - horiz. wheel  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|EVDEV_SYSMOUSE_T_AXIS_NONE
+init|=
+literal|0
+block|,
+name|EVDEV_SYSMOUSE_T_AXIS_UMS
+init|=
+literal|1
+block|,
+name|EVDEV_SYSMOUSE_T_AXIS_PSM
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|evdev_sysmouse_t_axis
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

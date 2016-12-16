@@ -8193,6 +8193,31 @@ operator||
 name|PSL_D
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Temporary forge some valid pointer to PCB, for exception 	 * handlers.  It is reinitialized properly below after FPU is 	 * set up.  Also set up td_critnest to short-cut the page 	 * fault handler. 	 */
+name|cpu_max_ext_state_size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|savefpu
+argument_list|)
+expr_stmt|;
+name|thread0
+operator|.
+name|td_pcb
+operator|=
+name|get_pcb_td
+argument_list|(
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+name|thread0
+operator|.
+name|td_critnest
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * The console and kdb should be initialized even earlier than here, 	 * but some console drivers don't work until after getmemsize(). 	 * Default to late console initialization to support these drivers. 	 * This loses mainly printf()s in getmemsize() and early debugging. 	 */
 name|late_console
 operator|=
@@ -8532,6 +8557,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|thread0
+operator|.
+name|td_critnest
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Location of kernel stack for locore */
 return|return
 operator|(

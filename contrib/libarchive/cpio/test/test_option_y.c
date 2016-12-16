@@ -106,7 +106,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|assertTextFileContents
 argument_list|(
@@ -116,6 +118,11 @@ literal|"archive.err"
 argument_list|)
 expr_stmt|;
 comment|/* Check that the archive file has a bzip2 signature. */
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|slurpfile
@@ -140,6 +147,13 @@ argument_list|,
 literal|"BZh9"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

@@ -1519,6 +1519,11 @@ block|{
 name|single_arg
 operator|++
 expr_stmt|;
+name|free
+argument_list|(
+name|format_string
+argument_list|)
+expr_stmt|;
 name|format_string
 operator|=
 name|strdup
@@ -1555,6 +1560,11 @@ case|:
 block|{
 name|single_arg
 operator|++
+expr_stmt|;
+name|free
+argument_list|(
+name|format_string
+argument_list|)
 expr_stmt|;
 name|format_string
 operator|=
@@ -1598,6 +1608,11 @@ block|}
 case|case
 literal|'T'
 case|:
+name|free
+argument_list|(
+name|timestamp_string
+argument_list|)
+expr_stmt|;
 name|timestamp_string
 operator|=
 name|strdup

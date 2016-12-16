@@ -432,7 +432,8 @@ name|dev
 argument_list|,
 literal|"spibus"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ar5315_spi_attach_sysctl
@@ -579,16 +580,6 @@ decl_stmt|,
 modifier|*
 name|buf_out
 decl_stmt|;
-name|struct
-name|spibus_ivar
-modifier|*
-name|devi
-init|=
-name|SPIBUS_IVAR
-argument_list|(
-name|child
-argument_list|)
-decl_stmt|;
 name|int
 name|lin
 decl_stmt|,
@@ -602,6 +593,8 @@ decl_stmt|,
 name|op
 decl_stmt|,
 name|rdat
+decl_stmt|,
+name|cs
 decl_stmt|;
 name|int
 name|i
@@ -628,13 +621,19 @@ argument_list|(
 literal|"ar5315_spi_transfer: CMD "
 argument_list|)
 expr_stmt|;
+name|spibus_get_cs
+argument_list|(
+name|child
+argument_list|,
+operator|&
+name|cs
+argument_list|)
+expr_stmt|;
 comment|/* Open SPI controller interface */
 name|ar5315_spi_chip_activate
 argument_list|(
 name|sc
 argument_list|,
-name|devi
-operator|->
 name|cs
 argument_list|)
 expr_stmt|;
@@ -1071,8 +1070,6 @@ name|ar5315_spi_chip_deactivate
 argument_list|(
 name|sc
 argument_list|,
-name|devi
-operator|->
 name|cs
 argument_list|)
 expr_stmt|;

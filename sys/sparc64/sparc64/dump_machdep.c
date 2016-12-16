@@ -374,9 +374,15 @@ name|size
 operator|+
 literal|2
 operator|*
-sizeof|sizeof
+name|di
+operator|->
+name|blocksize
+operator|+
+name|kerneldumpcrypto_dumpkeysize
 argument_list|(
-name|kdh
+name|di
+operator|->
+name|kdc
 argument_list|)
 expr_stmt|;
 if|if
@@ -427,6 +433,23 @@ name|mediasize
 operator|-
 name|totsize
 expr_stmt|;
+comment|/* Initialize kernel dump crypto. */
+name|error
+operator|=
+name|kerneldumpcrypto_init
+argument_list|(
+name|di
+operator|->
+name|kdc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
 name|mkdumpheader
 argument_list|(
 operator|&
@@ -437,6 +460,13 @@ argument_list|,
 name|KERNELDUMP_SPARC64_VERSION
 argument_list|,
 name|size
+argument_list|,
+name|kerneldumpcrypto_dumpkeysize
+argument_list|(
+name|di
+operator|->
+name|kdc
+argument_list|)
 argument_list|,
 name|di
 operator|->
@@ -462,7 +492,7 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|dump_write
+name|dump_write_header
 argument_list|(
 name|di
 argument_list|,
@@ -472,11 +502,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|dumplo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -488,9 +513,36 @@ name|fail
 goto|;
 name|dumplo
 operator|+=
-sizeof|sizeof
+name|di
+operator|->
+name|blocksize
+expr_stmt|;
+comment|/* Dump key */
+name|error
+operator|=
+name|dump_write_key
 argument_list|(
-name|kdh
+name|di
+argument_list|,
+literal|0
+argument_list|,
+name|dumplo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
+name|dumplo
+operator|+=
+name|kerneldumpcrypto_dumpkeysize
+argument_list|(
+name|di
+operator|->
+name|kdc
 argument_list|)
 expr_stmt|;
 comment|/* Dump the private header. */
@@ -625,7 +677,7 @@ goto|;
 comment|/* Dump trailer */
 name|error
 operator|=
-name|dump_write
+name|dump_write_header
 argument_list|(
 name|di
 argument_list|,
@@ -635,11 +687,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|dumplo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|kdh
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -649,6 +696,12 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|dumplo
+operator|+=
+name|di
+operator|->
+name|blocksize
+expr_stmt|;
 comment|/* Signal completion, signoff and exit stage left. */
 name|dump_write
 argument_list|(

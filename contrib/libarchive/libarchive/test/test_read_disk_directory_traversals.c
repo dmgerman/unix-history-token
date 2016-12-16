@@ -9529,6 +9529,11 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|archive_match_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Test1: Traversals with a name filter. 	 */

@@ -250,14 +250,6 @@ define|\
 value|_ENCODE_INSN(0, T0, T1, V0, OP_DADDU)
 end_define
 
-begin_define
-define|#
-directive|define
-name|_MTC0_V0_USERLOCAL
-define|\
-value|_ENCODE_INSN(OP_COP0, OP_DMT, V0, 4, 2)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -291,6 +283,46 @@ define|\
 value|_ENCODE_INSN(0, T0, T1, V0, OP_ADDU)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! __mips_n64 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_MTC0_V0_USERLOCAL
+define|\
+value|_ENCODE_INSN(OP_COP0, OP_DMT, V0, 4, 2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* mips o32 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -305,7 +337,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! __mips_n64 */
+comment|/* ! (__mips_n64 || __mipsn32) */
 end_comment
 
 begin_define

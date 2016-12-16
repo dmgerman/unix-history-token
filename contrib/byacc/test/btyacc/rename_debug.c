@@ -176,6 +176,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYDESTRUCT_CALL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|YYSTYPE_TOSTRING
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -192,6 +206,15 @@ literal|258
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* YYDESTRUCT_CALL || YYSTYPE_TOSTRING */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1491,7 +1514,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|short
+name|YYINT
 modifier|*
 name|yylexp
 init|=
@@ -1501,7 +1524,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|short
+name|YYINT
 modifier|*
 name|yylexemes
 init|=
@@ -1609,7 +1632,7 @@ end_function
 begin_line
 line|#
 directive|line
-number|236
+number|238
 file|"rename_debug.c"
 end_line
 
@@ -2783,10 +2806,6 @@ condition|(
 operator|(
 name|yylexemes
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylexemes
@@ -2795,7 +2814,7 @@ name|s
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 operator|)
@@ -2810,10 +2829,6 @@ condition|(
 operator|(
 name|yylvals
 operator|=
-operator|(
-name|YYSTYPE
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylvals
@@ -2848,10 +2863,6 @@ condition|(
 operator|(
 name|yylpsns
 operator|=
-operator|(
-name|YYLTYPE
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylpsns
@@ -2924,7 +2935,7 @@ operator|*
 name|yylexp
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|)
 name|YYLEX
 expr_stmt|;
@@ -3550,10 +3561,6 @@ condition|)
 block|{
 name|yylexemes
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -3562,7 +3569,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3727,7 +3734,7 @@ operator|*
 name|yylexp
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|)
 name|yychar
 expr_stmt|;
@@ -6179,10 +6186,6 @@ condition|(
 operator|(
 name|yylexemes
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylexemes
@@ -6191,7 +6194,7 @@ name|s
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|YYINT
 argument_list|)
 argument_list|)
 operator|)
@@ -6206,10 +6209,6 @@ condition|(
 operator|(
 name|yylvals
 operator|=
-operator|(
-name|YYSTYPE
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylvals
@@ -6244,10 +6243,6 @@ condition|(
 operator|(
 name|yylpsns
 operator|=
-operator|(
-name|YYLTYPE
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|yylpsns
@@ -6320,7 +6315,7 @@ operator|*
 name|yylexp
 operator|=
 operator|(
-name|short
+name|YYINT
 operator|)
 name|YYLEX
 expr_stmt|;

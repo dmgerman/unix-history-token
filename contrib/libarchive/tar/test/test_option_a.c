@@ -93,6 +93,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Test2: archive it with .taZ suffix. */
 name|assertEqualInt
 argument_list|(
@@ -141,6 +146,11 @@ argument_list|,
 literal|"\x1f\x9d"
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* Test3: archive it with .tar.Z.uu suffix. */
@@ -193,6 +203,11 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Test4: archive it with .zip suffix. */
 name|assertEqualInt
 argument_list|(
@@ -241,6 +256,11 @@ argument_list|,
 literal|"\x50\x4b\x03\x04"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* Test5: archive it with .tar.Z suffix and --uuencode option. */
@@ -293,6 +313,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Test6: archive it with .xxx suffix(unknown suffix) and 	 * --uuencode option. */
 name|assertEqualInt
 argument_list|(
@@ -343,6 +368,11 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Test7: archive it with .tar.Z suffix using a long-name option. */
 name|assertEqualInt
 argument_list|(
@@ -391,6 +421,11 @@ argument_list|,
 literal|"\x1f\x9d"
 argument_list|,
 literal|2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

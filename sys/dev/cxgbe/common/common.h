@@ -710,8 +710,8 @@ decl_stmt|;
 name|uint32_t
 name|ingress_config
 decl_stmt|;
-name|uint32_t
-name|rx_pkt_encap
+name|__be16
+name|err_vec_mask
 decl_stmt|;
 name|int8_t
 name|fcoe_shift

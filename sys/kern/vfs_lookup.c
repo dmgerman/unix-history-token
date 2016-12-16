@@ -700,16 +700,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Intent is that lookup_cap_dotdot becomes unconditionally enabled,  * but it defaults to the disabled state until verification efforts  * are complete.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
 name|lookup_cap_dotdot
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -739,7 +735,7 @@ specifier|static
 name|int
 name|lookup_cap_dotdot_nonlocal
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1187,7 +1183,7 @@ name|ndp
 operator|->
 name|ni_rootdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 operator|*
 name|dpp
@@ -1657,7 +1653,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|ndp
 operator|->
@@ -1792,7 +1788,7 @@ name|fdp
 operator|->
 name|fd_cdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|dp
 argument_list|)
@@ -4246,7 +4242,7 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vref
+name|vrefact
 argument_list|(
 name|vp_crossmp
 argument_list|)

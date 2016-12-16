@@ -1198,7 +1198,7 @@ operator|&=
 operator|~
 operator|(
 name|DBCR0_IDM
-operator|||
+operator||
 name|DBCR0_IC
 operator|)
 expr_stmt|;

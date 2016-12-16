@@ -1372,7 +1372,7 @@ name|dev
 operator|->
 name|sysctl_tree
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_NODE_WITH_LABEL
 argument_list|(
 operator|&
 name|dev
@@ -1404,6 +1404,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|""
+argument_list|,
+literal|"device_index"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC

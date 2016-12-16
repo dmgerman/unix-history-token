@@ -13039,7 +13039,7 @@ name|init_done
 condition|)
 comment|/* Initialized early. */
 continue|continue;
-comment|/* 	 * Race: other thread might try to use this object before current 	 * one completes the initilization. Not much can be done here 	 * without better locking. 	 */
+comment|/* 	 * Race: other thread might try to use this object before current 	 * one completes the initialization. Not much can be done here 	 * without better locking. 	 */
 name|elm
 operator|->
 name|obj
@@ -18047,7 +18047,7 @@ operator|&
 name|phdr_lockstate
 argument_list|)
 expr_stmt|;
-name|rlock_acquire
+name|wlock_acquire
 argument_list|(
 name|rtld_bind_lock
 argument_list|,
@@ -18116,7 +18116,7 @@ argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
-name|rlock_acquire
+name|wlock_acquire
 argument_list|(
 name|rtld_bind_lock
 argument_list|,

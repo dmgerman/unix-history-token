@@ -186,6 +186,14 @@ name|EVDEV_RCPT_KBDMUX
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|evdev_sysmouse_t_axis
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -222,6 +230,27 @@ literal|0
 argument_list|,
 literal|"Who is receiving events: bit0 - sysmouse, bit1 - kbdmux, "
 literal|"bit2 - mouse hardware, bit3 - keyboard hardware"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_evdev
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sysmouse_t_axis
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|evdev_sysmouse_t_axis
+argument_list|,
+literal|0
+argument_list|,
+literal|"Extract T-axis from 0-none, 1-ums, 2-psm"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -130,7 +130,7 @@ file|<vm/vm_reserv.h>
 end_include
 
 begin_comment
-comment|/*  * The reservation system supports the speculative allocation of large physical  * pages ("superpages").  Speculative allocation enables the fully-automatic  * utilization of superpages by the virtual memory system.  In other words, no  * programmatic directives are required to use superpages.  */
+comment|/*  * The reservation system supports the speculative allocation of large physical  * pages ("superpages").  Speculative allocation enables the fully automatic  * utilization of superpages by the virtual memory system.  In other words, no  * programmatic directives are required to use superpages.  */
 end_comment
 
 begin_if
@@ -390,7 +390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The reservation structure  *  * A reservation structure is constructed whenever a large physical page is  * speculatively allocated to an object.  The reservation provides the small  * physical pages for the range [pindex, pindex + VM_LEVEL_0_NPAGES) of offsets  * within that object.  The reservation's "popcnt" tracks the number of these  * small physical pages that are in use at any given time.  When and if the  * reservation is not fully utilized, it appears in the queue of partially-  * populated reservations.  The reservation always appears on the containing  * object's list of reservations.  *  * A partially-populated reservation can be broken and reclaimed at any time.  */
+comment|/*  * The reservation structure  *  * A reservation structure is constructed whenever a large physical page is  * speculatively allocated to an object.  The reservation provides the small  * physical pages for the range [pindex, pindex + VM_LEVEL_0_NPAGES) of offsets  * within that object.  The reservation's "popcnt" tracks the number of these  * small physical pages that are in use at any given time.  When and if the  * reservation is not fully utilized, it appears in the queue of partially  * populated reservations.  The reservation always appears on the containing  * object's list of reservations.  *  * A partially populated reservation can be broken and reclaimed at any time.  */
 end_comment
 
 begin_struct
@@ -451,7 +451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The partially-populated reservation queue  *  * This queue enables the fast recovery of an unused cached or free small page  * from a partially-populated reservation.  The reservation at the head of  * this queue is the least-recently-changed, partially-populated reservation.  *  * Access to this queue is synchronized by the free page queue lock.  */
+comment|/*  * The partially populated reservation queue  *  * This queue enables the fast recovery of an unused free small page from a  * partially populated reservation.  The reservation at the head of this queue  * is the least recently changed, partially populated reservation.  *  * Access to this queue is synchronized by the free page queue lock.  */
 end_comment
 
 begin_expr_stmt
@@ -612,7 +612,7 @@ name|sysctl_vm_reserv_partpopq
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"Partially-populated reservation queues"
+literal|"Partially populated reservation queues"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -842,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Describes the current state of the partially-populated reservation queue.  */
+comment|/*  * Describes the current state of the partially populated reservation queue.  */
 end_comment
 
 begin_function
@@ -1015,7 +1015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reduces the given reservation's population count.  If the population count  * becomes zero, the reservation is destroyed.  Additionally, moves the  * reservation to the tail of the partially-populated reservation queue if the  * population count is non-zero.  *  * The free page queue lock must be held.  */
+comment|/*  * Reduces the given reservation's population count.  If the population count  * becomes zero, the reservation is destroyed.  Additionally, moves the  * reservation to the tail of the partially populated reservation queue if the  * population count is non-zero.  *  * The free page queue lock must be held.  */
 end_comment
 
 begin_function
@@ -1285,7 +1285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Increases the given reservation's population count.  Moves the reservation  * to the tail of the partially-populated reservation queue.  *  * The free page queue must be locked.  */
+comment|/*  * Increases the given reservation's population count.  Moves the reservation  * to the tail of the partially populated reservation queue.  *  * The free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -2382,7 +2382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a page from an existing or newly-created reservation.  *  * The page "mpred" must immediately precede the offset "pindex" within the  * specified object.  *  * The object and free page queue must be locked.  */
+comment|/*  * Allocates a page from an existing or newly created reservation.  *  * The page "mpred" must immediately precede the offset "pindex" within the  * specified object.  *  * The object and free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -2961,7 +2961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Breaks the given reservation.  Except for the specified cached or free  * page, all cached and free pages in the reservation are returned to the  * physical memory allocator.  The reservation's population count and map are  * reset to their initial state.  *  * The given reservation must not be in the partially-populated reservation  * queue.  The free page queue lock must be held.  */
+comment|/*  * Breaks the given reservation.  Except for the specified free page, all free  * pages in the reservation are returned to the physical memory allocator.  * The reservation's population count and map are reset to their initial  * state.  *  * The given reservation must not be in the partially populated reservation  * queue.  The free page queue lock must be held.  */
 end_comment
 
 begin_function
@@ -3694,7 +3694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns a reservation level if the given page belongs to a fully-populated  * reservation and -1 otherwise.  */
+comment|/*  * Returns a reservation level if the given page belongs to a fully populated  * reservation and -1 otherwise.  */
 end_comment
 
 begin_function
@@ -3733,7 +3733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Breaks the given partially-populated reservation, releasing its cached and  * free pages to the physical memory allocator.  *  * The free page queue lock must be held.  */
+comment|/*  * Breaks the given partially populated reservation, releasing its free pages  * to the physical memory allocator.  *  * The free page queue lock must be held.  */
 end_comment
 
 begin_function
@@ -3796,7 +3796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Breaks the reservation at the head of the partially-populated reservation  * queue, releasing its cached and free pages to the physical memory  * allocator.  Returns TRUE if a reservation is broken and FALSE otherwise.  *  * The free page queue lock must be held.  */
+comment|/*  * Breaks the reservation at the head of the partially populated reservation  * queue, releasing its free pages to the physical memory allocator.  Returns  * TRUE if a reservation is broken and FALSE otherwise.  *  * The free page queue lock must be held.  */
 end_comment
 
 begin_function
@@ -3852,7 +3852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Searches the partially-populated reservation queue for the least recently  * active reservation with unused pages, i.e., cached or free, that satisfy the  * given request for contiguous physical memory.  If a satisfactory reservation  * is found, it is broken.  Returns TRUE if a reservation is broken and FALSE  * otherwise.  *  * The free page queue lock must be held.  */
+comment|/*  * Searches the partially populated reservation queue for the least recently  * changed reservation with free pages that satisfy the given request for  * contiguous physical memory.  If a satisfactory reservation is found, it is  * broken.  Returns TRUE if a reservation is broken and FALSE otherwise.  *  * The free page queue lock must be held.  */
 end_comment
 
 begin_function

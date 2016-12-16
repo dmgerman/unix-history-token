@@ -107,16 +107,12 @@ name|NULL
 decl_stmt|;
 comment|/* buffer */
 specifier|static
-name|int
+name|size_t
 name|sfbufsz
-init|=
-literal|0
 decl_stmt|;
 comment|/* buffer size */
-name|int
+name|size_t
 name|len
-decl_stmt|,
-name|ct
 decl_stmt|;
 if|if
 condition|(
@@ -205,9 +201,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ct
-operator|=
 name|fread
 argument_list|(
 name|sfbuf
@@ -221,11 +214,6 @@ name|len
 argument_list|,
 name|sfp
 argument_list|)
-operator|)
-operator|<
-literal|0
-operator|||
-name|ct
 operator|!=
 name|len
 condition|)
@@ -288,10 +276,8 @@ name|line_t
 modifier|*
 name|lp
 decl_stmt|;
-name|int
+name|size_t
 name|len
-decl_stmt|,
-name|ct
 decl_stmt|;
 specifier|const
 name|char
@@ -446,9 +432,6 @@ block|}
 comment|/* assert: SPL1() */
 if|if
 condition|(
-operator|(
-name|ct
-operator|=
 name|fwrite
 argument_list|(
 name|cs
@@ -462,11 +445,6 @@ name|len
 argument_list|,
 name|sfp
 argument_list|)
-operator|)
-operator|<
-literal|0
-operator|||
-name|ct
 operator|!=
 name|len
 condition|)

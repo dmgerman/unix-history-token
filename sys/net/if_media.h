@@ -1525,6 +1525,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_IEEE80211_VHT
+value|25
+end_define
+
+begin_comment
+comment|/* HT MCS rate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_IEEE80211_ADHOC
 value|0x00000100
 end_define
@@ -1667,6 +1678,28 @@ end_define
 
 begin_comment
 comment|/* 2Ghz, HT mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_VHT5G
+value|0x00070000
+end_define
+
+begin_comment
+comment|/* 5Ghz, VHT mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_VHT2G
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* 2Ghz, VHT mode */
 end_comment
 
 begin_comment

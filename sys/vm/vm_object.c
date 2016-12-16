@@ -4975,7 +4975,7 @@ goto|goto
 name|retry
 goto|;
 block|}
-comment|/* vm_page_rename() will handle dirty and cache. */
+comment|/* vm_page_rename() will dirty the page. */
 if|if
 condition|(
 name|vm_page_rename
@@ -5335,7 +5335,7 @@ name|object
 operator|->
 name|backing_object
 expr_stmt|;
-comment|/* 	 * Initial conditions: 	 * 	 * We do not want to have to test for the existence of cache or swap 	 * pages in the backing object.  XXX but with the new swapper this 	 * would be pretty easy to do. 	 */
+comment|/* 	 * Initial conditions: 	 * 	 * We do not want to have to test for the existence of swap 	 * pages in the backing object.  XXX but with the new swapper this 	 * would be pretty easy to do. 	 */
 if|if
 condition|(
 name|backing_object
@@ -5827,7 +5827,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Page does not exist in parent, rename the page from the 		 * backing object to the main object. 		 * 		 * If the page was mapped to a process, it can remain mapped 		 * through the rename.  vm_page_rename() will handle dirty and 		 * cache. 		 */
+comment|/* 		 * Page does not exist in parent, rename the page from the 		 * backing object to the main object. 		 * 		 * If the page was mapped to a process, it can remain mapped 		 * through the rename.  vm_page_rename() will dirty the page. 		 */
 if|if
 condition|(
 name|vm_page_rename

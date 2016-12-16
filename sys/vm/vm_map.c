@@ -7511,7 +7511,7 @@ value|96
 end_define
 
 begin_comment
-comment|/*  *	vm_map_pmap_enter:  *  *	Preload the specified map's pmap with mappings to the specified  *	object's memory-resident pages.  No further physical pages are  *	allocated, and no further virtual pages are retrieved from secondary  *	storage.  If the specified flags include MAP_PREFAULT_PARTIAL, then a  *	limited number of page mappings are created at the low-end of the  *	specified address range.  (For this purpose, a superpage mapping  *	counts as one page mapping.)  Otherwise, all resident pages within  *	the specified address range are mapped.  Because these mappings are  *	being created speculatively, cached pages are not reactivated and  *	mapped.  */
+comment|/*  *	vm_map_pmap_enter:  *  *	Preload the specified map's pmap with mappings to the specified  *	object's memory-resident pages.  No further physical pages are  *	allocated, and no further virtual pages are retrieved from secondary  *	storage.  If the specified flags include MAP_PREFAULT_PARTIAL, then a  *	limited number of page mappings are created at the low-end of the  *	specified address range.  (For this purpose, a superpage mapping  *	counts as one page mapping.)  Otherwise, all resident pages within  *	the specified address range are mapped.  */
 end_comment
 
 begin_function
@@ -17739,12 +17739,10 @@ condition|)
 block|{
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
+name|db_lookup_proc
+argument_list|(
 name|addr
+argument_list|)
 expr_stmt|;
 block|}
 else|else

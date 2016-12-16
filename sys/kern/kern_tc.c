@@ -5114,7 +5114,7 @@ expr_stmt|;
 comment|/* 	 * Set up sysctl tree for this counter. 	 */
 name|tc_root
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_NODE_WITH_LABEL
 argument_list|(
 name|NULL
 argument_list|,
@@ -5134,6 +5134,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"timecounter description"
+argument_list|,
+literal|"timecounter"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT

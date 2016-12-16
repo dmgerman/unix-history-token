@@ -210,6 +210,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|R92S_FIFOCTRL
+value|0x00a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_MGT
+value|(R92S_FIFOCTRL + 0x076)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_CTL
+value|(R92S_FIFOCTRL + 0x078)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_DATA
+value|(R92S_FIFOCTRL + 0x07a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_MESH
+value|(R92S_FIFOCTRL + 0x07c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|R92S_SECURITY
 value|0x0240
 end_define
@@ -261,6 +296,13 @@ define|#
 directive|define
 name|R92S_MAC_PINMUX_CTRL
 value|(R92S_GP + 0x011)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_LEDCFG
+value|(R92S_GP + 0x012)
 end_define
 
 begin_define
@@ -623,6 +665,151 @@ define|#
 directive|define
 name|R92S_TCR_FWRDY
 value|0x80
+end_define
+
+begin_comment
+comment|/* Bits for R92S_RCR. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_AAP
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_APM
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_AM
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_AB
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_ACRC32
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_AICV
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_APP_ICV
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_APP_MIC
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_ADF
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_ACF
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_AMF
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_ADD3
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_APWRMGT
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_CBSSID
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_APP_PHYSTS
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_TCP_OFFLD_EN
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RCR_ENMBID
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Bits for R92S_RXFLTMAP*. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_MGT_DEF
+value|0x3f3f
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92S_RXFLTMAP_FW
+parameter_list|(
+name|subtype
+parameter_list|)
+define|\
+value|(1<< ((subtype)>> IEEE80211_FC0_SUBTYPE_SHIFT))
 end_define
 
 begin_comment
@@ -2430,6 +2617,22 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Structure for R92S_CMD_SET_CHANNEL. */
+end_comment
+
+begin_struct
+struct|struct
+name|r92s_set_channel
+block|{
+name|uint32_t
+name|channel
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/* Structure for event R92S_EVENT_JOIN_BSS. */
 end_comment
 
@@ -2909,7 +3112,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RX_LIST_COUNT
-value|100
+value|1
 end_define
 
 begin_define
@@ -2923,7 +3126,7 @@ begin_define
 define|#
 directive|define
 name|RSU_RXBUFSZ
-value|(8 * 1024)
+value|(30 * 1024)
 end_define
 
 begin_define
@@ -3489,6 +3692,14 @@ name|sc_currssi
 decl_stmt|;
 name|u_int
 name|sc_running
+range|:
+literal|1
+decl_stmt|,
+name|sc_vap_is_running
+range|:
+literal|1
+decl_stmt|,
+name|sc_rx_checksum_enable
 range|:
 literal|1
 decl_stmt|,

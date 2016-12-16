@@ -39889,9 +39889,6 @@ condition|;
 name|i
 operator|++
 operator|,
-name|s
-operator|++
-operator|,
 name|p
 operator|++
 control|)

@@ -2915,7 +2915,9 @@ end_function
 begin_function
 name|uint32_t
 name|imx6_get_cpu_clock
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|uint32_t
 name|corediv

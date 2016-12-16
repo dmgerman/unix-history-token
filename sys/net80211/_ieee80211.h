@@ -48,6 +48,9 @@ comment|/* 1/2 rate OFDM */
 name|IEEE80211_T_OFDM_QUARTER
 block|,
 comment|/* 1/4 rate OFDM */
+name|IEEE80211_T_VHT
+block|,
+comment|/* VHT PHY */
 block|}
 enum|;
 end_enum
@@ -131,6 +134,16 @@ init|=
 literal|11
 block|,
 comment|/* OFDM, 1/4x clock */
+name|IEEE80211_MODE_VHT_2GHZ
+init|=
+literal|12
+block|,
+comment|/* 2GHz, VHT */
+name|IEEE80211_MODE_VHT_5GHZ
+init|=
+literal|13
+block|,
+comment|/* 5GHz, VHT */
 block|}
 enum|;
 end_enum
@@ -139,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MODE_MAX
-value|(IEEE80211_MODE_QUARTER+1)
+value|(IEEE80211_MODE_VHT_5GHZ+1)
 end_define
 
 begin_define
@@ -314,7 +327,7 @@ comment|/* see below */
 name|uint16_t
 name|ic_freq
 decl_stmt|;
-comment|/* setting in MHz */
+comment|/* primary centre frequency in MHz */
 name|uint8_t
 name|ic_ieee
 decl_stmt|;
@@ -350,15 +363,31 @@ name|uint16_t
 name|ic_devdata
 decl_stmt|;
 comment|/* opaque device/driver data */
+name|uint8_t
+name|ic_vht_ch_freq1
+decl_stmt|;
+comment|/* VHT primary freq1 IEEE value */
+name|uint8_t
+name|ic_vht_ch_freq2
+decl_stmt|;
+comment|/* VHT secondary 80MHz freq2 IEEE value */
+name|uint16_t
+name|ic_freq2
+decl_stmt|;
+comment|/* VHT secondary 80MHz freq2 MHz */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Note: for VHT operation we will need significantly more than  * IEEE80211_CHAN_MAX channels because of the combinations of  * VHT20, VHT40, VHT80, VHT80+80 and VHT160.  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_CHAN_MAX
-value|256
+value|1024
 end_define
 
 begin_define
@@ -658,6 +687,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHAN_VHT20
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* VHT20 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT40U
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* VHT40 channel, ext above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT40D
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* VHT40 channel, ext below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT80
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* VHT80 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT80_80
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* VHT80+80 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT160
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* VHT160 channel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHAN_HT40
 value|(IEEE80211_CHAN_HT40U | IEEE80211_CHAN_HT40D)
 end_define
@@ -672,10 +767,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_CHAN_VHT40
+value|(IEEE80211_CHAN_VHT40U | IEEE80211_CHAN_VHT40D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_VHT
+value|(IEEE80211_CHAN_VHT20 | IEEE80211_CHAN_VHT40 \ 				| IEEE80211_CHAN_VHT80 | IEEE80211_CHAN_VHT80_80 \ 				| IEEE80211_CHAN_VHT160)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CHAN_BITS
 define|\
 value|"\20\1PRIV0\2PRIV2\3PRIV3\4PRIV4\5TURBO\6CCK\7OFDM\0102GHZ\0115GHZ" \ 	"\12PASSIVE\13DYN\14GFSK\15GSM\16STURBO\17HALF\20QUARTER\21HT20" \ 	"\22HT40U\23HT40D\24DFS\0254MSXMIT\26NOADHOC\27NOHOSTAP\03011D"
 end_define
+
+begin_comment
+comment|/* XXX TODO: add VHT bits */
+end_comment
 
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
@@ -750,7 +863,7 @@ define|#
 directive|define
 name|IEEE80211_CHAN_ALL
 define|\
-value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_GFSK | \ 	 IEEE80211_CHAN_CCK | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN | \ 	 IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER | \ 	 IEEE80211_CHAN_HT)
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_GFSK | \ 	 IEEE80211_CHAN_CCK | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_DYN | \ 	 IEEE80211_CHAN_HALF | IEEE80211_CHAN_QUARTER | \ 	 IEEE80211_CHAN_HT | IEEE80211_CHAN_VHT)
 end_define
 
 begin_define
@@ -1133,6 +1246,116 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_flags& IEEE80211_CHAN_11D) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT20
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT20) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT40
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT40) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT40U
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT40U) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT40D
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT40D) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHTA
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 ((_c)->ic_flags& IEEE80211_CHAN_VHT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHTG
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_2GHZ(_c)&& \ 	 ((_c)->ic_flags& IEEE80211_CHAN_VHT) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT80
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT80) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT80_80
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT80_80) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_VHT160
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_VHT160) != 0)
 end_define
 
 begin_define

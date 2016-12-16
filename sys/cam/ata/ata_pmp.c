@@ -1551,7 +1551,7 @@ name|softc
 operator|->
 name|sysctl_tree
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_NODE_WITH_LABEL
 argument_list|(
 operator|&
 name|softc
@@ -1572,6 +1572,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|tmpstr
+argument_list|,
+literal|"device_index"
 argument_list|)
 expr_stmt|;
 if|if
