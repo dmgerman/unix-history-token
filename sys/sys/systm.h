@@ -1454,11 +1454,20 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 unit|)
 name|__nonnull
 argument_list|(
 literal|2
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__scanflike
+argument_list|(
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1482,11 +1491,20 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 unit|)
 name|__nonnull
 argument_list|(
 literal|2
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__scanflike
+argument_list|(
+literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt

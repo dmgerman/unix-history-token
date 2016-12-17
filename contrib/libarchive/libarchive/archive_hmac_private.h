@@ -187,12 +187,13 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<openssl/hmac.h>
+file|"archive_openssl_hmac_private.h"
 end_include
 
 begin_typedef
 typedef|typedef
 name|HMAC_CTX
+modifier|*
 name|archive_hmac_sha1_ctx
 typedef|;
 end_typedef

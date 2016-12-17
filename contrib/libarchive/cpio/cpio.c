@@ -6795,8 +6795,10 @@ block|{
 operator|*
 name|name_cache_variable
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6818,20 +6820,6 @@ argument_list|,
 name|ENOMEM
 argument_list|,
 literal|"No more memory"
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|*
-name|name_cache_variable
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|name_cache
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(

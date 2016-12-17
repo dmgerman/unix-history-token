@@ -339,7 +339,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<openssl/evp.h>
+file|"archive_openssl_evp_private.h"
 end_include
 
 begin_define
@@ -361,6 +361,7 @@ typedef|typedef
 struct|struct
 block|{
 name|EVP_CIPHER_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 specifier|const
