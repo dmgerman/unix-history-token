@@ -157,6 +157,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|close_filters
+parameter_list|(
+name|struct
+name|archive_read
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|struct
 name|archive_vtable
 modifier|*
@@ -2780,7 +2792,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|__archive_read_close_filters
+name|close_filters
 argument_list|(
 name|a
 argument_list|)
@@ -3030,11 +3042,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a
@@ -3151,11 +3158,6 @@ operator|!=
 name|ARCHIVE_OK
 condition|)
 block|{
-name|__archive_read_close_filters
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
 name|__archive_read_free_filters
 argument_list|(
 name|a
@@ -4664,8 +4666,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|__archive_read_close_filters
+name|close_filters
 parameter_list|(
 name|struct
 name|archive_read
@@ -4781,6 +4784,12 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+comment|/* Make sure filters are closed and their buffers are freed */
+name|close_filters
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|a
@@ -4967,7 +4976,7 @@ comment|/* TODO: Clean up the formatters. */
 comment|/* Release the filter objects. */
 name|r1
 operator|=
-name|__archive_read_close_filters
+name|close_filters
 argument_list|(
 name|a
 argument_list|)

@@ -827,7 +827,7 @@ name|unsigned
 name|long
 name|header_crc32
 decl_stmt|;
-comment|/* Header offset to check that reading pointes of the file contens 	 * will not exceed the header. */
+comment|/* Header offset to check that reading points of the file contents 	 * will not exceed the header. */
 name|uint64_t
 name|header_offset
 decl_stmt|;

@@ -268,7 +268,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Second call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Second call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL
@@ -367,7 +367,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Third call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Third call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL
@@ -682,7 +682,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Second call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Second call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL
@@ -782,7 +782,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Second call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Second call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL
@@ -912,7 +912,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fourth call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Fourth call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL
@@ -1080,7 +1080,7 @@ name|ar
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fourth call, we should get NULL which means all the pssphrases 	 * are passed already. */
+comment|/* Fourth call, we should get NULL which means all the passphrases 	 * are passed already. */
 name|assertEqualString
 argument_list|(
 name|NULL

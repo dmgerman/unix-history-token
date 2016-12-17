@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Test if the current filesytem is mounted with noatime option.  */
+comment|/*  * Test if the current filesystem is mounted with noatime option.  */
 end_comment
 
 begin_function

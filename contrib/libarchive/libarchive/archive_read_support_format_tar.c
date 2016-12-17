@@ -1738,7 +1738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Validate number field  *  * This has to be pretty lenient in order to accomodate the enormous  * variety of tar writers in the world:  *  = POSIX (IEEE Std 1003.1-1988) ustar requires octal values with leading  *    zeros and allows fields to be terminated with space or null characters  *  = Many writers use different termination (in particular, libarchive  *    omits terminator bytes to squeeze one or two more digits)  *  = Many writers pad with space and omit leading zeros  *  = GNU tar and star write base-256 values if numbers are too  *    big to be represented in octal  *  *  Examples of specific tar headers that we should support:  *  = Perl Archive::Tar terminates uid, gid, devminor and devmajor with two  *    null bytes, pads size with spaces and other numeric fields with zeroes  *  = plexus-archiver prior to 2.6.3 (before switching to commons-compress)  *    may have uid and gid fields filled with spaces without any octal digits  *    at all and pads all numeric fields with spaces  *  * This should tolerate all variants in use.  It will reject a field  * where the writer just left garbage after a trailing NUL.  */
+comment|/*  * Validate number field  *  * This has to be pretty lenient in order to accommodate the enormous  * variety of tar writers in the world:  *  = POSIX (IEEE Std 1003.1-1988) ustar requires octal values with leading  *    zeros and allows fields to be terminated with space or null characters  *  = Many writers use different termination (in particular, libarchive  *    omits terminator bytes to squeeze one or two more digits)  *  = Many writers pad with space and omit leading zeros  *  = GNU tar and star write base-256 values if numbers are too  *    big to be represented in octal  *  *  Examples of specific tar headers that we should support:  *  = Perl Archive::Tar terminates uid, gid, devminor and devmajor with two  *    null bytes, pads size with spaces and other numeric fields with zeroes  *  = plexus-archiver prior to 2.6.3 (before switching to commons-compress)  *    may have uid and gid fields filled with spaces without any octal digits  *    at all and pads all numeric fields with spaces  *  * This should tolerate all variants in use.  It will reject a field  * where the writer just left garbage after a trailing NUL.  */
 end_comment
 
 begin_function
@@ -2349,7 +2349,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Handle UTF-8 filnames as libarchive 2.x */
+comment|/* Handle UTF-8 filenames as libarchive 2.x */
 name|tar
 operator|->
 name|compat_2x
@@ -11013,8 +11013,10 @@ expr|struct
 name|sparse_block
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -11047,19 +11049,6 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-name|memset
-argument_list|(
-name|p
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tar
@@ -12471,7 +12460,7 @@ name|INT64_MAX
 operator|%
 name|base
 expr_stmt|;
-comment|/* the pointer will not be dereferenced if char_cnt is zero 	 * due to the way the&& operator is evaulated. 	 */
+comment|/* the pointer will not be dereferenced if char_cnt is zero 	 * due to the way the&& operator is evaluated. 	 */
 while|while
 condition|(
 name|char_cnt
