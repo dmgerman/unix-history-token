@@ -295,6 +295,20 @@ name|Idx
 index|]
 return|;
 block|}
+name|DenseSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|&
+name|getVisitedMetadata
+argument_list|()
+block|{
+return|return
+name|VisitedMetadata
+return|;
+block|}
 name|private
 label|:
 comment|/// incorporateType - This method adds the type to the list of used
