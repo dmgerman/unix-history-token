@@ -913,7 +913,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"SRAT: Found memory domain %d addr %jx len %jx: %s\n"
+literal|"SRAT: Found memory domain %d addr 0x%jx len 0x%jx: %s\n"
 argument_list|,
 name|mem
 operator|->
@@ -979,7 +979,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SRAT: Ignoring memory at addr %jx\n"
+literal|"SRAT: Ignoring memory at addr 0x%jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1460,7 +1460,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"SRAT: No memory region found for %jx - %jx\n"
+literal|"SRAT: No memory region found for 0x%jx - 0x%jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
