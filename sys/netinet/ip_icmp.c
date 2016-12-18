@@ -2506,6 +2506,11 @@ comment|/* 			 * RFC 1122, Sections 3.2.2.1 and 4.2.3.9. 			 * Treat subcodes 2,
 case|case
 name|ICMP_UNREACH_PROTOCOL
 case|:
+name|code
+operator|=
+name|PRC_UNREACH_PROTOCOL
+expr_stmt|;
+break|break;
 case|case
 name|ICMP_UNREACH_PORT
 case|:

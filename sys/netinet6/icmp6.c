@@ -1968,9 +1968,8 @@ argument_list|)
 expr_stmt|;
 name|code
 operator|=
-name|PRC_UNREACH_PROTOCOL
+name|PRC_UNREACH_ADMIN_PROHIB
 expr_stmt|;
-comment|/* is this a good code? */
 break|break;
 case|case
 name|ICMP6_DST_UNREACH_BEYONDSCOPE

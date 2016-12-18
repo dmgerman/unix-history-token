@@ -7303,11 +7303,13 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|EHOSTUNREACH
 block|,
 literal|0
 block|,
 name|ENOPROTOOPT
+block|,
+name|ECONNREFUSED
 block|}
 decl_stmt|;
 end_decl_stmt
