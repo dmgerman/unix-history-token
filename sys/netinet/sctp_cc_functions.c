@@ -1050,7 +1050,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
@@ -1093,7 +1093,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
@@ -9754,7 +9754,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
@@ -9797,7 +9797,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
@@ -12463,7 +12463,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
@@ -12506,7 +12506,7 @@ name|rec
 operator|.
 name|data
 operator|.
-name|TSN_seq
+name|tsn
 operator|-
 literal|1
 expr_stmt|;
