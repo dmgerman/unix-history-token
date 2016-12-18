@@ -510,25 +510,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s, Revision %s\n"
+literal|"\n%s"
 argument_list|,
-name|bootprog_name
-argument_list|,
-name|bootprog_rev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"(%s, %s)\n"
-argument_list|,
-name|bootprog_maker
-argument_list|,
-name|bootprog_date
+name|bootprog_info
 argument_list|)
 expr_stmt|;
 if|#
