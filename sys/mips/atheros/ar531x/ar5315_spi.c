@@ -629,6 +629,11 @@ operator|&
 name|cs
 argument_list|)
 expr_stmt|;
+name|cs
+operator|&=
+operator|~
+name|SPIBUS_CS_HIGH
+expr_stmt|;
 comment|/* Open SPI controller interface */
 name|ar5315_spi_chip_activate
 argument_list|(

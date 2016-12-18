@@ -79,6 +79,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SPIBUS_CS_HIGH
+value|(1U<< 31)
+end_define
+
 begin_enum
 enum|enum
 block|{

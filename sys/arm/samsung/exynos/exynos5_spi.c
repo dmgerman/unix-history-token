@@ -897,6 +897,11 @@ operator|&
 name|cs
 argument_list|)
 expr_stmt|;
+name|cs
+operator|&=
+operator|~
+name|SPIBUS_CS_HIGH
+expr_stmt|;
 comment|/* Command */
 name|spi_txrx
 argument_list|(

@@ -907,6 +907,11 @@ operator|&
 name|cs
 argument_list|)
 expr_stmt|;
+name|cs
+operator|&=
+operator|~
+name|SPIBUS_CS_HIGH
+expr_stmt|;
 comment|/* Assert CS */
 name|reg
 operator|=

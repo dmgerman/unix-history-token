@@ -718,6 +718,11 @@ operator|&
 name|cs
 argument_list|)
 expr_stmt|;
+name|cs
+operator|&=
+operator|~
+name|SPIBUS_CS_HIGH
+expr_stmt|;
 name|ar71xx_spi_chip_activate
 argument_list|(
 name|sc

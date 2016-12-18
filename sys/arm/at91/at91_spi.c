@@ -1317,6 +1317,11 @@ operator|&
 name|cs
 argument_list|)
 expr_stmt|;
+name|cs
+operator|&=
+operator|~
+name|SPIBUS_CS_HIGH
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
