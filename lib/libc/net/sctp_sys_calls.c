@@ -4271,7 +4271,7 @@ name|flags
 expr_stmt|;
 name|sinfo
 operator|.
-name|sinfo_ssn
+name|sinfo_stream
 operator|=
 name|stream_no
 expr_stmt|;
