@@ -6206,7 +6206,7 @@ literal|0x0B
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Warning"
 argument_list|)
@@ -6220,7 +6220,7 @@ literal|0x0B
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Warning - specified temperature exceeded"
 argument_list|)
@@ -6234,7 +6234,7 @@ literal|0x0B
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Warning - enclosure degraded"
 argument_list|)
@@ -6248,9 +6248,8 @@ literal|0x0B
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - background self-test failed"
 argument_list|)
 block|}
@@ -6263,9 +6262,8 @@ literal|0x0B
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - background pre-scan detected medium error"
 argument_list|)
 block|}
@@ -6278,9 +6276,8 @@ literal|0x0B
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - background medium scan detected medium error"
 argument_list|)
 block|}
@@ -6293,9 +6290,8 @@ literal|0x0B
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - non-volatile cache now volatile"
 argument_list|)
 block|}
@@ -6308,9 +6304,8 @@ literal|0x0B
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - degraded power to non-volatile cache"
 argument_list|)
 block|}
@@ -6323,9 +6318,8 @@ literal|0x0B
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - power loss expected"
 argument_list|)
 block|}
@@ -6338,9 +6332,8 @@ literal|0x0B
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - device statistics notification available"
 argument_list|)
 block|}
@@ -6353,9 +6346,8 @@ literal|0x0B
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - High critical temperature limit exceeded"
 argument_list|)
 block|}
@@ -6368,9 +6360,8 @@ literal|0x0B
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - Low critical temperature limit exceeded"
 argument_list|)
 block|}
@@ -6383,9 +6374,8 @@ literal|0x0B
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - High operating temperature limit exceeded"
 argument_list|)
 block|}
@@ -6398,9 +6388,8 @@ literal|0x0B
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - Low operating temperature limit exceeded"
 argument_list|)
 block|}
@@ -6413,9 +6402,8 @@ literal|0x0B
 argument_list|,
 literal|0x0E
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - High citical humidity limit exceeded"
 argument_list|)
 block|}
@@ -6428,9 +6416,8 @@ literal|0x0B
 argument_list|,
 literal|0x0F
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - Low citical humidity limit exceeded"
 argument_list|)
 block|}
@@ -6443,9 +6430,8 @@ literal|0x0B
 argument_list|,
 literal|0x10
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - High operating humidity limit exceeded"
 argument_list|)
 block|}
@@ -6458,9 +6444,8 @@ literal|0x0B
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Warning - Low operating humidity limit exceeded"
 argument_list|)
 block|}
@@ -12832,7 +12817,7 @@ literal|0x5D
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Failure prediction threshold exceeded"
 argument_list|)
@@ -12846,9 +12831,8 @@ literal|0x5D
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Media failure prediction threshold exceeded"
 argument_list|)
 block|}
@@ -12861,9 +12845,8 @@ literal|0x5D
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit failure prediction threshold exceeded"
 argument_list|)
 block|}
@@ -12876,9 +12859,8 @@ literal|0x5D
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spare area exhaustion prediction threshold exceeded"
 argument_list|)
 block|}
@@ -12891,9 +12873,8 @@ literal|0x5D
 argument_list|,
 literal|0x10
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -12906,9 +12887,8 @@ literal|0x5D
 argument_list|,
 literal|0x11
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -12921,9 +12901,8 @@ literal|0x5D
 argument_list|,
 literal|0x12
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure data error rate too high"
 argument_list|)
 block|}
@@ -12936,9 +12915,8 @@ literal|0x5D
 argument_list|,
 literal|0x13
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -12951,9 +12929,8 @@ literal|0x5D
 argument_list|,
 literal|0x14
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -12966,9 +12943,8 @@ literal|0x5D
 argument_list|,
 literal|0x15
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure access times too high"
 argument_list|)
 block|}
@@ -12981,9 +12957,8 @@ literal|0x5D
 argument_list|,
 literal|0x16
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure start unit times too high"
 argument_list|)
 block|}
@@ -12996,9 +12971,8 @@ literal|0x5D
 argument_list|,
 literal|0x17
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13011,9 +12985,8 @@ literal|0x5D
 argument_list|,
 literal|0x18
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure controller detected"
 argument_list|)
 block|}
@@ -13026,9 +12999,8 @@ literal|0x5D
 argument_list|,
 literal|0x19
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure throughput performance"
 argument_list|)
 block|}
@@ -13041,9 +13013,8 @@ literal|0x5D
 argument_list|,
 literal|0x1A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure seek time performance"
 argument_list|)
 block|}
@@ -13056,9 +13027,8 @@ literal|0x5D
 argument_list|,
 literal|0x1B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -13071,10 +13041,23 @@ literal|0x5D
 argument_list|,
 literal|0x1C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Hardware impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x1D
+argument_list|,
+argument|SS_NOP | SSQ_PRINT_SENSE
+argument_list|,
+literal|"Hardware impending failure power loss protection circuit"
 argument_list|)
 block|}
 block|,
@@ -13086,9 +13069,8 @@ literal|0x5D
 argument_list|,
 literal|0x20
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -13101,9 +13083,8 @@ literal|0x5D
 argument_list|,
 literal|0x21
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -13116,9 +13097,8 @@ literal|0x5D
 argument_list|,
 literal|0x22
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure data error rate too high"
 argument_list|)
 block|}
@@ -13131,9 +13111,8 @@ literal|0x5D
 argument_list|,
 literal|0x23
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -13146,9 +13125,8 @@ literal|0x5D
 argument_list|,
 literal|0x24
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -13161,9 +13139,8 @@ literal|0x5D
 argument_list|,
 literal|0x25
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure access times too high"
 argument_list|)
 block|}
@@ -13176,9 +13153,8 @@ literal|0x5D
 argument_list|,
 literal|0x26
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure start unit times too high"
 argument_list|)
 block|}
@@ -13191,9 +13167,8 @@ literal|0x5D
 argument_list|,
 literal|0x27
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13206,9 +13181,8 @@ literal|0x5D
 argument_list|,
 literal|0x28
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure controller detected"
 argument_list|)
 block|}
@@ -13221,9 +13195,8 @@ literal|0x5D
 argument_list|,
 literal|0x29
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure throughput performance"
 argument_list|)
 block|}
@@ -13236,9 +13209,8 @@ literal|0x5D
 argument_list|,
 literal|0x2A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure seek time performance"
 argument_list|)
 block|}
@@ -13251,9 +13223,8 @@ literal|0x5D
 argument_list|,
 literal|0x2B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -13266,9 +13237,8 @@ literal|0x5D
 argument_list|,
 literal|0x2C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Controller impending failure drive calibration retry count"
 argument_list|)
 block|}
@@ -13281,9 +13251,8 @@ literal|0x5D
 argument_list|,
 literal|0x30
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -13296,9 +13265,8 @@ literal|0x5D
 argument_list|,
 literal|0x31
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -13311,9 +13279,8 @@ literal|0x5D
 argument_list|,
 literal|0x32
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure data error rate too high"
 argument_list|)
 block|}
@@ -13326,9 +13293,8 @@ literal|0x5D
 argument_list|,
 literal|0x33
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -13341,9 +13307,8 @@ literal|0x5D
 argument_list|,
 literal|0x34
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -13356,9 +13321,8 @@ literal|0x5D
 argument_list|,
 literal|0x35
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure access times too high"
 argument_list|)
 block|}
@@ -13371,9 +13335,8 @@ literal|0x5D
 argument_list|,
 literal|0x36
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure start unit times too high"
 argument_list|)
 block|}
@@ -13386,9 +13349,8 @@ literal|0x5D
 argument_list|,
 literal|0x37
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13401,9 +13363,8 @@ literal|0x5D
 argument_list|,
 literal|0x38
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure controller detected"
 argument_list|)
 block|}
@@ -13416,9 +13377,8 @@ literal|0x5D
 argument_list|,
 literal|0x39
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure throughput performance"
 argument_list|)
 block|}
@@ -13431,9 +13391,8 @@ literal|0x5D
 argument_list|,
 literal|0x3A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure seek time performance"
 argument_list|)
 block|}
@@ -13446,9 +13405,8 @@ literal|0x5D
 argument_list|,
 literal|0x3B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -13461,9 +13419,8 @@ literal|0x5D
 argument_list|,
 literal|0x3C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Data channel impending failure drive calibration retry count"
 argument_list|)
 block|}
@@ -13476,9 +13433,8 @@ literal|0x5D
 argument_list|,
 literal|0x40
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -13491,9 +13447,8 @@ literal|0x5D
 argument_list|,
 literal|0x41
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -13506,9 +13461,8 @@ literal|0x5D
 argument_list|,
 literal|0x42
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure data error rate too high"
 argument_list|)
 block|}
@@ -13521,9 +13475,8 @@ literal|0x5D
 argument_list|,
 literal|0x43
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -13536,9 +13489,8 @@ literal|0x5D
 argument_list|,
 literal|0x44
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -13551,9 +13503,8 @@ literal|0x5D
 argument_list|,
 literal|0x45
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure access times too high"
 argument_list|)
 block|}
@@ -13566,9 +13517,8 @@ literal|0x5D
 argument_list|,
 literal|0x46
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure start unit times too high"
 argument_list|)
 block|}
@@ -13581,9 +13531,8 @@ literal|0x5D
 argument_list|,
 literal|0x47
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13596,9 +13545,8 @@ literal|0x5D
 argument_list|,
 literal|0x48
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure controller detected"
 argument_list|)
 block|}
@@ -13611,9 +13559,8 @@ literal|0x5D
 argument_list|,
 literal|0x49
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure throughput performance"
 argument_list|)
 block|}
@@ -13626,9 +13573,8 @@ literal|0x5D
 argument_list|,
 literal|0x4A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure seek time performance"
 argument_list|)
 block|}
@@ -13641,9 +13587,8 @@ literal|0x5D
 argument_list|,
 literal|0x4B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -13656,9 +13601,8 @@ literal|0x5D
 argument_list|,
 literal|0x4C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Servo impending failure drive calibration retry count"
 argument_list|)
 block|}
@@ -13671,9 +13615,8 @@ literal|0x5D
 argument_list|,
 literal|0x50
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -13686,9 +13629,8 @@ literal|0x5D
 argument_list|,
 literal|0x51
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -13701,9 +13643,8 @@ literal|0x5D
 argument_list|,
 literal|0x52
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure data error rate too high"
 argument_list|)
 block|}
@@ -13716,9 +13657,8 @@ literal|0x5D
 argument_list|,
 literal|0x53
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -13731,9 +13671,8 @@ literal|0x5D
 argument_list|,
 literal|0x54
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -13746,9 +13685,8 @@ literal|0x5D
 argument_list|,
 literal|0x55
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure access times too high"
 argument_list|)
 block|}
@@ -13761,9 +13699,8 @@ literal|0x5D
 argument_list|,
 literal|0x56
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure start unit times too high"
 argument_list|)
 block|}
@@ -13776,9 +13713,8 @@ literal|0x5D
 argument_list|,
 literal|0x57
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13791,9 +13727,8 @@ literal|0x5D
 argument_list|,
 literal|0x58
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure controller detected"
 argument_list|)
 block|}
@@ -13806,9 +13741,8 @@ literal|0x5D
 argument_list|,
 literal|0x59
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure throughput performance"
 argument_list|)
 block|}
@@ -13821,9 +13755,8 @@ literal|0x5D
 argument_list|,
 literal|0x5A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure seek time performance"
 argument_list|)
 block|}
@@ -13836,9 +13769,8 @@ literal|0x5D
 argument_list|,
 literal|0x5B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -13851,9 +13783,8 @@ literal|0x5D
 argument_list|,
 literal|0x5C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Spindle impending failure drive calibration retry count"
 argument_list|)
 block|}
@@ -13866,9 +13797,8 @@ literal|0x5D
 argument_list|,
 literal|0x60
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure general hard drive failure"
 argument_list|)
 block|}
@@ -13881,9 +13811,8 @@ literal|0x5D
 argument_list|,
 literal|0x61
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure drive error rate too high"
 argument_list|)
 block|}
@@ -13896,9 +13825,8 @@ literal|0x5D
 argument_list|,
 literal|0x62
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure data error rate too high"
 argument_list|)
 block|}
@@ -13911,9 +13839,8 @@ literal|0x5D
 argument_list|,
 literal|0x63
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure seek error rate too high"
 argument_list|)
 block|}
@@ -13926,9 +13853,8 @@ literal|0x5D
 argument_list|,
 literal|0x64
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure too many block reassigns"
 argument_list|)
 block|}
@@ -13941,9 +13867,8 @@ literal|0x5D
 argument_list|,
 literal|0x65
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure access times too high"
 argument_list|)
 block|}
@@ -13956,9 +13881,8 @@ literal|0x5D
 argument_list|,
 literal|0x66
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure start unit times too high"
 argument_list|)
 block|}
@@ -13971,9 +13895,8 @@ literal|0x5D
 argument_list|,
 literal|0x67
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure channel parametrics"
 argument_list|)
 block|}
@@ -13986,9 +13909,8 @@ literal|0x5D
 argument_list|,
 literal|0x68
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure controller detected"
 argument_list|)
 block|}
@@ -14001,9 +13923,8 @@ literal|0x5D
 argument_list|,
 literal|0x69
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure throughput performance"
 argument_list|)
 block|}
@@ -14016,9 +13937,8 @@ literal|0x5D
 argument_list|,
 literal|0x6A
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure seek time performance"
 argument_list|)
 block|}
@@ -14031,9 +13951,8 @@ literal|0x5D
 argument_list|,
 literal|0x6B
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure spin-up retry count"
 argument_list|)
 block|}
@@ -14046,10 +13965,23 @@ literal|0x5D
 argument_list|,
 literal|0x6C
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
-comment|/* XXX TBD */
 literal|"Firmware impending failure drive calibration retry count"
+argument_list|)
+block|}
+block|,
+comment|/* D         B    */
+block|{
+name|SST
+argument_list|(
+literal|0x5D
+argument_list|,
+literal|0x73
+argument_list|,
+argument|SS_NOP | SSQ_PRINT_SENSE
+argument_list|,
+literal|"Media impending failure endurance limit met"
 argument_list|)
 block|}
 block|,
@@ -14061,7 +13993,7 @@ literal|0x5D
 argument_list|,
 literal|0xFF
 argument_list|,
-argument|SS_RDEF
+argument|SS_NOP | SSQ_PRINT_SENSE
 argument_list|,
 literal|"Failure prediction threshold exceeded (false)"
 argument_list|)
