@@ -51739,6 +51739,10 @@ operator|*
 operator|)
 name|fwdtsn
 expr_stmt|;
+name|strseq
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -51750,6 +51754,10 @@ name|sctp_strseq
 operator|*
 operator|)
 name|fwdtsn
+expr_stmt|;
+name|strseq_m
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/*- 	 * Now populate the strseq list. This is done blindly 	 * without pulling out duplicate stream info. This is 	 * inefficent but won't harm the process since the peer will 	 * look at these in sequence and will thus release anything. 	 * It could mean we exceed the PMTU and chop off some that 	 * we could have included.. but this is unlikely (aka 1432/4 	 * would mean 300+ stream seq's would have to be reported in 	 * one FWD-TSN. With a bit of work we can later FIX this to 	 * optimize and pull out duplicates.. but it does add more 	 * overhead. So for now... not! 	 */
