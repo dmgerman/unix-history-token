@@ -8394,7 +8394,7 @@ argument_list|(
 literal|"Failed to initiate iterator for handle_addr_wq\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Freeing if we are stopping or put back on the 			 * addr_wq. 			 */
+comment|/* Freeing if we are stopping or put back on the 			 * addr_wq. */
 if|if
 condition|(
 name|SCTP_BASE_VAR
@@ -12715,7 +12715,7 @@ name|SCTP_RTT_FROM_DATA
 operator|)
 condition|)
 block|{
-comment|/* 		 * Tell the CC module that a new update has just occurred 		 * from a sack 		 */
+comment|/* Tell the CC module that a new update has just occurred 		 * from a sack */
 call|(
 modifier|*
 name|asoc
@@ -25577,7 +25577,7 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
-comment|/* 			 * on to the sent queue so we can wait for it to be 			 * passed by. 			 */
+comment|/* on to the sent queue so we can wait for it to be 			 * passed by. */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -27311,7 +27311,7 @@ name|int
 name|filling_sinfo
 parameter_list|)
 block|{
-comment|/* 	 * MSG flags we will look at MSG_DONTWAIT - non-blocking IO. 	 * MSG_PEEK - Look don't touch :-D (only valid with OUT mbuf copy 	 * mp=NULL thus uio is the copy method to userland) MSG_WAITALL - ?? 	 * On the way out we may send out any combination of: 	 * MSG_NOTIFICATION MSG_EOR 	 *  	 */
+comment|/* 	 * MSG flags we will look at MSG_DONTWAIT - non-blocking IO. 	 * MSG_PEEK - Look don't touch :-D (only valid with OUT mbuf copy 	 * mp=NULL thus uio is the copy method to userland) MSG_WAITALL - ?? 	 * On the way out we may send out any combination of: 	 * MSG_NOTIFICATION MSG_EOR 	 * 	 */
 name|struct
 name|sctp_inpcb
 modifier|*
@@ -27964,7 +27964,7 @@ operator|&
 name|SCTP_PCB_FLAGS_WAS_ABORTED
 condition|)
 block|{
-comment|/* 					 * You were aborted, passive side 					 * always hits here 					 */
+comment|/* You were aborted, passive side 					 * always hits here */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -28396,7 +28396,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* 		 * Do we also need to check for (control->pdapi_aborted == 		 * 1)? 		 */
+comment|/* Do we also need to check for (control->pdapi_aborted == 		 * 1)? */
 if|if
 condition|(
 name|hold_rlock
@@ -30076,7 +30076,7 @@ name|control
 operator|->
 name|data
 expr_stmt|;
-comment|/* 					 * been through it all, must hold sb 					 * lock ok to null tail 					 */
+comment|/* been through it all, must hold sb 					 * lock ok to null tail */
 if|if
 condition|(
 name|control
@@ -31139,7 +31139,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* 				 * big trouble.. we have the lock and its 				 * corrupt? 				 */
+comment|/* big trouble.. we have the lock and its 				 * corrupt? */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -34542,7 +34542,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 							 * skip unspecified 							 * addrs 							 */
+comment|/* skip unspecified 							 * addrs */
 continue|continue;
 block|}
 if|if
@@ -34702,7 +34702,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* 									 *  									 * bad 									 *  									 * li 									 * nk 									 *  									 * loc 									 * al 									 *  									 * add 									 * re 									 * ss 									 * */
+comment|/* 									 * 									 * bad 									 * link 									 * 									 * local 									 * 									 * address 									 */
 continue|continue;
 block|}
 block|}

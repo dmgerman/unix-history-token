@@ -651,7 +651,7 @@ name|stcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Remove from wheel if stream queue is empty and actually is on the 	 * wheel 	 */
+comment|/* Remove from wheel if stream queue is empty and actually is on the 	 * wheel */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -2375,7 +2375,7 @@ name|stcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Remove from wheel if stream queue is empty and actually is on the 	 * wheel 	 */
+comment|/* Remove from wheel if stream queue is empty and actually is on the 	 * wheel */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -3430,7 +3430,7 @@ name|stcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Remove from wheel if stream queue is empty and actually is on the 	 * wheel 	 */
+comment|/* Remove from wheel if stream queue is empty and actually is on the 	 * wheel */
 if|if
 condition|(
 name|TAILQ_EMPTY

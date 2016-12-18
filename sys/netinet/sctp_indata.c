@@ -1681,7 +1681,7 @@ name|q
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Only one stream can be here in old style 				 * -- abort 				 */
+comment|/* Only one stream can be here in old style 				 * -- abort */
 return|return
 operator|(
 operator|-
@@ -2292,7 +2292,7 @@ modifier|*
 name|need_reasm
 parameter_list|)
 block|{
-comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream usage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 *  	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and ssn 2 	 * with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 *  	 */
+comment|/* 	 * FIX-ME maybe? What happens when the ssn wraps? If we are getting 	 * all the data in one stream this could happen quite rapidly. One 	 * could use the TSN to keep track of things, but this scheme breaks 	 * down in the other type of stream usage that could occur. Send a 	 * single msg to stream 0, send 4Billion messages to stream 1, now 	 * send a message to stream 0. You have a situation where the TSN 	 * has wrapped but not in the stream. Is this worth worrying about 	 * or should we just change our queue sort at the bottom to be by 	 * TSN. 	 * 	 * Could it also be legal for a peer to send ssn 1 with TSN 2 and 	 * ssn 2 with TSN 1? If the peer is doing some sort of funky TSN/SSN 	 * assignment this could happen... and I don't see how this would be 	 * a violation. So for now I am undecided an will leave the sort by 	 * SSN alone. Maybe a hybred approach is the answer 	 * 	 */
 name|struct
 name|sctp_queued_to_read
 modifier|*
@@ -4003,7 +4003,7 @@ name|reasm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 					 * Now lets add it to the queue 					 * after removing control 					 */
+comment|/* Now lets add it to the queue 					 * after removing control */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4165,7 +4165,7 @@ name|reasm
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Switch to the new guy and 					 * continue 					 */
+comment|/* Switch to the new guy and 					 * continue */
 name|control
 operator|=
 name|nc
@@ -4404,7 +4404,7 @@ name|fsn_included
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Easy way the start of a new guy beyond 				 * the lowest 				 */
+comment|/* Easy way the start of a new guy beyond 				 * the lowest */
 goto|goto
 name|place_chunk
 goto|;
@@ -4432,7 +4432,7 @@ name|pdapi_started
 operator|)
 condition|)
 block|{
-comment|/* 				 * Ok this should not happen, if it does we 				 * started the pd-api on the higher TSN 				 * (since the equals part is a TSN failure 				 * it must be that). 				 *  				 * We are completly hosed in that case since I 				 * have no way to recover. This really will 				 * only happen if we can get more TSN's 				 * higher before the pd-api-point. 				 */
+comment|/* 				 * Ok this should not happen, if it does we 				 * started the pd-api on the higher TSN 				 * (since the equals part is a TSN failure 				 * it must be that). 				 * 				 * We are completly hosed in that case since 				 * I have no way to recover. This really 				 * will only happen if we can get more TSN's 				 * higher before the pd-api-point. 				 */
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -5409,7 +5409,7 @@ operator|->
 name|pd_api_started
 condition|)
 block|{
-comment|/* 		 * Can't add more must have gotten an un-ordered above being 		 * partially delivered. 		 */
+comment|/* Can't add more must have gotten an un-ordered above being 		 * partially delivered. */
 return|return
 operator|(
 literal|0
@@ -5574,7 +5574,7 @@ operator|==
 name|SCTP_DATA_NOT_FRAG
 condition|)
 block|{
-comment|/* 				 * A singleton now slipping through - mark 				 * it non-revokable too 				 */
+comment|/* A singleton now slipping through - mark 				 * it non-revokable too */
 name|sctp_mark_non_revokable
 argument_list|(
 name|asoc
@@ -5595,7 +5595,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Check if we can defer adding until its 				 * all there 				 */
+comment|/* Check if we can defer adding until its 				 * all there */
 if|if
 condition|(
 operator|(
@@ -5613,7 +5613,7 @@ name|pd_api_started
 operator|)
 condition|)
 block|{
-comment|/* 					 * Don't need it or cannot add more 					 * (one being delivered that way) 					 */
+comment|/* Don't need it or cannot add more 					 * (one being delivered that way) */
 goto|goto
 name|out
 goto|;
@@ -6520,7 +6520,7 @@ name|fsn_num
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
+comment|/* We have already delivered up to 					 * this so its a dup */
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -6622,7 +6622,7 @@ name|fsn_num
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
+comment|/* We have already delivered up to 					 * this so its a dup */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
@@ -6660,7 +6660,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 			 * validate not beyond top FSN if we have seen last 			 * one 			 */
+comment|/* validate not beyond top FSN if we have seen last 			 * one */
 if|if
 condition|(
 name|SCTP_TSN_GT
@@ -6829,7 +6829,7 @@ operator|.
 name|fsn_num
 condition|)
 block|{
-comment|/* 				 * Gak, He sent me a duplicate str seq 				 * number 				 */
+comment|/* Gak, He sent me a duplicate str seq 				 * number */
 comment|/* 				 * foo bar, I guess I will just free this 				 * new guy, should we abort too? FIX ME 				 * MAYBE? Or it COULD be that the SSN's have 				 * wrapped. Maybe I should compare to TSN 				 * somehow... sigh for now just blow away 				 * the chunk! 				 */
 name|SCTPDBG
 argument_list|(
@@ -8412,7 +8412,7 @@ name|SCTP_DATA_UNORDERED
 operator|)
 condition|)
 block|{
-comment|/* 				 * We can't have a switched order with an 				 * unordered chunk 				 */
+comment|/* We can't have a switched order with an 				 * unordered chunk */
 name|snprintf
 argument_list|(
 name|msg
@@ -8453,7 +8453,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 * We can't have a switched unordered with a 				 * ordered chunk 				 */
+comment|/* We can't have a switched unordered with a 				 * ordered chunk */
 name|snprintf
 argument_list|(
 name|msg
@@ -9998,7 +9998,7 @@ operator|==
 name|SCTP_DATA_NOT_FRAG
 condition|)
 block|{
-comment|/* 		 * Special check for when streams are resetting. We could be 		 * more smart about this and check the actual stream to see 		 * if it is not being reset.. that way we would not create a 		 * HOLB when amongst streams being reset and those not being 		 * reset. 		 *  		 */
+comment|/* 		 * Special check for when streams are resetting. We could be 		 * more smart about this and check the actual stream to see 		 * if it is not being reset.. that way we would not create a 		 * HOLB when amongst streams being reset and those not being 		 * reset. 		 * 		 */
 if|if
 condition|(
 operator|(
@@ -11235,7 +11235,7 @@ modifier|*
 name|stcb
 parameter_list|)
 block|{
-comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 *  	 * When you first glance at this you might think that all entries that 	 * make up the position of the cum-ack would be in the nr-mapping 	 * array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
+comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 * 	 * When you first glance at this you might think that all entries 	 * that make up the position of the cum-ack would be in the 	 * nr-mapping array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -12344,7 +12344,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * CMT DAC algorithm: With CMT, delay acks 				 * even in the face of 				 *  				 * reordering. Therefore, if acks that do not 				 * have to be sent because of the above 				 * reasons, will be delayed. That is, acks 				 * that would have been sent due to gap 				 * reports will be delayed with DAC. Start 				 * the delayed ack timer. 				 */
+comment|/* 				 * CMT DAC algorithm: With CMT, delay acks 				 * even in the face of 				 * 				 * reordering. Therefore, if acks that do 				 * not have to be sent because of the above 				 * reasons, will be delayed. That is, acks 				 * that would have been sent due to gap 				 * reports will be delayed with DAC. Start 				 * the delayed ack timer. 				 */
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_RECV
@@ -13260,7 +13260,7 @@ case|case
 name|SCTP_ASCONF
 case|:
 block|{
-comment|/* 					 * Now, what do we do with KNOWN 					 * chunks that are NOT in the right 					 * place? 					 *  					 * For now, I do nothing but ignore 					 * them. We may later want to add 					 * sysctl stuff to switch out and do 					 * either an ABORT() or possibly 					 * process them. 					 */
+comment|/* 					 * Now, what do we do with KNOWN 					 * chunks that are NOT in the right 					 * place? 					 * 					 * For now, I do nothing but ignore 					 * them. We may later want to add 					 * sysctl stuff to switch out and do 					 * either an ABORT() or possibly 					 * process them. 					 */
 name|struct
 name|mbuf
 modifier|*
@@ -13477,7 +13477,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* else skip this bad chunk and 					 * continue... */
+comment|/* else skip this bad chunk and 				  * continue... */
 break|break;
 block|}
 comment|/* switch of chunk type */
@@ -14749,7 +14749,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* 							 * sa_ignore 							 * NO_NULL_CHK 							 */
+comment|/* sa_ignore 							 * NO_NULL_CHK */
 name|sctp_free_bufspace
 argument_list|(
 name|stcb
@@ -16594,7 +16594,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 				 * Has it been retransmitted tv_sec times? - 				 * we store the retran count there. 				 */
+comment|/* Has it been retransmitted tv_sec times? - 				 * we store the retran count there. */
 if|if
 condition|(
 name|tp1
@@ -16648,7 +16648,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 			 * SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); 			 */
+comment|/* SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); */
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -16732,7 +16732,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 					 * JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() 					 */
+comment|/* JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() */
 name|alt
 operator|=
 name|sctp_find_alternate_net
@@ -16747,7 +16747,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() 					 */
+comment|/* JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() */
 comment|/* sa_ignore NO_NULL_CHK */
 name|alt
 operator|=
@@ -18490,7 +18490,7 @@ name|whoTo
 operator|->
 name|RTO
 operator|=
-comment|/* 								 * sa_ignore 								 * NO_NULL_CH 								 * K 								 */
+comment|/* 								 * sa_ignore 								 * NO_NULL_CHK 								 */
 name|sctp_calculate_rto
 argument_list|(
 name|stcb
@@ -19182,7 +19182,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* 						 * release the alternate, 						 * primary is good 						 */
+comment|/* release the alternate, 						 * primary is good */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -19627,7 +19627,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
+comment|/* In window probes we must assure a timer 				 * is still running there */
 name|net
 operator|->
 name|window_probe
@@ -22514,7 +22514,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Check for revoked fragments: 	 *  	 * if Previous sack - Had no frags then we can't have any revoked if 	 * Previous sack - Had frag's then - If we now have frags aka 	 * num_seg> 0 call sctp_check_for_revoked() to tell if peer revoked 	 * some of them. else - The peer revoked all ACKED fragments, since 	 * we had some before and now we have NONE. 	 */
+comment|/* 	 * Check for revoked fragments: 	 * 	 * if Previous sack - Had no frags then we can't have any revoked if 	 * Previous sack - Had frag's then - If we now have frags aka 	 * num_seg> 0 call sctp_check_for_revoked() to tell if peer revoked 	 * some of them. else - The peer revoked all ACKED fragments, since 	 * we had some before and now we have NONE. 	 */
 if|if
 condition|(
 name|num_seg
@@ -22784,7 +22784,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* 						 * release the alternate, 						 * primary is good 						 */
+comment|/* release the alternate, 						 * primary is good */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -23834,7 +23834,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
+comment|/* In window probes we must assure a timer 				 * is still running there */
 if|if
 condition|(
 operator|!
@@ -24587,7 +24587,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 					 * Make it so this is next to 					 * deliver, we restore later 					 */
+comment|/* Make it so this is next to 					 * deliver, we restore later */
 name|strmin
 operator|->
 name|last_sequence_delivered
@@ -24885,7 +24885,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* 					 * Make it so this is next to 					 * deliver 					 */
+comment|/* Make it so this is next to 					 * deliver */
 name|strmin
 operator|->
 name|last_sequence_delivered
@@ -25423,7 +25423,7 @@ name|offset
 parameter_list|)
 block|{
 comment|/* The pr-sctp fwd tsn */
-comment|/* 	 * here we will perform all the data receiver side steps for 	 * processing FwdTSN, as required in by pr-sctp draft: 	 *  	 * Assume we get FwdTSN(x): 	 *  	 * 1) update local cumTSN to x 2) try to further advance cumTSN to x + 	 * others we have 3) examine and update re-ordering queue on 	 * pr-in-streams 4) clean up re-assembly queue 5) Send a sack to 	 * report where we are. 	 */
+comment|/* 	 * here we will perform all the data receiver side steps for 	 * processing FwdTSN, as required in by pr-sctp draft: 	 * 	 * Assume we get FwdTSN(x): 	 * 	 * 1) update local cumTSN to x 2) try to further advance cumTSN to x 	 * + others we have 3) examine and update re-ordering queue on 	 * pr-in-streams 4) clean up re-assembly queue 5) Send a sack to 	 * report where we are. 	 */
 name|struct
 name|sctp_association
 modifier|*
