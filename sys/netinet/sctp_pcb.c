@@ -5170,7 +5170,7 @@ operator|=
 name|net
 expr_stmt|;
 block|}
-comment|/* 						 * Update the endpoint 						 * pointer 						 */
+comment|/* Update the endpoint 						 * pointer */
 operator|*
 name|inp_p
 operator|=
@@ -5253,7 +5253,7 @@ operator|=
 name|net
 expr_stmt|;
 block|}
-comment|/* 						 * Update the endpoint 						 * pointer 						 */
+comment|/* Update the endpoint 						 * pointer */
 operator|*
 name|inp_p
 operator|=
@@ -6967,7 +6967,7 @@ name|inp
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * IPv4 on a IPv6 socket with ONLY 					 * IPv6 set 					 */
+comment|/* IPv4 on a IPv6 socket with ONLY 					 * IPv6 set */
 name|SCTP_INP_RUNLOCK
 argument_list|(
 name|inp
@@ -7012,7 +7012,7 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-comment|/* 				 * A V6 address and the endpoint is NOT 				 * bound V6 				 */
+comment|/* A V6 address and the endpoint is NOT 				 * bound V6 */
 if|if
 condition|(
 operator|(
@@ -9175,7 +9175,7 @@ condition|(
 name|remote_tag
 condition|)
 block|{
-comment|/* 				 * If we have both vtags that's all we match 				 * on 				 */
+comment|/* If we have both vtags that's all we match 				 * on */
 if|if
 condition|(
 name|stcb
@@ -12788,7 +12788,7 @@ case|case
 name|AF_INET6
 case|:
 block|{
-comment|/* 				 * Only for pure IPv6 Address. (No IPv4 				 * Mapped!) 				 */
+comment|/* Only for pure IPv6 Address. (No IPv4 				 * Mapped!) */
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -13115,7 +13115,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 					 * Ok, must be one-2-one and 					 * allowing port re-use 					 */
+comment|/* Ok, must be one-2-one and 					 * allowing port re-use */
 name|port_reuse_active
 operator|=
 literal|1
@@ -13202,7 +13202,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 					 * Ok, must be one-2-one and 					 * allowing port re-use 					 */
+comment|/* Ok, must be one-2-one and 					 * allowing port re-use */
 name|port_reuse_active
 operator|=
 literal|1
@@ -13841,7 +13841,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * bind specific, make sure flags is off and add a new 		 * address structure to the sctp_addr_list inside the ep 		 * structure. 		 *  		 * We will need to allocate one and insert it at the head. The 		 * socketopt call can just insert new addresses in there as 		 * well. It will also have to do the embed scope kame hack 		 * too (before adding). 		 */
+comment|/* 		 * bind specific, make sure flags is off and add a new 		 * address structure to the sctp_addr_list inside the ep 		 * structure. 		 * 		 * We will need to allocate one and insert it at the head. 		 * The socketopt call can just insert new addresses in there 		 * as well. It will also have to do the embed scope kame 		 * hack too (before adding). 		 */
 name|struct
 name|sctp_ifa
 modifier|*
@@ -14296,7 +14296,7 @@ name|inp
 operator|)
 condition|)
 block|{
-comment|/* 		 * This is tricky and we hold the iterator lock, but when it 		 * returns and gets the lock (when we release it) the 		 * iterator will try to operate on inp. We need to stop that 		 * from happening. But of course the iterator has a 		 * reference on the stcb and inp. We can mark it and it will 		 * stop. 		 *  		 * If its a single iterator situation, we set the end iterator 		 * flag. Otherwise we set the iterator to go to the next 		 * inp. 		 *  		 */
+comment|/* 		 * This is tricky and we hold the iterator lock, but when it 		 * returns and gets the lock (when we release it) the 		 * iterator will try to operate on inp. We need to stop that 		 * from happening. But of course the iterator has a 		 * reference on the stcb and inp. We can mark it and it will 		 * stop. 		 * 		 * If its a single iterator situation, we set the end 		 * iterator flag. Otherwise we set the iterator to go to the 		 * next inp. 		 * 		 */
 if|if
 condition|(
 name|it
@@ -14446,7 +14446,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * When its put in the refcnt is incremented so decr 			 * it 			 */
+comment|/* When its put in the refcnt is incremented so decr 			 * it */
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|inp
@@ -17741,7 +17741,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Start things off to match mtu of 				 * interface please. 				 */
+comment|/* Start things off to match mtu of 				 * interface please. */
 name|SCTP_SET_MTU_OF_ROUTE
 argument_list|(
 operator|&
@@ -24870,7 +24870,7 @@ name|last_used_address
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * Now spin through all the nets and purge any ref 			 * to laddr 			 */
+comment|/* Now spin through all the nets and purge any ref 			 * to laddr */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -28436,7 +28436,7 @@ index|[
 name|SCTP_DIAG_INFO_LEN
 index|]
 decl_stmt|;
-comment|/* 							 * in setup state we 							 * abort this guy 							 */
+comment|/* in setup state we 							 * abort this guy */
 name|snprintf
 argument_list|(
 name|msg
@@ -28652,7 +28652,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Link local make no sense without 					 * scope 					 */
+comment|/* Link local make no sense without 					 * scope */
 goto|goto
 name|next_param
 goto|;
@@ -28860,7 +28860,7 @@ index|[
 name|SCTP_DIAG_INFO_LEN
 index|]
 decl_stmt|;
-comment|/* 							 * in setup state we 							 * abort this guy 							 */
+comment|/* in setup state we 							 * abort this guy */
 name|snprintf
 argument_list|(
 name|msg
