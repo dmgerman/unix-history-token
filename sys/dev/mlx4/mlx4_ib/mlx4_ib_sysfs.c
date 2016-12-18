@@ -238,7 +238,9 @@ name|port
 operator|->
 name|dev
 decl_stmt|;
-name|u64
+name|unsigned
+name|long
+name|long
 name|sysadmin_ag_val
 decl_stmt|;
 name|record_num
