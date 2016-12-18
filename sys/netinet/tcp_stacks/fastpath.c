@@ -2721,6 +2721,12 @@ case|:
 case|case
 name|TCPS_CLOSE_WAIT
 case|:
+case|case
+name|TCPS_CLOSING
+case|:
+case|case
+name|TCPS_LAST_ACK
+case|:
 name|so
 operator|->
 name|so_error
