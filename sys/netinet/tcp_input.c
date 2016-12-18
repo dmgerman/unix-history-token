@@ -13751,6 +13751,17 @@ condition|)
 name|tlen
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|th
+operator|->
+name|th_flags
+operator|&
+name|TH_FIN
+condition|)
+name|tlen
+operator|++
+expr_stmt|;
 name|tcp_respond
 argument_list|(
 name|tp
