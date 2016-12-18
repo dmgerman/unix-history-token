@@ -12199,6 +12199,14 @@ decl_stmt|;
 name|uint32_t
 name|highest_tsn
 decl_stmt|;
+name|int
+name|is_a_gap
+decl_stmt|;
+name|sctp_slide_mapping_arrays
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|asoc
 operator|=
 operator|&
@@ -12236,6 +12244,20 @@ operator|->
 name|highest_tsn_inside_map
 expr_stmt|;
 block|}
+comment|/* Is there a gap now? */
+name|is_a_gap
+operator|=
+name|SCTP_TSN_GT
+argument_list|(
+name|highest_tsn
+argument_list|,
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|cumulative_tsn
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now we need to see if we need to queue a sack or just start the 	 * timer (if allowed). 	 */
 if|if
 condition|(
@@ -12308,6 +12330,11 @@ name|primary_destination
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_a_gap
+condition|)
+block|{
 name|sctp_send_sack
 argument_list|(
 name|stcb
@@ -12316,25 +12343,9 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
-name|int
-name|is_a_gap
-decl_stmt|;
-comment|/* is there a gap now ? */
-name|is_a_gap
-operator|=
-name|SCTP_TSN_GT
-argument_list|(
-name|highest_tsn
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|cumulative_tsn
-argument_list|)
-expr_stmt|;
 comment|/* 		 * CMT DAC algorithm: increase number of packets received 		 * since last ack 		 */
 name|stcb
 operator|->
