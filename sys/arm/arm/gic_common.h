@@ -257,6 +257,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GICD_I_PER_IGROUPRn
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICD_ISENABLER
 parameter_list|(
 name|n

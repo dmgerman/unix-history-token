@@ -4609,6 +4609,37 @@ name|DIST
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 2. Configure the Distributor 	 */
+comment|/* Set all SPIs to be Group 1 Non-secure */
+for|for
+control|(
+name|i
+operator|=
+name|GIC_FIRST_SPI
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|gic_nirqs
+condition|;
+name|i
+operator|+=
+name|GICD_I_PER_IGROUPRn
+control|)
+name|gic_d_write
+argument_list|(
+name|sc
+argument_list|,
+literal|4
+argument_list|,
+name|GICD_IGROUPR
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+literal|0xFFFFFFFF
+argument_list|)
+expr_stmt|;
 comment|/* Set all global interrupts to be level triggered, active low. */
 for|for
 control|(
@@ -5365,6 +5396,20 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* Configure SGIs and PPIs to be Group1 Non-secure */
+name|gic_r_write
+argument_list|(
+name|sc
+argument_list|,
+literal|4
+argument_list|,
+name|GICR_SGI_BASE_SIZE
+operator|+
+name|GICR_IGROUPR0
+argument_list|,
+literal|0xFFFFFFFF
+argument_list|)
+expr_stmt|;
 comment|/* Disable SPIs */
 name|gic_r_write
 argument_list|(

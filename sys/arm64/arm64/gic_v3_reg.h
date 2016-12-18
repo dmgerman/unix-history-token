@@ -686,6 +686,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GICR_IGROUPR0
+value|(0x0080)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GICR_ISENABLER0
 value|(0x0100)
 end_define
