@@ -16890,8 +16890,6 @@ operator|=
 name|verbose
 condition|?
 name|IEEE80211_NWID_LEN
-operator|-
-literal|1
 else|:
 literal|14
 expr_stmt|;
