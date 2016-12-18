@@ -1382,6 +1382,11 @@ name|inp_flags
 operator||=
 name|INP_TIMEWAIT
 expr_stmt|;
+name|TCPSTATES_INC
+argument_list|(
+name|TCPS_TIME_WAIT
+argument_list|)
+expr_stmt|;
 name|tcp_tw_2msl_reset
 argument_list|(
 name|tw
