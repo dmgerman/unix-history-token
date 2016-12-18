@@ -3586,7 +3586,7 @@ name|td_pcb
 argument_list|)
 argument_list|,
 operator|(
-literal|"System call %s returing with kernel FPU ctx leaked"
+literal|"System call %s returning with kernel FPU ctx leaked"
 operator|,
 name|syscallname
 argument_list|(
