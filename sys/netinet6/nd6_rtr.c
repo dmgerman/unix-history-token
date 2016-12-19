@@ -4777,21 +4777,6 @@ modifier|*
 name|list
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|pr
-operator|->
-name|ndpr_addrcnt
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"prefix %p has referencing addresses"
-operator|,
-name|pr
-operator|)
-argument_list|)
-expr_stmt|;
 name|ND6_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;
