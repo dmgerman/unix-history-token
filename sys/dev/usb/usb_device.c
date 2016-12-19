@@ -7060,13 +7060,18 @@ expr_stmt|;
 comment|/* Announce device */
 name|printf
 argument_list|(
-literal|"%s:<%s> at %s\n"
+literal|"%s:<%s %s> at %s\n"
 argument_list|,
 name|udev
 operator|->
 name|ugen_name
 argument_list|,
 name|usb_get_manufacturer
+argument_list|(
+name|udev
+argument_list|)
+argument_list|,
+name|usb_get_product
 argument_list|(
 name|udev
 argument_list|)
@@ -7958,13 +7963,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:<%s> at %s (disconnected)\n"
+literal|"%s:<%s %s> at %s (disconnected)\n"
 argument_list|,
 name|udev
 operator|->
 name|ugen_name
 argument_list|,
 name|usb_get_manufacturer
+argument_list|(
+name|udev
+argument_list|)
+argument_list|,
+name|usb_get_product
 argument_list|(
 name|udev
 argument_list|)
