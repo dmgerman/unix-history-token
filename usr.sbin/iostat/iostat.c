@@ -3147,7 +3147,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device     r/s   w/s     kr/s     kw/s "
+literal|"device       r/s     w/s     kr/s     kw/s "
 literal|" ms/r  ms/w  ms/o  ms/t qlen  %%b  "
 argument_list|)
 expr_stmt|;
@@ -3590,7 +3590,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8s %5d %5d %8.1Lf "
+literal|"%-8.8s %7d %7d %8.1Lf "
 literal|"%8.1Lf %5d %5d %5d %5d "
 literal|"%4"
 name|PRIu64
