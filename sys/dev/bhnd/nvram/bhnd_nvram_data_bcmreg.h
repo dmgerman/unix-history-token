@@ -28,6 +28,21 @@ define|\
 value|((_value& _field ## _MASK)>> _field ## _SHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCM_NVRAM_SET_BITS
+parameter_list|(
+name|_value
+parameter_list|,
+name|_field
+parameter_list|,
+name|_bits
+parameter_list|)
+define|\
+value|((_value& ~(_field ## _MASK)) |			\ 	    (((_bits)<< _field ## _SHIFT)& _field ## _MASK))
+end_define
+
 begin_comment
 comment|/* BCM NVRAM header fields */
 end_comment
@@ -88,6 +103,17 @@ directive|define
 name|BCM_NVRAM_CFG0_VER_SHIFT
 value|8
 end_define
+
+begin_define
+define|#
+directive|define
+name|BCM_NVRAM_CFG0_VER_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* default version */
+end_comment
 
 begin_define
 define|#

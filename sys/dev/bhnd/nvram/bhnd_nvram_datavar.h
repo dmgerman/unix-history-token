@@ -145,6 +145,40 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/** @see bhnd_nvram_data_serialize() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_serialize
+function_decl|)
+parameter_list|(
+name|bhnd_nvram_data_class
+modifier|*
+name|cls
+parameter_list|,
+name|bhnd_nvram_plist
+modifier|*
+name|props
+parameter_list|,
+name|bhnd_nvram_plist
+modifier|*
+name|options
+parameter_list|,
+name|void
+modifier|*
+name|outp
+parameter_list|,
+name|size_t
+modifier|*
+name|olen
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/** @see bhnd_nvram_data_new() */
 end_comment
 
@@ -202,56 +236,6 @@ name|struct
 name|bhnd_nvram_data
 modifier|*
 name|nv
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/** @see bhnd_nvram_data_size() */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|bhnd_nvram_data_op_size
-function_decl|)
-parameter_list|(
-name|struct
-name|bhnd_nvram_data
-modifier|*
-name|nv
-parameter_list|,
-name|size_t
-modifier|*
-name|len
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/** @see bhnd_nvram_data_serialize() */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|bhnd_nvram_data_op_serialize
-function_decl|)
-parameter_list|(
-name|struct
-name|bhnd_nvram_data
-modifier|*
-name|nv
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-modifier|*
-name|len
 parameter_list|)
 function_decl|;
 end_typedef
@@ -564,6 +548,10 @@ modifier|*
 name|desc
 decl_stmt|;
 comment|/**< description */
+name|uint32_t
+name|caps
+decl_stmt|;
+comment|/**< capabilities (BHND_NVRAM_DATA_CAP_*) */
 name|size_t
 name|size
 decl_stmt|;
@@ -571,6 +559,10 @@ comment|/**< instance size */
 name|bhnd_nvram_data_op_probe
 modifier|*
 name|op_probe
+decl_stmt|;
+name|bhnd_nvram_data_op_serialize
+modifier|*
+name|op_serialize
 decl_stmt|;
 name|bhnd_nvram_data_op_new
 modifier|*
@@ -583,14 +575,6 @@ decl_stmt|;
 name|bhnd_nvram_data_op_count
 modifier|*
 name|op_count
-decl_stmt|;
-name|bhnd_nvram_data_op_size
-modifier|*
-name|op_size
-decl_stmt|;
-name|bhnd_nvram_data_op_serialize
-modifier|*
-name|op_serialize
 decl_stmt|;
 name|bhnd_nvram_data_op_options
 modifier|*
@@ -710,7 +694,7 @@ parameter_list|,
 name|_macro
 parameter_list|)
 define|\
-value|_macro(_cname, probe)					\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, size)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, options)					\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
+value|_macro(_cname, probe)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, options)					\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
 end_define
 
 begin_comment
@@ -726,10 +710,12 @@ name|_cname
 parameter_list|,
 name|_desc
 parameter_list|,
+name|_caps
+parameter_list|,
 name|_size
 parameter_list|)
 define|\
-value|BHND_NVRAM_DATA_CLASS_ITER_METHODS(_cname,			\ 	    BHND_NVRAM_DATA_CLASS_DECL_METHOD)				\ 									\ 	struct bhnd_nvram_data_class bhnd_nvram_## _cname ## _class = {	\ 		.desc		= (_desc),				\ 		.size		= (_size),				\ 		BHND_NVRAM_DATA_CLASS_ITER_METHODS(_cname,		\ 		    BHND_NVRAM_DATA_CLASS_ASSIGN_METHOD)		\ 	};								\ 									\ 	DATA_SET(bhnd_nvram_data_class_set,				\ 	    bhnd_nvram_## _cname ## _class);
+value|BHND_NVRAM_DATA_CLASS_ITER_METHODS(_cname,			\ 	    BHND_NVRAM_DATA_CLASS_DECL_METHOD)				\ 									\ 	struct bhnd_nvram_data_class bhnd_nvram_## _cname ## _class = {	\ 		.desc		= (_desc),				\ 		.caps		= (_caps),				\ 		.size		= (_size),				\ 		BHND_NVRAM_DATA_CLASS_ITER_METHODS(_cname,		\ 		    BHND_NVRAM_DATA_CLASS_ASSIGN_METHOD)		\ 	};								\ 									\ 	DATA_SET(bhnd_nvram_data_class_set,				\ 	    bhnd_nvram_## _cname ## _class);
 end_define
 
 begin_endif

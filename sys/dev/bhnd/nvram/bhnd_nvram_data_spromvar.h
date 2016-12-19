@@ -68,9 +68,157 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 value|12
 end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bhnd_sprom_opcode_state
+name|bhnd_sprom_opcode_state
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bhnd_sprom_opcode_bind
+name|bhnd_sprom_opcode_bind
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bhnd_sprom_opcode_var
+name|bhnd_sprom_opcode_var
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bhnd_sprom_opcode_idx_entry
+name|bhnd_sprom_opcode_idx_entry
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|bhnd_sprom_opcode_init
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+specifier|const
+name|bhnd_sprom_layout
+modifier|*
+name|layout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bhnd_sprom_opcode_fini
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|bhnd_sprom_opcode_index_find
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|bhnd_sprom_opcode_index_next
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|prev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_sprom_opcode_parse_var
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_sprom_opcode_seek
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_sprom_opcode_next_binding
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bhnd_sprom_opcode_apply_scale
+parameter_list|(
+name|bhnd_sprom_opcode_state
+modifier|*
+name|state
+parameter_list|,
+name|uint32_t
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**  * SPROM opcode per-bind evaluation state.  */
@@ -78,7 +226,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sprom_opcode_bind
+name|bhnd_sprom_opcode_bind
 block|{
 name|uint8_t
 name|count
@@ -105,7 +253,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sprom_opcode_var
+name|bhnd_sprom_opcode_var
 block|{
 name|uint8_t
 name|nelem
@@ -127,8 +275,7 @@ name|uint32_t
 name|scale
 decl_stmt|;
 comment|/**< current scale to apply to scaled encodings */
-name|struct
-name|sprom_opcode_bind
+name|bhnd_sprom_opcode_bind
 name|bind
 decl_stmt|;
 comment|/**< current bind state */
@@ -167,7 +314,7 @@ init|=
 literal|3
 comment|/**< full variable entry has been parsed */
 block|}
-name|sprom_opcode_var_state
+name|bhnd_sprom_opcode_var_state
 typedef|;
 end_typedef
 
@@ -177,15 +324,23 @@ end_comment
 
 begin_struct
 struct|struct
-name|sprom_opcode_state
+name|bhnd_sprom_opcode_state
 block|{
 specifier|const
-name|struct
 name|bhnd_sprom_layout
 modifier|*
 name|layout
 decl_stmt|;
 comment|/**< SPROM layout */
+name|bhnd_sprom_opcode_idx_entry
+modifier|*
+name|idx
+decl_stmt|;
+comment|/**< variable index (NULL during initialization) */
+name|size_t
+name|num_idx
+decl_stmt|;
+comment|/**< variable index entry count */
 comment|/** Current SPROM revision range */
 name|bitstr_t
 name|bit_decl
@@ -211,12 +366,11 @@ name|vid
 decl_stmt|;
 comment|/**< Variable ID */
 comment|/* State reset after end of each variable definition */
-name|struct
-name|sprom_opcode_var
+name|bhnd_sprom_opcode_var
 name|var
 decl_stmt|;
 comment|/**< variable record (if any) */
-name|sprom_opcode_var_state
+name|bhnd_sprom_opcode_var_state
 name|var_state
 decl_stmt|;
 comment|/**< variable record state */
@@ -230,7 +384,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sprom_opcode_idx
+name|bhnd_sprom_opcode_idx_entry
 block|{
 name|uint16_t
 name|vid
@@ -259,62 +413,44 @@ block|{
 name|uint8_t
 name|u8
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|uint16_t
 name|u16
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|uint32_t
 name|u32
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|int8_t
 name|i8
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|int16_t
 name|i16
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|int32_t
 name|i32
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
 decl_stmt|;
 name|char
 name|ch
 index|[
-name|SPROM_ARRAY_MAXLEN
+name|BHND_SPROM_ARRAY_MAXLEN
 index|]
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_comment
-comment|/**  * SPROM common integer value representation.  */
-end_comment
-
-begin_union
-union|union
-name|bhnd_nvram_sprom_intv
-block|{
-name|uint32_t
-name|u32
-decl_stmt|;
-name|int32_t
-name|s32
 decl_stmt|;
 block|}
 union|;
@@ -340,27 +476,15 @@ name|data
 decl_stmt|;
 comment|/**< backing SPROM image */
 specifier|const
-name|struct
 name|bhnd_sprom_layout
 modifier|*
 name|layout
 decl_stmt|;
 comment|/**< layout definition */
-name|struct
-name|sprom_opcode_state
+name|bhnd_sprom_opcode_state
 name|state
 decl_stmt|;
 comment|/**< opcode eval state */
-name|struct
-name|sprom_opcode_idx
-modifier|*
-name|idx
-decl_stmt|;
-comment|/**< opcode index entries */
-name|size_t
-name|num_idx
-decl_stmt|;
-comment|/**< opcode index entry count */
 block|}
 struct|;
 end_struct

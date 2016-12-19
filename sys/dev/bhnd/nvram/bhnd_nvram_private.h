@@ -1425,7 +1425,7 @@ name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 decl_stmt|;
-comment|/**< value format, or NULL */
+comment|/**< value format */
 name|uint32_t
 name|flags
 decl_stmt|;
@@ -1460,7 +1460,8 @@ begin_comment
 comment|/**  * SPROM layout descriptor.  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|bhnd_sprom_layout
 block|{
@@ -1488,6 +1489,10 @@ name|uint16_t
 name|magic_value
 decl_stmt|;
 comment|/**< expected magic value */
+name|size_t
+name|crc_offset
+decl_stmt|;
+comment|/**< offset to crc8 value */
 specifier|const
 name|uint8_t
 modifier|*
@@ -1503,8 +1508,9 @@ name|num_vars
 decl_stmt|;
 comment|/**< total number of variables defined 					     for this layout by the binding 					     table */
 block|}
-struct|;
-end_struct
+name|bhnd_sprom_layout
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * SPROM layout descriptions generated from nvram_map.  */
