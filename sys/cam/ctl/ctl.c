@@ -49508,7 +49508,7 @@ name|eid_ptr
 operator|->
 name|flags4
 operator|=
-name|SVPD_EID_LUICLT
+name|SVPD_EID_LUICLR
 expr_stmt|;
 comment|/* 	 * XXX KDM in order to correctly answer this, we would need 	 * information from the SIM to determine how much sense data it 	 * can send.  So this would really be a path inquiry field, most 	 * likely.  This can be set to a maximum of 252 according to SPC-4, 	 * but the hardware may or may not be able to support that much. 	 * 0 just means that the maximum sense data length is not reported. 	 */
 name|eid_ptr
