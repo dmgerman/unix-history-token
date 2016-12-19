@@ -234,6 +234,10 @@ name|unsigned
 name|int
 name|irq
 decl_stmt|;
+define|#
+directive|define
+name|LINUX_IRQ_INVALID
+value|65535
 name|unsigned
 name|int
 name|msix
