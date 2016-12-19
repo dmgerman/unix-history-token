@@ -213,7 +213,7 @@ name|bhnd_nv_malloc
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc((size), M_BHND_NVRAM, M_WAITOK)
+value|malloc((size), M_BHND_NVRAM, M_NOWAIT)
 end_define
 
 begin_define
@@ -225,7 +225,7 @@ name|n
 parameter_list|,
 name|size
 parameter_list|)
-value|malloc((n) * (size), M_BHND_NVRAM, \ 					    M_WAITOK | M_ZERO)
+value|malloc((n) * (size), M_BHND_NVRAM, \ 					    M_NOWAIT | M_ZERO)
 end_define
 
 begin_define
@@ -237,7 +237,7 @@ name|buf
 parameter_list|,
 name|size
 parameter_list|)
-value|reallocf((buf), (size), M_BHND_NVRAM, \ 					    M_WAITOK)
+value|reallocf((buf), (size), M_BHND_NVRAM, \ 					    M_NOWAIT)
 end_define
 
 begin_define
@@ -253,24 +253,154 @@ end_define
 begin_define
 define|#
 directive|define
-name|bhnd_nv_strdup
+name|bhnd_nv_asprintf
 parameter_list|(
-name|str
+name|buf
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
-value|strdup(str, M_BHND_NVRAM)
+value|asprintf((buf), M_BHND_NVRAM,	\ 					    fmt, ## __VA_ARGS__)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/* We need our own strdup() implementation to pass required M_NOWAIT */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|char
+modifier|*
+name|bhnd_nv_strdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|dest
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|dest
+operator|=
+name|malloc
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|,
+name|M_BHND_NVRAM
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|dest
+argument_list|,
+name|str
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|dest
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+operator|(
+name|dest
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* We need our own strndup() implementation to pass required M_NOWAIT */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|char
+modifier|*
 name|bhnd_nv_strndup
 parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|str
 parameter_list|,
+name|size_t
 name|len
 parameter_list|)
-value|strndup(str, len, M_BHND_NVRAM)
-end_define
+block|{
+name|char
+modifier|*
+name|dest
+decl_stmt|;
+name|len
+operator|=
+name|strnlen
+argument_list|(
+name|str
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|dest
+operator|=
+name|malloc
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|,
+name|M_BHND_NVRAM
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|dest
+argument_list|,
+name|str
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|dest
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+operator|(
+name|dest
+operator|)
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -538,6 +668,20 @@ parameter_list|)
 value|strndup(str, len)
 end_define
 
+begin_define
+define|#
+directive|define
+name|bhnd_nv_asprintf
+parameter_list|(
+name|buf
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|asprintf((buf), fmt, ## __VA_ARGS__)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -555,6 +699,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BHND_NV_INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -562,10 +712,39 @@ name|BHND_NV_ASSERT
 parameter_list|(
 name|expr
 parameter_list|,
-modifier|...
+name|msg
 parameter_list|)
-value|assert(expr)
+value|do {				\ 	if (!(expr)) {							\ 		fprintf(stderr, "Assertion failed: %s, function %s, "	\ 		    "file %s, line %u\n", __STRING(expr), __FUNCTION__,	\ 		    __FILE__, __LINE__);				\ 		BHND_NV_PANIC msg;					\ 	}								\ } while(0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !BHND_NV_INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BHND_NV_ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BHND_NV_INVARIANTS */
+end_comment
 
 begin_define
 define|#
@@ -1057,6 +1236,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|bhnd_nvram_trim_path_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|bhnd_nvram_validate_name
 parameter_list|(
@@ -1064,9 +1257,6 @@ specifier|const
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|size_t
-name|name_len
 parameter_list|)
 function_decl|;
 end_function_decl

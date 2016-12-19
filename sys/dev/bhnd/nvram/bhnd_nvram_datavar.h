@@ -104,23 +104,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/** @see bhnd_nvram_data_class_desc() */
-end_comment
-
-begin_typedef
-typedef|typedef
-specifier|const
-name|char
-modifier|*
-function_decl|(
-name|bhnd_nvram_data_op_class_desc
-function_decl|)
+begin_function_decl
+name|int
+name|bhnd_nvram_data_generic_rp_copy_val
 parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|,
 name|void
+modifier|*
+name|cookiep
+parameter_list|,
+name|bhnd_nvram_val
+modifier|*
+modifier|*
+name|val
 parameter_list|)
 function_decl|;
-end_typedef
+end_function_decl
 
 begin_comment
 comment|/** @see bhnd_nvram_data_probe() */
@@ -324,6 +327,61 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/** @see bhnd_nvram_data_copy_val() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_copy_val
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|,
+name|void
+modifier|*
+name|cookiep
+parameter_list|,
+name|bhnd_nvram_val
+modifier|*
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/** @see bhnd_nvram_data_getvar_order() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_getvar_order
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|,
+name|void
+modifier|*
+name|cookiep1
+parameter_list|,
+name|void
+modifier|*
+name|cookiep2
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/** @see bhnd_nvram_data_getvar_name() */
 end_comment
 
@@ -416,6 +474,63 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/** @see bhnd_nvram_data_filter_setvar() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_filter_setvar
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|bhnd_nvram_val
+modifier|*
+name|value
+parameter_list|,
+name|bhnd_nvram_val
+modifier|*
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/** @see bhnd_nvram_data_filter_unsetvar() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|bhnd_nvram_data_op_filter_unsetvar
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/**  * NVRAM data class.  */
 end_comment
 
@@ -469,6 +584,14 @@ name|bhnd_nvram_data_op_find
 modifier|*
 name|op_find
 decl_stmt|;
+name|bhnd_nvram_data_op_copy_val
+modifier|*
+name|op_copy_val
+decl_stmt|;
+name|bhnd_nvram_data_op_getvar_order
+modifier|*
+name|op_getvar_order
+decl_stmt|;
 name|bhnd_nvram_data_op_getvar
 modifier|*
 name|op_getvar
@@ -480,6 +603,14 @@ decl_stmt|;
 name|bhnd_nvram_data_op_getvar_name
 modifier|*
 name|op_getvar_name
+decl_stmt|;
+name|bhnd_nvram_data_op_filter_setvar
+modifier|*
+name|op_filter_setvar
+decl_stmt|;
+name|bhnd_nvram_data_op_filter_unsetvar
+modifier|*
+name|op_filter_unsetvar
 decl_stmt|;
 block|}
 struct|;
@@ -555,7 +686,7 @@ parameter_list|,
 name|_macro
 parameter_list|)
 define|\
-value|_macro(_cname, probe)					\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, size)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)
+value|_macro(_cname, probe)					\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, size)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
 end_define
 
 begin_comment
