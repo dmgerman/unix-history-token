@@ -13061,7 +13061,7 @@ name|init_done
 condition|)
 comment|/* Initialized early. */
 continue|continue;
-comment|/* 	 * Race: other thread might try to use this object before current 	 * one completes the initilization. Not much can be done here 	 * without better locking. 	 */
+comment|/* 	 * Race: other thread might try to use this object before current 	 * one completes the initialization. Not much can be done here 	 * without better locking. 	 */
 name|elm
 operator|->
 name|obj
