@@ -116,6 +116,20 @@ name|VDSO_TH_ALGO_2
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|VDSO_TH_ALGO_3
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDSO_TH_ALGO_4
+value|0x4
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

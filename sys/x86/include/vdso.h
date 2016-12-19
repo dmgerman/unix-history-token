@@ -37,6 +37,17 @@ name|VDSO_TH_ALGO_X86_HPET
 value|VDSO_TH_ALGO_2
 end_define
 
+begin_define
+define|#
+directive|define
+name|VDSO_TH_ALGO_X86_HVTSC
+value|VDSO_TH_ALGO_3
+end_define
+
+begin_comment
+comment|/* Hyper-V ref. TSC */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
