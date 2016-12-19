@@ -58,6 +58,17 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
+comment|/**  * BHND NVRAM boolean type; guaranteed to be exactly 8-bits, representing  * true as integer constant 1, and false as integer constant 0.  *   * Compatible with stdbool constants (true, false).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|bhnd_nvram_bool_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/**  * NVRAM data sources supported by bhnd(4) devices.  */
 end_comment
 
@@ -139,6 +150,21 @@ init|=
 literal|9
 block|,
 comment|/**< ASCII/UTF-8 NUL-terminated 						     string */
+name|BHND_NVRAM_TYPE_BOOL
+init|=
+literal|10
+block|,
+comment|/**< uint8 boolean value. see 						     bhnd_nvram_bool_t. */
+name|BHND_NVRAM_TYPE_NULL
+init|=
+literal|11
+block|,
+comment|/**< NULL (empty) value */
+name|BHND_NVRAM_TYPE_DATA
+init|=
+literal|12
+block|,
+comment|/**< opaque octet string */
 comment|/* 10-15 reserved for primitive (non-array) types */
 name|BHND_NVRAM_TYPE_UINT8_ARRAY
 init|=
@@ -190,6 +216,11 @@ init|=
 literal|25
 block|,
 comment|/**< array of ASCII/UTF-8 						     NUL-terminated strings */
+name|BHND_NVRAM_TYPE_BOOL_ARRAY
+init|=
+literal|26
+block|,
+comment|/**< array of uint8 boolean 						     values */
 block|}
 name|bhnd_nvram_type
 typedef|;
@@ -238,6 +269,16 @@ end_function_decl
 begin_function_decl
 name|bhnd_nvram_type
 name|bhnd_nvram_base_type
+parameter_list|(
+name|bhnd_nvram_type
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_nvram_type
+name|bhnd_nvram_raw_type
 parameter_list|(
 name|bhnd_nvram_type
 name|type

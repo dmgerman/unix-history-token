@@ -834,6 +834,15 @@ case|case
 name|BHND_NVRAM_TYPE_INT64
 case|:
 case|case
+name|BHND_NVRAM_TYPE_NULL
+case|:
+case|case
+name|BHND_NVRAM_TYPE_DATA
+case|:
+case|case
+name|BHND_NVRAM_TYPE_BOOL
+case|:
+case|case
 name|BHND_NVRAM_TYPE_UINT8_ARRAY
 case|:
 case|case
@@ -862,6 +871,9 @@ name|BHND_NVRAM_TYPE_CHAR_ARRAY
 case|:
 case|case
 name|BHND_NVRAM_TYPE_STRING_ARRAY
+case|:
+case|case
+name|BHND_NVRAM_TYPE_BOOL_ARRAY
 case|:
 comment|// TODO: non-char/string value support
 return|return
