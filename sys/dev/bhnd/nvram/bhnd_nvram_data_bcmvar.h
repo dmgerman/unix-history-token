@@ -15,6 +15,13 @@ directive|define
 name|_BHND_NVRAM_BHND_NVRAM_BCMVAR_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCM_NVRAM_ENCODE_OPT_VERSION
+value|"bcm_version"
+end_define
+
 begin_comment
 comment|/**  * BCM NVRAM header value data.  */
 end_comment

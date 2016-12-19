@@ -907,6 +907,26 @@ end_function
 
 begin_function
 specifier|static
+name|bhnd_nvram_plist
+modifier|*
+name|bhnd_nvram_tlv_options
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|bhnd_nvram_tlv_size
 parameter_list|(
@@ -1261,42 +1281,20 @@ operator|*
 operator|)
 name|nv
 expr_stmt|;
-comment|/* Seek past the TLV_ENV record referenced by cookiep */
-name|io_offset
-operator|=
-name|bhnd_nvram_tlv_to_offset
-argument_list|(
-name|tlv
-argument_list|,
-operator|*
-name|cookiep
-argument_list|)
-expr_stmt|;
+comment|/* Find next readable TLV record */
 if|if
 condition|(
-name|bhnd_nvram_tlv_next_env
-argument_list|(
-name|tlv
-argument_list|,
-operator|&
-name|io_offset
-argument_list|,
-name|NULL
-argument_list|)
+operator|*
+name|cookiep
 operator|==
 name|NULL
 condition|)
-name|BHND_NV_PANIC
-argument_list|(
-literal|"invalid cookiep: %p\n"
-argument_list|,
-name|cookiep
-argument_list|)
+block|{
+comment|/* Start search at offset 0x0 */
+name|io_offset
+operator|=
+literal|0x0
 expr_stmt|;
-comment|/* Fetch the next TLV_ENV record */
-if|if
-condition|(
-operator|(
 name|env
 operator|=
 name|bhnd_nvram_tlv_next_env
@@ -1308,18 +1306,70 @@ name|io_offset
 argument_list|,
 name|cookiep
 argument_list|)
-operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Seek past the previous env record */
+name|io_offset
+operator|=
+name|bhnd_nvram_tlv_to_offset
+argument_list|(
+name|tlv
+argument_list|,
+operator|*
+name|cookiep
+argument_list|)
+expr_stmt|;
+name|env
+operator|=
+name|bhnd_nvram_tlv_next_env
+argument_list|(
+name|tlv
+argument_list|,
+operator|&
+name|io_offset
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|env
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* No remaining ENV records */
+name|BHND_NV_PANIC
+argument_list|(
+literal|"invalid cookiep; record missing"
+argument_list|)
+expr_stmt|;
+comment|/* Advance to next env record, update the caller's cookiep */
+name|env
+operator|=
+name|bhnd_nvram_tlv_next_env
+argument_list|(
+name|tlv
+argument_list|,
+operator|&
+name|io_offset
+argument_list|,
+name|cookiep
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Check for EOF */
+if|if
+condition|(
+name|env
+operator|==
+name|NULL
+condition|)
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 comment|/* Return the NUL terminated name */
 return|return
 operator|(

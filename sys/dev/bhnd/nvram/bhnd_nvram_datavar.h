@@ -257,6 +257,26 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/** @see bhnd_nvram_data_options() */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|bhnd_nvram_plist
+modifier|*
+function_decl|(
+name|bhnd_nvram_data_op_options
+function_decl|)
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/** @see bhnd_nvram_data_caps() */
 end_comment
 
@@ -572,6 +592,10 @@ name|bhnd_nvram_data_op_serialize
 modifier|*
 name|op_serialize
 decl_stmt|;
+name|bhnd_nvram_data_op_options
+modifier|*
+name|op_options
+decl_stmt|;
 name|bhnd_nvram_data_op_caps
 modifier|*
 name|op_caps
@@ -686,7 +710,7 @@ parameter_list|,
 name|_macro
 parameter_list|)
 define|\
-value|_macro(_cname, probe)					\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, size)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
+value|_macro(_cname, probe)					\ 	_macro(_cname, new)					\ 	_macro(_cname, free)					\ 	_macro(_cname, count)					\ 	_macro(_cname, size)					\ 	_macro(_cname, serialize)				\ 	_macro(_cname, options)					\ 	_macro(_cname, caps)					\ 	_macro(_cname, next)					\ 	_macro(_cname, find)					\ 	_macro(_cname, copy_val)				\ 	_macro(_cname, getvar_order)				\ 	_macro(_cname, getvar)					\ 	_macro(_cname, getvar_ptr)				\ 	_macro(_cname, getvar_name)				\ 	_macro(_cname, filter_setvar)				\ 	_macro(_cname, filter_unsetvar)
 end_define
 
 begin_comment

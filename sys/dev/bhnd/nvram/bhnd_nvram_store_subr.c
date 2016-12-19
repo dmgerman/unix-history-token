@@ -968,13 +968,11 @@ name|false
 expr_stmt|;
 name|cookiep
 operator|=
-name|bhnd_nvstore_index_lookup
+name|bhnd_nvstore_path_data_lookup
 argument_list|(
 name|sc
 argument_list|,
 name|path
-operator|->
-name|index
 argument_list|,
 name|name
 argument_list|)

@@ -691,6 +691,36 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Return a borrowed reference to the serialization options for @p nv,  * suitable for use with bhnd_nvram_data_serialize(), or NULL if none.  *   * @param nv The NVRAM data to be queried.  */
+end_comment
+
+begin_function
+name|bhnd_nvram_plist
+modifier|*
+name|bhnd_nvram_data_options
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|)
+block|{
+return|return
+operator|(
+name|nv
+operator|->
+name|cls
+operator|->
+name|op_options
+argument_list|(
+name|nv
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Compute the size of the serialized form of @p nv.  *  * Serialization may be performed via bhnd_nvram_data_serialize().  *  * @param	nv	The NVRAM data to be queried.  * @param[out]	len	On success, will be set to the computed size.  *   * @retval 0		success  * @retval non-zero	if computing the serialized size otherwise fails, a  *			regular unix error code will be returned.  */
 end_comment
 

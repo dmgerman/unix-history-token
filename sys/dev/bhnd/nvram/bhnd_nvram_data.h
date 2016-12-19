@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bhnd_nvram_plist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhnd_nvram_value.h"
 end_include
 
@@ -389,6 +395,19 @@ parameter_list|,
 name|size_t
 modifier|*
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_nvram_plist
+modifier|*
+name|bhnd_nvram_data_options
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
 parameter_list|)
 function_decl|;
 end_function_decl

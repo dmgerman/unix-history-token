@@ -1574,6 +1574,26 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|bhnd_nvram_plist
+modifier|*
+name|bhnd_nvram_sprom_options
+parameter_list|(
+name|struct
+name|bhnd_nvram_data
+modifier|*
+name|nv
+parameter_list|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|size_t
 name|bhnd_nvram_sprom_count
 parameter_list|(

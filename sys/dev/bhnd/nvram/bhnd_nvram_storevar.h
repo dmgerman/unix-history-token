@@ -862,6 +862,11 @@ name|uint32_t
 name|data_caps
 decl_stmt|;
 comment|/**< data capability flags */
+name|bhnd_nvram_plist
+modifier|*
+name|data_opts
+decl_stmt|;
+comment|/**< data serialization options */
 name|bhnd_nvstore_alias_list
 name|aliases
 index|[
