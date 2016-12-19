@@ -90,7 +90,7 @@ name|size
 parameter_list|,
 name|flags
 parameter_list|)
-value|kmalloc((size), (flags) | M_ZERO)
+value|kmalloc((size), M_ZERO | ((flags) ? (flags) : M_NOWAIT))
 end_define
 
 begin_define
