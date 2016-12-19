@@ -11637,6 +11637,7 @@ name|cp2
 decl_stmt|;
 name|struct
 name|allowedpeer
+modifier|*
 name|ap
 decl_stmt|;
 name|struct
@@ -11686,6 +11687,32 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+name|ap
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -11754,7 +11781,7 @@ literal|'*'
 condition|)
 comment|/* any port allowed */
 name|ap
-operator|.
+operator|->
 name|port
 operator|=
 literal|0
@@ -11775,7 +11802,7 @@ operator|)
 condition|)
 block|{
 name|ap
-operator|.
+operator|->
 name|port
 operator|=
 name|ntohs
@@ -11789,7 +11816,7 @@ block|}
 else|else
 block|{
 name|ap
-operator|.
+operator|->
 name|port
 operator|=
 name|strtol
@@ -11834,7 +11861,7 @@ argument_list|)
 operator|)
 condition|)
 name|ap
-operator|.
+operator|->
 name|port
 operator|=
 name|ntohs
@@ -11847,7 +11874,7 @@ expr_stmt|;
 else|else
 comment|/* sanity, should not happen */
 name|ap
-operator|.
+operator|->
 name|port
 operator|=
 literal|514
@@ -12020,7 +12047,7 @@ literal|0
 condition|)
 block|{
 name|ap
-operator|.
+operator|->
 name|isnumeric
 operator|=
 literal|1
@@ -12029,7 +12056,7 @@ name|memcpy
 argument_list|(
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_addr
 argument_list|,
 name|res
@@ -12045,7 +12072,7 @@ name|memset
 argument_list|(
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 argument_list|,
 literal|0
@@ -12053,13 +12080,13 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ap
-operator|.
+operator|->
 name|a_mask
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|.
 name|ss_family
@@ -12078,7 +12105,7 @@ name|AF_INET
 condition|)
 block|{
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|.
 name|ss_len
@@ -12100,7 +12127,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|)
 operator|->
@@ -12117,7 +12144,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_addr
 operator|)
 operator|->
@@ -12272,7 +12299,7 @@ literal|128
 condition|)
 block|{
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|.
 name|ss_len
@@ -12308,7 +12335,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|)
 operator|->
@@ -12371,7 +12398,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|)
 operator|->
@@ -12392,7 +12419,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_addr
 operator|)
 operator|->
@@ -12448,13 +12475,13 @@ else|else
 block|{
 comment|/* arg `s' is domain name */
 name|ap
-operator|.
+operator|->
 name|isnumeric
 operator|=
 literal|0
 expr_stmt|;
 name|ap
-operator|.
+operator|->
 name|a_name
 operator|=
 name|s
@@ -12488,6 +12515,16 @@ block|}
 endif|#
 directive|endif
 block|}
+name|STAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|aphead
+argument_list|,
+name|ap
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Debug
@@ -12501,7 +12538,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ap
-operator|.
+operator|->
 name|isnumeric
 condition|)
 block|{
@@ -12519,7 +12556,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_addr
 argument_list|,
 operator|(
@@ -12530,7 +12567,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_addr
 operator|)
 operator|->
@@ -12564,7 +12601,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 argument_list|,
 operator|(
@@ -12575,7 +12612,7 @@ operator|*
 operator|)
 operator|&
 name|ap
-operator|.
+operator|->
 name|a_mask
 operator|)
 operator|->
@@ -12608,7 +12645,7 @@ argument_list|(
 literal|"domainname = %s; "
 argument_list|,
 name|ap
-operator|.
+operator|->
 name|a_name
 argument_list|)
 expr_stmt|;
@@ -12618,7 +12655,7 @@ argument_list|(
 literal|"port = %d\n"
 argument_list|,
 name|ap
-operator|.
+operator|->
 name|port
 argument_list|)
 expr_stmt|;
