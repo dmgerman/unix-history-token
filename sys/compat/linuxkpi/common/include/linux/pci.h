@@ -894,7 +894,7 @@ specifier|inline
 name|struct
 name|resource_list_entry
 modifier|*
-name|_pci_get_rle
+name|linux_pci_get_rle
 parameter_list|(
 name|struct
 name|pci_dev
@@ -955,7 +955,7 @@ specifier|inline
 name|struct
 name|resource_list_entry
 modifier|*
-name|_pci_get_bar
+name|linux_pci_get_bar
 parameter_list|(
 name|struct
 name|pci_dev
@@ -983,7 +983,7 @@ condition|(
 operator|(
 name|rle
 operator|=
-name|_pci_get_rle
+name|linux_pci_get_rle
 argument_list|(
 name|pdev
 argument_list|,
@@ -997,7 +997,7 @@ name|NULL
 condition|)
 name|rle
 operator|=
-name|_pci_get_rle
+name|linux_pci_get_rle
 argument_list|(
 name|pdev
 argument_list|,
@@ -1020,7 +1020,7 @@ specifier|inline
 name|struct
 name|device
 modifier|*
-name|_pci_find_irq_dev
+name|linux_pci_find_irq_dev
 parameter_list|(
 name|unsigned
 name|int
@@ -1128,7 +1128,7 @@ condition|(
 operator|(
 name|rle
 operator|=
-name|_pci_get_bar
+name|linux_pci_get_bar
 argument_list|(
 name|pdev
 argument_list|,
@@ -1177,7 +1177,7 @@ condition|(
 operator|(
 name|rle
 operator|=
-name|_pci_get_bar
+name|linux_pci_get_bar
 argument_list|(
 name|pdev
 argument_list|,
@@ -1630,7 +1630,7 @@ condition|(
 operator|(
 name|rle
 operator|=
-name|_pci_get_bar
+name|linux_pci_get_bar
 argument_list|(
 name|pdev
 argument_list|,
@@ -2318,7 +2318,7 @@ return|;
 block|}
 name|rle
 operator|=
-name|_pci_get_rle
+name|linux_pci_get_rle
 argument_list|(
 name|pdev
 argument_list|,

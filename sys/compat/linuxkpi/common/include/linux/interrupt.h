@@ -110,6 +110,7 @@ name|void
 modifier|*
 name|tag
 decl_stmt|;
+name|unsigned
 name|int
 name|irq
 decl_stmt|;
@@ -128,6 +129,7 @@ name|device
 modifier|*
 name|dev
 parameter_list|,
+name|unsigned
 name|int
 name|irq
 parameter_list|)
@@ -181,6 +183,7 @@ name|device
 modifier|*
 name|dev
 parameter_list|,
+name|unsigned
 name|int
 name|irq
 parameter_list|)
@@ -269,7 +272,7 @@ name|rid
 decl_stmt|;
 name|dev
 operator|=
-name|_pci_find_irq_dev
+name|linux_pci_find_irq_dev
 argument_list|(
 name|irq
 argument_list|)
@@ -469,7 +472,7 @@ name|dev
 decl_stmt|;
 name|dev
 operator|=
-name|_pci_find_irq_dev
+name|linux_pci_find_irq_dev
 argument_list|(
 name|irq
 argument_list|)
@@ -557,7 +560,7 @@ name|rid
 decl_stmt|;
 name|dev
 operator|=
-name|_pci_find_irq_dev
+name|linux_pci_find_irq_dev
 argument_list|(
 name|irq
 argument_list|)
