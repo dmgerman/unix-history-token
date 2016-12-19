@@ -90,7 +90,7 @@ name|prev
 parameter_list|,
 name|size_t
 modifier|*
-name|len
+name|olen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -216,7 +216,7 @@ name|prev
 parameter_list|,
 name|size_t
 modifier|*
-name|len
+name|olen
 parameter_list|)
 function_decl|;
 end_typedef

@@ -2270,15 +2270,9 @@ union|;
 comment|/* Determine type width */
 name|sp_width
 operator|=
-name|bhnd_nvram_value_size
+name|bhnd_nvram_type_width
 argument_list|(
 name|type
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2719,11 +2713,11 @@ name|iwidth
 operator|=
 name|bhnd_nvram_value_size
 argument_list|(
-name|var_btype
-argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|var_btype
 argument_list|,
 literal|1
 argument_list|)
@@ -4433,15 +4427,9 @@ block|}
 comment|/* Fetch type width for use as our scale value */
 name|width
 operator|=
-name|bhnd_nvram_value_size
+name|bhnd_nvram_type_width
 argument_list|(
 name|type
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

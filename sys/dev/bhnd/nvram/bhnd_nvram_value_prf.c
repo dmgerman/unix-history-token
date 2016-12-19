@@ -2257,15 +2257,9 @@ name|BHND_NVRAM_TYPE_CHAR
 expr_stmt|;
 name|arg_size
 operator|=
-name|bhnd_nvram_value_size
+name|bhnd_nvram_type_width
 argument_list|(
 name|arg_type
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Encode as single character */
