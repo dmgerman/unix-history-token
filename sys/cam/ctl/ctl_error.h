@@ -409,6 +409,9 @@ name|struct
 name|ctl_scsiio
 modifier|*
 name|ctsio
+parameter_list|,
+name|uint64_t
+name|lba
 parameter_list|)
 function_decl|;
 end_function_decl
