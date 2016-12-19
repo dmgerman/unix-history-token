@@ -178,7 +178,7 @@ name|int
 name|bhnd_nvram_val_bcm_macaddr_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -202,7 +202,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_macaddr_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -226,7 +226,7 @@ name|int
 name|bhnd_nvram_val_bcm_macaddr_string_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -250,7 +250,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_macaddr_string_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -283,7 +283,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_bcm_macaddr_string_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -305,7 +305,7 @@ name|int
 name|bhnd_nvram_val_bcm_int_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -329,7 +329,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_int_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -352,7 +352,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_decimal_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -383,7 +383,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_hex_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -415,7 +415,7 @@ name|int
 name|bhnd_nvram_val_bcm_leddc_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -439,7 +439,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_leddc_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -470,7 +470,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcmstr_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -494,7 +494,7 @@ name|int
 name|bhnd_nvram_val_bcmstr_csv_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -520,7 +520,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_bcmstr_csv_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -542,7 +542,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_macaddr_fmt
 init|=
 block|{
@@ -576,7 +576,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_macaddr_string_fmt
 init|=
 block|{
@@ -614,7 +614,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_leddc_fmt
 init|=
 block|{
@@ -647,7 +647,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_decimal_fmt
 init|=
 block|{
@@ -685,7 +685,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_hex_fmt
 init|=
 block|{
@@ -723,7 +723,7 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_string_fmt
 init|=
 block|{
@@ -752,7 +752,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 name|bhnd_nvram_val_bcm_string_csv_fmt
 init|=
 block|{
@@ -789,7 +789,7 @@ name|int
 name|bhnd_nvram_val_bcm_int_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -867,7 +867,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_int_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -932,7 +932,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_hex_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -1144,7 +1144,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_decimal_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -1262,7 +1262,7 @@ name|int
 name|bhnd_nvram_val_bcm_leddc_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -1368,7 +1368,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_leddc_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -1906,7 +1906,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcmstr_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -1922,11 +1922,11 @@ name|bhnd_nvram_type
 name|otype
 parameter_list|)
 block|{
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 name|array
 decl_stmt|;
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|array_fmt
 decl_stmt|;
@@ -2115,7 +2115,7 @@ name|int
 name|bhnd_nvram_val_bcmstr_csv_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -2169,7 +2169,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_bcmstr_csv_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2428,7 +2428,7 @@ name|int
 name|bhnd_nvram_val_bcm_macaddr_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -2492,7 +2492,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_macaddr_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2592,7 +2592,7 @@ name|int
 name|bhnd_nvram_val_bcm_macaddr_string_filter
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -2662,7 +2662,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_bcm_macaddr_string_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2783,7 +2783,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_bcm_macaddr_string_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,

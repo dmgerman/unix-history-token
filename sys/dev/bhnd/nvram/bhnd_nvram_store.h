@@ -134,7 +134,7 @@ name|bhnd_nvram_io
 modifier|*
 name|io
 parameter_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|)

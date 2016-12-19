@@ -89,7 +89,7 @@ begin_typedef
 typedef|typedef
 name|struct
 name|bhnd_nvram_data_class
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 typedef|;
 end_typedef
 
@@ -229,7 +229,7 @@ name|char
 modifier|*
 name|bhnd_nvram_data_class_desc
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|)
@@ -240,7 +240,7 @@ begin_function_decl
 name|int
 name|bhnd_nvram_data_probe
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|,
@@ -267,7 +267,7 @@ name|bhnd_nvram_io
 modifier|*
 name|io
 parameter_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|classes
 index|[]
@@ -282,7 +282,7 @@ begin_function_decl
 name|int
 name|bhnd_nvram_data_new
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|,
@@ -327,9 +327,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|bhnd_nvram_data_class_t
-modifier|*
 name|bhnd_nvram_data_class
+modifier|*
+name|bhnd_nvram_data_get_class
 parameter_list|(
 name|struct
 name|bhnd_nvram_data

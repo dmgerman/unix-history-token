@@ -2533,7 +2533,7 @@ name|bhnd_nvram_type
 name|otype
 parameter_list|)
 block|{
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 name|val
 decl_stmt|;
 name|struct

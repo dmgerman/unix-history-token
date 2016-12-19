@@ -117,7 +117,7 @@ name|char
 modifier|*
 name|bhnd_nvram_data_class_desc
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|)
@@ -140,7 +140,7 @@ begin_function
 name|int
 name|bhnd_nvram_data_probe
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|,
@@ -182,7 +182,7 @@ name|bhnd_nvram_io
 modifier|*
 name|io
 parameter_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|classes
 index|[]
@@ -191,7 +191,7 @@ name|size_t
 name|num_classes
 parameter_list|)
 block|{
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 decl_stmt|;
@@ -254,7 +254,7 @@ name|i
 operator|++
 control|)
 block|{
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|next_cls
 decl_stmt|;
@@ -418,7 +418,7 @@ begin_function
 name|int
 name|bhnd_nvram_data_new
 parameter_list|(
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 parameter_list|,
@@ -641,9 +641,9 @@ comment|/**  * Return a pointer to @p nv's data class.  *   * @param nv The NVRA
 end_comment
 
 begin_function
-name|bhnd_nvram_data_class_t
-modifier|*
 name|bhnd_nvram_data_class
+modifier|*
+name|bhnd_nvram_data_get_class
 parameter_list|(
 name|struct
 name|bhnd_nvram_data
@@ -1025,7 +1025,7 @@ name|bhnd_nvram_type
 name|otype
 parameter_list|)
 block|{
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 name|val
 decl_stmt|;
 specifier|const
@@ -1035,7 +1035,7 @@ modifier|*
 name|vdefn
 decl_stmt|;
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 decl_stmt|;

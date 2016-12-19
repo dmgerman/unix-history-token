@@ -54,7 +54,7 @@ name|SET_DECLARE
 argument_list|(
 name|bhnd_nvram_data_class_set
 argument_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 argument_list|)
 expr_stmt|;
 end_expr_stmt

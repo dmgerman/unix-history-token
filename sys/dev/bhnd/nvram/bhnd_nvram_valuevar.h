@@ -25,7 +25,7 @@ begin_function_decl
 name|int
 name|bhnd_nvram_val_generic_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -47,7 +47,7 @@ begin_function_decl
 name|int
 name|bhnd_nvram_val_generic_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -79,7 +79,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_generic_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -107,7 +107,7 @@ name|bhnd_nvram_val_op_filter
 function_decl|)
 parameter_list|(
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 modifier|*
 name|fmt
@@ -137,7 +137,7 @@ function_decl|(
 name|bhnd_nvram_val_op_encode
 function_decl|)
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -166,7 +166,7 @@ function_decl|(
 name|bhnd_nvram_val_op_encode_elem
 function_decl|)
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -205,7 +205,7 @@ function_decl|(
 name|bhnd_nvram_val_op_next
 function_decl|)
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -232,7 +232,7 @@ function_decl|(
 name|bhnd_nvram_val_op_nelem
 function_decl|)
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|)

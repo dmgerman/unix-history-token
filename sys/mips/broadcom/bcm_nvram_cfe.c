@@ -216,7 +216,7 @@ modifier|*
 modifier|*
 name|dname
 parameter_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 modifier|*
 name|cls
@@ -254,7 +254,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 specifier|const
 name|nvram_cfe_fmts
@@ -284,7 +284,7 @@ name|bhnd_nvram_io
 modifier|*
 name|io
 decl_stmt|;
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 decl_stmt|;
@@ -408,7 +408,7 @@ name|bhnd_nvram_cfe_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 name|cls
 decl_stmt|;
@@ -709,7 +709,7 @@ modifier|*
 modifier|*
 name|dname
 parameter_list|,
-name|bhnd_nvram_data_class_t
+name|bhnd_nvram_data_class
 modifier|*
 modifier|*
 name|cls

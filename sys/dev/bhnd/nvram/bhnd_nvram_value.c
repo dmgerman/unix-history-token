@@ -119,7 +119,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_alloc_bytes
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -140,7 +140,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_set
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -166,7 +166,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_set_inline
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -194,7 +194,7 @@ parameter_list|,
 name|_storage
 parameter_list|)
 define|\
-value|(bhnd_nvram_val_t) {					\ 		.refs = 1,					\ 		.val_storage = _storage,			\ 		.fmt = _fmt,					\ 		.data_storage = BHND_NVRAM_VAL_DATA_NONE,	\ 	};
+value|(bhnd_nvram_val) {					\ 		.refs = 1,					\ 		.val_storage = _storage,			\ 		.fmt = _fmt,					\ 		.data_storage = BHND_NVRAM_VAL_DATA_NONE,	\ 	};
 end_define
 
 begin_comment
@@ -221,15 +221,15 @@ specifier|static
 name|int
 name|bhnd_nvram_val_init_common
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
-name|bhnd_nvram_val_storage_t
+name|bhnd_nvram_val_storage
 name|val_storage
 parameter_list|,
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 parameter_list|,
@@ -276,7 +276,7 @@ name|NULL
 condition|)
 block|{
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|nfmt
 init|=
@@ -513,12 +513,12 @@ begin_function
 name|int
 name|bhnd_nvram_val_init
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 parameter_list|,
@@ -584,13 +584,13 @@ begin_function
 name|int
 name|bhnd_nvram_val_new
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 modifier|*
 name|value
 parameter_list|,
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 parameter_list|,
@@ -680,20 +680,20 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Copy or retain a reference to @p value.  *   * On success, the caller is responsible for freeing the result via  * bhnd_nvram_val_release().  *   * @param	value	The value to be copied (or retained).  *   * @retval bhnd_nvram_val_t	if @p value was successfully copied or retained.  * @retval NULL			if allocation failed.  */
+comment|/**  * Copy or retain a reference to @p value.  *   * On success, the caller is responsible for freeing the result via  * bhnd_nvram_val_release().  *   * @param	value	The value to be copied (or retained).  *   * @retval bhnd_nvram_val	if @p value was successfully copied or retained.  * @retval NULL			if allocation failed.  */
 end_comment
 
 begin_function
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|bhnd_nvram_val_copy
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|)
 block|{
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|result
 decl_stmt|;
@@ -872,7 +872,7 @@ begin_function
 name|void
 name|bhnd_nvram_val_release
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|)
@@ -2463,7 +2463,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2539,7 +2539,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2635,7 +2635,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_bytes
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2732,7 +2732,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -2802,7 +2802,7 @@ begin_function
 name|bhnd_nvram_type
 name|bhnd_nvram_val_elem_type
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|)
@@ -2828,7 +2828,7 @@ begin_function
 name|size_t
 name|bhnd_nvram_val_nelem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|)
@@ -3002,7 +3002,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_generic_encode
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -3360,7 +3360,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_generic_encode_elem
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -3488,7 +3488,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_generic_next
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -3677,7 +3677,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_set
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -3818,7 +3818,7 @@ specifier|static
 name|int
 name|bhnd_nvram_val_set_inline
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -4126,7 +4126,7 @@ name|void
 modifier|*
 name|bhnd_nvram_val_alloc_bytes
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,

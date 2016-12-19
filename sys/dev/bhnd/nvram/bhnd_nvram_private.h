@@ -1164,7 +1164,7 @@ name|nelem
 decl_stmt|;
 comment|/**< element count, or 1 if not 						     an array-typed variable */
 specifier|const
-name|bhnd_nvram_val_fmt_t
+name|bhnd_nvram_val_fmt
 modifier|*
 name|fmt
 decl_stmt|;

@@ -199,7 +199,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_printf
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
@@ -268,7 +268,7 @@ begin_function
 name|int
 name|bhnd_nvram_val_vprintf
 parameter_list|(
-name|bhnd_nvram_val_t
+name|bhnd_nvram_val
 modifier|*
 name|value
 parameter_list|,
