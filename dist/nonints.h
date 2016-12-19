@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nonints.h,v 1.73 2016/06/03 01:21:59 sjg Exp $	*/
+comment|/*	$NetBSD: nonints.h,v 1.74 2016/09/05 00:40:29 sevan Exp $	*/
 end_comment
 
 begin_comment
@@ -304,19 +304,6 @@ name|MakeMode
 parameter_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
