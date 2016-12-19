@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.100 2016/06/07 00:40:00 sjg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.102 2016/12/07 15:00:46 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -1372,6 +1372,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|deleteOnError
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if failed targets should be deleted */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|keepgoing
 decl_stmt|;
 end_decl_stmt
@@ -2063,9 +2074,20 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
-function_decl|;
+function_decl|MAKE_ATTR_PRINTFLIKE
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
