@@ -147,6 +147,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|bhnd_nvram_io
+modifier|*
+name|bhnd_nvram_ioptr_new
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|size_t
+name|capacity
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -322,6 +345,35 @@ name|io
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * bhnd_nvram_ioptr flags  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|BHND_NVRAM_IOPTR_RDONLY
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|/**< read-only */
+name|BHND_NVRAM_IOPTR_RDWR
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|/**< read/write */
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#
