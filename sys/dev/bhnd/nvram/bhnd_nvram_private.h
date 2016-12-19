@@ -253,6 +253,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|bhnd_nv_strdup
+parameter_list|(
+name|str
+parameter_list|)
+value|strdup(str, M_BHND_NVRAM)
+end_define
+
+begin_define
+define|#
+directive|define
 name|bhnd_nv_strndup
 parameter_list|(
 name|str
@@ -504,6 +514,16 @@ parameter_list|(
 name|buf
 parameter_list|)
 value|free((buf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bhnd_nv_strdup
+parameter_list|(
+name|str
+parameter_list|)
+value|strdup(str)
 end_define
 
 begin_define

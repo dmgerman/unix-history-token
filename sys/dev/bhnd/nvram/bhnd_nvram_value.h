@@ -291,6 +291,17 @@ end_function_decl
 
 begin_function_decl
 name|bhnd_nvram_type
+name|bhnd_nvram_val_type
+parameter_list|(
+name|bhnd_nvram_val
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bhnd_nvram_type
 name|bhnd_nvram_val_elem_type
 parameter_list|(
 name|bhnd_nvram_val

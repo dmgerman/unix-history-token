@@ -2795,6 +2795,29 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Return the value's data type.  *  * @param	value	The value to be queried.  */
+end_comment
+
+begin_function
+name|bhnd_nvram_type
+name|bhnd_nvram_val_type
+parameter_list|(
+name|bhnd_nvram_val
+modifier|*
+name|value
+parameter_list|)
+block|{
+return|return
+operator|(
+name|value
+operator|->
+name|data_type
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Return value's element data type.  *  * @param	value	The value to be queried.  */
 end_comment
 
