@@ -921,6 +921,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|phdr
+argument_list|)
+expr_stmt|;
 name|_kvm_err
 argument_list|(
 name|kd
