@@ -398,7 +398,7 @@ literal|0x22948086
 block|,
 literal|0xffff
 block|,
-literal|"Braswell Storage Cluster Control MMC Port"
+literal|"Intel Braswell Storage Cluster Control MMC Port"
 block|,
 literal|0
 block|}
