@@ -194,7 +194,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"hv_util.h"
+file|<dev/hyperv/utilities/vmbus_icvar.h>
 end_include
 
 begin_include

@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/utilities/hv_util.h>
+file|<dev/hyperv/utilities/vmbus_icreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/hyperv/utilities/vmbus_icreg.h>
+file|<dev/hyperv/utilities/vmbus_icvar.h>
 end_include
 
 begin_include
