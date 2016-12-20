@@ -2962,7 +2962,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-16s %-4x %-3s %-3s %-4s %s\n"
+literal|"%-16s %-4u %-3s %-3s %-4s %s\n"
 argument_list|,
 operator|&
 name|dp
