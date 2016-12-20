@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__IMX6__HDMI_REGS_H__
+name|__DWC_HDMIREG_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__IMX6__HDMI_REGS_H__
+name|__DWC_HDMIREG_H__
 end_define
 
 begin_define
@@ -2792,6 +2792,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDMI_PHY_STAT0_RX_SENSE3
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_PHY_STAT0_RX_SENSE2
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_PHY_STAT0_RX_SENSE1
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_PHY_STAT0_RX_SENSE0
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_PHY_STAT0_RX_SENSE
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_PHY_STAT0_HPD
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDMI_PHY_TX_PHY_LOCK
 value|0x01
 end_define
@@ -2820,8 +2862,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDMI_PHY_HPD
-value|(1<< 1)
+name|HDMI_PHY_POL0_HPD
+value|0x02
 end_define
 
 begin_comment
@@ -3330,8 +3372,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDMI_A_HDCPCFG0_RXDETECT_MASK
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_HDCPCFG0_RXDETECT_ENABLE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_HDCPCFG0_RXDETECT_DISABLE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDMI_A_HDCPCFG1
 value|0x5001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_MASK
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_DISABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_HDCPCFG1_ENCRYPTIONDISABLE_ENABLE
+value|0x0
 end_define
 
 begin_define
@@ -3388,6 +3472,27 @@ define|#
 directive|define
 name|HDMI_A_VIDPOLCFG
 value|0x5009
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_VIDPOLCFG_DATAENPOL_MASK
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_VIDPOLCFG_DATAENPOL_ACTIVE_HIGH
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMI_A_VIDPOLCFG_DATAENPOL_ACTIVE_LOW
+value|0x0
 end_define
 
 begin_define
@@ -4177,7 +4282,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __IMX6__HDMI_REGS_H__ */
+comment|/* __DWC_HDMIREG_H__ */
 end_comment
 
 end_unit
