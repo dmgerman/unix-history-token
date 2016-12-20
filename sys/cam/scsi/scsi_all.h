@@ -7893,6 +7893,10 @@ name|SCSI_REV_SPC4
 value|6
 define|#
 directive|define
+name|SCSI_REV_SPC5
+value|7
+define|#
+directive|define
 name|SID_ECMA
 value|0x38
 define|#
