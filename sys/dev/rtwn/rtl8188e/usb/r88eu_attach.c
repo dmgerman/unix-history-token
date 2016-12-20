@@ -754,7 +754,7 @@ name|sc
 operator|->
 name|sc_init_rf
 operator|=
-name|r92c_init_rf_common
+name|r92c_init_rf
 expr_stmt|;
 name|sc
 operator|->

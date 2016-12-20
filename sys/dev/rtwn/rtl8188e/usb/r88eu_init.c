@@ -785,29 +785,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Turn CCK and OFDM blocks on. */
-name|rtwn_bb_setbits
-argument_list|(
-name|sc
-argument_list|,
-name|R92C_FPGA0_RFMOD
-argument_list|,
-literal|0
-argument_list|,
-name|R92C_RFMOD_CCK_EN
-argument_list|)
-expr_stmt|;
-name|rtwn_bb_setbits
-argument_list|(
-name|sc
-argument_list|,
-name|R92C_FPGA0_RFMOD
-argument_list|,
-literal|0
-argument_list|,
-name|R92C_RFMOD_OFDM_EN
-argument_list|)
-expr_stmt|;
 comment|/* Enable per-packet TX report. */
 name|rtwn_setbits_1
 argument_list|(

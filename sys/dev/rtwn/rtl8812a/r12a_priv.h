@@ -4136,7 +4136,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* RF path 2. */
+comment|/* RF chain 1. */
 block|{
 name|nitems
 argument_list|(
