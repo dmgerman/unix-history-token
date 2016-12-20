@@ -1751,14 +1751,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|clang
-name|optimize
-name|off
-end_pragma
-
 begin_function
 specifier|static
 name|void
