@@ -313,7 +313,7 @@ name|void
 name|vmbus_timesync
 parameter_list|(
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -610,7 +610,7 @@ name|xsc
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -644,7 +644,7 @@ name|data
 operator|=
 name|sc
 operator|->
-name|receive_buffer
+name|ic_buf
 expr_stmt|;
 name|dlen
 operator|=
@@ -875,7 +875,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|hv_util_attach
+name|vmbus_ic_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -912,7 +912,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|hv_util_detach
+name|vmbus_ic_detach
 argument_list|)
 block|,
 block|{
@@ -936,7 +936,8 @@ name|timesync_methods
 block|,
 expr|sizeof
 operator|(
-name|hv_util_sc
+expr|struct
+name|vmbus_ic_softc
 operator|)
 block|}
 decl_stmt|;

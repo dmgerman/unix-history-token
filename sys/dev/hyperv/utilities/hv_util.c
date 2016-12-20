@@ -148,7 +148,7 @@ name|int
 name|vmbus_ic_negomsg
 parameter_list|(
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -910,7 +910,7 @@ end_function
 
 begin_function
 name|int
-name|hv_util_attach
+name|vmbus_ic_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -920,7 +920,7 @@ name|cb
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -966,7 +966,7 @@ name|VMBUS_IC_BRSIZE
 expr_stmt|;
 name|sc
 operator|->
-name|receive_buffer
+name|ic_buf
 operator|=
 name|malloc
 argument_list|(
@@ -1015,7 +1015,7 @@ name|free
 argument_list|(
 name|sc
 operator|->
-name|receive_buffer
+name|ic_buf
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1114,7 +1114,7 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -1179,7 +1179,7 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -1237,14 +1237,14 @@ end_function
 
 begin_function
 name|int
-name|hv_util_detach
+name|vmbus_ic_detach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 init|=
@@ -1265,7 +1265,7 @@ name|free
 argument_list|(
 name|sc
 operator|->
-name|receive_buffer
+name|ic_buf
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1283,7 +1283,7 @@ name|int
 name|vmbus_ic_sendresp
 parameter_list|(
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 modifier|*
 name|sc
 parameter_list|,

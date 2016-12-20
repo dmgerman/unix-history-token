@@ -714,7 +714,7 @@ struct|struct
 name|hv_vss_sc
 block|{
 name|struct
-name|hv_util_sc
+name|vmbus_ic_softc
 name|util_sc
 decl_stmt|;
 name|device_t
@@ -3662,7 +3662,7 @@ name|sc
 operator|->
 name|util_sc
 operator|.
-name|receive_buffer
+name|ic_buf
 expr_stmt|;
 name|channel
 operator|=
@@ -4838,12 +4838,14 @@ operator|=
 name|sc
 expr_stmt|;
 return|return
-name|hv_util_attach
+operator|(
+name|vmbus_ic_attach
 argument_list|(
 name|dev
 argument_list|,
 name|hv_vss_callback
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -4980,10 +4982,12 @@ name|hv_appvss_dev
 argument_list|)
 expr_stmt|;
 return|return
-name|hv_util_detach
+operator|(
+name|vmbus_ic_detach
 argument_list|(
 name|dev
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
