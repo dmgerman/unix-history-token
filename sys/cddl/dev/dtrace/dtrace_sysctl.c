@@ -349,5 +349,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_bsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|allow_destructive_dtrace
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|dtrace_allow_destructive
+argument_list|,
+literal|1
+argument_list|,
+literal|"Allow destructive mode DTrace scripts"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

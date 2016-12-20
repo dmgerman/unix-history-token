@@ -403,6 +403,29 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
+
+begin_comment
+comment|/* Positive logic version of dtrace_destructive_disallow for loader tunable */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dtrace_allow_destructive
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|dtrace_optval_t
 name|dtrace_nonroot_maxsize
