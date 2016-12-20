@@ -2707,6 +2707,19 @@ name|pe
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pe
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 operator|*
 name|pe
 operator|=
