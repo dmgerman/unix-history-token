@@ -5349,8 +5349,6 @@ decl_stmt|;
 name|int
 name|win
 decl_stmt|,
-name|sb_hiwat
-decl_stmt|,
 name|ip_ttl
 decl_stmt|,
 name|ip_tos
@@ -5519,14 +5517,6 @@ name|so
 operator|->
 name|so_rcv
 argument_list|)
-expr_stmt|;
-name|sb_hiwat
-operator|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
 expr_stmt|;
 name|ltflags
 operator|=
