@@ -997,11 +997,13 @@ decl_stmt|;
 name|uint32_t
 name|context_phys
 decl_stmt|;
+specifier|const
 name|struct
 name|sdma_firmware_header
 modifier|*
 name|fw_header
 decl_stmt|;
+specifier|const
 name|struct
 name|sdma_script_start_addrs
 modifier|*

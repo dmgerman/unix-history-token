@@ -1402,6 +1402,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sdma_firmware_header
 modifier|*
@@ -1445,11 +1446,6 @@ return|;
 block|}
 name|header
 operator|=
-operator|(
-expr|struct
-name|sdma_firmware_header
-operator|*
-operator|)
 name|fp
 operator|->
 name|data
@@ -1490,11 +1486,13 @@ operator|->
 name|fw_scripts
 operator|=
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1529,6 +1527,7 @@ name|sdma_buffer_descriptor
 modifier|*
 name|bd0
 decl_stmt|;
+specifier|const
 name|uint32_t
 modifier|*
 name|ram_code
@@ -1551,11 +1550,13 @@ decl_stmt|;
 name|ram_code
 operator|=
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2262,7 +2263,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|sdma
 argument_list|,
@@ -2275,6 +2276,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_RESOURCE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
