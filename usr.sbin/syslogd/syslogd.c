@@ -863,6 +863,11 @@ argument_list|,
 argument|deadq_entry
 argument_list|)
 name|deadq_head
+operator|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|deadq_head
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -988,7 +993,7 @@ begin_define
 define|#
 directive|define
 name|MAXREPEAT
-value|((sizeof(repeatinterval) / sizeof(repeatinterval[0])) - 1)
+value|(nitems(repeatinterval) - 1)
 end_define
 
 begin_define
@@ -1008,7 +1013,7 @@ name|BACKOFF
 parameter_list|(
 name|f
 parameter_list|)
-value|{ if (++(f)->f_repeatcount> MAXREPEAT) \ 				 (f)->f_repeatcount = MAXREPEAT; \ 			}
+value|do {						\ 				if (++(f)->f_repeatcount> MAXREPEAT)	\ 					(f)->f_repeatcount = MAXREPEAT;	\ 			} while (0)
 end_define
 
 begin_comment
@@ -3290,12 +3295,6 @@ argument_list|(
 name|TIMERINTVL
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|deadq_head
-argument_list|)
-expr_stmt|;
 comment|/* tuck my process id away */
 name|pidfile_write
 argument_list|(
@@ -3996,7 +3995,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: syslogd [-468ACcdFknosTuv] [-a allowed_peer]"
 argument_list|,
@@ -4005,6 +4004,8 @@ argument_list|,
 literal|"               [-l [mode:]path] [-m mark_interval]"
 argument_list|,
 literal|"               [-P pid_file] [-p log_socket]"
+argument_list|,
+literal|"               [-S logpriv_socket]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6848,7 +6849,10 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-name|IOV_SIZE
+name|nitems
+argument_list|(
+name|iov
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -6997,7 +7001,10 @@ name|f_file
 argument_list|,
 name|iov
 argument_list|,
-name|IOV_SIZE
+name|nitems
+argument_list|(
+name|iov
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -7109,7 +7116,10 @@ name|ttymsg
 argument_list|(
 name|iov
 argument_list|,
-name|IOV_SIZE
+name|nitems
+argument_list|(
+name|iov
+argument_list|)
 argument_list|,
 name|f
 operator|->
@@ -7162,7 +7172,10 @@ name|f
 argument_list|,
 name|iov
 argument_list|,
-name|IOV_SIZE
+name|nitems
+argument_list|(
+name|iov
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
