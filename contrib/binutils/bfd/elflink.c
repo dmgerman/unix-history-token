@@ -50140,6 +50140,8 @@ name|sec_contents
 decl_stmt|,
 modifier|*
 name|l_sec_contents
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
