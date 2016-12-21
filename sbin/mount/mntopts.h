@@ -351,5 +351,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|free_iovec
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+modifier|*
+name|iovec
+parameter_list|,
+name|int
+modifier|*
+name|iovlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
