@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -365,6 +371,10 @@ argument|vmbus_channel
 argument_list|)
 name|vmbus_chans
 expr_stmt|;
+name|struct
+name|intr_config_hook
+name|vmbus_intrhook
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NEW_PCIB
