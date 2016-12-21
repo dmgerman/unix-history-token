@@ -714,7 +714,7 @@ literal|7
 index|]
 condition|)
 block|{
-comment|/* 							 * Formula from DS18S20 datasheet, page 6 							 * DS18S20 datahseet says count_per_c is 16, DS1820 does not 							 */
+comment|/* 							 * Formula from DS18S20 datasheet, page 6 							 * DS18S20 datasheet says count_per_c is 16, DS1820 does not 							 */
 name|sc
 operator|->
 name|temp
