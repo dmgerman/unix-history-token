@@ -182,9 +182,11 @@ name|s_fp
 name|test
 init|=
 operator|-
+operator|(
 literal|200
 operator|<<
 literal|16
+operator|)
 decl_stmt|;
 comment|// exact -200.000000
 name|TEST_ASSERT_EQUAL_STRING
@@ -274,8 +276,8 @@ block|{
 name|s_fp
 name|test
 init|=
-operator|(
 operator|-
+operator|(
 literal|200
 operator|<<
 literal|16
@@ -375,8 +377,8 @@ block|{
 name|s_fp
 name|test
 init|=
-operator|(
 operator|-
+operator|(
 literal|200
 operator|<<
 literal|16

@@ -908,6 +908,14 @@ name|FOLLBY_TOKEN
 block|}
 block|,
 block|{
+literal|"bcpollbstep"
+block|,
+name|T_Bcpollbstep
+block|,
+name|FOLLBY_TOKEN
+block|}
+block|,
+block|{
 literal|"beacon"
 block|,
 name|T_Beacon

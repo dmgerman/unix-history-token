@@ -200,7 +200,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *---------------------------------------------------------------------  * replacing the 'time()' function  * --------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * replacing the 'time()' function  *---------------------------------------------------------------------  */
 end_comment
 
 begin_decl_stmt
@@ -1073,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *---------------------------------------------------------------------  * basic calendar stuff  * --------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * basic calendar stuff  *---------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -1202,11 +1202,11 @@ comment|/*  * Some notes on the terminology:  *  * We use the proleptic Gregoria
 end_comment
 
 begin_comment
-comment|/*  * ==================================================================  *  * General algorithmic stuff  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * General algorithmic stuff  *  * ====================================================================  */
 end_comment
 
 begin_comment
-comment|/*  *---------------------------------------------------------------------  * Do a periodic extension of 'value' around 'pivot' with a period of  * 'cycle'.  *  * The result 'res' is a number that holds to the following properties:  *  *   1)	 res MOD cycle == value MOD cycle  *   2)	 pivot<= res< pivot + cycle  *	 (replace</<= with>/>= for negative cycles)  *  * where 'MOD' denotes the modulo operator for FLOOR DIVISION, which  * is not the same as the '%' operator in C: C requires division to be  * a truncated division, where remainder and dividend have the same  * sign if the remainder is not zero, whereas floor division requires  * divider and modulus to have the same sign for a non-zero modulus.  *  * This function has some useful applications:  *  * + let Y be a calendar year and V a truncated 2-digit year: then  *	periodic_extend(Y-50, V, 100)  *   is the closest expansion of the truncated year with respect to  *   the full year, that is a 4-digit year with a difference of less  *   than 50 years to the year Y. ("century unfolding")  *  * + let T be a UN*X time stamp and V be seconds-of-day: then  *	perodic_extend(T-43200, V, 86400)  *   is a time stamp that has the same seconds-of-day as the input  *   value, with an absolute difference to T of<= 12hrs.  ("day  *   unfolding")  *  * + Wherever you have a truncated periodic value and a non-truncated  *   base value and you want to match them somehow...  *  * Basically, the function delivers 'pivot + (value - pivot) % cycle',  * but the implementation takes some pains to avoid internal signed  * integer overflows in the '(value - pivot) % cycle' part and adheres  * to the floor division convention.  *  * If 64bit scalars where available on all intended platforms, writing a  * version that uses 64 bit ops would be easy; writing a general  * division routine for 64bit ops on a platform that can only do  * 32/16bit divisions and is still performant is a bit more  * difficult. Since most usecases can be coded in a way that does only  * require the 32-bit version a 64bit version is NOT provided here.  * ---------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Do a periodic extension of 'value' around 'pivot' with a period of  * 'cycle'.  *  * The result 'res' is a number that holds to the following properties:  *  *   1)	 res MOD cycle == value MOD cycle  *   2)	 pivot<= res< pivot + cycle  *	 (replace</<= with>/>= for negative cycles)  *  * where 'MOD' denotes the modulo operator for FLOOR DIVISION, which  * is not the same as the '%' operator in C: C requires division to be  * a truncated division, where remainder and dividend have the same  * sign if the remainder is not zero, whereas floor division requires  * divider and modulus to have the same sign for a non-zero modulus.  *  * This function has some useful applications:  *  * + let Y be a calendar year and V a truncated 2-digit year: then  *	periodic_extend(Y-50, V, 100)  *   is the closest expansion of the truncated year with respect to  *   the full year, that is a 4-digit year with a difference of less  *   than 50 years to the year Y. ("century unfolding")  *  * + let T be a UN*X time stamp and V be seconds-of-day: then  *	perodic_extend(T-43200, V, 86400)  *   is a time stamp that has the same seconds-of-day as the input  *   value, with an absolute difference to T of<= 12hrs.  ("day  *   unfolding")  *  * + Wherever you have a truncated periodic value and a non-truncated  *   base value and you want to match them somehow...  *  * Basically, the function delivers 'pivot + (value - pivot) % cycle',  * but the implementation takes some pains to avoid internal signed  * integer overflows in the '(value - pivot) % cycle' part and adheres  * to the floor division convention.  *  * If 64bit scalars where available on all intended platforms, writing a  * version that uses 64 bit ops would be easy; writing a general  * division routine for 64bit ops on a platform that can only do  * 32/16bit divisions and is still performant is a bit more  * difficult. Since most usecases can be coded in a way that does only  * require the 32-bit version a 64bit version is NOT provided here.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1360,7 +1360,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-------------------------------------------------------------------  * Convert a timestamp in NTP scale to a 64bit seconds value in the UN*X  * scale with proper epoch unfolding around a given pivot or the current  * system time. This function happily accepts negative pivot values as  * timestamps befor 1970-01-01, so be aware of possible trouble on  * platforms with 32bit 'time_t'!  *  * This is also a periodic extension, but since the cycle is 2^32 and  * the shift is 2^31, we can do some *very* fast math without explicit  * divisions.  *-------------------------------------------------------------------  */
+comment|/*---------------------------------------------------------------------  * Note to the casual reader  *  * In the next two functions you will find (or would have found...)  * the expression  *  *   res.Q_s -= 0x80000000;  *  * There was some ruckus about a possible programming error due to  * integer overflow and sign propagation.  *  * This assumption is based on a lack of understanding of the C  * standard. (Though this is admittedly not one of the most 'natural'  * aspects of the 'C' language and easily to get wrong.)  *  * see   *	http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf  *	"ISO/IEC 9899:201x Committee Draft â April 12, 2011"  *	6.4.4.1 Integer constants, clause 5  *  * why there is no sign extension/overflow problem here.  *  * But to ease the minds of the doubtful, I added back the 'u' qualifiers  * that somehow got lost over the last years.   */
+end_comment
+
+begin_comment
+comment|/*  *---------------------------------------------------------------------  * Convert a timestamp in NTP scale to a 64bit seconds value in the UN*X  * scale with proper epoch unfolding around a given pivot or the current  * system time. This function happily accepts negative pivot values as  * timestamps befor 1970-01-01, so be aware of possible trouble on  * platforms with 32bit 'time_t'!  *  * This is also a periodic extension, but since the cycle is 2^32 and  * the shift is 2^31, we can do some *very* fast math without explicit  * divisions.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1405,7 +1409,7 @@ name|res
 operator|.
 name|Q_s
 operator|-=
-literal|0x80000000
+literal|0x80000000u
 expr_stmt|;
 comment|/* unshift of half range */
 name|ntp
@@ -1479,7 +1483,7 @@ name|lo
 argument_list|,
 literal|0
 argument_list|,
-literal|0x80000000
+literal|0x80000000u
 argument_list|)
 expr_stmt|;
 name|ntp
@@ -1528,7 +1532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-------------------------------------------------------------------  * Convert a timestamp in NTP scale to a 64bit seconds value in the NTP  * scale with proper epoch unfolding around a given pivot or the current  * system time.  *  * Note: The pivot must be given in the UN*X time domain!  *  * This is also a periodic extension, but since the cycle is 2^32 and  * the shift is 2^31, we can do some *very* fast math without explicit  * divisions.  *-------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Convert a timestamp in NTP scale to a 64bit seconds value in the NTP  * scale with proper epoch unfolding around a given pivot or the current  * system time.  *  * Note: The pivot must be given in the UN*X time domain!  *  * This is also a periodic extension, but since the cycle is 2^32 and  * the shift is 2^31, we can do some *very* fast math without explicit  * divisions.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1571,7 +1575,7 @@ name|res
 operator|.
 name|Q_s
 operator|-=
-literal|0x80000000
+literal|0x80000000u
 expr_stmt|;
 comment|/* unshift of half range */
 name|res
@@ -1709,11 +1713,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==================================================================  *  * Splitting values to composite entities  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * Splitting values to composite entities  *  * ====================================================================  */
 end_comment
 
 begin_comment
-comment|/*  *-------------------------------------------------------------------  * Split a 64bit seconds value into elapsed days in 'res.hi' and  * elapsed seconds since midnight in 'res.lo' using explicit floor  * division. This function happily accepts negative time values as  * timestamps before the respective epoch start.  * -------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Split a 64bit seconds value into elapsed days in 'res.hi' and  * elapsed seconds since midnight in 'res.lo' using explicit floor  * division. This function happily accepts negative time values as  * timestamps before the respective epoch start.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1952,7 +1956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-------------------------------------------------------------------  * Split a 32bit seconds value into h/m/s and excessive days.  This  * function happily accepts negative time values as timestamps before  * midnight.  * -------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Split a 32bit seconds value into h/m/s and excessive days.  This  * function happily accepts negative time values as timestamps before  * midnight.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2088,7 +2092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ---------------------------------------------------------------------  * Given the number of elapsed days in the calendar era, split this  * number into the number of elapsed years in 'res.hi' and the number  * of elapsed days of that year in 'res.lo'.  *  * if 'isleapyear' is not NULL, it will receive an integer that is 0 for  * regular years and a non-zero value for leap years.  *---------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Given the number of elapsed days in the calendar era, split this  * number into the number of elapsed years in 'res.hi' and the number  * of elapsed days of that year in 'res.lo'.  *  * if 'isleapyear' is not NULL, it will receive an integer that is 0 for  * regular years and a non-zero value for leap years.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2954,7 +2958,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==================================================================  *  * merging composite entities  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * merging composite entities  *  * ====================================================================  */
 end_comment
 
 begin_comment
@@ -3535,7 +3539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *---------------------------------------------------------------------  * Convert ELAPSED years/months/days of gregorian calendar to elapsed  * days in year.  *  * Note: This will give the true difference to the start of the given year,  * even if months& days are off-scale.  *---------------------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------------------  * Convert ELAPSED years/months/days of gregorian calendar to elapsed  * days in year.  *  * Note: This will give the true difference to the start of the given  * year, even if months& days are off-scale.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3985,7 +3989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==================================================================  *  * extended and unchecked variants of caljulian/caltontp  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * extended and unchecked variants of caljulian/caltontp  *  * ====================================================================  */
 end_comment
 
 begin_function
@@ -4141,7 +4145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==================================================================  *  * day-of-week calculations  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * day-of-week calculations  *  * ====================================================================  */
 end_comment
 
 begin_comment
@@ -4277,7 +4281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ==================================================================  *  * ISO week-calendar conversions  *  * The ISO8601 calendar defines a calendar of years, weeks and weekdays.  * It is related to the Gregorian calendar, and a ISO year starts at the  * Monday closest to Jan,1st of the corresponding Gregorian year.  A ISO  * calendar year has always 52 or 53 weeks, and like the Grogrian  * calendar the ISO8601 calendar repeats itself every 400 years, or  * 146097 days, or 20871 weeks.  *  * While it is possible to write ISO calendar functions based on the  * Gregorian calendar functions, the following implementation takes a  * different approach, based directly on years and weeks.  *  * Analysis of the tabulated data shows that it is not possible to  * interpolate from years to weeks over a full 400 year range; cyclic  * shifts over 400 years do not provide a solution here. But it *is*  * possible to interpolate over every single century of the 400-year  * cycle. (The centennial leap year rule seems to be the culprit here.)  *  * It can be shown that a conversion from years to weeks can be done  * using a linear transformation of the form  *  *   w = floor( y * a + b )  *  * where the slope a must hold to  *  *  52.1780821918<= a< 52.1791044776  *  * and b must be chosen according to the selected slope and the number  * of the century in a 400-year period.  *  * The inverse calculation can also be done in this way. Careful scaling  * provides an unlimited set of integer coefficients a,k,b that enable  * us to write the calulation in the form  *  *   w = (y * a	 + b ) / k  *   y = (w * a' + b') / k'  *  * In this implementation the values of k and k' are chosen to be  * smallest possible powers of two, so the division can be implemented  * as shifts if the optimiser chooses to do so.  *  * ==================================================================  */
+comment|/*  * ====================================================================  *  * ISO week-calendar conversions  *  * The ISO8601 calendar defines a calendar of years, weeks and weekdays.  * It is related to the Gregorian calendar, and a ISO year starts at the  * Monday closest to Jan,1st of the corresponding Gregorian year.  A ISO  * calendar year has always 52 or 53 weeks, and like the Grogrian  * calendar the ISO8601 calendar repeats itself every 400 years, or  * 146097 days, or 20871 weeks.  *  * While it is possible to write ISO calendar functions based on the  * Gregorian calendar functions, the following implementation takes a  * different approach, based directly on years and weeks.  *  * Analysis of the tabulated data shows that it is not possible to  * interpolate from years to weeks over a full 400 year range; cyclic  * shifts over 400 years do not provide a solution here. But it *is*  * possible to interpolate over every single century of the 400-year  * cycle. (The centennial leap year rule seems to be the culprit here.)  *  * It can be shown that a conversion from years to weeks can be done  * using a linear transformation of the form  *  *   w = floor( y * a + b )  *  * where the slope a must hold to  *  *  52.1780821918<= a< 52.1791044776  *  * and b must be chosen according to the selected slope and the number  * of the century in a 400-year period.  *  * The inverse calculation can also be done in this way. Careful scaling  * provides an unlimited set of integer coefficients a,k,b that enable  * us to write the calulation in the form  *  *   w = (y * a	 + b ) / k  *   y = (w * a' + b') / k'  *  * In this implementation the values of k and k' are chosen to be  * smallest possible powers of two, so the division can be implemented  * as shifts if the optimiser chooses to do so.  *  * ====================================================================  */
 end_comment
 
 begin_comment
