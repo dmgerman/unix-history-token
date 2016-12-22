@@ -1394,6 +1394,7 @@ name|u32
 modifier|*
 name|out
 decl_stmt|;
+specifier|const
 name|u64
 modifier|*
 name|ptr
@@ -1444,6 +1445,7 @@ comment|/* 	 * Get pointer to the 64-bit counter set which is located at a 	 * f
 name|ptr
 operator|=
 operator|(
+specifier|const
 name|uint64_t
 operator|*
 operator|)
