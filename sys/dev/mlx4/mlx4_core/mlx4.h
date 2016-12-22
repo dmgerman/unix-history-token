@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|DRV_RELDATE
-value|__DATE__
+value|"Sep 30 2016"
 end_define
 
 begin_define
