@@ -1455,7 +1455,9 @@ name|enum
 name|evtchn_type
 name|type
 parameter_list|,
-name|device_t
+specifier|const
+name|char
+modifier|*
 name|intr_owner
 parameter_list|,
 name|driver_filter_t
@@ -1497,11 +1499,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|printf
 argument_list|(
-name|intr_owner
+literal|"%s: xen_intr_bind_isrc: Bad event handle\n"
 argument_list|,
-literal|"xen_intr_bind_isrc: Bad event handle\n"
+name|intr_owner
 argument_list|)
 expr_stmt|;
 return|return
@@ -4380,7 +4382,10 @@ name|local_port
 argument_list|,
 name|EVTCHN_TYPE_PORT
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|filter
 argument_list|,
@@ -4510,7 +4515,10 @@ name|port
 argument_list|,
 name|EVTCHN_TYPE_PORT
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|filter
 argument_list|,
@@ -4671,7 +4679,10 @@ name|local_port
 argument_list|,
 name|EVTCHN_TYPE_PORT
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|filter
 argument_list|,
@@ -4851,7 +4862,10 @@ name|port
 argument_list|,
 name|EVTCHN_TYPE_VIRQ
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|filter
 argument_list|,
@@ -4988,9 +5002,6 @@ begin_function
 name|int
 name|xen_intr_alloc_and_bind_ipi
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|u_int
 name|cpu
 parameter_list|,
@@ -5035,6 +5046,15 @@ operator|=
 name|vcpu_id
 block|}
 decl_stmt|;
+comment|/* Same size as the one used by intr_handler->ih_name. */
+name|char
+name|name
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5073,6 +5093,20 @@ name|error
 operator|)
 return|;
 block|}
+name|snprintf
+argument_list|(
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+literal|"cpu%u"
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|xen_intr_bind_isrc
@@ -5086,7 +5120,7 @@ name|port
 argument_list|,
 name|EVTCHN_TYPE_IPI
 argument_list|,
-name|dev
+name|name
 argument_list|,
 name|filter
 argument_list|,
@@ -5097,25 +5131,6 @@ argument_list|,
 name|flags
 argument_list|,
 name|port_handlep
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|error
-operator|=
-name|intr_event_bind
-argument_list|(
-name|isrc
-operator|->
-name|xi_intsrc
-operator|.
-name|is_event
-argument_list|,
-name|cpu
 argument_list|)
 expr_stmt|;
 if|if
@@ -6016,8 +6031,10 @@ begin_function
 name|int
 name|xen_intr_add_handler
 parameter_list|(
-name|device_t
-name|dev
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|,
 name|driver_filter_t
 name|filter
@@ -6073,10 +6090,7 @@ name|error
 operator|=
 name|intr_add_handler
 argument_list|(
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
+name|name
 argument_list|,
 name|isrc
 operator|->
@@ -6105,11 +6119,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|device_printf
+name|printf
 argument_list|(
-name|dev
+literal|"%s: xen_intr_add_handler: intr_add_handler failed: %d\n"
 argument_list|,
-literal|"xen_intr_add_handler: intr_add_handler failed: %d\n"
+name|name
 argument_list|,
 name|error
 argument_list|)

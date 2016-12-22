@@ -1647,9 +1647,6 @@ name|xen_ipi_handler
 modifier|*
 name|ipi
 decl_stmt|;
-name|device_t
-name|dev
-decl_stmt|;
 name|int
 name|idx
 decl_stmt|,
@@ -1662,28 +1659,6 @@ argument_list|(
 name|cpu
 argument_list|,
 name|ipi_handle
-argument_list|)
-expr_stmt|;
-name|dev
-operator|=
-name|pcpu_find
-argument_list|(
-name|cpu
-argument_list|)
-operator|->
-name|pc_device
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|dev
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"NULL pcpu device_t"
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1732,8 +1707,6 @@ name|rc
 operator|=
 name|xen_intr_alloc_and_bind_ipi
 argument_list|(
-name|dev
-argument_list|,
 name|cpu
 argument_list|,
 name|ipi

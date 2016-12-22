@@ -1687,7 +1687,10 @@ name|error
 operator|=
 name|xen_intr_add_handler
 argument_list|(
+name|device_get_nameunit
+argument_list|(
 name|evtchn_dev
+argument_list|)
 argument_list|,
 name|evtchn_filter
 argument_list|,
