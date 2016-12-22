@@ -5,28 +5,6 @@ directive|include
 file|"config.h"
 end_include
 
-begin_comment
-comment|/* need autokey for some of the tests, or the will create buffer overruns. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AUTOKEY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AUTOKEY
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -62,7 +40,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Hacks into the key database.
+comment|/* Hacks into the key database. */
 end_comment
 
 begin_decl_stmt
@@ -302,18 +280,76 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
+begin_comment
+comment|/* [Bug 2998] There are some issues whith the definition of 'struct pkt'  * when AUTOKEY is undefined -- the formal struct is too small to hold  * all the extension fields that are going to be tested. We have to make  * sure we have the extra bytes, or the test yield undefined results due  * to buffer overrun.   */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AUTOKEY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXTRA_BUFSIZE
+value|256
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXTRA_BUFSIZE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_union
+union|union
+name|tpkt
+block|{
 name|struct
 name|pkt
+name|p
+decl_stmt|;
+name|u_char
+name|b
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pkt
+argument_list|)
+operator|+
+name|EXTRA_BUFSIZE
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_decl_stmt
+specifier|static
+name|union
+name|tpkt
 name|testpkt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|pkt
+name|union
+name|tpkt
 name|testspkt
 decl_stmt|;
 end_decl_stmt
@@ -499,6 +535,8 @@ expr_stmt|;
 comment|/* Initialize the test packet and socket, 	 * so they contain at least some valid data. 	 */
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -512,6 +550,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|stratum
 operator|=
 name|STRATUM_REFCLOCK
@@ -520,6 +560,8 @@ name|memcpy
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|refid
 argument_list|,
@@ -552,6 +594,8 @@ argument_list|,
 operator|&
 name|testpkt
 operator|.
+name|p
+operator|.
 name|org
 argument_list|)
 expr_stmt|;
@@ -562,6 +606,8 @@ name|tmp
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 operator|.
 name|xmt
 argument_list|)
@@ -617,6 +663,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -629,6 +677,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -642,6 +692,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -654,6 +706,8 @@ name|MODE_BROADCAST
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -677,6 +731,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -689,6 +745,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -702,6 +760,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -714,6 +774,8 @@ name|MODE_BROADCAST
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -729,13 +791,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* The lower 16-bits are the length of the extension field. 	 * This lengths must be multiples of 4 bytes, which gives 	 * a minimum of 4 byte extension field length. 	 */
+comment|/* [Bug 2998] We have to get around the formal specification of 	 * the extension field if AUTOKEY is undefined. (At least CLANG 	 * issues a warning in this case. It's just a warning, but 	 * still... 	 */
+name|uint32_t
+modifier|*
+name|pe
+init|=
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
-index|[
+operator|+
 literal|7
-index|]
+decl_stmt|;
+comment|/* The lower 16-bits are the length of the extension field. 	 * This lengths must be multiples of 4 bytes, which gives 	 * a minimum of 4 byte extension field length. 	 */
+operator|*
+name|pe
 operator|=
 name|htonl
 argument_list|(
@@ -761,6 +832,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -771,6 +844,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -816,6 +891,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -826,6 +903,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -873,6 +952,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -883,6 +964,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -924,6 +1007,8 @@ name|LEN_PKT_NOMAC
 decl_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
 index|[
 literal|0
@@ -941,6 +1026,8 @@ name|make_mac
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 name|pkt_len
 argument_list|,
@@ -950,6 +1037,8 @@ name|key_ptr
 argument_list|,
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|exten
 index|[
@@ -966,6 +1055,8 @@ expr_stmt|;
 comment|/* Now, alter the MAC so it becomes invalid. */
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
 index|[
 literal|1
@@ -981,6 +1072,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -991,6 +1084,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1032,6 +1127,8 @@ name|LEN_PKT_NOMAC
 decl_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
 index|[
 literal|0
@@ -1049,6 +1146,8 @@ name|make_mac
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 name|pkt_len
 argument_list|,
@@ -1058,6 +1157,8 @@ name|key_ptr
 argument_list|,
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|exten
 index|[
@@ -1079,6 +1180,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1089,6 +1192,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1114,6 +1219,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -1132,6 +1239,8 @@ argument_list|(
 name|PKT_VERSION
 argument_list|(
 name|testpkt
+operator|.
+name|p
 operator|.
 name|li_vn_mode
 argument_list|)
@@ -1152,6 +1261,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1162,6 +1273,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1187,6 +1300,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -1205,6 +1320,8 @@ argument_list|(
 name|PKT_VERSION
 argument_list|(
 name|testpkt
+operator|.
+name|p
 operator|.
 name|li_vn_mode
 argument_list|)
@@ -1225,6 +1342,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1235,6 +1354,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1260,6 +1381,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -1280,6 +1403,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1290,6 +1415,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1319,6 +1446,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|stratum
 operator|=
 name|STRATUM_PKT_UNSPEC
@@ -1327,6 +1456,8 @@ name|memcpy
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|refid
 argument_list|,
@@ -1343,6 +1474,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1353,6 +1486,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1378,6 +1513,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|stratum
 operator|=
 name|STRATUM_PKT_UNSPEC
@@ -1386,6 +1523,8 @@ name|memcpy
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|refid
 argument_list|,
@@ -1402,6 +1541,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1412,6 +1553,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1437,6 +1580,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -1456,6 +1601,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1466,6 +1613,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1512,6 +1661,8 @@ argument_list|,
 operator|&
 name|testpkt
 operator|.
+name|p
+operator|.
 name|org
 argument_list|)
 expr_stmt|;
@@ -1535,6 +1686,8 @@ argument_list|,
 operator|&
 name|testspkt
 operator|.
+name|p
+operator|.
 name|xmt
 argument_list|)
 expr_stmt|;
@@ -1546,6 +1699,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1556,6 +1711,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1581,6 +1738,8 @@ argument_list|)
 expr_stmt|;
 name|testpkt
 operator|.
+name|p
+operator|.
 name|li_vn_mode
 operator|=
 name|PKT_LI_VN_MODE
@@ -1600,6 +1759,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1640,6 +1801,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1650,6 +1813,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1690,6 +1855,8 @@ decl_stmt|;
 comment|/* Prepare the packet. */
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
 index|[
 literal|0
@@ -1707,6 +1874,8 @@ name|make_mac
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 name|pkt_len
 argument_list|,
@@ -1716,6 +1885,8 @@ name|key_ptr
 argument_list|,
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|exten
 index|[
@@ -1737,6 +1908,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1747,6 +1920,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
@@ -1789,6 +1964,8 @@ decl_stmt|;
 comment|/* Prepare the packet. */
 name|testpkt
 operator|.
+name|p
+operator|.
 name|exten
 index|[
 literal|0
@@ -1806,6 +1983,8 @@ name|make_mac
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 name|pkt_len
 argument_list|,
@@ -1815,6 +1994,8 @@ name|key_ptr
 argument_list|,
 operator|&
 name|testpkt
+operator|.
+name|p
 operator|.
 name|exten
 index|[
@@ -1836,6 +2017,8 @@ name|process_pkt
 argument_list|(
 operator|&
 name|testpkt
+operator|.
+name|p
 argument_list|,
 operator|&
 name|testsock
@@ -1846,6 +2029,8 @@ name|MODE_SERVER
 argument_list|,
 operator|&
 name|testspkt
+operator|.
+name|p
 argument_list|,
 literal|"UnitTest"
 argument_list|)
