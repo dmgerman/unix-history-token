@@ -638,6 +638,18 @@ comment|/* cluster stratum floor */
 end_comment
 
 begin_decl_stmt
+name|u_char
+name|sys_bcpollbstep
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Broadcast Poll backstep gate */
+end_comment
+
+begin_decl_stmt
 name|int
 name|sys_ceiling
 init|=
@@ -5001,7 +5013,7 @@ operator|++
 name|bail
 expr_stmt|;
 block|}
-comment|/* too early? worth an error, too! */
+comment|/* too early? worth an error, too! 			 * 			 * [Bug 3113] Ensure that at least one poll 			 * interval has elapsed since the last **clean** 			 * packet was received.  We limit the check to 			 * **clean** packets to prevent replayed packets 			 * and incorrectly authenticated packets, which 			 * we'll discard, from being used to create a 			 * denial of service condition. 			 */
 name|deadband
 operator|=
 operator|(
@@ -5032,7 +5044,7 @@ name|current_time
 operator|-
 name|peer
 operator|->
-name|timelastrec
+name|timereceived
 operator|)
 operator|<
 name|deadband
@@ -5057,7 +5069,7 @@ name|current_time
 operator|-
 name|peer
 operator|->
-name|timelastrec
+name|timereceived
 operator|)
 argument_list|,
 name|deadband
@@ -5067,7 +5079,59 @@ operator|++
 name|bail
 expr_stmt|;
 block|}
-comment|/* Alert if time from the server is non-monotonic */
+comment|/* Alert if time from the server is non-monotonic. 			 * 			 * [Bug 3114] is about Broadcast mode replay DoS. 			 * 			 * Broadcast mode *assumes* a trusted network. 			 * Even so, it's nice to be robust in the face 			 * of attacks. 			 * 			 * If we get an authenticated broadcast packet 			 * with an "earlier" timestamp, it means one of 			 * two things: 			 * 			 * - the broadcast server had a backward step. 			 * 			 * - somebody is trying a replay attack. 			 * 			 * deadband: By default, we assume the broadcast 			 * network is trustable, so we take our accepted 			 * broadcast packets as we receive them.  But 			 * some folks might want to take additional poll 			 * delays before believing a backward step.  			 */
+if|if
+condition|(
+name|sys_bcpollbstep
+condition|)
+block|{
+comment|/* pkt->ppoll or peer->ppoll ? */
+name|deadband
+operator|=
+operator|(
+literal|1u
+operator|<<
+name|pkt
+operator|->
+name|ppoll
+operator|)
+operator|*
+name|sys_bcpollbstep
+operator|+
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+name|deadband
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|L_ISZERO
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|bxmt
+argument_list|)
+condition|)
+block|{
+name|tdiff
+operator|.
+name|l_ui
+operator|=
+name|tdiff
+operator|.
+name|l_uf
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|tdiff
 operator|=
 name|p_xmt
@@ -5083,6 +5147,7 @@ operator|->
 name|bxmt
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tdiff
@@ -5090,6 +5155,16 @@ operator|.
 name|l_i
 operator|<
 literal|0
+operator|&&
+operator|(
+name|current_time
+operator|-
+name|peer
+operator|->
+name|timereceived
+operator|)
+operator|<
+name|deadband
 condition|)
 block|{
 name|msyslog
@@ -5131,12 +5206,6 @@ operator|++
 name|bail
 expr_stmt|;
 block|}
-name|peer
-operator|->
-name|bxmt
-operator|=
-name|p_xmt
-expr_stmt|;
 if|if
 condition|(
 name|bail
@@ -5646,11 +5715,86 @@ name|p_org
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|action
+decl_stmt|;
+name|L_CLR
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|aorg
+argument_list|)
+expr_stmt|;
+comment|/**/
+switch|switch
+condition|(
+name|hismode
+condition|)
+block|{
+comment|/* We allow 0org for: */
+case|case
+name|UCHAR_MAX
+case|:
+name|action
+operator|=
+literal|"Allow"
+expr_stmt|;
+break|break;
+comment|/* We disallow 0org for: */
+case|case
+name|MODE_UNSPEC
+case|:
+case|case
+name|MODE_ACTIVE
+case|:
+case|case
+name|MODE_PASSIVE
+case|:
+case|case
+name|MODE_CLIENT
+case|:
+case|case
+name|MODE_SERVER
+case|:
+case|case
+name|MODE_BROADCAST
+case|:
+name|action
+operator|=
+literal|"Drop"
+expr_stmt|;
+name|peer
+operator|->
+name|bogusorg
+operator|++
+expr_stmt|;
+name|peer
+operator|->
+name|flash
+operator||=
+name|TEST2
+expr_stmt|;
+comment|/* bogus */
+break|break;
+default|default:
+name|INSIST
+argument_list|(
+operator|!
+literal|"receive(): impossible hismode"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/**/
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"receive: Got 0 origin timestamp from %s@%s xmt %#010x.%08x"
+literal|"receive: %s 0 origin timestamp from %s@%s xmt %#010x.%08x"
+argument_list|,
+name|action
 argument_list|,
 name|hm_str
 argument_list|,
@@ -5679,14 +5823,6 @@ name|xmt
 operator|.
 name|l_uf
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|L_CLR
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|aorg
 argument_list|)
 expr_stmt|;
 block|}
@@ -6303,6 +6439,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Now that we know the packet is correctly authenticated, 		 * update peer->bxmt. 		 */
+name|peer
+operator|->
+name|bxmt
+operator|=
+name|p_xmt
+expr_stmt|;
 block|}
 comment|/* 	** Update the state variables. 	*/
 if|if
@@ -9321,6 +9464,14 @@ block|{
 name|u_char
 name|u
 decl_stmt|;
+name|l_fp
+name|bxmt
+init|=
+name|peer
+operator|->
+name|bxmt
+decl_stmt|;
+comment|/* bcast clients retain this! */
 ifdef|#
 directive|ifdef
 name|AUTOKEY
@@ -9480,6 +9631,21 @@ name|LOGTOD
 argument_list|(
 name|sys_precision
 argument_list|)
+expr_stmt|;
+comment|/* Don't throw away our broadcast replay protection */
+if|if
+condition|(
+name|peer
+operator|->
+name|hmode
+operator|==
+name|MODE_BCLIENT
+condition|)
+name|peer
+operator|->
+name|bxmt
+operator|=
+name|bxmt
 expr_stmt|;
 comment|/* 	 * If interleave mode, initialize the alternate origin switch. 	 */
 if|if
@@ -10815,7 +10981,9 @@ argument_list|(
 name|peer
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 comment|/* 		 * If this peer is an orphan parent, elect the 		 * one with the lowest metric defined as the 		 * IPv4 address or the first 64 bits of the 		 * hashed IPv6 address.  To ensure convergence 		 * on the same selected orphan, consider as 		 * well that this system may have the lowest 		 * metric and be the orphan parent.  If this 		 * system wins, sys_peer will be NULL to trigger 		 * orphan mode in timer(). 		 */
 if|if
 condition|(
@@ -10900,7 +11068,9 @@ name|stratum
 operator|>
 name|sys_orphan
 condition|)
+block|{
 continue|continue;
+block|}
 ifdef|#
 directive|ifdef
 name|REFCLOCK
@@ -12713,7 +12883,7 @@ block|{
 name|double
 name|dtemp
 decl_stmt|;
-comment|/* 	 * Root Distance (LAMBDA) is defined as: 	 * (delta + DELTA)/2 + epsilon + EPSILON + phi 	 * 	 * where: 	 *  delta   is the round-trip delay 	 *  DELTA   is the root delay 	 *  epsilon is the remote server precision + local precision 	 *	    + (15 usec each second) 	 *  EPSILON is the root dispersion 	 *  phi     is the peer jitter statistic 	 * 	 * NB: Think hard about why we are using these values, and what 	 * the alternatives are, and the various pros/cons. 	 * 	 * DLM thinks these are probably the best choices from any of the 	 * other worse choices. 	 */
+comment|/* 	 * Root Distance (LAMBDA) is defined as: 	 * (delta + DELTA)/2 + epsilon + EPSILON + D 	 * 	 * where: 	 *  delta   is the round-trip delay 	 *  DELTA   is the root delay 	 *  epsilon is the peer dispersion 	 *	    + (15 usec each second) 	 *  EPSILON is the root dispersion 	 *  D       is sys_jitter 	 * 	 * NB: Think hard about why we are using these values, and what 	 * the alternatives are, and the various pros/cons. 	 * 	 * DLM thinks these are probably the best choices from any of the 	 * other worse choices. 	 */
 name|dtemp
 operator|=
 operator|(
@@ -12728,17 +12898,9 @@ operator|)
 operator|/
 literal|2
 operator|+
-name|LOGTOD
-argument_list|(
 name|peer
 operator|->
-name|precision
-argument_list|)
-operator|+
-name|LOGTOD
-argument_list|(
-name|sys_precision
-argument_list|)
+name|disp
 operator|+
 name|clock_phi
 operator|*
@@ -14480,6 +14642,7 @@ operator|.
 name|offset
 argument_list|)
 expr_stmt|;
+comment|/* 	** XXX: Should the smear be added to the root dispersion? 	*/
 return|return;
 block|}
 end_function
@@ -16295,11 +16458,13 @@ name|stratum
 operator|>=
 name|sys_ceiling
 condition|)
+block|{
 name|rval
 operator||=
 name|TEST10
 expr_stmt|;
 comment|/* bad synch or stratum */
+block|}
 comment|/* 	 * A distance error for a remote peer occurs if the root 	 * distance is greater than or equal to the distance threshold 	 * plus the increment due to one host poll interval. 	 */
 if|if
 condition|(
@@ -16328,11 +16493,13 @@ operator|->
 name|hpoll
 argument_list|)
 condition|)
+block|{
 name|rval
 operator||=
 name|TEST11
 expr_stmt|;
 comment|/* distance exceeded */
+block|}
 comment|/* 	 * A loop error occurs if the remote peer is synchronized to the 	 * local peer or if the remote peer is synchronized to the same 	 * server as the local peer but only if the remote peer is 	 * neither a reference clock nor an orphan. 	 */
 if|if
 condition|(
@@ -16347,11 +16514,13 @@ argument_list|(
 name|peer
 argument_list|)
 condition|)
+block|{
 name|rval
 operator||=
 name|TEST12
 expr_stmt|;
 comment|/* synchronization loop */
+block|}
 comment|/* 	 * An unreachable error occurs if the server is unreachable or 	 * the noselect bit is set. 	 */
 if|if
 condition|(
@@ -16368,11 +16537,13 @@ operator|&
 name|FLAG_NOSELECT
 operator|)
 condition|)
+block|{
 name|rval
 operator||=
 name|TEST13
 expr_stmt|;
 comment|/* unreachable */
+block|}
 name|peer
 operator|->
 name|flash
@@ -17169,6 +17340,18 @@ name|value
 expr_stmt|;
 break|break;
 comment|/* 	 * tos command - arguments are double, sometimes cast to int 	 */
+case|case
+name|PROTO_BCPOLLBSTEP
+case|:
+comment|/* Broadcast Poll Backstep gate (bcpollbstep) */
+name|sys_bcpollbstep
+operator|=
+operator|(
+name|u_char
+operator|)
+name|dvalue
+expr_stmt|;
+break|break;
 case|case
 name|PROTO_BEACON
 case|:
