@@ -492,6 +492,8 @@ name|int
 name|retries
 decl_stmt|,
 name|rv
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|sc
 operator|=
@@ -715,9 +717,7 @@ index|]
 condition|)
 block|{
 comment|/* 							 * Formula from DS18S20 datasheet, page 6 							 * DS18S20 datasheet says count_per_c is 16, DS1820 does not 							 */
-name|sc
-operator|->
-name|temp
+name|tmp
 operator|=
 call|(
 name|int16_t
@@ -744,9 +744,7 @@ argument_list|)
 operator|<<
 literal|3
 expr_stmt|;
-name|sc
-operator|->
-name|temp
+name|tmp
 operator|+=
 literal|16
 operator|-
@@ -760,9 +758,7 @@ expr_stmt|;
 comment|/* count_per_c == 16 */
 block|}
 else|else
-name|sc
-operator|->
-name|temp
+name|tmp
 operator|=
 call|(
 name|int16_t
@@ -787,9 +783,7 @@ literal|3
 expr_stmt|;
 block|}
 else|else
-name|sc
-operator|->
-name|temp
+name|tmp
 operator|=
 call|(
 name|int16_t
@@ -814,9 +808,7 @@ name|sc
 operator|->
 name|temp
 operator|=
-name|sc
-operator|->
-name|temp
+name|tmp
 operator|*
 literal|1000
 operator|/
