@@ -680,10 +680,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|phys_avail
-index|[
 literal|0
-index|]
 expr_stmt|;
 name|dump_avail
 index|[
