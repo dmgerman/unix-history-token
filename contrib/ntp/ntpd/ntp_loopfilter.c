@@ -2533,6 +2533,7 @@ operator|-
 name|clock_offset
 operator|)
 operator|/
+operator|(
 name|max
 argument_list|(
 name|ULOGTOD
@@ -2544,6 +2545,7 @@ name|mu
 argument_list|)
 operator|*
 name|CLOCK_FLL
+operator|)
 expr_stmt|;
 comment|/* 				 * The PLL frequency gain (numerator) depends on 				 * the minimum of the update interval and Allan 				 * intercept. This reduces the PLL gain when the 				 * FLL becomes effective. 				 */
 name|etemp

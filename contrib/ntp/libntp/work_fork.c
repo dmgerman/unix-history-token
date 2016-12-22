@@ -394,7 +394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * harvest_child_status() runs in the parent.  */
+comment|/*  * harvest_child_status() runs in the parent.  *  * Note the error handling -- this is an interaction with SIGCHLD.  * SIG_IGN on SIGCHLD on some OSes means do not wait but reap  * automatically. Since we're not really interested in the result code,  * we simply ignore the error.  */
 end_comment
 
 begin_function
@@ -445,7 +445,13 @@ name|pid
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ECHILD
+condition|)
 name|msyslog
 argument_list|(
 name|LOG_ERR
@@ -456,6 +462,12 @@ name|c
 operator|->
 name|pid
 argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|pid
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -575,12 +587,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|c
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
 name|c
 operator|->
 name|resp_read_ctx
@@ -1863,13 +1869,8 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|signal_no_reset
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
+comment|/* [BUG 3050] setting SIGCHLD to SIG_IGN likely causes unwanted 	 * or undefined effects. We don't do it and leave SIGCHLD alone. 	 */
+comment|/* signal_no_reset(SIGCHLD, SIG_IGN); */
 name|childpid
 operator|=
 name|fork

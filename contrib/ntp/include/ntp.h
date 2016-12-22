@@ -1602,7 +1602,7 @@ comment|/* time stat counters were reset */
 name|u_long
 name|timelastrec
 decl_stmt|;
-comment|/* last packet received time */
+comment|/* last packet received time, incl. trash */
 name|u_long
 name|timereceived
 decl_stmt|;
@@ -1700,7 +1700,7 @@ comment|/* overload, clock is free running */
 end_comment
 
 begin_comment
-comment|/*  * Values for peer mode and packet mode. Only the modes through  * MODE_BROADCAST and MODE_BCLIENT appear in the transition  * function. MODE_CONTROL and MODE_PRIVATE can appear in packets,  * but those never survive to the transition function.  * is a / */
+comment|/*  * Values for peer mode and packet mode. Only the modes through  * MODE_BROADCAST and MODE_BCLIENT appear in the transition  * function. MODE_CONTROL and MODE_PRIVATE can appear in packets,  * but those never survive to the transition function.  */
 end_comment
 
 begin_define
@@ -1796,7 +1796,7 @@ comment|/* private mode */
 end_comment
 
 begin_comment
-comment|/*  * This is a madeup mode for broadcast client.  */
+comment|/*  * This is a made-up mode for broadcast client.  */
 end_comment
 
 begin_define
@@ -3615,6 +3615,13 @@ name|PROTO_PCEDIGEST
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_BCPOLLBSTEP
+value|33
+end_define
+
 begin_comment
 comment|/*  * Configuration items for the loop filter  */
 end_comment
@@ -3660,7 +3667,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* set bacward-step offset */
+comment|/* set backward-step offset */
 end_comment
 
 begin_define
