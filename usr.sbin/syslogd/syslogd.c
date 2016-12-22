@@ -6616,6 +6616,12 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+default|default:
+name|dprintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* check for local vs remote messages */
 if|if
