@@ -39,6 +39,21 @@ comment|/* seconds between queries */
 end_comment
 
 begin_comment
+comment|/* flags for extended addrinfo version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GAIR_F_IGNDNSERR
+value|0x0001
+end_define
+
+begin_comment
+comment|/* ignore DNS errors */
+end_comment
+
+begin_comment
 comment|/*  * you call getaddrinfo_sometime(name, service,&hints, retry, callback_func, context);  * later (*callback_func)(rescode, gai_errno, context, name, service, hints, ai_result) is called.  */
 end_comment
 
@@ -102,6 +117,36 @@ name|gai_sometime_callback
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|getaddrinfo_sometime_ex
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|addrinfo
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|gai_sometime_callback
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
