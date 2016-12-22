@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|CLK_RATIO_M
-value|(0x1f<< 0)
+value|(0xf<< 0)
 end_define
 
 begin_define
@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|CLK_RATIO_M_MAX
-value|0x1f
+value|0xf
 end_define
 
 begin_decl_stmt
