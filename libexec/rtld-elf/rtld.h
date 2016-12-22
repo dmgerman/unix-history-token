@@ -1090,6 +1090,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* unmap upon last unhold */
+name|bool
+name|doomed
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object cannot be referenced */
 name|struct
 name|link_map
 name|linkmap

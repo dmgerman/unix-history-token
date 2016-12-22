@@ -11844,6 +11844,10 @@ condition|(
 name|obj
 operator|->
 name|marker
+operator|||
+name|obj
+operator|->
+name|doomed
 condition|)
 continue|continue;
 if|if
@@ -12039,6 +12043,10 @@ condition|(
 name|obj
 operator|->
 name|marker
+operator|||
+name|obj
+operator|->
+name|doomed
 condition|)
 continue|continue;
 if|if
@@ -12736,6 +12744,18 @@ operator|==
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|root
+operator|!=
+name|NULL
+condition|)
+name|root
+operator|->
+name|doomed
+operator|=
+name|true
+expr_stmt|;
 comment|/*      * Preserve the current error message since a fini function might      * call into the dynamic linker and overwrite it.      */
 name|saved_msg
 operator|=
@@ -12796,7 +12816,15 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-comment|/* 	     * XXX: If a dlopen() call references an object while the 	     * fini function is in progress, we might end up trying to 	     * unload the referenced object in dlclose() or the object 	     * won't be unloaded although its fini function has been 	     * called. 	     */
+comment|/* Ensure that new references cannot be acquired. */
+name|elm
+operator|->
+name|obj
+operator|->
+name|doomed
+operator|=
+name|true
+expr_stmt|;
 name|hold_object
 argument_list|(
 name|elm
