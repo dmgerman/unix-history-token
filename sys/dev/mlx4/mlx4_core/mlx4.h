@@ -105,13 +105,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRV_RELDATE
-value|"Sep 30 2016"
-end_define
-
-begin_define
-define|#
-directive|define
 name|DRV_STACK_NAME
 value|"Linux-MLNX_OFED"
 end_define

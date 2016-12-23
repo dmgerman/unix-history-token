@@ -676,9 +676,7 @@ init|=
 name|DRV_NAME
 literal|": Mellanox ConnectX VPI driver v"
 name|DRV_VERSION
-literal|" ("
-name|DRV_RELDATE
-literal|")\n"
+literal|"\n"
 decl_stmt|;
 end_decl_stmt
 

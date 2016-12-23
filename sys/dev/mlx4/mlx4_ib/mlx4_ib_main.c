@@ -153,13 +153,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRV_RELDATE
-value|"Sep 30 2016"
-end_define
-
-begin_define
-define|#
-directive|define
 name|MLX4_IB_DRIVER_PROC_DIR_NAME
 value|"driver/mlx4_ib"
 end_define
@@ -374,9 +367,7 @@ init|=
 name|DRV_NAME
 literal|": Mellanox ConnectX InfiniBand driver v"
 name|DRV_VERSION
-literal|" ("
-name|DRV_RELDATE
-literal|")\n"
+literal|"\n"
 decl_stmt|;
 end_decl_stmt
 
