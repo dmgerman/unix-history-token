@@ -2052,12 +2052,10 @@ name|sp
 expr_stmt|;
 name|sp
 operator|=
-operator|*
-operator|(
-name|uintptr_t
-operator|*
-operator|)
+name|dtrace_next_sp
+argument_list|(
 name|sp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
