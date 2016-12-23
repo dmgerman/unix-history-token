@@ -597,7 +597,7 @@ name|VMBUS_ICMSG_TS_FLAG_SAMPLE
 operator|)
 operator|&&
 name|vmbus_ts_sample_thresh
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
