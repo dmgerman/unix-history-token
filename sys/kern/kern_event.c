@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stdatomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -231,6 +225,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
 
 begin_include
 include|#
@@ -1092,13 +1092,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|atomic_uint
+name|unsigned
+name|int
 name|kq_ncallouts
 init|=
-name|ATOMIC_VAR_INIT
-argument_list|(
 literal|0
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3054,18 +3052,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|ncallouts
-operator|=
-name|atomic_load_explicit
-argument_list|(
-operator|&
-name|kq_ncallouts
-argument_list|,
-name|memory_order_relaxed
-argument_list|)
-expr_stmt|;
 do|do
 block|{
+name|ncallouts
+operator|=
+name|kq_ncallouts
+expr_stmt|;
 if|if
 condition|(
 name|ncallouts
@@ -3081,21 +3073,16 @@ block|}
 do|while
 condition|(
 operator|!
-name|atomic_compare_exchange_weak_explicit
+name|atomic_cmpset_int
 argument_list|(
 operator|&
 name|kq_ncallouts
 argument_list|,
-operator|&
 name|ncallouts
 argument_list|,
 name|ncallouts
 operator|+
 literal|1
-argument_list|,
-name|memory_order_relaxed
-argument_list|,
-name|memory_order_relaxed
 argument_list|)
 condition|)
 do|;
@@ -3261,14 +3248,13 @@ argument_list|)
 expr_stmt|;
 name|old
 operator|=
-name|atomic_fetch_sub_explicit
+name|atomic_fetchadd_int
 argument_list|(
 operator|&
 name|kq_ncallouts
 argument_list|,
+operator|-
 literal|1
-argument_list|,
-name|memory_order_relaxed
 argument_list|)
 expr_stmt|;
 name|KASSERT
