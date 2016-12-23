@@ -20,7 +20,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_ASL_OPERATOR
-name|AslOperatorInfo
+name|Gbl_AslOperatorInfo
 index|[]
 init|=
 block|{

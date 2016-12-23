@@ -126,27 +126,11 @@ operator|==
 name|AE_CTRL_TRUE
 condition|)
 block|{
-if|if
-condition|(
-name|AcpiGbl_DebuggerConfiguration
-operator|==
-name|DEBUGGER_MULTI_THREADED
-condition|)
-block|{
-comment|/* Handshake with the front-end that gets user command lines */
-name|AcpiOsReleaseMutex
-argument_list|(
-name|AcpiGbl_DbCommandComplete
-argument_list|)
-expr_stmt|;
+comment|/* Notify the completion of the command */
 name|Status
 operator|=
-name|AcpiOsAcquireMutex
-argument_list|(
-name|AcpiGbl_DbCommandReady
-argument_list|,
-name|ACPI_WAIT_FOREVER
-argument_list|)
+name|AcpiOsNotifyCommandComplete
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -156,58 +140,15 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
-block|}
-else|else
-block|{
-comment|/* Single threaded, we must get a command line ourselves */
-comment|/* Force output to console until a command is entered */
-name|AcpiDbSetOutputDestination
-argument_list|(
-name|ACPI_DB_CONSOLE_OUTPUT
-argument_list|)
-expr_stmt|;
-comment|/* Different prompt if method is executing */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_MethodExecuting
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"%1c "
-argument_list|,
-name|ACPI_DEBUGGER_COMMAND_PROMPT
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"%1c "
-argument_list|,
-name|ACPI_DEBUGGER_EXECUTE_PROMPT
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Get the user input line */
+comment|/* Wait the readiness of the command */
 name|Status
 operator|=
-name|AcpiOsGetLine
-argument_list|(
-name|AcpiGbl_DbLineBuf
-argument_list|,
-name|ACPI_DB_LINE_BUFFER_SIZE
-argument_list|,
-name|NULL
-argument_list|)
+name|AcpiOsWaitCommandReady
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -217,23 +158,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"While parsing command line"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|Status
 operator|=
@@ -248,6 +175,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE); */
+name|ErrorExit
+label|:
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_CTRL_TERMINATE
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"While parsing/handling command line"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -1063,40 +1016,8 @@ block|{
 comment|/* These were created with one unit, grab it */
 name|Status
 operator|=
-name|AcpiOsAcquireMutex
-argument_list|(
-name|AcpiGbl_DbCommandComplete
-argument_list|,
-name|ACPI_WAIT_FOREVER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Could not get debugger mutex\n"
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-name|Status
-operator|=
-name|AcpiOsAcquireMutex
-argument_list|(
-name|AcpiGbl_DbCommandReady
-argument_list|,
-name|ACPI_WAIT_FOREVER
-argument_list|)
+name|AcpiOsInitializeDebugger
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1209,11 +1130,6 @@ operator|&
 name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
-name|AcpiOsReleaseMutex
-argument_list|(
-name|AcpiGbl_DbCommandReady
-argument_list|)
-expr_stmt|;
 comment|/* Wait the AML Debugger threads */
 while|while
 condition|(
@@ -1227,6 +1143,9 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsTerminateDebugger
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(

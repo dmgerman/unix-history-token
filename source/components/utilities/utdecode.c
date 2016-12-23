@@ -547,7 +547,7 @@ literal|"Null Object Descriptor\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_PTR
+name|return_STR
 argument_list|(
 literal|"[NULL Object Descriptor]"
 argument_list|)
@@ -596,7 +596,7 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_PTR
+name|return_STR
 argument_list|(
 literal|"Invalid object"
 argument_list|)

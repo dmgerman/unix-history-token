@@ -661,6 +661,32 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsEnterSleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              RegaValue           - Register A value  *              RegbValue           - Register B value  *  * RETURN:      Status  *  * DESCRIPTION: A hook before writing sleep registers to enter the sleep  *              state. Return AE_CTRL_SKIP to skip further sleep register  *              writes.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsEnterSleep
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|,
+name|UINT32
+name|RegaValue
+parameter_list|,
+name|UINT32
+name|RegbValue
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsRedirectOutput  *  * PARAMETERS:  Destination         - An open file handle/pointer  *  * RETURN:      None  *  * DESCRIPTION: Causes redirect of AcpiOsPrintf and AcpiOsVprintf  *  *****************************************************************************/
 end_comment
 

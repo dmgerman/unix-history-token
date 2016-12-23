@@ -1168,12 +1168,28 @@ name|BS
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|union
+name|acpi_efi_file
+name|ACPI_EFI_FILE
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
 name|FILE
-value|struct _ACPI_SIMPLE_TEXT_OUTPUT_INTERFACE
+value|ACPI_EFI_FILE
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|stdin
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -949,12 +949,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiDbUserCommands
 parameter_list|(
-name|char
-name|Prompt
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

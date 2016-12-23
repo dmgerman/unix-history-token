@@ -472,6 +472,18 @@ directive|define
 name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWritable
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsInitializeDebugger
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsTerminateDebugger
+end_define
+
 begin_comment
 comment|/*  * OSL interfaces used by utilities  */
 end_comment
@@ -656,6 +668,12 @@ operator|||
 name|defined
 argument_list|(
 name|__PPC64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__s390x__
 argument_list|)
 end_if
 

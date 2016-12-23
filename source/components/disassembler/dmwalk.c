@@ -1072,6 +1072,39 @@ return|;
 block|}
 if|if
 condition|(
+name|AcpiDmIsTempName
+argument_list|(
+name|Op
+argument_list|)
+condition|)
+block|{
+comment|/* Ignore compiler generated temporary names */
+return|return
+operator|(
+name|AE_CTRL_DEPTH
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_IGNORE_SINGLE
+condition|)
+block|{
+comment|/* Ignore this op, but not it's children */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|Op
 operator|->
 name|Common
@@ -2354,6 +2387,14 @@ operator|.
 name|DisasmFlags
 operator|&
 name|ACPI_PARSEOP_IGNORE
+operator|||
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_IGNORE_SINGLE
 condition|)
 block|{
 comment|/* Ignore this op -- it was handled elsewhere */
@@ -2851,7 +2892,7 @@ name|Common
 operator|.
 name|Parent
 expr_stmt|;
-comment|/*          * Just completed a parameter node for something like "Buffer (param)".          * Close the paren and open up the term list block with a brace          */
+comment|/*          * Just completed a parameter node for something like "Buffer (param)".          * Close the paren and open up the term list block with a brace.          *          * Switch predicates don't have a Next node but require a closing paren          * and opening brace.          */
 if|if
 condition|(
 name|Op
@@ -2859,6 +2900,14 @@ operator|->
 name|Common
 operator|.
 name|Next
+operator|||
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_SWITCH_PREDICATE
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -2894,6 +2943,22 @@ name|AcpiDmPredefinedDescription
 argument_list|(
 name|ParentOp
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Correct the indentation level for Switch and Case predicates */
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_SWITCH_PREDICATE
+condition|)
+block|{
+operator|--
+name|Level
 expr_stmt|;
 block|}
 name|AcpiOsPrintf

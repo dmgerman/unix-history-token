@@ -20,7 +20,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_ASL_KEYWORD
-name|AslKeywordInfo
+name|Gbl_AslKeywordInfo
 index|[]
 init|=
 block|{
@@ -390,7 +390,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_DIRECTIVE_INFO
-name|PreprocessorDirectives
+name|Gbl_PreprocessorDirectives
 index|[]
 init|=
 block|{

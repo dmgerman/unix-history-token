@@ -20,7 +20,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|AH_AML_OPCODE
-name|AmlOpcodeInfo
+name|Gbl_AmlOpcodeInfo
 index|[]
 init|=
 block|{

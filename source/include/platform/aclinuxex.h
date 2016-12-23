@@ -275,6 +275,34 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|ACPI_STATUS
+name|AcpiOsInitializeDebugger
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|AE_OK
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|AcpiOsTerminateDebugger
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
 begin_comment
 comment|/*  * OSL interfaces added by Linux  */
 end_comment

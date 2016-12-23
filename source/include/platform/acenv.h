@@ -116,6 +116,12 @@ operator|(
 name|defined
 name|ACPI_EXAMPLE_APP
 operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_EFI_HELLO
+operator|)
 end_if
 
 begin_define
@@ -1156,11 +1162,19 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_APPLICATION
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_LIBRARY
+argument_list|)
+end_if
 
 begin_include
 include|#

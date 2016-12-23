@@ -317,6 +317,56 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+block|{
+name|UINT16
+name|Year
+decl_stmt|;
+comment|/* 1998 - 20XX */
+name|UINT8
+name|Month
+decl_stmt|;
+comment|/* 1 - 12 */
+name|UINT8
+name|Day
+decl_stmt|;
+comment|/* 1 - 31 */
+name|UINT8
+name|Hour
+decl_stmt|;
+comment|/* 0 - 23 */
+name|UINT8
+name|Minute
+decl_stmt|;
+comment|/* 0 - 59 */
+name|UINT8
+name|Second
+decl_stmt|;
+comment|/* 0 - 59 */
+name|UINT8
+name|Pad1
+decl_stmt|;
+name|UINT32
+name|Nanosecond
+decl_stmt|;
+comment|/* 0 - 999,999,999 */
+name|INT16
+name|TimeZone
+decl_stmt|;
+comment|/* -1440 to 1440 or 2047 */
+name|UINT8
+name|Daylight
+decl_stmt|;
+name|UINT8
+name|Pad2
+decl_stmt|;
+block|}
+name|ACPI_EFI_TIME
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|_ACPI_EFI_DEVICE_PATH
 block|{
 name|UINT8
@@ -1242,6 +1292,57 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_EFI_FILE_INFO_ID
+define|\
+value|{ 0x9576e92, 0x6d3f, 0x11d2, {0x8e, 0x39, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x3b} }
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT64
+name|Size
+decl_stmt|;
+name|UINT64
+name|FileSize
+decl_stmt|;
+name|UINT64
+name|PhysicalSize
+decl_stmt|;
+name|ACPI_EFI_TIME
+name|CreateTime
+decl_stmt|;
+name|ACPI_EFI_TIME
+name|LastAccessTime
+decl_stmt|;
+name|ACPI_EFI_TIME
+name|ModificationTime
+decl_stmt|;
+name|UINT64
+name|Attribute
+decl_stmt|;
+name|CHAR16
+name|FileName
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_EFI_FILE_INFO
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SIZE_OF_ACPI_EFI_FILE_INFO
+value|ACPI_OFFSET(ACPI_EFI_FILE_INFO, FileName)
+end_define
+
 begin_typedef
 typedef|typedef
 name|ACPI_EFI_STATUS
@@ -1494,6 +1595,31 @@ function_decl|)
 parameter_list|(
 name|ACPI_EFI_HANDLE
 name|ImageHandle
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ACPI_EFI_STATUS
+function_decl|(
+name|ACPI_EFI_API
+modifier|*
+name|ACPI_EFI_SET_WATCHDOG_TIMER
+function_decl|)
+parameter_list|(
+name|UINTN
+name|Timeout
+parameter_list|,
+name|UINT64
+name|WatchdogCode
+parameter_list|,
+name|UINTN
+name|DataSize
+parameter_list|,
+name|CHAR16
+modifier|*
+name|WatchdogData
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2377,7 +2503,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|ACPI_EFI_EXIT_BOOT_SERVICES         ExitBootServices;     ACPI_EFI_GET_NEXT_MONOTONIC_COUNT   GetNextMonotonicCount;     ACPI_EFI_STALL                      Stall;     ACPI_EFI_SET_WATCHDOG_TIMER         SetWatchdogTimer;
+block|ACPI_EFI_EXIT_BOOT_SERVICES         ExitBootServices;     ACPI_EFI_GET_NEXT_MONOTONIC_COUNT   GetNextMonotonicCount;     ACPI_EFI_STALL                      Stall;
 else|#
 directive|else
 name|ACPI_EFI_UNKNOWN_INTERFACE
@@ -2389,11 +2515,11 @@ decl_stmt|;
 name|ACPI_EFI_UNKNOWN_INTERFACE
 name|Stall
 decl_stmt|;
-name|ACPI_EFI_UNKNOWN_INTERFACE
-name|SetWatchdogTimer
-decl_stmt|;
 endif|#
 directive|endif
+name|ACPI_EFI_SET_WATCHDOG_TIMER
+name|SetWatchdogTimer
+decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -2765,6 +2891,30 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* FILE abstraction */
+end_comment
+
+begin_union
+union|union
+name|acpi_efi_file
+block|{
+name|struct
+name|_ACPI_EFI_FILE_HANDLE
+name|File
+decl_stmt|;
+name|struct
+name|_ACPI_SIMPLE_TEXT_OUTPUT_INTERFACE
+name|ConOut
+decl_stmt|;
+name|struct
+name|_ACPI_SIMPLE_INPUT_INTERFACE
+name|ConIn
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/* GNU EFI definitions */
 end_comment
 
@@ -2861,6 +3011,13 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_EFI_GUID
 name|AcpiGbl_FileSystemProtocol
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_EFI_GUID
+name|AcpiGbl_GenericFileInfo
 decl_stmt|;
 end_decl_stmt
 

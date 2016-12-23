@@ -922,29 +922,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|AE_CTRL_SKIP
+name|AE_CTRL_PARSE_CONTINUE
 value|EXCEP_CTL (0x000B)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AE_CTRL_PARSE_CONTINUE
+name|AE_CTRL_PARSE_PENDING
 value|EXCEP_CTL (0x000C)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AE_CTRL_PARSE_PENDING
-value|EXCEP_CTL (0x000D)
-end_define
-
-begin_define
-define|#
-directive|define
 name|AE_CODE_CTRL_MAX
-value|0x000D
+value|0x000C
 end_define
 
 begin_comment
@@ -1669,13 +1662,6 @@ argument_list|(
 literal|"AE_CTRL_CONTINUE"
 argument_list|,
 literal|"A Continue has been executed"
-argument_list|)
-block|,
-name|EXCEP_TXT
-argument_list|(
-literal|"AE_CTRL_SKIP"
-argument_list|,
-literal|"Not currently used"
 argument_list|)
 block|,
 name|EXCEP_TXT

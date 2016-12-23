@@ -16,7 +16,7 @@ end_include
 begin_decl_stmt
 specifier|const
 name|AH_AML_TYPE
-name|AmlTypesInfo
+name|Gbl_AmlTypesInfo
 index|[]
 init|=
 block|{

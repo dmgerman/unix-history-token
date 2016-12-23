@@ -240,7 +240,7 @@ for|for
 control|(
 name|TableData
 operator|=
-name|AcpiSupportedTables
+name|Gbl_AcpiSupportedTables
 operator|,
 name|i
 operator|=
