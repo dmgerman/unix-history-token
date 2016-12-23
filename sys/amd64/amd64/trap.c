@@ -2942,7 +2942,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fault code		= %s %s %s%s, %s\n"
+literal|"fault code		= %s %s %s, %s\n"
 argument_list|,
 name|code
 operator|&
@@ -2972,10 +2972,8 @@ name|code
 operator|&
 name|PGEX_RSV
 condition|?
-literal|" rsv"
+literal|"reserved bits in PTE"
 else|:
-literal|""
-argument_list|,
 name|code
 operator|&
 name|PGEX_P
