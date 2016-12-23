@@ -937,6 +937,19 @@ argument_list|(
 name|tick_sbt
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Arrange for ticks to wrap 10 minutes after boot to help catch 	 * sign problems sooner. 	 */
+name|ticks
+operator|=
+name|INT_MAX
+operator|-
+operator|(
+name|hz
+operator|*
+literal|10
+operator|*
+literal|60
+operator|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VM_SWZONE_SIZE_MAX
