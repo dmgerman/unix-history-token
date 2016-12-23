@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/hlfsd.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/hlfsd/hlfsd.c  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifdef
@@ -230,7 +230,7 @@ name|char
 modifier|*
 name|slinkname
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -366,6 +366,17 @@ name|hlfsd_going_down
 parameter_list|(
 name|int
 name|rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fatalerror
+parameter_list|(
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -965,19 +976,6 @@ name|opterrs
 operator|++
 expr_stmt|;
 block|}
-comment|/* set some default debugging options */
-if|if
-condition|(
-name|xlog_level_init
-operator|==
-operator|~
-literal|0
-condition|)
-name|switch_option
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
 comment|/* need my pid before any dlog/plog */
 name|am_set_mypid
 argument_list|()
@@ -1162,6 +1160,8 @@ name|gr_gid
 expr_stmt|;
 block|}
 comment|/* get hostname for logging and open log before we reset umask */
+if|if
+condition|(
 name|gethostname
 argument_list|(
 name|hostname
@@ -1171,7 +1171,32 @@ argument_list|(
 name|hostname
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: gethostname failed \"%s\".\n"
+argument_list|,
+name|am_get_progname
+argument_list|()
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|hostname
 index|[
 sizeof|sizeof
@@ -1714,9 +1739,6 @@ comment|/* resplit dir_name */
 block|}
 comment|/* end of "if (!forcefast) {" */
 comment|/*    * Register hlfsd as an nfs service with the portmapper.    */
-ifdef|#
-directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
 name|ret
 operator|=
 name|create_nfs_service
@@ -1731,30 +1753,10 @@ operator|&
 name|nfsxprt
 argument_list|,
 name|nfs_program_2
+argument_list|,
+name|NFS_VERSION
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
-name|ret
-operator|=
-name|create_nfs_service
-argument_list|(
-operator|&
-name|soNFS
-argument_list|,
-operator|&
-name|nfs_port
-argument_list|,
-operator|&
-name|nfsxprt
-argument_list|,
-name|nfs_program_2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_TRANSPORT_TYPE_TLI */
 if|if
 condition|(
 name|ret
@@ -1897,10 +1899,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* not HAVE_SIGACTION */
-comment|/*    * In the parent, if -D daemon, we don't need to    * set this signal handler.    */
+comment|/*    * In the parent, if -D nodaemon, we don't need to    * set this signal handler.    */
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON
@@ -2564,9 +2565,10 @@ argument_list|,
 literal|"hlfsd ready to serve"
 argument_list|)
 expr_stmt|;
-comment|/*    * If asked not to fork a daemon (-D daemon), then hlfsd_init()    * will not run svc_run.  We must start svc_run here.    */
+comment|/*    * If asked not to fork a daemon (-D nodaemon), then hlfsd_init()    * will not run svc_run.  We must start svc_run here.    */
 if|if
 condition|(
+operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON
@@ -2633,10 +2635,9 @@ expr_stmt|;
 name|hlfsd_init_filehandles
 argument_list|()
 expr_stmt|;
-comment|/*    * If not -D daemon then we must fork.    */
+comment|/*    * If -D daemon then we must fork.    */
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON
@@ -3037,7 +3038,7 @@ expr|struct
 name|itimerval
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -3053,10 +3054,9 @@ operator|&
 name|startup
 argument_list|)
 expr_stmt|;
-comment|/*    * If not -D daemon, then start serving here in the child,    * and the parent will exit.  But if -D daemon, then    * skip this code and make sure svc_run is entered elsewhere.    */
+comment|/*    * If -D daemon, then start serving here in the child,    * and the parent will exit.  But if -D nodaemon, then    * skip this code and make sure svc_run is entered elsewhere.    */
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON
@@ -3277,7 +3277,6 @@ name|umount_result
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON
@@ -3397,7 +3396,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
 name|amuDebug
 argument_list|(
 name|D_DAEMON

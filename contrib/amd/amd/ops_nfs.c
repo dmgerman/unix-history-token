@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/ops_nfs.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/ops_nfs.c  *  */
 end_comment
 
 begin_comment
@@ -277,6 +277,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * clamp the filehandle version to 3, so that we can fail back to nfsv3  * since nfsv4 does not have file handles  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_FH_VERSION
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+value|(fs)->fs_version> NFS_VERSION3 ? NFS_VERSION3 : (fs)->fs_version;
+end_define
+
+begin_comment
 comment|/* globals */
 end_comment
 
@@ -378,7 +393,7 @@ decl_stmt|,
 modifier|*
 name|fp2
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|id
@@ -653,6 +668,44 @@ operator|.
 name|v3
 operator|.
 name|am_fh3_length
+argument_list|)
+expr_stmt|;
+name|XFREE
+argument_list|(
+name|res3
+operator|.
+name|mountres3_u
+operator|.
+name|mountinfo
+operator|.
+name|fhandle
+operator|.
+name|fhandle3_val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res3
+operator|.
+name|mountres3_u
+operator|.
+name|mountinfo
+operator|.
+name|auth_flavors
+operator|.
+name|auth_flavors_val
+condition|)
+name|XFREE
+argument_list|(
+name|res3
+operator|.
+name|mountres3_u
+operator|.
+name|mountinfo
+operator|.
+name|auth_flavors
+operator|.
+name|auth_flavors_val
 argument_list|)
 expr_stmt|;
 block|}
@@ -1292,12 +1345,6 @@ name|fh_fs
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|fp
-operator|->
-name|fh_path
-condition|)
 name|XFREE
 argument_list|(
 name|fp
@@ -1346,7 +1393,7 @@ decl_stmt|,
 modifier|*
 name|fp_save
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -1864,9 +1911,10 @@ name|fp
 operator|->
 name|fh_nfs_version
 operator|=
+name|SET_FH_VERSION
+argument_list|(
 name|fs
-operator|->
-name|fs_version
+argument_list|)
 expr_stmt|;
 block|}
 name|fp
@@ -1882,7 +1930,7 @@ name|fp
 operator|->
 name|fh_path
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|path
 argument_list|)
@@ -2207,7 +2255,34 @@ name|sin_port
 operator|=
 name|mountd_port
 expr_stmt|;
+name|dlog
+argument_list|(
+literal|"%s: New %d mountd port"
+argument_list|,
+name|__func__
+argument_list|,
+name|fp
+operator|->
+name|fh_sin
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|dlog
+argument_list|(
+literal|"%s: Already had %d mountd port"
+argument_list|,
+name|__func__
+argument_list|,
+name|fp
+operator|->
+name|fh_sin
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
 comment|/* find the right version of the mount protocol */
 ifdef|#
 directive|ifdef
@@ -2421,6 +2496,7 @@ name|args3
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* HAVE_FS_NFS3 */
 name|char
 modifier|*
 name|wnfs_path
@@ -2922,6 +2998,32 @@ name|char
 modifier|*
 name|colon
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_FALLBACK
+comment|/*    * We don't need file handles for NFS version 4, but we can fall back to    * version 3, so we allocate anyway    */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_NFS4
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_server
+operator|->
+name|fs_version
+operator|==
+name|NFS_VERSION4
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS4 */
+endif|#
+directive|endif
+comment|/* NO_FALLBACK */
 if|if
 condition|(
 name|mf
@@ -2960,6 +3062,18 @@ name|mf
 operator|->
 name|mf_private
 argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|mf_private
+operator|=
+name|NULL
+expr_stmt|;
+name|mf
+operator|->
+name|mf_prfree
+operator|=
+name|NULL
 expr_stmt|;
 name|fs
 operator|=
@@ -3191,9 +3305,22 @@ decl_stmt|;
 name|mntent_t
 name|mnt
 decl_stmt|;
+name|void
+modifier|*
+name|argsp
+decl_stmt|;
 name|nfs_args_t
 name|nfs_args
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FS_NFS4
+name|nfs4_args_t
+name|nfs4_args
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS4 */
 comment|/*    * Extract HOST name to give to kernel.    * Some systems like osf1/aix3/bsd44 variants may need old code    * for NFS_ARGS_NEEDS_PATH.    */
 if|if
 condition|(
@@ -3501,22 +3628,9 @@ operator|=
 name|xopts
 expr_stmt|;
 comment|/*    * Set mount types accordingly    */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|HAVE_FS_NFS3
-name|type
-operator|=
-name|MOUNT_TYPE_NFS
-expr_stmt|;
-name|mnt
-operator|.
-name|mnt_type
-operator|=
-name|MNTTAB_TYPE_NFS
-expr_stmt|;
-else|#
-directive|else
-comment|/* HAVE_FS_NFS3 */
 if|if
 condition|(
 name|nfs_version
@@ -3529,6 +3643,11 @@ operator|=
 name|MOUNT_TYPE_NFS3
 expr_stmt|;
 comment|/*      * Systems that include the mount table "vers" option generally do not      * set the mnttab entry to "nfs3", but to "nfs" and then they set      * "vers=3".  Setting it to "nfs3" works, but it may break some things      * like "df -t nfs" and the "quota" program (esp. on Solaris and Irix).      * So on those systems, set it to "nfs".      * Note: MNTTAB_OPT_VERS is always set for NFS3 (see am_compat.h).      */
+name|argsp
+operator|=
+operator|&
+name|nfs_args
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -3558,9 +3677,47 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(MNTTAB_OPT_VERS)&& defined(MOUNT_TABLE_ON_FILE) */
+ifdef|#
+directive|ifdef
+name|HAVE_FS_NFS4
+block|}
+elseif|else
+if|if
+condition|(
+name|nfs_version
+operator|==
+name|NFS_VERSION4
+condition|)
+block|{
+name|argsp
+operator|=
+operator|&
+name|nfs4_args
+expr_stmt|;
+name|type
+operator|=
+name|MOUNT_TYPE_NFS4
+expr_stmt|;
+name|mnt
+operator|.
+name|mnt_type
+operator|=
+name|MNTTAB_TYPE_NFS4
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS4 */
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS3 */
 block|{
+name|argsp
+operator|=
+operator|&
+name|nfs_args
+expr_stmt|;
 name|type
 operator|=
 name|MOUNT_TYPE_NFS
@@ -3572,9 +3729,6 @@ operator|=
 name|MNTTAB_TYPE_NFS
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* HAVE_FS_NFS3 */
 name|plog
 argument_list|(
 name|XLOG_INFO
@@ -3646,8 +3800,7 @@ comment|/* HAVE_FS_AUTOFS */
 comment|/* setup the many fields and flags within nfs_args */
 name|compute_nfs_args
 argument_list|(
-operator|&
-name|nfs_args
+name|argsp
 argument_list|,
 operator|&
 name|mnt
@@ -3683,8 +3836,7 @@ condition|)
 block|{
 name|print_nfs_args
 argument_list|(
-operator|&
-name|nfs_args
+name|argsp
 argument_list|,
 name|nfs_version
 argument_list|)
@@ -3708,11 +3860,7 @@ name|mnt
 argument_list|,
 name|genflags
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|nfs_args
+name|argsp
 argument_list|,
 name|retry
 argument_list|,
@@ -3729,36 +3877,85 @@ argument_list|)
 expr_stmt|;
 name|XFREE
 argument_list|(
-name|xopts
+name|mnt
+operator|.
+name|mnt_opts
+argument_list|)
+expr_stmt|;
+name|discard_nfs_args
+argument_list|(
+name|argsp
+argument_list|,
+name|nfs_version
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_TRANSPORT_TYPE_TLI
-name|free_knetconfig
+name|HAVE_FS_NFS4
+ifndef|#
+directive|ifndef
+name|NO_FALLBACK
+comment|/*    * If we are using a v4 file handle, we try a v3 if we get back:    * 	ENOENT: NFS v4 has a different export list than v3    * 	EPERM: Kernels<= 2.6.18 return that, instead of ENOENT    */
+if|if
+condition|(
+operator|(
+name|error
+operator|==
+name|ENOENT
+operator|||
+name|error
+operator|==
+name|EPERM
+operator|)
+operator|&&
+name|nfs_version
+operator|==
+name|NFS_VERSION4
+condition|)
+block|{
+name|plog
 argument_list|(
-name|nfs_args
-operator|.
-name|knconf
+name|XLOG_DEBUG
+argument_list|,
+literal|"Could not find NFS 4 mount, trying again with NFS 3"
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|fs_version
+operator|=
+name|NFS_VERSION3
+expr_stmt|;
+name|error
+operator|=
+name|mount_nfs_fh
+argument_list|(
+name|fhp
+argument_list|,
+name|mntdir
+argument_list|,
+name|fs_name
+argument_list|,
+name|mf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nfs_args
-operator|.
-name|addr
+name|error
 condition|)
-name|XFREE
-argument_list|(
-name|nfs_args
-operator|.
-name|addr
-argument_list|)
+name|fs
+operator|->
+name|fs_version
+operator|=
+name|NFS_VERSION4
 expr_stmt|;
-comment|/* allocated in compute_nfs_args() */
+block|}
 endif|#
 directive|endif
-comment|/* HAVE_TRANSPORT_TYPE_TLI */
+comment|/* NO_FALLBACK */
+endif|#
+directive|endif
+comment|/* HAVE_FS_NFS4 */
 return|return
 name|error
 return|;
@@ -3793,6 +3990,14 @@ operator|!
 name|mf
 operator|->
 name|mf_private
+operator|&&
+name|mf
+operator|->
+name|mf_server
+operator|->
+name|fs_version
+operator|!=
+literal|4
 condition|)
 block|{
 name|plog
@@ -3800,6 +4005,30 @@ argument_list|(
 name|XLOG_ERROR
 argument_list|,
 literal|"Missing filehandle for %s"
+argument_list|,
+name|mf
+operator|->
+name|mf_info
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_mopts
+operator|==
+name|NULL
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"Missing mount options for %s"
 argument_list|,
 name|mf
 operator|->
@@ -3918,6 +4147,11 @@ name|new_unmount_flags
 decl_stmt|,
 name|error
 decl_stmt|;
+name|dlog
+argument_list|(
+literal|"attempting nfs umount"
+argument_list|)
+expr_stmt|;
 name|unmount_flags
 operator|=
 operator|(
@@ -4312,9 +4546,10 @@ name|f
 operator|.
 name|fh_nfs_version
 operator|=
+name|SET_FH_VERSION
+argument_list|(
 name|fs
-operator|->
-name|fs_version
+argument_list|)
 expr_stmt|;
 name|f
 operator|.
@@ -4348,7 +4583,7 @@ operator|(
 name|am_nfs_handle_t
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|mf
 argument_list|)
@@ -4364,12 +4599,12 @@ operator|(
 name|fwd_fun
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|wchan_t
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|*

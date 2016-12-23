@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amfs_nfsl.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amfs_nfsl.c  *  */
 end_comment
 
 begin_comment
@@ -223,6 +223,13 @@ condition|(
 name|fo
 operator|->
 name|opt_sublink
+operator|&&
+name|fo
+operator|->
+name|opt_sublink
+index|[
+literal|0
+index|]
 condition|)
 name|cp
 operator|=
@@ -268,15 +275,29 @@ argument_list|,
 name|am_get_hostname
 argument_list|()
 argument_list|)
+operator|&&
+operator|!
+name|STRCEQ
+argument_list|(
+name|ho
+argument_list|,
+name|hostd
+argument_list|)
 condition|)
 block|{
 name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"amfs_nfsl: \"%s\" is not local host, using type:=nfs"
+literal|"amfs_nfsl: \"%s\" is not the local host \"%s\", "
+literal|"or \"%s\" using type:=nfs"
 argument_list|,
 name|ho
+argument_list|,
+name|am_get_hostname
+argument_list|()
+argument_list|,
+name|hostd
 argument_list|)
 expr_stmt|;
 name|retval
@@ -643,16 +664,9 @@ block|{
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|ho
-init|=
-name|mf
-operator|->
-name|mf_fo
-operator|->
-name|opt_rhost
 decl_stmt|;
 name|struct
 name|stat
@@ -663,8 +677,47 @@ condition|(
 name|mf
 operator|->
 name|mf_fo
+operator|==
+name|NULL
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"%s: NULL mf_fo"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|ho
+operator|=
+name|mf
+operator|->
+name|mf_fo
+operator|->
+name|opt_rhost
+expr_stmt|;
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_fo
 operator|->
 name|opt_sublink
+operator|&&
+name|mf
+operator|->
+name|mf_fo
+operator|->
+name|opt_sublink
+index|[
+literal|0
+index|]
 condition|)
 name|cp
 operator|=
@@ -686,6 +739,7 @@ expr_stmt|;
 comment|/*    * If this host is not the same as $rhost, or if link does not exist,    * call amfs_link_ops.ffserver().    * If link value exists (or same host), then call ops_nfs.ffserver().    */
 if|if
 condition|(
+operator|(
 operator|!
 name|STRCEQ
 argument_list|(
@@ -694,6 +748,15 @@ argument_list|,
 name|am_get_hostname
 argument_list|()
 argument_list|)
+operator|&&
+operator|!
+name|STRCEQ
+argument_list|(
+name|ho
+argument_list|,
+name|hostd
+argument_list|)
+operator|)
 operator|||
 name|lstat
 argument_list|(
