@@ -736,7 +736,7 @@ name|sc
 operator|->
 name|sc_mem
 argument_list|,
-literal|0
+name|GPIO_GPDAT
 argument_list|,
 name|outvals
 argument_list|)
@@ -904,7 +904,7 @@ name|sc
 operator|->
 name|sc_mem
 argument_list|,
-literal|0
+name|GPIO_GPDAT
 argument_list|,
 name|val
 argument_list|)
