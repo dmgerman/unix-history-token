@@ -249,6 +249,10 @@ index|[
 name|NFSX_V4SESSIONID
 index|]
 decl_stmt|;
+name|uint8_t
+name|nfsess_defunct
+decl_stmt|;
+comment|/* Non-zero for old sessions */
 block|}
 struct|;
 end_struct
