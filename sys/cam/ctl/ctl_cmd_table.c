@@ -1841,7 +1841,7 @@ block|,
 name|CTL_LUN_PAT_NONE
 block|}
 block|,
-comment|/* 16 */
+comment|/* 16 SET TAPE STREAM MIRRORING */
 block|{
 name|NULL
 block|,
@@ -1955,7 +1955,20 @@ block|,
 literal|0x07
 block|}
 block|}
-block|, }
+block|,
+comment|/* 1D COPY OPERATION CLOSE */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 1e-1f */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2313,7 +2326,163 @@ block|,
 literal|0x07
 block|}
 block|}
-block|, }
+block|,
+comment|/* 09 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0A */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0B */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0C */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0D */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0E */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 0F */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 10 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 11 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 12 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 13 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 14 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 15 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 16 REPORT TAPE STREAM MIRRORING */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 17-1f */
+block|}
 decl_stmt|;
 end_decl_stmt
 
