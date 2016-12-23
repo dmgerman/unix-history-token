@@ -2351,7 +2351,13 @@ argument_list|,
 name|mmu_booke_kextract
 argument_list|)
 block|,
-comment|/*	MMUMETHOD(mmu_kremove,		mmu_booke_kremove),	*/
+name|MMUMETHOD
+argument_list|(
+name|mmu_kremove
+argument_list|,
+name|mmu_booke_kremove
+argument_list|)
+block|,
 name|MMUMETHOD
 argument_list|(
 name|mmu_unmapdev
