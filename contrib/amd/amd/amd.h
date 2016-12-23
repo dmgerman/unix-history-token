@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amd.h  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/amd.h  *  */
 end_comment
 
 begin_ifndef
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|DEBUG_MNTTAB_FILE
-value|"/tmp/mnttab"
+value|"/tmp/mtab"
 end_define
 
 begin_endif
@@ -44,6 +44,17 @@ end_endif
 begin_comment
 comment|/* MOUNT_TABLE_ON_FILE */
 end_comment
+
+begin_comment
+comment|/* Max line length that info services can handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INFO_MAX_LINE_LEN
+value|1500
+end_define
 
 begin_comment
 comment|/* options for amd.conf */
@@ -199,16 +210,6 @@ begin_comment
 comment|/* truncate log file? */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX: reserved to sync up with am-utils-6.2 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -219,11 +220,6 @@ end_define
 begin_comment
 comment|/* Sun map syntax? */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1053,6 +1049,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|am_loc
+name|am_loc
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|am_opts
 name|am_opts
 typedef|;
@@ -1396,13 +1400,11 @@ parameter_list|(
 name|am_node
 modifier|*
 parameter_list|,
-name|nfscookie
+name|voidp
 parameter_list|,
-name|nfsdirlist
-modifier|*
+name|voidp
 parameter_list|,
-name|nfsentry
-modifier|*
+name|voidp
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -1480,6 +1482,30 @@ function_decl|)
 parameter_list|(
 name|mntfs
 modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * NFS progran dispatcher  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|dispatcher_t
+function_decl|)
+parameter_list|(
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|,
+name|SVCXPRT
+modifier|*
+name|transp
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1713,6 +1739,10 @@ name|int
 name|nfs_vers
 decl_stmt|;
 comment|/* NFS version (0, 2, 3, 4) */
+name|int
+name|nfs_vers_ping
+decl_stmt|;
+comment|/* NFS rpc ping version (0, 2, 3, 4) */
 name|u_int
 name|exec_map_timeout
 decl_stmt|;
@@ -1839,6 +1869,10 @@ name|u_int
 name|reloads
 decl_stmt|;
 comment|/* Number of times map was reloaded */
+name|u_int
+name|nentries
+decl_stmt|;
+comment|/* Number of entries in the map */
 name|char
 modifier|*
 name|map_name
@@ -2119,7 +2153,7 @@ name|char
 modifier|*
 name|mf_auto
 decl_stmt|;
-comment|/* Automount opts */
+comment|/* Mount info */
 name|char
 modifier|*
 name|mf_mopts
@@ -2174,6 +2208,29 @@ name|opaque_t
 name|mf_private
 decl_stmt|;
 comment|/* Private - per-fs data */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Locations: bindings between keys and mntfs  */
+end_comment
+
+begin_struct
+struct|struct
+name|am_loc
+block|{
+name|am_opts
+modifier|*
+name|al_fo
+decl_stmt|;
+name|mntfs
+modifier|*
+name|al_mnt
+decl_stmt|;
+name|int
+name|al_refc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2285,6 +2342,14 @@ name|int
 name|s_statfs
 decl_stmt|;
 comment|/* Count of statfs */
+name|int
+name|s_fsinfo
+decl_stmt|;
+comment|/* Count of fsinfo */
+name|int
+name|s_pathconf
+decl_stmt|;
+comment|/* Count of pathconf */
 block|}
 struct|;
 end_struct
@@ -2341,15 +2406,15 @@ name|int
 name|am_mapno
 decl_stmt|;
 comment|/* Map number */
-name|mntfs
+name|am_loc
 modifier|*
-name|am_mnt
+name|am_al
 decl_stmt|;
 comment|/* Mounted filesystem */
-name|mntfs
+name|am_loc
 modifier|*
 modifier|*
-name|am_mfarray
+name|am_alarray
 decl_stmt|;
 comment|/* Filesystem sources to try to mount */
 name|char
@@ -2455,6 +2520,13 @@ comment|/* Time to expire autofs nodes */
 endif|#
 directive|endif
 comment|/* HAVE_FS_AUTOFS */
+name|int
+name|am_fd
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* parent child pipe fd's for sync umount */
 block|}
 struct|;
 end_struct
@@ -2638,8 +2710,77 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|voidp
+name|int
+modifier|*
 name|amqproc_umnt_1_svc
+parameter_list|(
+name|voidp
+name|argp
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+modifier|*
+name|amqproc_sync_umnt_1_svc_parent
+parameter_list|(
+name|voidp
+name|argp
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|amq_sync_umnt
+modifier|*
+name|amqproc_sync_umnt_1_svc_child
+parameter_list|(
+name|voidp
+name|argp
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|amq_sync_umnt
+modifier|*
+name|amqproc_sync_umnt_1_svc_async
+parameter_list|(
+name|voidp
+name|argp
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|amq_map_info_list
+modifier|*
+name|amqproc_getmapinfo_1_svc
 parameter_list|(
 name|voidp
 name|argp
@@ -2658,13 +2799,17 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|am_nfs_fh
+name|am_nfs_handle_t
 modifier|*
 name|get_root_nfs_fh
 parameter_list|(
 name|char
 modifier|*
 name|dir
+parameter_list|,
+name|am_nfs_handle_t
+modifier|*
+name|nfh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2700,6 +2845,22 @@ begin_function_decl
 specifier|extern
 name|bool_t
 name|xdr_amq_mount_info_qelem
+parameter_list|(
+name|XDR
+modifier|*
+name|xdrs
+parameter_list|,
+name|qelem
+modifier|*
+name|qhead
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool_t
+name|xdr_amq_map_info_qelem
 parameter_list|(
 name|XDR
 modifier|*
@@ -2822,12 +2983,28 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|yyparse
+name|conf_parse
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* "yyparse" renamed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|conf_in
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "yyin" renamed */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -3127,6 +3304,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|am_loc
+modifier|*
+name|dup_loc
+parameter_list|(
+name|am_loc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|mntfs
 modifier|*
 name|find_mntfs
@@ -3181,6 +3370,17 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|am_loc
+modifier|*
+name|new_loc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3243,6 +3443,16 @@ begin_function_decl
 specifier|extern
 name|void
 name|free_mntfs
+parameter_list|(
+name|voidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_loc
 parameter_list|(
 name|voidp
 parameter_list|)
@@ -3325,6 +3535,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|file_read_line
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|forcibly_timeout_mp
 parameter_list|(
@@ -3349,6 +3575,18 @@ begin_function_decl
 specifier|extern
 name|void
 name|free_opts
+parameter_list|(
+name|am_opts
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|am_opts
+modifier|*
+name|copy_opts
 parameter_list|(
 name|am_opts
 modifier|*
@@ -3560,6 +3798,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3708,6 +3950,22 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|mp_to_fh3
+parameter_list|(
+name|am_node
+modifier|*
+name|mp
+parameter_list|,
+name|am_nfs_fh3
+modifier|*
+name|fhp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|new_ttl
 parameter_list|(
 name|am_node
@@ -3738,6 +3996,23 @@ name|normalize_slash
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|notify_child
+parameter_list|(
+name|am_node
+modifier|*
+parameter_list|,
+name|au_etype
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4049,14 +4324,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|FILE
-modifier|*
-name|yyin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|SVCXPRT
 modifier|*
 name|current_transp
@@ -4066,6 +4333,13 @@ end_decl_stmt
 begin_comment
 comment|/* For nfs_quick_reply() */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|dispatcher_t
+name|nfs_dispatcher
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -4646,6 +4920,54 @@ comment|/* HAVE_FS_PCFS */
 end_comment
 
 begin_comment
+comment|/*  * UDF File System  * Many systems can't support this, and in any case most of the  * functionality is available with program FS.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_UDF
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|udf_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_UDF */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_LUSTRE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|lustre_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_LUSTRE */
+end_comment
+
+begin_comment
 comment|/*  * Caching File System (Solaris)  */
 end_comment
 
@@ -4669,6 +4991,32 @@ end_endif
 
 begin_comment
 comment|/* HAVE_FS_CACHEFS */
+end_comment
+
+begin_comment
+comment|/*  * In memory /tmp filesystem (Linux, NetBSD)  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_TMPFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|tmpfs_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_TMPFS */
 end_comment
 
 begin_comment
@@ -4778,6 +5126,58 @@ end_endif
 
 begin_comment
 comment|/* HAVE_FS_XFS */
+end_comment
+
+begin_comment
+comment|/* Unix file system (ext*) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_EXT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|ext2_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Un*x file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|ext3_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Un*x file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|ext4_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Un*x file system */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FS_EXT */
 end_comment
 
 begin_comment
@@ -4891,15 +5291,13 @@ name|am_node
 modifier|*
 name|mp
 parameter_list|,
-name|nfscookie
+name|voidp
 name|cookie
 parameter_list|,
-name|nfsdirlist
-modifier|*
+name|voidp
 name|dp
 parameter_list|,
-name|nfsentry
-modifier|*
+name|voidp
 name|ep
 parameter_list|,
 name|u_int
@@ -5154,15 +5552,13 @@ name|am_node
 modifier|*
 name|mp
 parameter_list|,
-name|nfscookie
+name|voidp
 name|cookie
 parameter_list|,
-name|nfsdirlist
-modifier|*
+name|voidp
 name|dp
 parameter_list|,
-name|nfsentry
-modifier|*
+name|voidp
 name|ep
 parameter_list|,
 name|u_int

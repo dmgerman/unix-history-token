@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/get_args.c  *  */
+comment|/*  * Copyright (c) 1997-2014 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * File: am-utils/amd/get_args.c  *  */
 end_comment
 
 begin_comment
@@ -184,7 +184,7 @@ name|len
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"Copyright (c) 1997-2006 Erez Zadok"
+literal|"Copyright (c) 1997-2014 Erez Zadok"
 argument_list|,
 literal|"Copyright (c) 1990 Jan-Simon Pendry"
 argument_list|,
@@ -211,7 +211,7 @@ argument_list|,
 name|AMU_BUILD_VERSION
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -234,7 +234,7 @@ argument_list|,
 name|PACKAGE_BUGREPORT
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -243,6 +243,13 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*    * XXX  This block (between from the #if 0 to #endif was in the    * XXX  original was in the original merge however in the interest    * XXX  of reproduceable builds and the fact that this is redundant    * XXX  information, it is effectively removed.    */
+block|xsnprintf(tmpbuf, sizeof(tmpbuf), "Configured by %s@%s on date %s.\n", 	    USER_NAME, HOST_NAME, CONFIG_DATE);   xstrlcat(vers, tmpbuf, len);   xsnprintf(tmpbuf, sizeof(tmpbuf), "Built by %s@%s on date %s.\n", 	    BUILD_USER, BUILD_HOST, BUILD_DATE);   xstrlcat(vers, tmpbuf, len);
+endif|#
+directive|endif
 name|xsnprintf
 argument_list|(
 name|tmpbuf
@@ -319,7 +326,7 @@ operator|.
 name|karch
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -358,7 +365,7 @@ argument_list|,
 name|DISTRO_NAME
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -386,7 +393,7 @@ argument_list|,
 name|hostd
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -395,7 +402,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -414,7 +421,7 @@ name|tmpbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -423,7 +430,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -442,7 +449,7 @@ name|tmpbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -451,7 +458,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -471,7 +478,7 @@ name|tmpbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -486,7 +493,7 @@ condition|(
 name|wire_buf
 condition|)
 block|{
-name|strlcat
+name|xstrlcat
 argument_list|(
 name|vers
 argument_list|,
@@ -1163,11 +1170,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|yyin
+name|conf_in
 operator|=
 name|fp
 expr_stmt|;
-name|yyparse
+name|conf_parse
 argument_list|()
 expr_stmt|;
 name|fclose
@@ -1188,21 +1195,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* make sure there are some default options defined */
-if|if
-condition|(
-name|xlog_level_init
-operator|==
-operator|~
-literal|0
-condition|)
-block|{
-name|switch_option
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1213,6 +1205,17 @@ argument_list|(
 literal|"debug"
 argument_list|)
 expr_stmt|;
+comment|/* initialize debug options */
+if|if
+condition|(
+operator|!
+name|debug_flags
+condition|)
+name|debug_flags
+operator|=
+name|D_CONTROL
+expr_stmt|;
+comment|/* CONTROL = "daemon,amq,fork" */
 endif|#
 directive|endif
 comment|/* DEBUG */
