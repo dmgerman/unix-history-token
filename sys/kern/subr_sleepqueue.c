@@ -3800,7 +3800,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Resume all blocked threads on the sleep queue. */
+comment|/* 	 * Resume all blocked threads on the sleep queue.  The last thread will 	 * be given ownership of sq and may re-enqueue itself before 	 * sleepq_resume_thread() returns, so we must cache the "next" queue 	 * item at the beginning of the final iteration. 	 */
 name|wakeup_swapper
 operator|=
 literal|0
