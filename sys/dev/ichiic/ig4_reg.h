@@ -4,19 +4,19 @@ comment|/*  * Copyright (c) 2014 The DragonFly Project.  All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Intel fourth generation mobile cpus integrated I2C device.  *  * Datasheet reference:  Section 22.  *  * http://www.intel.com/content/www/us/en/processors/core/4th-gen-core-family-mobile-i-o-datasheet.html?wapkw=datasheets+4th+generation  *  * This is a from-scratch driver under the BSD license using the Intel data  * sheet and the linux driver for reference.  All code is freshly written  * without referencing the linux driver code.  However, during testing  * I am also using the linux driver code as a reference to help resolve any  * issues that come.  These will be specifically documented in the code.  *  * Please see protocol notes in section 5.21.  This controller is an I2C  * master only and cannot act as a slave.  The IO voltage should be set by  * the BIOS.  Standard (100Kb/s) and Fast (400Kb/s) and fast mode plus  * (1MB/s) is supported.  High speed mode (3.4 MB/s) is NOT supported.  */
+comment|/*  * Intel fourth generation mobile cpus integrated I2C device.  *  * Datasheet reference:  Section 22.  *  * http://www.intel.com/content/www/us/en/processors/core/4th-gen-core-family-mobile-i-o-datasheet.html?wapkw=datasheets+4th+generation  *  * This is a from-scratch driver under the BSD license using the Intel data  * sheet and the linux driver for reference.  All code is freshly written  * without referencing the linux driver code.  However, during testing  * I am also using the linux driver code as a reference to help resolve any  * issues that come.  These will be specifically documented in the code.  *  * This controller is an I2C master only and cannot act as a slave.  The IO  * voltage should be set by the BIOS.  Standard (100Kb/s) and Fast (400Kb/s)  * and fast mode plus (1MB/s) is supported.  High speed mode (3.4 MB/s) is NOT  * supported.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_BUS_SMBUS_INTELGEN4_IG4_REG_H_
+name|_ICHIIC_IG4_REG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_BUS_SMBUS_INTELGEN4_IG4_REG_H_
+name|_ICHIIC_IG4_REG_H_
 end_define
 
 begin_comment
@@ -1386,6 +1386,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _ICHIIC_IG4_REG_H_ */
+end_comment
 
 end_unit
 
