@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/smbus/smb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/smbus/smbconf.h>
 end_include
 
@@ -1962,7 +1968,7 @@ if|if
 condition|(
 name|count
 operator|>
-literal|32
+name|SMB_MAXBLOCKSIZE
 operator|||
 name|count
 operator|==
@@ -2078,26 +2084,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_char
-name|bufsz
-decl_stmt|;
-comment|/* Stash output buffer size before overwriting it. */
-name|bufsz
-operator|=
-operator|*
-name|count
-expr_stmt|;
-if|if
-condition|(
-name|bufsz
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|SMB_EINVAL
-operator|)
-return|;
 comment|/* Have to do this because the command is split in two transfers. */
 name|error
 operator|=
@@ -2132,13 +2118,13 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If the slave offers an empty or a too long reply, 		 * read one byte to generate the stop or abort. 		 * XXX 32 is hardcoded until SMB_MAXBLOCKSIZE is restored 		 * to sanity. 		 */
+comment|/* 		 * If the slave offers an empty or a too long reply, 		 * read one byte to generate the stop or abort. 		 */
 if|if
 condition|(
 operator|*
 name|count
 operator|>
-literal|32
+name|SMB_MAXBLOCKSIZE
 operator|||
 operator|*
 name|count
@@ -2153,23 +2139,6 @@ operator|.
 name|len
 operator|=
 literal|1
-expr_stmt|;
-comment|/* If longer than the buffer, then clamp at the buffer size. */
-if|if
-condition|(
-operator|*
-name|count
-operator|>
-name|bufsz
-condition|)
-name|block_msg
-index|[
-literal|0
-index|]
-operator|.
-name|len
-operator|=
-name|bufsz
 expr_stmt|;
 else|else
 name|block_msg
@@ -2196,7 +2165,7 @@ condition|(
 operator|*
 name|count
 operator|>
-literal|32
+name|SMB_MAXBLOCKSIZE
 operator|||
 operator|*
 name|count
