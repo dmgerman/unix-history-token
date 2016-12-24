@@ -450,6 +450,20 @@ argument_list|,
 literal|"Test page residency with mincore(2)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -510,6 +524,18 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* 	 * Bump the mlock limit to unlimited so the rest of the testcase 	 * passes instead of failing on the mlock call. 	 */
+name|rlim
+operator|.
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+endif|#
+directive|endif
 name|rlim
 operator|.
 name|rlim_cur
@@ -820,8 +846,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|ATF_REQUIRE_MSG
-argument_list|(
+if|if
+condition|(
 name|mlock
 argument_list|(
 name|addr
@@ -831,14 +857,17 @@ operator|*
 name|page
 argument_list|)
 operator|==
-literal|0
-argument_list|,
-literal|"mlock failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
+operator|-
+literal|1
+operator|&&
 name|errno
-argument_list|)
+operator|!=
+name|ENOMEM
+condition|)
+name|atf_tc_skip
+argument_list|(
+literal|"could not wire anonymous test area, system might "
+literal|"be low on memory"
 argument_list|)
 expr_stmt|;
 endif|#
