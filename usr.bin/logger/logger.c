@@ -378,6 +378,10 @@ name|src
 operator|=
 name|NULL
 expr_stmt|;
+name|socks
+operator|=
+name|NULL
+expr_stmt|;
 name|pri
 operator|=
 name|LOG_USER
