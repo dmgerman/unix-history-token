@@ -69,6 +69,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
+name|Maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|realmem
 decl_stmt|;
 end_decl_stmt
@@ -741,6 +747,14 @@ operator|=
 name|atop
 argument_list|(
 name|realmem
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space. 	 */
+name|Maxmem
+operator|=
+name|atop
+argument_list|(
+name|paddr_max
 argument_list|)
 expr_stmt|;
 return|return

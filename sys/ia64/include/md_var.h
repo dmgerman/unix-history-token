@@ -241,6 +241,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|long
+name|Maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_int
 name|busdma_swi_pending
 decl_stmt|;
