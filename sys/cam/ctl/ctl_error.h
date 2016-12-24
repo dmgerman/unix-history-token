@@ -40,6 +40,10 @@ name|scsi_sense_data
 modifier|*
 name|sense_data
 parameter_list|,
+name|u_int
+modifier|*
+name|sense_len
+parameter_list|,
 name|void
 modifier|*
 name|lun
@@ -73,6 +77,10 @@ name|struct
 name|scsi_sense_data
 modifier|*
 name|sense_data
+parameter_list|,
+name|u_int
+modifier|*
+name|sense_len
 parameter_list|,
 name|void
 modifier|*
@@ -211,6 +219,10 @@ name|struct
 name|scsi_sense_data
 modifier|*
 name|sense
+parameter_list|,
+name|u_int
+modifier|*
+name|sense_len
 parameter_list|,
 name|scsi_sense_data_type
 name|sense_format
