@@ -2907,14 +2907,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"malloc() failed - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc() failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5819,14 +5814,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"inet_ntop failed - %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"inet_ntop failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6073,16 +6063,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Bad BITS value %s - %s"
+literal|"Bad BITS value %s"
 argument_list|,
 name|str
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -6282,16 +6267,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnx
+name|warn
 argument_list|(
-literal|"Bad BITS value %s - %s"
+literal|"Bad BITS value %s"
 argument_list|,
 name|string
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
