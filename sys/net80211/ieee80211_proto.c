@@ -8794,6 +8794,10 @@ operator|->
 name|iv_state
 operator|==
 name|IEEE80211_S_CAC
+operator|&&
+name|vap
+operator|!=
+name|vap0
 condition|)
 name|ieee80211_new_state_locked
 argument_list|(
