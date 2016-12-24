@@ -14630,19 +14630,9 @@ condition|(
 name|res
 operator|->
 name|ai_family
-operator|==
+operator|!=
 name|AF_LOCAL
-condition|)
-name|unlink
-argument_list|(
-name|pe
-operator|->
-name|pe_name
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|&&
 name|SecureMode
 operator|>
 literal|1
@@ -14818,15 +14808,45 @@ block|}
 end_block
 
 begin_comment
-comment|/* 		 * RFC 3164 recommends that client side message 		 * should come from the privileged syslogd port. 		 * 		 * If the system administrator choose not to obey 		 * this, we can skip the bind() step so that the 		 * system will choose a port for us. 		 */
+comment|/* 		 * Bind INET and UNIX-domain sockets. 		 * 		 * A UNIX-domain socket is always bound to a pathname 		 * regardless of -N flag. 		 * 		 * For INET sockets, RFC 3164 recommends that client 		 * side message should come from the privileged syslogd port. 		 * 		 * If the system administrator chooses not to obey 		 * this, we can skip the bind() step so that the 		 * system will choose a port for us. 		 */
 end_comment
 
 begin_if
 if|if
 condition|(
+name|res
+operator|->
+name|ai_family
+operator|==
+name|AF_LOCAL
+condition|)
+name|unlink
+argument_list|(
+name|pe
+operator|->
+name|pe_name
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|res
+operator|->
+name|ai_family
+operator|==
+name|AF_LOCAL
+operator|||
 name|NoBind
 operator|==
 literal|0
+operator|||
+name|pe
+operator|->
+name|pe_name
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -14864,6 +14884,12 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|res
+operator|->
+name|ai_family
+operator|==
+name|AF_LOCAL
+operator|||
 name|SecureMode
 operator|==
 literal|0
@@ -14957,6 +14983,12 @@ begin_if
 if|if
 condition|(
 name|SecureMode
+operator|||
+name|res
+operator|->
+name|ai_family
+operator|==
+name|AF_LOCAL
 condition|)
 block|{
 comment|/* Forbid communication in secure mode. */
@@ -14994,14 +15026,14 @@ expr_stmt|;
 block|}
 name|dprintf
 argument_list|(
-literal|"listening on inet socket\n"
+literal|"listening on socket\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|dprintf
 argument_list|(
-literal|"sending on inet socket\n"
+literal|"sending on socket\n"
 argument_list|)
 expr_stmt|;
 end_if
