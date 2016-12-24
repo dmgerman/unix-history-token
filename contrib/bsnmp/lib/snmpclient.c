@@ -8813,14 +8813,14 @@ name|struct
 name|snmp_pdu
 name|pdu
 decl_stmt|;
-name|u_int
-name|i
+name|int
+name|ret
 decl_stmt|;
 name|int32_t
 name|reqid
 decl_stmt|;
-name|int
-name|ret
+name|u_int
+name|i
 decl_stmt|;
 comment|/* 	 * Make a copy of the request and replace the syntaxes by NULL 	 * if this is a GET,GETNEXT or GETBULK. 	 */
 name|pdu
