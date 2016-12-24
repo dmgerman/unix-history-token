@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_include
@@ -2953,7 +2953,7 @@ while|while
 condition|(
 name|zilog
 operator|=
-name|txg_list_remove
+name|txg_list_head
 argument_list|(
 operator|&
 name|dp
@@ -2975,8 +2975,24 @@ operator|->
 name|zl_os
 argument_list|)
 decl_stmt|;
+comment|/* 		 * We don't remove the zilog from the dp_dirty_zilogs 		 * list until after we've cleaned it. This ensures that 		 * callers of zilog_is_dirty() receive an accurate 		 * answer when they are racing with the spa sync thread. 		 */
 name|zil_clean
 argument_list|(
+name|zilog
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|txg_list_remove_this
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_dirty_zilogs
+argument_list|,
 name|zilog
 argument_list|,
 name|txg

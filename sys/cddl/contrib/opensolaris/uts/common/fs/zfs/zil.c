@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2016 by Delphix. All rights reserved.  * Copyright (c) 2014 Integros [integros.com]  */
 end_comment
 
 begin_comment
@@ -2339,6 +2339,63 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Determine if the zil is dirty in the specified txg. Callers wanting to  * ensure that the dirty state does not change must hold the itxg_lock for  * the specified txg. Holding the lock will ensure that the zil cannot be  * dirtied (zil_itx_assign) or cleaned (zil_clean) while we check its current  * state.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|zilog_is_dirty_in_txg
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+block|{
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|zilog
+operator|->
+name|zl_dmu_pool
+decl_stmt|;
+if|if
+condition|(
+name|txg_list_member
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_dirty_zilogs
+argument_list|,
+name|zilog
+argument_list|,
+name|txg
+operator|&
+name|TXG_MASK
+argument_list|)
+condition|)
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Determine if the zil is dirty. The zil is considered dirty if it has  * any pending itx records that have not been cleaned by zil_clean().  */
+end_comment
 
 begin_function
 name|boolean_t
@@ -4881,23 +4938,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
-name|zilog_is_dirty
-argument_list|(
-name|zilog
-argument_list|)
-operator|||
-name|spa_freeze_txg
-argument_list|(
-name|zilog
-operator|->
-name|zl_spa
-argument_list|)
-operator|!=
-name|UINT64_MAX
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lrc
@@ -6611,6 +6651,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * This is inherently racy, since there is nothing to prevent 	 * the last synced txg from changing. That's okay since we'll 	 * only commit things in the future. 	 */
 for|for
 control|(
 name|txg
@@ -6670,6 +6711,26 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * If we're adding itx records to the zl_itx_commit_list, 		 * then the zil better be dirty in this "txg". We can assert 		 * that here since we're holding the itxg_lock which will 		 * prevent spa_sync from cleaning it. Once we add the itxs 		 * to the zl_itx_commit_list we must commit it to disk even 		 * if it's unnecessary (i.e. the txg was synced). 		 */
+name|ASSERT
+argument_list|(
+name|zilog_is_dirty_in_txg
+argument_list|(
+name|zilog
+argument_list|,
+name|txg
+argument_list|)
+operator|||
+name|spa_freeze_txg
+argument_list|(
+name|zilog
+operator|->
+name|zl_spa
+argument_list|)
+operator|!=
+name|UINT64_MAX
+argument_list|)
+expr_stmt|;
 name|list_move_tail
 argument_list|(
 name|commit_list
@@ -6777,6 +6838,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * This is inherently racy, since there is nothing to prevent 	 * the last synced txg from changing. 	 */
 for|for
 control|(
 name|txg
@@ -7111,11 +7173,16 @@ name|itx_lr
 operator|.
 name|lrc_txg
 expr_stmt|;
-name|ASSERT
+name|ASSERT3U
 argument_list|(
 name|txg
+argument_list|,
+operator|!=
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * This is inherently racy and may result in us writing 		 * out a log block for a txg that was just synced. This is 		 * ok since we'll end cleaning up that log block the next 		 * time we call zil_sync(). 		 */
 if|if
 condition|(
 name|txg
@@ -8497,7 +8564,23 @@ argument_list|,
 name|txg
 argument_list|)
 expr_stmt|;
-name|ASSERT
+if|if
+condition|(
+name|zilog_is_dirty
+argument_list|(
+name|zilog
+argument_list|)
+condition|)
+name|zfs_dbgmsg
+argument_list|(
+literal|"zil (%p) is dirty, txg %llu"
+argument_list|,
+name|zilog
+argument_list|,
+name|txg
+argument_list|)
+expr_stmt|;
+name|VERIFY
 argument_list|(
 operator|!
 name|zilog_is_dirty

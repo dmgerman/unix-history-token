@@ -31156,14 +31156,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|spa
-operator|->
-name|spa_ubsync
-operator|=
-name|spa
-operator|->
-name|spa_uberblock
-expr_stmt|;
 name|dsl_pool_sync_done
 argument_list|(
 name|dp
@@ -31273,6 +31265,15 @@ operator|->
 name|spa_sync_pass
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Update the last synced uberblock here. We want to do this at 	 * the end of spa_sync() so that consumers of spa_last_synced_txg() 	 * will be guaranteed that all the processing associated with 	 * that txg has been completed. 	 */
+name|spa
+operator|->
+name|spa_ubsync
+operator|=
+name|spa
+operator|->
+name|spa_uberblock
 expr_stmt|;
 name|spa_config_exit
 argument_list|(
