@@ -527,8 +527,11 @@ name|gfp_mask
 argument_list|,
 literal|0
 argument_list|,
-operator|-
-literal|1
+operator|~
+operator|(
+name|vm_paddr_t
+operator|)
+literal|0
 argument_list|,
 name|size
 argument_list|,
