@@ -749,7 +749,7 @@ directive|ifdef
 name|__powerpc64__
 name|printf
 argument_list|(
-literal|"0x%016jx - 0x%016jx, %jd bytes (%jd pages)\n"
+literal|"0x%016jx - 0x%016jx, %ju bytes (%ju pages)\n"
 argument_list|,
 else|#
 directive|else
