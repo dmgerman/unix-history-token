@@ -1510,8 +1510,8 @@ name|port
 argument_list|,
 name|l
 argument_list|)
-operator|>=
-name|CTL_MAX_LUNS
+operator|==
+name|UINT32_MAX
 condition|)
 continue|continue;
 name|port
@@ -1653,8 +1653,8 @@ name|lun
 operator|->
 name|lun
 argument_list|)
-operator|>=
-name|CTL_MAX_LUNS
+operator|==
+name|UINT32_MAX
 condition|)
 continue|continue;
 name|mtx_lock
@@ -1782,8 +1782,8 @@ name|port
 argument_list|,
 name|l
 argument_list|)
-operator|>=
-name|CTL_MAX_LUNS
+operator|==
+name|UINT32_MAX
 condition|)
 continue|continue;
 name|port
@@ -1858,8 +1858,8 @@ name|lun
 operator|->
 name|lun
 argument_list|)
-operator|>=
-name|CTL_MAX_LUNS
+operator|==
+name|UINT32_MAX
 condition|)
 continue|continue;
 name|mtx_lock
