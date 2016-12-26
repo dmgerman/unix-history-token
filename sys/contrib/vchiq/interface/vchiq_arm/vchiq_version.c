@@ -40,7 +40,7 @@ name|VC_DEBUG_DECLARE_STRING_VAR
 argument_list|(
 name|vchiq_build_time
 argument_list|,
-name|__TIME__
+literal|"not available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -50,7 +50,7 @@ name|VC_DEBUG_DECLARE_STRING_VAR
 argument_list|(
 name|vchiq_build_date
 argument_list|,
-name|__DATE__
+literal|"not available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
