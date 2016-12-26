@@ -1224,7 +1224,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ssize_t
 name|recv_dgram
 parameter_list|(
 name|struct
