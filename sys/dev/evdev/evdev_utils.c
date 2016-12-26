@@ -1185,7 +1185,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|inline
 name|uint16_t
 name|evdev_hid2key
 parameter_list|(
@@ -1203,7 +1202,6 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 name|void
 name|evdev_support_all_known_keys
 parameter_list|(
@@ -1255,7 +1253,6 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 name|uint16_t
 name|evdev_scancode2key
 parameter_list|(
