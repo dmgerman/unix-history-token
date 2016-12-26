@@ -847,7 +847,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|MINOR
+name|minor
 argument_list|(
 name|dev2unit
 argument_list|(
