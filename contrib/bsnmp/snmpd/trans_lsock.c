@@ -18,13 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include
@@ -42,25 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<syslog.h>
 end_include
 
 begin_include
