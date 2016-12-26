@@ -87,6 +87,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has an lzma signature. */
 name|p
 operator|=
@@ -112,6 +117,11 @@ argument_list|,
 literal|"LRZI\x00"
 argument_list|,
 literal|5
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

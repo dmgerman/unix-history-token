@@ -92,7 +92,9 @@ argument_list|(
 literal|"gzip is not supported on this platform"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|failure
 argument_list|(
@@ -106,8 +108,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Check that the archive file has a gzip signature. */
 name|p
 operator|=
@@ -133,6 +142,13 @@ argument_list|,
 literal|"\x1f\x8b\x08\x00"
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
