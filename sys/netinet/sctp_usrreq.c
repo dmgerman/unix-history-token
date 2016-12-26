@@ -4703,7 +4703,7 @@ argument_list|,
 name|netp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Why do this in the case where we have still data 		 * queued? */
+comment|/* 		 * XXX: Why do this in the case where we have still data 		 * queued? 		 */
 name|sctp_chunk_output
 argument_list|(
 name|inp
@@ -8499,7 +8499,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Can't get stream value without 				 * association */
+comment|/* 				 * Can't get stream value without 				 * association 				 */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -19314,7 +19314,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Must have Frag 							 * interleave and 							 * stream interleave 							 * on */
+comment|/* 							 * Must have Frag 							 * interleave and 							 * stream interleave 							 * on 							 */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -20643,7 +20643,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Can't set stream value without 					 * association */
+comment|/* 					 * Can't set stream value without 					 * association 					 */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -21824,7 +21824,7 @@ name|asoc
 operator|.
 name|shared_keys
 expr_stmt|;
-comment|/* clear the cached keys for 						 * this key id */
+comment|/* 						 * clear the cached keys for 						 * this key id 						 */
 name|sctp_clear_cachedkeys
 argument_list|(
 name|stcb
@@ -23919,7 +23919,7 @@ name|addstream
 operator||=
 literal|2
 expr_stmt|;
-comment|/* We allocate inside 				 * sctp_send_str_reset_req() */
+comment|/* 				 * We allocate inside 				 * sctp_send_str_reset_req() 				 */
 name|add_i_strmcnt
 operator|=
 name|stradd
@@ -24151,7 +24151,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Is there any data pending in the send or sent 			 * queues? */
+comment|/* 			 * Is there any data pending in the send or sent 			 * queues? 			 */
 if|if
 condition|(
 operator|!
@@ -24928,7 +24928,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* FIXME MT: I think this is not in 					 * tune with the API ID */
+comment|/* 					 * FIXME MT: I think this is not in 					 * tune with the API ID 					 */
 if|if
 condition|(
 name|av
@@ -25608,7 +25608,7 @@ name|stcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Send up the sender dry event only for 1-to-1 			 * style sockets. */
+comment|/* 			 * Send up the sender dry event only for 1-to-1 			 * style sockets. 			 */
 if|if
 condition|(
 name|events
@@ -29723,7 +29723,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Must validate the ifa found is in 					 * our ep */
+comment|/* 					 * Must validate the ifa found is in 					 * our ep 					 */
 name|struct
 name|sctp_laddr
 modifier|*
@@ -33877,7 +33877,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* AUTH is required for 						 * ASCONF */
+comment|/* 						 * AUTH is required for 						 * ASCONF 						 */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -34066,7 +34066,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* AUTH is required for 						 * ASCONF */
+comment|/* 						 * AUTH is required for 						 * ASCONF 						 */
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
 name|inp
@@ -36364,7 +36364,7 @@ name|so_qlimit
 operator|)
 condition|)
 block|{
-comment|/* we have a listener already and 					 * its not this inp. */
+comment|/* 					 * we have a listener already and 					 * its not this inp. 					 */
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|tinp
@@ -36591,7 +36591,7 @@ name|so_qlimit
 operator|)
 condition|)
 block|{
-comment|/* we have a listener already and its not 				 * this inp. */
+comment|/* 				 * we have a listener already and its not 				 * this inp. 				 */
 name|SCTP_INP_DECR_REF
 argument_list|(
 name|tinp
