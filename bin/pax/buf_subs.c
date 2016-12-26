@@ -2571,7 +2571,7 @@ name|cnt
 operator|)
 return|;
 block|}
-comment|/* 		 * errors require resync, EOF goes to next archive 		 */
+comment|/* 		 * errors require resync, EOF goes to next archive 		 * but in case we have not determined yet the format, 		 * this means that we have a very short file, so we 		 * are done again. 		 */
 if|if
 condition|(
 name|cnt
@@ -2581,6 +2581,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|frmt
+operator|==
+name|NULL
+operator|||
 name|ar_next
 argument_list|()
 operator|<
