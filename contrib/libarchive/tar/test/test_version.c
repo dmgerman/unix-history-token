@@ -133,7 +133,9 @@ argument_list|,
 literal|7
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|done
+goto|;
 name|q
 operator|+=
 literal|7
@@ -443,6 +445,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 name|free
 argument_list|(
 name|p

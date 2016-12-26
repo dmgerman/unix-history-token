@@ -1527,6 +1527,9 @@ operator|&
 name|pos
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+operator|(
 name|fd
 operator|=
 name|dup
@@ -1535,6 +1538,11 @@ name|fileno
 argument_list|(
 name|stderr
 argument_list|)
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|fp
@@ -1679,16 +1687,14 @@ name|stderr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 name|clearerr
 argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fsetpos
 argument_list|(
 name|stderr
@@ -1698,6 +1704,11 @@ name|pos
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|assertTextFileContents
 argument_list|(
 literal|"bunzip2: (stdin) is not a bzip2 file.\n"

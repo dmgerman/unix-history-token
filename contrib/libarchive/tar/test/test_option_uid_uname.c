@@ -153,6 +153,11 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 comment|/* Again with just --uid */
 name|failure
 argument_list|(
@@ -214,6 +219,11 @@ argument_list|,
 literal|"\0"
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 comment|/* Again with just --uname */
@@ -279,6 +289,16 @@ argument_list|,
 literal|"foofoofoo\0"
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|reference
 argument_list|)
 expr_stmt|;
 block|}

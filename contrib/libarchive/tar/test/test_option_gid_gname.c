@@ -153,6 +153,11 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 comment|/* Again with just --gname */
 name|failure
 argument_list|(
@@ -218,6 +223,16 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|reference
+argument_list|)
+expr_stmt|;
 comment|/* Again with --gid  and force gname to empty. */
 name|failure
 argument_list|(
@@ -279,6 +294,11 @@ argument_list|,
 literal|"\0"
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 comment|/* TODO: It would be nice to verify that --gid= by itself 	 * will look up the associated gname and use that, but 	 * that requires some system-specific code. */
