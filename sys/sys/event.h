@@ -1027,7 +1027,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Setting the KN_INFLUX flag enables you to unlock the kq that this knote  * is on, and modify kn_status as if you had the KQ lock.  *  * kn_sfflags, kn_sdata, and kn_kevent are protected by the knlist lock.  */
+comment|/*  * An in-flux knote cannot be dropped from its kq while the kq is  * unlocked.  If the KN_SCAN flag is not set, a thread can only set  * kn_influx when it is exclusive owner of the knote state, and can  * modify kn_status as if it had the KQ lock.  KN_SCAN must not be set  * on a knote which is already in flux.  *  * kn_sfflags, kn_sdata, and kn_kevent are protected by the knlist lock.  */
 end_comment
 
 begin_struct
@@ -1070,6 +1070,13 @@ name|struct
 name|kevent
 name|kn_kevent
 decl_stmt|;
+name|void
+modifier|*
+name|kn_hook
+decl_stmt|;
+name|int
+name|kn_hookid
+decl_stmt|;
 name|int
 name|kn_status
 decl_stmt|;
@@ -1096,11 +1103,6 @@ value|0x08
 comment|/* knote is detached */
 define|#
 directive|define
-name|KN_INFLUX
-value|0x10
-comment|/* knote is in flux */
-define|#
-directive|define
 name|KN_MARKER
 value|0x20
 comment|/* ignore this knote */
@@ -1119,6 +1121,9 @@ directive|define
 name|KN_SCAN
 value|0x100
 comment|/* flux set in kqueue_scan() */
+name|int
+name|kn_influx
+decl_stmt|;
 name|int
 name|kn_sfflags
 decl_stmt|;
@@ -1165,13 +1170,6 @@ name|struct
 name|filterops
 modifier|*
 name|kn_fop
-decl_stmt|;
-name|void
-modifier|*
-name|kn_hook
-decl_stmt|;
-name|int
-name|kn_hookid
 decl_stmt|;
 define|#
 directive|define
