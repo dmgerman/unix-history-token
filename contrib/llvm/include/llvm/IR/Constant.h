@@ -154,28 +154,27 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
+comment|/// Return true if this is the value that would be returned by getNullValue.
 name|bool
 name|isNullValue
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Returns true if the value is one.
+comment|/// Returns true if the value is one.
 name|bool
 name|isOneValue
 argument_list|()
 specifier|const
 block|;
-comment|/// isAllOnesValue - Return true if this is the value that would be returned by
+comment|/// Return true if this is the value that would be returned by
 comment|/// getAllOnesValue.
 name|bool
 name|isAllOnesValue
 argument_list|()
 specifier|const
 block|;
-comment|/// isNegativeZeroValue - Return true if the value is what would be returned
-comment|/// by getZeroValueForNegation.
+comment|/// Return true if the value is what would be returned by
+comment|/// getZeroValueForNegation.
 name|bool
 name|isNegativeZeroValue
 argument_list|()
@@ -187,26 +186,26 @@ name|isZeroValue
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Return true if the value is not the smallest signed value.
+comment|/// Return true if the value is not the smallest signed value.
 name|bool
 name|isNotMinSignedValue
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Return true if the value is the smallest signed value.
+comment|/// Return true if the value is the smallest signed value.
 name|bool
 name|isMinSignedValue
 argument_list|()
 specifier|const
 block|;
-comment|/// canTrap - Return true if evaluation of this constant could trap.  This is
-comment|/// true for things like constant expressions that could divide by zero.
+comment|/// Return true if evaluation of this constant could trap. This is true for
+comment|/// things like constant expressions that could divide by zero.
 name|bool
 name|canTrap
 argument_list|()
 specifier|const
 block|;
-comment|/// isThreadDependent - Return true if the value can vary between threads.
+comment|/// Return true if the value can vary between threads.
 name|bool
 name|isThreadDependent
 argument_list|()
@@ -218,8 +217,8 @@ name|isDLLImportDependent
 argument_list|()
 specifier|const
 block|;
-comment|/// isConstantUsed - Return true if the constant has users other than constant
-comment|/// exprs and other dangling things.
+comment|/// Return true if the constant has users other than constant expressions and
+comment|/// other dangling things.
 name|bool
 name|isConstantUsed
 argument_list|()
@@ -235,10 +234,9 @@ name|needsRelocation
 argument_list|()
 specifier|const
 block|;
-comment|/// getAggregateElement - For aggregates (struct/array/vector) return the
-comment|/// constant that corresponds to the specified element if possible, or null if
-comment|/// not.  This can return null if the element index is a ConstantExpr, or if
-comment|/// 'this' is a constant expr.
+comment|/// For aggregates (struct/array/vector) return the constant that corresponds
+comment|/// to the specified element if possible, or null if not. This can return null
+comment|/// if the element index is a ConstantExpr, or if 'this' is a constant expr.
 name|Constant
 operator|*
 name|getAggregateElement
@@ -255,8 +253,8 @@ argument|Constant *Elt
 argument_list|)
 specifier|const
 block|;
-comment|/// getSplatValue - If this is a splat vector constant, meaning that all of
-comment|/// the elements have the same value, return that value. Otherwise return 0.
+comment|/// If this is a splat vector constant, meaning that all of the elements have
+comment|/// the same value, return that value. Otherwise return 0.
 name|Constant
 operator|*
 name|getSplatValue
@@ -326,9 +324,6 @@ operator|*
 argument_list|,
 name|Value
 operator|*
-argument_list|,
-name|Use
-operator|*
 argument_list|)
 block|;
 specifier|static
@@ -354,8 +349,8 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getIntegerValue - Return the value for an integer or pointer constant,
-comment|/// or a vector thereof, with the given scalar value.
+comment|/// Return the value for an integer or pointer constant, or a vector thereof,
+comment|/// with the given scalar value.
 specifier|static
 name|Constant
 operator|*
@@ -371,10 +366,10 @@ operator|&
 name|V
 argument_list|)
 block|;
-comment|/// removeDeadConstantUsers - If there are any dead constant users dangling
-comment|/// off of this constant, remove them.  This method is useful for clients
-comment|/// that want to check to see if a global is unused, but don't want to deal
-comment|/// with potentially dead constants hanging off of the globals.
+comment|/// If there are any dead constant users dangling off of this constant, remove
+comment|/// them. This method is useful for clients that want to check to see if a
+comment|/// global is unused, but don't want to deal with potentially dead constants
+comment|/// hanging off of the globals.
 name|void
 name|removeDeadConstantUsers
 argument_list|()

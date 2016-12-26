@@ -65,18 +65,6 @@ directive|include
 file|"llvm/DebugInfo/DIContext.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

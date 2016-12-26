@@ -89,6 +89,8 @@ argument|StringRef LS
 argument_list|,
 argument|bool LE
 argument_list|,
+argument|bool IsDWO
+argument_list|,
 argument|const DWARFUnitSectionBase&UnitSection
 argument_list|,
 argument|const DWARFUnitIndex::Entry *Entry
@@ -113,6 +115,8 @@ argument_list|,
 argument|LS
 argument_list|,
 argument|LE
+argument_list|,
+argument|IsDWO
 argument_list|,
 argument|UnitSection
 argument_list|,

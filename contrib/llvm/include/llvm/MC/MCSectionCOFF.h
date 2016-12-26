@@ -98,6 +98,18 @@ name|mutable
 name|unsigned
 name|Characteristics
 block|;
+comment|/// The unique IDs used with the .pdata and .xdata sections created internally
+comment|/// by the assembler. This ID is used to ensure that for every .text section,
+comment|/// there is exactly one .pdata and one .xdata section, which is required by
+comment|/// the Microsoft incremental linker. This data is mutable because this ID is
+comment|/// not notionally part of the section.
+name|mutable
+name|unsigned
+name|WinCFISectionID
+operator|=
+operator|~
+literal|0U
+block|;
 comment|/// The COMDAT symbol of this section. Only valid if this is a COMDAT section.
 comment|/// Two COMDAT sections are merged if they have the same COMDAT symbol.
 name|MCSymbol
@@ -258,12 +270,41 @@ argument_list|()
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getOrAssignWinCFISectionID
+argument_list|(
+argument|unsigned *NextID
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|WinCFISectionID
+operator|==
+operator|~
+literal|0U
+condition|)
+name|WinCFISectionID
+operator|=
+operator|(
+operator|*
+name|NextID
+operator|)
+operator|++
+expr_stmt|;
+return|return
+name|WinCFISectionID
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const MCSection *S
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|S
+parameter_list|)
 block|{
 return|return
 name|S
@@ -274,11 +315,15 @@ operator|==
 name|SV_COFF
 return|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

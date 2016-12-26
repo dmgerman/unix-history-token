@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|<functional>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -80,7 +80,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|FunctionInfoIndex
+name|StringRef
+decl_stmt|;
+name|class
+name|ModuleSummaryIndex
 decl_stmt|;
 name|class
 name|ModulePass
@@ -209,7 +212,7 @@ modifier|*
 name|createFunctionImportPass
 parameter_list|(
 specifier|const
-name|FunctionInfoIndex
+name|ModuleSummaryIndex
 modifier|*
 name|Index
 init|=
@@ -278,7 +281,8 @@ comment|//===-------------------------------------------------------------------
 comment|/// createInternalizePass - This pass loops over all of the functions in the
 comment|/// input module, internalizing all globals (functions and variables) it can.
 comment|////
-comment|/// The symbols in \p ExportList are never internalized.
+comment|/// Before internalizing a symbol, the callback \p MustPreserveGV is invoked and
+comment|/// gives to the client the ability to prevent internalizing specific symbols.
 comment|///
 comment|/// The symbol in DSOList are internalized if it is safe to drop them from
 comment|/// the symbol table.
@@ -289,13 +293,18 @@ name|ModulePass
 modifier|*
 name|createInternalizePass
 argument_list|(
-name|ArrayRef
+name|std
+operator|::
+name|function
 operator|<
+name|bool
+argument_list|(
 specifier|const
-name|char
-operator|*
+name|GlobalValue
+operator|&
+argument_list|)
 operator|>
-name|ExportList
+name|MustPreserveGV
 argument_list|)
 decl_stmt|;
 comment|/// createInternalizePass - Same as above, but with an empty exportList.
@@ -389,18 +398,6 @@ name|createStripDeadPrototypesPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createPostOrderFunctionAttrsPass - This pass walks SCCs of the call graph
-comment|/// in post-order to deduce and propagate function attributes. It can discover
-comment|/// functions that do not access memory, or only read memory, and give them the
-comment|/// readnone/readonly attribute. It also discovers function arguments that are
-comment|/// not captured by the function and marks them with the nocapture attribute.
-comment|///
-name|Pass
-modifier|*
-name|createPostOrderFunctionAttrsPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// createReversePostOrderFunctionAttrsPass - This pass walks SCCs of the call
 comment|/// graph in RPO to deduce and propagate function attributes. Currently it
 comment|/// only handles synthesizing norecurse attributes.
@@ -443,17 +440,24 @@ modifier|*
 name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
-comment|/// \brief This pass lowers bitset metadata and the llvm.bitset.test intrinsic
-comment|/// to bitsets.
+comment|/// \brief This pass lowers type metadata and the llvm.type.test intrinsic to
+comment|/// bitsets.
 name|ModulePass
 modifier|*
-name|createLowerBitSetsPass
+name|createLowerTypeTestsPass
 parameter_list|()
 function_decl|;
 comment|/// \brief This pass export CFI checks for use by external modules.
 name|ModulePass
 modifier|*
 name|createCrossDSOCFIPass
+parameter_list|()
+function_decl|;
+comment|/// \brief This pass implements whole-program devirtualization using type
+comment|/// metadata.
+name|ModulePass
+modifier|*
+name|createWholeProgramDevirtPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

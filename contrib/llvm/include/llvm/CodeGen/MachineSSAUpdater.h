@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 

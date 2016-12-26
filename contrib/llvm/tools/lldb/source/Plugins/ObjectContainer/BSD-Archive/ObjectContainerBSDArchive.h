@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -428,9 +434,9 @@ name|GetArchiveCache
 parameter_list|()
 function_decl|;
 specifier|static
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 operator|&
 name|GetArchiveCacheMutex
 argument_list|()

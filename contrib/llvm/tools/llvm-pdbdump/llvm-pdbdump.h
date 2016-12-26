@@ -59,6 +59,9 @@ begin_decl_stmt
 name|namespace
 name|opts
 block|{
+name|namespace
+name|pretty
+block|{
 extern|extern llvm::cl::opt<bool> Compilands;
 extern|extern llvm::cl::opt<bool> Symbols;
 extern|extern llvm::cl::opt<bool> Globals;
@@ -73,6 +76,41 @@ extern|extern llvm::cl::list<std::string> ExcludeCompilands;
 extern|extern llvm::cl::list<std::string> IncludeTypes;
 extern|extern llvm::cl::list<std::string> IncludeSymbols;
 extern|extern llvm::cl::list<std::string> IncludeCompilands;
+block|}
+name|namespace
+name|raw
+block|{
+extern|extern llvm::cl::opt<bool> DumpHeaders;
+extern|extern llvm::cl::opt<bool> DumpStreamBlocks;
+extern|extern llvm::cl::opt<bool> DumpStreamSummary;
+extern|extern llvm::cl::opt<bool> DumpTpiHash;
+extern|extern llvm::cl::opt<bool> DumpTpiRecordBytes;
+extern|extern llvm::cl::opt<bool> DumpTpiRecords;
+extern|extern llvm::cl::opt<bool> DumpIpiRecords;
+extern|extern llvm::cl::opt<bool> DumpIpiRecordBytes;
+extern|extern llvm::cl::opt<std::string> DumpStreamDataIdx;
+extern|extern llvm::cl::opt<std::string> DumpStreamDataName;
+extern|extern llvm::cl::opt<bool> DumpModules;
+extern|extern llvm::cl::opt<bool> DumpModuleFiles;
+extern|extern llvm::cl::opt<bool> DumpModuleSyms;
+extern|extern llvm::cl::opt<bool> DumpPublics;
+extern|extern llvm::cl::opt<bool> DumpSectionContribs;
+extern|extern llvm::cl::opt<bool> DumpLineInfo;
+extern|extern llvm::cl::opt<bool> DumpSectionMap;
+extern|extern llvm::cl::opt<bool> DumpSymRecordBytes;
+extern|extern llvm::cl::opt<bool> DumpSectionHeaders;
+extern|extern llvm::cl::opt<bool> DumpFpo;
+block|}
+name|namespace
+name|pdb2yaml
+block|{
+extern|extern llvm::cl::opt<bool> NoFileHeaders;
+extern|extern llvm::cl::opt<bool> StreamMetadata;
+extern|extern llvm::cl::opt<bool> StreamDirectory;
+extern|extern llvm::cl::opt<bool> PdbStream;
+extern|extern llvm::cl::opt<bool> DbiStream;
+extern|extern llvm::cl::list<std::string> InputFilename;
+block|}
 block|}
 end_decl_stmt
 

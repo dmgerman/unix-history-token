@@ -1184,8 +1184,10 @@ comment|///     to just extract the entire integer value.
 comment|///
 comment|/// @param[in] bitfield_bit_offset
 comment|///     The bit offset of the bitfield value in the extracted
-comment|///     integer (the number of bits to shift the integer to the
-comment|///     right).
+comment|///     integer.  For little-endian data, this is the offset of
+comment|///     the LSB of the bitfield from the LSB of the integer.
+comment|///     For big-endian data, this is the offset of the MSB of the
+comment|///     bitfield from the MSB of the integer.
 comment|///
 comment|/// @return
 comment|///     The unsigned bitfield integer value that was extracted, or
@@ -1240,8 +1242,10 @@ comment|///     to just extract the entire integer value.
 comment|///
 comment|/// @param[in] bitfield_bit_offset
 comment|///     The bit offset of the bitfield value in the extracted
-comment|///     integer (the number of bits to shift the integer to the
-comment|///     right).
+comment|///     integer.  For little-endian data, this is the offset of
+comment|///     the LSB of the bitfield from the LSB of the integer.
+comment|///     For big-endian data, this is the offset of the MSB of the
+comment|///     bitfield from the MSB of the integer.
 comment|///
 comment|/// @return
 comment|///     The signed bitfield integer value that was extracted, or

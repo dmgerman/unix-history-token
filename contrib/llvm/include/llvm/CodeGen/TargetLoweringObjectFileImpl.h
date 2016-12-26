@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/MC/MCExpr.h"
 end_include
 
 begin_include
@@ -93,9 +93,6 @@ name|Mangler
 decl_stmt|;
 name|class
 name|MCAsmInfo
-decl_stmt|;
-name|class
-name|MCExpr
 decl_stmt|;
 name|class
 name|MCSection
@@ -129,6 +126,17 @@ name|unsigned
 name|NextUniqueID
 operator|=
 literal|0
+block|;
+name|protected
+operator|:
+name|MCSymbolRefExpr
+operator|::
+name|VariantKind
+name|PLTRelativeVariantKind
+operator|=
+name|MCSymbolRefExpr
+operator|::
+name|VK_None
 block|;
 name|public
 operator|:
@@ -168,6 +176,8 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
+argument_list|,
+argument|unsigned&Align
 argument_list|)
 specifier|const
 name|override
@@ -290,6 +300,22 @@ argument|const MCSymbol *KeySym
 argument_list|)
 specifier|const
 name|override
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|lowerRelativeReference
+argument_list|(
+argument|const GlobalValue *LHS
+argument_list|,
+argument|const GlobalValue *RHS
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -362,6 +388,8 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
+argument_list|,
+argument|unsigned&Align
 argument_list|)
 specifier|const
 name|override
@@ -443,6 +471,12 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
+name|mutable
+name|unsigned
+name|NextUniqueID
+operator|=
+literal|0
+block|;
 name|public
 operator|:
 operator|~

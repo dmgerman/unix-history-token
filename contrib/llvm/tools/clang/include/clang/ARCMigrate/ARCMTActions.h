@@ -87,8 +87,12 @@ name|public
 operator|:
 name|CheckAction
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendAction
-operator|*
+operator|>
 name|WrappedAction
 argument_list|)
 block|; }
@@ -112,8 +116,12 @@ name|public
 operator|:
 name|ModifyAction
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendAction
-operator|*
+operator|>
 name|WrappedAction
 argument_list|)
 block|; }
@@ -183,7 +191,7 @@ name|public
 operator|:
 name|MigrateAction
 argument_list|(
-argument|FrontendAction *WrappedAction
+argument|std::unique_ptr<FrontendAction> WrappedAction
 argument_list|,
 argument|StringRef migrateDir
 argument_list|,
@@ -219,7 +227,7 @@ name|public
 operator|:
 name|ObjCMigrateAction
 argument_list|(
-argument|FrontendAction *WrappedAction
+argument|std::unique_ptr<FrontendAction> WrappedAction
 argument_list|,
 argument|StringRef migrateDir
 argument_list|,

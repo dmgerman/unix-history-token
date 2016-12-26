@@ -44,7 +44,7 @@ comment|/// \brief This file defines the WebAssembly subclass for
 end_comment
 
 begin_comment
-comment|/// TargetSelectionDAGInfo.
+comment|/// SelectionDAGTargetInfo.
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSelectionDAGInfo.h"
+file|"llvm/CodeGen/SelectionDAGTargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -82,7 +82,7 @@ name|WebAssemblySelectionDAGInfo
 name|final
 range|:
 name|public
-name|TargetSelectionDAGInfo
+name|SelectionDAGTargetInfo
 block|{
 name|public
 operator|:

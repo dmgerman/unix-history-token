@@ -1,0 +1,467 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===----- CGOpenMPRuntimeNVPTX.h - Interface to OpenMP NVPTX Runtimes ----===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This provides a class for OpenMP runtime code generation specialized to NVPTX
+end_comment
+
+begin_comment
+comment|// targets.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_CLANG_LIB_CODEGEN_CGOPENMPRUNTIMENVPTX_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_CLANG_LIB_CODEGEN_CGOPENMPRUNTIMENVPTX_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"CGOpenMPRuntime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CodeGenFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/StmtOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+name|namespace
+name|CodeGen
+block|{
+name|class
+name|CGOpenMPRuntimeNVPTX
+range|:
+name|public
+name|CGOpenMPRuntime
+block|{
+name|public
+operator|:
+name|class
+name|EntryFunctionState
+block|{
+name|public
+operator|:
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|ExitBB
+block|;
+name|EntryFunctionState
+argument_list|()
+operator|:
+name|ExitBB
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+block|;   }
+block|;
+name|class
+name|WorkerFunctionState
+block|{
+name|public
+operator|:
+name|llvm
+operator|::
+name|Function
+operator|*
+name|WorkerFn
+block|;
+specifier|const
+name|CGFunctionInfo
+operator|*
+name|CGFI
+block|;
+name|WorkerFunctionState
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|createWorkerFunction
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|)
+block|;   }
+block|;
+comment|/// \brief Helper for target entry function. Guide the master and worker
+comment|/// threads to their respective locations.
+name|void
+name|emitEntryHeader
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|,
+name|WorkerFunctionState
+operator|&
+name|WST
+argument_list|)
+block|;
+comment|/// \brief Signal termination of OMP execution.
+name|void
+name|emitEntryFooter
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|EntryFunctionState
+operator|&
+name|EST
+argument_list|)
+block|;
+name|private
+operator|:
+comment|//
+comment|// NVPTX calls.
+comment|//
+comment|/// \brief Get the GPU warp size.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getNVPTXWarpSize
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|/// \brief Get the id of the current thread on the GPU.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getNVPTXThreadID
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|// \brief Get the maximum number of threads in a block of the GPU.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getNVPTXNumThreads
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|/// \brief Get barrier to synchronize all threads in a block.
+name|void
+name|getNVPTXCTABarrier
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|// \brief Synchronize all GPU threads in a block.
+name|void
+name|syncCTAThreads
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|//
+comment|// OMP calls.
+comment|//
+comment|/// \brief Get the thread id of the OMP master thread.
+comment|/// The master thread id is the first thread (lane) of the last warp in the
+comment|/// GPU block.  Warp size is assumed to be some power of 2.
+comment|/// Thread id is 0 indexed.
+comment|/// E.g: If NumThreads is 33, master id is 32.
+comment|///      If NumThreads is 64, master id is 32.
+comment|///      If NumThreads is 1024, master id is 992.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getMasterThreadID
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+block|;
+comment|//
+comment|// Private state and methods.
+comment|//
+comment|// Master-worker control state.
+comment|// Number of requested OMP threads in parallel region.
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|ActiveWorkers
+block|;
+comment|// Outlined function for the workers to execute.
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|WorkID
+block|;
+comment|/// \brief Initialize master-worker control state.
+name|void
+name|initializeEnvironment
+argument_list|()
+block|;
+comment|/// \brief Emit the worker function for the current target region.
+name|void
+name|emitWorkerFunction
+argument_list|(
+name|WorkerFunctionState
+operator|&
+name|WST
+argument_list|)
+block|;
+comment|/// \brief Helper for worker function. Emit body of worker loop.
+name|void
+name|emitWorkerLoop
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|WorkerFunctionState
+operator|&
+name|WST
+argument_list|)
+block|;
+comment|/// \brief Returns specified OpenMP runtime function for the current OpenMP
+comment|/// implementation.  Specialized for the NVPTX device.
+comment|/// \param Function OpenMP runtime function.
+comment|/// \return Specified function.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|createNVPTXRuntimeFunction
+argument_list|(
+argument|unsigned Function
+argument_list|)
+block|;
+comment|//
+comment|// Base class overrides.
+comment|//
+comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
+comment|/// address \a Addr and size \a Size.
+name|void
+name|createOffloadEntry
+argument_list|(
+argument|llvm::Constant *ID
+argument_list|,
+argument|llvm::Constant *Addr
+argument_list|,
+argument|uint64_t Size
+argument_list|)
+name|override
+block|;
+comment|/// \brief Emit outlined function for 'target' directive on the NVPTX
+comment|/// device.
+comment|/// \param D Directive to emit.
+comment|/// \param ParentName Name of the function that encloses the target region.
+comment|/// \param OutlinedFn Outlined function value to be defined by this call.
+comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
+comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// An outlined function may not be an entry if, e.g. the if clause always
+comment|/// evaluates to false.
+name|void
+name|emitTargetOutlinedFunction
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|StringRef ParentName
+argument_list|,
+argument|llvm::Function *&OutlinedFn
+argument_list|,
+argument|llvm::Constant *&OutlinedFnID
+argument_list|,
+argument|bool IsOffloadEntry
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
+name|override
+block|;
+name|public
+operator|:
+name|explicit
+name|CGOpenMPRuntimeNVPTX
+argument_list|(
+name|CodeGenModule
+operator|&
+name|CGM
+argument_list|)
+block|;
+comment|/// \brief This function ought to emit, in the general case, a call to
+comment|// the openmp runtime kmpc_push_num_teams. In NVPTX backend it is not needed
+comment|// as these numbers are obtained through the PTX grid and block configuration.
+comment|/// \param NumTeams An integer expression of teams.
+comment|/// \param ThreadLimit An integer expression of threads.
+name|void
+name|emitNumTeamsClause
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|const Expr *NumTeams
+argument_list|,
+argument|const Expr *ThreadLimit
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+name|override
+block|;
+comment|/// \brief Emits inlined function for the specified OpenMP parallel
+comment|//  directive but an inlined function for teams.
+comment|/// \a D. This outlined function has type void(*)(kmp_int32 *ThreadID,
+comment|/// kmp_int32 BoundID, struct context_vars*).
+comment|/// \param D OpenMP directive.
+comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
+comment|/// is a directive itself, for combined - its innermost directive).
+comment|/// \param CodeGen Code generation sequence for the \a D directive.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|emitParallelOrTeamsOutlinedFunction
+argument_list|(
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|const VarDecl *ThreadIDVar
+argument_list|,
+argument|OpenMPDirectiveKind InnermostKind
+argument_list|,
+argument|const RegionCodeGenTy&CodeGen
+argument_list|)
+name|override
+block|;
+comment|/// \brief Emits code for teams call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// \param OutlinedFn Outlined function to be run by team masters. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|///
+name|void
+name|emitTeamsCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|const OMPExecutableDirective&D
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::Value *OutlinedFn
+argument_list|,
+argument|ArrayRef<llvm::Value *> CapturedVars
+argument_list|)
+name|override
+block|; }
+decl_stmt|;
+block|}
+comment|// CodeGen namespace.
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// clang namespace.
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_CLANG_LIB_CODEGEN_CGOPENMPRUNTIMENVPTX_H
+end_comment
+
+end_unit
+

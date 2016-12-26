@@ -101,6 +101,16 @@ specifier|const
 name|override
 block|;
 name|void
+name|emitEpilogue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
@@ -109,6 +119,18 @@ argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
 name|override
+block|;
+name|private
+operator|:
+comment|/// \brief Emits debugger prologue.
+name|void
+name|emitDebuggerPrologue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

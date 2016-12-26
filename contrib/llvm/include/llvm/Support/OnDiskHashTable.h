@@ -645,6 +645,46 @@ argument_list|(
 name|Out
 argument_list|)
 expr_stmt|;
+comment|// Now we're done adding entries, resize the bucket list if it's
+comment|// significantly too large. (This only happens if the number of
+comment|// entries is small and we're within our initial allocation of
+comment|// 64 buckets.) We aim for an occupancy ratio in [3/8, 3/4).
+comment|//
+comment|// As a special case, if there are two or fewer entries, just
+comment|// form a single bucket. A linear scan is fine in that case, and
+comment|// this is very common in C++ class lookup tables. This also
+comment|// guarantees we produce at least one bucket for an empty table.
+comment|//
+comment|// FIXME: Try computing a perfect hash function at this point.
+name|unsigned
+name|TargetNumBuckets
+init|=
+name|NumEntries
+operator|<=
+literal|2
+condition|?
+literal|1
+else|:
+name|NextPowerOf2
+argument_list|(
+name|NumEntries
+operator|*
+literal|4
+operator|/
+literal|3
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TargetNumBuckets
+operator|!=
+name|NumBuckets
+condition|)
+name|resize
+argument_list|(
+name|TargetNumBuckets
+argument_list|)
+expr_stmt|;
 comment|// Emit the payload of the table.
 for|for
 control|(
@@ -1562,6 +1602,9 @@ label|:
 name|iterator
 argument_list|()
 operator|:
+name|Key
+argument_list|()
+operator|,
 name|Data
 argument_list|(
 name|nullptr
@@ -1570,6 +1613,11 @@ operator|,
 name|Len
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|InfoObj
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 name|iterator

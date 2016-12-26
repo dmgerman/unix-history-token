@@ -214,15 +214,6 @@ argument|const FileSpecList *module_search_paths_ptr
 argument_list|)
 name|override
 block|;
-name|size_t
-name|GetSoftwareBreakpointTrapOpcode
-argument_list|(
-argument|Target&target
-argument_list|,
-argument|BreakpointSite *bp_site
-argument_list|)
-name|override
-block|;
 name|bool
 name|GetRemoteOSVersion
 argument_list|()

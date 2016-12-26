@@ -278,6 +278,9 @@ name|GlobalVariable
 argument_list|()
 name|override
 block|{
+name|dropAllReferences
+argument_list|()
+block|;
 comment|// FIXME: needed by operator delete
 name|setGlobalVariableNumOperands
 argument_list|(
@@ -330,10 +333,10 @@ return|return
 name|hasInitializer
 argument_list|()
 operator|&&
-comment|// The initializer of a global variable with weak linkage may change at
-comment|// link time.
+comment|// The initializer of a global variable may change to something arbitrary
+comment|// at link time.
 operator|!
-name|mayBeOverridden
+name|isInterposable
 argument_list|()
 operator|&&
 comment|// The initializer of a global variable with the externally_initialized
@@ -521,6 +524,12 @@ name|eraseFromParent
 argument_list|()
 name|override
 expr_stmt|;
+comment|/// Drop all references in preparation to destroy the GlobalVariable. This
+comment|/// drops not only the reference to the initializer but also to any metadata.
+name|void
+name|dropAllReferences
+parameter_list|()
+function_decl|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

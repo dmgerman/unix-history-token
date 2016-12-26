@@ -124,13 +124,22 @@ name|ARMCPModifier
 block|{
 name|no_modifier
 block|,
+comment|/// None
 name|TLSGD
 block|,
+comment|/// Thread Local Storage (General Dynamic Mode)
 name|GOT_PREL
 block|,
+comment|/// Global Offset Table, PC Relative
 name|GOTTPOFF
 block|,
+comment|/// Global Offset Table, Thread Pointer Offset
 name|TPOFF
+block|,
+comment|/// Thread Pointer Offset
+name|SECREL
+block|,
+comment|/// Section Relative (Windows TLS)
 block|}
 enum|;
 block|}

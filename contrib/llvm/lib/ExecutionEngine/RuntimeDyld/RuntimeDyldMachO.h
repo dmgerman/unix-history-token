@@ -330,7 +330,10 @@ argument_list|)
 return|;
 block|}
 comment|/// Process a scattered vanilla relocation.
+name|Expected
+operator|<
 name|relocation_iterator
+operator|>
 name|processScatteredVANILLA
 argument_list|(
 argument|unsigned SectionID
@@ -351,7 +354,10 @@ comment|/// immediate (held in RE.Addend).
 comment|/// In both cases the Addend field is *NOT* fixed up to be PC-relative. That
 comment|/// should be done by the caller where appropriate by calling makePCRel on
 comment|/// the RelocationValueRef.
+name|Expected
+operator|<
 name|RelocationValueRef
+operator|>
 name|getRelocationValueRef
 argument_list|(
 specifier|const
@@ -406,7 +412,7 @@ argument|uint64_t Addr
 argument_list|)
 block|;
 comment|// Populate __pointers section.
-name|void
+name|Error
 name|populateIndirectSymbolPointersSection
 argument_list|(
 argument|const MachOObjectFile&Obj
@@ -565,7 +571,7 @@ argument_list|,
 argument|Resolver
 argument_list|)
 block|{}
-name|void
+name|Error
 name|finalizeLoad
 argument_list|(
 argument|const ObjectFile&Obj

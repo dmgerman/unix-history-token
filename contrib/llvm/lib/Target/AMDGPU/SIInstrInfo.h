@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_SIINSTRINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_SIINSTRINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIINSTRINFO_H
 end_define
 
 begin_include
@@ -87,6 +87,7 @@ name|llvm
 block|{
 name|class
 name|SIInstrInfo
+name|final
 range|:
 name|public
 name|AMDGPUInstrInfo
@@ -96,6 +97,61 @@ operator|:
 specifier|const
 name|SIRegisterInfo
 name|RI
+block|;
+specifier|const
+name|SISubtarget
+operator|&
+name|ST
+block|;
+comment|// The the inverse predicate should have the negative value.
+block|enum
+name|BranchPredicate
+block|{
+name|INVALID_BR
+operator|=
+literal|0
+block|,
+name|SCC_TRUE
+operator|=
+literal|1
+block|,
+name|SCC_FALSE
+operator|=
+operator|-
+literal|1
+block|,
+name|VCCNZ
+operator|=
+literal|2
+block|,
+name|VCCZ
+operator|=
+operator|-
+literal|2
+block|,
+name|EXECNZ
+operator|=
+operator|-
+literal|3
+block|,
+name|EXECZ
+operator|=
+literal|3
+block|}
+block|;
+specifier|static
+name|unsigned
+name|getBranchOpcode
+argument_list|(
+argument|BranchPredicate Cond
+argument_list|)
+block|;
+specifier|static
+name|BranchPredicate
+name|getBranchPredicate
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
 block|;
 name|unsigned
 name|buildExtractSubReg
@@ -134,7 +190,7 @@ block|;
 name|void
 name|swapOperands
 argument_list|(
-argument|MachineBasicBlock::iterator Inst
+argument|MachineInstr&Inst
 argument_list|)
 specifier|const
 block|;
@@ -143,7 +199,7 @@ name|lowerScalarAbs
 argument_list|(
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|,
-argument|MachineInstr *Inst
+argument|MachineInstr&Inst
 argument_list|)
 specifier|const
 block|;
@@ -152,7 +208,7 @@ name|splitScalar64BitUnaryOp
 argument_list|(
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|,
-argument|MachineInstr *Inst
+argument|MachineInstr&Inst
 argument_list|,
 argument|unsigned Opcode
 argument_list|)
@@ -163,7 +219,7 @@ name|splitScalar64BitBinaryOp
 argument_list|(
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|,
-argument|MachineInstr *Inst
+argument|MachineInstr&Inst
 argument_list|,
 argument|unsigned Opcode
 argument_list|)
@@ -174,7 +230,7 @@ name|splitScalar64BitBCNT
 argument_list|(
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|,
-argument|MachineInstr *Inst
+argument|MachineInstr&Inst
 argument_list|)
 specifier|const
 block|;
@@ -183,7 +239,7 @@ name|splitScalar64BitBFE
 argument_list|(
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|,
-argument|MachineInstr *Inst
+argument|MachineInstr&Inst
 argument_list|)
 specifier|const
 block|;
@@ -193,6 +249,15 @@ argument_list|(
 argument|unsigned Reg
 argument_list|,
 argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument_list|)
+specifier|const
+block|;
+name|void
+name|addSCCDefUsersToVALUWorklist
+argument_list|(
+argument|MachineInstr&SCCDefInst
 argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&Worklist
 argument_list|)
@@ -210,16 +275,16 @@ block|;
 name|bool
 name|checkInstOffsetsDoNotOverlap
 argument_list|(
-argument|MachineInstr *MIa
+argument|MachineInstr&MIa
 argument_list|,
-argument|MachineInstr *MIb
+argument|MachineInstr&MIb
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|findUsedSGPR
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int OpIndices[
 literal|3
@@ -233,7 +298,7 @@ name|MachineInstr
 operator|*
 name|commuteInstructionImpl
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|bool NewMI
 argument_list|,
@@ -246,13 +311,24 @@ name|override
 block|;
 name|public
 operator|:
+expr|enum
+name|TargetOperandFlags
+block|{
+name|MO_NONE
+operator|=
+literal|0
+block|,
+name|MO_GOTPCREL
+operator|=
+literal|1
+block|}
+block|;
 name|explicit
 name|SIInstrInfo
 argument_list|(
 specifier|const
-name|AMDGPUSubtarget
+name|SISubtarget
 operator|&
-name|st
 argument_list|)
 block|;
 specifier|const
@@ -261,7 +337,6 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 name|RI
@@ -270,7 +345,7 @@ block|}
 name|bool
 name|isReallyTriviallyReMaterializable
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|AliasAnalysis *AA
 argument_list|)
@@ -294,11 +369,11 @@ block|;
 name|bool
 name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr *LdSt
+argument|MachineInstr&LdSt
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
-argument|unsigned&Offset
+argument|int64_t&Offset
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
@@ -306,11 +381,11 @@ specifier|const
 name|final
 block|;
 name|bool
-name|shouldClusterLoads
+name|shouldClusterMemOps
 argument_list|(
-argument|MachineInstr *FirstLdSt
+argument|MachineInstr&FirstLdSt
 argument_list|,
-argument|MachineInstr *SecondLdSt
+argument|MachineInstr&SecondLdSt
 argument_list|,
 argument|unsigned NumLoads
 argument_list|)
@@ -324,7 +399,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -340,7 +415,7 @@ name|calculateLDSSpillAddress
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|,
 argument|RegScavenger *RS
 argument_list|,
@@ -393,7 +468,7 @@ block|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -419,7 +494,7 @@ block|;
 name|bool
 name|findCommutedOpIndices
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcOpIdx1
 argument_list|,
@@ -429,36 +504,61 @@ specifier|const
 name|override
 block|;
 name|bool
-name|areMemAccessesTriviallyDisjoint
+name|analyzeBranch
 argument_list|(
-argument|MachineInstr *MIa
+argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineInstr *MIb
+argument|MachineBasicBlock *&TBB
 argument_list|,
-argument|AliasAnalysis *AA = nullptr
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
 argument_list|)
 specifier|const
 name|override
 block|;
-name|MachineInstr
-operator|*
-name|buildMovInstr
+name|unsigned
+name|RemoveBranch
 argument_list|(
-argument|MachineBasicBlock *MBB
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|InsertBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|MachineBasicBlock *TBB
 argument_list|,
-argument|unsigned DstReg
+argument|MachineBasicBlock *FBB
 argument_list|,
-argument|unsigned SrcReg
+argument|ArrayRef<MachineOperand> Cond
+argument_list|,
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|isMov
+name|ReverseBranchCondition
 argument_list|(
-argument|unsigned Opcode
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|areMemAccessesTriviallyDisjoint
+argument_list|(
+argument|MachineInstr&MIa
+argument_list|,
+argument|MachineInstr&MIb
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -466,9 +566,9 @@ block|;
 name|bool
 name|FoldImmediate
 argument_list|(
-argument|MachineInstr *UseMI
+argument|MachineInstr&UseMI
 argument_list|,
-argument|MachineInstr *DefMI
+argument|MachineInstr&DefMI
 argument_list|,
 argument|unsigned Reg
 argument_list|,
@@ -493,9 +593,21 @@ name|convertToThreeAddress
 argument_list|(
 argument|MachineFunction::iterator&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator&MI
+argument|MachineInstr&MI
 argument_list|,
 argument|LiveVariables *LV
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isSchedulingBoundary
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
@@ -582,6 +694,54 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isVMEM
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|isMUBUF
+argument_list|(
+name|MI
+argument_list|)
+operator|||
+name|isMTBUF
+argument_list|(
+name|MI
+argument_list|)
+operator|||
+name|isMIMG
+argument_list|(
+name|MI
+argument_list|)
+return|;
+block|}
+name|bool
+name|isVMEM
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isMUBUF
+argument_list|(
+name|Opcode
+argument_list|)
+operator|||
+name|isMTBUF
+argument_list|(
+name|Opcode
+argument_list|)
+operator|||
+name|isMIMG
+argument_list|(
+name|Opcode
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
 name|isSOP1
 argument_list|(
 argument|const MachineInstr&MI
@@ -1142,6 +1302,46 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isGather4
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|Gather4
+return|;
+block|}
+name|bool
+name|isGather4
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|Gather4
+return|;
+block|}
+specifier|static
+name|bool
 name|isFLAT
 argument_list|(
 argument|const MachineInstr&MI
@@ -1222,6 +1422,46 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isDisableWQM
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DisableWQM
+return|;
+block|}
+name|bool
+name|isDisableWQM
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DisableWQM
+return|;
+block|}
+specifier|static
+name|bool
 name|isVGPRSpill
 argument_list|(
 argument|const MachineInstr&MI
@@ -1258,6 +1498,156 @@ operator|&
 name|SIInstrFlags
 operator|::
 name|VGPRSpill
+return|;
+block|}
+specifier|static
+name|bool
+name|isDPP
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DPP
+return|;
+block|}
+name|bool
+name|isDPP
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|DPP
+return|;
+block|}
+specifier|static
+name|bool
+name|isScalarUnit
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+operator|(
+name|SIInstrFlags
+operator|::
+name|SALU
+operator||
+name|SIInstrFlags
+operator|::
+name|SMRD
+operator|)
+return|;
+block|}
+specifier|static
+name|bool
+name|usesVM_CNT
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+block|{
+return|return
+name|MI
+operator|.
+name|getDesc
+argument_list|()
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VM_CNT
+return|;
+block|}
+name|bool
+name|isVGPRCopy
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MI
+operator|.
+name|isCopy
+argument_list|()
+argument_list|)
+block|;
+name|unsigned
+name|Dest
+operator|=
+name|MI
+operator|.
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+block|;
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+operator|=
+operator|*
+name|MI
+operator|.
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+block|;
+specifier|const
+name|MachineRegisterInfo
+operator|&
+name|MRI
+operator|=
+name|MF
+operator|.
+name|getRegInfo
+argument_list|()
+block|;
+return|return
+operator|!
+name|RI
+operator|.
+name|isSGPRReg
+argument_list|(
+name|MRI
+argument_list|,
+name|Dest
+argument_list|)
 return|;
 block|}
 name|bool
@@ -1288,7 +1678,7 @@ block|;
 name|bool
 name|isImmOperandLegal
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned OpNo
 argument_list|,
@@ -1338,7 +1728,7 @@ block|;
 name|bool
 name|verifyInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|StringRef&ErrInfo
 argument_list|)
@@ -1490,7 +1880,7 @@ comment|/// instead of MOV.
 name|void
 name|legalizeOpWithMove
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned OpIdx
 argument_list|)
@@ -1501,7 +1891,7 @@ comment|/// for \p MI.
 name|bool
 name|isOperandLegal
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned OpIdx
 argument_list|,
@@ -1543,7 +1933,7 @@ name|legalizeOperandsVOP2
 argument_list|(
 argument|MachineRegisterInfo&MRI
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1553,7 +1943,31 @@ name|legalizeOperandsVOP3
 argument_list|(
 argument|MachineRegisterInfo&MRI
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|/// Copy a value from a VGPR (\p SrcReg) to SGPR.  This function can only
+comment|/// be used when it is know that the value in SrcReg is same across all
+comment|/// threads in the wave.
+comment|/// \returns The SGPR register that \p SrcReg was copied to.
+name|unsigned
+name|readlaneVGPRToSGPR
+argument_list|(
+argument|unsigned SrcReg
+argument_list|,
+argument|MachineInstr&UseMI
+argument_list|,
+argument|MachineRegisterInfo&MRI
+argument_list|)
+specifier|const
+block|;
+name|void
+name|legalizeOperandsSMRD
+argument_list|(
+argument|MachineRegisterInfo&MRI
+argument_list|,
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1562,37 +1976,7 @@ comment|/// create new instruction and insert them before \p MI.
 name|void
 name|legalizeOperands
 argument_list|(
-argument|MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Split an SMRD instruction into two smaller loads of half the
-comment|//  size storing the results in \p Lo and \p Hi.
-name|void
-name|splitSMRD
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|const TargetRegisterClass *HalfRC
-argument_list|,
-argument|unsigned HalfImmOp
-argument_list|,
-argument|unsigned HalfSGPROp
-argument_list|,
-argument|MachineInstr *&Lo
-argument_list|,
-argument|MachineInstr *&Hi
-argument_list|)
-specifier|const
-block|;
-name|void
-name|moveSMRDToVALU
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|MachineRegisterInfo&MRI
-argument_list|,
-argument|SmallVectorImpl<MachineInstr *>&Worklist
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1606,84 +1990,33 @@ argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|calculateIndirectAddress
-argument_list|(
-argument|unsigned RegIndex
-argument_list|,
-argument|unsigned Channel
-argument_list|)
-specifier|const
-name|override
-block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getIndirectAddrRegClass
-argument_list|()
-specifier|const
-name|override
-block|;
-name|MachineInstrBuilder
-name|buildIndirectWrite
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned ValueReg
-argument_list|,
-argument|unsigned Address
-argument_list|,
-argument|unsigned OffsetReg
-argument_list|)
-specifier|const
-name|override
-block|;
-name|MachineInstrBuilder
-name|buildIndirectRead
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned ValueReg
-argument_list|,
-argument|unsigned Address
-argument_list|,
-argument|unsigned OffsetReg
-argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|reserveIndirectRegisters
-argument_list|(
-argument|BitVector&Reserved
-argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|LoadM0
-argument_list|(
-argument|MachineInstr *MoveRel
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned SavReg
-argument_list|,
-argument|unsigned IndexReg
-argument_list|)
-specifier|const
-block|;
 name|void
 name|insertWaitStates
 argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|int Count
+argument_list|)
+specifier|const
+block|;
+name|void
+name|insertNoop
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// \brief Return the number of wait states that result from executing this
+comment|/// instruction.
+name|unsigned
+name|getNumWaitStates
+argument_list|(
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -1778,16 +2111,81 @@ block|;
 name|bool
 name|isLowLatencyInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isHighLatencyInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Return the descriptor of the target-specific machine instruction
+comment|/// that corresponds to the specified pseudo or native opcode.
+specifier|const
+name|MCInstrDesc
+operator|&
+name|getMCOpcodeFromPseudo
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|pseudoToMCOpcode
+argument_list|(
+name|Opcode
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getInstSizeInBytes
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+block|,
+specifier|const
+name|char
+operator|*
+operator|>>
+name|getSerializableTargetIndices
+argument_list|()
+specifier|const
+name|override
+block|;
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData *II
+argument_list|,
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|namespace
@@ -1857,11 +2255,38 @@ literal|0xf00000000000LL
 decl_stmt|;
 specifier|const
 name|uint64_t
+name|RSRC_ELEMENT_SIZE_SHIFT
+init|=
+operator|(
+literal|32
+operator|+
+literal|19
+operator|)
+decl_stmt|;
+specifier|const
+name|uint64_t
+name|RSRC_INDEX_STRIDE_SHIFT
+init|=
+operator|(
+literal|32
+operator|+
+literal|21
+operator|)
+decl_stmt|;
+specifier|const
+name|uint64_t
 name|RSRC_TID_ENABLE
 init|=
-literal|1LL
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
-literal|55
+operator|(
+literal|32
+operator|+
+literal|23
+operator|)
 decl_stmt|;
 block|}
 comment|// End namespace AMDGPU

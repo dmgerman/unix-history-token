@@ -68,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/PointerSumType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerEmbeddedInt.h"
 end_include
 
 begin_include
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/PassManager.h"
 end_include
 
 begin_include
@@ -127,7 +139,7 @@ name|class
 name|AssumptionCache
 decl_stmt|;
 name|class
-name|MemoryDependenceAnalysis
+name|MemoryDependenceResults
 decl_stmt|;
 name|class
 name|PredIteratorCache
@@ -138,24 +150,31 @@ decl_stmt|;
 name|class
 name|PHITransAddr
 decl_stmt|;
-comment|/// MemDepResult - A memory dependence query can return one of three different
-comment|/// answers, described below.
+comment|/// A memory dependence query can return one of three different answers.
 name|class
 name|MemDepResult
 block|{
 enum|enum
 name|DepType
 block|{
-comment|/// Invalid - Clients of MemDep never see this.
+comment|/// Clients of MemDep never see this.
+comment|///
+comment|/// Entries with this marker occur in a LocalDeps map or NonLocalDeps map
+comment|/// when the instruction they previously referenced was removed from
+comment|/// MemDep.  In either case, the entry may include an instruction pointer.
+comment|/// If so, the pointer is an instruction in the block where scanning can
+comment|/// start from, saving some work.
+comment|///
+comment|/// In a default-constructed MemDepResult object, the type will be Invalid
+comment|/// and the instruction pointer will be null.
 name|Invalid
 init|=
 literal|0
 block|,
-comment|/// Clobber - This is a dependence on the specified instruction which
-comment|/// clobbers the desired value.  The pointer member of the MemDepResult
-comment|/// pair holds the instruction that clobbers the memory.  For example,
-comment|/// this occurs when we see a may-aliased store to the memory location we
-comment|/// care about.
+comment|/// This is a dependence on the specified instruction which clobbers the
+comment|/// desired value.  The pointer member of the MemDepResult pair holds the
+comment|/// instruction that clobbers the memory.  For example, this occurs when we
+comment|/// see a may-aliased store to the memory location we care about.
 comment|///
 comment|/// There are several cases that may be interesting here:
 comment|///   1. Loads are clobbered by may-alias stores.
@@ -163,9 +182,10 @@ comment|///   2. Loads are considered clobbered by partially-aliased loads.  The
 comment|///      client may choose to analyze deeper into these cases.
 name|Clobber
 block|,
-comment|/// Def - This is a dependence on the specified instruction which
-comment|/// defines/produces the desired memory location.  The pointer member of
-comment|/// the MemDepResult pair holds the instruction that defines the memory.
+comment|/// This is a dependence on the specified instruction which defines or
+comment|/// produces the desired memory location.  The pointer member of the
+comment|/// MemDepResult pair holds the instruction that defines the memory.
+comment|///
 comment|/// Cases of interest:
 comment|///   1. This could be a load or store for dependence queries on
 comment|///      load/store.  The value loaded or stored is the produced value.
@@ -176,63 +196,89 @@ comment|///      may just be must aliases.
 comment|///   2. For loads and stores, this could be an allocation instruction. In
 comment|///      this case, the load is loading an undef value or a store is the
 comment|///      first store to (that part of) the allocation.
-comment|///   3. Dependence queries on calls return Def only when they are
-comment|///      readonly calls or memory use intrinsics with identical callees
-comment|///      and no intervening clobbers.  No validation is done that the
-comment|///      operands to the calls are the same.
+comment|///   3. Dependence queries on calls return Def only when they are readonly
+comment|///      calls or memory use intrinsics with identical callees and no
+comment|///      intervening clobbers.  No validation is done that the operands to
+comment|///      the calls are the same.
 name|Def
 block|,
-comment|/// Other - This marker indicates that the query has no known dependency
-comment|/// in the specified block.  More detailed state info is encoded in the
-comment|/// upper part of the pair (i.e. the Instruction*)
+comment|/// This marker indicates that the query has no known dependency in the
+comment|/// specified block.
+comment|///
+comment|/// More detailed state info is encoded in the upper part of the pair (i.e.
+comment|/// the Instruction*)
 name|Other
 block|}
 enum|;
-comment|/// If DepType is "Other", the upper part of the pair
-comment|/// (i.e. the Instruction* part) is instead used to encode more detailed
-comment|/// type information as follows
+comment|/// If DepType is "Other", the upper part of the sum type is an encoding of
+comment|/// the following more detailed type information.
 enum|enum
 name|OtherType
 block|{
-comment|/// NonLocal - This marker indicates that the query has no dependency in
-comment|/// the specified block.  To find out more, the client should query other
-comment|/// predecessor blocks.
+comment|/// This marker indicates that the query has no dependency in the specified
+comment|/// block.
+comment|///
+comment|/// To find out more, the client should query other predecessor blocks.
 name|NonLocal
 init|=
-literal|0x4
+literal|1
 block|,
-comment|/// NonFuncLocal - This marker indicates that the query has no
-comment|/// dependency in the specified function.
+comment|/// This marker indicates that the query has no dependency in the specified
+comment|/// function.
 name|NonFuncLocal
-init|=
-literal|0x8
 block|,
-comment|/// Unknown - This marker indicates that the query dependency
-comment|/// is unknown.
+comment|/// This marker indicates that the query dependency is unknown.
 name|Unknown
-init|=
-literal|0xc
 block|}
 enum|;
 typedef|typedef
-name|PointerIntPair
+name|PointerSumType
 operator|<
+name|DepType
+operator|,
+name|PointerSumTypeMember
+operator|<
+name|Invalid
+operator|,
 name|Instruction
 operator|*
-operator|,
-literal|2
-operator|,
-name|DepType
 operator|>
-name|PairTy
+operator|,
+name|PointerSumTypeMember
+operator|<
+name|Clobber
+operator|,
+name|Instruction
+operator|*
+operator|>
+operator|,
+name|PointerSumTypeMember
+operator|<
+name|Def
+operator|,
+name|Instruction
+operator|*
+operator|>
+operator|,
+name|PointerSumTypeMember
+operator|<
+name|Other
+operator|,
+name|PointerEmbeddedInt
+operator|<
+name|OtherType
+operator|,
+literal|3
+operator|>>>
+name|ValueTy
 expr_stmt|;
-name|PairTy
+name|ValueTy
 name|Value
 decl_stmt|;
 name|explicit
 name|MemDepResult
 argument_list|(
-argument|PairTy V
+argument|ValueTy V
 argument_list|)
 block|:
 name|Value
@@ -246,11 +292,7 @@ name|MemDepResult
 argument_list|()
 operator|:
 name|Value
-argument_list|(
-argument|nullptr
-argument_list|,
-argument|Invalid
-argument_list|)
+argument_list|()
 block|{}
 comment|/// get methods: These are static ctor methods for creating various
 comment|/// MemDepResult kinds.
@@ -271,12 +313,15 @@ block|;
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|Inst
-argument_list|,
+name|ValueTy
+operator|::
+name|create
+operator|<
 name|Def
-argument_list|)
+operator|>
+operator|(
+name|Inst
+operator|)
 argument_list|)
 return|;
 block|}
@@ -299,12 +344,15 @@ expr_stmt|;
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|Inst
-argument_list|,
+name|ValueTy
+operator|::
+name|create
+operator|<
 name|Clobber
-argument_list|)
+operator|>
+operator|(
+name|Inst
+operator|)
 argument_list|)
 return|;
 block|}
@@ -316,19 +364,15 @@ block|{
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|reinterpret_cast
+name|ValueTy
+operator|::
+name|create
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
 name|NonLocal
 operator|)
-argument_list|,
-name|Other
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -340,19 +384,15 @@ block|{
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|reinterpret_cast
+name|ValueTy
+operator|::
+name|create
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
 name|NonFuncLocal
 operator|)
-argument_list|,
-name|Other
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -364,24 +404,20 @@ block|{
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|reinterpret_cast
+name|ValueTy
+operator|::
+name|create
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
 name|Unknown
 operator|)
-argument_list|,
-name|Other
-argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// isClobber - Return true if this MemDepResult represents a query that is
-comment|/// an instruction clobber dependency.
+comment|/// Tests if this MemDepResult represents a query that is an instruction
+comment|/// clobber dependency.
 name|bool
 name|isClobber
 argument_list|()
@@ -390,14 +426,16 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Clobber
+operator|>
+operator|(
+operator|)
 return|;
 block|}
-comment|/// isDef - Return true if this MemDepResult represents a query that is
-comment|/// an instruction definition dependency.
+comment|/// Tests if this MemDepResult represents a query that is an instruction
+comment|/// definition dependency.
 name|bool
 name|isDef
 argument_list|()
@@ -406,15 +444,16 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Def
+operator|>
+operator|(
+operator|)
 return|;
 block|}
-comment|/// isNonLocal - Return true if this MemDepResult represents a query that
-comment|/// is transparent to the start of the block, but where a non-local hasn't
-comment|/// been done.
+comment|/// Tests if this MemDepResult represents a query that is transparent to the
+comment|/// start of the block, but where a non-local hasn't been done.
 name|bool
 name|isNonLocal
 argument_list|()
@@ -423,28 +462,27 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Other
+operator|>
+operator|(
+operator|)
 operator|&&
 name|Value
 operator|.
-name|getPointer
-argument_list|()
-operator|==
-name|reinterpret_cast
+name|cast
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
-name|NonLocal
 operator|)
+operator|==
+name|NonLocal
 return|;
 block|}
-comment|/// isNonFuncLocal - Return true if this MemDepResult represents a query
-comment|/// that is transparent to the start of the function.
+comment|/// Tests if this MemDepResult represents a query that is transparent to the
+comment|/// start of the function.
 name|bool
 name|isNonFuncLocal
 argument_list|()
@@ -453,28 +491,27 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Other
+operator|>
+operator|(
+operator|)
 operator|&&
 name|Value
 operator|.
-name|getPointer
-argument_list|()
-operator|==
-name|reinterpret_cast
+name|cast
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
-name|NonFuncLocal
 operator|)
+operator|==
+name|NonFuncLocal
 return|;
 block|}
-comment|/// isUnknown - Return true if this MemDepResult represents a query which
-comment|/// cannot and/or will not be computed.
+comment|/// Tests if this MemDepResult represents a query which cannot and/or will
+comment|/// not be computed.
 name|bool
 name|isUnknown
 argument_list|()
@@ -483,52 +520,92 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Other
+operator|>
+operator|(
+operator|)
 operator|&&
 name|Value
 operator|.
-name|getPointer
-argument_list|()
-operator|==
-name|reinterpret_cast
+name|cast
 operator|<
-name|Instruction
-operator|*
+name|Other
 operator|>
 operator|(
-name|Unknown
 operator|)
+operator|==
+name|Unknown
 return|;
 block|}
-comment|/// getInst() - If this is a normal dependency, return the instruction that
-comment|/// is depended on.  Otherwise, return null.
+comment|/// If this is a normal dependency, returns the instruction that is depended
+comment|/// on.  Otherwise, returns null.
 name|Instruction
 operator|*
 name|getInst
 argument_list|()
 specifier|const
 block|{
-if|if
+switch|switch
 condition|(
 name|Value
 operator|.
-name|getInt
+name|getTag
 argument_list|()
-operator|==
-name|Other
 condition|)
-return|return
-name|nullptr
-return|;
+block|{
+case|case
+name|Invalid
+case|:
 return|return
 name|Value
 operator|.
-name|getPointer
-argument_list|()
+name|cast
+operator|<
+name|Invalid
+operator|>
+operator|(
+operator|)
 return|;
+case|case
+name|Clobber
+case|:
+return|return
+name|Value
+operator|.
+name|cast
+operator|<
+name|Clobber
+operator|>
+operator|(
+operator|)
+return|;
+case|case
+name|Def
+case|:
+return|return
+name|Value
+operator|.
+name|cast
+operator|<
+name|Def
+operator|>
+operator|(
+operator|)
+return|;
+case|case
+name|Other
+case|:
+return|return
+name|nullptr
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown discriminant!"
+argument_list|)
+expr_stmt|;
 block|}
 name|bool
 name|operator
@@ -610,19 +687,9 @@ name|private
 label|:
 name|friend
 name|class
-name|MemoryDependenceAnalysis
+name|MemoryDependenceResults
 decl_stmt|;
-comment|/// Dirty - Entries with this marker occur in a LocalDeps map or
-comment|/// NonLocalDeps map when the instruction they previously referenced was
-comment|/// removed from MemDep.  In either case, the entry may include an
-comment|/// instruction pointer.  If so, the pointer is an instruction in the
-comment|/// block where scanning can start from, saving some work.
-comment|///
-comment|/// In a default-constructed MemDepResult object, the type will be Dirty
-comment|/// and the instruction pointer will be null.
-comment|///
-comment|/// isDirty - Return true if this is a MemDepResult in its dirty/invalid.
-comment|/// state.
+comment|/// Tests if this is a MemDepResult in its dirty/invalid. state.
 name|bool
 name|isDirty
 argument_list|()
@@ -631,10 +698,12 @@ block|{
 return|return
 name|Value
 operator|.
-name|getInt
-argument_list|()
-operator|==
+name|is
+operator|<
 name|Invalid
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 specifier|static
@@ -649,31 +718,23 @@ block|{
 return|return
 name|MemDepResult
 argument_list|(
-name|PairTy
-argument_list|(
-name|Inst
-argument_list|,
+name|ValueTy
+operator|::
+name|create
+operator|<
 name|Invalid
-argument_list|)
+operator|>
+operator|(
+name|Inst
+operator|)
 argument_list|)
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// NonLocalDepEntry - This is an entry in the NonLocalDepInfo cache.  For
-end_comment
-
-begin_comment
-comment|/// each BasicBlock (the BB entry) it keeps a MemDepResult.
-end_comment
-
-begin_decl_stmt
+comment|/// This is an entry in the NonLocalDepInfo cache.
+comment|///
+comment|/// For each BasicBlock (the BB entry) it keeps a MemDepResult.
 name|class
 name|NonLocalDepEntry
 block|{
@@ -772,25 +833,11 @@ name|BB
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// NonLocalDepResult - This is a result from a NonLocal dependence query.
-end_comment
-
-begin_comment
+comment|/// This is a result from a NonLocal dependence query.
+comment|///
 comment|/// For each BasicBlock (the BB entry) it keeps a MemDepResult and the
-end_comment
-
-begin_comment
 comment|/// (potentially phi translated) address that was live in the block.
-end_comment
-
-begin_decl_stmt
 name|class
 name|NonLocalDepResult
 block|{
@@ -877,11 +924,12 @@ name|getResult
 argument_list|()
 return|;
 block|}
-comment|/// getAddress - Return the address of this pointer in this block.  This can
-comment|/// be different than the address queried for the non-local result because
-comment|/// of phi translation.  This returns null if the address was not available
-comment|/// in a block (i.e. because phi translation failed) or if this is a cached
-comment|/// result and that address was deleted.
+comment|/// Returns the address of this pointer in this block.
+comment|///
+comment|/// This can be different than the address queried for the non-local result
+comment|/// because of phi translation.  This returns null if the address was not
+comment|/// available in a block (i.e. because phi translation failed) or if this is
+comment|/// a cached result and that address was deleted.
 comment|///
 comment|/// The address is always null for a non-local 'call' dependence.
 name|Value
@@ -895,78 +943,21 @@ name|Address
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// MemoryDependenceAnalysis - This is an analysis that determines, for a
-end_comment
-
-begin_comment
-comment|/// given memory operation, what preceding memory operations it depends on.
-end_comment
-
-begin_comment
-comment|/// It builds on alias analysis information, and tries to provide a lazy,
-end_comment
-
-begin_comment
-comment|/// caching interface to a common kind of alias information query.
-end_comment
-
-begin_comment
+comment|/// Provides a lazy, caching interface for making common memory aliasing
+comment|/// information queries, backed by LLVM's alias analysis passes.
 comment|///
-end_comment
-
-begin_comment
 comment|/// The dependency information returned is somewhat unusual, but is pragmatic.
-end_comment
-
-begin_comment
 comment|/// If queried about a store or call that might modify memory, the analysis
-end_comment
-
-begin_comment
 comment|/// will return the instruction[s] that may either load from that memory or
-end_comment
-
-begin_comment
 comment|/// store to it.  If queried with a load or call that can never modify memory,
-end_comment
-
-begin_comment
 comment|/// the analysis will return calls and stores that might modify the pointer,
-end_comment
-
-begin_comment
 comment|/// but generally does not return loads unless a) they are volatile, or
-end_comment
-
-begin_comment
 comment|/// b) they load from *must-aliased* pointers.  Returning a dependence on
-end_comment
-
-begin_comment
 comment|/// must-alias'd pointers instead of all pointers interacts well with the
-end_comment
-
-begin_comment
 comment|/// internal caching mechanism.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
 name|class
-name|MemoryDependenceAnalysis
-range|:
-name|public
-name|FunctionPass
+name|MemoryDependenceResults
 block|{
 comment|// A map from instructions to their dependency.
 typedef|typedef
@@ -982,14 +973,8 @@ expr_stmt|;
 name|LocalDepMapType
 name|LocalDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -999,22 +984,10 @@ name|NonLocalDepEntry
 operator|>
 name|NonLocalDepInfo
 expr_stmt|;
-end_typedef
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_comment
-comment|/// ValueIsLoadPair - This is a pair<Value*, bool> where the bool is true if
-end_comment
-
-begin_comment
-comment|/// the dependence is a read only dependence, false if read/write.
-end_comment
-
-begin_typedef
+comment|/// A pair<Value*, bool> where the bool is true if the dependence is a read
+comment|/// only dependence, false if read/write.
 typedef|typedef
 name|PointerIntPair
 operator|<
@@ -1028,25 +1001,11 @@ name|bool
 operator|>
 name|ValueIsLoadPair
 expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// BBSkipFirstBlockPair - This pair is used when caching information for a
-end_comment
-
-begin_comment
-comment|/// block.  If the pointer is null, the cache value is not a full query that
-end_comment
-
-begin_comment
-comment|/// starts at the specified block.  If non-null, the bool indicates whether
-end_comment
-
-begin_comment
-comment|/// or not the contents of the block was skipped.
-end_comment
-
-begin_typedef
+comment|/// This pair is used when caching information for a block.
+comment|///
+comment|/// If the pointer is null, the cache value is not a full query that starts
+comment|/// at the specified block.  If non-null, the bool indicates whether or not
+comment|/// the contents of the block was skipped.
 typedef|typedef
 name|PointerIntPair
 operator|<
@@ -1059,36 +1018,27 @@ name|bool
 operator|>
 name|BBSkipFirstBlockPair
 expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// NonLocalPointerInfo - This record is the information kept for each
-end_comment
-
-begin_comment
-comment|/// (value, is load) pair.
-end_comment
-
-begin_struct
+comment|/// This record is the information kept for each (value, is load) pair.
 struct|struct
 name|NonLocalPointerInfo
 block|{
-comment|/// Pair - The pair of the block and the skip-first-block flag.
+comment|/// The pair of the block and the skip-first-block flag.
 name|BBSkipFirstBlockPair
 name|Pair
 decl_stmt|;
-comment|/// NonLocalDeps - The results of the query for each relevant block.
+comment|/// The results of the query for each relevant block.
 name|NonLocalDepInfo
 name|NonLocalDeps
 decl_stmt|;
-comment|/// Size - The maximum size of the dereferences of the
-comment|/// pointer. May be UnknownSize if the sizes are unknown.
+comment|/// The maximum size of the dereferences of the pointer.
+comment|///
+comment|/// May be UnknownSize if the sizes are unknown.
 name|uint64_t
 name|Size
 decl_stmt|;
-comment|/// AATags - The AA tags associated with dereferences of the
-comment|/// pointer. The members may be null if there are no tags or
-comment|/// conflicting tags.
+comment|/// The AA tags associated with dereferences of the pointer.
+comment|///
+comment|/// The members may be null if there are no tags or conflicting tags.
 name|AAMDNodes
 name|AATags
 decl_stmt|;
@@ -1102,21 +1052,11 @@ argument_list|)
 block|{}
 block|}
 struct|;
-end_struct
-
-begin_comment
-comment|/// CachedNonLocalPointerInfo - This map stores the cached results of doing
-end_comment
-
-begin_comment
-comment|/// a pointer lookup at the bottom of a block.  The key of this map is the
-end_comment
-
-begin_comment
-comment|/// pointer+isload bit, the value is a list of<bb->result> mappings.
-end_comment
-
-begin_typedef
+comment|/// This map stores the cached results of doing a pointer lookup at the
+comment|/// bottom of a block.
+comment|///
+comment|/// The key of this map is the pointer+isload bit, the value is a list of
+comment|///<bb->result> mappings.
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1126,19 +1066,10 @@ name|NonLocalPointerInfo
 operator|>
 name|CachedNonLocalPointerInfo
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|CachedNonLocalPointerInfo
 name|NonLocalPointerDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// A map from instructions to their non-local pointer dependencies.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1150,31 +1081,17 @@ operator|<
 name|ValueIsLoadPair
 operator|,
 literal|4
-operator|>
-expr|>
+operator|>>
 name|ReverseNonLocalPtrDepTy
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|ReverseNonLocalPtrDepTy
 name|ReverseNonLocalPtrDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// PerInstNLInfo - This is the instruction we keep for each cached access
-end_comment
-
-begin_comment
-comment|/// that we have for an instruction.  The pointer is an owning pointer and
-end_comment
-
-begin_comment
-comment|/// the bool indicates whether we have any dirty bits in the set.
-end_comment
-
-begin_typedef
+comment|/// This is the instruction we keep for each cached access that we have for
+comment|/// an instruction.
+comment|///
+comment|/// The pointer is an owning pointer and the bool indicates whether we have
+comment|/// any dirty bits in the set.
 typedef|typedef
 name|std
 operator|::
@@ -1186,13 +1103,7 @@ name|bool
 operator|>
 name|PerInstNLInfo
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|// A map from instructions to their non-local dependencies.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1203,23 +1114,11 @@ name|PerInstNLInfo
 operator|>
 name|NonLocalDepMapType
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|NonLocalDepMapType
 name|NonLocalDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// A reverse mapping from dependencies to the dependees.  This is
-end_comment
-
-begin_comment
 comment|// used when removing instructions to keep the cache coherent.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1232,217 +1131,104 @@ name|Instruction
 operator|*
 operator|,
 literal|4
-operator|>
-expr|>
+operator|>>
 name|ReverseDepMapType
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|ReverseDepMapType
 name|ReverseLocalDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// A reverse mapping from dependencies to the non-local dependees.
-end_comment
-
-begin_decl_stmt
 name|ReverseDepMapType
 name|ReverseNonLocalDeps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// Current AA implementation, just a cache.
-end_comment
-
-begin_decl_stmt
 name|AliasAnalysis
-modifier|*
+modifier|&
 name|AA
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DominatorTree
-modifier|*
-name|DT
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|AssumptionCache
-modifier|*
+modifier|&
 name|AC
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|TargetLibraryInfo
-modifier|*
+modifier|&
 name|TLI
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|DominatorTree
+modifier|&
+name|DT
+decl_stmt|;
 name|PredIteratorCache
 name|PredCache
 decl_stmt|;
-end_decl_stmt
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_expr_stmt
-name|MemoryDependenceAnalysis
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|~
-name|MemoryDependenceAnalysis
-argument_list|()
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|ID
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Pass Implementation stuff.  This doesn't do any analysis eagerly.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|runOnFunction
+name|MemoryDependenceResults
 argument_list|(
-name|Function
+name|AliasAnalysis
 operator|&
+name|AA
+argument_list|,
+name|AssumptionCache
+operator|&
+name|AC
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|&
+name|TLI
+argument_list|,
+name|DominatorTree
+operator|&
+name|DT
 argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Clean up memory in between runs
-end_comment
-
-begin_expr_stmt
-name|void
-name|releaseMemory
-argument_list|()
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getAnalysisUsage - Does not modify anything.  It uses Value Numbering
-end_comment
-
-begin_comment
-comment|/// and Alias Analysis.
-end_comment
-
-begin_comment
+operator|:
+name|AA
+argument_list|(
+name|AA
+argument_list|)
+operator|,
+name|AC
+argument_list|(
+name|AC
+argument_list|)
+operator|,
+name|TLI
+argument_list|(
+name|TLI
+argument_list|)
+operator|,
+name|DT
+argument_list|(
+argument|DT
+argument_list|)
+block|{}
+comment|/// Returns the instruction on which a memory operation depends.
 comment|///
-end_comment
-
-begin_decl_stmt
-name|void
-name|getAnalysisUsage
-argument_list|(
-name|AnalysisUsage
-operator|&
-name|AU
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getDependency - Return the instruction on which a memory operation
-end_comment
-
-begin_comment
-comment|/// depends.  See the class comment for more details.  It is illegal to call
-end_comment
-
-begin_comment
-comment|/// this on non-memory instructions.
-end_comment
-
-begin_function_decl
+comment|/// See the class comment for more details.  It is illegal to call this on
+comment|/// non-memory instructions.
 name|MemDepResult
 name|getDependency
-parameter_list|(
+argument_list|(
 name|Instruction
-modifier|*
+operator|*
 name|QueryInst
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getNonLocalCallDependency - Perform a full dependency query for the
-end_comment
-
-begin_comment
-comment|/// specified call, returning the set of blocks that the value is
-end_comment
-
-begin_comment
-comment|/// potentially live across.  The returned set of results will include a
-end_comment
-
-begin_comment
-comment|/// "NonLocal" result for all blocks where the value is live across.
-end_comment
-
-begin_comment
+argument_list|)
+expr_stmt|;
+comment|/// Perform a full dependency query for the specified call, returning the set
+comment|/// of blocks that the value is potentially live across.
 comment|///
-end_comment
-
-begin_comment
+comment|/// The returned set of results will include a "NonLocal" result for all
+comment|/// blocks where the value is live across.
+comment|///
 comment|/// This method assumes the instruction returns a "NonLocal" dependency
-end_comment
-
-begin_comment
 comment|/// within its own block.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This returns a reference to an internal data structure that may be
-end_comment
-
-begin_comment
 comment|/// invalidated on the next non-local query or when an instruction is
-end_comment
-
-begin_comment
 comment|/// removed.  Clients must copy this data if they want it around longer than
-end_comment
-
-begin_comment
 comment|/// that.
-end_comment
-
-begin_function_decl
 specifier|const
 name|NonLocalDepInfo
 modifier|&
@@ -1452,49 +1238,16 @@ name|CallSite
 name|QueryCS
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getNonLocalPointerDependency - Perform a full dependency query for an
-end_comment
-
-begin_comment
-comment|/// access to the QueryInst's specified memory location, returning the set
-end_comment
-
-begin_comment
-comment|/// of instructions that either define or clobber the value.
-end_comment
-
-begin_comment
+comment|/// Perform a full dependency query for an access to the QueryInst's
+comment|/// specified memory location, returning the set of instructions that either
+comment|/// define or clobber the value.
 comment|///
-end_comment
-
-begin_comment
 comment|/// Warning: For a volatile query instruction, the dependencies will be
-end_comment
-
-begin_comment
 comment|/// accurate, and thus usable for reordering, but it is never legal to
-end_comment
-
-begin_comment
 comment|/// remove the query instruction.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This method assumes the pointer has a "NonLocal" dependency within
-end_comment
-
-begin_comment
 comment|/// QueryInst's parent basic block.
-end_comment
-
-begin_decl_stmt
 name|void
 name|getNonLocalPointerDependency
 argument_list|(
@@ -1510,17 +1263,8 @@ operator|&
 name|Result
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// removeInstruction - Remove an instruction from the dependence analysis,
-end_comment
-
-begin_comment
-comment|/// updating the dependence of instructions that previously depended on it.
-end_comment
-
-begin_function_decl
+comment|/// Removes an instruction from the dependence analysis, updating the
+comment|/// dependence of instructions that previously depended on it.
 name|void
 name|removeInstruction
 parameter_list|(
@@ -1529,33 +1273,13 @@ modifier|*
 name|InstToRemove
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// invalidateCachedPointerInfo - This method is used to invalidate cached
-end_comment
-
-begin_comment
-comment|/// information about the specified pointer, because it may be too
-end_comment
-
-begin_comment
-comment|/// conservative in memdep.  This is an optional call that can be used when
-end_comment
-
-begin_comment
-comment|/// the client detects an equivalence between the pointer and some other
-end_comment
-
-begin_comment
-comment|/// value and replaces the other value with ptr. This can make Ptr available
-end_comment
-
-begin_comment
-comment|/// in more places that cached info does not necessarily keep.
-end_comment
-
-begin_function_decl
+comment|/// Invalidates cached information about the specified pointer, because it
+comment|/// may be too conservative in memdep.
+comment|///
+comment|/// This is an optional call that can be used when the client detects an
+comment|/// equivalence between the pointer and some other value and replaces the
+comment|/// other value with ptr. This can make Ptr available in more places that
+comment|/// cached info does not necessarily keep.
 name|void
 name|invalidateCachedPointerInfo
 parameter_list|(
@@ -1564,64 +1288,23 @@ modifier|*
 name|Ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// invalidateCachedPredecessors - Clear the PredIteratorCache info.
-end_comment
-
-begin_comment
+comment|/// Clears the PredIteratorCache info.
+comment|///
 comment|/// This needs to be done when the CFG changes, e.g., due to splitting
-end_comment
-
-begin_comment
 comment|/// critical edges.
-end_comment
-
-begin_function_decl
 name|void
 name|invalidateCachedPredecessors
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Return the instruction on which a memory location depends.
-end_comment
-
-begin_comment
+comment|/// Returns the instruction on which a memory location depends.
+comment|///
 comment|/// If isLoad is true, this routine ignores may-aliases with read-only
-end_comment
-
-begin_comment
 comment|/// operations.  If isLoad is false, this routine ignores may-aliases
-end_comment
-
-begin_comment
 comment|/// with reads from read-only locations. If possible, pass the query
-end_comment
-
-begin_comment
 comment|/// instruction as well; this function may take advantage of the metadata
-end_comment
-
-begin_comment
 comment|/// annotated to the query instruction to refine the result.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that this is an uncached query, and thus may be inefficient.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
 name|MemDepResult
 name|getPointerDependencyFrom
 argument_list|(
@@ -1649,9 +1332,6 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MemDepResult
 name|getSimplePointerDependencyFrom
 argument_list|(
@@ -1677,33 +1357,12 @@ operator|*
 name|QueryInst
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// This analysis looks for other loads and stores with invariant.group
-end_comment
-
-begin_comment
 comment|/// metadata and the same pointer operand. Returns Unknown if it does not
-end_comment
-
-begin_comment
 comment|/// find anything, and Def if it can be assumed that 2 instructions load or
-end_comment
-
-begin_comment
 comment|/// store the same value.
-end_comment
-
-begin_comment
 comment|/// FIXME: This analysis works only on single block because of restrictions
-end_comment
-
-begin_comment
 comment|/// at the call site.
-end_comment
-
-begin_function_decl
 name|MemDepResult
 name|getInvariantGroupPointerDependency
 parameter_list|(
@@ -1716,37 +1375,13 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getLoadLoadClobberFullWidthSize - This is a little bit of analysis that
-end_comment
-
-begin_comment
-comment|/// looks at a memory location for a load (specified by MemLocBase, Offs,
-end_comment
-
-begin_comment
-comment|/// and Size) and compares it against a load.  If the specified load could
-end_comment
-
-begin_comment
-comment|/// be safely widened to a larger integer load that is 1) still efficient,
-end_comment
-
-begin_comment
-comment|/// 2) safe for the target, and 3) would provide the specified memory
-end_comment
-
-begin_comment
-comment|/// location value, then this function returns the size in bytes of the
-end_comment
-
-begin_comment
-comment|/// load width to use.  If not, this returns zero.
-end_comment
-
-begin_function_decl
+comment|/// Looks at a memory location for a load (specified by MemLocBase, Offs, and
+comment|/// Size) and compares it against a load.
+comment|///
+comment|/// If the specified load could be safely widened to a larger integer load
+comment|/// that is 1) still efficient, 2) safe for the target, and 3) would provide
+comment|/// the specified memory location value, then this function returns the size
+comment|/// in bytes of the load width to use.  If not, this returns zero.
 specifier|static
 name|unsigned
 name|getLoadLoadClobberFullWidthSize
@@ -1768,14 +1403,13 @@ modifier|*
 name|LI
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
+comment|/// Release memory in caches.
+name|void
+name|releaseMemory
+parameter_list|()
+function_decl|;
 name|private
 label|:
-end_label
-
-begin_decl_stmt
 name|MemDepResult
 name|getCallSiteDependencyFrom
 argument_list|(
@@ -1795,9 +1429,6 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|getNonLocalPointerDepFromBB
 argument_list|(
@@ -1846,9 +1477,6 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|MemDepResult
 name|GetNonLocalInfoForBlock
 parameter_list|(
@@ -1876,9 +1504,6 @@ name|unsigned
 name|NumSortedEntries
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|RemoveCachedNonLocalPointerDependencies
 parameter_list|(
@@ -1886,17 +1511,6 @@ name|ValueIsLoadPair
 name|P
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// verifyRemoved - Verify that the specified instruction does not occur
-end_comment
-
-begin_comment
-comment|/// in our internal data structures.
-end_comment
-
-begin_decl_stmt
 name|void
 name|verifyRemoved
 argument_list|(
@@ -1906,10 +1520,132 @@ name|Inst
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// An analysis that produces \c MemoryDependenceResults for a function.
+comment|///
+comment|/// This is essentially a no-op because the results are computed entirely
+comment|/// lazily.
+name|class
+name|MemoryDependenceAnalysis
+range|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|MemoryDependenceAnalysis
+operator|>
+block|{
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|MemoryDependenceAnalysis
+operator|>
+block|;
+specifier|static
+name|char
+name|PassID
+block|;
+name|public
+operator|:
+typedef|typedef
+name|MemoryDependenceResults
+name|Result
+typedef|;
+name|MemoryDependenceResults
+name|run
+argument_list|(
+name|Function
+operator|&
+name|F
+argument_list|,
+name|AnalysisManager
+operator|<
+name|Function
+operator|>
+operator|&
+name|AM
+argument_list|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// A wrapper analysis pass for the legacy pass manager that exposes a \c
+end_comment
+
+begin_comment
+comment|/// MemoryDepnedenceResults instance.
+end_comment
+
+begin_decl_stmt
+name|class
+name|MemoryDependenceWrapperPass
+range|:
+name|public
+name|FunctionPass
+block|{
+name|Optional
+operator|<
+name|MemoryDependenceResults
+operator|>
+name|MemDep
+block|;
+name|public
+operator|:
+name|MemoryDependenceWrapperPass
+argument_list|()
+block|;
+operator|~
+name|MemoryDependenceWrapperPass
+argument_list|()
+name|override
+block|;
+specifier|static
+name|char
+name|ID
+block|;
+comment|/// Pass Implementation stuff.  This doesn't do any analysis eagerly.
+name|bool
+name|runOnFunction
+argument_list|(
+argument|Function&
+argument_list|)
+name|override
+block|;
+comment|/// Clean up memory in between runs
+name|void
+name|releaseMemory
+argument_list|()
+name|override
+block|;
+comment|/// Does not modify anything.  It uses Value Numbering and Alias Analysis.
+name|void
+name|getAnalysisUsage
+argument_list|(
+argument|AnalysisUsage&AU
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MemoryDependenceResults
+operator|&
+name|getMemDep
+argument_list|()
+block|{
+return|return
+operator|*
+name|MemDep
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// End llvm namespace
 end_comment
 

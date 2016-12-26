@@ -227,6 +227,13 @@ argument_list|)
 name|override
 block|;
 name|bool
+name|ParseCompileUnitIsOptimized
+argument_list|(
+argument|const lldb_private::SymbolContext&sc
+argument_list|)
+name|override
+block|;
+name|bool
 name|ParseImportedModules
 argument_list|(
 argument|const lldb_private::SymbolContext&sc
@@ -395,6 +402,8 @@ argument|bool append
 argument_list|,
 argument|uint32_t max_matches
 argument_list|,
+argument|llvm::DenseSet<lldb_private::SymbolFile *>&searched_symbol_files
+argument_list|,
 argument|lldb_private::TypeMap& types
 argument_list|)
 name|override
@@ -455,19 +464,23 @@ block|}
 block|;
 name|friend
 name|class
+name|DebugMapModule
+block|;
+name|friend
+expr|struct
+name|DIERef
+block|;
+name|friend
+name|class
+name|DWARFASTParserClang
+block|;
+name|friend
+name|class
 name|DWARFCompileUnit
 block|;
 name|friend
 name|class
 name|SymbolFileDWARF
-block|;
-name|friend
-name|class
-name|DebugMapModule
-block|;
-name|friend
-name|class
-name|DWARFASTParserClang
 block|;     struct
 name|OSOInfo
 block|{
@@ -1399,6 +1412,11 @@ name|lldb
 operator|::
 name|addr_t
 name|exe_file_addr
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|exe_byte_size
 argument_list|,
 name|lldb
 operator|::

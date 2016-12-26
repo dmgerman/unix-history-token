@@ -354,6 +354,62 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Default Linux/S390 mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x30000000, 0x7fffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x26000000, 0x2fffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x24000000, 0x25ffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x20000000, 0x23ffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x1fffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/SystemZ mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x14000000000000, 0x1fffffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x12800000000000, 0x13ffffffffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x12000000000000, 0x127fffffffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x10000000000000, 0x11ffffffffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000000000, 0x0fffffffffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Shadow mapping on FreeBSD/x86-64 with SHADOW_OFFSET == 0x400000000000:
 end_comment
 
@@ -515,7 +571,7 @@ specifier|const
 name|u64
 name|kIosShadowOffset64
 init|=
-literal|0x130000000
+literal|0x120200000
 decl_stmt|;
 end_decl_stmt
 
@@ -591,6 +647,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|u64
+name|kSystemZ_ShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|52
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
 name|kFreeBSD_ShadowOffset32
 init|=
 literal|1ULL
@@ -633,6 +701,22 @@ end_decl_stmt
 
 begin_comment
 comment|// 0x30000000
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kWindowsShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|45
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// 32TB
 end_comment
 
 begin_define
@@ -708,8 +792,14 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|SANITIZER_IOSSIM
+name|SANITIZER_IOS
 end_elif
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_IOSSIM
+end_if
 
 begin_define
 define|#
@@ -718,11 +808,10 @@ name|SHADOW_OFFSET
 value|kIosSimShadowOffset32
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|SANITIZER_IOS
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -730,6 +819,11 @@ directive|define
 name|SHADOW_OFFSET
 value|kIosShadowOffset32
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -756,11 +850,47 @@ end_else
 begin_if
 if|#
 directive|if
+name|SANITIZER_IOS
+end_if
+
+begin_if
+if|#
+directive|if
+name|SANITIZER_IOSSIM
+end_if
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kIosSimShadowOffset64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kIosShadowOffset64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__aarch64__
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -783,6 +913,22 @@ define|#
 directive|define
 name|SHADOW_OFFSET
 value|kPPC64_ShadowOffset64
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__s390x__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kSystemZ_ShadowOffset64
 end_define
 
 begin_elif
@@ -830,27 +976,14 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|SANITIZER_IOSSIM
+name|SANITIZER_WINDOWS64
 end_elif
 
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
-value|kIosSimShadowOffset64
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|SANITIZER_IOS
-end_elif
-
-begin_define
-define|#
-directive|define
-name|SHADOW_OFFSET
-value|kIosShadowOffset64
+value|kWindowsShadowOffset64
 end_define
 
 begin_else

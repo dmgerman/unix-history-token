@@ -153,6 +153,8 @@ argument_list|,
 argument|SectionKind Kind
 argument_list|,
 argument|const Constant *C
+argument_list|,
+argument|unsigned&Align
 argument_list|)
 specifier|const
 name|override

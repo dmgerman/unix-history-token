@@ -281,8 +281,12 @@ comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|raw_pwrite_stream
-operator|*
+operator|>
 name|ComputeASTConsumerArguments
 argument_list|(
 argument|CompilerInstance&CI
@@ -385,8 +389,12 @@ comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|raw_pwrite_stream
-operator|*
+operator|>
 name|ComputeASTConsumerArguments
 argument_list|(
 argument|CompilerInstance&CI
@@ -423,6 +431,11 @@ name|override
 block|;
 name|public
 operator|:
+operator|~
+name|SyntaxOnlyAction
+argument_list|()
+name|override
+block|;
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
@@ -557,8 +570,12 @@ name|public
 name|FrontendAction
 block|{
 comment|/// \brief The action that the merge action adapts.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendAction
-operator|*
+operator|>
 name|AdaptedAction
 block|;
 comment|/// \brief The set of AST files to merge.
@@ -611,8 +628,12 @@ name|public
 operator|:
 name|ASTMergeAction
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendAction
-operator|*
+operator|>
 name|AdaptedAction
 argument_list|,
 name|ArrayRef

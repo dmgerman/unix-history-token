@@ -358,6 +358,11 @@ name|SMULL
 block|,
 name|UMULL
 block|,
+comment|// Reciprocal estimates.
+name|FRECPE
+block|,
+name|FRSQRTE
+block|,
 comment|// NEON Load/Store with post-increment base updates
 name|LD2post
 init|=
@@ -614,7 +619,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitF128CSEL
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -624,7 +629,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -958,6 +963,17 @@ argument_list|)
 specifier|const
 name|override
 block|;
+comment|/// If the target has a standard location for the stack protector cookie,
+comment|/// returns the address of that location. Otherwise, returns nullptr.
+name|Value
+operator|*
+name|getIRStackGuard
+argument_list|(
+argument|IRBuilder<>&IRB
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// If the target has a standard location for the unsafe stack pointer,
 comment|/// returns the address of that location. Otherwise, returns nullptr.
 name|Value
@@ -1004,6 +1020,16 @@ name|X1
 return|;
 block|}
 name|bool
+name|isIntDivCheap
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|AttributeSet Attr
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|isCheapToSpeculateCttz
 argument_list|()
 specifier|const
@@ -1021,6 +1047,29 @@ name|override
 block|{
 return|return
 name|true
+return|;
+block|}
+name|bool
+name|hasBitPreservingFPLogic
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: Is this always true? It should be true for vectors at least.
+return|return
+name|VT
+operator|==
+name|MVT
+operator|::
+name|f32
+operator|||
+name|VT
+operator|==
+name|MVT
+operator|::
+name|f64
 return|;
 block|}
 name|bool
@@ -1075,6 +1124,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|supportSwiftError
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|private
 operator|:
 name|bool
@@ -1095,9 +1154,9 @@ block|;
 name|void
 name|addTypeForNEON
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|,
-argument|EVT PromotedBitwiseVT
+argument|MVT PromotedBitwiseVT
 argument_list|)
 block|;
 name|void
@@ -1123,7 +1182,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1156,7 +1215,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -1185,10 +1244,6 @@ argument_list|,
 argument|CallingConv::ID CalleeCC
 argument_list|,
 argument|bool isVarArg
-argument_list|,
-argument|bool isCalleeStructRet
-argument_list|,
-argument|bool isCallerStructRet
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
@@ -1239,7 +1294,7 @@ argument|CCState&CCInfo
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue&Chain
 argument_list|)
@@ -1274,7 +1329,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1322,7 +1377,7 @@ name|LowerELFTLSDescCallSeq
 argument_list|(
 argument|SDValue SymAddr
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1377,7 +1432,7 @@ argument|SDValue TVal
 argument_list|,
 argument|SDValue FVal
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1678,6 +1733,32 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|SDValue
+name|getRsqrtEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|,
+argument|bool&UseOneConstNR
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|getRecipEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|)
+specifier|const
+name|override
+block|;
 name|unsigned
 name|combineRepeatedFPDivisors
 argument_list|()
@@ -1733,6 +1814,16 @@ argument_list|,
 argument|StringRef Constraint
 argument_list|,
 argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|char
+operator|*
+name|LowerXConstraint
+argument_list|(
+argument|EVT ConstraintVT
 argument_list|)
 specifier|const
 name|override

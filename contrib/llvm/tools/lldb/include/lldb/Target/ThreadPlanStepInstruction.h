@@ -89,6 +89,19 @@ name|ThreadPlan
 block|{
 name|public
 operator|:
+name|ThreadPlanStepInstruction
+argument_list|(
+argument|Thread&thread
+argument_list|,
+argument|bool step_over
+argument_list|,
+argument|bool stop_others
+argument_list|,
+argument|Vote stop_vote
+argument_list|,
+argument|Vote run_vote
+argument_list|)
+block|;
 operator|~
 name|ThreadPlanStepInstruction
 argument_list|()
@@ -152,19 +165,6 @@ argument_list|(
 argument|Event *event_ptr
 argument_list|)
 name|override
-block|;
-name|ThreadPlanStepInstruction
-argument_list|(
-argument|Thread&thread
-argument_list|,
-argument|bool step_over
-argument_list|,
-argument|bool stop_others
-argument_list|,
-argument|Vote stop_vote
-argument_list|,
-argument|Vote run_vote
-argument_list|)
 block|;
 name|void
 name|SetUpState

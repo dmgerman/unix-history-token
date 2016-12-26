@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/IdentifierResolver.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -1293,6 +1299,12 @@ comment|/// \brief The module manager which manages modules and their dependenci
 name|ModuleManager
 name|ModuleMgr
 decl_stmt|;
+comment|/// \brief A dummy identifier resolver used to merge TU-scope declarations in
+comment|/// C, for the cases where we don't have a Sema object to provide a real
+comment|/// identifier resolver.
+name|IdentifierResolver
+name|DummyIdResolver
+decl_stmt|;
 comment|/// A mapping from extension block names to module file extensions.
 name|llvm
 operator|::
@@ -1538,80 +1550,6 @@ literal|4
 operator|>
 name|PendingExceptionSpecUpdates
 expr_stmt|;
-struct|struct
-name|ReplacedDeclInfo
-block|{
-name|ModuleFile
-modifier|*
-name|Mod
-decl_stmt|;
-name|uint64_t
-name|Offset
-decl_stmt|;
-name|unsigned
-name|RawLoc
-decl_stmt|;
-name|ReplacedDeclInfo
-argument_list|()
-operator|:
-name|Mod
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|RawLoc
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|ReplacedDeclInfo
-argument_list|(
-argument|ModuleFile *Mod
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|unsigned RawLoc
-argument_list|)
-operator|:
-name|Mod
-argument_list|(
-name|Mod
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-name|Offset
-argument_list|)
-operator|,
-name|RawLoc
-argument_list|(
-argument|RawLoc
-argument_list|)
-block|{}
-block|}
-struct|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-name|ReplacedDeclInfo
-operator|>
-name|DeclReplacementMap
-expr_stmt|;
-comment|/// \brief Declarations that have been replaced in a later file in the chain.
-name|DeclReplacementMap
-name|ReplacedDecls
-decl_stmt|;
 comment|/// \brief Declarations that have been imported and have typedef names for
 comment|/// linkage purposes.
 name|llvm
@@ -2186,6 +2124,18 @@ name|unsigned
 operator|>
 name|SelectorGeneration
 expr_stmt|;
+comment|/// Whether a selector is out of date. We mark a selector as out of date
+comment|/// if we load another module after the method pool entry was pulled in.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|Selector
+operator|,
+name|bool
+operator|>
+name|SelectorOutOfDate
+expr_stmt|;
 struct|struct
 name|PendingMacroInfo
 block|{
@@ -2429,6 +2379,17 @@ comment|/// \brief The pragma clang optimize location (if the pragma state is "o
 name|SourceLocation
 name|OptimizeOffPragmaLocation
 decl_stmt|;
+comment|/// \brief The PragmaMSStructKind pragma ms_struct state if set, or -1.
+name|int
+name|PragmaMSStructState
+decl_stmt|;
+comment|/// \brief The PragmaMSPointersToMembersKind pragma pointers_to_members state.
+name|int
+name|PragmaMSPointersToMembersState
+decl_stmt|;
+name|SourceLocation
+name|PointersToMembersPragmaLocation
+decl_stmt|;
 comment|/// \brief The OpenCL extension settings.
 name|SmallVector
 operator|<
@@ -2554,6 +2515,10 @@ decl_stmt|;
 comment|/// \brief Whether we have tried loading the global module index yet.
 name|bool
 name|TriedLoadingGlobalIndex
+decl_stmt|;
+comment|///\brief Whether we are currently processing update records.
+name|bool
+name|ProcessingUpdateRecords
 decl_stmt|;
 typedef|typedef
 name|llvm
@@ -3029,6 +2994,74 @@ operator|.
 name|ReadingKind
 operator|=
 name|PrevKind
+block|; }
+block|}
+empty_stmt|;
+comment|/// \brief RAII object to mark the start of processing updates.
+name|class
+name|ProcessingUpdatesRAIIObj
+block|{
+name|ASTReader
+modifier|&
+name|Reader
+decl_stmt|;
+name|bool
+name|PrevState
+decl_stmt|;
+name|ProcessingUpdatesRAIIObj
+argument_list|(
+specifier|const
+name|ProcessingUpdatesRAIIObj
+operator|&
+argument_list|)
+operator|=
+name|delete
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ProcessingUpdatesRAIIObj
+operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|public
+label|:
+name|ProcessingUpdatesRAIIObj
+argument_list|(
+name|ASTReader
+operator|&
+name|reader
+argument_list|)
+operator|:
+name|Reader
+argument_list|(
+name|reader
+argument_list|)
+operator|,
+name|PrevState
+argument_list|(
+argument|Reader.ProcessingUpdateRecords
+argument_list|)
+block|{
+name|Reader
+operator|.
+name|ProcessingUpdateRecords
+operator|=
+name|true
+block|;     }
+operator|~
+name|ProcessingUpdatesRAIIObj
+argument_list|()
+block|{
+name|Reader
+operator|.
+name|ProcessingUpdateRecords
+operator|=
+name|PrevState
 block|; }
 block|}
 empty_stmt|;
@@ -3773,9 +3806,9 @@ operator|::
 name|DeclID
 name|ID
 argument_list|,
-name|unsigned
+name|SourceLocation
 operator|&
-name|RawLocation
+name|Location
 argument_list|)
 decl_stmt|;
 name|void
@@ -4599,28 +4632,24 @@ begin_comment
 comment|/// LoadFailureCapabilities.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ASTReadResult
 name|ReadAST
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|FileName
-argument_list|,
+parameter_list|,
 name|ModuleKind
 name|Type
-argument_list|,
+parameter_list|,
 name|SourceLocation
 name|ImportLoc
-argument_list|,
+parameter_list|,
 name|unsigned
 name|ClientLoadCapabilities
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Make the entities in the given module and any of its (non-explicit)
@@ -6335,34 +6364,6 @@ name|override
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// \brief Read a CXXBaseSpecifiers ID form the given record and
-end_comment
-
-begin_comment
-comment|/// return its global bit offset.
-end_comment
-
-begin_function_decl
-name|uint64_t
-name|readCXXBaseSpecifiers
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|M
-parameter_list|,
-specifier|const
-name|RecordData
-modifier|&
-name|Record
-parameter_list|,
-name|unsigned
-modifier|&
-name|Idx
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|CXXBaseSpecifier
 modifier|*
@@ -6813,6 +6814,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Load the contents of the global method pool for a given
+end_comment
+
+begin_comment
+comment|/// selector if necessary.
+end_comment
+
+begin_decl_stmt
+name|void
+name|updateOutOfDateSelector
+argument_list|(
+name|Selector
+name|Sel
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Load the set of namespaces that are known to the external source,
 end_comment
 
@@ -6842,7 +6862,7 @@ name|ReadUndefinedButUsed
 argument_list|(
 name|llvm
 operator|::
-name|DenseMap
+name|MapVector
 operator|<
 name|NamedDecl
 operator|*
@@ -7934,34 +7954,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Read a CXXCtorInitializers ID from the given record and
-end_comment
-
-begin_comment
-comment|/// return its global bit offset.
-end_comment
-
-begin_function_decl
-name|uint64_t
-name|ReadCXXCtorInitializersRef
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|M
-parameter_list|,
-specifier|const
-name|RecordData
-modifier|&
-name|Record
-parameter_list|,
-name|unsigned
-modifier|&
-name|Idx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Read the contents of a CXXCtorInitializer array.
 end_comment
 
@@ -7979,6 +7971,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Read a source location from raw form and return it in its
+end_comment
+
+begin_comment
+comment|/// originating module file's source location space.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|ReadUntranslatedSourceLocation
+argument_list|(
+name|uint32_t
+name|Raw
+argument_list|)
+decl|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+operator|(
+name|Raw
+operator|>>
+literal|1
+operator|)
+operator||
+operator|(
+name|Raw
+operator|<<
+literal|31
+operator|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Read a source location from raw form.
 end_comment
 
@@ -7990,7 +8020,7 @@ name|ModuleFile
 operator|&
 name|ModuleFile
 argument_list|,
-name|unsigned
+name|uint32_t
 name|Raw
 argument_list|)
 decl|const
@@ -7998,13 +8028,43 @@ block|{
 name|SourceLocation
 name|Loc
 init|=
-name|SourceLocation
-operator|::
-name|getFromRawEncoding
+name|ReadUntranslatedSourceLocation
 argument_list|(
 name|Raw
 argument_list|)
 decl_stmt|;
+return|return
+name|TranslateSourceLocation
+argument_list|(
+name|ModuleFile
+argument_list|,
+name|Loc
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Translate a source location from another module file's source
+end_comment
+
+begin_comment
+comment|/// location space into ours.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|TranslateSourceLocation
+argument_list|(
+name|ModuleFile
+operator|&
+name|ModuleFile
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+block|{
 name|assert
 argument_list|(
 name|ModuleFile
@@ -8622,6 +8682,26 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Get the identifier resolver used for name lookup / updates
+end_comment
+
+begin_comment
+comment|/// in the translation unit scope. We have one of these even if we don't
+end_comment
+
+begin_comment
+comment|/// have a Sema object.
+end_comment
+
+begin_function_decl
+name|IdentifierResolver
+modifier|&
+name|getIdResolver
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Retrieve the identifier table associated with the
 end_comment
 
@@ -8719,6 +8799,17 @@ argument_list|()
 name|override
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|bool
+name|isProcessingUpdateRecords
+parameter_list|()
+block|{
+return|return
+name|ProcessingUpdateRecords
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};

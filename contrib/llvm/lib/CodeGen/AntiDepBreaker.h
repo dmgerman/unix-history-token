@@ -195,7 +195,7 @@ name|void
 name|Observe
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned
@@ -221,7 +221,7 @@ name|void
 name|UpdateDbgValue
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|unsigned
@@ -234,7 +234,7 @@ block|{
 name|assert
 argument_list|(
 name|MI
-operator|->
+operator|.
 name|isDebugValue
 argument_list|()
 operator|&&
@@ -244,9 +244,7 @@ expr_stmt|;
 if|if
 condition|(
 name|MI
-operator|&&
-name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 literal|0
@@ -256,7 +254,7 @@ name|isReg
 argument_list|()
 operator|&&
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 literal|0
@@ -268,7 +266,7 @@ operator|==
 name|OldReg
 condition|)
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 literal|0

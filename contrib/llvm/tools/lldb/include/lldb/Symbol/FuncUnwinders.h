@@ -14,6 +14,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -33,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/AddressRange.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_decl_stmt
@@ -295,6 +295,35 @@ operator|&
 name|target
 argument_list|)
 expr_stmt|;
+comment|// Do a simplistic comparison for the register restore rule for getting
+comment|// the caller's pc value on two UnwindPlans -- returns LazyBoolYes if
+comment|// they have the same unwind rule for the pc, LazyBoolNo if they do not
+comment|// have the same unwind rule for the pc, and LazyBoolCalculate if it was
+comment|// unable to determine this for some reason.
+name|lldb_private
+operator|::
+name|LazyBool
+name|CompareUnwindPlansForIdenticalInitialPCLocation
+argument_list|(
+name|Thread
+operator|&
+name|thread
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|UnwindPlanSP
+operator|&
+name|a
+argument_list|,
+specifier|const
+name|lldb
+operator|::
+name|UnwindPlanSP
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
 name|UnwindTable
 modifier|&
 name|m_unwind_table
@@ -302,9 +331,11 @@ decl_stmt|;
 name|AddressRange
 name|m_range
 decl_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|lldb
 operator|::
 name|UnwindPlanSP

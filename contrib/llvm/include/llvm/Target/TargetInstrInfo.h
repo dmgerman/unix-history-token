@@ -101,6 +101,12 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveIntervalAnalysis.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -209,6 +215,9 @@ literal|0u
 argument_list|,
 argument|unsigned CatchRetOpcode = ~
 literal|0u
+argument_list|,
+argument|unsigned ReturnOpcode = ~
+literal|0u
 argument_list|)
 operator|:
 name|CallFrameSetupOpcode
@@ -223,7 +232,12 @@ argument_list|)
 block|,
 name|CatchRetOpcode
 argument_list|(
-argument|CatchRetOpcode
+name|CatchRetOpcode
+argument_list|)
+block|,
+name|ReturnOpcode
+argument_list|(
+argument|ReturnOpcode
 argument_list|)
 block|{}
 name|virtual
@@ -271,7 +285,7 @@ comment|/// in the function.
 name|bool
 name|isTriviallyReMaterializable
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|AliasAnalysis *AA = nullptr
 argument_list|)
@@ -279,7 +293,7 @@ specifier|const
 block|{
 return|return
 name|MI
-operator|->
+operator|.
 name|getOpcode
 argument_list|()
 operator|==
@@ -289,7 +303,7 @@ name|IMPLICIT_DEF
 operator|||
 operator|(
 name|MI
-operator|->
+operator|.
 name|getDesc
 argument_list|()
 operator|.
@@ -327,7 +341,7 @@ name|virtual
 name|bool
 name|isReallyTriviallyReMaterializable
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|AliasAnalysis *AA
 argument_list|)
@@ -357,7 +371,7 @@ name|MachineInstr
 operator|*
 name|commuteInstructionImpl
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|bool NewMI
 argument_list|,
@@ -399,7 +413,7 @@ comment|/// instruction is really trivially rematerializable.
 name|bool
 name|isReallyTriviallyReMaterializableGeneric
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|AliasAnalysis *AA
 argument_list|)
@@ -439,6 +453,15 @@ return|return
 name|CatchRetOpcode
 return|;
 block|}
+name|unsigned
+name|getReturnOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnOpcode
+return|;
+block|}
 comment|/// Returns the actual stack pointer adjustment made by an instruction
 comment|/// as part of a call sequence. By default, only call frame setup/destroy
 comment|/// instructions adjust the stack, but targets may want to override this
@@ -447,7 +470,7 @@ name|virtual
 name|int
 name|getSPAdjust
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -483,7 +506,7 @@ name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -499,7 +522,7 @@ name|virtual
 name|unsigned
 name|isLoadFromStackSlotPostFE
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -519,7 +542,7 @@ name|virtual
 name|bool
 name|hasLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineMemOperand *&MMO
 argument_list|,
@@ -536,7 +559,7 @@ name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -552,7 +575,7 @@ name|virtual
 name|unsigned
 name|isStoreToStackSlotPostFE
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -572,7 +595,7 @@ name|virtual
 name|bool
 name|hasStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineMemOperand *&MMO
 argument_list|,
@@ -587,7 +610,7 @@ name|virtual
 name|bool
 name|isStackSlotCopy
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&DestFrameIndex
 argument_list|,
@@ -636,14 +659,50 @@ name|virtual
 name|bool
 name|isAsCheapAsAMove
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
 return|return
 name|MI
-operator|->
+operator|.
 name|isAsCheapAsAMove
+argument_list|()
+return|;
+block|}
+comment|/// Return true if the instruction should be sunk by MachineSink.
+comment|///
+comment|/// MachineSink determines on its own whether the instruction is safe to sink;
+comment|/// this gives the target a hook to override the default behavior with regards
+comment|/// to which instructions should be sunk.
+comment|/// The default behavior is to not sink insert_subreg, subreg_to_reg, and
+comment|/// reg_sequence. These are meant to be close to the source to make it easier
+comment|/// to coalesce.
+name|virtual
+name|bool
+name|shouldSink
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|!
+name|MI
+operator|.
+name|isInsertSubreg
+argument_list|()
+operator|&&
+operator|!
+name|MI
+operator|.
+name|isSubregToReg
+argument_list|()
+operator|&&
+operator|!
+name|MI
+operator|.
+name|isRegSequence
 argument_list|()
 return|;
 block|}
@@ -664,7 +723,7 @@ argument|unsigned DestReg
 argument_list|,
 argument|unsigned SubIdx
 argument_list|,
-argument|const MachineInstr *Orig
+argument|const MachineInstr&Orig
 argument_list|,
 argument|const TargetRegisterInfo&TRI
 argument_list|)
@@ -680,7 +739,7 @@ name|MachineInstr
 operator|*
 name|duplicate
 argument_list|(
-argument|MachineInstr *Orig
+argument|MachineInstr&Orig
 argument_list|,
 argument|MachineFunction&MF
 argument_list|)
@@ -703,7 +762,7 @@ name|convertToThreeAddress
 argument_list|(
 argument|MachineFunction::iterator&MFI
 argument_list|,
-argument|MachineBasicBlock::iterator&MBBI
+argument|MachineInstr&MI
 argument_list|,
 argument|LiveVariables *LV
 argument_list|)
@@ -745,7 +804,7 @@ name|MachineInstr
 operator|*
 name|commuteInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|bool NewMI = false
 argument_list|,
@@ -776,7 +835,7 @@ name|virtual
 name|bool
 name|findCommutedOpIndices
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcOpIdx1
 argument_list|,
@@ -944,9 +1003,9 @@ name|virtual
 name|bool
 name|produceSameValue
 argument_list|(
-argument|const MachineInstr *MI0
+argument|const MachineInstr&MI0
 argument_list|,
-argument|const MachineInstr *MI1
+argument|const MachineInstr&MI1
 argument_list|,
 argument|const MachineRegisterInfo *MRI = nullptr
 argument_list|)
@@ -977,9 +1036,11 @@ comment|///
 comment|/// If AllowModify is true, then this routine is allowed to modify the basic
 comment|/// block (e.g. delete instructions after the unconditional branch).
 comment|///
+comment|/// The CFG information in MBB.Predecessors and MBB.Successors must be valid
+comment|/// before calling this function.
 name|virtual
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -1105,7 +1166,7 @@ comment|/// block (e.g. delete instructions after the unconditional branch).
 comment|///
 name|virtual
 name|bool
-name|AnalyzeBranchPredicate
+name|analyzeBranchPredicate
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -1145,6 +1206,9 @@ comment|/// It is also invoked by tail merging to add unconditional branches in
 comment|/// cases where AnalyzeBranch doesn't apply because there was no original
 comment|/// branch to analyze.  At least this much must be implemented, else tail
 comment|/// merging needs to be disabled.
+comment|///
+comment|/// The CFG information in MBB.Predecessors and MBB.Successors must be valid
+comment|/// before calling this function.
 name|virtual
 name|unsigned
 name|InsertBranch
@@ -1157,7 +1221,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 block|{
@@ -1417,7 +1481,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
@@ -1456,7 +1520,7 @@ name|virtual
 name|bool
 name|analyzeSelect
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
@@ -1471,9 +1535,7 @@ block|{
 name|assert
 argument_list|(
 name|MI
-operator|&&
-name|MI
-operator|->
+operator|.
 name|getDesc
 argument_list|()
 operator|.
@@ -1507,7 +1569,7 @@ name|MachineInstr
 operator|*
 name|optimizeSelect
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|SmallPtrSetImpl<MachineInstr *>&NewMIs
 argument_list|,
@@ -1537,7 +1599,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -1619,7 +1681,7 @@ name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -1637,11 +1699,13 @@ name|MachineInstr
 operator|*
 name|foldMemoryOperand
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|int FrameIndex
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1651,11 +1715,13 @@ name|MachineInstr
 operator|*
 name|foldMemoryOperand
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
-argument|MachineInstr *LoadMI
+argument|MachineInstr&LoadMI
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1673,6 +1739,17 @@ argument_list|(
 argument|MachineInstr&Root
 argument_list|,
 argument|SmallVectorImpl<MachineCombinerPattern>&Patterns
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true when a code sequence can improve throughput. It
+comment|/// should be called only for instructions in loops.
+comment|/// \param Pattern - combiner pattern
+name|virtual
+name|bool
+name|isThroughputPattern
+argument_list|(
+argument|MachineCombinerPattern Pattern
 argument_list|)
 specifier|const
 block|;
@@ -1788,10 +1865,7 @@ argument_list|,
 argument|MachineInstr&NewMI2
 argument_list|)
 specifier|const
-block|{
-return|return;
-block|}
-block|;
+block|{   }
 comment|/// Return true when a target supports MachineCombiner.
 name|virtual
 name|bool
@@ -1817,13 +1891,15 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -1843,13 +1919,15 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
-argument|MachineInstr *LoadMI
+argument|MachineInstr&LoadMI
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 block|{
@@ -1942,7 +2020,7 @@ name|unfoldMemoryOperand
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Reg
 argument_list|,
@@ -1950,7 +2028,7 @@ argument|bool UnfoldLoad
 argument_list|,
 argument|bool UnfoldStore
 argument_list|,
-argument|SmallVectorImpl<MachineInstr*>&NewMIs
+argument|SmallVectorImpl<MachineInstr *>&NewMIs
 argument_list|)
 specifier|const
 block|{
@@ -2054,11 +2132,11 @@ name|virtual
 name|bool
 name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr *MemOp
+argument|MachineInstr&MemOp
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
-argument|unsigned&Offset
+argument|int64_t&Offset
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
@@ -2080,11 +2158,21 @@ return|;
 block|}
 name|virtual
 name|bool
-name|shouldClusterLoads
+name|enableClusterStores
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|shouldClusterMemOps
 argument_list|(
-argument|MachineInstr *FirstLdSt
+argument|MachineInstr&FirstLdSt
 argument_list|,
-argument|MachineInstr *SecondLdSt
+argument|MachineInstr&SecondLdSt
 argument_list|,
 argument|unsigned NumLoads
 argument_list|)
@@ -2100,9 +2188,9 @@ name|virtual
 name|bool
 name|shouldScheduleAdjacent
 argument_list|(
-argument|MachineInstr* First
+argument|MachineInstr&First
 argument_list|,
-argument|MachineInstr *Second
+argument|MachineInstr&Second
 argument_list|)
 specifier|const
 block|{
@@ -2149,7 +2237,7 @@ name|virtual
 name|bool
 name|isPredicated
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -2163,7 +2251,7 @@ name|virtual
 name|bool
 name|isUnpredicatedTerminator
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -2173,7 +2261,7 @@ name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<MachineOperand> Pred
 argument_list|)
@@ -2202,7 +2290,7 @@ name|virtual
 name|bool
 name|DefinesPredicate
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
@@ -2219,13 +2307,13 @@ name|virtual
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
 return|return
 name|MI
-operator|->
+operator|.
 name|getDesc
 argument_list|()
 operator|.
@@ -2253,7 +2341,7 @@ name|virtual
 name|bool
 name|isSchedulingBoundary
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineBasicBlock *MBB
 argument_list|,
@@ -2312,6 +2400,21 @@ argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// Allocate and return a hazard recognizer to use for by non-scheduling
+comment|/// passes.
+name|virtual
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// Provide a global flag for disabling the PreRA hazard recognizer that
 comment|/// targets may choose to honor.
 name|bool
@@ -2327,7 +2430,7 @@ name|virtual
 name|bool
 name|analyzeCompare
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
@@ -2350,7 +2453,7 @@ name|virtual
 name|bool
 name|optimizeCompareInstr
 argument_list|(
-argument|MachineInstr *CmpInstr
+argument|MachineInstr&CmpInstr
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
@@ -2372,7 +2475,7 @@ name|virtual
 name|bool
 name|optimizeCondBranch
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -2392,7 +2495,7 @@ name|MachineInstr
 operator|*
 name|optimizeLoadInstr
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|,
@@ -2416,9 +2519,9 @@ name|virtual
 name|bool
 name|FoldImmediate
 argument_list|(
-argument|MachineInstr *UseMI
+argument|MachineInstr&UseMI
 argument_list|,
-argument|MachineInstr *DefMI
+argument|MachineInstr&DefMI
 argument_list|,
 argument|unsigned Reg
 argument_list|,
@@ -2440,7 +2543,7 @@ name|getNumMicroOps
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -2493,24 +2596,33 @@ name|getOperandLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|,
-argument|const MachineInstr *UseMI
+argument|const MachineInstr&UseMI
 argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
 block|;
-comment|/// Compute and return the latency of the given data
-comment|/// dependent def and use when the operand indices are already known.
+comment|/// Compute and return the latency of the given data dependent def and use
+comment|/// when the operand indices are already known. UseMI may be \c nullptr for
+comment|/// an unknown use.
+comment|///
+comment|/// FindMin may be set to get the minimum vs. expected latency. Minimum
+comment|/// latency is used for scheduling groups, while expected latency is for
+comment|/// instruction cost and critical path.
+comment|///
+comment|/// Depending on the subtarget's itinerary properties, this may or may not
+comment|/// need to call getOperandLatency(). For most subtargets, we don't need
+comment|/// DefIdx or UseIdx to compute min latency.
 name|unsigned
 name|computeOperandLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|,
@@ -2529,7 +2641,7 @@ name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned *PredCost = nullptr
 argument_list|)
@@ -2539,7 +2651,7 @@ name|virtual
 name|unsigned
 name|getPredicationCost
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -2553,13 +2665,13 @@ argument|SDNode *Node
 argument_list|)
 specifier|const
 block|;
-comment|/// Return the default expected latency for a def based on it's opcode.
+comment|/// Return the default expected latency for a def based on its opcode.
 name|unsigned
 name|defaultDefLatency
 argument_list|(
 argument|const MCSchedModel&SchedModel
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|)
 specifier|const
 block|;
@@ -2568,7 +2680,7 @@ name|computeDefOperandLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|)
 specifier|const
 block|;
@@ -2598,11 +2710,11 @@ argument|const TargetSchedModel&SchedModel
 argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|,
-argument|const MachineInstr *UseMI
+argument|const MachineInstr&UseMI
 argument_list|,
 argument|unsigned UseIdx
 argument_list|)
@@ -2620,7 +2732,7 @@ name|hasLowDefLatency
 argument_list|(
 argument|const TargetSchedModel&SchedModel
 argument_list|,
-argument|const MachineInstr *DefMI
+argument|const MachineInstr&DefMI
 argument_list|,
 argument|unsigned DefIdx
 argument_list|)
@@ -2631,7 +2743,7 @@ name|virtual
 name|bool
 name|verifyInstruction
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|StringRef&ErrInfo
 argument_list|)
@@ -2671,7 +2783,7 @@ name|uint16_t
 operator|>
 name|getExecutionDomain
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|{
@@ -2694,7 +2806,7 @@ name|virtual
 name|void
 name|setExecutionDomain
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned Domain
 argument_list|)
@@ -2743,7 +2855,7 @@ name|virtual
 name|unsigned
 name|getPartialRegUpdateClearance
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|,
@@ -2774,7 +2886,7 @@ name|virtual
 name|unsigned
 name|getUndefRegClearance
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&OpNum
 argument_list|,
@@ -2808,7 +2920,7 @@ name|virtual
 name|void
 name|breakPartialRegDependency
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|,
@@ -2838,9 +2950,9 @@ name|virtual
 name|bool
 name|areMemAccessesTriviallyDisjoint
 argument_list|(
-argument|MachineInstr *MIa
+argument|MachineInstr&MIa
 argument_list|,
-argument|MachineInstr *MIb
+argument|MachineInstr&MIb
 argument_list|,
 argument|AliasAnalysis *AA = nullptr
 argument_list|)
@@ -2848,16 +2960,14 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|MIa
-operator|&&
 operator|(
 name|MIa
-operator|->
+operator|.
 name|mayLoad
 argument_list|()
 operator|||
 name|MIa
-operator|->
+operator|.
 name|mayStore
 argument_list|()
 operator|)
@@ -2867,16 +2977,14 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
-name|MIb
-operator|&&
 operator|(
 name|MIb
-operator|->
+operator|.
 name|mayLoad
 argument_list|()
 operator|||
 name|MIb
-operator|->
+operator|.
 name|mayStore
 argument_list|()
 operator|)
@@ -3018,6 +3126,9 @@ name|CallFrameDestroyOpcode
 block|;
 name|unsigned
 name|CatchRetOpcode
+block|;
+name|unsigned
+name|ReturnOpcode
 block|; }
 decl_stmt|;
 comment|/// \brief Provide DenseMapInfo for TargetInstrInfo::RegSubRegPair.
@@ -3182,13 +3293,17 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_TARGET_TARGETINSTRINFO_H
+end_comment
 
 end_unit
 

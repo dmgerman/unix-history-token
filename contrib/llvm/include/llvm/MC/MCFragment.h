@@ -154,6 +154,10 @@ name|FT_LEB
 block|,
 name|FT_SafeSEH
 block|,
+name|FT_CVInlineLines
+block|,
+name|FT_CVDefRange
+block|,
 name|FT_Dummy
 block|}
 enum|;
@@ -771,6 +775,12 @@ operator|==
 name|MCFragment
 operator|::
 name|FT_Data
+operator|||
+name|Kind
+operator|==
+name|MCFragment
+operator|::
+name|FT_CVDefRange
 return|;
 block|}
 expr|}
@@ -1178,16 +1188,11 @@ operator|:
 name|public
 name|MCFragment
 block|{
-comment|/// Value - Value to use for filling bytes.
-name|int64_t
+comment|/// Value to use for filling bytes.
+name|uint8_t
 name|Value
 block|;
-comment|/// ValueSize - The size (in bytes) of \p Value to use when filling, or 0 if
-comment|/// this is a virtual fill fragment.
-name|unsigned
-name|ValueSize
-block|;
-comment|/// Size - The number of bytes to insert.
+comment|/// The number of bytes to insert.
 name|uint64_t
 name|Size
 block|;
@@ -1195,9 +1200,7 @@ name|public
 operator|:
 name|MCFillFragment
 argument_list|(
-argument|int64_t Value
-argument_list|,
-argument|unsigned ValueSize
+argument|uint8_t Value
 argument_list|,
 argument|uint64_t Size
 argument_list|,
@@ -1220,52 +1223,18 @@ argument_list|(
 name|Value
 argument_list|)
 block|,
-name|ValueSize
-argument_list|(
-name|ValueSize
-argument_list|)
-block|,
 name|Size
 argument_list|(
 argument|Size
 argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|ValueSize
-operator|||
-operator|(
-name|Size
-operator|%
-name|ValueSize
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-literal|"Fill size must be a multiple of the value size!"
-argument_list|)
-block|;   }
-comment|/// \name Accessors
-comment|/// @{
-name|int64_t
+block|{}
+name|uint8_t
 name|getValue
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Value
-return|;
-block|}
-name|unsigned
-name|getValueSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ValueSize
 return|;
 block|}
 name|uint64_t
@@ -1277,7 +1246,6 @@ return|return
 name|Size
 return|;
 block|}
-comment|/// @}
 specifier|static
 name|bool
 name|classof
@@ -1858,6 +1826,328 @@ operator|==
 name|MCFragment
 operator|::
 name|FT_SafeSEH
+return|;
+block|}
+expr|}
+block|;
+comment|/// Fragment representing the binary annotations produced by the
+comment|/// .cv_inline_linetable directive.
+name|class
+name|MCCVInlineLineTableFragment
+operator|:
+name|public
+name|MCFragment
+block|{
+name|unsigned
+name|SiteFuncId
+block|;
+name|unsigned
+name|StartFileId
+block|;
+name|unsigned
+name|StartLineNum
+block|;
+specifier|const
+name|MCSymbol
+operator|*
+name|FnStartSym
+block|;
+specifier|const
+name|MCSymbol
+operator|*
+name|FnEndSym
+block|;
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|3
+operator|>
+name|SecondaryFuncs
+block|;
+name|SmallString
+operator|<
+literal|8
+operator|>
+name|Contents
+block|;
+comment|/// CodeViewContext has the real knowledge about this format, so let it access
+comment|/// our members.
+name|friend
+name|class
+name|CodeViewContext
+block|;
+name|public
+operator|:
+name|MCCVInlineLineTableFragment
+argument_list|(
+argument|unsigned SiteFuncId
+argument_list|,
+argument|unsigned StartFileId
+argument_list|,
+argument|unsigned StartLineNum
+argument_list|,
+argument|const MCSymbol *FnStartSym
+argument_list|,
+argument|const MCSymbol *FnEndSym
+argument_list|,
+argument|ArrayRef<unsigned> SecondaryFuncs
+argument_list|,
+argument|MCSection *Sec = nullptr
+argument_list|)
+operator|:
+name|MCFragment
+argument_list|(
+name|FT_CVInlineLines
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|,
+name|Sec
+argument_list|)
+block|,
+name|SiteFuncId
+argument_list|(
+name|SiteFuncId
+argument_list|)
+block|,
+name|StartFileId
+argument_list|(
+name|StartFileId
+argument_list|)
+block|,
+name|StartLineNum
+argument_list|(
+name|StartLineNum
+argument_list|)
+block|,
+name|FnStartSym
+argument_list|(
+name|FnStartSym
+argument_list|)
+block|,
+name|FnEndSym
+argument_list|(
+name|FnEndSym
+argument_list|)
+block|,
+name|SecondaryFuncs
+argument_list|(
+argument|SecondaryFuncs.begin()
+argument_list|,
+argument|SecondaryFuncs.end()
+argument_list|)
+block|{}
+comment|/// \name Accessors
+comment|/// @{
+specifier|const
+name|MCSymbol
+operator|*
+name|getFnStartSym
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FnStartSym
+return|;
+block|}
+specifier|const
+name|MCSymbol
+operator|*
+name|getFnEndSym
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FnEndSym
+return|;
+block|}
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+block|{
+return|return
+name|Contents
+return|;
+block|}
+specifier|const
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Contents
+return|;
+block|}
+comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCFragment
+operator|::
+name|FT_CVInlineLines
+return|;
+block|}
+expr|}
+block|;
+comment|/// Fragment representing the .cv_def_range directive.
+name|class
+name|MCCVDefRangeFragment
+operator|:
+name|public
+name|MCEncodedFragmentWithFixups
+operator|<
+literal|32
+block|,
+literal|4
+operator|>
+block|{
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+block|,
+specifier|const
+name|MCSymbol
+operator|*
+operator|>
+block|,
+literal|2
+operator|>
+name|Ranges
+block|;
+name|SmallString
+operator|<
+literal|32
+operator|>
+name|FixedSizePortion
+block|;
+comment|/// CodeViewContext has the real knowledge about this format, so let it access
+comment|/// our members.
+name|friend
+name|class
+name|CodeViewContext
+block|;
+name|public
+operator|:
+name|MCCVDefRangeFragment
+argument_list|(
+argument|ArrayRef<std::pair<const MCSymbol *
+argument_list|,
+argument|const MCSymbol *>> Ranges
+argument_list|,
+argument|StringRef FixedSizePortion
+argument_list|,
+argument|MCSection *Sec = nullptr
+argument_list|)
+operator|:
+name|MCEncodedFragmentWithFixups
+operator|<
+literal|32
+block|,
+literal|4
+operator|>
+operator|(
+name|FT_CVDefRange
+expr|,
+name|false
+expr|,
+name|Sec
+operator|)
+block|,
+name|Ranges
+argument_list|(
+name|Ranges
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Ranges
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|,
+name|FixedSizePortion
+argument_list|(
+argument|FixedSizePortion
+argument_list|)
+block|{}
+comment|/// \name Accessors
+comment|/// @{
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+block|,
+specifier|const
+name|MCSymbol
+operator|*
+operator|>>
+name|getRanges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ranges
+return|;
+block|}
+name|StringRef
+name|getFixedSizePortion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FixedSizePortion
+return|;
+block|}
+comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCFragment
+operator|::
+name|FT_CVDefRange
 return|;
 block|}
 expr|}

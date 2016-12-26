@@ -206,9 +206,82 @@ name|eMIPSABI_N64
 init|=
 literal|0x00008000
 block|,
+name|eMIPSABI_O64
+init|=
+literal|0x00020000
+block|,
+name|eMIPSABI_EABI32
+init|=
+literal|0x00040000
+block|,
+name|eMIPSABI_EABI64
+init|=
+literal|0x00080000
+block|,
 name|eMIPSABI_mask
 init|=
 literal|0x000ff000
+block|}
+enum|;
+comment|// MIPS Floating point ABI Values
+enum|enum
+name|MIPS_ABI_FP
+block|{
+name|eMIPS_ABI_FP_ANY
+init|=
+literal|0x00000000
+block|,
+name|eMIPS_ABI_FP_DOUBLE
+init|=
+literal|0x00100000
+block|,
+comment|// hard float / -mdouble-float
+name|eMIPS_ABI_FP_SINGLE
+init|=
+literal|0x00200000
+block|,
+comment|// hard float / -msingle-float
+name|eMIPS_ABI_FP_SOFT
+init|=
+literal|0x00300000
+block|,
+comment|// soft float
+name|eMIPS_ABI_FP_OLD_64
+init|=
+literal|0x00400000
+block|,
+comment|// -mips32r2 -mfp64
+name|eMIPS_ABI_FP_XX
+init|=
+literal|0x00500000
+block|,
+comment|// -mfpxx
+name|eMIPS_ABI_FP_64
+init|=
+literal|0x00600000
+block|,
+comment|// -mips32r2 -mfp64
+name|eMIPS_ABI_FP_64A
+init|=
+literal|0x00700000
+block|,
+comment|// -mips32r2 -mfp64 -mno-odd-spreg
+name|eMIPS_ABI_FP_mask
+init|=
+literal|0x00700000
+block|}
+enum|;
+comment|// ARM specific e_flags
+enum|enum
+name|ARMeflags
+block|{
+name|eARM_abi_soft_float
+init|=
+literal|0x00000200
+block|,
+name|eARM_abi_hard_float
+init|=
+literal|0x00000400
 block|}
 enum|;
 enum|enum
@@ -343,6 +416,8 @@ block|,
 name|eCore_ppc64_generic
 block|,
 name|eCore_ppc64_ppc970_64
+block|,
+name|eCore_s390x_generic
 block|,
 name|eCore_sparc_generic
 block|,
@@ -635,6 +710,29 @@ name|GetArchitectureName
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//-----------------------------------------------------------------
+comment|/// if MIPS architecture return true.
+comment|///
+comment|///  @return a boolean value.
+comment|//-----------------------------------------------------------------
+name|bool
+name|IsMIPS
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns a string representing current architecture as a target CPU
+comment|/// for tools like compiler, disassembler etc.
+comment|///
+comment|/// @return A string representing target CPU for the current
+comment|///         architecture.
+comment|//------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetClangTargetCPU
+argument_list|()
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Clears the object state.
 comment|///
@@ -721,6 +819,18 @@ operator|<
 name|kNumCores
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Return a string representing target application ABI.
+comment|///
+comment|/// @return A string representing target application ABI.
+comment|//------------------------------------------------------------------
+name|std
+operator|::
+name|string
+name|GetTargetABI
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|TripleVendorWasSpecified
 argument_list|()
@@ -1189,6 +1299,24 @@ modifier|&
 name|env_different
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Detect whether this architecture uses thumb code exclusively
+comment|///
+comment|/// Some embedded ARM chips (e.g. the ARM Cortex M0-7 line) can
+comment|/// only execute the Thumb instructions, never Arm.  We should normally
+comment|/// pick up arm/thumbness from their the processor status bits (cpsr/xpsr)
+comment|/// or hints on each function - but when doing bare-boards low level
+comment|/// debugging (especially common with these embedded processors), we may
+comment|/// not have those things easily accessible.
+comment|///
+comment|/// @return true if this is an arm ArchSpec which can only execute Thumb
+comment|///         instructions
+comment|//------------------------------------------------------------------
+name|bool
+name|IsAlwaysThumbInstructions
+argument_list|()
+specifier|const
+expr_stmt|;
 name|uint32_t
 name|GetFlags
 argument_list|()
@@ -1210,6 +1338,15 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
+name|void
+name|SetFlags
+argument_list|(
+name|std
+operator|::
+name|string
+name|elf_abi
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|bool

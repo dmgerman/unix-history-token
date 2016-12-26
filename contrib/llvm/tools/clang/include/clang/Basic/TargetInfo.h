@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
+file|"llvm/ADT/APInt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APInt.h"
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -239,6 +245,9 @@ name|bool
 name|NoAsmVariants
 block|;
 comment|// True if {|} are normal characters.
+name|bool
+name|HasFloat128
+block|;
 name|unsigned
 name|char
 name|PointerWidth
@@ -280,6 +289,8 @@ name|char
 name|LongDoubleWidth
 block|,
 name|LongDoubleAlign
+block|,
+name|Float128Align
 block|;
 name|unsigned
 name|char
@@ -329,15 +340,15 @@ name|unsigned
 name|short
 name|SimdDefaultAlign
 block|;
-specifier|const
-name|char
-operator|*
-name|DataLayoutString
-block|;
-specifier|const
-name|char
-operator|*
-name|UserLabelPrefix
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
+name|DataLayout
+operator|>
+name|DataLayout
 block|;
 specifier|const
 name|char
@@ -359,6 +370,9 @@ name|DoubleFormat
 block|,
 operator|*
 name|LongDoubleFormat
+block|,
+operator|*
+name|Float128Format
 block|;
 name|unsigned
 name|char
@@ -415,6 +429,19 @@ operator|&
 name|T
 argument_list|)
 block|;
+name|void
+name|resetDataLayout
+argument_list|(
+argument|StringRef DL
+argument_list|)
+block|{
+name|DataLayout
+operator|.
+name|reset
+argument_list|(
+argument|new llvm::DataLayout(DL)
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|/// \brief Construct a target for the given options.
@@ -508,6 +535,8 @@ block|,
 name|Double
 block|,
 name|LongDouble
+block|,
+name|Float128
 block|}
 block|;
 comment|/// \brief The different kinds of __builtin_va_list types defined by
@@ -607,6 +636,12 @@ comment|/// that follows it, `bar', `bar' will be aligned as the type of the
 comment|/// zero-length bitfield.
 name|unsigned
 name|UseZeroLengthBitfieldAlignment
+operator|:
+literal|1
+block|;
+comment|/// \brief  Whether explicit bit field alignment attributes are honored.
+name|unsigned
+name|UseExplicitBitFieldAlignment
 operator|:
 literal|1
 block|;
@@ -1059,6 +1094,17 @@ literal|64
 return|;
 block|}
 comment|// FIXME
+comment|/// \brief Determine whether the __float128 type is supported on this target.
+name|virtual
+name|bool
+name|hasFloat128Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFloat128
+return|;
+block|}
 comment|/// \brief Return the alignment that is suitable for storing any
 comment|/// object with a fundamental alignment requirement.
 name|unsigned
@@ -1303,6 +1349,40 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|/// getFloat128Width/Align/Format - Return the size/align/format of
+comment|/// '__float128'.
+name|unsigned
+name|getFloat128Width
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|128
+return|;
+block|}
+name|unsigned
+name|getFloat128Align
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Float128Align
+return|;
+block|}
+specifier|const
+name|llvm
+operator|::
+name|fltSemantics
+operator|&
+name|getFloat128Format
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|Float128Format
+return|;
+block|}
 comment|/// \brief Return true if the 'long double' type should be mangled like
 comment|/// __float128.
 name|virtual
@@ -1430,6 +1510,28 @@ return|return
 name|SimdDefaultAlign
 return|;
 block|}
+comment|/// Return the alignment (in bits) of the thrown exception object. This is
+comment|/// only meaningful for targets that allocate C++ exceptions in a system
+comment|/// runtime, such as those using the Itanium C++ ABI.
+name|virtual
+name|unsigned
+name|getExnObjectAlignment
+argument_list|()
+specifier|const
+block|{
+comment|// Itanium says that an _Unwind_Exception has to be "double-word"
+comment|// aligned (and thus the end of it is also so-aligned), meaning 16
+comment|// bytes.  Of course, that was written for the actual Itanium,
+comment|// which is a 64-bit platform.  Classically, the ABI doesn't really
+comment|// specify the alignment on other platforms, but in practice
+comment|// libUnwind declares the struct with __attribute__((aligned)), so
+comment|// we assume that alignment here.  (It's generally 16 bytes, but
+comment|// some targets overwrite it.)
+return|return
+name|getDefaultAlignForAttributeAligned
+argument_list|()
+return|;
+block|}
 comment|/// \brief Return the size of intmax_t and uintmax_t for this target, in bits.
 name|unsigned
 name|getIntMaxTWidth
@@ -1444,6 +1546,7 @@ argument_list|)
 return|;
 block|}
 comment|// Return the size of unwind_word for this target.
+name|virtual
 name|unsigned
 name|getUnwindWordWidth
 argument_list|()
@@ -1457,6 +1560,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Return the "preferred" register width on this target.
+name|virtual
 name|unsigned
 name|getRegisterWidth
 argument_list|()
@@ -1467,21 +1571,6 @@ comment|// width, we can introduce a new variable for this if/when some target w
 comment|// it.
 return|return
 name|PointerWidth
-return|;
-block|}
-comment|/// \brief Returns the default value of the __USER_LABEL_PREFIX__ macro,
-comment|/// which is the prefix given to user symbols by default.
-comment|///
-comment|/// On most platforms this is "_", but it is "" on some, and "." on others.
-specifier|const
-name|char
-operator|*
-name|getUserLabelPrefix
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UserLabelPrefix
 return|;
 block|}
 comment|/// \brief Returns the name of the mcount instrumentation function.
@@ -1549,6 +1638,17 @@ specifier|const
 block|{
 return|return
 name|ZeroLengthBitfieldBoundary
+return|;
+block|}
+comment|/// \brief Check whether explicit bitfield alignment attributes should be
+comment|//  honored, as in "__attribute__((aligned(2))) int b : 1;".
+name|bool
+name|useExplicitBitFieldAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseExplicitBitFieldAlignment
 return|;
 block|}
 comment|/// \brief Check whether this target support '\#pragma options align=mac68k'.
@@ -2408,21 +2508,24 @@ name|Triple
 return|;
 block|}
 specifier|const
-name|char
-operator|*
-name|getDataLayoutString
+name|llvm
+operator|::
+name|DataLayout
+operator|&
+name|getDataLayout
 argument_list|()
 specifier|const
 block|{
 name|assert
 argument_list|(
-name|DataLayoutString
+name|DataLayout
 operator|&&
-literal|"Uninitialized DataLayoutString!"
+literal|"Uninitialized DataLayout!"
 argument_list|)
 block|;
 return|return
-name|DataLayoutString
+operator|*
+name|DataLayout
 return|;
 block|}
 expr|struct
@@ -2773,6 +2876,8 @@ return|;
 block|}
 comment|/// \brief Return the register number that __builtin_eh_return_regno would
 comment|/// return with the specified argument.
+comment|/// This corresponds with TargetLowering's getExceptionPointerRegister
+comment|/// and getExceptionSelectorRegister in the backend.
 name|virtual
 name|int
 name|getEHDataRegisterNumber
@@ -2920,6 +3025,64 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Whether target allows to overalign ABI-specified prefered alignment
+name|virtual
+name|bool
+name|allowsLargerPreferedTypeAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// \brief Set supported OpenCL extensions and optional core features.
+name|virtual
+name|void
+name|setSupportedOpenCLOpts
+argument_list|()
+block|{}
+comment|/// \brief Get supported OpenCL extensions and optional core features.
+name|OpenCLOptions
+operator|&
+name|getSupportedOpenCLOpts
+argument_list|()
+block|{
+return|return
+name|getTargetOpts
+argument_list|()
+operator|.
+name|SupportedOpenCLOptions
+return|;
+block|}
+comment|/// \brief Get const supported OpenCL extensions and optional core features.
+specifier|const
+name|OpenCLOptions
+operator|&
+name|getSupportedOpenCLOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTargetOpts
+argument_list|()
+operator|.
+name|SupportedOpenCLOptions
+return|;
+block|}
+comment|/// \brief Check the target is valid after it is fully initialized.
+name|virtual
+name|bool
+name|validateTarget
+argument_list|(
+argument|DiagnosticsEngine&Diags
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 name|protected

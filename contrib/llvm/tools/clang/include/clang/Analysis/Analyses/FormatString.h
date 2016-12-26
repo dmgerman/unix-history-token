@@ -720,6 +720,20 @@ operator|:
 literal|1
 return|;
 block|}
+name|void
+name|setEndScanList
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|pos
+parameter_list|)
+block|{
+name|EndScanList
+operator|=
+name|pos
+expr_stmt|;
+block|}
 name|bool
 name|isIntArg
 argument_list|()
@@ -773,6 +787,21 @@ operator|&&
 name|kind
 operator|<=
 name|UIntArgEnd
+return|;
+block|}
+name|bool
+name|isDoubleArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|kind
+operator|>=
+name|DoubleArgBeg
+operator|&&
+name|kind
+operator|<=
+name|DoubleArgEnd
 return|;
 block|}
 specifier|const
@@ -1608,17 +1637,6 @@ operator|<=
 name|DoubleArgEnd
 return|;
 block|}
-name|unsigned
-name|getLength
-argument_list|()
-specifier|const
-block|{
-comment|// Conversion specifiers currently only are represented by
-comment|// single characters, but we be flexible.
-return|return
-literal|1
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -2130,16 +2148,6 @@ argument_list|,
 argument|k
 argument_list|)
 block|{}
-name|void
-name|setEndScanList
-argument_list|(
-argument|const char *pos
-argument_list|)
-block|{
-name|EndScanList
-operator|=
-name|pos
-block|; }
 specifier|static
 name|bool
 name|classof

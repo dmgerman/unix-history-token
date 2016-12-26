@@ -74,6 +74,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AsmPrinter
+decl_stmt|;
+name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
@@ -85,6 +88,16 @@ decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
+typedef|typedef
+name|MCSymbol
+modifier|*
+name|ExceptionSymbolProvider
+parameter_list|(
+name|AsmPrinter
+modifier|*
+name|Asm
+parameter_list|)
+function_decl|;
 comment|/// \brief Collects and handles AsmPrinter objects required to build debug
 comment|/// or EH information.
 name|class
@@ -159,6 +172,24 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|beginFragment
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|*
+name|MBB
+parameter_list|,
+name|ExceptionSymbolProvider
+name|ESP
+parameter_list|)
+block|{}
+name|virtual
+name|void
+name|endFragment
+parameter_list|()
+block|{}
 comment|/// \brief Emit target-specific EH funclet machinery.
 name|virtual
 name|void

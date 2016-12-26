@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMapInfo.h"
 end_include
 
@@ -83,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -119,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineOperand.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DebugInfo.h"
 end_include
 
 begin_include
@@ -161,6 +143,17 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -170,6 +163,12 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
+name|DILocalVariable
+decl_stmt|;
+name|class
+name|DIExpression
+decl_stmt|;
+name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
@@ -178,6 +177,14 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LLVM_BUILD_GLOBAL_ISEL
+name|class
+name|Type
+decl_stmt|;
+endif|#
+directive|endif
 name|class
 name|MachineFunction
 decl_stmt|;
@@ -328,6 +335,18 @@ name|DebugLoc
 name|debugLoc
 decl_stmt|;
 comment|// Source line information.
+ifdef|#
+directive|ifdef
+name|LLVM_BUILD_GLOBAL_ISEL
+comment|/// Type of the instruction in case of a generic opcode.
+comment|/// \invariant This must be nullptr is getOpcode() is not
+comment|/// in the range of generic opcodes.
+name|Type
+modifier|*
+name|Ty
+decl_stmt|;
+endif|#
+directive|endif
 name|MachineInstr
 argument_list|(
 specifier|const
@@ -592,6 +611,22 @@ name|Flag
 operator|)
 expr_stmt|;
 block|}
+comment|/// Set the type of the instruction.
+comment|/// \pre getOpcode() is in the range of the generic opcodes.
+name|void
+name|setType
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+name|Type
+operator|*
+name|getType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Return true if MI is in a bundle (but not the first MI in a bundle).
 comment|///
 comment|/// A bundle looks like this before it's finalized:
@@ -724,31 +759,7 @@ operator|*
 name|getDebugVariable
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|isDebugValue
-argument_list|()
-operator|&&
-literal|"not a DBG_VALUE"
-argument_list|)
-block|;
-return|return
-name|cast
-operator|<
-name|DILocalVariable
-operator|>
-operator|(
-name|getOperand
-argument_list|(
-literal|2
-argument_list|)
-operator|.
-name|getMetadata
-argument_list|()
-operator|)
-return|;
-block|}
+expr_stmt|;
 comment|/// Return the complex address expression referenced by
 comment|/// this DBG_VALUE instruction.
 specifier|const
@@ -757,31 +768,7 @@ operator|*
 name|getDebugExpression
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-name|isDebugValue
-argument_list|()
-operator|&&
-literal|"not a DBG_VALUE"
-argument_list|)
-block|;
-return|return
-name|cast
-operator|<
-name|DIExpression
-operator|>
-operator|(
-name|getOperand
-argument_list|(
-literal|3
-argument_list|)
-operator|.
-name|getMetadata
-argument_list|()
-operator|)
-return|;
-block|}
+expr_stmt|;
 comment|/// Emit an error referring to the source location of this instruction.
 comment|/// This should only be used for inline assembly that is somehow
 comment|/// impossible to compile. Other errors should have been handled much
@@ -1164,6 +1151,61 @@ name|getNumDefs
 argument_list|()
 argument_list|,
 name|operands_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|explicit_uses
+argument_list|()
+block|{
+return|return
+name|make_range
+argument_list|(
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+argument_list|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getNumExplicitOperands
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|explicit_uses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+argument_list|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getNumExplicitOperands
 argument_list|()
 argument_list|)
 return|;
@@ -1769,6 +1811,37 @@ name|AnyInBundle
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|isInlineAsm
+argument_list|()
+condition|)
+block|{
+name|unsigned
+name|ExtraInfo
+init|=
+name|getOperand
+argument_list|(
+name|InlineAsm
+operator|::
+name|MIOp_ExtraInfo
+argument_list|)
+operator|.
+name|getImm
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|ExtraInfo
+operator|&
+name|InlineAsm
+operator|::
+name|Extra_IsConvergent
+condition|)
+return|return
+name|true
+return|;
+block|}
 return|return
 name|hasProperty
 argument_list|(
@@ -2318,7 +2391,7 @@ name|isIdenticalTo
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|Other
 argument_list|,
 name|MICheckType
@@ -3037,6 +3110,16 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/// Returns true if the MachineInstr has an implicit-use operand of exactly
+comment|/// the given register (not considering sub/super-registers).
+name|bool
+name|hasRegisterImplicitUseOperand
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns the operand index that is a use of the specific register or -1
 comment|/// if it is not found. It further tightens the search criteria to a use
 comment|/// that kills the register if isKill is true.
@@ -3578,8 +3661,8 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// Clear all kill flags affecting Reg.  If RegInfo is
-comment|/// provided, this includes super-register kills.
+comment|/// Clear all kill flags affecting Reg.  If RegInfo is provided, this includes
+comment|/// all aliasing registers.
 name|void
 name|clearRegisterKills
 parameter_list|(
@@ -3753,7 +3836,7 @@ name|MF
 parameter_list|,
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -3882,7 +3965,7 @@ literal|"Expected trivial destructor"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Erase an operand  from an instruction, leaving it with one
+comment|/// Erase an operand from an instruction, leaving it with one
 comment|/// fewer operand than it started with.
 name|void
 name|RemoveOperand
@@ -4245,6 +4328,7 @@ name|LHS
 operator|->
 name|isIdenticalTo
 argument_list|(
+operator|*
 name|RHS
 argument_list|,
 name|MachineInstr

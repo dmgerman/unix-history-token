@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -81,18 +87,11 @@ directive|include
 file|"llvm/IR/MDBuilder.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|LLVMContext
-decl_stmt|;
-name|class
-name|MDNode
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
+end_include
 
 begin_decl_stmt
 name|namespace

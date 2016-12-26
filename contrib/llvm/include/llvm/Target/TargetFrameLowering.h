@@ -238,7 +238,7 @@ block|{
 name|SPAdj
 operator|=
 operator|-
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 operator|-
 name|SPAdj
@@ -251,7 +251,7 @@ else|else
 block|{
 name|SPAdj
 operator|=
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|SPAdj
 argument_list|,
@@ -406,6 +406,24 @@ comment|/// Returns true if the target will correctly handle shrink wrapping.
 name|virtual
 name|bool
 name|enableShrinkWrapping
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Returns true if the stack slot holes in the fixed and callee-save stack
+comment|/// area should be used when allocating other stack locations to reduce stack
+comment|/// size.
+name|virtual
+name|bool
+name|enableStackSlotScavenging
 argument_list|(
 specifier|const
 name|MachineFunction
@@ -708,13 +726,15 @@ name|FrameReg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Same as above, except that the 'base register' will always be RSP, not
-comment|/// RBP on x86. This is generally used for emitting statepoint or EH tables
-comment|/// that use offsets from RSP.
-comment|/// TODO: This should really be a parameterizable choice.
+comment|/// Same as \c getFrameIndexReference, except that the stack pointer (as
+comment|/// opposed to the frame pointer) will be the preferred value for \p
+comment|/// FrameReg. This is generally used for emitting statepoint or EH tables that
+comment|/// use offsets from RSP.  If \p IgnoreSPUpdates is true, the returned
+comment|/// offset is only guaranteed to be valid with respect to the value of SP at
+comment|/// the end of the prologue.
 name|virtual
 name|int
-name|getFrameIndexReferenceFromSP
+name|getFrameIndexReferencePreferSP
 argument_list|(
 specifier|const
 name|MachineFunction
@@ -727,17 +747,22 @@ argument_list|,
 name|unsigned
 operator|&
 name|FrameReg
+argument_list|,
+name|bool
+name|IgnoreSPUpdates
 argument_list|)
 decl|const
 block|{
-comment|// default to calling normal version, we override this on x86 only
-name|llvm_unreachable
-argument_list|(
-literal|"unimplemented for non-x86"
-argument_list|)
-expr_stmt|;
+comment|// Always safe to dispatch to getFrameIndexReference.
 return|return
-literal|0
+name|getFrameIndexReference
+argument_list|(
+name|MF
+argument_list|,
+name|FI
+argument_list|,
+name|FrameReg
+argument_list|)
 return|;
 block|}
 comment|/// This method determines which of the registers reported by
@@ -805,39 +830,48 @@ literal|"WinEH not implemented for this target"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// eliminateCallFramePseudoInstr - This method is called during prolog/epilog
-comment|/// code insertion to eliminate call frame setup and destroy pseudo
-comment|/// instructions (but only if the Target is using them).  It is responsible
-comment|/// for eliminating these instructions, replacing them with concrete
-comment|/// instructions.  This method need only be implemented if using call frame
-comment|/// setup/destroy pseudo instructions.
-comment|///
+comment|/// This method is called during prolog/epilog code insertion to eliminate
+comment|/// call frame setup and destroy pseudo instructions (but only if the Target
+comment|/// is using them).  It is responsible for eliminating these instructions,
+comment|/// replacing them with concrete instructions.  This method need only be
+comment|/// implemented if using call frame setup/destroy pseudo instructions.
+comment|/// Returns an iterator pointing to the instruction after the replaced one.
 name|virtual
-name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
 name|MachineBasicBlock
 operator|::
 name|iterator
-name|MI
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|llvm_unreachable
 argument_list|(
 literal|"Call Frame Pseudo Instructions do not exist on this "
 literal|"target!"
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
+comment|/// Order the symbols in the local stack frame.
+comment|/// The list of objects that we want to order is in \p objectsToAllocate as
+comment|/// indices into the MachineFrameInfo. The array can be reordered in any way
+comment|/// upon return. The contents of the array, however, may not be modified (i.e.
+comment|/// only their order may be changed).
+comment|/// By default, just maintain the original order.
+name|virtual
+name|void
+name|orderFrameObjects
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|SmallVectorImpl<int>&objectsToAllocate
+argument_list|)
+specifier|const
+block|{   }
 comment|/// Check whether or not the given \p MBB can be used as a prologue
 comment|/// for the target.
 comment|/// The prologue will be inserted first in this basic block.
@@ -850,12 +884,9 @@ name|virtual
 name|bool
 name|canUseAsPrologue
 argument_list|(
-specifier|const
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|const MachineBasicBlock&MBB
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|true
@@ -880,6 +911,81 @@ name|MBB
 argument_list|)
 decl|const
 block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Check if given function is safe for not having callee saved registers.
+comment|/// This is used when interprocedural register allocation is enabled.
+specifier|static
+name|bool
+name|isSafeForNoCSROpt
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|F
+operator|->
+name|hasLocalLinkage
+argument_list|()
+operator|||
+name|F
+operator|->
+name|hasAddressTaken
+argument_list|()
+operator|||
+operator|!
+name|F
+operator|->
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|NoRecurse
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// Function should not be optimized as tail call.
+for|for
+control|(
+specifier|const
+name|User
+modifier|*
+name|U
+range|:
+name|F
+operator|->
+name|users
+argument_list|()
+control|)
+if|if
+condition|(
+name|auto
+name|CS
+init|=
+name|ImmutableCallSite
+argument_list|(
+name|U
+argument_list|)
+condition|)
+if|if
+condition|(
+name|CS
+operator|.
+name|isTailCall
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
 return|return
 name|true
 return|;

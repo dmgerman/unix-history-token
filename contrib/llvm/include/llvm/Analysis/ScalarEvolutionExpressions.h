@@ -126,9 +126,7 @@ block|,
 name|scCouldNotCompute
 block|}
 enum|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVConstant - This class represents a constant integer value.
-comment|///
+comment|/// This class represents a constant integer value.
 name|class
 name|SCEVConstant
 range|:
@@ -222,9 +220,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVCastExpr - This is the base class for unary cast operator classes.
-comment|///
+comment|/// This is the base class for unary cast operator classes.
 name|class
 name|SCEVCastExpr
 operator|:
@@ -310,10 +306,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVTruncateExpr - This class represents a truncation of an integer value
-comment|/// to a smaller integer value.
-comment|///
+comment|/// This class represents a truncation of an integer value to a
+comment|/// smaller integer value.
 name|class
 name|SCEVTruncateExpr
 operator|:
@@ -355,10 +349,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVZeroExtendExpr - This class represents a zero extension of a small
-comment|/// integer value to a larger integer value.
-comment|///
+comment|/// This class represents a zero extension of a small integer value
+comment|/// to a larger integer value.
 name|class
 name|SCEVZeroExtendExpr
 operator|:
@@ -400,10 +392,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVSignExtendExpr - This class represents a sign extension of a small
-comment|/// integer value to a larger integer value.
-comment|///
+comment|/// This class represents a sign extension of a small integer value
+comment|/// to a larger integer value.
 name|class
 name|SCEVSignExtendExpr
 operator|:
@@ -445,10 +435,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVNAryExpr - This node is a base class providing common
-comment|/// functionality for n'ary operators.
-comment|///
+comment|/// This node is a base class providing common functionality for
+comment|/// n'ary operators.
 name|class
 name|SCEVNAryExpr
 operator|:
@@ -620,6 +608,48 @@ name|Mask
 argument_list|)
 return|;
 block|}
+name|bool
+name|hasNoUnsignedWrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNoWrapFlags
+argument_list|(
+name|FlagNUW
+argument_list|)
+operator|!=
+name|FlagAnyWrap
+return|;
+block|}
+name|bool
+name|hasNoSignedWrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNoWrapFlags
+argument_list|(
+name|FlagNSW
+argument_list|)
+operator|!=
+name|FlagAnyWrap
+return|;
+block|}
+name|bool
+name|hasNoSelfWrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNoWrapFlags
+argument_list|(
+name|FlagNW
+argument_list|)
+operator|!=
+name|FlagAnyWrap
+return|;
+block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -668,10 +698,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVCommutativeExpr - This node is the base class for n'ary commutative
-comment|/// operators.
-comment|///
+comment|/// This node is the base class for n'ary commutative operators.
 name|class
 name|SCEVCommutativeExpr
 operator|:
@@ -756,9 +783,7 @@ name|Flags
 block|;     }
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVAddExpr - This node represents an addition of some number of SCEVs.
-comment|///
+comment|/// This node represents an addition of some number of SCEVs.
 name|class
 name|SCEVAddExpr
 operator|:
@@ -833,9 +858,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVMulExpr - This node represents multiplication of some number of SCEVs.
-comment|///
+comment|/// This node represents multiplication of some number of SCEVs.
 name|class
 name|SCEVMulExpr
 operator|:
@@ -888,9 +911,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVUDivExpr - This class represents a binary unsigned division operation.
-comment|///
+comment|/// This class represents a binary unsigned division operation.
 name|class
 name|SCEVUDivExpr
 operator|:
@@ -1000,12 +1021,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVAddRecExpr - This node represents a polynomial recurrence on the trip
-comment|/// count of the specified loop.  This is the primary focus of the
-comment|/// ScalarEvolution framework; all the other SCEV subclasses are mostly just
-comment|/// supporting infrastructure to allow SCEVAddRecExpr expressions to be
-comment|/// created and analyzed.
+comment|/// This node represents a polynomial recurrence on the trip count
+comment|/// of the specified loop.  This is the primary focus of the
+comment|/// ScalarEvolution framework; all the other SCEV subclasses are
+comment|/// mostly just supporting infrastructure to allow SCEVAddRecExpr
+comment|/// expressions to be created and analyzed.
 comment|///
 comment|/// All operands of an AddRec are required to be loop invariant.
 comment|///
@@ -1078,10 +1098,10 @@ return|return
 name|L
 return|;
 block|}
-comment|/// getStepRecurrence - This method constructs and returns the recurrence
-comment|/// indicating how much this expression steps by.  If this is a polynomial
-comment|/// of degree N, it returns a chrec of degree N-1.
-comment|/// We cannot determine whether the step recurrence has self-wraparound.
+comment|/// Constructs and returns the recurrence indicating how much this
+comment|/// expression steps by.  If this is a polynomial of degree N, it
+comment|/// returns a chrec of degree N-1.  We cannot determine whether
+comment|/// the step recurrence has self-wraparound.
 specifier|const
 name|SCEV
 operator|*
@@ -1132,8 +1152,8 @@ name|FlagAnyWrap
 argument_list|)
 return|;
 block|}
-comment|/// isAffine - Return true if this represents an expression
-comment|/// A + B*x where A and B are loop invariant values.
+comment|/// Return true if this represents an expression A + B*x where A
+comment|/// and B are loop invariant values.
 name|bool
 name|isAffine
 argument_list|()
@@ -1148,9 +1168,9 @@ operator|==
 literal|2
 return|;
 block|}
-comment|/// isQuadratic - Return true if this represents an expression
-comment|/// A + B*x + C*x^2 where A, B and C are loop invariant values.
-comment|/// This corresponds to an addrec of the form {L,+,M,+,N}
+comment|/// Return true if this represents an expression A + B*x + C*x^2
+comment|/// where A, B and C are loop invariant values.  This corresponds
+comment|/// to an addrec of the form {L,+,M,+,N}
 name|bool
 name|isQuadratic
 argument_list|()
@@ -1197,8 +1217,8 @@ name|SubclassData
 operator||=
 name|Flags
 block|;     }
-comment|/// evaluateAtIteration - Return the value of this chain of recurrences at
-comment|/// the specified iteration number.
+comment|/// Return the value of this chain of recurrences at the specified
+comment|/// iteration number.
 specifier|const
 name|SCEV
 operator|*
@@ -1210,25 +1230,25 @@ argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|;
-comment|/// getNumIterationsInRange - Return the number of iterations of this loop
-comment|/// that produce values in the specified constant range.  Another way of
-comment|/// looking at this is that it returns the first iteration number where the
-comment|/// value is not in the condition, thus computing the exit count.  If the
-comment|/// iteration count can't be computed, an instance of SCEVCouldNotCompute is
-comment|/// returned.
+comment|/// Return the number of iterations of this loop that produce
+comment|/// values in the specified constant range.  Another way of
+comment|/// looking at this is that it returns the first iteration number
+comment|/// where the value is not in the condition, thus computing the
+comment|/// exit count.  If the iteration count can't be computed, an
+comment|/// instance of SCEVCouldNotCompute is returned.
 specifier|const
 name|SCEV
 operator|*
 name|getNumIterationsInRange
 argument_list|(
-argument|ConstantRange Range
+argument|const ConstantRange&Range
 argument_list|,
 argument|ScalarEvolution&SE
 argument_list|)
 specifier|const
 block|;
-comment|/// getPostIncExpr - Return an expression representing the value of
-comment|/// this expression one iteration of the loop ahead.
+comment|/// Return an expression representing the value of this expression
+comment|/// one iteration of the loop ahead.
 specifier|const
 name|SCEVAddRecExpr
 operator|*
@@ -1278,9 +1298,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVSMaxExpr - This class represents a signed maximum selection.
-comment|///
+comment|/// This class represents a signed maximum selection.
 name|class
 name|SCEVSMaxExpr
 operator|:
@@ -1346,9 +1364,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVUMaxExpr - This class represents an unsigned maximum selection.
-comment|///
+comment|/// This class represents an unsigned maximum selection.
 name|class
 name|SCEVUMaxExpr
 operator|:
@@ -1414,11 +1430,9 @@ return|;
 block|}
 expr|}
 block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVUnknown - This means that we are dealing with an entirely unknown SCEV
-comment|/// value, and only represent it as its LLVM Value.  This is the "bottom"
-comment|/// value for the analysis.
-comment|///
+comment|/// This means that we are dealing with an entirely unknown SCEV
+comment|/// value, and only represent it as its LLVM Value.  This is the
+comment|/// "bottom" value for the analysis.
 name|class
 name|SCEVUnknown
 name|final
@@ -1446,15 +1460,15 @@ argument|Value *New
 argument_list|)
 name|override
 block|;
-comment|/// SE - The parent ScalarEvolution value. This is used to update
-comment|/// the parent's maps when the value associated with a SCEVUnknown
-comment|/// is deleted or RAUW'd.
+comment|/// The parent ScalarEvolution value. This is used to update the
+comment|/// parent's maps when the value associated with a SCEVUnknown is
+comment|/// deleted or RAUW'd.
 name|ScalarEvolution
 operator|*
 name|SE
 block|;
-comment|/// Next - The next pointer in the linked list of all
-comment|/// SCEVUnknown instances owned by a ScalarEvolution.
+comment|/// The next pointer in the linked list of all SCEVUnknown
+comment|/// instances owned by a ScalarEvolution.
 name|SCEVUnknown
 operator|*
 name|Next
@@ -1505,12 +1519,13 @@ name|getValPtr
 argument_list|()
 return|;
 block|}
-comment|/// isSizeOf, isAlignOf, isOffsetOf - Test whether this is a special
-comment|/// constant representing a type size, alignment, or field offset in
-comment|/// a target-independent manner, and hasn't happened to have been
-comment|/// folded with other operations into something unrecognizable. This
-comment|/// is mainly only useful for pretty-printing and other situations
-comment|/// where it isn't absolutely required for these to succeed.
+comment|/// @{
+comment|/// Test whether this is a special constant representing a type
+comment|/// size, alignment, or field offset in a target-independent
+comment|/// manner, and hasn't happened to have been folded with other
+comment|/// operations into something unrecognizable. This is mainly only
+comment|/// useful for pretty-printing and other situations where it isn't
+comment|/// absolutely required for these to succeed.
 name|bool
 name|isSizeOf
 argument_list|(
@@ -1534,6 +1549,7 @@ argument|Constant *&FieldNo
 argument_list|)
 specifier|const
 block|;
+comment|/// @}
 name|Type
 operator|*
 name|getType
@@ -1568,8 +1584,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// SCEVVisitor - This class defines a simple visitor class that may be used
-comment|/// for various SCEV analysis purposes.
+comment|/// This class defines a simple visitor class that may be used for
+comment|/// various SCEV analysis purposes.
 name|template
 operator|<
 name|typename
@@ -2057,12 +2073,13 @@ case|:
 case|case
 name|scAddRecExpr
 case|:
-block|{
+for|for
+control|(
 specifier|const
-name|SCEVNAryExpr
+specifier|auto
 modifier|*
-name|NAry
-init|=
+name|Op
+range|:
 name|cast
 operator|<
 name|SCEVNAryExpr
@@ -2070,43 +2087,16 @@ operator|>
 operator|(
 name|S
 operator|)
-decl_stmt|;
-for|for
-control|(
-name|SCEVNAryExpr
-operator|::
-name|op_iterator
-name|I
-operator|=
-name|NAry
 operator|->
-name|op_begin
+name|operands
 argument_list|()
-init|,
-name|E
-operator|=
-name|NAry
-operator|->
-name|op_end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
-block|{
 name|push
 argument_list|(
-operator|*
-name|I
+name|Op
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
-block|}
 case|case
 name|scUDivExpr
 case|:
@@ -3183,36 +3173,7 @@ name|LoopToScevMapT
 operator|&
 name|Map
 block|;   }
-block|;
-comment|/// Applies the Map (Loop -> SCEV) to the given Scev.
-specifier|static
-specifier|inline
-specifier|const
-name|SCEV
-operator|*
-name|apply
-argument_list|(
-argument|const SCEV *Scev
-argument_list|,
-argument|LoopToScevMapT&Map
-argument_list|,
-argument|ScalarEvolution&SE
-argument_list|)
-block|{
-return|return
-name|SCEVLoopAddRecRewriter
-operator|::
-name|rewrite
-argument_list|(
-name|Scev
-argument_list|,
-name|Map
-argument_list|,
-name|SE
-argument_list|)
-return|;
-block|}
-expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

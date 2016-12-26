@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-private.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/Address.h"
 end_include
 
@@ -71,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Scalar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
 end_include
 
 begin_decl_stmt
@@ -313,6 +319,35 @@ name|addr_t
 name|file_addr
 argument_list|)
 decl_stmt|;
+name|bool
+name|ContainsThreadLocalStorage
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|LinkThreadLocalStorage
+argument_list|(
+name|lldb
+operator|::
+name|ModuleSP
+name|new_module_sp
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|lldb
+operator|::
+name|addr_t
+argument_list|(
+argument|lldb::addr_t file_addr
+argument_list|)
+operator|>
+specifier|const
+operator|&
+name|link_address_callback
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Make the expression parser read its location information from a
 comment|/// given data source.  Does not change the offset and length
@@ -530,6 +565,11 @@ name|Value
 operator|*
 name|initial_value_ptr
 argument_list|,
+specifier|const
+name|Value
+operator|*
+name|object_address_ptr
+argument_list|,
 name|Value
 operator|&
 name|result
@@ -572,6 +612,11 @@ specifier|const
 name|Value
 operator|*
 name|initial_value_ptr
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|object_address_ptr
 argument_list|,
 name|Value
 operator|&
@@ -698,6 +743,11 @@ specifier|const
 name|Value
 operator|*
 name|initial_value_ptr
+argument_list|,
+specifier|const
+name|Value
+operator|*
+name|object_address_ptr
 argument_list|,
 name|Value
 operator|&

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ProfileData/ProfileCommon.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ProfileData/SampleProf.h"
 end_include
 
@@ -127,7 +133,7 @@ operator|~
 name|SampleProfileWriter
 argument_list|()
 block|{}
-comment|/// Write sample profiles in \p S for function \p FName.
+comment|/// Write sample profiles in \p S.
 comment|///
 comment|/// \returns status code of the file update operation.
 name|virtual
@@ -136,9 +142,10 @@ operator|::
 name|error_code
 name|write
 argument_list|(
-argument|StringRef FName
-argument_list|,
-argument|const FunctionSamples&S
+specifier|const
+name|FunctionSamples
+operator|&
+name|S
 argument_list|)
 operator|=
 literal|0
@@ -179,14 +186,6 @@ range|:
 name|ProfileMap
 control|)
 block|{
-name|StringRef
-name|FName
-init|=
-name|I
-operator|.
-name|first
-argument_list|()
-decl_stmt|;
 specifier|const
 name|FunctionSamples
 modifier|&
@@ -205,8 +204,6 @@ name|EC
 operator|=
 name|write
 argument_list|(
-name|FName
-argument_list|,
 name|Profile
 argument_list|)
 condition|)
@@ -313,6 +310,28 @@ name|raw_ostream
 operator|>
 name|OutputStream
 expr_stmt|;
+comment|/// \brief Profile summary.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ProfileSummary
+operator|>
+name|Summary
+expr_stmt|;
+comment|/// \brief Compute summary for this profile.
+name|void
+name|computeSummary
+argument_list|(
+specifier|const
+name|StringMap
+operator|<
+name|FunctionSamples
+operator|>
+operator|&
+name|ProfileMap
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Sample-based profile writer (text format).
@@ -329,8 +348,6 @@ operator|::
 name|error_code
 name|write
 argument_list|(
-argument|StringRef FName
-argument_list|,
 argument|const FunctionSamples&S
 argument_list|)
 name|override
@@ -415,8 +432,6 @@ operator|::
 name|error_code
 name|write
 argument_list|(
-argument|StringRef F
-argument_list|,
 argument|const FunctionSamples&S
 argument_list|)
 name|override
@@ -455,6 +470,12 @@ block|;
 name|std
 operator|::
 name|error_code
+name|writeSummary
+argument_list|()
+block|;
+name|std
+operator|::
+name|error_code
 name|writeNameIdx
 argument_list|(
 argument|StringRef FName
@@ -465,9 +486,10 @@ operator|::
 name|error_code
 name|writeBody
 argument_list|(
-argument|StringRef FName
-argument_list|,
-argument|const FunctionSamples&S
+specifier|const
+name|FunctionSamples
+operator|&
+name|S
 argument_list|)
 block|;
 name|private

@@ -1786,25 +1786,11 @@ condition|)
 block|{
 comment|// If this record has blob data, emit it, otherwise we must have record
 comment|// entries to encode this way.
-comment|// Emit a vbr6 to indicate the number of elements present.
 if|if
 condition|(
 name|BlobData
 condition|)
 block|{
-name|EmitVBR
-argument_list|(
-name|static_cast
-operator|<
-name|uint32_t
-operator|>
-operator|(
-name|BlobLen
-operator|)
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
 name|assert
 argument_list|(
 name|RecordIdx
@@ -1817,65 +1803,35 @@ operator|&&
 literal|"Blob data and record entries specified for blob operand!"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|EmitVBR
+name|assert
 argument_list|(
-name|static_cast
-operator|<
-name|uint32_t
-operator|>
-operator|(
-name|Vals
+name|Blob
+operator|.
+name|data
+argument_list|()
+operator|==
+name|BlobData
+operator|&&
+literal|"BlobData got moved"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Blob
 operator|.
 name|size
 argument_list|()
-operator|-
-name|RecordIdx
-operator|)
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-block|}
-comment|// Flush to a 32-bit alignment boundary.
-name|FlushToWord
-argument_list|()
-expr_stmt|;
-comment|// Emit each field as a literal byte.
-if|if
-condition|(
-name|BlobData
-condition|)
-block|{
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
+operator|==
 name|BlobLen
-condition|;
-operator|++
-name|i
-control|)
-name|WriteByte
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|BlobData
-index|[
-name|i
-index|]
+operator|&&
+literal|"BlobLen got changed"
 argument_list|)
 expr_stmt|;
-comment|// Know that blob data is consumed for assertion below.
+name|emitBlob
+argument_list|(
+name|Blob
+argument_list|)
+expr_stmt|;
 name|BlobData
 operator|=
 name|nullptr
@@ -1883,67 +1839,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-for|for
-control|(
-name|unsigned
-name|e
-init|=
+name|emitBlob
+argument_list|(
 name|Vals
 operator|.
-name|size
-argument_list|()
-init|;
-name|RecordIdx
-operator|!=
-name|e
-condition|;
-operator|++
-name|RecordIdx
-control|)
-block|{
-name|assert
+name|slice
 argument_list|(
-name|isUInt
-operator|<
-literal|8
-operator|>
-operator|(
-name|Vals
-index|[
 name|RecordIdx
-index|]
-operator|)
-operator|&&
-literal|"Value too large to emit as blob"
 argument_list|)
-expr_stmt|;
-name|WriteByte
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|Vals
-index|[
-name|RecordIdx
-index|]
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|// Align end to 32-bits.
-while|while
-condition|(
-name|GetBufferOffset
-argument_list|()
-operator|&
-literal|3
-condition|)
-name|WriteByte
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1999,8 +1905,143 @@ expr_stmt|;
 block|}
 name|public
 label|:
+comment|/// Emit a blob, including flushing before and tail-padding.
+name|template
+operator|<
+name|class
+name|UIntTy
+operator|>
+name|void
+name|emitBlob
+argument_list|(
+argument|ArrayRef<UIntTy> Bytes
+argument_list|,
+argument|bool ShouldEmitSize = true
+argument_list|)
+block|{
+comment|// Emit a vbr6 to indicate the number of elements present.
+if|if
+condition|(
+name|ShouldEmitSize
+condition|)
+name|EmitVBR
+argument_list|(
+name|static_cast
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|Bytes
+operator|.
+name|size
+argument_list|()
+operator|)
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|// Flush to a 32-bit alignment boundary.
+name|FlushToWord
+argument_list|()
+expr_stmt|;
+comment|// Emit literal bytes.
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|B
+range|:
+name|Bytes
+control|)
+block|{
+name|assert
+argument_list|(
+name|isUInt
+operator|<
+literal|8
+operator|>
+operator|(
+name|B
+operator|)
+operator|&&
+literal|"Value too large to emit as byte"
+argument_list|)
+expr_stmt|;
+name|WriteByte
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|B
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Align end to 32-bits.
+while|while
+condition|(
+name|GetBufferOffset
+argument_list|()
+operator|&
+literal|3
+condition|)
+name|WriteByte
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+name|void
+name|emitBlob
+parameter_list|(
+name|StringRef
+name|Bytes
+parameter_list|,
+name|bool
+name|ShouldEmitSize
+init|=
+name|true
+parameter_list|)
+block|{
+name|emitBlob
+argument_list|(
+name|makeArrayRef
+argument_list|(
+operator|(
+specifier|const
+name|uint8_t
+operator|*
+operator|)
+name|Bytes
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|Bytes
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|,
+name|ShouldEmitSize
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// EmitRecord - Emit the specified record to the stream, using an abbrev if
+end_comment
+
+begin_comment
 comment|/// we have one to compress the output.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2108,11 +2149,23 @@ argument_list|,
 name|Code
 argument_list|)
 expr_stmt|;
-block|}
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/// EmitRecordWithAbbrev - Emit a record with the specified abbreviation.
+end_comment
+
+begin_comment
 comment|/// Unlike EmitRecord, the code for the record should be included in Vals as
+end_comment
+
+begin_comment
 comment|/// the first entry.
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|typename
 name|Container
@@ -2212,8 +2265,17 @@ name|None
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// EmitRecordWithArray - Just like EmitRecordWithBlob, works with records
+end_comment
+
+begin_comment
 comment|/// that end with an array.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2281,12 +2343,30 @@ name|None
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Abbrev Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|// Emit the abbreviation as a DEFINE_ABBREV record.
+end_comment
+
+begin_function
 name|void
 name|EncodeAbbrev
 parameter_list|(
@@ -2413,10 +2493,22 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// EmitAbbrev - This emits an abbreviation to the stream.  Note that this
+end_comment
+
+begin_comment
 comment|/// method takes ownership of the specified abbrev.
+end_comment
+
+begin_function
 name|unsigned
 name|EmitAbbrev
 parameter_list|(
@@ -2457,10 +2549,25 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
+end_function
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// BlockInfo Block Emission
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// EnterBlockInfoBlock - Start emitting the BLOCKINFO_BLOCK.
+end_comment
+
+begin_function
 name|void
 name|EnterBlockInfoBlock
 parameter_list|(
@@ -2483,10 +2590,22 @@ operator|~
 literal|0U
 expr_stmt|;
 block|}
+end_function
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|/// SwitchToBlockID - If we aren't already talking about the specified block
+end_comment
+
+begin_comment
 comment|/// ID, emit a BLOCKINFO_CODE_SETBID record.
+end_comment
+
+begin_function
 name|void
 name|SwitchToBlockID
 parameter_list|(
@@ -2530,6 +2649,9 @@ operator|=
 name|BlockID
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|BlockInfo
 modifier|&
 name|getOrCreateBlockInfo
@@ -2575,10 +2697,22 @@ name|back
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// EmitBlockInfoAbbrev - Emit a DEFINE_ABBREV record for the specified
+end_comment
+
+begin_comment
 comment|/// BlockID.
+end_comment
+
+begin_function
 name|unsigned
 name|EmitBlockInfoAbbrev
 parameter_list|(
@@ -2634,15 +2768,10 @@ operator|::
 name|FIRST_APPLICATION_ABBREV
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
-unit|}
+unit|};   }
 comment|// End llvm namespace
 end_comment
 

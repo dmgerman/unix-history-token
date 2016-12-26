@@ -63,6 +63,12 @@ directive|include
 file|<memory>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -668,6 +674,147 @@ end_empty_stmt
 
 begin_decl_stmt
 name|class
+name|TaggedPointerVendorExtended
+range|:
+name|public
+name|TaggedPointerVendorRuntimeAssisted
+block|{
+name|public
+operator|:
+name|ObjCLanguageRuntime
+operator|::
+name|ClassDescriptorSP
+name|GetClassDescriptor
+argument_list|(
+argument|lldb::addr_t ptr
+argument_list|)
+name|override
+block|;
+name|protected
+operator|:
+name|TaggedPointerVendorExtended
+argument_list|(
+argument|AppleObjCRuntimeV2& runtime
+argument_list|,
+argument|uint64_t objc_debug_taggedpointer_mask
+argument_list|,
+argument|uint64_t objc_debug_taggedpointer_ext_mask
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_slot_shift
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_ext_slot_shift
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_slot_mask
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_ext_slot_mask
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_payload_lshift
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_payload_rshift
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_ext_payload_lshift
+argument_list|,
+argument|uint32_t objc_debug_taggedpointer_ext_payload_rshift
+argument_list|,
+argument|lldb::addr_t objc_debug_taggedpointer_classes
+argument_list|,
+argument|lldb::addr_t objc_debug_taggedpointer_ext_classes
+argument_list|)
+block|;
+name|bool
+name|IsPossibleExtendedTaggedPointer
+argument_list|(
+argument|lldb::addr_t ptr
+argument_list|)
+block|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|uint8_t
+operator|,
+name|ObjCLanguageRuntime
+operator|::
+name|ClassDescriptorSP
+operator|>
+name|Cache
+expr_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|Cache
+operator|::
+name|iterator
+name|CacheIterator
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|Cache
+name|m_ext_cache
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint64_t
+name|m_objc_debug_taggedpointer_ext_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_objc_debug_taggedpointer_ext_slot_shift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_objc_debug_taggedpointer_ext_slot_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_objc_debug_taggedpointer_ext_payload_lshift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|m_objc_debug_taggedpointer_ext_payload_rshift
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|addr_t
+name|m_objc_debug_taggedpointer_ext_classes
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|class
+name|AppleObjCRuntimeV2
+operator|::
+name|TaggedPointerVendorV2
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|TaggedPointerVendorExtended
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+unit|};
+name|class
 name|TaggedPointerVendorLegacy
 range|:
 name|public
@@ -911,11 +1058,13 @@ name|m_get_class_info_args
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|mutex
 name|m_get_class_info_args_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -936,11 +1085,13 @@ name|m_get_shared_cache_class_info_args
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|mutex
 name|m_get_shared_cache_class_info_args_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std

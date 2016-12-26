@@ -506,6 +506,8 @@ comment|/// \param ToolAction The action to run over the code.
 comment|/// \param Code C++ code.
 comment|/// \param Args Additional flags to pass on.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param ToolName The name of the binary running the tool. Standard library
+comment|///                 header paths will be resolved relative to this.
 comment|/// \param PCHContainerOps   The PCHContainerOperations for loading and creating
 comment|///                          clang modules.
 comment|///
@@ -542,6 +544,13 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|ToolName
+operator|=
+literal|"clang-tool"
 argument_list|,
 name|std
 operator|::
@@ -620,6 +629,8 @@ comment|///
 comment|/// \param Code C++ code.
 comment|/// \param Args Additional flags to pass on.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
+comment|/// \param ToolName The name of the binary running the tool. Standard library
+comment|///                 header paths will be resolved relative to this.
 comment|/// \param PCHContainerOps The PCHContainerOperations for loading and creating
 comment|/// clang modules.
 comment|///
@@ -655,6 +666,13 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|ToolName
+operator|=
+literal|"clang-tool"
 argument_list|,
 name|std
 operator|::

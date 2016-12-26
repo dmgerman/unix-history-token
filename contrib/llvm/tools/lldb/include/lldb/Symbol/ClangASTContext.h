@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/lldb-enumerations.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Core/ClangForward.h"
 end_include
 
@@ -166,6 +160,22 @@ include|#
 directive|include
 file|"lldb/Symbol/TypeSystem.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-enumerations.h"
+end_include
+
+begin_decl_stmt
+name|class
+name|DWARFASTParserClang
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//class PDBASTParser;
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -255,6 +265,11 @@ argument_list|)
 expr_stmt|;
 operator|~
 name|ClangASTContext
+argument_list|()
+name|override
+expr_stmt|;
+name|void
+name|Finalize
 argument_list|()
 name|override
 expr_stmt|;
@@ -1080,6 +1095,39 @@ name|compiler_type
 return|;
 block|}
 name|CompilerType
+name|CreateStructForIdentifier
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|type_name
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|initializer_list
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|CompilerType
+operator|>
+expr|>
+operator|&
+name|type_fields
+argument_list|,
+name|bool
+name|packed
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+name|CompilerType
 name|GetOrCreateStructForIdentifier
 argument_list|(
 specifier|const
@@ -1586,6 +1634,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|clang
+operator|::
+name|NamespaceDecl
+operator|*
+name|GetUniqueNamespaceDeclaration
+argument_list|(
+name|clang
+operator|::
+name|ASTContext
+operator|*
+name|ast
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+name|clang
+operator|::
+name|DeclContext
+operator|*
+name|decl_ctx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|//------------------------------------------------------------------
 end_comment
@@ -1735,6 +1811,18 @@ name|num_params
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|CompilerType
+name|CreateBlockPointerType
+parameter_list|(
+specifier|const
+name|CompilerType
+modifier|&
+name|function_type
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -1926,6 +2014,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|//  PDBASTParser *
+end_comment
+
+begin_comment
+comment|//  GetPDBParser();
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
@@ -2059,38 +2155,6 @@ begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
 
-begin_expr_stmt
-name|lldb
-operator|::
-name|VariableSP
-name|DeclGetVariable
-argument_list|(
-argument|void *opaque_decl
-argument_list|)
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|DeclLinkToObject
-argument_list|(
-name|void
-operator|*
-name|opaque_decl
-argument_list|,
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|void
-operator|>
-name|object
-argument_list|)
-name|override
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|ConstString
 name|DeclGetName
@@ -2190,6 +2254,8 @@ argument_list|(
 argument|void *opaque_decl_ctx
 argument_list|,
 argument|ConstString name
+argument_list|,
+argument|const bool ignore_using_decls
 argument_list|)
 name|override
 expr_stmt|;
@@ -2256,55 +2322,6 @@ argument_list|)
 name|override
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// Clang specific CompilerType predicates
-end_comment
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_function
-specifier|static
-name|bool
-name|IsClangType
-parameter_list|(
-specifier|const
-name|CompilerType
-modifier|&
-name|ct
-parameter_list|)
-block|{
-return|return
-name|llvm
-operator|::
-name|dyn_cast_or_null
-operator|<
-name|ClangASTContext
-operator|>
-operator|(
-name|ct
-operator|.
-name|GetTypeSystem
-argument_list|()
-operator|)
-operator|!=
-name|nullptr
-operator|&&
-name|ct
-operator|.
-name|GetOpaqueQualType
-argument_list|()
-operator|!=
-name|nullptr
-return|;
-block|}
-end_function
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -2712,7 +2729,41 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|IsBlockPointerType
+argument_list|(
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|type
+argument_list|,
+name|CompilerType
+operator|*
+name|function_pointer_type_ptr
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|IsIntegerType
+argument_list|(
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|type
+argument_list|,
+name|bool
+operator|&
+name|is_signed
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|IsEnumerationType
 argument_list|(
 name|lldb
 operator|::
@@ -2798,6 +2849,32 @@ name|opaque_compiler_type_t
 name|type
 argument_list|)
 name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|IsClassType
+argument_list|(
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|IsEnumType
+argument_list|(
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|type
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3395,19 +3472,6 @@ argument_list|)
 name|override
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|CompilerType
-name|RemoveFastQualifiers
-parameter_list|(
-specifier|const
-name|CompilerType
-modifier|&
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|//----------------------------------------------------------------------
@@ -4248,6 +4312,8 @@ argument_list|,
 argument|lldb::AccessType access
 argument_list|,
 argument|bool is_artificial
+argument_list|,
+argument|bool is_variadic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4264,44 +4330,6 @@ name|type
 argument_list|,
 name|bool
 name|has_extern
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|CanImport
-argument_list|(
-specifier|const
-name|CompilerType
-operator|&
-name|type
-argument_list|,
-name|lldb_private
-operator|::
-name|ClangASTImporter
-operator|&
-name|importer
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|Import
-argument_list|(
-specifier|const
-name|CompilerType
-operator|&
-name|type
-argument_list|,
-name|lldb_private
-operator|::
-name|ClangASTImporter
-operator|&
-name|importer
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4757,131 +4785,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|clang
-operator|::
-name|QualType
-name|GetQualType
-argument_list|(
-argument|const CompilerType& type
-argument_list|)
-block|{
-comment|// Make sure we have a clang type before making a clang::QualType
-if|if
-condition|(
-name|type
-operator|.
-name|GetOpaqueQualType
-argument_list|()
-condition|)
-block|{
-name|ClangASTContext
-modifier|*
-name|ast
-init|=
-name|llvm
-operator|::
-name|dyn_cast_or_null
-operator|<
-name|ClangASTContext
-operator|>
-operator|(
-name|type
-operator|.
-name|GetTypeSystem
-argument_list|()
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|ast
-condition|)
-return|return
-name|clang
-operator|::
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
-name|type
-operator|.
-name|GetOpaqueQualType
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_return
-return|return
-name|clang
-operator|::
-name|QualType
-argument_list|()
-return|;
-end_return
-
-begin_expr_stmt
-unit|}      static
-name|clang
-operator|::
-name|QualType
-name|GetCanonicalQualType
-argument_list|(
-argument|const CompilerType& type
-argument_list|)
-block|{
-comment|// Make sure we have a clang type before making a clang::QualType
-name|ClangASTContext
-operator|*
-name|ast
-operator|=
-name|llvm
-operator|::
-name|dyn_cast_or_null
-operator|<
-name|ClangASTContext
-operator|>
-operator|(
-name|type
-operator|.
-name|GetTypeSystem
-argument_list|()
-operator|)
-block|;
-if|if
-condition|(
-name|ast
-condition|)
-return|return
-name|clang
-operator|::
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
-name|type
-operator|.
-name|GetOpaqueQualType
-argument_list|()
-argument_list|)
-operator|.
-name|getCanonicalType
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|clang
-operator|::
-name|QualType
-argument_list|()
-return|;
-end_return
-
-begin_expr_stmt
-unit|}      clang
 operator|::
 name|ClassTemplateDecl
 operator|*
@@ -4976,10 +4880,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_label
-name|protected
-label|:
-end_label
+begin_expr_stmt
+specifier|static
+name|lldb
+operator|::
+name|opaque_compiler_type_t
+name|GetOpaqueCompilerType
+argument_list|(
+argument|clang::ASTContext *ast
+argument_list|,
+argument|lldb::BasicType basic_type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -5017,7 +4930,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}          static
+unit|}      static
 name|clang
 operator|::
 name|QualType
@@ -5055,7 +4968,7 @@ return|;
 end_return
 
 begin_comment
-unit|}
+unit|}  protected:
 comment|//------------------------------------------------------------------
 end_comment
 
@@ -5067,8 +4980,12 @@ begin_comment
 comment|//------------------------------------------------------------------
 end_comment
 
+begin_comment
+comment|// clang-format off
+end_comment
+
 begin_expr_stmt
-unit|std
+name|std
 operator|::
 name|string
 name|m_target_triple
@@ -5238,11 +5155,15 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DWARFASTParser
+name|DWARFASTParserClang
 operator|>
 name|m_dwarf_ast_parser_ap
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|//  std::unique_ptr<PDBASTParser>                   m_pdb_ast_parser_ap;
+end_comment
 
 begin_expr_stmt
 name|std
@@ -5305,23 +5226,9 @@ name|m_can_evaluate_expressions
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|map
-operator|<
-name|void
-operator|*
-operator|,
-name|std
-operator|::
-name|shared_ptr
-operator|<
-name|void
-operator|>>
-name|m_decl_objects
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|// clang-format on
+end_comment
 
 begin_label
 name|private

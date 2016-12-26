@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm-c/Support.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm-c/TargetMachine.h"
 end_include
 
@@ -91,12 +85,33 @@ modifier|*
 name|CallbackCtx
 parameter_list|)
 function_decl|;
+typedef|typedef
+enum|enum
+block|{
+name|LLVMOrcErrSuccess
+init|=
+literal|0
+block|,
+name|LLVMOrcErrGeneric
+block|}
+name|LLVMOrcErrorCode
+typedef|;
 comment|/**  * Create an ORC JIT stack.  *  * The client owns the resulting stack, and must call OrcDisposeInstance(...)  * to destroy it and free its memory. The JIT stack will take ownership of the  * TargetMachine, which will be destroyed when the stack is destroyed. The  * client should not attempt to dispose of the Target Machine, or it will result  * in a double-free.  */
 name|LLVMOrcJITStackRef
 name|LLVMOrcCreateInstance
 parameter_list|(
 name|LLVMTargetMachineRef
 name|TM
+parameter_list|)
+function_decl|;
+comment|/**  * Get the error message for the most recent error (if any).  *  * This message is owned by the ORC JIT Stack and will be freed when the stack  * is disposed of by LLVMOrcDisposeInstance.  */
+specifier|const
+name|char
+modifier|*
+name|LLVMOrcGetErrorMsg
+parameter_list|(
+name|LLVMOrcJITStackRef
+name|JITStack
 parameter_list|)
 function_decl|;
 comment|/**  * Mangle the given symbol.  * Memory will be allocated for MangledSymbol to hold the result. The client  */
@@ -142,7 +157,7 @@ name|CallbackCtx
 parameter_list|)
 function_decl|;
 comment|/**  * Create a named indirect call stub.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcCreateIndirectStub
 parameter_list|(
 name|LLVMOrcJITStackRef
@@ -158,7 +173,7 @@ name|InitAddr
 parameter_list|)
 function_decl|;
 comment|/**  * Set the pointer for the given indirect stub.  */
-name|void
+name|LLVMOrcErrorCode
 name|LLVMOrcSetIndirectStubPointer
 parameter_list|(
 name|LLVMOrcJITStackRef

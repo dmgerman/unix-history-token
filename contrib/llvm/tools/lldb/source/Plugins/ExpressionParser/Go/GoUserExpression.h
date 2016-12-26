@@ -198,7 +198,7 @@ block|;
 name|bool
 name|Parse
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -207,23 +207,6 @@ argument_list|,
 argument|bool keep_result_in_memory
 argument_list|,
 argument|bool generate_debug_info
-argument_list|)
-name|override
-block|;
-name|lldb
-operator|::
-name|ExpressionResults
-name|Execute
-argument_list|(
-argument|Stream&error_stream
-argument_list|,
-argument|ExecutionContext&exe_ctx
-argument_list|,
-argument|const EvaluateExpressionOptions&options
-argument_list|,
-argument|lldb::UserExpressionSP&shared_ptr_to_me
-argument_list|,
-argument|lldb::ExpressionVariableSP&result
 argument_list|)
 name|override
 block|;
@@ -239,7 +222,7 @@ block|}
 name|bool
 name|FinalizeJITExecution
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -255,6 +238,25 @@ return|return
 name|true
 return|;
 block|}
+name|protected
+operator|:
+name|lldb
+operator|::
+name|ExpressionResults
+name|DoExecute
+argument_list|(
+argument|DiagnosticManager&diagnostic_manager
+argument_list|,
+argument|ExecutionContext&exe_ctx
+argument_list|,
+argument|const EvaluateExpressionOptions&options
+argument_list|,
+argument|lldb::UserExpressionSP&shared_ptr_to_me
+argument_list|,
+argument|lldb::ExpressionVariableSP&result
+argument_list|)
+name|override
+block|;
 name|private
 operator|:
 name|class

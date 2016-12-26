@@ -614,6 +614,10 @@ name|Extra_MayStore
 init|=
 literal|16
 block|,
+name|Extra_IsConvergent
+init|=
+literal|32
+block|,
 comment|// Inline asm operands map to multiple SDNode / MachineInstr operands.
 comment|// The first operand is an immediate describing the asm operand, the low
 comment|// bits is the kind:
@@ -760,204 +764,6 @@ literal|3
 operator|)
 return|;
 block|}
-comment|/// getFlagWordForMatchingOp - Augment an existing flag word returned by
-comment|/// getFlagWord with information indicating that this input operand is tied
-comment|/// to a previous output operand.
-specifier|static
-name|unsigned
-name|getFlagWordForMatchingOp
-parameter_list|(
-name|unsigned
-name|InputFlag
-parameter_list|,
-name|unsigned
-name|MatchedOperandNo
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|MatchedOperandNo
-operator|<=
-literal|0x7fff
-operator|&&
-literal|"Too big matched operand"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|InputFlag
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"High bits already contain data"
-argument_list|)
-expr_stmt|;
-return|return
-name|InputFlag
-operator||
-name|Flag_MatchingOperand
-operator||
-operator|(
-name|MatchedOperandNo
-operator|<<
-literal|16
-operator|)
-return|;
-block|}
-comment|/// getFlagWordForRegClass - Augment an existing flag word returned by
-comment|/// getFlagWord with the required register class for the following register
-comment|/// operands.
-comment|/// A tied use operand cannot have a register class, use the register class
-comment|/// from the def operand instead.
-specifier|static
-name|unsigned
-name|getFlagWordForRegClass
-parameter_list|(
-name|unsigned
-name|InputFlag
-parameter_list|,
-name|unsigned
-name|RC
-parameter_list|)
-block|{
-comment|// Store RC + 1, reserve the value 0 to mean 'no register class'.
-operator|++
-name|RC
-expr_stmt|;
-name|assert
-argument_list|(
-name|RC
-operator|<=
-literal|0x7fff
-operator|&&
-literal|"Too large register class ID"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|InputFlag
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"High bits already contain data"
-argument_list|)
-expr_stmt|;
-return|return
-name|InputFlag
-operator||
-operator|(
-name|RC
-operator|<<
-literal|16
-operator|)
-return|;
-block|}
-comment|/// Augment an existing flag word returned by getFlagWord with the constraint
-comment|/// code for a memory constraint.
-specifier|static
-name|unsigned
-name|getFlagWordForMem
-parameter_list|(
-name|unsigned
-name|InputFlag
-parameter_list|,
-name|unsigned
-name|Constraint
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Constraint
-operator|<=
-literal|0x7fff
-operator|&&
-literal|"Too large a memory constraint ID"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|Constraint
-operator|<=
-name|Constraints_Max
-operator|&&
-literal|"Unknown constraint ID"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|(
-name|InputFlag
-operator|&
-operator|~
-literal|0xffff
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"High bits already contain data"
-argument_list|)
-expr_stmt|;
-return|return
-name|InputFlag
-operator||
-operator|(
-name|Constraint
-operator|<<
-name|Constraints_ShiftAmount
-operator|)
-return|;
-block|}
-specifier|static
-name|unsigned
-name|convertMemFlagWordToMatchingFlagWord
-parameter_list|(
-name|unsigned
-name|InputFlag
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isMemKind
-argument_list|(
-name|InputFlag
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|InputFlag
-operator|&
-operator|~
-operator|(
-literal|0x7fff
-operator|<<
-name|Constraints_ShiftAmount
-operator|)
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getKind
-parameter_list|(
-name|unsigned
-name|Flags
-parameter_list|)
-block|{
-return|return
-name|Flags
-operator|&
-literal|7
-return|;
-block|}
 specifier|static
 name|bool
 name|isRegDefKind
@@ -1041,6 +847,236 @@ name|Flag
 argument_list|)
 operator|==
 name|Kind_Clobber
+return|;
+block|}
+comment|/// getFlagWordForMatchingOp - Augment an existing flag word returned by
+comment|/// getFlagWord with information indicating that this input operand is tied
+comment|/// to a previous output operand.
+specifier|static
+name|unsigned
+name|getFlagWordForMatchingOp
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|MatchedOperandNo
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|MatchedOperandNo
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too big matched operand"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator||
+name|Flag_MatchingOperand
+operator||
+operator|(
+name|MatchedOperandNo
+operator|<<
+literal|16
+operator|)
+return|;
+block|}
+comment|/// getFlagWordForRegClass - Augment an existing flag word returned by
+comment|/// getFlagWord with the required register class for the following register
+comment|/// operands.
+comment|/// A tied use operand cannot have a register class, use the register class
+comment|/// from the def operand instead.
+specifier|static
+name|unsigned
+name|getFlagWordForRegClass
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|RC
+parameter_list|)
+block|{
+comment|// Store RC + 1, reserve the value 0 to mean 'no register class'.
+operator|++
+name|RC
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|isImmKind
+argument_list|(
+name|InputFlag
+argument_list|)
+operator|&&
+literal|"Immediates cannot have a register class"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|isMemKind
+argument_list|(
+name|InputFlag
+argument_list|)
+operator|&&
+literal|"Memory operand cannot have a register class"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|RC
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too large register class ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator||
+operator|(
+name|RC
+operator|<<
+literal|16
+operator|)
+return|;
+block|}
+comment|/// Augment an existing flag word returned by getFlagWord with the constraint
+comment|/// code for a memory constraint.
+specifier|static
+name|unsigned
+name|getFlagWordForMem
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|Constraint
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isMemKind
+argument_list|(
+name|InputFlag
+argument_list|)
+operator|&&
+literal|"InputFlag is not a memory constraint!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Constraint
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too large a memory constraint ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Constraint
+operator|<=
+name|Constraints_Max
+operator|&&
+literal|"Unknown constraint ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator||
+operator|(
+name|Constraint
+operator|<<
+name|Constraints_ShiftAmount
+operator|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|convertMemFlagWordToMatchingFlagWord
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isMemKind
+argument_list|(
+name|InputFlag
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator|&
+operator|~
+operator|(
+literal|0x7fff
+operator|<<
+name|Constraints_ShiftAmount
+operator|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getKind
+parameter_list|(
+name|unsigned
+name|Flags
+parameter_list|)
+block|{
+return|return
+name|Flags
+operator|&
+literal|7
 return|;
 block|}
 specifier|static

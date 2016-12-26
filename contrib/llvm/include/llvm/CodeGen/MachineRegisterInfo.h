@@ -74,7 +74,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_comment
+comment|// PointerUnion needs to have access to the full RegisterBank type.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/GlobalISel/RegisterBank.h"
 end_include
 
 begin_include
@@ -114,6 +130,20 @@ block|{
 name|class
 name|PSetIterator
 decl_stmt|;
+comment|/// Convenient type to represent either a register class or a register bank.
+typedef|typedef
+name|PointerUnion
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|,
+specifier|const
+name|RegisterBank
+operator|*
+operator|>
+name|RegClassOrRegBank
+expr_stmt|;
 comment|/// MachineRegisterInfo - Keep track of information for virtual and physical
 comment|/// registers, including vreg register classes, use/def chains for registers,
 comment|/// etc.
@@ -151,7 +181,6 @@ block|}
 empty_stmt|;
 name|private
 label|:
-specifier|const
 name|MachineFunction
 modifier|*
 name|MF
@@ -159,17 +188,6 @@ decl_stmt|;
 name|Delegate
 modifier|*
 name|TheDelegate
-decl_stmt|;
-comment|/// IsSSA - True when the machine function is in SSA form and virtual
-comment|/// registers have a single def.
-name|bool
-name|IsSSA
-decl_stmt|;
-comment|/// TracksLiveness - True while register liveness is being tracked accurately.
-comment|/// Basic block live-in lists, kill flags, and implicit defs may not be
-comment|/// accurate when after this flag is cleared.
-name|bool
-name|TracksLiveness
 decl_stmt|;
 comment|/// True if subregister liveness is tracked.
 name|bool
@@ -185,9 +203,7 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|TargetRegisterClass
-operator|*
+name|RegClassOrRegBank
 operator|,
 name|MachineOperand
 operator|*
@@ -345,6 +361,53 @@ comment|/// started.
 name|BitVector
 name|ReservedRegs
 decl_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|VRegToSizeMap
+expr_stmt|;
+comment|/// Map generic virtual registers to their actual size.
+name|mutable
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|VRegToSizeMap
+operator|>
+name|VRegToSize
+expr_stmt|;
+comment|/// Accessor for VRegToSize. This accessor should only be used
+comment|/// by global-isel related work.
+name|VRegToSizeMap
+operator|&
+name|getVRegToSize
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|VRegToSize
+condition|)
+name|VRegToSize
+operator|.
+name|reset
+argument_list|(
+argument|new VRegToSizeMap
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|VRegToSize
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 comment|/// Keep track of the physical registers that are live in to the function.
 comment|/// Live in values are typically arguments in registers.  LiveIn values are
 comment|/// allowed to have virtual registers associated with them, stored in the
@@ -389,7 +452,6 @@ label|:
 name|explicit
 name|MachineRegisterInfo
 parameter_list|(
-specifier|const
 name|MachineFunction
 modifier|*
 name|MF
@@ -477,7 +539,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|MF
+operator|->
+name|getProperties
+argument_list|()
+operator|.
+name|hasProperty
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
 name|IsSSA
+argument_list|)
 return|;
 block|}
 comment|// leaveSSA - Indicates that the machine function is no longer in SSA form.
@@ -485,26 +559,42 @@ name|void
 name|leaveSSA
 parameter_list|()
 block|{
+name|MF
+operator|->
+name|getProperties
+argument_list|()
+operator|.
+name|clear
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
 name|IsSSA
-operator|=
-name|false
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// tracksLiveness - Returns true when tracking register liveness accurately.
-comment|///
-comment|/// While this flag is true, register liveness information in basic block
-comment|/// live-in lists and machine instruction operands is accurate. This means it
-comment|/// can be used to change the code in ways that affect the values in
-comment|/// registers, for example by the register scavenger.
-comment|///
-comment|/// When this flag is false, liveness is no longer reliable.
+comment|/// (see MachineFUnctionProperties::Property description for details)
 name|bool
 name|tracksLiveness
 argument_list|()
 specifier|const
 block|{
 return|return
+name|MF
+operator|->
+name|getProperties
+argument_list|()
+operator|.
+name|hasProperty
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
 name|TracksLiveness
+argument_list|)
 return|;
 block|}
 comment|/// invalidateLiveness - Indicates that register liveness is no longer being
@@ -516,9 +606,19 @@ name|void
 name|invalidateLiveness
 parameter_list|()
 block|{
+name|MF
+operator|->
+name|getProperties
+argument_list|()
+operator|.
+name|clear
+argument_list|(
+name|MachineFunctionProperties
+operator|::
+name|Property
+operator|::
 name|TracksLiveness
-operator|=
-name|false
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// Returns true if liveness for register class @p RC should be tracked at
@@ -1452,8 +1552,8 @@ name|def_end
 argument_list|()
 return|;
 block|}
-comment|/// hasOneDef - Return true if there is exactly one instruction defining the
-comment|/// specified register.
+comment|/// Return true if there is exactly one operand defining the specified
+comment|/// register.
 name|bool
 name|hasOneDef
 argument_list|(
@@ -2117,12 +2217,153 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Virtual Register Info
 comment|//===--------------------------------------------------------------------===//
-comment|/// getRegClass - Return the register class of the specified virtual register.
+comment|/// Return the register class of the specified virtual register.
+comment|/// This shouldn't be used directly unless \p Reg has a register class.
+comment|/// \see getRegClassOrNull when this might happen.
 comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
 name|getRegClass
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+operator|.
+name|is
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Register class not set, wrong accessor"
+argument_list|)
+expr_stmt|;
+return|return
+name|VRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+operator|.
+name|get
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// Return the register class of \p Reg, or null if Reg has not been assigned
+comment|/// a register class yet.
+comment|///
+comment|/// \note A null register class can only happen when these two
+comment|/// conditions are met:
+comment|/// 1. Generic virtual registers are created.
+comment|/// 2. The machine function has not completely been through the
+comment|///    instruction selection process.
+comment|/// None of this condition is possible without GlobalISel for now.
+comment|/// In other words, if GlobalISel is not used or if the query happens after
+comment|/// the select pass, using getRegClass is safe.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClassOrNull
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|RegClassOrRegBank
+modifier|&
+name|Val
+init|=
+name|VRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+decl_stmt|;
+return|return
+name|Val
+operator|.
+name|dyn_cast
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// Return the register bank of \p Reg, or null if Reg has not been assigned
+comment|/// a register bank or has been assigned a register class.
+comment|/// \note It is possible to get the register bank from the register class via
+comment|/// RegisterBankInfo::getRegBankFromRegClass.
+comment|///
+specifier|const
+name|RegisterBank
+modifier|*
+name|getRegBankOrNull
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|RegClassOrRegBank
+modifier|&
+name|Val
+init|=
+name|VRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|first
+decl_stmt|;
+return|return
+name|Val
+operator|.
+name|dyn_cast
+operator|<
+specifier|const
+name|RegisterBank
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// Return the register bank or register class of \p Reg.
+comment|/// \note Before the register bank gets assigned (i.e., before the
+comment|/// RegBankSelect pass) \p Reg may not have either.
+comment|///
+specifier|const
+name|RegClassOrRegBank
+modifier|&
+name|getRegClassOrRegBank
 argument_list|(
 name|unsigned
 name|Reg
@@ -2150,6 +2391,20 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
+parameter_list|)
+function_decl|;
+comment|/// Set the register bank to \p RegBank for \p Reg.
+comment|///
+name|void
+name|setRegBank
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|RegisterBank
+modifier|&
+name|RegBank
 parameter_list|)
 function_decl|;
 comment|/// constrainRegClass - Constrain the register class of the specified virtual
@@ -2203,6 +2458,38 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RegClass
+parameter_list|)
+function_decl|;
+comment|/// Get the size in bits of \p VReg or 0 if VReg is not a generic
+comment|/// (target independent) virtual register.
+name|unsigned
+name|getSize
+argument_list|(
+name|unsigned
+name|VReg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Set the size in bits of \p VReg to \p Size.
+comment|/// Although the size should be set at build time, mir infrastructure
+comment|/// is not yet able to do it.
+name|void
+name|setSize
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|)
+function_decl|;
+comment|/// Create and return a new generic virtual register with a size of \p Size.
+comment|/// \pre Size> 0.
+name|unsigned
+name|createGenericVirtualRegister
+parameter_list|(
+name|unsigned
+name|Size
 parameter_list|)
 function_decl|;
 comment|/// getNumVirtRegs - Return the number of virtual registers created.
@@ -2385,13 +2672,19 @@ decl_stmt|;
 comment|/// Return true if the specified register is modified in this function.
 comment|/// This checks that no defining machine operands exist for the register or
 comment|/// any of its aliases. Definitions found on functions marked noreturn are
-comment|/// ignored. The register is also considered modified when it is set in the
-comment|/// UsedPhysRegMask.
+comment|/// ignored, to consider them pass 'true' for optional parameter
+comment|/// SkipNoReturnDef. The register is also considered modified when it is set
+comment|/// in the UsedPhysRegMask.
 name|bool
 name|isPhysRegModified
 argument_list|(
 name|unsigned
 name|PhysReg
+argument_list|,
+name|bool
+name|SkipNoReturnDef
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3086,11 +3379,12 @@ do|} else if (ByBundle
 block|)
 block|{
 name|MachineInstr
-modifier|*
+modifier|&
 name|P
 init|=
 name|getBundleStart
 argument_list|(
+operator|*
 name|Op
 operator|->
 name|getParent
@@ -3107,14 +3401,17 @@ while|while
 condition|(
 name|Op
 operator|&&
+operator|&
 name|getBundleStart
 argument_list|(
+operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
 argument_list|)
 operator|==
+operator|&
 name|P
 condition|)
 empty_stmt|;
@@ -3205,14 +3502,10 @@ return|return
 name|Op
 return|;
 block|}
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
+unit|};
 comment|/// defusechain_iterator - This class provides iterator support for machine
 end_comment
 
@@ -3624,11 +3917,12 @@ name|ByBundle
 condition|)
 block|{
 name|MachineInstr
-modifier|*
+modifier|&
 name|P
 init|=
 name|getBundleStart
 argument_list|(
+operator|*
 name|Op
 operator|->
 name|getParent
@@ -3645,14 +3939,17 @@ do|while
 condition|(
 name|Op
 operator|&&
+operator|&
 name|getBundleStart
 argument_list|(
+operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
 argument_list|)
 operator|==
+operator|&
 name|P
 condition|)
 do|;
@@ -3716,16 +4013,14 @@ condition|(
 name|ByBundle
 condition|)
 return|return
-operator|*
-operator|(
 name|getBundleStart
 argument_list|(
+operator|*
 name|Op
 operator|->
 name|getParent
 argument_list|()
 argument_list|)
-operator|)
 return|;
 end_expr_stmt
 
@@ -3751,44 +4046,18 @@ begin_expr_stmt
 unit|)
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|Op
-operator|&&
-literal|"Cannot dereference end iterator!"
-argument_list|)
-block|;
-if|if
-condition|(
-name|ByBundle
-condition|)
 return|return
-name|getBundleStart
-argument_list|(
-name|Op
-operator|->
-name|getParent
-argument_list|()
-argument_list|)
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
 return|;
+block|}
 end_expr_stmt
 
-begin_return
-return|return
-name|Op
-operator|->
-name|getParent
-argument_list|()
-return|;
-end_return
-
-begin_empty_stmt
-unit|}   }
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|};
+unit|}; };
 comment|/// Iterate over the pressure sets affected by the given physical or virtual
 end_comment
 

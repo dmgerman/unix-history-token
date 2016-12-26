@@ -227,6 +227,11 @@ argument_list|()
 operator|:
 name|m_entries
 argument_list|()
+operator|,
+name|m_language
+argument_list|(
+argument|lldb::eLanguageTypeUnknown
+argument_list|)
 block|{     }
 name|void
 name|AppendDeclContext
@@ -374,6 +379,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_language
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetLanguage
+argument_list|(
+name|lldb
+operator|::
+name|LanguageType
+name|language
+argument_list|)
+block|{
+name|m_language
+operator|=
+name|language
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_label
 name|protected
 label|:
@@ -403,6 +439,14 @@ name|std
 operator|::
 name|string
 name|m_qualified_name
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|LanguageType
+name|m_language
 expr_stmt|;
 end_expr_stmt
 

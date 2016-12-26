@@ -68,6 +68,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|SUnit
 decl_stmt|;
 comment|/// HazardRecognizer - This determines whether or not an instruction can be
@@ -190,6 +193,16 @@ name|SUnit
 modifier|*
 parameter_list|)
 block|{}
+comment|/// This overload will be used when the hazard recognizer is being used
+comment|/// by a non-scheduling pass, which does not use SUnits.
+name|virtual
+name|void
+name|EmitInstruction
+parameter_list|(
+name|MachineInstr
+modifier|*
+parameter_list|)
+block|{}
 comment|/// PreEmitNoops - This callback is invoked prior to emitting an instruction.
 comment|/// It should return the number of noops to emit prior to the provided
 comment|/// instruction.
@@ -200,6 +213,20 @@ name|unsigned
 name|PreEmitNoops
 parameter_list|(
 name|SUnit
+modifier|*
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// This overload will be used when the hazard recognizer is being used
+comment|/// by a non-scheduling pass, which does not use SUnits.
+name|virtual
+name|unsigned
+name|PreEmitNoops
+parameter_list|(
+name|MachineInstr
 modifier|*
 parameter_list|)
 block|{

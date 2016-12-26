@@ -162,7 +162,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|XDEBUG
+name|EXPENSIVE_CHECKS
 operator|~
 name|BlotMapVector
 argument_list|()

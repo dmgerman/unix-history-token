@@ -365,7 +365,7 @@ name|private
 operator|:
 name|friend
 name|class
-name|BinaryOperator
+name|Instruction
 block|;
 name|friend
 name|class
@@ -616,7 +616,7 @@ name|private
 operator|:
 name|friend
 name|class
-name|BinaryOperator
+name|Instruction
 block|;
 name|friend
 name|class
@@ -1792,6 +1792,12 @@ block|}
 name|Type
 operator|*
 name|getSourceElementType
+argument_list|()
+specifier|const
+block|;
+name|Type
+operator|*
+name|getResultElementType
 argument_list|()
 specifier|const
 block|;

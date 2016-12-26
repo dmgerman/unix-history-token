@@ -89,6 +89,12 @@ directive|include
 file|"lldb/Core/PluginInterface.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/StructuredData.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -159,6 +165,15 @@ name|bool
 name|IsActive
 parameter_list|()
 function_decl|;
+name|virtual
+name|lldb
+operator|::
+name|ThreadCollectionSP
+name|GetBacktracesFromExtendedStopInfo
+argument_list|(
+argument|StructuredData::ObjectSP info
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

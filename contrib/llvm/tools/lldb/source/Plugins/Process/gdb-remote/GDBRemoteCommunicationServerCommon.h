@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/Process.h"
 end_include
 

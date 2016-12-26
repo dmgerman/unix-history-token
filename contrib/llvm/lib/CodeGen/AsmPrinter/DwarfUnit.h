@@ -317,10 +317,6 @@ name|DwarfUnit
 block|{
 name|protected
 label|:
-comment|/// A numeric ID unique among all CUs in the module
-name|unsigned
-name|UniqueID
-decl_stmt|;
 comment|/// MDNode for the compile unit.
 specifier|const
 name|DICompileUnit
@@ -335,10 +331,6 @@ comment|/// Unit debug information entry.
 name|DIE
 modifier|&
 name|UnitDie
-decl_stmt|;
-comment|/// Offset of the UnitDie from beginning of debug info section.
-name|unsigned
-name|DebugInfoOffset
 decl_stmt|;
 comment|/// Target of Dwarf emission.
 name|AsmPrinter
@@ -413,19 +405,28 @@ name|Section
 decl_stmt|;
 name|DwarfUnit
 argument_list|(
-argument|unsigned UID
+name|dwarf
+operator|::
+name|Tag
 argument_list|,
-argument|dwarf::Tag
+specifier|const
+name|DICompileUnit
+operator|*
+name|CU
 argument_list|,
-argument|const DICompileUnit *CU
+name|AsmPrinter
+operator|*
+name|A
 argument_list|,
-argument|AsmPrinter *A
+name|DwarfDebug
+operator|*
+name|DW
 argument_list|,
-argument|DwarfDebug *DW
-argument_list|,
-argument|DwarfFile *DWU
+name|DwarfFile
+operator|*
+name|DWU
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|bool
 name|applySubprogramDefinitionAttributes
 parameter_list|(
@@ -480,15 +481,6 @@ return|return
 name|Asm
 return|;
 block|}
-name|unsigned
-name|getUniqueID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UniqueID
-return|;
-block|}
 name|uint16_t
 name|getLanguage
 argument_list|()
@@ -520,27 +512,6 @@ block|{
 return|return
 name|UnitDie
 return|;
-block|}
-name|unsigned
-name|getDebugInfoOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DebugInfoOffset
-return|;
-block|}
-name|void
-name|setDebugInfoOffset
-parameter_list|(
-name|unsigned
-name|DbgInfoOff
-parameter_list|)
-block|{
-name|DebugInfoOffset
-operator|=
-name|DbgInfoOff
-expr_stmt|;
 block|}
 comment|/// Return true if this compile unit has something to write out.
 name|bool
@@ -911,10 +882,8 @@ name|DIE
 modifier|&
 name|Die
 parameter_list|,
-specifier|const
-name|DwarfTypeUnit
-modifier|&
-name|Type
+name|uint64_t
+name|Signature
 parameter_list|)
 function_decl|;
 comment|/// Add an attribute containing the type signature for a unique identifier.
@@ -1523,12 +1492,10 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|DD
-operator|->
-name|resolve
-argument_list|(
 name|Ref
-argument_list|)
+operator|.
+name|resolve
+argument_list|()
 return|;
 block|}
 name|private
@@ -1754,17 +1721,27 @@ name|public
 operator|:
 name|DwarfTypeUnit
 argument_list|(
-argument|unsigned UID
+name|DwarfCompileUnit
+operator|&
+name|CU
 argument_list|,
-argument|DwarfCompileUnit&CU
+name|AsmPrinter
+operator|*
+name|A
 argument_list|,
-argument|AsmPrinter *A
+name|DwarfDebug
+operator|*
+name|DW
 argument_list|,
-argument|DwarfDebug *DW
+name|DwarfFile
+operator|*
+name|DWU
 argument_list|,
-argument|DwarfFile *DWU
-argument_list|,
-argument|MCDwarfDwoLineTable *SplitLineTable = nullptr
+name|MCDwarfDwoLineTable
+operator|*
+name|SplitLineTable
+operator|=
+name|nullptr
 argument_list|)
 block|;
 name|void
@@ -1777,15 +1754,6 @@ name|TypeSignature
 operator|=
 name|Signature
 block|; }
-name|uint64_t
-name|getTypeSignature
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TypeSignature
-return|;
-block|}
 name|void
 name|setType
 argument_list|(

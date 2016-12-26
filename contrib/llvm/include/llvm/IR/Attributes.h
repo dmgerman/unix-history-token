@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Types.h"
 end_include
 
 begin_include
@@ -307,6 +319,26 @@ name|uint64_t
 name|Bytes
 parameter_list|)
 function_decl|;
+specifier|static
+name|Attribute
+name|getWithAllocSizeArgs
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|unsigned
+name|ElemSizeArg
+argument_list|,
+specifier|const
+name|Optional
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|NumElemsArg
+argument_list|)
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute Accessors
 comment|//===--------------------------------------------------------------------===//
@@ -348,7 +380,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Return the attribute's kind as an enum (Attribute::AttrKind). This
-comment|/// requires the attribute to be an enum or alignment attribute.
+comment|/// requires the attribute to be an enum or integer attribute.
 name|Attribute
 operator|::
 name|AttrKind
@@ -357,7 +389,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Return the attribute's value as an integer. This requires that the
-comment|/// attribute be an alignment attribute.
+comment|/// attribute be an integer attribute.
 name|uint64_t
 name|getValueAsInt
 argument_list|()
@@ -402,6 +434,22 @@ comment|/// \brief Returns the number of dereferenceable_or_null bytes from the
 comment|/// dereferenceable_or_null attribute.
 name|uint64_t
 name|getDereferenceableOrNullBytes
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns the argument numbers for the allocsize attribute (or pair(0, 0)
+comment|/// if not known).
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|Optional
+operator|<
+name|unsigned
+operator|>>
+name|getAllocSizeArgs
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -478,8 +526,83 @@ name|pImpl
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Return a raw pointer that uniquely identifies this attribute.
+name|void
+operator|*
+name|getRawPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|pImpl
+return|;
+block|}
+comment|/// \brief Get an attribute from a raw pointer created by getRawPointer.
+specifier|static
+name|Attribute
+name|fromRawPointer
+parameter_list|(
+name|void
+modifier|*
+name|RawPtr
+parameter_list|)
+block|{
+return|return
+name|Attribute
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|AttributeImpl
+operator|*
+operator|>
+operator|(
+name|RawPtr
+operator|)
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
+comment|// Specialized opaque value conversions.
+specifier|inline
+name|LLVMAttributeRef
+name|wrap
+parameter_list|(
+name|Attribute
+name|Attr
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|LLVMAttributeRef
+operator|>
+operator|(
+name|Attr
+operator|.
+name|getRawPointer
+argument_list|()
+operator|)
+return|;
+block|}
+comment|// Specialized opaque value conversions.
+specifier|inline
+name|Attribute
+name|unwrap
+parameter_list|(
+name|LLVMAttributeRef
+name|Attr
+parameter_list|)
+block|{
+return|return
+name|Attribute
+operator|::
+name|fromRawPointer
+argument_list|(
+name|Attr
+argument_list|)
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|/// \class
 comment|/// \brief This class holds the attributes for a function, its return value, and
@@ -517,6 +640,10 @@ decl_stmt|;
 name|friend
 name|class
 name|AttributeSetImpl
+decl_stmt|;
+name|friend
+name|class
+name|AttributeSetNode
 decl_stmt|;
 name|template
 operator|<
@@ -671,6 +798,24 @@ name|Attribute
 operator|::
 name|AttrKind
 operator|>
+name|Kinds
+argument_list|)
+decl_stmt|;
+specifier|static
+name|AttributeSet
+name|get
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
 name|Kind
 argument_list|)
 decl_stmt|;
@@ -706,7 +851,7 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|Attr
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -724,24 +869,12 @@ name|Index
 argument_list|,
 name|StringRef
 name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-name|AttributeSet
-name|addAttribute
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|,
-name|unsigned
-name|Index
-argument_list|,
-name|StringRef
-name|Kind
 argument_list|,
 name|StringRef
 name|Value
+operator|=
+name|StringRef
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -798,7 +931,25 @@ argument_list|,
 name|Attribute
 operator|::
 name|AttrKind
-name|Attr
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Remove the specified attribute at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeSet
+name|removeAttribute
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|StringRef
+name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
@@ -875,6 +1026,30 @@ name|Bytes
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Add the allocsize attribute to the attribute set at the given index.
+comment|/// Because attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addAllocSizeAttr
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|unsigned
+name|ElemSizeArg
+argument_list|,
+specifier|const
+name|Optional
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|NumElemsArg
+argument_list|)
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// AttributeSet Accessors
 comment|//===--------------------------------------------------------------------===//
@@ -941,15 +1116,34 @@ name|Index
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Equivalent to hasAttribute(AttributeSet::FunctionIndex, Kind) but
+comment|/// may be faster.
+name|bool
+name|hasFnAttribute
+argument_list|(
+name|Attribute
+operator|::
+name|AttrKind
+name|Kind
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Return true if the specified attribute is set for at least one
-comment|/// parameter or for the return value.
+comment|/// parameter or for the return value. If Index is not nullptr, the index
+comment|/// of a parameter with the specified attribute is provided.
 name|bool
 name|hasAttrSomewhere
 argument_list|(
 name|Attribute
 operator|::
 name|AttrKind
-name|Attr
+name|Kind
+argument_list|,
+name|unsigned
+operator|*
+name|Index
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1016,6 +1210,23 @@ name|Index
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Get the allocsize argument numbers (or pair(0, 0) if unknown).
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|Optional
+operator|<
+name|unsigned
+operator|>>
+name|getAllocSizeArgs
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// \brief Return the attributes at the index as a string.
 name|std
 operator|::
@@ -1356,6 +1567,9 @@ block|;
 name|uint64_t
 name|DerefOrNullBytes
 block|;
+name|uint64_t
+name|AllocSizeArgs
+block|;
 name|public
 operator|:
 name|AttrBuilder
@@ -1382,6 +1596,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefOrNullBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|AllocSizeArgs
 argument_list|(
 literal|0
 argument_list|)
@@ -1413,6 +1632,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefOrNullBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|AllocSizeArgs
 argument_list|(
 literal|0
 argument_list|)
@@ -1451,6 +1675,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefOrNullBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|AllocSizeArgs
 argument_list|(
 literal|0
 argument_list|)
@@ -1657,6 +1886,22 @@ return|return
 name|DerefOrNullBytes
 return|;
 block|}
+comment|/// Retrieve the allocsize args, if the allocsize attribute exists.  If it
+comment|/// doesn't exist, pair(0, 0) is returned.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|Optional
+operator|<
+name|unsigned
+operator|>>
+name|getAllocSizeArgs
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief This turns an int alignment (which must be a power of 2) into the
 comment|/// form used internally in Attribute.
 name|AttrBuilder
@@ -1691,6 +1936,25 @@ operator|&
 name|addDereferenceableOrNullAttr
 argument_list|(
 argument|uint64_t Bytes
+argument_list|)
+block|;
+comment|/// This turns one (or two) ints into the form used internally in Attribute.
+name|AttrBuilder
+operator|&
+name|addAllocSizeAttr
+argument_list|(
+argument|unsigned ElemSizeArg
+argument_list|,
+argument|const Optional<unsigned>&NumElemsArg
+argument_list|)
+block|;
+comment|/// Add an allocsize attribute, using the representation returned by
+comment|/// Attribute.getIntValue().
+name|AttrBuilder
+operator|&
+name|addAllocSizeAttrFromRawRepr
+argument_list|(
+argument|uint64_t RawAllocSizeRepr
 argument_list|)
 block|;
 comment|/// \brief Return true if the builder contains no target-independent

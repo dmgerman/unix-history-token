@@ -57,6 +57,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -374,6 +380,12 @@ expr_stmt|;
 name|collection
 name|m_break_loc_collection
 decl_stmt|;
+name|mutable
+name|std
+operator|::
+name|mutex
+name|m_collection_mutex
+expr_stmt|;
 name|public
 label|:
 typedef|typedef

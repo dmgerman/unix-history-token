@@ -279,6 +279,10 @@ name|parsePPUnknown
 parameter_list|()
 function_decl|;
 name|void
+name|readTokenWithJavaScriptASI
+parameter_list|()
+function_decl|;
+name|void
 name|parseStructuralElement
 parameter_list|()
 function_decl|;

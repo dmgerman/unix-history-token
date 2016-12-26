@@ -647,7 +647,7 @@ name|SmallVector
 operator|<
 name|Segment
 operator|,
-literal|4
+literal|2
 operator|>
 name|Segments
 expr_stmt|;
@@ -657,7 +657,7 @@ operator|<
 name|VNInfo
 operator|*
 operator|,
-literal|4
+literal|2
 operator|>
 name|VNInfoList
 expr_stmt|;
@@ -2382,7 +2382,18 @@ argument_list|(
 argument|LaneMask
 argument_list|)
 block|{       }
-block|}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|;     }
 decl_stmt|;
 name|private
 label|:
@@ -2856,28 +2867,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Construct main live range by merging the SubRanges of @p LI.
-end_comment
-
-begin_decl_stmt
-name|void
-name|constructMainRangeFromSubranges
-argument_list|(
-specifier|const
-name|SlotIndexes
-operator|&
-name|Indexes
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|&
-name|VNIAllocator
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getSize - Returns the sum of sizes of all the LiveRange's.
 end_comment
 
@@ -3111,6 +3100,38 @@ end_function_decl
 
 begin_expr_stmt
 unit|};
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|LiveInterval
+operator|::
+name|SubRange
+operator|&
+name|SR
+operator|)
+block|{
+name|SR
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|raw_ostream
 operator|&

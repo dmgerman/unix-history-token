@@ -193,7 +193,7 @@ argument_list|(
 argument|new ObjectMemoryBuffer(std::move(ObjBufferSV))
 argument_list|)
 expr_stmt|;
-name|ErrorOr
+name|Expected
 operator|<
 name|std
 operator|::
@@ -217,7 +217,6 @@ name|getMemBufferRef
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// TODO: Actually report errors helpfully.
 typedef|typedef
 name|object
 operator|::
@@ -252,6 +251,15 @@ name|ObjBuffer
 argument_list|)
 argument_list|)
 return|;
+comment|// TODO: Actually report errors helpfully.
+name|consumeError
+argument_list|(
+name|Obj
+operator|.
+name|takeError
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|OwningObj
 argument_list|(

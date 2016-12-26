@@ -158,6 +158,14 @@ directive|error
 literal|"ProcessInfo is not defined for this platform!"
 endif|#
 directive|endif
+enum_decl|enum :
+name|ProcessId
+block|{
+name|InvalidPid
+init|=
+literal|0
+block|}
+enum_decl|;
 comment|/// The process identifier.
 name|ProcessId
 name|Pid
@@ -230,7 +238,7 @@ name|StringRef
 name|Program
 argument_list|,
 comment|///< Path of the program to be executed. It is
-comment|/// presumed this is the result of the findProgramByName method.
+comment|///< presumed this is the result of the findProgramByName method.
 specifier|const
 name|char
 operator|*

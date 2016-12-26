@@ -514,6 +514,11 @@ operator|=
 literal|1
 block|,
 comment|// ARM_THREAD_STATE
+name|GPRAltRegSet
+operator|=
+literal|9
+block|,
+comment|// ARM_THREAD_STATE32
 name|FPURegSet
 operator|=
 literal|2

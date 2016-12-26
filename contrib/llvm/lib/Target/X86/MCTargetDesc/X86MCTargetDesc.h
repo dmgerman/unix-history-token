@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCStreamer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -98,9 +104,6 @@ name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MCRelocationInfo
-decl_stmt|;
-name|class
-name|MCStreamer
 decl_stmt|;
 name|class
 name|Target
@@ -212,7 +215,7 @@ name|isEH
 parameter_list|)
 function_decl|;
 name|void
-name|InitLLVM2SEHRegisterMapping
+name|initLLVMToSEHAndCVRegMapping
 parameter_list|(
 name|MCRegisterInfo
 modifier|*
@@ -383,26 +386,6 @@ name|OS
 parameter_list|,
 name|bool
 name|Is64Bit
-parameter_list|)
-function_decl|;
-comment|/// Construct X86-64 Mach-O relocation info.
-name|MCRelocationInfo
-modifier|*
-name|createX86_64MachORelocationInfo
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
-comment|/// Construct X86-64 ELF relocation info.
-name|MCRelocationInfo
-modifier|*
-name|createX86_64ELFRelocationInfo
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
 parameter_list|)
 function_decl|;
 comment|/// Returns the sub or super register of a specific X86 register.

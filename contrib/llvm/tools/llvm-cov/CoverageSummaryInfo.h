@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ProfileData/CoverageMapping.h"
+file|"llvm/ProfileData/Coverage/CoverageMapping.h"
 end_include
 
 begin_include
@@ -187,6 +187,15 @@ name|getPercentCovered
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|NumRegions
+operator|==
+literal|0
+condition|)
+return|return
+literal|0.0
+return|;
 return|return
 name|double
 argument_list|(
@@ -202,8 +211,17 @@ literal|100.0
 return|;
 block|}
 block|}
-struct|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Provides information about line coverage for a function/file.
+end_comment
+
+begin_struct
 struct|struct
 name|LineCoverageInfo
 block|{
@@ -339,6 +357,17 @@ name|getPercentCovered
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|NumLines
+operator|-
+name|NonCodeLines
+operator|==
+literal|0
+condition|)
+return|return
+literal|0.0
+return|;
 return|return
 name|double
 argument_list|(
@@ -355,9 +384,14 @@ operator|*
 literal|100.0
 return|;
 block|}
-block|}
-struct|;
+end_struct
+
+begin_comment
+unit|};
 comment|/// \brief Provides information about function coverage for a file.
+end_comment
+
+begin_struct
 struct|struct
 name|FunctionCoverageInfo
 block|{
@@ -432,6 +466,15 @@ name|getPercentCovered
 argument_list|()
 decl|const
 block|{
+if|if
+condition|(
+name|NumFunctions
+operator|==
+literal|0
+condition|)
+return|return
+literal|0.0
+return|;
 return|return
 name|double
 argument_list|(
@@ -446,14 +489,10 @@ operator|*
 literal|100.0
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_struct
 
 begin_comment
+unit|};
 comment|/// \brief A summary of function's code coverage.
 end_comment
 

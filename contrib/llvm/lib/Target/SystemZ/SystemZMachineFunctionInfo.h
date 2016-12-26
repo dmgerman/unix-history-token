@@ -82,6 +82,9 @@ block|;
 name|unsigned
 name|RegSaveFrameIndex
 block|;
+name|int
+name|FramePointerSaveIndex
+block|;
 name|bool
 name|ManipulatesSP
 block|;
@@ -124,6 +127,11 @@ literal|0
 argument_list|)
 block|,
 name|RegSaveFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|FramePointerSaveIndex
 argument_list|(
 literal|0
 argument_list|)
@@ -261,6 +269,26 @@ block|{
 name|RegSaveFrameIndex
 operator|=
 name|FI
+block|; }
+comment|// Get and set the frame index of where the old frame pointer is stored.
+name|int
+name|getFramePointerSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FramePointerSaveIndex
+return|;
+block|}
+name|void
+name|setFramePointerSaveIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|FramePointerSaveIndex
+operator|=
+name|Idx
 block|; }
 comment|// Get and set whether the function directly manipulates the stack pointer,
 comment|// e.g. through STACKSAVE or STACKRESTORE.

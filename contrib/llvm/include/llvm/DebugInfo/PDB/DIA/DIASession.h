@@ -52,18 +52,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/DebugInfo/PDB/IPDBSession.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo/PDB/IPDBSession.h"
+file|"llvm/Support/Error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
+block|{
+name|class
+name|StringRef
+decl_stmt|;
+name|namespace
+name|pdb
 block|{
 name|class
 name|DIASession
@@ -84,7 +96,7 @@ name|DiaSession
 argument_list|)
 block|;
 specifier|static
-name|PDB_ErrorCode
+name|Error
 name|createFromPdb
 argument_list|(
 argument|StringRef Path
@@ -93,7 +105,7 @@ argument|std::unique_ptr<IPDBSession>&Session
 argument_list|)
 block|;
 specifier|static
-name|PDB_ErrorCode
+name|Error
 name|createFromExe
 argument_list|(
 argument|StringRef Path
@@ -159,11 +171,92 @@ name|unique_ptr
 operator|<
 name|IPDBEnumLineNumbers
 operator|>
+name|findLineNumbers
+argument_list|(
+argument|const PDBSymbolCompiland&Compiland
+argument_list|,
+argument|const IPDBSourceFile&File
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumLineNumbers
+operator|>
 name|findLineNumbersByAddress
 argument_list|(
 argument|uint64_t Address
 argument_list|,
 argument|uint32_t Length
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumSourceFiles
+operator|>
+name|findSourceFiles
+argument_list|(
+argument|const PDBSymbolCompiland *Compiland
+argument_list|,
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBSourceFile
+operator|>
+name|findOneSourceFile
+argument_list|(
+argument|const PDBSymbolCompiland *Compiland
+argument_list|,
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IPDBEnumChildren
+operator|<
+name|PDBSymbolCompiland
+operator|>>
+name|findCompilandsForSourceFile
+argument_list|(
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PDBSymbolCompiland
+operator|>
+name|findOneCompilandForSourceFile
+argument_list|(
+argument|llvm::StringRef Pattern
+argument_list|,
+argument|PDB_NameSearchFlags Flags
 argument_list|)
 specifier|const
 name|override
@@ -225,6 +318,7 @@ operator|>
 name|Session
 block|; }
 decl_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -137,6 +137,40 @@ operator|&
 name|O
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|printAliasInstr
+argument_list|(
+specifier|const
+name|MCInst
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|,
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+block|;
+name|virtual
+name|void
+name|printCustomAliasOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpIdx
+argument_list|,
+argument|unsigned PrintMethodIdx
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
 specifier|static
 specifier|const
 name|char
@@ -350,6 +384,23 @@ name|AlwaysPrintImm0
 operator|>
 name|void
 name|printAddrMode5Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
+name|void
+name|printAddrMode5FP16Operand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

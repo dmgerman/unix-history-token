@@ -104,7 +104,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|SCOPED_INTERCEPTOR_RAW(func, __VA_ARGS__); \     if (REAL(func) == 0) { \       Report("FATAL: ThreadSanitizer: failed to intercept %s\n", #func); \       Die(); \     }                                                    \     if (thr->ignore_interceptors || thr->in_ignored_lib) \       return REAL(func)(__VA_ARGS__);
+value|SCOPED_INTERCEPTOR_RAW(func, __VA_ARGS__); \     if (REAL(func) == 0) { \       Report("FATAL: ThreadSanitizer: failed to intercept %s\n", #func); \       Die(); \     }                                                    \     if (!thr->is_inited || thr->ignore_interceptors || thr->in_ignored_lib) \       return REAL(func)(__VA_ARGS__);
 end_define
 
 begin_comment
@@ -143,57 +143,6 @@ modifier|...
 parameter_list|)
 value|INTERCEPTOR(ret, func, __VA_ARGS__)
 end_define
-
-begin_if
-if|#
-directive|if
-name|SANITIZER_FREEBSD
-end_if
-
-begin_define
-define|#
-directive|define
-name|__libc_free
-value|__free
-end_define
-
-begin_define
-define|#
-directive|define
-name|__libc_malloc
-value|__malloc
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_extern
-extern|extern
-literal|"C"
-name|void
-name|__libc_free
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-function_decl|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|void
-modifier|*
-name|__libc_malloc
-parameter_list|(
-name|uptr
-name|size
-parameter_list|)
-function_decl|;
-end_extern
 
 begin_endif
 endif|#

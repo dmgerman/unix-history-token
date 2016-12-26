@@ -95,12 +95,6 @@ directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -119,180 +113,6 @@ name|raw_ostream
 decl_stmt|;
 name|class
 name|DwarfTypeUnit
-decl_stmt|;
-comment|// AsmStreamerBase - A base abstract interface class defines methods that
-comment|// can be implemented to stream objects or can be implemented to
-comment|// calculate the size of the streamed objects.
-comment|// The derived classes will use an AsmPrinter to implement the methods.
-comment|//
-comment|// TODO: complete this interface and use it to merge EmitValue and SizeOf
-comment|//       methods in the DIE classes below.
-name|class
-name|AsmStreamerBase
-block|{
-name|protected
-label|:
-specifier|const
-name|AsmPrinter
-modifier|*
-name|AP
-decl_stmt|;
-name|AsmStreamerBase
-argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|)
-operator|:
-name|AP
-argument_list|(
-argument|AP
-argument_list|)
-block|{}
-name|public
-operator|:
-name|virtual
-operator|~
-name|AsmStreamerBase
-argument_list|()
-block|{}
-name|virtual
-name|unsigned
-name|emitULEB128
-argument_list|(
-argument|uint64_t Value
-argument_list|,
-argument|const char *Desc = nullptr
-argument_list|,
-argument|unsigned PadTo =
-literal|0
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|unsigned
-name|emitInt8
-parameter_list|(
-name|unsigned
-name|char
-name|Value
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-name|virtual
-name|unsigned
-name|emitBytes
-parameter_list|(
-name|StringRef
-name|Data
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-block|}
-empty_stmt|;
-comment|/// EmittingAsmStreamer - Implements AbstractAsmStreamer to stream objects.
-comment|/// Notice that the return value is not the actual size of the streamed object.
-comment|/// For size calculation use SizeReporterAsmStreamer.
-name|class
-name|EmittingAsmStreamer
-range|:
-name|public
-name|AsmStreamerBase
-block|{
-name|public
-operator|:
-name|EmittingAsmStreamer
-argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|)
-operator|:
-name|AsmStreamerBase
-argument_list|(
-argument|AP
-argument_list|)
-block|{}
-name|unsigned
-name|emitULEB128
-argument_list|(
-argument|uint64_t Value
-argument_list|,
-argument|const char *Desc = nullptr
-argument_list|,
-argument|unsigned PadTo =
-literal|0
-argument_list|)
-name|override
-block|;
-name|unsigned
-name|emitInt8
-argument_list|(
-argument|unsigned char Value
-argument_list|)
-name|override
-block|;
-name|unsigned
-name|emitBytes
-argument_list|(
-argument|StringRef Data
-argument_list|)
-name|override
-block|; }
-decl_stmt|;
-comment|/// SizeReporterAsmStreamer - Only reports the size of the streamed objects.
-name|class
-name|SizeReporterAsmStreamer
-range|:
-name|public
-name|AsmStreamerBase
-block|{
-name|public
-operator|:
-name|SizeReporterAsmStreamer
-argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|)
-operator|:
-name|AsmStreamerBase
-argument_list|(
-argument|AP
-argument_list|)
-block|{}
-name|unsigned
-name|emitULEB128
-argument_list|(
-argument|uint64_t Value
-argument_list|,
-argument|const char *Desc = nullptr
-argument_list|,
-argument|unsigned PadTo =
-literal|0
-argument_list|)
-name|override
-block|;
-name|unsigned
-name|emitInt8
-argument_list|(
-argument|unsigned char Value
-argument_list|)
-name|override
-block|;
-name|unsigned
-name|emitBytes
-argument_list|(
-argument|StringRef Data
-argument_list|)
-name|override
-block|; }
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes one attribute of a
@@ -1180,85 +1000,6 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// \brief A signature reference to a type unit.
-name|class
-name|DIETypeSignature
-block|{
-specifier|const
-name|DwarfTypeUnit
-modifier|*
-name|Unit
-decl_stmt|;
-name|DIETypeSignature
-argument_list|()
-operator|=
-name|delete
-expr_stmt|;
-name|public
-label|:
-name|explicit
-name|DIETypeSignature
-argument_list|(
-specifier|const
-name|DwarfTypeUnit
-operator|&
-name|Unit
-argument_list|)
-operator|:
-name|Unit
-argument_list|(
-argument|&Unit
-argument_list|)
-block|{}
-name|void
-name|EmitValue
-argument_list|(
-argument|const AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-expr_stmt|;
-name|unsigned
-name|SizeOf
-argument_list|(
-specifier|const
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|Form
-operator|==
-name|dwarf
-operator|::
-name|DW_FORM_ref_sig8
-argument_list|)
-expr_stmt|;
-return|return
-literal|8
-return|;
-block|}
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
-decl|const
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|//===--------------------------------------------------------------------===//
 comment|/// DIELocList - Represents a pointer to a location list in the debug_loc
 comment|/// section.
 comment|//
@@ -1416,8 +1157,6 @@ name|DIEDelta
 operator|*
 operator|,
 name|DIEEntry
-operator|,
-name|DIETypeSignature
 operator|,
 name|DIEBlock
 operator|*
@@ -2705,7 +2444,7 @@ name|addValue
 argument_list|(
 argument|BumpPtrAllocator&Alloc
 argument_list|,
-argument|DIEValue V
+argument|const DIEValue&V
 argument_list|)
 block|{
 name|List

@@ -102,12 +102,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -123,36 +117,22 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Dominators.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|BasicBlock
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|DomTreeNodeBase
-expr_stmt|;
-typedef|typedef
-name|DomTreeNodeBase
-operator|<
-name|BasicBlock
-operator|>
-name|DomTreeNode
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|DominatorTreeBase
-expr_stmt|;
 comment|/// \brief Determine the iterated dominance frontier, given a set of defining
 comment|/// blocks, and optionally, a set of live-in blocks.
 comment|///
@@ -161,11 +141,18 @@ comment|///
 comment|/// This algorithm is a linear time computation of Iterated Dominance Frontiers,
 comment|/// pruned using the live-in set.
 comment|/// By default, liveness is not used to prune the IDF computation.
+comment|/// The template parameters should be either BasicBlock* or Inverse<BasicBlock
+comment|/// *>, depending on if you want the forward or reverse IDF.
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
 name|class
 name|IDFCalculator
 block|{
 name|public
-label|:
+operator|:
 name|IDFCalculator
 argument_list|(
 name|DominatorTreeBase
@@ -180,7 +167,7 @@ name|DT
 argument_list|(
 name|DT
 argument_list|)
-operator|,
+block|,
 name|useLiveIn
 argument_list|(
 argument|false
@@ -253,28 +240,28 @@ operator|>
 operator|&
 name|IDFBlocks
 argument_list|)
-expr_stmt|;
+block|;
 name|private
-label|:
+operator|:
 name|DominatorTreeBase
 operator|<
 name|BasicBlock
 operator|>
 operator|&
 name|DT
-expr_stmt|;
+block|;
 name|bool
 name|useLiveIn
-decl_stmt|;
+block|;
 name|DenseMap
 operator|<
 name|DomTreeNode
 operator|*
-operator|,
+block|,
 name|unsigned
 operator|>
 name|DomLevels
-expr_stmt|;
+block|;
 specifier|const
 name|SmallPtrSetImpl
 operator|<
@@ -283,7 +270,7 @@ operator|*
 operator|>
 operator|*
 name|LiveInBlocks
-expr_stmt|;
+block|;
 specifier|const
 name|SmallPtrSetImpl
 operator|<
@@ -292,18 +279,35 @@ operator|*
 operator|>
 operator|*
 name|DefBlocks
-expr_stmt|;
+block|;
 name|SmallVector
 operator|<
 name|BasicBlock
 operator|*
-operator|,
+block|,
 literal|32
 operator|>
 name|PHIBlocks
+block|; }
 expr_stmt|;
-block|}
-empty_stmt|;
+typedef|typedef
+name|IDFCalculator
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|ForwardIDFCalculator
+expr_stmt|;
+typedef|typedef
+name|IDFCalculator
+operator|<
+name|Inverse
+operator|<
+name|BasicBlock
+operator|*
+operator|>>
+name|ReverseIDFCalculator
+expr_stmt|;
 block|}
 end_decl_stmt
 

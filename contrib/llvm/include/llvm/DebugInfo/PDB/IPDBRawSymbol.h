@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/CodeView.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -74,6 +80,9 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
+name|namespace
+name|pdb
+block|{
 comment|/// IPDBRawSymbol defines an interface used to represent an arbitrary symbol.
 comment|/// It exposes a monolithic interface consisting of accessors for the union of
 comment|/// all properties that are valid for any symbol type.  This interface is then
@@ -390,7 +399,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|PDB_RegisterId
+name|codeview
+operator|::
+name|RegisterId
 name|getLocalBasePointerRegisterId
 argument_list|()
 specifier|const
@@ -514,7 +525,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|PDB_RegisterId
+name|codeview
+operator|::
+name|RegisterId
 name|getRegisterId
 argument_list|()
 specifier|const
@@ -808,7 +821,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|virtual
-name|PDB_ThunkOrdinal
+name|codeview
+operator|::
+name|ThunkOrdinal
 name|getThunkOrdinal
 argument_list|()
 specifier|const
@@ -1507,6 +1522,8 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
+block|}
+comment|// namespace pdb
 block|}
 end_decl_stmt
 

@@ -94,23 +94,6 @@ name|TypeCheckKind
 decl_stmt|;
 block|}
 struct|;
-struct|struct
-name|CFIBadTypeData
-block|{
-name|SourceLocation
-name|Loc
-decl_stmt|;
-specifier|const
-name|TypeDescriptor
-modifier|&
-name|Type
-decl_stmt|;
-name|unsigned
-name|char
-name|TypeCheckKind
-decl_stmt|;
-block|}
-struct|;
 comment|/// \brief Handle a runtime type check failure, caused by an incorrect vptr.
 comment|/// When this handler is called, all we know is that the type was not in the
 comment|/// cache; this does not necessarily imply the existence of a bug.
@@ -146,36 +129,6 @@ name|Pointer
 parameter_list|,
 name|ValueHandle
 name|Hash
-parameter_list|)
-function_decl|;
-comment|/// \brief Handle a control flow integrity check failure by printing a
-comment|/// diagnostic.
-extern|extern
-literal|"C"
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__ubsan_handle_cfi_bad_type
-parameter_list|(
-name|CFIBadTypeData
-modifier|*
-name|Data
-parameter_list|,
-name|ValueHandle
-name|Vtable
-parameter_list|)
-function_decl|;
-extern|extern
-literal|"C"
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__ubsan_handle_cfi_bad_type_abort
-parameter_list|(
-name|CFIBadTypeData
-modifier|*
-name|Data
-parameter_list|,
-name|ValueHandle
-name|Vtable
 parameter_list|)
 function_decl|;
 block|}

@@ -385,10 +385,9 @@ name|ArrayRef
 argument_list|(
 argument|const ArrayRef<U *>&A
 argument_list|,
-argument|typename std::enable_if<                  std::is_convertible<U *const *
+argument|typename std::enable_if<            std::is_convertible<U *const *
 argument_list|,
-argument|T const *>::value>::type* =
-literal|0
+argument|T const *>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|Data
@@ -418,14 +417,13 @@ operator|>
 comment|/*implicit*/
 name|ArrayRef
 argument_list|(
-argument|const SmallVectorTemplateCommon<U*
+argument|const SmallVectorTemplateCommon<U *
 argument_list|,
 argument|DummyT>&Vec
 argument_list|,
-argument|typename std::enable_if<                               std::is_convertible<U *const *
+argument|typename std::enable_if<           std::is_convertible<U *const *
 argument_list|,
-argument|T const *>::value>::type* =
-literal|0
+argument|T const *>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|Data
@@ -704,7 +702,7 @@ name|T
 operator|>
 name|slice
 argument_list|(
-argument|unsigned N
+argument|size_t N
 argument_list|)
 specifier|const
 block|{
@@ -744,9 +742,9 @@ name|T
 operator|>
 name|slice
 argument_list|(
-argument|unsigned N
+argument|size_t N
 argument_list|,
-argument|unsigned M
+argument|size_t M
 argument_list|)
 specifier|const
 block|{
@@ -777,14 +775,48 @@ name|M
 operator|)
 return|;
 block|}
-comment|// \brief Drop the last \p N elements of the array.
+comment|/// \brief Drop the first \p N elements of the array.
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|drop_front
+argument_list|(
+argument|size_t N =
+literal|1
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|size
+argument_list|()
+operator|>=
+name|N
+operator|&&
+literal|"Dropping more elements than exist"
+argument_list|)
+block|;
+return|return
+name|slice
+argument_list|(
+name|N
+argument_list|,
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+comment|/// \brief Drop the last \p N elements of the array.
 name|ArrayRef
 operator|<
 name|T
 operator|>
 name|drop_back
 argument_list|(
-argument|unsigned N =
+argument|size_t N =
 literal|1
 argument_list|)
 specifier|const
@@ -1317,7 +1349,7 @@ name|T
 operator|>
 name|slice
 argument_list|(
-argument|unsigned N
+argument|size_t N
 argument_list|)
 specifier|const
 block|{
@@ -1370,9 +1402,9 @@ name|T
 operator|>
 name|slice
 argument_list|(
-argument|unsigned N
+argument|size_t N
 argument_list|,
-argument|unsigned M
+argument|size_t M
 argument_list|)
 specifier|const
 block|{
@@ -1407,6 +1439,50 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Drop the first \p N elements of the array.
+end_comment
+
+begin_expr_stmt
+name|MutableArrayRef
+operator|<
+name|T
+operator|>
+name|drop_front
+argument_list|(
+argument|size_t N =
+literal|1
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|this
+operator|->
+name|size
+argument_list|()
+operator|>=
+name|N
+operator|&&
+literal|"Dropping more elements than exist"
+argument_list|)
+block|;
+return|return
+name|slice
+argument_list|(
+name|N
+argument_list|,
+name|this
+operator|->
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|MutableArrayRef
 operator|<
@@ -1414,7 +1490,8 @@ name|T
 operator|>
 name|drop_back
 argument_list|(
-argument|unsigned N
+argument|size_t N =
+literal|1
 argument_list|)
 specifier|const
 block|{
@@ -1915,11 +1992,19 @@ return|;
 block|}
 end_expr_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// end namespace llvm
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_ADT_ARRAYREF_H
+end_comment
 
 end_unit
 

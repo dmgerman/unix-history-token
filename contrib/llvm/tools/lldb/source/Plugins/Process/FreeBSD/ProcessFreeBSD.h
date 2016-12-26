@@ -54,13 +54,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<set>
+file|<mutex>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<queue>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
 end_include
 
 begin_comment
@@ -82,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/ProcessMessage.h"
+file|"ProcessMessage.h"
 end_include
 
 begin_include
@@ -125,7 +131,7 @@ name|CreateInstance
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb_private::FileSpec *crash_file_path
 argument_list|)
@@ -161,7 +167,7 @@ name|ProcessFreeBSD
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|lldb_private::Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|lldb::UnixSignalsSP&unix_signals_sp
 argument_list|)
@@ -573,9 +579,9 @@ operator|*
 name|m_module
 block|;
 comment|/// Message queue notifying this instance of inferior process state changes.
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|recursive_mutex
 name|m_message_mutex
 block|;
 name|std

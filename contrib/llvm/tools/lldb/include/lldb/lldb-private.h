@@ -110,6 +110,12 @@ directive|include
 file|"lldb/lldb-private-types.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/lldb-private-defines.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private

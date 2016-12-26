@@ -164,6 +164,8 @@ name|SeparateClass
 block|,
 name|RemainingArgsClass
 block|,
+name|RemainingArgsJoinedClass
+block|,
 name|CommaJoinedClass
 block|,
 name|MultiArgClass
@@ -538,6 +540,9 @@ name|JoinedOrSeparateClass
 case|:
 case|case
 name|RemainingArgsClass
+case|:
+case|case
+name|RemainingArgsJoinedClass
 case|:
 return|return
 name|RenderSeparateStyle

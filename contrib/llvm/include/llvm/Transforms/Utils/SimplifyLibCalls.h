@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
@@ -91,6 +85,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
@@ -1049,9 +1046,9 @@ name|Value
 operator|*
 name|Val
 argument_list|,
-name|BasicBlock
+name|Function
 operator|*
-name|BB
+name|F
 argument_list|,
 name|bool
 name|IsFloat

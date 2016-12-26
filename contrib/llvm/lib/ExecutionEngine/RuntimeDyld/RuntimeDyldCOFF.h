@@ -65,12 +65,6 @@ directive|include
 file|"RuntimeDyldImpl.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
 begin_define
 define|#
 directive|define

@@ -192,14 +192,12 @@ name|CharUnits
 name|RequiredAlignment
 decl_stmt|;
 comment|/// FieldOffsets - Array of field offsets in bits.
+name|ASTVector
+operator|<
 name|uint64_t
-modifier|*
+operator|>
 name|FieldOffsets
-decl_stmt|;
-comment|// FieldCount - Number of fields.
-name|unsigned
-name|FieldCount
-decl_stmt|;
+expr_stmt|;
 comment|/// CXXRecordLayoutInfo - Contains C++ specific layout information.
 struct|struct
 name|CXXRecordLayoutInfo
@@ -240,11 +238,11 @@ name|HasExtendableVFPtr
 range|:
 literal|1
 decl_stmt|;
-comment|/// HasZeroSizedSubObject - True if this class contains a zero sized member
-comment|/// or base or a base with a zero sized member or base.  Only used for
-comment|/// MS-ABI.
+comment|/// EndsWithZeroSizedObject - True if this class contains a zero sized
+comment|/// member or base or a base with a zero sized member or base.
+comment|/// Only used for MS-ABI.
 name|bool
-name|HasZeroSizedSubObject
+name|EndsWithZeroSizedObject
 range|:
 literal|1
 decl_stmt|;
@@ -322,9 +320,7 @@ argument|CharUnits requiredAlignment
 argument_list|,
 argument|CharUnits datasize
 argument_list|,
-argument|const uint64_t *fieldoffsets
-argument_list|,
-argument|unsigned fieldcount
+argument|ArrayRef<uint64_t> fieldoffsets
 argument_list|)
 empty_stmt|;
 comment|// Constructor for C++ records.
@@ -352,9 +348,7 @@ argument|CharUnits vbptroffset
 argument_list|,
 argument|CharUnits datasize
 argument_list|,
-argument|const uint64_t *fieldoffsets
-argument_list|,
-argument|unsigned fieldcount
+argument|ArrayRef<uint64_t> fieldoffsets
 argument_list|,
 argument|CharUnits nonvirtualsize
 argument_list|,
@@ -368,7 +362,7 @@ argument|bool IsPrimaryBaseVirtual
 argument_list|,
 argument|const CXXRecordDecl *BaseSharingVBPtr
 argument_list|,
-argument|bool HasZeroSizedSubObject
+argument|bool EndsWithZeroSizedObject
 argument_list|,
 argument|bool LeadsWithZeroSizedBase
 argument_list|,
@@ -440,7 +434,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|FieldCount
+name|FieldOffsets
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|/// getFieldOffset - Get the offset of the given field index, in
@@ -453,15 +450,6 @@ name|FieldNo
 argument_list|)
 decl|const
 block|{
-name|assert
-argument_list|(
-name|FieldNo
-operator|<
-name|FieldCount
-operator|&&
-literal|"Invalid Field No"
-argument_list|)
-expr_stmt|;
 return|return
 name|FieldOffsets
 index|[
@@ -777,7 +765,7 @@ name|RequiredAlignment
 return|;
 block|}
 name|bool
-name|hasZeroSizedSubObject
+name|endsWithZeroSizedObject
 argument_list|()
 specifier|const
 block|{
@@ -786,7 +774,7 @@ name|CXXInfo
 operator|&&
 name|CXXInfo
 operator|->
-name|HasZeroSizedSubObject
+name|EndsWithZeroSizedObject
 return|;
 block|}
 name|bool

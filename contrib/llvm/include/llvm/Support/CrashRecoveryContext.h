@@ -49,12 +49,6 @@ directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -164,8 +158,7 @@ comment|///
 comment|/// \return True if the function completed successfully, and false if the
 comment|/// function crashed (or HandleCrash was called explicitly). Clients should
 comment|/// make as little assumptions as possible about the program state when
-comment|/// RunSafely has returned false. Clients can use getBacktrace() to retrieve
-comment|/// the backtrace of the crash on failures.
+comment|/// RunSafely has returned false.
 name|bool
 name|RunSafely
 argument_list|(
@@ -283,20 +276,6 @@ name|void
 name|HandleCrash
 parameter_list|()
 function_decl|;
-comment|/// \brief Return a string containing the backtrace where the crash was
-comment|/// detected; or empty if the backtrace wasn't recovered.
-comment|///
-comment|/// This function is only valid when a crash has been detected (i.e.,
-comment|/// RunSafely() has returned false.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getBacktrace
-argument_list|()
-specifier|const
-expr_stmt|;
 block|}
 empty_stmt|;
 name|class

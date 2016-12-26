@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/iterator.h"
 end_include
 
@@ -89,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -176,6 +164,9 @@ comment|///
 comment|/// The result indicates whether the node existed in the folding set.
 name|class
 name|FoldingSetNodeID
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// FoldingSetImpl - Implements the folding set functionality.  The main
@@ -410,13 +401,46 @@ operator|==
 literal|0
 return|;
 block|}
+comment|/// reserve - Increase the number of buckets such that adding the
+comment|/// EltCount-th node won't cause a rebucket operation. reserve is permitted
+comment|/// to allocate more space than requested by EltCount.
+name|void
+name|reserve
+parameter_list|(
+name|unsigned
+name|EltCount
+parameter_list|)
+function_decl|;
+comment|/// capacity - Returns the number of nodes permitted in the folding set
+comment|/// before a rebucket operation is performed.
+name|unsigned
+name|capacity
+parameter_list|()
+block|{
+comment|// We allow a load factor of up to 2.0,
+comment|// so that means our capacity is NumBuckets * 2
+return|return
+name|NumBuckets
+operator|*
+literal|2
+return|;
+block|}
 name|private
 label|:
 comment|/// GrowHashTable - Double the size of the hash table and rehash everything.
-comment|///
 name|void
 name|GrowHashTable
 parameter_list|()
+function_decl|;
+comment|/// GrowBucketCount - resize the hash table and rehash everything.
+comment|/// NewBucketCount must be a power of two, and must be greater than the old
+comment|/// bucket count.
+name|void
+name|GrowBucketCount
+parameter_list|(
+name|unsigned
+name|NewBucketCount
+parameter_list|)
 function_decl|;
 name|protected
 label|:

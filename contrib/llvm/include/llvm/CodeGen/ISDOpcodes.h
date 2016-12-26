@@ -168,6 +168,11 @@ comment|/// first (possible) on-stack argument. This is needed for correct stack
 comment|/// adjustment during unwind.
 name|FRAME_TO_ARGS_OFFSET
 block|,
+comment|/// EH_DWARF_CFA - This node represents the pointer to the DWARF Canonical
+comment|/// Frame Address (CFA), generally the value of the stack pointer at the
+comment|/// call site in the previous frame.
+name|EH_DWARF_CFA
+block|,
 comment|/// OUTCHAIN = EH_RETURN(INCHAIN, OFFSET, HANDLER) - This node represents
 comment|/// 'eh_return' gcc dwarf builtin, which is used to return from
 comment|/// exception. The general meaning is: adjust stack by OFFSET and pass
@@ -375,6 +380,9 @@ block|,
 comment|/// INT = FGETSIGN(FP) - Return the sign bit of the specified floating point
 comment|/// value as an integer 0/1 value.
 name|FGETSIGN
+block|,
+comment|/// Returns platform specific canonical encoding of a floating point number.
+name|FCANONICALIZE
 block|,
 comment|/// BUILD_VECTOR(ELT0, ELT1, ELT2, ELT3,...) - Return a vector with the
 comment|/// specified, possibly variable, elements.  The number of elements is
@@ -637,6 +645,12 @@ comment|/// format conversions, etc).  The source and result are required to hav
 comment|/// the same bit size (e.g.  f32<-> i32).  This can also be used for
 comment|/// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
 comment|/// getNode().
+comment|///
+comment|/// This operator is subtly different from the bitcast instruction from
+comment|/// LLVM-IR since this node may change the bits in the register. For
+comment|/// example, this occurs on big-endian NEON and big-endian MSA where the
+comment|/// layout of the bits in the register depends on the vector type and this
+comment|/// operator acts as a shuffle operation for some vector type combinations.
 name|BITCAST
 block|,
 comment|/// ADDRSPACECAST - This operator converts between pointers of different
@@ -1167,8 +1181,8 @@ name|SETCC_INVALID
 comment|// Marker value.
 block|}
 enum|;
-comment|/// isSignedIntSetCC - Return true if this is a setcc instruction that
-comment|/// performs a signed comparison when used with integer operands.
+comment|/// Return true if this is a setcc instruction that performs a signed
+comment|/// comparison when used with integer operands.
 specifier|inline
 name|bool
 name|isSignedIntSetCC
@@ -1195,8 +1209,8 @@ operator|==
 name|SETLE
 return|;
 block|}
-comment|/// isUnsignedIntSetCC - Return true if this is a setcc instruction that
-comment|/// performs an unsigned comparison when used with integer operands.
+comment|/// Return true if this is a setcc instruction that performs an unsigned
+comment|/// comparison when used with integer operands.
 specifier|inline
 name|bool
 name|isUnsignedIntSetCC
@@ -1223,9 +1237,9 @@ operator|==
 name|SETULE
 return|;
 block|}
-comment|/// isTrueWhenEqual - Return true if the specified condition returns true if
-comment|/// the two operands to the condition are equal.  Note that if one of the two
-comment|/// operands is a NaN, this value is meaningless.
+comment|/// Return true if the specified condition returns true if the two operands to
+comment|/// the condition are equal. Note that if one of the two operands is a NaN,
+comment|/// this value is meaningless.
 specifier|inline
 name|bool
 name|isTrueWhenEqual
@@ -1247,10 +1261,9 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getUnorderedFlavor - This function returns 0 if the condition is always
-comment|/// false if an operand is a NaN, 1 if the condition is always true if the
-comment|/// operand is a NaN, and 2 if the condition is undefined if the operand is a
-comment|/// NaN.
+comment|/// This function returns 0 if the condition is always false if an operand is
+comment|/// a NaN, 1 if the condition is always true if the operand is a NaN, and 2 if
+comment|/// the condition is undefined if the operand is a NaN.
 specifier|inline
 name|unsigned
 name|getUnorderedFlavor
@@ -1272,8 +1285,8 @@ operator|&
 literal|3
 return|;
 block|}
-comment|/// getSetCCInverse - Return the operation corresponding to !(X op Y), where
-comment|/// 'op' is a valid SetCC operation.
+comment|/// Return the operation corresponding to !(X op Y), where 'op' is a valid
+comment|/// SetCC operation.
 name|CondCode
 name|getSetCCInverse
 parameter_list|(
@@ -1284,8 +1297,8 @@ name|bool
 name|isInteger
 parameter_list|)
 function_decl|;
-comment|/// getSetCCSwappedOperands - Return the operation corresponding to (Y op X)
-comment|/// when given the operation for (X op Y).
+comment|/// Return the operation corresponding to (Y op X) when given the operation
+comment|/// for (X op Y).
 name|CondCode
 name|getSetCCSwappedOperands
 parameter_list|(
@@ -1293,10 +1306,9 @@ name|CondCode
 name|Operation
 parameter_list|)
 function_decl|;
-comment|/// getSetCCOrOperation - Return the result of a logical OR between different
-comment|/// comparisons of identical values: ((X op1 Y) | (X op2 Y)).  This
-comment|/// function returns SETCC_INVALID if it is not possible to represent the
-comment|/// resultant comparison.
+comment|/// Return the result of a logical OR between different comparisons of
+comment|/// identical values: ((X op1 Y) | (X op2 Y)). This function returns
+comment|/// SETCC_INVALID if it is not possible to represent the resultant comparison.
 name|CondCode
 name|getSetCCOrOperation
 parameter_list|(
@@ -1310,10 +1322,9 @@ name|bool
 name|isInteger
 parameter_list|)
 function_decl|;
-comment|/// getSetCCAndOperation - Return the result of a logical AND between
-comment|/// different comparisons of identical values: ((X op1 Y)& (X op2 Y)).  This
-comment|/// function returns SETCC_INVALID if it is not possible to represent the
-comment|/// resultant comparison.
+comment|/// Return the result of a logical AND between different comparisons of
+comment|/// identical values: ((X op1 Y)& (X op2 Y)). This function returns
+comment|/// SETCC_INVALID if it is not possible to represent the resultant comparison.
 name|CondCode
 name|getSetCCAndOperation
 parameter_list|(
@@ -1328,8 +1339,7 @@ name|isInteger
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// CvtCode enum - This enum defines the various converts CONVERT_RNDSAT
-comment|/// supports.
+comment|/// This enum defines the various converts CONVERT_RNDSAT supports.
 enum|enum
 name|CvtCode
 block|{

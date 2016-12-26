@@ -263,7 +263,7 @@ comment|/// corresponding to this instruction, false otherwise.
 name|bool
 name|removeKill
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 block|{
 name|std
@@ -291,6 +291,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|,
+operator|&
 name|MI
 argument_list|)
 block|;
@@ -459,7 +460,7 @@ name|unsigned
 name|Reg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -485,7 +486,7 @@ name|void
 name|UpdatePhysRegDefs
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|SmallVectorImpl
@@ -543,7 +544,7 @@ name|void
 name|runOnInstr
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|SmallVectorImpl
@@ -582,7 +583,7 @@ name|bool
 name|RegisterDefIsDead
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned
@@ -601,11 +602,11 @@ name|unsigned
 name|Reg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|OldMI
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|NewMI
 parameter_list|)
 function_decl|;
@@ -620,7 +621,7 @@ name|unsigned
 name|IncomingReg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|bool
@@ -632,7 +633,7 @@ block|{
 if|if
 condition|(
 name|MI
-operator|->
+operator|.
 name|addRegisterKilled
 argument_list|(
 name|IncomingReg
@@ -651,6 +652,7 @@ name|Kills
 operator|.
 name|push_back
 argument_list|(
+operator|&
 name|MI
 argument_list|)
 expr_stmt|;
@@ -666,7 +668,7 @@ name|unsigned
 name|reg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -701,7 +703,7 @@ init|,
 name|e
 init|=
 name|MI
-operator|->
+operator|.
 name|getNumOperands
 argument_list|()
 init|;
@@ -718,7 +720,7 @@ modifier|&
 name|MO
 init|=
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|i
@@ -780,7 +782,7 @@ name|void
 name|removeVirtualRegistersKilled
 parameter_list|(
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -794,7 +796,7 @@ name|unsigned
 name|IncomingReg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|,
 name|bool
@@ -806,7 +808,7 @@ block|{
 if|if
 condition|(
 name|MI
-operator|->
+operator|.
 name|addRegisterDead
 argument_list|(
 name|IncomingReg
@@ -825,6 +827,7 @@ name|Kills
 operator|.
 name|push_back
 argument_list|(
+operator|&
 name|MI
 argument_list|)
 expr_stmt|;
@@ -840,7 +843,7 @@ name|unsigned
 name|reg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 block|{
@@ -875,7 +878,7 @@ init|,
 name|e
 init|=
 name|MI
-operator|->
+operator|.
 name|getNumOperands
 argument_list|()
 init|;
@@ -892,7 +895,7 @@ modifier|&
 name|MO
 init|=
 name|MI
-operator|->
+operator|.
 name|getOperand
 argument_list|(
 name|i
@@ -1028,7 +1031,7 @@ name|unsigned
 name|reg
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -1043,7 +1046,7 @@ modifier|*
 name|MBB
 parameter_list|,
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;

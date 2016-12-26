@@ -381,6 +381,25 @@ argument_list|)
 block|{}
 block|}
 struct|;
+comment|// Kinds of fused compares in compare-and-* instructions.  Together with type
+comment|// of the converted compare, this identifies the compare-and-*
+comment|// instruction.
+enum|enum
+name|FusedCompareType
+block|{
+comment|// Relative branch - CRJ etc.
+name|CompareAndBranch
+block|,
+comment|// Indirect branch, used for return - CRBReturn etc.
+name|CompareAndReturn
+block|,
+comment|// Indirect branch, used for sibcall - CRBCall etc.
+name|CompareAndSibcall
+block|,
+comment|// Trap
+name|CompareAndTrap
+block|}
+enum|;
 block|}
 comment|// end namespace SystemZII
 name|class
@@ -419,7 +438,7 @@ block|;
 name|void
 name|expandRIPseudo
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned LowOpcode
 argument_list|,
@@ -432,7 +451,7 @@ block|;
 name|void
 name|expandRIEPseudo
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned LowOpcode
 argument_list|,
@@ -445,7 +464,7 @@ block|;
 name|void
 name|expandRXYPseudo
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned LowOpcode
 argument_list|,
@@ -456,11 +475,18 @@ block|;
 name|void
 name|expandZExtPseudo
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned LowOpcode
 argument_list|,
 argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
+name|void
+name|expandLoadStackGuard
+argument_list|(
+argument|MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -471,7 +497,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -504,7 +530,7 @@ comment|// Override TargetInstrInfo.
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -514,7 +540,7 @@ block|;
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -524,7 +550,7 @@ block|;
 name|bool
 name|isStackSlotCopy
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&DestFrameIndex
 argument_list|,
@@ -534,7 +560,7 @@ specifier|const
 name|override
 block|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -568,7 +594,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -576,7 +602,7 @@ block|;
 name|bool
 name|analyzeCompare
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
@@ -592,7 +618,7 @@ block|;
 name|bool
 name|optimizeCompareInstr
 argument_list|(
-argument|MachineInstr *CmpInstr
+argument|MachineInstr&CmpInstr
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
@@ -610,7 +636,7 @@ block|;
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -650,9 +676,21 @@ specifier|const
 name|override
 block|;
 name|bool
+name|isProfitableToDupForIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|BranchProbability Probability
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|PredicateInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<MachineOperand> Pred
 argument_list|)
@@ -666,7 +704,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -721,7 +759,7 @@ name|convertToThreeAddress
 argument_list|(
 argument|MachineFunction::iterator&MFI
 argument_list|,
-argument|MachineBasicBlock::iterator&MBBI
+argument|MachineInstr&MI
 argument_list|,
 argument|LiveVariables *LV
 argument_list|)
@@ -734,13 +772,15 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -751,13 +791,15 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
-argument|MachineInstr *LoadMI
+argument|MachineInstr&LoadMI
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -765,7 +807,7 @@ block|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MBBI
+argument|MachineInstr&MBBI
 argument_list|)
 specifier|const
 name|override
@@ -794,7 +836,7 @@ comment|// Return the size in bytes of MI.
 name|uint64_t
 name|getInstSizeInBytes
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -808,7 +850,7 @@ operator|::
 name|Branch
 name|getBranchInfo
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -863,13 +905,15 @@ argument|unsigned&End
 argument_list|)
 specifier|const
 block|;
-comment|// If Opcode is a COMPARE opcode for which an associated COMPARE AND
-comment|// BRANCH exists, return the opcode for the latter, otherwise return 0.
+comment|// If Opcode is a COMPARE opcode for which an associated fused COMPARE AND *
+comment|// operation exists, return the opcode for the latter, otherwise return 0.
 comment|// MI, if nonnull, is the compare instruction.
 name|unsigned
-name|getCompareAndBranch
+name|getFusedCompare
 argument_list|(
 argument|unsigned Opcode
+argument_list|,
+argument|SystemZII::FusedCompareType Type
 argument_list|,
 argument|const MachineInstr *MI = nullptr
 argument_list|)

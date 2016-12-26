@@ -50,8 +50,295 @@ begin_define
 define|#
 directive|define
 name|__DEFAULT_FN_ATTRS
+define|\
 value|__attribute__((__always_inline__, __nodebug__, __target__("f16c")))
 end_define
+
+begin_comment
+comment|/// \brief Converts a 16-bit half-precision float value into a 32-bit float
+end_comment
+
+begin_comment
+comment|///    value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPH2PS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 16-bit half-precision float value.
+end_comment
+
+begin_comment
+comment|/// \returns The converted 32-bit float value.
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|float
+name|__DEFAULT_FN_ATTRS
+name|_cvtsh_ss
+parameter_list|(
+name|unsigned
+name|short
+name|__a
+parameter_list|)
+block|{
+name|__v8hi
+name|v
+init|=
+block|{
+operator|(
+name|short
+operator|)
+name|__a
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|__v4sf
+name|r
+init|=
+name|__builtin_ia32_vcvtph2ps
+argument_list|(
+name|v
+argument_list|)
+decl_stmt|;
+return|return
+name|r
+index|[
+literal|0
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Converts a 32-bit single-precision float value to a 16-bit
+end_comment
+
+begin_comment
+comment|///    half-precision float value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// unsigned short _cvtss_sh(float a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPS2PH instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 32-bit single-precision float value to be converted to a 16-bit
+end_comment
+
+begin_comment
+comment|///    half-precision float value.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An immediate value controlling rounding using bits [2:0]:
+end_comment
+
+begin_comment
+comment|///    000: Nearest
+end_comment
+
+begin_comment
+comment|///    001: Down
+end_comment
+
+begin_comment
+comment|///    010: Up
+end_comment
+
+begin_comment
+comment|///    011: Truncate
+end_comment
+
+begin_comment
+comment|///    1XX: Use MXCSR.RC for rounding
+end_comment
+
+begin_comment
+comment|/// \returns The converted 16-bit half-precision float value.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_cvtss_sh
+parameter_list|(
+name|a
+parameter_list|,
+name|imm
+parameter_list|)
+define|\
+value|((unsigned short)(((__v8hi)__builtin_ia32_vcvtps2ph((__v4sf){a, 0, 0, 0}, \                                                       (imm)))[0]))
+end_define
+
+begin_comment
+comment|/// \brief Converts a 128-bit vector containing 32-bit float values into a
+end_comment
+
+begin_comment
+comment|///    128-bit vector containing 16-bit half-precision float values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_cvtps_ph(__m128 a, const int imm);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPS2PH instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector containing 32-bit float values.
+end_comment
+
+begin_comment
+comment|/// \param imm
+end_comment
+
+begin_comment
+comment|///    An immediate value controlling rounding using bits [2:0]:
+end_comment
+
+begin_comment
+comment|///    000: Nearest
+end_comment
+
+begin_comment
+comment|///    001: Down
+end_comment
+
+begin_comment
+comment|///    010: Up
+end_comment
+
+begin_comment
+comment|///    011: Truncate
+end_comment
+
+begin_comment
+comment|///    1XX: Use MXCSR.RC for rounding
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector containing converted 16-bit half-precision float
+end_comment
+
+begin_comment
+comment|///    values. The lower 64 bits are used to store the converted 16-bit
+end_comment
+
+begin_comment
+comment|///    half-precision floating-point values.
+end_comment
 
 begin_define
 define|#
@@ -62,8 +349,53 @@ name|a
 parameter_list|,
 name|imm
 parameter_list|)
-value|__extension__ ({ \  (__m128i)__builtin_ia32_vcvtps2ph((__v4sf)(__m128)(a), (imm)); })
+define|\
+value|((__m128i)__builtin_ia32_vcvtps2ph((__v4sf)(__m128)(a), (imm)))
 end_define
+
+begin_comment
+comment|/// \brief Converts a 128-bit vector containing 16-bit half-precision float
+end_comment
+
+begin_comment
+comment|///    values into a 128-bit vector containing 32-bit float values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VCVTPH2PS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __a
+end_comment
+
+begin_comment
+comment|///    A 128-bit vector containing 16-bit half-precision float values. The lower
+end_comment
+
+begin_comment
+comment|///    64 bits are used in the conversion.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit vector of [4 x float] containing converted float values.
+end_comment
 
 begin_function
 specifier|static

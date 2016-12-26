@@ -55,6 +55,12 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Core/dwarf.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -128,12 +134,64 @@ parameter_list|,
 name|kind2
 parameter_list|,
 name|kind3
-parameter_list|,
-name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((GPR_linux_mips*)NULL)->reg) / 2, GPR_OFFSET(reg), eEncodingUint,  \       eFormatHex, { kind1, kind2, kind3, kind4, gpr_##reg##_mips }, NULL, NULL }
+value|{                                                                            \     #reg, alt, sizeof(((GPR_linux_mips *) NULL)->reg) / 2,                     \                       GPR_OFFSET(reg), eEncodingUint, eFormatHex,              \                                  {kind1, kind2, kind3, ptrace_##reg##_mips,    \                                   gpr_##reg##_mips },                          \                                   NULL, NULL, NULL, 0                          \   }
 end_define
+
+begin_decl_stmt
+specifier|const
+name|uint8_t
+name|dwarf_opcode_mips
+index|[]
+init|=
+block|{
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_regx
+block|,
+name|dwarf_sr_mips
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit1
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit26
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_shl
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_and
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_lit26
+block|,
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|DW_OP_shr
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -149,11 +207,28 @@ parameter_list|,
 name|kind2
 parameter_list|,
 name|kind3
-parameter_list|,
-name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((FPR_linux_mips*)NULL)->reg), FPR_OFFSET(reg), eEncodingUint,   \       eFormatHex, { kind1, kind2, kind3, kind4, fpr_##reg##_mips }, NULL, NULL }
+value|{                                                                            \     #reg, alt, sizeof(((FPR_linux_mips *) NULL)->reg),                         \                       FPR_OFFSET(reg), eEncodingIEEE754, eFormatFloat,         \                                  {kind1, kind2, kind3, ptrace_##reg##_mips,    \                                   fpr_##reg##_mips },                          \                                   NULL, NULL, dwarf_opcode_mips,               \                                   sizeof(dwarf_opcode_mips)                    \   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFINE_FPR_INFO
+parameter_list|(
+name|reg
+parameter_list|,
+name|alt
+parameter_list|,
+name|kind1
+parameter_list|,
+name|kind2
+parameter_list|,
+name|kind3
+parameter_list|)
+define|\
+value|{                                                                            \     #reg, alt, sizeof(((FPR_linux_mips *) NULL)->reg),                         \                       FPR_OFFSET(reg), eEncodingUint, eFormatHex,              \                                  {kind1, kind2, kind3, ptrace_##reg##_mips,    \                                   fpr_##reg##_mips },                          \                                   NULL, NULL, NULL, 0                          \   }
 end_define
 
 begin_define
@@ -174,7 +249,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingVector,   \       eFormatVectorOfUInt8, { kind1, kind2, kind3, kind4, msa_##reg##_mips }, NULL, NULL }
+value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingVector,   \       eFormatVectorOfUInt8, { kind1, kind2, kind3, kind4, msa_##reg##_mips }, NULL, NULL, NULL, 0}
 end_define
 
 begin_define
@@ -195,7 +270,7 @@ parameter_list|,
 name|kind4
 parameter_list|)
 define|\
-value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, msa_##reg##_mips }, NULL, NULL }
+value|{ #reg, alt, sizeof(((MSA_linux_mips*)0)->reg), MSA_OFFSET(reg), eEncodingUint, \       eFormatHex, { kind1, kind2, kind3, kind4, msa_##reg##_mips }, NULL, NULL, NULL, 0}
 end_define
 
 begin_comment
@@ -220,8 +295,6 @@ argument_list|,
 name|dwarf_zero_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -233,8 +306,6 @@ argument_list|,
 name|dwarf_r1_mips
 argument_list|,
 name|dwarf_r1_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -250,8 +321,6 @@ argument_list|,
 name|dwarf_r2_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -263,8 +332,6 @@ argument_list|,
 name|dwarf_r3_mips
 argument_list|,
 name|dwarf_r3_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -280,8 +347,6 @@ argument_list|,
 name|dwarf_r4_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_ARG1
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -295,8 +360,6 @@ argument_list|,
 name|dwarf_r5_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_ARG2
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -310,8 +373,6 @@ argument_list|,
 name|dwarf_r6_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_ARG3
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -325,8 +386,6 @@ argument_list|,
 name|dwarf_r7_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_ARG4
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -338,8 +397,6 @@ argument_list|,
 name|dwarf_r8_mips
 argument_list|,
 name|dwarf_r8_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -355,8 +412,6 @@ argument_list|,
 name|dwarf_r9_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -368,8 +423,6 @@ argument_list|,
 name|dwarf_r10_mips
 argument_list|,
 name|dwarf_r10_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -385,8 +438,6 @@ argument_list|,
 name|dwarf_r11_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -398,8 +449,6 @@ argument_list|,
 name|dwarf_r12_mips
 argument_list|,
 name|dwarf_r12_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -415,8 +464,6 @@ argument_list|,
 name|dwarf_r13_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -428,8 +475,6 @@ argument_list|,
 name|dwarf_r14_mips
 argument_list|,
 name|dwarf_r14_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -445,8 +490,6 @@ argument_list|,
 name|dwarf_r15_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -458,8 +501,6 @@ argument_list|,
 name|dwarf_r16_mips
 argument_list|,
 name|dwarf_r16_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -475,8 +516,6 @@ argument_list|,
 name|dwarf_r17_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -488,8 +527,6 @@ argument_list|,
 name|dwarf_r18_mips
 argument_list|,
 name|dwarf_r18_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -505,8 +542,6 @@ argument_list|,
 name|dwarf_r19_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -518,8 +553,6 @@ argument_list|,
 name|dwarf_r20_mips
 argument_list|,
 name|dwarf_r20_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -535,8 +568,6 @@ argument_list|,
 name|dwarf_r21_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -548,8 +579,6 @@ argument_list|,
 name|dwarf_r22_mips
 argument_list|,
 name|dwarf_r22_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -565,8 +594,6 @@ argument_list|,
 name|dwarf_r23_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -578,8 +605,6 @@ argument_list|,
 name|dwarf_r24_mips
 argument_list|,
 name|dwarf_r24_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -595,8 +620,6 @@ argument_list|,
 name|dwarf_r25_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -608,8 +631,6 @@ argument_list|,
 name|dwarf_r26_mips
 argument_list|,
 name|dwarf_r26_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -625,8 +646,6 @@ argument_list|,
 name|dwarf_r27_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -638,8 +657,6 @@ argument_list|,
 name|dwarf_gp_mips
 argument_list|,
 name|dwarf_gp_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -655,8 +672,6 @@ argument_list|,
 name|dwarf_sp_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_SP
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -670,8 +685,6 @@ argument_list|,
 name|dwarf_r30_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_FP
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -685,8 +698,6 @@ argument_list|,
 name|dwarf_ra_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_RA
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -700,8 +711,6 @@ argument_list|,
 name|dwarf_sr_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_FLAGS
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -713,8 +722,6 @@ argument_list|,
 name|dwarf_lo_mips
 argument_list|,
 name|dwarf_lo_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -730,8 +737,6 @@ argument_list|,
 name|dwarf_hi_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -743,8 +748,6 @@ argument_list|,
 name|dwarf_bad_mips
 argument_list|,
 name|dwarf_bad_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -760,8 +763,6 @@ argument_list|,
 name|dwarf_cause_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -775,8 +776,6 @@ argument_list|,
 name|dwarf_pc_mips
 argument_list|,
 name|LLDB_REGNUM_GENERIC_PC
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_GPR
@@ -788,8 +787,6 @@ argument_list|,
 name|dwarf_config5_mips
 argument_list|,
 name|dwarf_config5_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -805,8 +802,6 @@ argument_list|,
 name|dwarf_f0_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -818,8 +813,6 @@ argument_list|,
 name|dwarf_f1_mips
 argument_list|,
 name|dwarf_f1_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -835,8 +828,6 @@ argument_list|,
 name|dwarf_f2_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -848,8 +839,6 @@ argument_list|,
 name|dwarf_f3_mips
 argument_list|,
 name|dwarf_f3_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -865,8 +854,6 @@ argument_list|,
 name|dwarf_f4_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -878,8 +865,6 @@ argument_list|,
 name|dwarf_f5_mips
 argument_list|,
 name|dwarf_f5_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -895,8 +880,6 @@ argument_list|,
 name|dwarf_f6_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -908,8 +891,6 @@ argument_list|,
 name|dwarf_f7_mips
 argument_list|,
 name|dwarf_f7_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -925,8 +906,6 @@ argument_list|,
 name|dwarf_f8_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -938,8 +917,6 @@ argument_list|,
 name|dwarf_f9_mips
 argument_list|,
 name|dwarf_f9_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -955,8 +932,6 @@ argument_list|,
 name|dwarf_f10_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -968,8 +943,6 @@ argument_list|,
 name|dwarf_f11_mips
 argument_list|,
 name|dwarf_f11_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -985,8 +958,6 @@ argument_list|,
 name|dwarf_f12_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -998,8 +969,6 @@ argument_list|,
 name|dwarf_f13_mips
 argument_list|,
 name|dwarf_f13_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1015,8 +984,6 @@ argument_list|,
 name|dwarf_f14_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1028,8 +995,6 @@ argument_list|,
 name|dwarf_f15_mips
 argument_list|,
 name|dwarf_f15_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1045,8 +1010,6 @@ argument_list|,
 name|dwarf_f16_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1058,8 +1021,6 @@ argument_list|,
 name|dwarf_f17_mips
 argument_list|,
 name|dwarf_f17_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1075,8 +1036,6 @@ argument_list|,
 name|dwarf_f18_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1088,8 +1047,6 @@ argument_list|,
 name|dwarf_f19_mips
 argument_list|,
 name|dwarf_f19_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1105,8 +1062,6 @@ argument_list|,
 name|dwarf_f20_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1118,8 +1073,6 @@ argument_list|,
 name|dwarf_f21_mips
 argument_list|,
 name|dwarf_f21_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1135,8 +1088,6 @@ argument_list|,
 name|dwarf_f22_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1148,8 +1099,6 @@ argument_list|,
 name|dwarf_f23_mips
 argument_list|,
 name|dwarf_f23_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1165,8 +1114,6 @@ argument_list|,
 name|dwarf_f24_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1178,8 +1125,6 @@ argument_list|,
 name|dwarf_f25_mips
 argument_list|,
 name|dwarf_f25_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1195,8 +1140,6 @@ argument_list|,
 name|dwarf_f26_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1208,8 +1151,6 @@ argument_list|,
 name|dwarf_f27_mips
 argument_list|,
 name|dwarf_f27_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1225,8 +1166,6 @@ argument_list|,
 name|dwarf_f28_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1238,8 +1177,6 @@ argument_list|,
 name|dwarf_f29_mips
 argument_list|,
 name|dwarf_f29_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1255,8 +1192,6 @@ argument_list|,
 name|dwarf_f30_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
 name|DEFINE_FPR
@@ -1270,11 +1205,9 @@ argument_list|,
 name|dwarf_f31_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|fcsr
 argument_list|,
@@ -1285,11 +1218,9 @@ argument_list|,
 name|dwarf_fcsr_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|fir
 argument_list|,
@@ -1300,11 +1231,9 @@ argument_list|,
 name|dwarf_fir_mips
 argument_list|,
 name|LLDB_INVALID_REGNUM
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|)
 block|,
-name|DEFINE_FPR
+name|DEFINE_FPR_INFO
 argument_list|(
 name|config5
 argument_list|,
@@ -1313,8 +1242,6 @@ argument_list|,
 name|dwarf_config5_mips
 argument_list|,
 name|dwarf_config5_mips
-argument_list|,
-name|LLDB_INVALID_REGNUM
 argument_list|,
 name|LLDB_INVALID_REGNUM
 argument_list|)
@@ -1930,6 +1857,12 @@ begin_undef
 undef|#
 directive|undef
 name|DEFINE_FPR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DEFINE_FPR_INFO
 end_undef
 
 begin_undef

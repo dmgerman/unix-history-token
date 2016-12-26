@@ -28,6 +28,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|long
+name|long
+name|__v1di
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(8)));
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
 name|__v2si
 name|__attribute__
@@ -67,6 +78,34 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("mmx")))
 end_define
 
+begin_comment
+comment|/// \brief Clears the MMX state by setting the state of the x87 stack registers
+end_comment
+
+begin_comment
+comment|///    to empty.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c EMMS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -82,6 +121,50 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector, setting the lower 32 bits to the
+end_comment
+
+begin_comment
+comment|///    value of the 32-bit integer parameter and setting the upper 32 bits to 0.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector. The lower 32 bits contain the value of the
+end_comment
+
+begin_comment
+comment|///    parameter. The upper 32 bits are set to 0.
+end_comment
 
 begin_function
 specifier|static
@@ -108,6 +191,50 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Returns the lower 32 bits of a 64-bit integer vector as a 32-bit
+end_comment
+
+begin_comment
+comment|///    signed integer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMOVD / MOVD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 32-bit signed integer value containing the lower 32 bits of the
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -133,6 +260,46 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Casts a 64-bit signed integer value into a 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMOVQ / MOVD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i
+end_comment
+
+begin_comment
+comment|///    A 64-bit signed integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the same bitwise pattern as the
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -153,6 +320,46 @@ name|__i
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Casts a 64-bit integer vector into a 64-bit signed integer value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VMOVQ / MOVD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit signed integer containing the same bitwise pattern as the
+end_comment
+
+begin_comment
+comment|///    parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -175,6 +382,102 @@ name|__m
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts 16-bit signed integers from both 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    parameters of [4 x i16] into 8-bit signed integer values, and constructs
+end_comment
+
+begin_comment
+comment|///    a 64-bit integer vector of [8 x i8] as the result. Positive values
+end_comment
+
+begin_comment
+comment|///    greater than 0x7F are saturated to 0x7F. Negative values less than 0x80
+end_comment
+
+begin_comment
+comment|///    are saturated to 0x80.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PACKSSWB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16]. Each 16-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    16-bit signed integer and is converted to an 8-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Positive values greater than 0x7F are saturated to 0x7F.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x80 are saturated to 0x80. The converted
+end_comment
+
+begin_comment
+comment|///    [4 x i8] values are written to the lower 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16]. Each 16-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    16-bit signed integer and is converted to an 8-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Positive values greater than 0x7F are saturated to 0x7F.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x80 are saturated to 0x80. The converted
+end_comment
+
+begin_comment
+comment|///    [4 x i8] values are written to the upper 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the converted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -210,6 +513,102 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Converts 32-bit signed integers from both 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    parameters of [2 x i32] into 16-bit signed integer values, and constructs
+end_comment
+
+begin_comment
+comment|///    a 64-bit integer vector of [4 x i16] as the result. Positive values
+end_comment
+
+begin_comment
+comment|///    greater than 0x7FFF are saturated to 0x7FFF. Negative values less than
+end_comment
+
+begin_comment
+comment|///    0x8000 are saturated to 0x8000.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PACKSSDW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. Each 32-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    32-bit signed integer and is converted to a 16-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Positive values greater than 0x7FFF are saturated to 0x7FFF.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x8000 are saturated to 0x8000. The converted
+end_comment
+
+begin_comment
+comment|///    [2 x i16] values are written to the lower 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. Each 32-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    32-bit signed integer and is converted to a 16-bit signed integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Positive values greater than 0x7FFF are saturated to 0x7FFF.
+end_comment
+
+begin_comment
+comment|///    Negative values less than 0x8000 are saturated to 0x8000. The converted
+end_comment
+
+begin_comment
+comment|///    [2 x i16] values are written to the upper 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the converted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -243,6 +642,102 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Converts 16-bit signed integers from both 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    parameters of [4 x i16] into 8-bit unsigned integer values, and
+end_comment
+
+begin_comment
+comment|///    constructs a 64-bit integer vector of [8 x i8] as the result. Values
+end_comment
+
+begin_comment
+comment|///    greater than 0xFF are saturated to 0xFF. Values less than 0 are saturated
+end_comment
+
+begin_comment
+comment|///    to 0.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PACKUSWB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16]. Each 16-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    16-bit signed integer and is converted to an 8-bit unsigned integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0xFF are saturated to 0xFF. Values less
+end_comment
+
+begin_comment
+comment|///    than 0 are saturated to 0. The converted [4 x i8] values are written to
+end_comment
+
+begin_comment
+comment|///    the lower 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16]. Each 16-bit element is treated as a
+end_comment
+
+begin_comment
+comment|///    16-bit signed integer and is converted to an 8-bit unsigned integer with
+end_comment
+
+begin_comment
+comment|///    saturation. Values greater than 0xFF are saturated to 0xFF. Values less
+end_comment
+
+begin_comment
+comment|///    than 0 are saturated to 0. The converted [4 x i8] values are written to
+end_comment
+
+begin_comment
+comment|///    the upper 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the converted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -278,6 +773,90 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the upper 32 bits from two 64-bit integer vectors of [8 x i8]
+end_comment
+
+begin_comment
+comment|///    and interleaves them into a 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKHBW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [39:32] are written to bits [7:0] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [47:40] are written to bits [23:16] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [55:48] are written to bits [39:32] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [63:56] are written to bits [55:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [39:32] are written to bits [15:8] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [47:40] are written to bits [31:24] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [55:48] are written to bits [47:40] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [63:56] are written to bits [63:56] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -311,6 +890,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Unpacks the upper 32 bits from two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i16] and interleaves them into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKHWD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [47:32] are written to bits [15:0] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [63:48] are written to bits [47:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [47:32] are written to bits [31:16] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [63:48] are written to bits [63:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -346,6 +993,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the upper 32 bits from two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x i32] and interleaves them into a 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKHDQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. The upper 32 bits are written to
+end_comment
+
+begin_comment
+comment|///    the lower 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. The upper 32 bits are written to
+end_comment
+
+begin_comment
+comment|///    the upper 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -379,6 +1086,90 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Unpacks the lower 32 bits from two 64-bit integer vectors of [8 x i8]
+end_comment
+
+begin_comment
+comment|///    and interleaves them into a 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKLBW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] are written to bits [7:0] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [15:8] are written to bits [23:16] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [23:16] are written to bits [39:32] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [31:24] are written to bits [55:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///    Bits [7:0] are written to bits [15:8] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [15:8] are written to bits [31:24] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [23:16] are written to bits [47:40] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [31:24] are written to bits [63:56] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -414,6 +1205,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Unpacks the lower 32 bits from two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i16] and interleaves them into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKLWD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [15:0] are written to bits [15:0] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [31:16] are written to bits [47:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///    Bits [15:0] are written to bits [31:16] of the result.
+end_comment
+
+begin_comment
+comment|///    Bits [31:16] are written to bits [63:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -447,6 +1306,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Unpacks the lower 32 bits from two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x i32] and interleaves them into a 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PUNPCKLDQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. The lower 32 bits are written to
+end_comment
+
+begin_comment
+comment|///    the lower 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32]. The lower 32 bits are written to
+end_comment
+
+begin_comment
+comment|///    the upper 32 bits of the result.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the interleaved
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -482,6 +1401,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds each 8-bit integer element of the first 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [8 x i8] to the corresponding 8-bit integer element of the second
+end_comment
+
+begin_comment
+comment|///    64-bit integer vector of [8 x i8]. The lower 8 bits of the results are
+end_comment
+
+begin_comment
+comment|///    packed into a 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -515,6 +1494,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds each 16-bit integer element of the first 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [4 x i16] to the corresponding 16-bit integer element of the second
+end_comment
+
+begin_comment
+comment|///    64-bit integer vector of [4 x i16]. The lower 16 bits of the results are
+end_comment
+
+begin_comment
+comment|///    packed into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -550,6 +1589,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds each 32-bit integer element of the first 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [2 x i32] to the corresponding 32-bit integer element of the second
+end_comment
+
+begin_comment
+comment|///    64-bit integer vector of [2 x i32]. The lower 32 bits of the results are
+end_comment
+
+begin_comment
+comment|///    packed into a 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the sums of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -583,6 +1682,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds each 8-bit signed integer element of the first 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [8 x i8] to the corresponding 8-bit signed integer element of
+end_comment
+
+begin_comment
+comment|///    the second 64-bit integer vector of [8 x i8]. Positive sums greater than
+end_comment
+
+begin_comment
+comment|///    0x7F are saturated to 0x7F. Negative sums less than 0x80 are saturated to
+end_comment
+
+begin_comment
+comment|///    0x80. The results are packed into a 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the saturated sums
+end_comment
+
+begin_comment
+comment|///    of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -618,6 +1781,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds each 16-bit signed integer element of the first 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16] to the corresponding 16-bit signed integer element of
+end_comment
+
+begin_comment
+comment|///    the second 64-bit integer vector of [4 x i16]. Positive sums greater than
+end_comment
+
+begin_comment
+comment|///    0x7FFF are saturated to 0x7FFF. Negative sums less than 0x8000 are
+end_comment
+
+begin_comment
+comment|///    saturated to 0x8000. The results are packed into a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the saturated sums
+end_comment
+
+begin_comment
+comment|///    of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -651,6 +1882,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Adds each 8-bit unsigned integer element of the first 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [8 x i8] to the corresponding 8-bit unsigned integer element of
+end_comment
+
+begin_comment
+comment|///    the second 64-bit integer vector of [8 x i8]. Sums greater than 0xFF are
+end_comment
+
+begin_comment
+comment|///    saturated to 0xFF. The results are packed into a 64-bit integer vector of
+end_comment
+
+begin_comment
+comment|///    [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDUSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the saturated
+end_comment
+
+begin_comment
+comment|///    unsigned sums of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -686,6 +1981,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Adds each 16-bit unsigned integer element of the first 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16] to the corresponding 16-bit unsigned integer element
+end_comment
+
+begin_comment
+comment|///    of the second 64-bit integer vector of [4 x i16]. Sums greater than
+end_comment
+
+begin_comment
+comment|///    0xFFFF are saturated to 0xFFFF. The results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PADDUSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the saturated
+end_comment
+
+begin_comment
+comment|///    unsigned sums of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -719,6 +2078,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts each 8-bit integer element of the second 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [8 x i8] from the corresponding 8-bit integer element of the
+end_comment
+
+begin_comment
+comment|///    first 64-bit integer vector of [8 x i8]. The lower 8 bits of the results
+end_comment
+
+begin_comment
+comment|///    are packed into a 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the differences of
+end_comment
+
+begin_comment
+comment|///    both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -754,6 +2173,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Subtracts each 16-bit integer element of the second 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16] from the corresponding 16-bit integer element of the
+end_comment
+
+begin_comment
+comment|///    first 64-bit integer vector of [4 x i16]. The lower 16 bits of the
+end_comment
+
+begin_comment
+comment|///    results are packed into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the differences of
+end_comment
+
+begin_comment
+comment|///    both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -787,6 +2266,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts each 32-bit integer element of the second 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32] from the corresponding 32-bit integer element of the
+end_comment
+
+begin_comment
+comment|///    first 64-bit integer vector of [2 x i32]. The lower 32 bits of the
+end_comment
+
+begin_comment
+comment|///    results are packed into a 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the differences of
+end_comment
+
+begin_comment
+comment|///    both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -822,6 +2361,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Subtracts each 8-bit signed integer element of the second 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [8 x i8] from the corresponding 8-bit signed integer
+end_comment
+
+begin_comment
+comment|///    element of the first 64-bit integer vector of [8 x i8]. Positive results
+end_comment
+
+begin_comment
+comment|///    greater than 0x7F are saturated to 0x7F. Negative results less than 0x80
+end_comment
+
+begin_comment
+comment|///    are saturated to 0x80. The results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the saturated
+end_comment
+
+begin_comment
+comment|///    differences of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -855,6 +2462,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts each 16-bit signed integer element of the second 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16] from the corresponding 16-bit signed integer
+end_comment
+
+begin_comment
+comment|///    element of the first 64-bit integer vector of [4 x i16]. Positive results
+end_comment
+
+begin_comment
+comment|///    greater than 0x7FFF are saturated to 0x7FFF. Negative results less than
+end_comment
+
+begin_comment
+comment|///    0x8000 are saturated to 0x8000. The results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the saturated
+end_comment
+
+begin_comment
+comment|///    differences of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -890,6 +2565,74 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Subtracts each 8-bit unsigned integer element of the second 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [8 x i8] from the corresponding 8-bit unsigned integer
+end_comment
+
+begin_comment
+comment|///    element of the first 64-bit integer vector of [8 x i8]. If an element of
+end_comment
+
+begin_comment
+comment|///    the first vector is less than the corresponding element of the second
+end_comment
+
+begin_comment
+comment|///    vector, the result is saturated to 0. The results are packed into a
+end_comment
+
+begin_comment
+comment|///    64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBUSB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the saturated
+end_comment
+
+begin_comment
+comment|///    differences of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -923,6 +2666,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Subtracts each 16-bit unsigned integer element of the second 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16] from the corresponding 16-bit unsigned
+end_comment
+
+begin_comment
+comment|///    integer element of the first 64-bit integer vector of [4 x i16]. If an
+end_comment
+
+begin_comment
+comment|///    element of the first vector is less than the corresponding element of the
+end_comment
+
+begin_comment
+comment|///    second vector, the result is saturated to 0. The results are packed into
+end_comment
+
+begin_comment
+comment|///    a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSUBUSW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the minuends.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16] containing the subtrahends.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the saturated
+end_comment
+
+begin_comment
+comment|///    differences of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -958,6 +2769,82 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies each 16-bit signed integer element of the first 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16] by the corresponding 16-bit signed integer
+end_comment
+
+begin_comment
+comment|///    element of the second 64-bit integer vector of [4 x i16] and get four
+end_comment
+
+begin_comment
+comment|///    32-bit products. Adds adjacent pairs of products to get two 32-bit sums.
+end_comment
+
+begin_comment
+comment|///    The lower 32 bits of these two sums are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32]. For example, bits [15:0] of both parameters are
+end_comment
+
+begin_comment
+comment|///    multiplied, bits [31:16] of both parameters are multiplied, and the sum
+end_comment
+
+begin_comment
+comment|///    of both results is written to bits [31:0] of the result.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PMADDWD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the sums of
+end_comment
+
+begin_comment
+comment|///    products of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -991,6 +2878,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Multiplies each 16-bit signed integer element of the first 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16] by the corresponding 16-bit signed integer
+end_comment
+
+begin_comment
+comment|///    element of the second 64-bit integer vector of [4 x i16]. Packs the upper
+end_comment
+
+begin_comment
+comment|///    16 bits of the 32-bit products into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PMULHW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the upper 16 bits
+end_comment
+
+begin_comment
+comment|///    of the products of both parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -1026,6 +2973,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Multiplies each 16-bit signed integer element of the first 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16] by the corresponding 16-bit signed integer
+end_comment
+
+begin_comment
+comment|///    element of the second 64-bit integer vector of [4 x i16]. Packs the lower
+end_comment
+
+begin_comment
+comment|///    16 bits of the 32-bit products into a 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PMULLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the lower 16 bits
+end_comment
+
+begin_comment
+comment|///    of the products of both parameters.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1060,6 +3067,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Left-shifts each 16-bit signed integer element of the first
+end_comment
+
+begin_comment
+comment|///    parameter, which is a 64-bit integer vector of [4 x i16], by the number
+end_comment
+
+begin_comment
+comment|///    of bits specified by the second parameter, which is a 64-bit integer. The
+end_comment
+
+begin_comment
+comment|///    lower 16 bits of the results are packed into a 64-bit integer vector of
+end_comment
+
+begin_comment
+comment|///    [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the left-shifted
+end_comment
+
+begin_comment
+comment|///    values. If __count is greater or equal to 16, the result is set to all 0.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1090,6 +3161,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Left-shifts each 16-bit signed integer element of a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    The lower 16 bits of the results are packed into a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the left-shifted
+end_comment
+
+begin_comment
+comment|///    values. If __count is greater or equal to 16, the result is set to all 0.
+end_comment
 
 begin_function
 specifier|static
@@ -1122,6 +3253,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Left-shifts each 32-bit signed integer element of the first
+end_comment
+
+begin_comment
+comment|///    parameter, which is a 64-bit integer vector of [2 x i32], by the number
+end_comment
+
+begin_comment
+comment|///    of bits specified by the second parameter, which is a 64-bit integer. The
+end_comment
+
+begin_comment
+comment|///    lower 32 bits of the results are packed into a 64-bit integer vector of
+end_comment
+
+begin_comment
+comment|///    [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the left-shifted
+end_comment
+
+begin_comment
+comment|///    values. If __count is greater or equal to 32, the result is set to all 0.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1152,6 +3347,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Left-shifts each 32-bit signed integer element of a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    The lower 32 bits of the results are packed into a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the left-shifted
+end_comment
+
+begin_comment
+comment|///    values. If __count is greater or equal to 32, the result is set to all 0.
+end_comment
 
 begin_function
 specifier|static
@@ -1184,6 +3439,62 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Left-shifts the first 64-bit integer parameter by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second 64-bit integer parameter. The lower 64 bits of
+end_comment
+
+begin_comment
+comment|///    result are returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the left-shifted value. If
+end_comment
+
+begin_comment
+comment|///     __count is greater or equal to 64, the result is set to 0.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1204,6 +3515,9 @@ name|__m64
 operator|)
 name|__builtin_ia32_psllq
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m
 argument_list|,
 name|__count
@@ -1211,6 +3525,62 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Left-shifts the first parameter, which is a 64-bit integer, by the
+end_comment
+
+begin_comment
+comment|///    number of bits specified by the second parameter, which is a 32-bit
+end_comment
+
+begin_comment
+comment|///    integer. The lower 64 bits of result are returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSLLQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the left-shifted value. If
+end_comment
+
+begin_comment
+comment|///     __count is greater or equal to 64, the result is set to 0.
+end_comment
 
 begin_function
 specifier|static
@@ -1232,6 +3602,9 @@ name|__m64
 operator|)
 name|__builtin_ia32_psllqi
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m
 argument_list|,
 name|__count
@@ -1239,6 +3612,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Right-shifts each 16-bit integer element of the first parameter,
+end_comment
+
+begin_comment
+comment|///    which is a 64-bit integer vector of [4 x i16], by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+end_comment
+
+begin_comment
+comment|///    bits are filled with the sign bit of the initial value of each 16-bit
+end_comment
+
+begin_comment
+comment|///    element. The 16-bit results are packed into a 64-bit integer vector of
+end_comment
+
+begin_comment
+comment|///    [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRAW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -1271,6 +3712,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Right-shifts each 16-bit integer element of a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [4 x i16] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    High-order bits are filled with the sign bit of the initial value of each
+end_comment
+
+begin_comment
+comment|///    16-bit element. The 16-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRAW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1301,6 +3806,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Right-shifts each 32-bit integer element of the first parameter,
+end_comment
+
+begin_comment
+comment|///    which is a 64-bit integer vector of [2 x i32], by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+end_comment
+
+begin_comment
+comment|///    bits are filled with the sign bit of the initial value of each 32-bit
+end_comment
+
+begin_comment
+comment|///    element. The 32-bit results are packed into a 64-bit integer vector of
+end_comment
+
+begin_comment
+comment|///    [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRAD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -1333,6 +3906,70 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Right-shifts each 32-bit integer element of a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [2 x i32] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    High-order bits are filled with the sign bit of the initial value of each
+end_comment
+
+begin_comment
+comment|///    32-bit element. The 32-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRAD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1363,6 +4000,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Right-shifts each 16-bit integer element of the first parameter,
+end_comment
+
+begin_comment
+comment|///    which is a 64-bit integer vector of [4 x i16], by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+end_comment
+
+begin_comment
+comment|///    bits are cleared. The 16-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -1395,6 +4096,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Right-shifts each 16-bit integer element of a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [4 x i16] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    High-order bits are cleared. The 16-bit results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1425,6 +4186,70 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Right-shifts each 32-bit integer element of the first parameter,
+end_comment
+
+begin_comment
+comment|///    which is a 64-bit integer vector of [2 x i32], by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second parameter, which is a 64-bit integer. High-order
+end_comment
+
+begin_comment
+comment|///    bits are cleared. The 32-bit results are packed into a 64-bit integer
+end_comment
+
+begin_comment
+comment|///    vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
 
 begin_function
 specifier|static
@@ -1457,6 +4282,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Right-shifts each 32-bit integer element of a 64-bit integer vector
+end_comment
+
+begin_comment
+comment|///    of [2 x i32] by the number of bits specified by a 32-bit integer.
+end_comment
+
+begin_comment
+comment|///    High-order bits are cleared. The 32-bit results are packed into a 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the right-shifted
+end_comment
+
+begin_comment
+comment|///    values.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1488,6 +4373,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Right-shifts the first 64-bit integer parameter by the number of bits
+end_comment
+
+begin_comment
+comment|///    specified by the second 64-bit integer parameter. High-order bits are
+end_comment
+
+begin_comment
+comment|///    cleared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the right-shifted value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1508,6 +4445,9 @@ name|__m64
 operator|)
 name|__builtin_ia32_psrlq
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m
 argument_list|,
 name|__count
@@ -1515,6 +4455,58 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Right-shifts the first parameter, which is a 64-bit integer, by the
+end_comment
+
+begin_comment
+comment|///    number of bits specified by the second parameter, which is a 32-bit
+end_comment
+
+begin_comment
+comment|///    integer. High-order bits are cleared.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PSRLQ instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector interpreted as a single 64-bit integer.
+end_comment
+
+begin_comment
+comment|/// \param __count
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the right-shifted value.
+end_comment
 
 begin_function
 specifier|static
@@ -1536,6 +4528,9 @@ name|__m64
 operator|)
 name|__builtin_ia32_psrlqi
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m
 argument_list|,
 name|__count
@@ -1543,6 +4538,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise AND of two 64-bit integer vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PAND instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the bitwise AND of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -1561,13 +4604,79 @@ block|{
 return|return
 name|__builtin_ia32_pand
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m1
 argument_list|,
+operator|(
+name|__v1di
+operator|)
 name|__m2
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise NOT of the first 64-bit integer vector, and then
+end_comment
+
+begin_comment
+comment|///    performs a bitwise AND of the intermediate result and the second 64-bit
+end_comment
+
+begin_comment
+comment|///    integer vector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PANDN instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector. The one's complement of this parameter is used
+end_comment
+
+begin_comment
+comment|///    in the bitwise AND.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the bitwise AND of the second
+end_comment
+
+begin_comment
+comment|///    parameter and the one's complement of the first parameter.
+end_comment
 
 begin_function
 specifier|static
@@ -1586,13 +4695,67 @@ block|{
 return|return
 name|__builtin_ia32_pandn
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m1
 argument_list|,
+operator|(
+name|__v1di
+operator|)
 name|__m2
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise OR of two 64-bit integer vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c POR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the bitwise OR of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -1611,13 +4774,67 @@ block|{
 return|return
 name|__builtin_ia32_por
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m1
 argument_list|,
+operator|(
+name|__v1di
+operator|)
 name|__m2
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a bitwise exclusive OR of two 64-bit integer vectors.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PXOR instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector.
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector containing the bitwise exclusive OR of both
+end_comment
+
+begin_comment
+comment|///    parameters.
+end_comment
 
 begin_function
 specifier|static
@@ -1636,13 +4853,79 @@ block|{
 return|return
 name|__builtin_ia32_pxor
 argument_list|(
+operator|(
+name|__v1di
+operator|)
 name|__m1
 argument_list|,
+operator|(
+name|__v1di
+operator|)
 name|__m2
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the 8-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [8 x i8] to determine if the element of the first vector is equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding element of the second vector. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 0xFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPEQB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
 
 begin_function
 specifier|static
@@ -1678,6 +4961,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the 16-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i16] to determine if the element of the first vector is equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding element of the second vector. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 0xFFFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPEQW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1711,6 +5054,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the 32-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x i32] to determine if the element of the first vector is equal to the
+end_comment
+
+begin_comment
+comment|///    corresponding element of the second vector. The comparison yields 0 for
+end_comment
+
+begin_comment
+comment|///    false, 0xFFFFFFFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPEQD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
 
 begin_function
 specifier|static
@@ -1746,6 +5149,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the 8-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [8 x i8] to determine if the element of the first vector is greater than
+end_comment
+
+begin_comment
+comment|///    the corresponding element of the second vector. The comparison yields 0
+end_comment
+
+begin_comment
+comment|///    for false, 0xFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPGTB instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [8 x i8].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [8 x i8] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1779,6 +5242,66 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Compares the 16-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [4 x i16] to determine if the element of the first vector is greater than
+end_comment
+
+begin_comment
+comment|///    the corresponding element of the second vector. The comparison yields 0
+end_comment
+
+begin_comment
+comment|///    for false, 0xFFFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPGTW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [4 x i16].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [4 x i16] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
 
 begin_function
 specifier|static
@@ -1814,6 +5337,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Compares the 32-bit integer elements of two 64-bit integer vectors of
+end_comment
+
+begin_comment
+comment|///    [2 x i32] to determine if the element of the first vector is greater than
+end_comment
+
+begin_comment
+comment|///    the corresponding element of the second vector. The comparison yields 0
+end_comment
+
+begin_comment
+comment|///    for false, 0xFFFFFFFF for true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c PCMPGTD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __m1
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \param __m2
+end_comment
+
+begin_comment
+comment|///    A 64-bit integer vector of [2 x i32].
+end_comment
+
+begin_comment
+comment|/// \returns A 64-bit integer vector of [2 x i32] containing the comparison
+end_comment
+
+begin_comment
+comment|///    results.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1848,6 +5431,34 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector initialized to zero.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the the \c VXORPS / XORPS instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector with all elements set to zero.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -1868,6 +5479,66 @@ block|}
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector initialized with the specified
+end_comment
+
+begin_comment
+comment|///    32-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i1
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value used to initialize the upper 32 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \param __i0
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value used to initialize the lower 32 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -1896,6 +5567,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector initialized with the specified
+end_comment
+
+begin_comment
+comment|///    16-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __s3
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [63:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __s2
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [47:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __s1
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [31:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __s0
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [15:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -1934,6 +5673,106 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector initialized with the specified
+end_comment
+
+begin_comment
+comment|///    8-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __b7
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [63:56] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b6
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [55:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b5
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [47:40] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b4
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [39:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b3
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [31:24] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b2
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [23:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b1
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [15:8] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b0
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [7:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -1993,6 +5832,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector of [2 x i32], with each of the
+end_comment
+
+begin_comment
+comment|///    32-bit integer vector elements set to the specified 32-bit integer
+end_comment
+
+begin_comment
+comment|///    value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSHUFD / PSHUFD instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value used to initialize each vector element of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector of [2 x i32].
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2014,6 +5901,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector of [4 x i16], with each of the
+end_comment
+
+begin_comment
+comment|///    16-bit integer vector elements set to the specified 16-bit integer
+end_comment
+
+begin_comment
+comment|///    value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPSHUFLW / PSHUFLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize each vector element of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector of [4 x i16].
+end_comment
 
 begin_function
 specifier|static
@@ -2040,6 +5975,54 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector of [8 x i8], with each of the
+end_comment
+
+begin_comment
+comment|///    8-bit integer vector elements set to the specified 8-bit integer value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VPUNPCKLBW + VPSHUFLW / \c PUNPCKLBW +
+end_comment
+
+begin_comment
+comment|///    PSHUFLW instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __b
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize each vector element of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector of [8 x i8].
+end_comment
 
 begin_function
 specifier|static
@@ -2075,6 +6058,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector, initialized in reverse order with
+end_comment
+
+begin_comment
+comment|///    the specified 32-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __i0
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value used to initialize the lower 32 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \param __i1
+end_comment
+
+begin_comment
+comment|///    A 32-bit integer value used to initialize the upper 32 bits of the
+end_comment
+
+begin_comment
+comment|///    result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -2099,6 +6142,74 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector, initialized in reverse order with
+end_comment
+
+begin_comment
+comment|///    the specified 16-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __w0
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [15:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w1
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [31:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w2
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [47:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __w3
+end_comment
+
+begin_comment
+comment|///    A 16-bit integer value used to initialize bits [63:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
 
 begin_function
 specifier|static
@@ -2134,6 +6245,106 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Constructs a 64-bit integer vector, initialized in reverse order with
+end_comment
+
+begin_comment
+comment|///    the specified 8-bit integer values.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic is a utility function and does not correspond to a specific
+end_comment
+
+begin_comment
+comment|///    instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __b0
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [7:0] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b1
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [15:8] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b2
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [23:16] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b3
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [31:24] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b4
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [39:32] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b5
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [47:40] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b6
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [55:48] of the result.
+end_comment
+
+begin_comment
+comment|/// \param __b7
+end_comment
+
+begin_comment
+comment|///    An 8-bit integer value used to initialize bits [63:56] of the result.
+end_comment
+
+begin_comment
+comment|/// \returns An initialized 64-bit integer vector.
+end_comment
 
 begin_function
 specifier|static

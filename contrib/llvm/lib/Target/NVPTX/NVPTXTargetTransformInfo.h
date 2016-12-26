@@ -296,6 +296,16 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+comment|// Increase the inlining cost threshold by a factor of 5, reflecting that
+comment|// calls are particularly expensive in NVPTX.
+name|unsigned
+name|getInliningThresholdMultiplier
+parameter_list|()
+block|{
+return|return
+literal|5
+return|;
+block|}
 name|int
 name|getArithmeticInstrCost
 argument_list|(

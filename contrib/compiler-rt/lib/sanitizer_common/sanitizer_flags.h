@@ -157,6 +157,22 @@ name|cf
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|SubstituteForFlagValue
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|char
+modifier|*
+name|out
+parameter_list|,
+name|uptr
+name|out_size
+parameter_list|)
+function_decl|;
 name|class
 name|FlagParser
 decl_stmt|;
@@ -185,6 +201,20 @@ parameter_list|,
 name|CommonFlags
 modifier|*
 name|cf
+parameter_list|)
+function_decl|;
+comment|// Should be called after parsing all flags. Sets up common flag values
+comment|// and perform initializations common to all sanitizers (e.g. setting
+comment|// verbosity).
+name|void
+name|InitializeCommonFlags
+parameter_list|(
+name|CommonFlags
+modifier|*
+name|cf
+init|=
+operator|&
+name|common_flags_dont_use
 parameter_list|)
 function_decl|;
 block|}

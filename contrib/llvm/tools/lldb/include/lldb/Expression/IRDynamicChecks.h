@@ -134,8 +134,8 @@ comment|//------------------------------------------------------------------
 comment|/// Install the utility functions into a process.  This binds the
 comment|/// instance of DynamicCheckerFunctions to that process.
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print errors on.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to report errors to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to install the functions into.
@@ -147,9 +147,9 @@ comment|//------------------------------------------------------------------
 name|bool
 name|Install
 parameter_list|(
-name|Stream
+name|DiagnosticManager
 modifier|&
-name|error_stream
+name|diagnostic_manager
 parameter_list|,
 name|ExecutionContext
 modifier|&

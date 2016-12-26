@@ -138,9 +138,11 @@ operator|::
 name|GlobalValue
 operator|*
 argument_list|,
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 argument_list|,
 name|unsigned
 operator|&
@@ -155,9 +157,11 @@ operator|::
 name|GlobalValue
 operator|*
 argument_list|,
+specifier|const
 name|std
 operator|::
 name|string
+operator|&
 argument_list|,
 name|std
 operator|::

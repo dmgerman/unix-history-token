@@ -299,6 +299,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Apply file mappings from target.source-map to the LineEntry's file.
+comment|///
+comment|/// @param[in] target_sp
+comment|///     Shared pointer to the target this LineEntry belongs to.
+comment|//------------------------------------------------------------------
+name|void
+name|ApplyFileMappings
+argument_list|(
+name|lldb
+operator|::
+name|TargetSP
+name|target_sp
+argument_list|)
+decl_stmt|;
+comment|//------------------------------------------------------------------
 comment|// Member variables.
 comment|//------------------------------------------------------------------
 name|AddressRange
@@ -308,6 +323,11 @@ comment|///< The section offset address range for this line entry.
 name|FileSpec
 name|file
 decl_stmt|;
+comment|///< The source file, possibly mapped by the target.source-map setting
+name|FileSpec
+name|original_file
+decl_stmt|;
+comment|///< The original source file, from debug info.
 name|uint32_t
 name|line
 decl_stmt|;

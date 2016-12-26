@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
@@ -104,19 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Utils/ValueMapper.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sstream>
+file|"llvm/Transforms/Utils/ValueMapper.h"
 end_include
 
 begin_decl_stmt
@@ -259,8 +247,10 @@ return|;
 comment|// Found a callback handler. Yank this trampoline out of the active list and
 comment|// put it back in the available trampolines list, then try to run the
 comment|// handler's compile and update actions.
-comment|// Moving the trampoline ID back to the available list first means there's at
-comment|// least one available trampoline if the compile action triggers a request for
+comment|// Moving the trampoline ID back to the available list first means there's
+comment|// at
+comment|// least one available trampoline if the compile action triggers a request
+comment|// for
 comment|// a new one.
 name|auto
 name|Compile
@@ -956,9 +946,7 @@ argument_list|()
 block|{}
 comment|/// @brief Create a single stub with the given name, target address and flags.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|createStub
 argument_list|(
 argument|StringRef StubName
@@ -973,19 +961,17 @@ expr_stmt|;
 comment|/// @brief Create StubInits.size() stubs with the given names, target
 comment|///        addresses, and flags.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|createStubs
-argument_list|(
+parameter_list|(
 specifier|const
 name|StubInitsMap
-operator|&
+modifier|&
 name|StubInits
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 comment|/// @brief Find the stub with the given name. If ExportedStubsOnly is true,
 comment|///        this will only return a result if the stub's flags indicate that it
 comment|///        is exported.
@@ -1015,18 +1001,18 @@ literal|0
 function_decl|;
 comment|/// @brief Change the value of the implementation pointer for the stub.
 name|virtual
-name|std
-operator|::
-name|error_code
+name|Error
 name|updatePointer
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|TargetAddress NewAddr
-argument_list|)
-operator|=
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|TargetAddress
+name|NewAddr
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 name|private
 label|:
 name|virtual
@@ -1063,9 +1049,7 @@ name|IndirectStubsManager
 block|{
 name|public
 operator|:
-name|std
-operator|::
-name|error_code
+name|Error
 name|createStub
 argument_list|(
 argument|StringRef StubName
@@ -1079,7 +1063,7 @@ block|{
 if|if
 condition|(
 name|auto
-name|EC
+name|Err
 init|=
 name|reserveStubs
 argument_list|(
@@ -1087,7 +1071,7 @@ literal|1
 argument_list|)
 condition|)
 return|return
-name|EC
+name|Err
 return|;
 name|createStubInternal
 argument_list|(
@@ -1099,28 +1083,29 @@ name|StubFlags
 argument_list|)
 block|;
 return|return
-name|std
+name|Error
 operator|::
-name|error_code
+name|success
 argument_list|()
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
+begin_function
+name|Error
 name|createStubs
-argument_list|(
-argument|const StubInitsMap&StubInits
-argument_list|)
-name|override
+parameter_list|(
+specifier|const
+name|StubInitsMap
+modifier|&
+name|StubInits
+parameter_list|)
+function|override
 block|{
 if|if
 condition|(
 name|auto
-name|EC
+name|Err
 init|=
 name|reserveStubs
 argument_list|(
@@ -1131,11 +1116,8 @@ argument_list|()
 argument_list|)
 condition|)
 return|return
-name|EC
+name|Err
 return|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|auto
@@ -1164,32 +1146,26 @@ operator|.
 name|second
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_return
 return|return
-name|std
+name|Error
 operator|::
-name|error_code
+name|success
 argument_list|()
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}    JITSymbol
+begin_function
+name|JITSymbol
 name|findStub
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|bool ExportedStubsOnly
-argument_list|)
-end_macro
-
-begin_macro
-name|override
-end_macro
-
-begin_block
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|bool
+name|ExportedStubsOnly
+parameter_list|)
+function|override
 block|{
 name|auto
 name|I
@@ -1295,7 +1271,7 @@ return|return
 name|StubSymbol
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|JITSymbol
@@ -1394,28 +1370,28 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
+begin_function
+name|Error
 name|updatePointer
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|TargetAddress NewAddr
-argument_list|)
-name|override
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|TargetAddress
+name|NewAddr
+parameter_list|)
+function|override
 block|{
 name|auto
 name|I
-operator|=
+init|=
 name|StubIndexes
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
-block|;
+decl_stmt|;
 name|assert
 argument_list|(
 name|I
@@ -1427,16 +1403,16 @@ argument_list|()
 operator|&&
 literal|"No stub pointer for symbol"
 argument_list|)
-block|;
+expr_stmt|;
 name|auto
 name|Key
-operator|=
+init|=
 name|I
 operator|->
 name|second
 operator|.
 name|first
-block|;
+decl_stmt|;
 operator|*
 name|IndirectStubsInfos
 index|[
@@ -1466,29 +1442,28 @@ operator|(
 name|NewAddr
 operator|)
 operator|)
-block|;
+expr_stmt|;
 return|return
-name|std
+name|Error
 operator|::
-name|error_code
+name|success
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_label
 name|private
 label|:
 end_label
 
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
+begin_function
+name|Error
 name|reserveStubs
-argument_list|(
-argument|unsigned NumStubs
-argument_list|)
+parameter_list|(
+name|unsigned
+name|NumStubs
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1500,24 +1475,21 @@ name|size
 argument_list|()
 condition|)
 return|return
-name|std
+name|Error
 operator|::
-name|error_code
+name|success
 argument_list|()
 return|;
 name|unsigned
 name|NewStubsRequired
-operator|=
+init|=
 name|NumStubs
 operator|-
 name|FreeStubs
 operator|.
 name|size
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|unsigned
 name|NewBlockId
 init|=
@@ -1526,22 +1498,16 @@ operator|.
 name|size
 argument_list|()
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|typename
 name|TargetT
 operator|::
 name|IndirectStubsInfo
 name|ISI
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|auto
-name|EC
+name|Err
 init|=
 name|TargetT
 operator|::
@@ -1555,11 +1521,8 @@ name|nullptr
 argument_list|)
 condition|)
 return|return
-name|EC
+name|Err
 return|;
-end_if
-
-begin_for
 for|for
 control|(
 name|unsigned
@@ -1591,9 +1554,6 @@ name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|IndirectStubsInfos
 operator|.
 name|push_back
@@ -1606,30 +1566,28 @@ name|ISI
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
-name|std
+name|Error
 operator|::
-name|error_code
+name|success
 argument_list|()
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}    void
+begin_function
+name|void
 name|createStubInternal
-argument_list|(
-argument|StringRef StubName
-argument_list|,
-argument|TargetAddress InitAddr
-argument_list|,
-argument|JITSymbolFlags StubFlags
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|StringRef
+name|StubName
+parameter_list|,
+name|TargetAddress
+name|InitAddr
+parameter_list|,
+name|JITSymbolFlags
+name|StubFlags
+parameter_list|)
 block|{
 name|auto
 name|Key
@@ -1689,7 +1647,7 @@ name|StubFlags
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|std
@@ -1747,6 +1705,78 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// @brief Create a local compile callback manager.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The given target triple will determine the ABI, and the given
+end_comment
+
+begin_comment
+comment|/// ErrorHandlerAddress will be used by the resulting compile callback
+end_comment
+
+begin_comment
+comment|/// manager if a compile callback fails.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|JITCompileCallbackManager
+operator|>
+name|createLocalCompileCallbackManager
+argument_list|(
+argument|const Triple&T
+argument_list|,
+argument|TargetAddress ErrorHandlerAddress
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// @brief Create a local indriect stubs manager builder.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The given target triple will determine the ABI.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|function
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IndirectStubsManager
+operator|>
+operator|(
+operator|)
+operator|>
+name|createLocalIndirectStubsManagerBuilder
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|T
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Build a function pointer of FunctionType with the given constant
 end_comment
 

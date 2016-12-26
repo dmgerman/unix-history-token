@@ -111,16 +111,6 @@ range|:
 name|public
 name|AArch64GenInstrInfo
 block|{
-comment|// Reserve bits in the MachineMemOperand target hint flags, starting at 1.
-comment|// They will be shifted into MOTargetHintStart when accessed.
-block|enum
-name|TargetMemOperandFlags
-block|{
-name|MOSuppressPair
-operator|=
-literal|1
-block|}
-block|;
 specifier|const
 name|AArch64RegisterInfo
 name|RI
@@ -158,14 +148,14 @@ block|}
 name|unsigned
 name|GetInstSizeInBytes
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isAsCheapAsAMove
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -187,9 +177,9 @@ block|;
 name|bool
 name|areMemAccessesTriviallyDisjoint
 argument_list|(
-argument|MachineInstr *MIa
+argument|MachineInstr&MIa
 argument_list|,
-argument|MachineInstr *MIb
+argument|MachineInstr&MIb
 argument_list|,
 argument|AliasAnalysis *AA = nullptr
 argument_list|)
@@ -199,7 +189,7 @@ block|;
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -209,7 +199,7 @@ block|;
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -221,7 +211,7 @@ comment|/// is non-zero.
 name|bool
 name|hasShiftedReg
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -230,7 +220,7 @@ comment|/// value is non-zero.
 name|bool
 name|hasExtendedReg
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -238,7 +228,7 @@ comment|/// \brief Does this instruction set its full destination register to ze
 name|bool
 name|isGPRZero
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -246,7 +236,7 @@ comment|/// \brief Does this instruction rename a GPR without modifying bits?
 name|bool
 name|isGPRCopy
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -254,7 +244,7 @@ comment|/// \brief Does this instruction rename an FPR without modifying bits?
 name|bool
 name|isFPRCopy
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -264,7 +254,7 @@ comment|/// MI should be a memory op that allows scaled addressing.
 name|bool
 name|isScaledAddr
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -273,7 +263,31 @@ comment|/// unprofitable.
 name|bool
 name|isLdStPairSuppressed
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if this is an unscaled load/store.
+name|bool
+name|isUnscaledLdSt
+argument_list|(
+argument|unsigned Opc
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if this is an unscaled load/store.
+name|bool
+name|isUnscaledLdSt
+argument_list|(
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+comment|/// Return true if this is a load/store that can be potentially paired/merged.
+name|bool
+name|isCandidateToMergeOrPair
+argument_list|(
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -281,18 +295,18 @@ comment|/// Hint that pairing the given load or store is unprofitable.
 name|void
 name|suppressLdStPair
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|getMemOpBaseRegImmOfs
 argument_list|(
-argument|MachineInstr *LdSt
+argument|MachineInstr&LdSt
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
-argument|unsigned&Offset
+argument|int64_t&Offset
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
@@ -302,13 +316,13 @@ block|;
 name|bool
 name|getMemOpBaseRegImmOfsWidth
 argument_list|(
-argument|MachineInstr *LdSt
+argument|MachineInstr&LdSt
 argument_list|,
 argument|unsigned&BaseReg
 argument_list|,
-argument|int&Offset
+argument|int64_t&Offset
 argument_list|,
-argument|int&Width
+argument|unsigned&Width
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
@@ -325,11 +339,21 @@ name|true
 return|;
 block|}
 name|bool
-name|shouldClusterLoads
+name|enableClusterStores
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|shouldClusterMemOps
 argument_list|(
-argument|MachineInstr *FirstLdSt
+argument|MachineInstr&FirstLdSt
 argument_list|,
-argument|MachineInstr *SecondLdSt
+argument|MachineInstr&SecondLdSt
 argument_list|,
 argument|unsigned NumLoads
 argument_list|)
@@ -339,9 +363,9 @@ block|;
 name|bool
 name|shouldScheduleAdjacent
 argument_list|(
-argument|MachineInstr *First
+argument|MachineInstr&First
 argument_list|,
-argument|MachineInstr *Second
+argument|MachineInstr&Second
 argument_list|)
 specifier|const
 name|override
@@ -360,7 +384,7 @@ argument|const MDNode *Var
 argument_list|,
 argument|const MDNode *Expr
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 block|;
@@ -371,7 +395,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -392,7 +416,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -452,19 +476,21 @@ name|foldMemoryOperandImpl
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
+argument_list|,
+argument|LiveIntervals *LIS = nullptr
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -498,7 +524,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -538,7 +564,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DstReg
 argument_list|,
@@ -565,7 +591,7 @@ comment|/// Return true if the comparison instruction can be analyzed.
 name|bool
 name|analyzeCompare
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
@@ -583,7 +609,7 @@ comment|/// the comparison into one that sets the zero bit in the flags register
 name|bool
 name|optimizeCompareInstr
 argument_list|(
-argument|MachineInstr *CmpInstr
+argument|MachineInstr&CmpInstr
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
@@ -601,7 +627,18 @@ block|;
 name|bool
 name|optimizeCondBranch
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true when a code sequence can improve throughput. It
+comment|/// should be called only for instructions in loops.
+comment|/// \param Pattern - combiner pattern
+name|bool
+name|isThroughputPattern
+argument_list|(
+argument|MachineCombinerPattern Pattern
 argument_list|)
 specifier|const
 name|override
@@ -649,7 +686,7 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// useMachineCombiner - AArch64 supports MachineCombiner
+comment|/// AArch64 supports MachineCombiner.
 name|bool
 name|useMachineCombiner
 argument_list|()
@@ -659,7 +696,7 @@ block|;
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -720,11 +757,22 @@ name|instantiateCondBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|MachineBasicBlock *TBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|substituteCmpToZero
+argument_list|(
+argument|MachineInstr&CmpInstr
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|; }
@@ -745,7 +793,9 @@ operator|::
 name|iterator
 name|MBBI
 argument_list|,
+specifier|const
 name|DebugLoc
+operator|&
 name|DL
 argument_list|,
 name|unsigned

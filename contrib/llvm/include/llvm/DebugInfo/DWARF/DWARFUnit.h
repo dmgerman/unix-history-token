@@ -207,6 +207,9 @@ name|LS
 parameter_list|,
 name|bool
 name|isLittleEndian
+parameter_list|,
+name|bool
+name|isDWO
 parameter_list|)
 init|=
 literal|0
@@ -260,49 +263,11 @@ name|DWARFUnitSectionBase
 block|{
 name|bool
 name|Parsed
+operator|=
+name|false
 block|;
 name|public
 operator|:
-name|DWARFUnitSection
-argument_list|()
-operator|:
-name|Parsed
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|DWARFUnitSection
-argument_list|(
-name|DWARFUnitSection
-operator|&&
-name|DUS
-argument_list|)
-operator|:
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|UnitType
-operator|>
-block|,
-literal|1
-operator|>
-operator|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|DUS
-argument_list|)
-operator|)
-block|,
-name|Parsed
-argument_list|(
-argument|DUS.Parsed
-argument_list|)
-block|{}
 typedef|typedef
 name|llvm
 operator|::
@@ -453,6 +418,9 @@ name|LS
 parameter_list|,
 name|bool
 name|LE
+parameter_list|,
+name|bool
+name|IsDWO
 parameter_list|)
 function|override
 block|{
@@ -529,6 +497,8 @@ expr|,
 name|LS
 expr|,
 name|LE
+expr|,
+name|IsDWO
 expr|,
 operator|*
 name|this
@@ -628,6 +598,9 @@ name|AddrOffsetSectionBase
 decl_stmt|;
 name|bool
 name|isLittleEndian
+decl_stmt|;
+name|bool
+name|isDWO
 decl_stmt|;
 specifier|const
 name|DWARFUnitSectionBase
@@ -768,6 +741,8 @@ argument_list|,
 argument|StringRef LS
 argument_list|,
 argument|bool LE
+argument_list|,
+argument|bool IsDWO
 argument_list|,
 argument|const DWARFUnitSectionBase&UnitSection
 argument_list|,
@@ -1214,7 +1189,7 @@ block|}
 comment|/// \brief Return the DIE object for a given offset inside the
 comment|/// unit's DIE vector.
 comment|///
-comment|/// The unit needs to have his DIEs extracted for this method to work.
+comment|/// The unit needs to have its DIEs extracted for this method to work.
 specifier|const
 name|DWARFDebugInfoEntryMinimal
 modifier|*

@@ -66,16 +66,22 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Error
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|MDNode
+name|Metadata
 decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
 name|class
 name|StructType
+decl_stmt|;
+name|class
+name|TrackingMDRef
 decl_stmt|;
 name|class
 name|Type
@@ -202,6 +208,18 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
+comment|/// Type of the Metadata map in \a ValueToValueMapTy.
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|Metadata
+operator|*
+operator|,
+name|TrackingMDRef
+operator|>
+name|MDMapT
+expr_stmt|;
 name|public
 label|:
 name|class
@@ -296,13 +314,22 @@ argument_list|)
 operator|>
 name|ValueAdder
 expr_stmt|;
-comment|/// Move in the provide values. The source is destroyed.
-comment|/// Returns true on error.
-name|bool
+comment|/// Move in the provide values in \p ValuesToLink from \p Src.
+comment|///
+comment|/// - \p AddLazyFor is a call back that the IRMover will call when a global
+comment|///   value is referenced by one of the ValuesToLink (transitively) but was
+comment|///   not present in ValuesToLink. The GlobalValue and a ValueAdder callback
+comment|///   are passed as an argument, and the callback is expected to be called
+comment|///   if the GlobalValue needs to be added to the \p ValuesToLink and linked.
+name|Error
 name|move
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|&
+operator|>
 name|Src
 argument_list|,
 name|ArrayRef
@@ -324,23 +351,6 @@ argument|ValueAdder Add
 argument_list|)
 operator|>
 name|AddLazyFor
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|MDNode
-operator|*
-operator|>
-operator|*
-name|ValIDToTempMDMap
-operator|=
-name|nullptr
-argument_list|,
-name|bool
-name|IsMetadataLinkingPostpass
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 name|Module
@@ -361,6 +371,10 @@ decl_stmt|;
 name|IdentifiedStructTypeSet
 name|IdentifiedStructTypes
 decl_stmt|;
+name|MDMapT
+name|SharedMDs
+decl_stmt|;
+comment|///< A Metadata map to use for all calls to \a move().
 block|}
 empty_stmt|;
 block|}

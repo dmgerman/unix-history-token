@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Cuda.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
@@ -586,33 +598,49 @@ comment|// \brief A class to find a viable CUDA installation
 name|class
 name|CudaInstallationDetector
 block|{
-name|bool
-name|IsValid
-block|;
+name|private
+operator|:
 specifier|const
 name|Driver
 operator|&
 name|D
 block|;
-name|std
+name|bool
+name|IsValid
+operator|=
+name|false
+block|;
+name|CudaVersion
+name|Version
+operator|=
+name|CudaVersion
 operator|::
-name|string
-name|CudaInstallPath
+name|UNKNOWN
 block|;
 name|std
 operator|::
 name|string
-name|CudaLibPath
+name|InstallPath
 block|;
 name|std
 operator|::
 name|string
-name|CudaLibDevicePath
+name|BinPath
 block|;
 name|std
 operator|::
 name|string
-name|CudaIncludePath
+name|LibPath
+block|;
+name|std
+operator|::
+name|string
+name|LibDevicePath
+block|;
+name|std
+operator|::
+name|string
+name|IncludePath
 block|;
 name|llvm
 operator|::
@@ -622,7 +650,20 @@ name|std
 operator|::
 name|string
 operator|>
-name|CudaLibDeviceMap
+name|LibDeviceMap
+block|;
+comment|// CUDA architectures for which we have raised an error in
+comment|// CheckCudaVersionSupportsArch.
+name|mutable
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+name|CudaArch
+block|,
+literal|4
+operator|>
+name|ArchsWithVersionTooLowErrors
 block|;
 name|public
 operator|:
@@ -634,11 +675,6 @@ operator|&
 name|D
 argument_list|)
 operator|:
-name|IsValid
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|D
 argument_list|(
 argument|D
@@ -664,6 +700,17 @@ operator|&
 name|Args
 argument_list|)
 block|;
+comment|/// \brief Emit an error if Version does not support the given Arch.
+comment|///
+comment|/// If either Version or Arch is unknown, does not emit an error.  Emits at
+comment|/// most one error per Arch.
+name|void
+name|CheckCudaVersionSupportsArch
+argument_list|(
+argument|CudaArch Arch
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Check whether we detected a valid Cuda install.
 name|bool
 name|isValid
@@ -682,6 +729,16 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Get the deteced Cuda install's version.
+name|CudaVersion
+name|version
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Version
+return|;
+block|}
 comment|/// \brief Get the detected Cuda installation path.
 name|StringRef
 name|getInstallPath
@@ -689,7 +746,17 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CudaInstallPath
+name|InstallPath
+return|;
+block|}
+comment|/// \brief Get the detected path to Cuda's bin directory.
+name|StringRef
+name|getBinPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BinPath
 return|;
 block|}
 comment|/// \brief Get the detected Cuda Include path.
@@ -699,7 +766,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CudaIncludePath
+name|IncludePath
 return|;
 block|}
 comment|/// \brief Get the detected Cuda library path.
@@ -709,7 +776,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CudaLibPath
+name|LibPath
 return|;
 block|}
 comment|/// \brief Get the detected Cuda device library path.
@@ -719,7 +786,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CudaLibDevicePath
+name|LibDevicePath
 return|;
 block|}
 comment|/// \brief Get libdevice file for given architecture
@@ -733,7 +800,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|CudaLibDeviceMap
+name|LibDeviceMap
 operator|.
 name|lookup
 argument_list|(
@@ -1841,6 +1908,23 @@ name|V2
 argument_list|)
 return|;
 block|}
+name|StringRef
+name|getPlatformFamily
+argument_list|()
+specifier|const
+block|;
+specifier|static
+name|StringRef
+name|getSDKName
+argument_list|(
+argument|StringRef isysroot
+argument_list|)
+block|;
+name|StringRef
+name|getOSLibraryNameSuffix
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|/// }
@@ -1871,6 +1955,12 @@ argument|const llvm::opt::DerivedArgList&Args
 argument_list|,
 argument|const char *BoundArch
 argument_list|)
+specifier|const
+name|override
+block|;
+name|CXXStdlibType
+name|GetDefaultCXXStdlibType
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -1990,6 +2080,12 @@ name|UseSjLjExceptions
 argument_list|(
 argument|const llvm::opt::ArgList&Args
 argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|SupportsEmbeddedBitcode
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -2297,11 +2393,19 @@ name|isPIEDefault
 argument_list|()
 specifier|const
 name|override
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
+name|SanitizerMask
+name|getSupportedSanitizers
+argument_list|()
+specifier|const
+name|override
+block|;
+name|SanitizerMask
+name|getDefaultSanitizers
+argument_list|()
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|Tool
@@ -2560,6 +2664,70 @@ block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
+name|Haiku
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|Haiku
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86_64
+return|;
+block|}
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|OpenBSD
 operator|:
 name|public
@@ -2714,10 +2882,8 @@ name|true
 return|;
 block|}
 name|CXXStdlibType
-name|GetCXXStdlibType
-argument_list|(
-argument|const llvm::opt::ArgList&Args
-argument_list|)
+name|GetDefaultCXXStdlibType
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -2830,10 +2996,8 @@ name|true
 return|;
 block|}
 name|CXXStdlibType
-name|GetCXXStdlibType
-argument_list|(
-argument|const llvm::opt::ArgList&Args
-argument_list|)
+name|GetDefaultCXXStdlibType
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -2970,10 +3134,8 @@ name|true
 return|;
 block|}
 name|CXXStdlibType
-name|GetCXXStdlibType
-argument_list|(
-argument|const llvm::opt::ArgList&Args
-argument_list|)
+name|GetDefaultCXXStdlibType
+argument_list|()
 specifier|const
 name|override
 block|;
@@ -3193,6 +3355,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|void
+name|AddIAMCUIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|isPIEDefault
 argument_list|()
@@ -3221,6 +3393,16 @@ operator|::
 name|string
 name|computeSysRoot
 argument_list|()
+specifier|const
+block|;
+name|virtual
+name|std
+operator|::
+name|string
+name|getDynamicLinker
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|)
 specifier|const
 block|;
 name|std
@@ -3307,7 +3489,72 @@ argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 name|override
-block|; }
+block|;
+comment|// Never try to use the integrated assembler with CUDA; always fork out to
+comment|// ptxas.
+name|bool
+name|useIntegratedAs
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|void
+name|AddCudaIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|Generic_GCC
+operator|::
+name|CudaInstallationDetector
+operator|&
+name|cudaInstallation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CudaInstallation
+return|;
+block|}
+name|Generic_GCC
+operator|::
+name|CudaInstallationDetector
+operator|&
+name|cudaInstallation
+argument_list|()
+block|{
+return|return
+name|CudaInstallation
+return|;
+block|}
+name|protected
+operator|:
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|// ptxas
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+name|override
+block|;
+comment|// fatbinary (ok, not really a linker)
+block|}
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -3442,6 +3689,60 @@ operator|::
 name|string
 name|LibSuffix
 block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|LanaiToolChain
+operator|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|LanaiToolChain
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+operator|:
+name|Generic_ELF
+argument_list|(
+argument|D
+argument_list|,
+argument|Triple
+argument_list|,
+argument|Args
+argument_list|)
+block|{}
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -3650,6 +3951,16 @@ operator|&
 name|Args
 argument_list|)
 block|;
+name|unsigned
+name|GetDefaultDwarfVersion
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|2
+return|;
+block|}
 name|bool
 name|IsIntegratedAssemblerDefault
 argument_list|()
@@ -4029,6 +4340,12 @@ argument|std::string&path
 argument_list|)
 specifier|const
 block|;
+name|VersionTuple
+name|getMSVCVersionFromExe
+argument_list|()
+specifier|const
+name|override
+block|;
 name|std
 operator|::
 name|string
@@ -4345,7 +4662,7 @@ name|LLVM_LIBRARY_VISIBILITY
 name|MyriadToolChain
 operator|:
 name|public
-name|Generic_GCC
+name|Generic_ELF
 block|{
 name|public
 operator|:
@@ -4571,6 +4888,40 @@ name|override
 block|;
 name|void
 name|addClangTargetOptions
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|RuntimeLibType
+name|GetDefaultRuntimeLibType
+argument_list|()
+specifier|const
+name|override
+block|;
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddClangCXXStdlibIncludeArgs
 argument_list|(
 argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,

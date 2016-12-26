@@ -886,137 +886,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/// Use move-assignment to move the range [I, E) onto the
-comment|/// objects starting with "Dest".  This is just<memory>'s
-comment|/// std::move, but not all stdlibs actually provide that.
-name|template
-operator|<
-name|typename
-name|It1
-operator|,
-name|typename
-name|It2
-operator|>
-specifier|static
-name|It2
-name|move
-argument_list|(
-argument|It1 I
-argument_list|,
-argument|It1 E
-argument_list|,
-argument|It2 Dest
-argument_list|)
-block|{
-for|for
-control|(
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-operator|,
-operator|++
-name|Dest
-control|)
-operator|*
-name|Dest
-operator|=
-operator|::
-name|std
-operator|::
-name|move
-argument_list|(
-operator|*
-name|I
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-name|Dest
-return|;
-end_return
-
-begin_comment
-unit|}
-comment|/// Use move-assignment to move the range
-end_comment
-
-begin_comment
-comment|/// [I, E) onto the objects ending at "Dest", moving objects
-end_comment
-
-begin_comment
-comment|/// in reverse order.  This is just<algorithm>'s
-end_comment
-
-begin_comment
-comment|/// std::move_backward, but not all stdlibs actually provide that.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|It1
-operator|,
-name|typename
-name|It2
-operator|>
-specifier|static
-name|It2
-name|move_backward
-argument_list|(
-argument|It1 I
-argument_list|,
-argument|It1 E
-argument_list|,
-argument|It2 Dest
-argument_list|)
-block|{
-while|while
-condition|(
-name|I
-operator|!=
-name|E
-condition|)
-operator|*
-operator|--
-name|Dest
-operator|=
-operator|::
-name|std
-operator|::
-name|move
-argument_list|(
-operator|*
-operator|--
-name|E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-name|Dest
-return|;
-end_return
-
-begin_comment
-unit|}
 comment|/// Move the range [I, E) into the uninitialized memory starting with "Dest",
-end_comment
-
-begin_comment
 comment|/// constructing elements as needed.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|It1
@@ -1035,48 +907,29 @@ argument_list|,
 argument|It2 Dest
 argument_list|)
 block|{
-for|for
-control|(
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-operator|,
-operator|++
-name|Dest
-control|)
-operator|::
-name|new
-argument_list|(
-argument|(void*)&*Dest
-argument_list|)
-name|T
-argument_list|(
-operator|::
 name|std
 operator|::
-name|move
+name|uninitialized_copy
 argument_list|(
-operator|*
+name|std
+operator|::
+name|make_move_iterator
+argument_list|(
 name|I
 argument_list|)
+argument_list|,
+name|std
+operator|::
+name|make_move_iterator
+argument_list|(
+name|E
 argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_comment
+argument_list|,
+name|Dest
+argument_list|)
+block|;   }
 comment|/// Copy the range [I, E) onto the uninitialized memory starting with "Dest",
-end_comment
-
-begin_comment
 comment|/// constructing elements as needed.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1510,92 +1363,13 @@ argument_list|,
 argument|T *
 argument_list|)
 block|{}
-comment|/// Use move-assignment to move the range [I, E) onto the
-comment|/// objects starting with "Dest".  For PODs, this is just memcpy.
+comment|/// Move the range [I, E) onto the uninitialized memory
+comment|/// starting with "Dest", constructing elements into it as needed.
 name|template
 operator|<
 name|typename
 name|It1
 block|,
-name|typename
-name|It2
-operator|>
-specifier|static
-name|It2
-name|move
-argument_list|(
-argument|It1 I
-argument_list|,
-argument|It1 E
-argument_list|,
-argument|It2 Dest
-argument_list|)
-block|{
-return|return
-operator|::
-name|std
-operator|::
-name|copy
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|,
-name|Dest
-argument_list|)
-return|;
-block|}
-comment|/// Use move-assignment to move the range [I, E) onto the objects ending at
-comment|/// "Dest", moving objects in reverse order.
-name|template
-operator|<
-name|typename
-name|It1
-operator|,
-name|typename
-name|It2
-operator|>
-specifier|static
-name|It2
-name|move_backward
-argument_list|(
-argument|It1 I
-argument_list|,
-argument|It1 E
-argument_list|,
-argument|It2 Dest
-argument_list|)
-block|{
-return|return
-operator|::
-name|std
-operator|::
-name|copy_backward
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|,
-name|Dest
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Move the range [I, E) onto the uninitialized memory
-end_comment
-
-begin_comment
-comment|/// starting with "Dest", constructing elements into it as needed.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|It1
-operator|,
 name|typename
 name|It2
 operator|>
@@ -1626,7 +1400,7 @@ name|template
 operator|<
 name|typename
 name|It1
-operator|,
+block|,
 name|typename
 name|It2
 operator|>
@@ -1659,7 +1433,7 @@ name|template
 operator|<
 name|typename
 name|T1
-operator|,
+block|,
 name|typename
 name|T2
 operator|>
@@ -1707,25 +1481,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Double the size of the allocated memory, guaranteeing space for at
-end_comment
-
-begin_comment
 comment|/// least one more element or MinSize if specified.
-end_comment
-
-begin_function
 name|void
 name|grow
-parameter_list|(
-name|size_t
-name|MinSize
-init|=
+argument_list|(
+argument|size_t MinSize =
 literal|0
-parameter_list|)
+argument_list|)
 block|{
 name|this
 operator|->
@@ -1743,24 +1506,14 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_label
+block|;   }
 name|public
-label|:
-end_label
-
-begin_function
+operator|:
 name|void
 name|push_back
-parameter_list|(
-specifier|const
-name|T
-modifier|&
-name|Elt
-parameter_list|)
+argument_list|(
+argument|const T&Elt
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1796,6 +1549,9 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|this
 operator|->
 name|setEnd
@@ -1808,13 +1564,15 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-name|void
+begin_macro
+unit|}    void
 name|pop_back
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|this
 operator|->
@@ -1829,7 +1587,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 unit|};
@@ -1899,6 +1657,16 @@ name|SuperClass
 operator|::
 name|iterator
 name|iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|SuperClass
+operator|::
+name|const_iterator
+name|const_iterator
 expr_stmt|;
 end_typedef
 
@@ -2625,10 +2393,22 @@ begin_function
 name|iterator
 name|erase
 parameter_list|(
-name|iterator
-name|I
+name|const_iterator
+name|CI
 parameter_list|)
 block|{
+comment|// Just cast away constness because this is a non-const member function.
+name|iterator
+name|I
+init|=
+name|const_cast
+operator|<
+name|iterator
+operator|>
+operator|(
+name|CI
+operator|)
+decl_stmt|;
 name|assert
 argument_list|(
 name|I
@@ -2659,8 +2439,8 @@ init|=
 name|I
 decl_stmt|;
 comment|// Shift all elts down one.
-name|this
-operator|->
+name|std
+operator|::
 name|move
 argument_list|(
 name|I
@@ -2693,13 +2473,36 @@ begin_function
 name|iterator
 name|erase
 parameter_list|(
-name|iterator
-name|S
+name|const_iterator
+name|CS
 parameter_list|,
-name|iterator
-name|E
+name|const_iterator
+name|CE
 parameter_list|)
 block|{
+comment|// Just cast away constness because this is a non-const member function.
+name|iterator
+name|S
+init|=
+name|const_cast
+operator|<
+name|iterator
+operator|>
+operator|(
+name|CS
+operator|)
+decl_stmt|;
+name|iterator
+name|E
+init|=
+name|const_cast
+operator|<
+name|iterator
+operator|>
+operator|(
+name|CE
+operator|)
+decl_stmt|;
 name|assert
 argument_list|(
 name|S
@@ -2742,8 +2545,8 @@ comment|// Shift all elts down.
 name|iterator
 name|I
 init|=
-name|this
-operator|->
+name|std
+operator|::
 name|move
 argument_list|(
 name|E
@@ -2909,8 +2712,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Push everything else over.
-name|this
-operator|->
+name|std
+operator|::
 name|move_backward
 argument_list|(
 name|I
@@ -3101,8 +2904,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Push everything else over.
-name|this
-operator|->
+name|std
+operator|::
 name|move_backward
 argument_list|(
 name|I
@@ -3328,8 +3131,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|// Copy the existing elements that get replaced.
-name|this
-operator|->
+name|std
+operator|::
 name|move_backward
 argument_list|(
 name|I
@@ -3639,8 +3442,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|// Copy the existing elements that get replaced.
-name|this
-operator|->
+name|std
+operator|::
 name|move_backward
 argument_list|(
 name|I
@@ -4970,8 +4773,8 @@ name|RHSSize
 condition|)
 name|NewEnd
 operator|=
-name|this
-operator|->
+name|std
+operator|::
 name|move
 argument_list|(
 name|RHS
@@ -5092,8 +4895,8 @@ name|CurSize
 condition|)
 block|{
 comment|// Otherwise, use assignment for the already-constructed elements.
-name|this
-operator|->
+name|std
+operator|::
 name|move
 argument_list|(
 name|RHS

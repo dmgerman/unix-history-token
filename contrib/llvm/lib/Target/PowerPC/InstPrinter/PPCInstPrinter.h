@@ -278,6 +278,26 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printU7ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU8ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printU10ImmOperand
 argument_list|(
 argument|const MCInst *MI

@@ -367,7 +367,17 @@ init|=
 name|NormalAndEHCleanup
 operator||
 name|InactiveCleanup
-block|}
+block|,
+name|LifetimeMarker
+init|=
+literal|0x8
+block|,
+name|NormalEHLifetimeMarker
+init|=
+name|LifetimeMarker
+operator||
+name|NormalAndEHCleanup
+block|, }
 enum|;
 comment|/// A stack of scopes which respond to exceptions, including cleanups
 comment|/// and catch blocks.
@@ -1294,14 +1304,7 @@ name|bool
 name|requiresLandingPad
 argument_list|()
 specifier|const
-block|{
-return|return
-name|InnermostEHScope
-operator|!=
-name|stable_end
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|/// Determines whether there are any normal cleanups on the stack.
 name|bool
 name|hasNormalCleanups

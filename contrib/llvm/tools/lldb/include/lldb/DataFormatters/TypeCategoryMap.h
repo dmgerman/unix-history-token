@@ -69,6 +69,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -453,9 +459,11 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_map_mutex
-decl_stmt|;
+expr_stmt|;
 name|IFormatChangeListener
 modifier|*
 name|listener
@@ -484,10 +492,12 @@ return|return
 name|m_active_categories
 return|;
 block|}
-name|Mutex
-modifier|&
+name|std
+operator|::
+name|recursive_mutex
+operator|&
 name|mutex
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|m_map_mutex

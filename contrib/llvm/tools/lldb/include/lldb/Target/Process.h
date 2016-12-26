@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -135,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/Event.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/Listener.h"
 end_include
 
 begin_include
@@ -1090,17 +1102,18 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_function_decl
-name|Listener
-modifier|&
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
 name|GetListenerForProcess
-parameter_list|(
+argument_list|(
 name|Debugger
-modifier|&
+operator|&
 name|debugger
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|protected
@@ -2782,7 +2795,7 @@ name|Process
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -2793,7 +2806,7 @@ name|Process
 argument_list|(
 argument|lldb::TargetSP target_sp
 argument_list|,
-argument|Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const lldb::UnixSignalsSP&unix_signals_sp
 argument_list|)
@@ -2854,7 +2867,7 @@ argument|lldb::TargetSP target_sp
 argument_list|,
 argument|const char *plugin_name
 argument_list|,
-argument|Listener&listener
+argument|lldb::ListenerSP listener_sp
 argument_list|,
 argument|const FileSpec *crash_file_path
 argument_list|)
@@ -2869,7 +2882,6 @@ comment|/// status automatically set when the host child process exits.
 comment|/// Subclasses should call Host::StartMonitoringChildProcess ()
 comment|/// with:
 comment|///     callback = Process::SetHostProcessExitStatus
-comment|///     callback_baton = nullptr
 comment|///     pid = Process::GetID()
 comment|///     monitor_signals = false
 comment|//------------------------------------------------------------------
@@ -2877,11 +2889,6 @@ specifier|static
 name|bool
 name|SetProcessExitStatus
 argument_list|(
-name|void
-operator|*
-name|callback_baton
-argument_list|,
-comment|// The callback baton which should be set to nullptr
 name|lldb
 operator|::
 name|pid_t
@@ -4285,9 +4292,9 @@ name|EvaluateExpressionOptions
 operator|&
 name|options
 argument_list|,
-name|Stream
+name|DiagnosticManager
 operator|&
-name|errors
+name|diagnostic_manager
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -4411,6 +4418,15 @@ specifier|const
 name|SymbolContext
 modifier|&
 name|sc
+parameter_list|)
+function_decl|;
+name|virtual
+name|bool
+name|GetProcessInfo
+parameter_list|(
+name|ProcessInstanceInfo
+modifier|&
+name|info
 parameter_list|)
 function_decl|;
 name|public
@@ -4858,6 +4874,25 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
+name|int64_t
+name|ReadSignedIntegerFromMemory
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|,
+name|size_t
+name|byte_size
+argument_list|,
+name|int64_t
+name|fail_value
+argument_list|,
+name|Error
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|addr_t
@@ -5209,6 +5244,32 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Locate the memory region that contains load_addr.
+comment|///
+comment|/// If load_addr is within the address space the process has mapped
+comment|/// range_info will be filled in with the start and end of that range
+comment|/// as well as the permissions for that range and range_info.GetMapped
+comment|/// will return true.
+comment|///
+comment|/// If load_addr is outside any mapped region then range_info will
+comment|/// have its start address set to load_addr and the end of the
+comment|/// range will indicate the start of the next mapped range or be
+comment|/// set to LLDB_INVALID_ADDRESS if there are no valid mapped ranges
+comment|/// between load_addr and the end of the process address space.
+comment|///
+comment|/// GetMemoryRegionInfo will only return an error if it is
+comment|/// unimplemented for the current process.
+comment|///
+comment|/// @param[in] load_addr
+comment|///     The load address to query the range_info for.
+comment|///
+comment|/// @param[out] range_info
+comment|///     An range_info value containing the details of the range.
+comment|///
+comment|/// @return
+comment|///     An error value.
+comment|//------------------------------------------------------------------
 name|virtual
 name|Error
 name|GetMemoryRegionInfo
@@ -5237,6 +5298,32 @@ return|return
 name|error
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Obtain all the mapped memory regions within this process.
+comment|///
+comment|/// @param[out] region_list
+comment|///     A vector to contain MemoryRegionInfo objects for all mapped
+comment|///     ranges.
+comment|///
+comment|/// @return
+comment|///     An error value.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|GetMemoryRegions
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|lldb
+operator|::
+name|MemoryRegionInfoSP
+operator|>
+operator|&
+name|region_list
+argument_list|)
+decl_stmt|;
 name|virtual
 name|Error
 name|GetWatchpointSupportInfo
@@ -6017,7 +6104,7 @@ argument|lldb::EventSP *event_sp_ptr = nullptr
 argument_list|,
 argument|bool wait_always = true
 argument_list|,
-argument|Listener *hijack_listener = nullptr
+argument|lldb::ListenerSP hijack_listener = lldb::ListenerSP()
 argument_list|,
 argument|Stream *stream = nullptr
 argument_list|,
@@ -6061,23 +6148,14 @@ operator|::
 name|StateType
 name|WaitForStateChangedEvents
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
+argument|const TimeValue *timeout
 argument_list|,
-name|lldb
-operator|::
-name|EventSP
-operator|&
-name|event_sp
+argument|lldb::EventSP&event_sp
 argument_list|,
-name|Listener
-operator|*
-name|hijack_listener
+argument|lldb::ListenerSP hijack_listener
 argument_list|)
 expr_stmt|;
-comment|// Pass nullptr to use builtin listener
+comment|// Pass an empty ListenerSP to use builtin listener
 comment|//--------------------------------------------------------------------------------------
 comment|/// Centralize the code that handles and prints descriptions for process state changes.
 comment|///
@@ -6127,15 +6205,11 @@ name|public
 label|:
 name|ProcessEventHijacker
 argument_list|(
-name|Process
-operator|&
-name|process
+argument|Process&process
 argument_list|,
-name|Listener
-operator|*
-name|listener
+argument|lldb::ListenerSP listener_sp
 argument_list|)
-operator|:
+block|:
 name|m_process
 argument_list|(
 argument|process
@@ -6145,9 +6219,10 @@ name|m_process
 operator|.
 name|HijackProcessEvents
 argument_list|(
-name|listener
+name|listener_sp
 argument_list|)
-block|;         }
+expr_stmt|;
+block|}
 operator|~
 name|ProcessEventHijacker
 argument_list|()
@@ -6189,12 +6264,13 @@ comment|///     \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|HijackProcessEvents
-parameter_list|(
-name|Listener
-modifier|*
-name|listener
-parameter_list|)
-function_decl|;
+argument_list|(
+name|lldb
+operator|::
+name|ListenerSP
+name|listener_sp
+argument_list|)
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Restores the process event broadcasting to its normal state.
 comment|///
@@ -6999,7 +7075,35 @@ name|PrivateStateThreadIsValid
 argument_list|()
 specifier|const
 block|{
+name|lldb
+operator|::
+name|StateType
+name|state
+operator|=
+name|m_private_state
+operator|.
+name|GetValue
+argument_list|()
+block|;
 return|return
+name|state
+operator|!=
+name|lldb
+operator|::
+name|eStateInvalid
+operator|&&
+name|state
+operator|!=
+name|lldb
+operator|::
+name|eStateDetached
+operator|&&
+name|state
+operator|!=
+name|lldb
+operator|::
+name|eStateExited
+operator|&&
 name|m_private_state_thread
 operator|.
 name|IsJoinable
@@ -7190,27 +7294,16 @@ begin_comment
 comment|// This is the control broadcaster, used to pause, resume& stop the private state thread.
 end_comment
 
-begin_decl_stmt
-name|Listener
-name|m_private_state_listener
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// This is the listener for the private state thread.
-end_comment
-
 begin_expr_stmt
-name|Predicate
-operator|<
-name|bool
-operator|>
-name|m_private_state_control_wait
+name|lldb
+operator|::
+name|ListenerSP
+name|m_private_state_listener_sp
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// This Predicate is used to signal that a control operation is complete.
+comment|// This is the listener for the private state thread.
 end_comment
 
 begin_decl_stmt
@@ -7288,21 +7381,25 @@ begin_comment
 comment|///< A textual description of why a process exited.
 end_comment
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|mutex
 name|m_exit_status_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|///< Mutex so m_exit_status m_exit_string can be safely accessed from multiple threads
 end_comment
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|recursive_mutex
 name|m_thread_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|ThreadList
@@ -7396,12 +7493,17 @@ name|m_image_tokens
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|Listener
-modifier|&
-name|m_listener
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|m_listener_sp
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|///< Shared pointer to the listener used for public events.  Can not be empty.
+end_comment
 
 begin_decl_stmt
 name|BreakpointSiteList
@@ -7491,11 +7593,13 @@ name|m_stdio_communication
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|recursive_mutex
 name|m_stdio_communication_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|bool
@@ -7523,11 +7627,13 @@ name|m_stderr_data
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|Mutex
+begin_expr_stmt
+name|std
+operator|::
+name|recursive_mutex
 name|m_profile_data_comm_mutex
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|std
@@ -7730,6 +7836,14 @@ begin_comment
 comment|// A set of object pointers which have already had warnings printed
 end_comment
 
+begin_expr_stmt
+name|std
+operator|::
+name|mutex
+name|m_run_thread_plan_lock
+expr_stmt|;
+end_expr_stmt
+
 begin_enum
 enum|enum
 block|{
@@ -7837,10 +7951,33 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_label
+name|private
+label|:
+end_label
+
 begin_struct
 struct|struct
 name|PrivateStateThreadArgs
 block|{
+name|PrivateStateThreadArgs
+argument_list|(
+argument|Process *p
+argument_list|,
+argument|bool s
+argument_list|)
+block|:
+name|process
+argument_list|(
+name|p
+argument_list|)
+operator|,
+name|is_secondary_thread
+argument_list|(
+argument|s
+argument_list|)
+block|{}
+expr_stmt|;
 name|Process
 modifier|*
 name|process
@@ -7851,6 +7988,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|// arg is a pointer to a new'ed PrivateStateThreadArgs structure.  PrivateStateThread will free it for you.
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -7892,6 +8033,11 @@ argument|bool is_secondary_thread
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
 
 begin_decl_stmt
 name|void

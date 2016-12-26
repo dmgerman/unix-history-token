@@ -1002,6 +1002,38 @@ name|m_unwind_table
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Returns if the function bounds for symbols in this symbol file
+comment|/// are likely accurate.
+comment|///
+comment|/// The unwinder can emulate the instructions of functions to understand
+comment|/// prologue/epilogue code sequences, where registers are spilled on
+comment|/// the stack, etc.  This feature relies on having the correct start
+comment|/// addresses of all functions.  If the ObjectFile has a way to tell
+comment|/// that symbols have been stripped and there's no way to reconstruct
+comment|/// start addresses (e.g. LC_FUNCTION_STARTS on Mach-O, or eh_frame
+comment|/// unwind info), the ObjectFile should indicate that assembly emulation
+comment|/// should not be used for this module.
+comment|///
+comment|/// It is uncommon for this to return false.  An ObjectFile needs to
+comment|/// be sure that symbol start addresses are unavailable before false
+comment|/// is returned.  If it is unclear, this should return true.
+comment|///
+comment|/// @return
+comment|///     Returns true if assembly emulation should be used for this
+comment|///     module.
+comment|///     Only returns false if the ObjectFile is sure that symbol
+comment|///     addresses are insufficient for accurate assembly emulation.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|AllowAssemblyEmulationUnwindPlans
+parameter_list|()
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|/// Similar to Process::GetImageInfoAddress().
 comment|///
 comment|/// Some platforms embed auxiliary structures useful to debuggers in the
@@ -1648,6 +1680,9 @@ name|Symtab
 operator|>
 name|m_symtab_ap
 expr_stmt|;
+name|uint32_t
+name|m_synthetic_symbol_idx
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Sets the architecture for a module.  At present the architecture
 comment|/// can only be set if it is invalid.  It is not allowed to switch from
@@ -1668,6 +1703,10 @@ name|ArchSpec
 modifier|&
 name|new_arch
 parameter_list|)
+function_decl|;
+name|ConstString
+name|GetNextSyntheticSymbolName
+parameter_list|()
 function_decl|;
 name|private
 label|:

@@ -144,8 +144,8 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Install the utility function into a process
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print parse errors and warnings to.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to print parse errors and warnings to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to install the utility function to.
@@ -157,9 +157,9 @@ name|virtual
 name|bool
 name|Install
 argument_list|(
-name|Stream
+name|DiagnosticManager
 operator|&
-name|error_stream
+name|diagnostic_manager
 argument_list|,
 name|ExecutionContext
 operator|&
@@ -278,23 +278,19 @@ name|false
 return|;
 block|}
 comment|// This makes the function caller function.
+comment|// Pass in the ThreadSP if you have one available, compilation can end up calling code (e.g. to look up indirect
+comment|// functions) and we don't want this to wander onto another thread.
 name|FunctionCaller
 operator|*
 name|MakeFunctionCaller
 argument_list|(
-specifier|const
-name|CompilerType
-operator|&
-name|return_type
+argument|const CompilerType&return_type
 argument_list|,
-specifier|const
-name|ValueList
-operator|&
-name|arg_value_list
+argument|const ValueList&arg_value_list
 argument_list|,
-name|Error
-operator|&
-name|error
+argument|lldb::ThreadSP compilation_thread
+argument_list|,
+argument|Error&error
 argument_list|)
 block|;
 comment|// This one retrieves the function caller that is already made.  If you haven't made it yet, this returns nullptr

@@ -57,6 +57,12 @@ directive|include
 file|<list>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/lldb-forward.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -544,9 +544,11 @@ name|BreakpointLocationCollection
 name|m_owners
 decl_stmt|;
 comment|///< This has the BreakpointLocations that share this breakpoint site.
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_owners_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< This mutex protects the owners collection.
 specifier|static
 name|lldb

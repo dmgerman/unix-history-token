@@ -231,6 +231,30 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+argument|EVT
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool *Fast
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isIntDivCheap
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|AttributeSet Attr
+argument_list|)
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -270,7 +294,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -288,7 +312,7 @@ argument|bool IsVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -310,6 +334,15 @@ name|override
 block|;
 name|SDValue
 name|LowerFrameIndex
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -355,6 +388,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerCopyToReg
 argument_list|(
 argument|SDValue Op
 argument_list|,

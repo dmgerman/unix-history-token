@@ -268,7 +268,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
@@ -345,7 +345,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -372,7 +372,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -401,7 +401,7 @@ block|;
 name|SDValue
 name|lowerLoadWordFromAlignedBasePlusOffset
 argument_list|(
-argument|SDLoc DL
+argument|const SDLoc&DL
 argument_list|,
 argument|SDValue Chain
 argument_list|,
@@ -682,7 +682,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -714,7 +714,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -736,9 +736,21 @@ argument|LLVMContext&Context
 argument_list|)
 specifier|const
 name|override
-block|;   }
-decl_stmt|;
+block|;
+name|bool
+name|shouldInsertFencesForAtomic
+argument_list|(
+argument|const Instruction *I
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

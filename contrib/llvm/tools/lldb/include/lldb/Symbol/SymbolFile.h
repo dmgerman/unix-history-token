@@ -79,6 +79,12 @@ directive|include
 file|"lldb/Symbol/Type.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -375,6 +381,17 @@ literal|0
 block|;
 name|virtual
 name|bool
+name|ParseCompileUnitIsOptimized
+argument_list|(
+argument|const lldb_private::SymbolContext&sc
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|ParseImportedModules
 argument_list|(
 specifier|const
@@ -593,6 +610,8 @@ argument_list|,
 argument|bool append
 argument_list|,
 argument|uint32_t max_matches
+argument_list|,
+argument|llvm::DenseSet<lldb_private::SymbolFile *>&searched_symbol_files
 argument_list|,
 argument|TypeMap& types
 argument_list|)

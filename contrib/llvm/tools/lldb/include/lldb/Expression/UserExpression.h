@@ -194,8 +194,8 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Parse the expression
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print parse errors and warnings to.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to report parse errors and warnings to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when looking up entities that
@@ -216,7 +216,7 @@ name|virtual
 name|bool
 name|Parse
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -245,10 +245,11 @@ name|exe_ctx
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|/// Execute the parsed expression
+comment|/// Execute the parsed expression by callinng the derived class's
+comment|/// DoExecute method.
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to report errors to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when looking up entities that
@@ -271,15 +272,14 @@ comment|///
 comment|/// @return
 comment|///     A Process::Execution results value.
 comment|//------------------------------------------------------------------
-name|virtual
 name|lldb
 operator|::
 name|ExpressionResults
 name|Execute
 argument_list|(
-name|Stream
+name|DiagnosticManager
 operator|&
-name|error_stream
+name|diagnostic_manager
 argument_list|,
 name|ExecutionContext
 operator|&
@@ -302,14 +302,12 @@ name|ExpressionVariableSP
 operator|&
 name|result
 argument_list|)
-operator|=
-literal|0
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Apply the side effects of the function to program state.
 comment|///
-comment|/// @param[in] error_stream
-comment|///     A stream to print errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     A diagnostic manager to report errors to.
 comment|///
 comment|/// @param[in] exe_ctx
 comment|///     The execution context to use when looking up entities that
@@ -332,7 +330,7 @@ name|virtual
 name|bool
 name|FinalizeJITExecution
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -518,6 +516,9 @@ comment|///
 comment|/// @param[in] line_offset
 comment|///     The offset of the first line of the expression from the "beginning" of a virtual source file used for error reporting and debug info.
 comment|///
+comment|/// @param[out] fixed_expression
+comment|///     If non-nullptr, the fixed expression is copied into the provided string.
+comment|///
 comment|/// @param[out] jit_module_sp_ptr
 comment|///     If non-nullptr, used to persist the generated IR module.
 comment|///
@@ -545,6 +546,8 @@ argument_list|,
 argument|uint32_t line_offset =
 literal|0
 argument_list|,
+argument|std::string *fixed_expression = nullptr
+argument_list|,
 argument|lldb::ModuleSP *jit_module_sp_ptr = nullptr
 argument_list|)
 block|;
@@ -558,8 +561,65 @@ operator|=
 literal|0x1001
 block|;
 comment|///< ValueObject::GetError() returns this if there is no result from the expression.
+specifier|const
+name|char
+operator|*
+name|GetFixedText
+argument_list|()
+block|{
+if|if
+condition|(
+name|m_fixed_text
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+name|m_fixed_text
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
 name|protected
-operator|:
+label|:
+name|virtual
+name|lldb
+operator|::
+name|ExpressionResults
+name|DoExecute
+argument_list|(
+name|DiagnosticManager
+operator|&
+name|diagnostic_manager
+argument_list|,
+name|ExecutionContext
+operator|&
+name|exe_ctx
+argument_list|,
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
+argument_list|,
+name|lldb
+operator|::
+name|UserExpressionSP
+operator|&
+name|shared_ptr_to_me
+argument_list|,
+name|lldb
+operator|::
+name|ExpressionVariableSP
+operator|&
+name|result
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 specifier|static
 name|lldb
 operator|::
@@ -572,18 +632,18 @@ argument|ConstString&object_name
 argument_list|,
 argument|Error&err
 argument_list|)
-block|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Populate m_in_cplusplus_method and m_in_objectivec_method based on the environment.
 comment|//------------------------------------------------------------------
 name|void
 name|InstallContext
-argument_list|(
+parameter_list|(
 name|ExecutionContext
-operator|&
+modifier|&
 name|exe_ctx
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|LockAndCheckContext
 argument_list|(
@@ -609,43 +669,52 @@ name|StackFrameSP
 operator|&
 name|frame_sp
 argument_list|)
-block|;
+decl_stmt|;
 name|Address
 name|m_address
-block|;
+decl_stmt|;
 comment|///< The address the process is stopped in.
 name|std
 operator|::
 name|string
 name|m_expr_text
-block|;
+expr_stmt|;
 comment|///< The text of the expression, as typed by the user
 name|std
 operator|::
 name|string
 name|m_expr_prefix
-block|;
+expr_stmt|;
 comment|///< The text of the translation-level definitions, as provided by the user
+name|std
+operator|::
+name|string
+name|m_fixed_text
+expr_stmt|;
+comment|///< The text of the expression with fix-its applied - this won't be set if the fixed text doesn't parse.
 name|lldb
 operator|::
 name|LanguageType
 name|m_language
-block|;
+expr_stmt|;
 comment|///< The language to use when parsing (eLanguageTypeUnknown means use defaults)
 name|ResultType
 name|m_desired_type
-block|;
+decl_stmt|;
 comment|///< The type to coerce the expression's result to.  If eResultTypeAny, inferred from the expression.
 name|EvaluateExpressionOptions
 name|m_options
-block|;
-comment|///< Additional options provided by the user.
-block|}
 decl_stmt|;
+comment|///< Additional options provided by the user.
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb_private
 end_comment
 

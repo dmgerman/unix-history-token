@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Core/UserID.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -1123,9 +1123,11 @@ operator|::
 name|string
 name|m_name
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_plan_complete_mutex
-decl_stmt|;
+expr_stmt|;
 name|LazyBool
 name|m_cached_plan_explains_stop
 decl_stmt|;

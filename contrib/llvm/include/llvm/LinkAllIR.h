@@ -202,6 +202,11 @@ operator|-
 literal|1
 condition|)
 return|return;
+name|llvm
+operator|::
+name|LLVMContext
+name|Context
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -212,10 +217,7 @@ name|Module
 argument_list|(
 literal|""
 argument_list|,
-name|llvm
-operator|::
-name|getGlobalContext
-argument_list|()
+name|Context
 argument_list|)
 expr_stmt|;
 operator|(
@@ -226,10 +228,7 @@ name|llvm
 operator|::
 name|UnreachableInst
 argument_list|(
-name|llvm
-operator|::
-name|getGlobalContext
-argument_list|()
+name|Context
 argument_list|)
 expr_stmt|;
 operator|(

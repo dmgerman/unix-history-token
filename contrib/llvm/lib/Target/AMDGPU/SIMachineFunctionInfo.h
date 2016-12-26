@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_TARGET_R600_SIMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIMACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_TARGET_R600_SIMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_AMDGPU_SIMACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"SIRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<array>
 end_include
 
 begin_include
@@ -88,6 +94,7 @@ comment|/// This class keeps track of the SPI_SP_INPUT_ADDR config register, whi
 comment|/// tells the hardware which interpolation parameters to load.
 name|class
 name|SIMachineFunctionInfo
+name|final
 range|:
 name|public
 name|AMDGPUMachineFunction
@@ -168,6 +175,35 @@ block|;
 name|bool
 name|ReturnsVoid
 block|;
+name|unsigned
+name|MaximumWorkGroupSize
+block|;
+comment|// Number of reserved VGPRs for debugger usage.
+name|unsigned
+name|DebuggerReservedVGPRCount
+block|;
+comment|// Stack object indices for work group IDs.
+name|std
+operator|::
+name|array
+operator|<
+name|int
+block|,
+literal|3
+operator|>
+name|DebuggerWorkGroupIDStackObjectIndices
+block|;
+comment|// Stack object indices for work item IDs.
+name|std
+operator|::
+name|array
+operator|<
+name|int
+block|,
+literal|3
+operator|>
+name|DebuggerWorkItemIDStackObjectIndices
+block|;
 name|public
 operator|:
 comment|// FIXME: Make private
@@ -203,6 +239,18 @@ name|HasSpilledSGPRs
 block|;
 name|bool
 name|HasSpilledVGPRs
+block|;
+name|bool
+name|HasNonSpillStackObjects
+block|;
+name|bool
+name|HasFlatInstructions
+block|;
+name|unsigned
+name|NumSpilledSGPRs
+block|;
+name|unsigned
+name|NumSpilledVGPRs
 block|;
 comment|// Feature bits required for inputs passed in user SGPRs.
 name|bool
@@ -363,7 +411,9 @@ argument_list|()
 operator|:
 name|VGPR
 argument_list|(
-literal|0
+name|AMDGPU
+operator|::
+name|NoRegister
 argument_list|)
 block|,
 name|Lane
@@ -381,6 +431,18 @@ name|Lane
 operator|!=
 operator|-
 literal|1
+return|;
+block|}
+name|bool
+name|hasReg
+argument_list|()
+block|{
+return|return
+name|VGPR
+operator|!=
+name|AMDGPU
+operator|::
+name|NoRegister
 return|;
 block|}
 expr|}
@@ -475,6 +537,15 @@ operator|&
 name|TRI
 argument_list|)
 block|;
+name|unsigned
+name|addFlatScratchInit
+argument_list|(
+specifier|const
+name|SIRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+block|;
 comment|// Add system SGPRs.
 name|unsigned
 name|addWorkGroupIDX
@@ -561,6 +632,16 @@ return|return
 name|PrivateSegmentWaveByteOffsetSystemSGPR
 return|;
 block|}
+name|void
+name|setPrivateSegmentWaveByteOffset
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|PrivateSegmentWaveByteOffsetSystemSGPR
+operator|=
+name|Reg
+block|;   }
 name|bool
 name|hasPrivateSegmentBuffer
 argument_list|()
@@ -805,6 +886,15 @@ name|ScratchWaveOffsetReg
 operator|=
 name|Reg
 block|;   }
+name|unsigned
+name|getQueuePtrUserSGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QueuePtrUserSGPR
+return|;
+block|}
 name|bool
 name|hasSpilledSGPRs
 argument_list|()
@@ -842,6 +932,82 @@ block|{
 name|HasSpilledVGPRs
 operator|=
 name|Spill
+block|;   }
+name|bool
+name|hasNonSpillStackObjects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasNonSpillStackObjects
+return|;
+block|}
+name|void
+name|setHasNonSpillStackObjects
+argument_list|(
+argument|bool StackObject = true
+argument_list|)
+block|{
+name|HasNonSpillStackObjects
+operator|=
+name|StackObject
+block|;   }
+name|bool
+name|hasFlatInstructions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFlatInstructions
+return|;
+block|}
+name|void
+name|setHasFlatInstructions
+argument_list|(
+argument|bool UseFlat = true
+argument_list|)
+block|{
+name|HasFlatInstructions
+operator|=
+name|UseFlat
+block|;   }
+name|unsigned
+name|getNumSpilledSGPRs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSpilledSGPRs
+return|;
+block|}
+name|unsigned
+name|getNumSpilledVGPRs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSpilledVGPRs
+return|;
+block|}
+name|void
+name|addToSpilledSGPRs
+argument_list|(
+argument|unsigned num
+argument_list|)
+block|{
+name|NumSpilledSGPRs
+operator|+=
+name|num
+block|;   }
+name|void
+name|addToSpilledVGPRs
+argument_list|(
+argument|unsigned num
+argument_list|)
+block|{
+name|NumSpilledVGPRs
+operator|+=
+name|num
 block|;   }
 name|unsigned
 name|getPSInputAddr
@@ -900,6 +1066,224 @@ name|ReturnsVoid
 operator|=
 name|Value
 block|;   }
+comment|/// \returns Number of reserved VGPRs for debugger usage.
+name|unsigned
+name|getDebuggerReservedVGPRCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebuggerReservedVGPRCount
+return|;
+block|}
+comment|/// \returns Stack object index for \p Dim's work group ID.
+name|int
+name|getDebuggerWorkGroupIDStackObjectIndex
+argument_list|(
+argument|unsigned Dim
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Dim
+operator|<
+literal|3
+argument_list|)
+block|;
+return|return
+name|DebuggerWorkGroupIDStackObjectIndices
+index|[
+name|Dim
+index|]
+return|;
+block|}
+comment|/// \brief Sets stack object index for \p Dim's work group ID to \p ObjectIdx.
+name|void
+name|setDebuggerWorkGroupIDStackObjectIndex
+argument_list|(
+argument|unsigned Dim
+argument_list|,
+argument|int ObjectIdx
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Dim
+operator|<
+literal|3
+argument_list|)
+block|;
+name|DebuggerWorkGroupIDStackObjectIndices
+index|[
+name|Dim
+index|]
+operator|=
+name|ObjectIdx
+block|;   }
+comment|/// \returns Stack object index for \p Dim's work item ID.
+name|int
+name|getDebuggerWorkItemIDStackObjectIndex
+argument_list|(
+argument|unsigned Dim
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Dim
+operator|<
+literal|3
+argument_list|)
+block|;
+return|return
+name|DebuggerWorkItemIDStackObjectIndices
+index|[
+name|Dim
+index|]
+return|;
+block|}
+comment|/// \brief Sets stack object index for \p Dim's work item ID to \p ObjectIdx.
+name|void
+name|setDebuggerWorkItemIDStackObjectIndex
+argument_list|(
+argument|unsigned Dim
+argument_list|,
+argument|int ObjectIdx
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Dim
+operator|<
+literal|3
+argument_list|)
+block|;
+name|DebuggerWorkItemIDStackObjectIndices
+index|[
+name|Dim
+index|]
+operator|=
+name|ObjectIdx
+block|;   }
+comment|/// \returns SGPR used for \p Dim's work group ID.
+name|unsigned
+name|getWorkGroupIDSGPR
+argument_list|(
+argument|unsigned Dim
+argument_list|)
+specifier|const
+block|{
+switch|switch
+condition|(
+name|Dim
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|assert
+argument_list|(
+name|hasWorkGroupIDX
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|WorkGroupIDXSystemSGPR
+return|;
+case|case
+literal|1
+case|:
+name|assert
+argument_list|(
+name|hasWorkGroupIDY
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|WorkGroupIDYSystemSGPR
+return|;
+case|case
+literal|2
+case|:
+name|assert
+argument_list|(
+name|hasWorkGroupIDZ
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|WorkGroupIDZSystemSGPR
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unexpected dimension"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \returns VGPR used for \p Dim' work item ID.
+name|unsigned
+name|getWorkItemIDVGPR
+argument_list|(
+argument|unsigned Dim
+argument_list|)
+specifier|const
+block|{
+switch|switch
+condition|(
+name|Dim
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|assert
+argument_list|(
+name|hasWorkItemIDX
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|AMDGPU
+operator|::
+name|VGPR0
+return|;
+case|case
+literal|1
+case|:
+name|assert
+argument_list|(
+name|hasWorkItemIDY
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|AMDGPU
+operator|::
+name|VGPR1
+return|;
+case|case
+literal|2
+case|:
+name|assert
+argument_list|(
+name|hasWorkItemIDZ
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|AMDGPU
+operator|::
+name|VGPR2
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unexpected dimension"
+argument_list|)
+expr_stmt|;
+block|}
 name|unsigned
 name|getMaximumWorkGroupSize
 argument_list|(

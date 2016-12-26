@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  This files defines TypeLocBuilder, a class for building TypeLocs
+comment|//  This file defines TypeLocBuilder, a class for building TypeLocs
 end_comment
 
 begin_comment

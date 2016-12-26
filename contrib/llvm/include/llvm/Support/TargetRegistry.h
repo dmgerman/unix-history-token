@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -139,9 +145,6 @@ name|MCAsmParser
 decl_stmt|;
 name|class
 name|MCCodeEmitter
-decl_stmt|;
-name|class
-name|MCCodeGenInfo
 decl_stmt|;
 name|class
 name|MCContext
@@ -397,12 +400,10 @@ name|TT
 parameter_list|)
 function_decl|;
 typedef|typedef
-name|MCCodeGenInfo
-operator|*
-operator|(
-operator|*
-name|MCCodeGenInfoCtorFnTy
-operator|)
+name|void
+argument_list|(
+argument|*MCAdjustCodeGenOptsFnTy
+argument_list|)
 operator|(
 specifier|const
 name|Triple
@@ -417,12 +418,8 @@ operator|,
 name|CodeModel
 operator|::
 name|Model
+operator|&
 name|CM
-operator|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OL
 operator|)
 expr_stmt|;
 typedef|typedef
@@ -513,9 +510,12 @@ name|TargetOptions
 operator|&
 name|Options
 operator|,
+name|Optional
+operator|<
 name|Reloc
 operator|::
 name|Model
+operator|>
 name|RM
 operator|,
 name|CodeModel
@@ -912,10 +912,8 @@ comment|/// registered.
 name|MCAsmInfoCtorFnTy
 name|MCAsmInfoCtorFn
 argument_list|;
-comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's
-comment|/// MCCodeGenInfo, if registered.
-name|MCCodeGenInfoCtorFnTy
-name|MCCodeGenInfoCtorFn
+name|MCAdjustCodeGenOptsFnTy
+name|MCAdjustCodeGenOptsFn
 argument_list|;
 comment|/// MCInstrInfoCtorFn - Constructor function for this target's MCInstrInfo,
 comment|/// if registered.
@@ -1171,13 +1169,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// createMCCodeGenInfo - Create a MCCodeGenInfo implementation.
-comment|///
-name|MCCodeGenInfo
-modifier|*
-name|createMCCodeGenInfo
+name|void
+name|adjustCodeGenOpts
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
+operator|&
 name|TT
 argument_list|,
 name|Reloc
@@ -1188,38 +1185,24 @@ argument_list|,
 name|CodeModel
 operator|::
 name|Model
+operator|&
 name|CM
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-name|OL
 argument_list|)
 decl|const
 block|{
 if|if
 condition|(
-operator|!
-name|MCCodeGenInfoCtorFn
+name|MCAdjustCodeGenOptsFn
 condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|MCCodeGenInfoCtorFn
-argument_list|(
-name|Triple
+name|MCAdjustCodeGenOptsFn
 argument_list|(
 name|TT
-argument_list|)
 argument_list|,
 name|RM
 argument_list|,
 name|CM
-argument_list|,
-name|OL
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 comment|/// createMCInstrInfo - Create a MCInstrInfo implementation.
 comment|///
@@ -1370,14 +1353,13 @@ name|TargetOptions
 operator|&
 name|Options
 argument_list|,
+name|Optional
+operator|<
 name|Reloc
 operator|::
 name|Model
+operator|>
 name|RM
-operator|=
-name|Reloc
-operator|::
-name|Default
 argument_list|,
 name|CodeModel
 operator|::
@@ -2724,46 +2706,10 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|/// RegisterMCCodeGenInfo - Register a MCCodeGenInfo implementation for the
-end_comment
-
-begin_comment
-comment|/// given target.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients are responsible for ensuring that registration doesn't occur
-end_comment
-
-begin_comment
-comment|/// while another thread is attempting to access the registry. Typically
-end_comment
-
-begin_comment
-comment|/// this is done by initializing all targets at program startup.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param T - The target being registered.
-end_comment
-
-begin_comment
-comment|/// @param Fn - A function to construct a MCCodeGenInfo for the target.
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|void
-name|RegisterMCCodeGenInfo
+name|registerMCAdjustCodeGenOpts
 argument_list|(
 name|Target
 operator|&
@@ -2771,13 +2717,13 @@ name|T
 argument_list|,
 name|Target
 operator|::
-name|MCCodeGenInfoCtorFnTy
+name|MCAdjustCodeGenOptsFnTy
 name|Fn
 argument_list|)
 block|{
 name|T
 operator|.
-name|MCCodeGenInfoCtorFn
+name|MCAdjustCodeGenOptsFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -3923,141 +3869,20 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/// RegisterMCCodeGenInfo - Helper template for registering a target codegen
-end_comment
-
-begin_comment
-comment|/// info
-end_comment
-
-begin_comment
-comment|/// implementation.  This invokes the static "Create" method on the class
-end_comment
-
-begin_comment
-comment|/// to actually do the construction.  Usage:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// extern "C" void LLVMInitializeFooTarget() {
-end_comment
-
-begin_comment
-comment|///   extern Target TheFooTarget;
-end_comment
-
-begin_comment
-comment|///   RegisterMCCodeGenInfo<FooMCCodeGenInfo> X(TheFooTarget);
-end_comment
-
-begin_comment
-comment|/// }
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|MCCodeGenInfoImpl
-operator|>
-expr|struct
-name|RegisterMCCodeGenInfo
-block|{
-name|RegisterMCCodeGenInfo
-argument_list|(
-argument|Target&T
-argument_list|)
-block|{
-name|TargetRegistry
-operator|::
-name|RegisterMCCodeGenInfo
-argument_list|(
-name|T
-argument_list|,
-operator|&
-name|Allocator
-argument_list|)
-block|;   }
-name|private
-operator|:
-specifier|static
-name|MCCodeGenInfo
-operator|*
-name|Allocator
-argument_list|(
-argument|const Triple&
-comment|/*TT*/
-argument_list|,
-argument|Reloc::Model
-comment|/*RM*/
-argument_list|,
-argument|CodeModel::Model
-comment|/*CM*/
-argument_list|,
-argument|CodeGenOpt::Level
-comment|/*OL*/
-argument_list|)
-block|{
-return|return
-name|new
-name|MCCodeGenInfoImpl
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// RegisterMCCodeGenInfoFn - Helper template for registering a target codegen
-end_comment
-
-begin_comment
-comment|/// info implementation.  This invokes the specified function to do the
-end_comment
-
-begin_comment
-comment|/// construction.  Usage:
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// extern "C" void LLVMInitializeFooTarget() {
-end_comment
-
-begin_comment
-comment|///   extern Target TheFooTarget;
-end_comment
-
-begin_comment
-comment|///   RegisterMCCodeGenInfoFn X(TheFooTarget, TheFunction);
-end_comment
-
-begin_comment
-comment|/// }
-end_comment
-
 begin_struct
 struct|struct
-name|RegisterMCCodeGenInfoFn
+name|RegisterMCAdjustCodeGenOptsFn
 block|{
-name|RegisterMCCodeGenInfoFn
+name|RegisterMCAdjustCodeGenOptsFn
 argument_list|(
 argument|Target&T
 argument_list|,
-argument|Target::MCCodeGenInfoCtorFnTy Fn
+argument|Target::MCAdjustCodeGenOptsFnTy Fn
 argument_list|)
 block|{
 name|TargetRegistry
 operator|::
-name|RegisterMCCodeGenInfo
+name|registerMCAdjustCodeGenOpts
 argument_list|(
 name|T
 argument_list|,
@@ -4678,7 +4503,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

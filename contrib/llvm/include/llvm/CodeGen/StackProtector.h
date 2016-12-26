@@ -217,6 +217,18 @@ literal|16
 operator|>
 name|VisitedPHIs
 expr_stmt|;
+comment|// A prologue is generated.
+name|bool
+name|HasPrologue
+init|=
+name|false
+decl_stmt|;
+comment|// IR checking code is generated.
+name|bool
+name|HasIRCheck
+init|=
+name|false
+decl_stmt|;
 comment|/// InsertStackProtectors - Insert code into the prologue and epilogue of
 comment|/// the function.
 comment|///
@@ -387,6 +399,17 @@ argument|const AllocaInst *AI
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|// Return true if StackProtector is supposed to be handled by SelectionDAG.
+name|bool
+name|shouldEmitSDCheck
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|&
+name|BB
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|adjustForColoring
 parameter_list|(

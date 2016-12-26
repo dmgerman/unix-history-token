@@ -557,26 +557,6 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printUnsignedImm
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int opNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printUnsignedImm8
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|int opNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printMemOperand
 argument_list|(
 argument|const MachineInstr *MI

@@ -382,6 +382,24 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if the target allows calling a function through a pointer
+comment|/// with a different signature than the actual function (or equivalently,
+comment|/// bitcasting a function or function pointer to a different function type).
+comment|/// In principle in the most general case this could depend on the target, the
+comment|/// calling convention, and the actual types of the arguments and return
+comment|/// value. Here it just means whether the signature mismatch could *ever* be
+comment|/// allowed; in other words, does the target do strict checking of signatures
+comment|/// for all calls.
+name|virtual
+name|bool
+name|canCallMismatchedFunctionType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// If the C++ ABI requires the given type be returned in a particular way,
 comment|/// this method sets RetAI and returns true.
 name|virtual
@@ -1180,6 +1198,23 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Get the ABI-specific "this" parameter adjustment to apply in the prologue
+comment|/// of a virtual function.
+name|virtual
+name|CharUnits
+name|getVirtualFunctionPrologueThisAdjustment
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+block|{
+return|return
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
+return|;
+block|}
 comment|/// Perform ABI-specific "this" parameter adjustment in a virtual function
 comment|/// prologue.
 name|virtual

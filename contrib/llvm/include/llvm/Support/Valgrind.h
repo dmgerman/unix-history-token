@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/Valgrind.h - Communication with Valgrind -----*- C++ -*-===//
+comment|//===- llvm/Support/Valgrind.h - Communication with Valgrind ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -70,19 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Config/llvm-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
+file|<cstddef>
 end_include
 
 begin_decl_stmt
@@ -112,13 +100,22 @@ name|Len
 parameter_list|)
 function_decl|;
 block|}
+comment|// namespace sys
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// LLVM_SUPPORT_VALGRIND_H
+end_comment
 
 end_unit
 

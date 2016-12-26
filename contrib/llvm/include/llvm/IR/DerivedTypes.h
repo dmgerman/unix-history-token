@@ -203,9 +203,8 @@ name|getSubclassData
 argument_list|()
 return|;
 block|}
-comment|/// getBitMask - Return a bitmask with ones set for all of the bits
-comment|/// that can be set by an unsigned version of this type.  This is 0xFF for
-comment|/// i8, 0xFFFF for i16, etc.
+comment|/// Return a bitmask with ones set for all of the bits that can be set by an
+comment|/// unsigned version of this type. This is 0xFF for i8, 0xFFFF for i16, etc.
 name|uint64_t
 name|getBitMask
 argument_list|()
@@ -226,8 +225,8 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/// getSignBit - Return a uint64_t with just the most significant bit set (the
-comment|/// sign bit, if the value is treated as a signed number).
+comment|/// Return a uint64_t with just the most significant bit set (the sign bit, if
+comment|/// the value is treated as a signed number).
 name|uint64_t
 name|getSignBit
 argument_list|()
@@ -301,7 +300,7 @@ name|getBitWidth
 argument_list|()
 return|;
 block|}
-comment|/// FunctionType - Class to represent function types
+comment|/// Class to represent function types
 comment|///
 name|class
 name|FunctionType
@@ -342,9 +341,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// FunctionType::get - This static method is the primary way of constructing
-comment|/// a FunctionType.
-comment|///
+comment|/// This static method is the primary way of constructing a FunctionType.
 specifier|static
 name|FunctionType
 operator|*
@@ -357,8 +354,7 @@ argument_list|,
 argument|bool isVarArg
 argument_list|)
 block|;
-comment|/// FunctionType::get - Create a FunctionType taking no parameters.
-comment|///
+comment|/// Create a FunctionType taking no parameters.
 specifier|static
 name|FunctionType
 operator|*
@@ -369,8 +365,7 @@ argument_list|,
 argument|bool isVarArg
 argument_list|)
 block|;
-comment|/// isValidReturnType - Return true if the specified type is valid as a return
-comment|/// type.
+comment|/// Return true if the specified type is valid as a return type.
 specifier|static
 name|bool
 name|isValidReturnType
@@ -380,8 +375,7 @@ operator|*
 name|RetTy
 argument_list|)
 block|;
-comment|/// isValidArgumentType - Return true if the specified type is valid as an
-comment|/// argument type.
+comment|/// Return true if the specified type is valid as an argument type.
 specifier|static
 name|bool
 name|isValidArgumentType
@@ -484,9 +478,8 @@ literal|1
 index|]
 return|;
 block|}
-comment|/// getNumParams - Return the number of fixed parameters this function type
-comment|/// requires.  This does not consider varargs.
-comment|///
+comment|/// Return the number of fixed parameters this function type requires.
+comment|/// This does not consider varargs.
 name|unsigned
 name|getNumParams
 argument_list|()
@@ -603,8 +596,7 @@ name|getNumParams
 argument_list|()
 return|;
 block|}
-comment|/// CompositeType - Common super class of ArrayType, StructType, PointerType
-comment|/// and VectorType.
+comment|/// Common super class of ArrayType, StructType, PointerType and VectorType.
 name|class
 name|CompositeType
 operator|:
@@ -630,9 +622,7 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// getTypeAtIndex - Given an index value into the type, return the type of
-comment|/// the element.
-comment|///
+comment|/// Given an index value into the type, return the type of the element.
 name|Type
 operator|*
 name|getTypeAtIndex
@@ -704,8 +694,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// StructType - Class to represent struct types.  There are two different kinds
-comment|/// of struct types: Literal structs and Identified structs.
+comment|/// Class to represent struct types. There are two different kinds of struct
+comment|/// types: Literal structs and Identified structs.
 comment|///
 comment|/// Literal struct types (e.g. { i32, i32 }) are uniqued structurally, and must
 comment|/// always have a body when created.  You can get one of these by using one of
@@ -791,18 +781,17 @@ operator|=
 literal|8
 block|}
 block|;
-comment|/// SymbolTableEntry - For a named struct that actually has a name, this is a
-comment|/// pointer to the symbol table entry (maintained by LLVMContext) for the
-comment|/// struct.  This is null if the type is an literal struct or if it is
-comment|/// a identified type that has an empty name.
-comment|///
+comment|/// For a named struct that actually has a name, this is a pointer to the
+comment|/// symbol table entry (maintained by LLVMContext) for the struct.
+comment|/// This is null if the type is an literal struct or if it is a identified
+comment|/// type that has an empty name.
 name|void
 operator|*
 name|SymbolTableEntry
 block|;
 name|public
 operator|:
-comment|/// StructType::create - This creates an identified struct.
+comment|/// This creates an identified struct.
 specifier|static
 name|StructType
 operator|*
@@ -892,8 +881,7 @@ argument|...
 argument_list|)
 name|LLVM_END_WITH_NULL
 block|;
-comment|/// StructType::get - This static method is the primary way to create a
-comment|/// literal StructType.
+comment|/// This static method is the primary way to create a literal StructType.
 specifier|static
 name|StructType
 operator|*
@@ -906,8 +894,7 @@ argument_list|,
 argument|bool isPacked = false
 argument_list|)
 block|;
-comment|/// StructType::get - Create an empty structure type.
-comment|///
+comment|/// Create an empty structure type.
 specifier|static
 name|StructType
 operator|*
@@ -918,10 +905,9 @@ argument_list|,
 argument|bool isPacked = false
 argument_list|)
 block|;
-comment|/// StructType::get - This static method is a convenience method for creating
-comment|/// structure types by specifying the elements as arguments.  Note that this
-comment|/// method always returns a non-packed struct, and requires at least one
-comment|/// element type.
+comment|/// This static method is a convenience method for creating structure types by
+comment|/// specifying the elements as arguments. Note that this method always returns
+comment|/// a non-packed struct, and requires at least one element type.
 specifier|static
 name|StructType
 operator|*
@@ -949,8 +935,8 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isLiteral - Return true if this type is uniqued by structural
-comment|/// equivalence, false if it is a struct definition.
+comment|/// Return true if this type is uniqued by structural equivalence, false if it
+comment|/// is a struct definition.
 name|bool
 name|isLiteral
 argument_list|()
@@ -967,8 +953,8 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isOpaque - Return true if this is a type with an identity that has no body
-comment|/// specified yet.  These prints as 'opaque' in .ll files.
+comment|/// Return true if this is a type with an identity that has no body specified
+comment|/// yet. These prints as 'opaque' in .ll files.
 name|bool
 name|isOpaque
 argument_list|()
@@ -993,7 +979,7 @@ argument|SmallPtrSetImpl<Type *> *Visited = nullptr
 argument_list|)
 specifier|const
 block|;
-comment|/// hasName - Return true if this is a named struct that has a non-empty name.
+comment|/// Return true if this is a named struct that has a non-empty name.
 name|bool
 name|hasName
 argument_list|()
@@ -1005,7 +991,7 @@ operator|!=
 name|nullptr
 return|;
 block|}
-comment|/// getName - Return the name for this struct type if it has an identity.
+comment|/// Return the name for this struct type if it has an identity.
 comment|/// This may return an empty string for an unnamed struct type.  Do not call
 comment|/// this on an literal type.
 name|StringRef
@@ -1013,16 +999,15 @@ name|getName
 argument_list|()
 specifier|const
 block|;
-comment|/// setName - Change the name of this type to the specified name, or to a name
-comment|/// with a suffix if there is a collision.  Do not call this on an literal
-comment|/// type.
+comment|/// Change the name of this type to the specified name, or to a name with a
+comment|/// suffix if there is a collision. Do not call this on an literal type.
 name|void
 name|setName
 argument_list|(
 argument|StringRef Name
 argument_list|)
 block|;
-comment|/// setBody - Specify a body for an opaque identified type.
+comment|/// Specify a body for an opaque identified type.
 name|void
 name|setBody
 argument_list|(
@@ -1040,8 +1025,7 @@ argument|...
 argument_list|)
 name|LLVM_END_WITH_NULL
 block|;
-comment|/// isValidElementType - Return true if the specified type is valid as a
-comment|/// element type.
+comment|/// Return true if the specified type is valid as a element type.
 specifier|static
 name|bool
 name|isValidElementType
@@ -1101,8 +1085,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// isLayoutIdentical - Return true if this is layout identical to the
-comment|/// specified struct.
+comment|/// Return true if this is layout identical to the specified struct.
 name|bool
 name|isLayoutIdentical
 argument_list|(
@@ -1229,14 +1212,12 @@ name|N
 argument_list|)
 return|;
 block|}
-comment|/// SequentialType - This is the superclass of the array, pointer and vector
-comment|/// type classes.  All of these represent "arrays" in memory.  The array type
-comment|/// represents a specifically sized array, pointer types are unsized/unknown
-comment|/// size arrays, vector types represent specifically sized arrays that
-comment|/// allow for use of SIMD instructions.  SequentialType holds the common
-comment|/// features of all, which stem from the fact that all three lay their
-comment|/// components out in memory identically.
-comment|///
+comment|/// This is the superclass of the array, pointer and vector type classes.
+comment|/// All of these represent "arrays" in memory. The array type represents a
+comment|/// specifically sized array, pointer types are unsized/unknown size arrays,
+comment|/// vector types represent specifically sized arrays that allow for use of SIMD
+comment|/// instructions. SequentialType holds the common features of all, which stem
+comment|/// from the fact that all three lay their components out in memory identically.
 name|class
 name|SequentialType
 operator|:
@@ -1312,10 +1293,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ContainedTys
-index|[
-literal|0
-index|]
+name|getSequentialElementType
+argument_list|()
 return|;
 block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast.
@@ -1352,29 +1331,7 @@ return|;
 block|}
 expr|}
 block|;
-name|Type
-operator|*
-name|Type
-operator|::
-name|getSequentialElementType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|SequentialType
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getElementType
-argument_list|()
-return|;
-block|}
-comment|/// ArrayType - Class to represent array types.
-comment|///
+comment|/// Class to represent array types.
 name|class
 name|ArrayType
 operator|:
@@ -1415,9 +1372,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// ArrayType::get - This static method is the primary way to construct an
-comment|/// ArrayType
-comment|///
+comment|/// This static method is the primary way to construct an ArrayType
 specifier|static
 name|ArrayType
 operator|*
@@ -1428,8 +1383,7 @@ argument_list|,
 argument|uint64_t NumElements
 argument_list|)
 block|;
-comment|/// isValidElementType - Return true if the specified type is valid as a
-comment|/// element type.
+comment|/// Return true if the specified type is valid as a element type.
 specifier|static
 name|bool
 name|isValidElementType
@@ -1488,8 +1442,7 @@ name|getNumElements
 argument_list|()
 return|;
 block|}
-comment|/// VectorType - Class to represent vector types.
-comment|///
+comment|/// Class to represent vector types.
 name|class
 name|VectorType
 operator|:
@@ -1530,9 +1483,7 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// VectorType::get - This static method is the primary way to construct an
-comment|/// VectorType.
-comment|///
+comment|/// This static method is the primary way to construct an VectorType.
 specifier|static
 name|VectorType
 operator|*
@@ -1543,10 +1494,9 @@ argument_list|,
 argument|unsigned NumElements
 argument_list|)
 block|;
-comment|/// VectorType::getInteger - This static method gets a VectorType with the
-comment|/// same number of elements as the input type, and the element type is an
-comment|/// integer type of the same width as the input element type.
-comment|///
+comment|/// This static method gets a VectorType with the same number of elements as
+comment|/// the input type, and the element type is an integer type of the same width
+comment|/// as the input element type.
 specifier|static
 name|VectorType
 operator|*
@@ -1603,10 +1553,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// VectorType::getExtendedElementVectorType - This static method is like
-comment|/// getInteger except that the element types are twice as wide as the
-comment|/// elements in the input type.
-comment|///
+comment|/// This static method is like getInteger except that the element types are
+comment|/// twice as wide as the elements in the input type.
 specifier|static
 name|VectorType
 operator|*
@@ -1658,10 +1606,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// VectorType::getTruncatedElementVectorType - This static method is like
-comment|/// getInteger except that the element types are half as wide as the
-comment|/// elements in the input type.
-comment|///
+comment|/// This static method is like getInteger except that the element types are
+comment|/// half as wide as the elements in the input type.
 specifier|static
 name|VectorType
 operator|*
@@ -1726,10 +1672,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// VectorType::getHalfElementsVectorType - This static method returns
-comment|/// a VectorType with half as many elements as the input type and the
-comment|/// same element type.
-comment|///
+comment|/// This static method returns a VectorType with half as many elements as the
+comment|/// input type and the same element type.
 specifier|static
 name|VectorType
 operator|*
@@ -1775,10 +1719,8 @@ literal|2
 argument_list|)
 return|;
 block|}
-comment|/// VectorType::getDoubleElementsVectorType - This static method returns
-comment|/// a VectorType with twice  as many elements as the input type and the
-comment|/// same element type.
-comment|///
+comment|/// This static method returns a VectorType with twice as many elements as the
+comment|/// input type and the same element type.
 specifier|static
 name|VectorType
 operator|*
@@ -1811,8 +1753,7 @@ literal|2
 argument_list|)
 return|;
 block|}
-comment|/// isValidElementType - Return true if the specified type is valid as a
-comment|/// element type.
+comment|/// Return true if the specified type is valid as a element type.
 specifier|static
 name|bool
 name|isValidElementType
@@ -1822,7 +1763,7 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-comment|/// @brief Return the number of elements in the Vector type.
+comment|/// Return the number of elements in the Vector type.
 name|unsigned
 name|getNumElements
 argument_list|()
@@ -1832,7 +1773,7 @@ return|return
 name|NumElements
 return|;
 block|}
-comment|/// @brief Return the number of bits in the Vector type.
+comment|/// Return the number of bits in the Vector type.
 comment|/// Returns zero when the vector is a vector of pointers.
 name|unsigned
 name|getBitWidth
@@ -1889,8 +1830,7 @@ name|getNumElements
 argument_list|()
 return|;
 block|}
-comment|/// PointerType - Class to represent pointers.
-comment|///
+comment|/// Class to represent pointers.
 name|class
 name|PointerType
 operator|:
@@ -1929,8 +1869,8 @@ argument_list|)
 block|;
 name|public
 operator|:
-comment|/// PointerType::get - This constructs a pointer to an object of the specified
-comment|/// type in a numbered address space.
+comment|/// This constructs a pointer to an object of the specified type in a numbered
+comment|/// address space.
 specifier|static
 name|PointerType
 operator|*
@@ -1941,8 +1881,8 @@ argument_list|,
 argument|unsigned AddressSpace
 argument_list|)
 block|;
-comment|/// PointerType::getUnqual - This constructs a pointer to an object of the
-comment|/// specified type in the generic address space (address space zero).
+comment|/// This constructs a pointer to an object of the specified type in the
+comment|/// generic address space (address space zero).
 specifier|static
 name|PointerType
 operator|*
@@ -1962,8 +1902,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// isValidElementType - Return true if the specified type is valid as a
-comment|/// element type.
+comment|/// Return true if the specified type is valid as a element type.
 specifier|static
 name|bool
 name|isValidElementType
@@ -1983,7 +1922,7 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-comment|/// @brief Return the address space of the Pointer type.
+comment|/// Return the address space of the Pointer type.
 specifier|inline
 name|unsigned
 name|getAddressSpace

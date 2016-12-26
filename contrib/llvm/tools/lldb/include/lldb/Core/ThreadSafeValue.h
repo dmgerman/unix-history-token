@@ -51,6 +51,12 @@ begin_comment
 comment|// C++ Includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -58,12 +64,6 @@ end_comment
 begin_comment
 comment|// Project includes
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
 
 begin_decl_stmt
 name|namespace
@@ -89,10 +89,8 @@ name|m_value
 argument_list|()
 block|,
 name|m_mutex
-argument_list|(
-argument|Mutex::eMutexTypeRecursive
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 name|ThreadSafeValue
 argument_list|(
 specifier|const
@@ -107,10 +105,8 @@ name|value
 argument_list|)
 block|,
 name|m_mutex
-argument_list|(
-argument|Mutex::eMutexTypeRecursive
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 operator|~
 name|ThreadSafeValue
 argument_list|()
@@ -124,10 +120,15 @@ name|T
 name|value
 block|;
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -156,13 +157,18 @@ block|}
 name|void
 name|SetValue
 argument_list|(
-argument|const T& value
+argument|const T&value
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -183,7 +189,9 @@ name|m_value
 operator|=
 name|value
 block|;     }
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -198,7 +206,9 @@ name|T
 name|m_value
 block|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
 block|;
 comment|//------------------------------------------------------------------

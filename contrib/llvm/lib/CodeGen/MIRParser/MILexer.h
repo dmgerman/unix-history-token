@@ -133,6 +133,10 @@ name|plus
 block|,
 name|minus
 block|,
+name|less
+block|,
+name|greater
+block|,
 comment|// Keywords
 name|kw_implicit
 block|,
@@ -264,7 +268,9 @@ block|,
 name|IRValue
 block|,
 name|QuotedIRValue
+block|,
 comment|// `<constant value>`
+name|SubRegisterIndex
 block|}
 enum|;
 name|private

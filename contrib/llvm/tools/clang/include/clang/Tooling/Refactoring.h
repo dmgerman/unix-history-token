@@ -204,6 +204,39 @@ name|Replacements
 name|Replace
 block|; }
 decl_stmt|;
+comment|/// \brief Groups \p Replaces by the file path and applies each group of
+comment|/// Replacements on the related file in \p Rewriter. In addition to applying
+comment|/// given Replacements, this function also formats the changed code.
+comment|///
+comment|/// \pre Replacements must be conflict-free.
+comment|///
+comment|/// Replacement applications happen independently of the success of other
+comment|/// applications.
+comment|///
+comment|/// \param[in] Replaces Replacements to apply.
+comment|/// \param[in] Rewrite The `Rewritter` to apply replacements on.
+comment|/// \param[in] Style The style name used for reformatting. See ```getStyle``` in
+comment|/// "include/clang/Format/Format.h" for all possible style forms.
+comment|///
+comment|/// \returns true if all replacements applied and formatted. false otherwise.
+name|bool
+name|formatAndApplyAllReplacements
+parameter_list|(
+specifier|const
+name|Replacements
+modifier|&
+name|Replaces
+parameter_list|,
+name|Rewriter
+modifier|&
+name|Rewrite
+parameter_list|,
+name|StringRef
+name|Style
+init|=
+literal|"file"
+parameter_list|)
+function_decl|;
 block|}
 comment|// end namespace tooling
 block|}

@@ -377,60 +377,30 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|MCSubRegIterator
-name|SubRegs
+name|MCRegAliasIterator
+name|R
 argument_list|(
 name|Reg
 argument_list|,
 name|TRI
 argument_list|,
-comment|/*IncludeSelf=*/
 name|true
 argument_list|)
 init|;
-name|SubRegs
+name|R
 operator|.
 name|isValid
 argument_list|()
 condition|;
 operator|++
-name|SubRegs
+name|R
 control|)
 name|LiveRegs
 operator|.
 name|erase
 argument_list|(
 operator|*
-name|SubRegs
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|MCSuperRegIterator
-name|SuperRegs
-argument_list|(
-name|Reg
-argument_list|,
-name|TRI
-argument_list|,
-comment|/*IncludeSelf=*/
-name|false
-argument_list|)
-init|;
-name|SuperRegs
-operator|.
-name|isValid
-argument_list|()
-condition|;
-operator|++
-name|SuperRegs
-control|)
-name|LiveRegs
-operator|.
-name|erase
-argument_list|(
-operator|*
-name|SuperRegs
+name|R
 argument_list|)
 expr_stmt|;
 block|}
@@ -460,8 +430,10 @@ name|Clobbers
 argument_list|)
 decl_stmt|;
 comment|/// \brief Returns true if register @p Reg is contained in the set. This also
-comment|/// works if only the super register of @p Reg has been defined, because we
-comment|/// always add also all sub-registers to the set.
+comment|/// works if only the super register of @p Reg has been defined, because
+comment|/// addReg() always adds all sub-registers to the set as well.
+comment|/// Note: Returns false if just some sub registers are live, use available()
+comment|/// when searching a free register.
 name|bool
 name|contains
 argument_list|(
@@ -479,6 +451,20 @@ name|Reg
 argument_list|)
 return|;
 block|}
+comment|/// Returns true if register \p Reg and no aliasing register is in the set.
+name|bool
+name|available
+argument_list|(
+specifier|const
+name|MachineRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Simulates liveness when stepping backwards over an
 comment|/// instruction(bundle): Remove Defs, add uses. This is the recommended way of
 comment|/// calculating liveness.
@@ -522,37 +508,40 @@ operator|&
 name|Clobbers
 argument_list|)
 decl_stmt|;
-comment|/// \brief Adds all live-in registers of basic block @p MBB; After prologue/
-comment|/// epilogue insertion \p AddPristines should be set to true to insert the
+comment|/// Adds all live-in registers of basic block @p MBB.
+comment|/// Live in registers are the registers in the blocks live-in list and the
 comment|/// pristine registers.
 name|void
 name|addLiveIns
 parameter_list|(
 specifier|const
 name|MachineBasicBlock
-modifier|*
+modifier|&
 name|MBB
-parameter_list|,
-name|bool
-name|AddPristines
-init|=
-name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Adds all live-out registers of basic block @p MBB; After prologue/
-comment|/// epilogue insertion \p AddPristinesAndCSRs should be set to true.
+comment|/// Adds all live-out registers of basic block @p MBB.
+comment|/// Live out registers are the union of the live-in registers of the successor
+comment|/// blocks and pristine registers. Live out registers of the end block are the
+comment|/// callee saved registers.
 name|void
 name|addLiveOuts
 parameter_list|(
 specifier|const
 name|MachineBasicBlock
-modifier|*
+modifier|&
 name|MBB
-parameter_list|,
-name|bool
-name|AddPristinesAndCSRs
-init|=
-name|false
+parameter_list|)
+function_decl|;
+comment|/// Like addLiveOuts() but does not add pristine registers/callee saved
+comment|/// registers.
+name|void
+name|addLiveOutsNoPristines
+parameter_list|(
+specifier|const
+name|MachineBasicBlock
+modifier|&
+name|MBB
 parameter_list|)
 function_decl|;
 typedef|typedef

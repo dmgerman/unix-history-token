@@ -83,20 +83,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
+name|struct
 name|LowerExpectIntrinsicPass
+range|:
+name|PassInfoMixin
+operator|<
+name|LowerExpectIntrinsicPass
+operator|>
 block|{
-name|public
-label|:
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"LowerExpectIntrinsicPass"
-return|;
-block|}
 comment|/// \brief Run the pass over the function.
 comment|///
 comment|/// This will lower all of th expect intrinsic calls in this function into
@@ -106,14 +100,16 @@ comment|/// no more expect intrinsics remain, allowing the rest of the optimizer
 comment|/// ignore them.
 name|PreservedAnalyses
 name|run
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|,
+name|FunctionAnalysisManager
+operator|&
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

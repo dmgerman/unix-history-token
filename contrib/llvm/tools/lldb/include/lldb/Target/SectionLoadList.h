@@ -57,6 +57,12 @@ directive|include
 file|<map>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mutex>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -83,12 +89,6 @@ directive|include
 file|"lldb/Core/Section.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -111,10 +111,8 @@ name|m_sect_to_addr
 argument_list|()
 operator|,
 name|m_mutex
-argument_list|(
-argument|Mutex::eMutexTypeRecursive
-argument_list|)
-block|{     }
+argument_list|()
+block|{}
 name|SectionLoadList
 argument_list|(
 specifier|const
@@ -279,9 +277,11 @@ name|sect_to_addr_collection
 name|m_sect_to_addr
 decl_stmt|;
 name|mutable
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

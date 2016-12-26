@@ -6737,7 +6737,184 @@ name|ObjCBridgedCastExprClass
 return|;
 block|}
 expr|}
-block|;    }
+block|;
+comment|/// \brief A runtime availability query.
+comment|///
+comment|/// There are 2 ways to spell this node:
+comment|/// \code
+comment|///   @available(macos 10.10, ios 8, *); // Objective-C
+comment|///   __builtin_available(macos 10.10, ios 8, *); // C, C++, and Objective-C
+comment|/// \endcode
+comment|///
+comment|/// Note that we only need to keep track of one \c VersionTuple here, which is
+comment|/// the one that corresponds to the current deployment target. This is meant to
+comment|/// be used in the condition of an \c if, but it is also usable as top level
+comment|/// expressions.
+comment|///
+name|class
+name|ObjCAvailabilityCheckExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|VersionTuple
+name|VersionToCheck
+block|;
+name|SourceLocation
+name|AtLoc
+block|,
+name|RParen
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+name|ObjCAvailabilityCheckExpr
+argument_list|(
+argument|VersionTuple VersionToCheck
+argument_list|,
+argument|SourceLocation AtLoc
+argument_list|,
+argument|SourceLocation RParen
+argument_list|,
+argument|QualType Ty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCAvailabilityCheckExprClass
+argument_list|,
+name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|VersionToCheck
+argument_list|(
+name|VersionToCheck
+argument_list|)
+block|,
+name|AtLoc
+argument_list|(
+name|AtLoc
+argument_list|)
+block|,
+name|RParen
+argument_list|(
+argument|RParen
+argument_list|)
+block|{}
+name|explicit
+name|ObjCAvailabilityCheckExpr
+argument_list|(
+argument|EmptyShell Shell
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCAvailabilityCheckExprClass
+argument_list|,
+argument|Shell
+argument_list|)
+block|{}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtLoc
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParen
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+block|{
+name|AtLoc
+block|,
+name|RParen
+block|}
+return|;
+block|}
+comment|/// \brief This may be '*', in which case this should fold to true.
+name|bool
+name|hasVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|VersionToCheck
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|VersionTuple
+name|getVersion
+argument_list|()
+block|{
+return|return
+name|VersionToCheck
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|child_iterator
+argument_list|()
+argument_list|,
+name|child_iterator
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCAvailabilityCheckExprClass
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

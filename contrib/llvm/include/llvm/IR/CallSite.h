@@ -1234,6 +1234,18 @@ name|i
 argument_list|)
 argument_list|)
 block|;   }
+name|ValTy
+operator|*
+name|getReturnedArgOperand
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getReturnedArgOperand
+argument_list|()
+argument_list|)
+block|;   }
 name|bool
 name|isInlineAsm
 argument_list|()
@@ -1355,19 +1367,115 @@ name|PAL
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// \brief Return true if this function has the given attribute.
-name|bool
-name|hasFnAttr
+name|void
+name|addAttribute
 argument_list|(
-argument|Attribute::AttrKind A
+argument|unsigned i
+argument_list|,
+argument|Attribute::AttrKind Kind
 argument_list|)
-specifier|const
 block|{
-name|CALLSITE_DELEGATE_GETTER
+name|CALLSITE_DELEGATE_SETTER
 argument_list|(
-name|hasFnAttr
+name|addAttribute
 argument_list|(
-name|A
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|addAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|,
+argument|StringRef Value
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|addAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|,
+name|Value
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|addAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|addAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Attr
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|removeAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|removeAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|removeAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|removeAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|removeAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute Attr
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|removeAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Attr
 argument_list|)
 argument_list|)
 block|;   }
@@ -1375,7 +1483,7 @@ comment|/// \brief Return true if this function has the given attribute.
 name|bool
 name|hasFnAttr
 argument_list|(
-argument|StringRef A
+argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|{
@@ -1383,7 +1491,23 @@ name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|hasFnAttr
 argument_list|(
-name|A
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// \brief Return true if this function has the given attribute.
+name|bool
+name|hasFnAttr
+argument_list|(
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|hasFnAttr
+argument_list|(
+name|Kind
 argument_list|)
 argument_list|)
 block|;   }
@@ -1393,7 +1517,7 @@ name|paramHasAttr
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute::AttrKind A
+argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|{
@@ -1403,7 +1527,45 @@ name|paramHasAttr
 argument_list|(
 name|i
 argument_list|,
-name|A
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Attribute::AttrKind Kind
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
+argument_list|)
+argument_list|)
+block|;   }
+name|Attribute
+name|getAttribute
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|StringRef Kind
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getAttribute
+argument_list|(
+name|i
+argument_list|,
+name|Kind
 argument_list|)
 argument_list|)
 block|;   }
@@ -1419,7 +1581,7 @@ name|dataOperandHasImpliedAttr
 argument_list|(
 argument|unsigned i
 argument_list|,
-argument|Attribute::AttrKind A
+argument|Attribute::AttrKind Kind
 argument_list|)
 specifier|const
 block|{
@@ -1429,7 +1591,7 @@ name|dataOperandHasImpliedAttr
 argument_list|(
 name|i
 argument_list|,
-name|A
+name|Kind
 argument_list|)
 argument_list|)
 block|;   }
@@ -1584,6 +1746,28 @@ name|setOnlyReadsMemory
 argument_list|()
 argument_list|)
 block|;   }
+comment|/// @brief Determine if the call does not access or only writes memory.
+name|bool
+name|doesNotReadMemory
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|doesNotReadMemory
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setDoesNotReadMemory
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setDoesNotReadMemory
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// @brief Determine if the call can access memmory only using pointers based
 comment|/// on its arguments.
 name|bool
@@ -1648,6 +1832,60 @@ block|{
 name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setDoesNotThrow
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call can be duplicated.
+name|bool
+name|cannotDuplicate
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|cannotDuplicate
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setCannotDuplicate
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|setCannotDuplicate
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call is convergent.
+name|bool
+name|isConvergent
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|isConvergent
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setConvergent
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setConvergent
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setNotConvergent
+argument_list|()
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setNotConvergent
 argument_list|()
 argument_list|)
 block|;   }
@@ -1752,6 +1990,21 @@ block|{
 name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|getOperandBundle
+argument_list|(
+name|ID
+argument_list|)
+argument_list|)
+block|;   }
+name|unsigned
+name|countOperandBundlesOfType
+argument_list|(
+argument|uint32_t ID
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|countOperandBundlesOfType
 argument_list|(
 name|ID
 argument_list|)

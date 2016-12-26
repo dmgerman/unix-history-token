@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<memory>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
 end_include
 
 begin_include
@@ -112,6 +112,9 @@ name|AsmPrinter
 decl_stmt|;
 name|class
 name|DbgVariable
+decl_stmt|;
+name|class
+name|DwarfCompileUnit
 decl_stmt|;
 name|class
 name|DwarfUnit
@@ -175,7 +178,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|>
 operator|,
 literal|1
@@ -248,7 +251,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|>>
 operator|&
 name|getUnits
@@ -275,6 +278,16 @@ name|void
 name|computeSizeAndOffsets
 parameter_list|()
 function_decl|;
+comment|/// \brief Compute the size and offset of all the DIEs in the given unit.
+comment|/// \returns The size of the root DIE.
+name|unsigned
+name|computeSizeAndOffsetsForUnit
+parameter_list|(
+name|DwarfUnit
+modifier|*
+name|TheU
+parameter_list|)
+function_decl|;
 comment|/// Define a unique number for the abbreviation.
 comment|///
 comment|/// Compute the abbreviation for \c Die, look up its unique number, and
@@ -296,7 +309,7 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
-name|DwarfUnit
+name|DwarfCompileUnit
 operator|>
 name|U
 argument_list|)
@@ -306,6 +319,18 @@ comment|/// abbreviation section.
 name|void
 name|emitUnits
 parameter_list|(
+name|bool
+name|UseOffsets
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the given unit to its section.
+name|void
+name|emitUnit
+parameter_list|(
+name|DwarfUnit
+modifier|*
+name|U
+parameter_list|,
 name|bool
 name|UseOffsets
 parameter_list|)

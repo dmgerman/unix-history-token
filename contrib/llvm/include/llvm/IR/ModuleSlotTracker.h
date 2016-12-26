@@ -85,6 +85,16 @@ name|SlotTracker
 operator|>
 name|MachineStorage
 expr_stmt|;
+name|bool
+name|ShouldCreateStorage
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|ShouldInitializeAllMetadata
+init|=
+name|false
+decl_stmt|;
 specifier|const
 name|Module
 modifier|*
@@ -153,16 +163,12 @@ operator|~
 name|ModuleSlotTracker
 argument_list|()
 expr_stmt|;
+comment|/// Lazily creates a slot tracker.
 name|SlotTracker
-operator|*
+modifier|*
 name|getMachine
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Machine
-return|;
-block|}
+parameter_list|()
+function_decl|;
 specifier|const
 name|Module
 operator|*

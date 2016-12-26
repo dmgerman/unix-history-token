@@ -49,6 +49,12 @@ directive|include
 file|"llvm/DebugInfo/CodeView/ListRecordBuilder.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo/CodeView/TypeRecord.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -218,137 +224,93 @@ name|FieldListRecordBuilder
 argument_list|()
 block|;
 name|void
+name|reset
+argument_list|()
+block|{
+name|ListRecordBuilder
+operator|::
+name|reset
+argument_list|()
+block|; }
+name|void
 name|writeBaseClass
 argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|uint64_t Offset
+specifier|const
+name|BaseClassRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
-name|writeEnumerate
+name|writeEnumerator
 argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|uint64_t Value
-argument_list|,
-argument|StringRef Name
+specifier|const
+name|EnumeratorRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
-name|writeIndirectVirtualBaseClass
+name|writeDataMember
 argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|TypeIndex VirtualBasePointerType
-argument_list|,
-argument|int64_t VirtualBasePointerOffset
-argument_list|,
-argument|uint64_t SlotIndex
-argument_list|)
-block|;
-name|void
-name|writeMember
-argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|StringRef Name
+specifier|const
+name|DataMemberRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
 name|writeOneMethod
 argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|MethodKind Kind
-argument_list|,
-argument|MethodOptions Options
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|int32_t VTableSlotOffset
-argument_list|,
-argument|StringRef Name
+specifier|const
+name|OneMethodRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
-name|writeOneMethod
+name|writeOverloadedMethod
 argument_list|(
-argument|const MethodInfo&Method
-argument_list|,
-argument|StringRef Name
-argument_list|)
-block|;
-name|void
-name|writeMethod
-argument_list|(
-argument|uint16_t OverloadCount
-argument_list|,
-argument|TypeIndex MethodList
-argument_list|,
-argument|StringRef Name
+specifier|const
+name|OverloadedMethodRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
 name|writeNestedType
 argument_list|(
-argument|TypeIndex Type
-argument_list|,
-argument|StringRef Name
+specifier|const
+name|NestedTypeRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
-name|writeStaticMember
+name|writeStaticDataMember
 argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|StringRef Name
-argument_list|)
-block|;
-name|void
-name|writeVirtualBaseClass
-argument_list|(
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|TypeIndex VirtualBasePointerType
-argument_list|,
-argument|int64_t VirtualBasePointerOffset
-argument_list|,
-argument|uint64_t SlotIndex
+specifier|const
+name|StaticDataMemberRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
 name|writeVirtualBaseClass
 argument_list|(
-argument|TypeRecordKind Kind
-argument_list|,
-argument|MemberAccess Access
-argument_list|,
-argument|TypeIndex Type
-argument_list|,
-argument|TypeIndex VirtualBasePointerType
-argument_list|,
-argument|int64_t VirtualBasePointerOffset
-argument_list|,
-argument|uint64_t SlotIndex
+specifier|const
+name|VirtualBaseClassRecord
+operator|&
+name|Record
 argument_list|)
 block|;
 name|void
-name|writeVirtualFunctionTablePointer
+name|writeVFPtr
 argument_list|(
-argument|TypeIndex Type
+specifier|const
+name|VFPtrRecord
+operator|&
+name|Type
 argument_list|)
 block|; }
 decl_stmt|;

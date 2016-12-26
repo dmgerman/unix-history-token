@@ -14,7 +14,7 @@ comment|/* Returns: convert a to a double, rounding toward even. */
 end_comment
 
 begin_comment
-comment|/* Assumption: double is a IEEE 64 bit floating point type   *             di_int is a 64 bit integral type  */
+comment|/* Assumption: double is a IEEE 64 bit floating point type  *             di_int is a 64 bit integral type  */
 end_comment
 
 begin_comment
@@ -354,6 +354,8 @@ name|fb
 operator|.
 name|u
 operator|.
+name|s
+operator|.
 name|high
 operator|=
 operator|(
@@ -394,6 +396,8 @@ comment|/* mantissa-high */
 name|fb
 operator|.
 name|u
+operator|.
+name|s
 operator|.
 name|low
 operator|=

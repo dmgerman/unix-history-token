@@ -2087,7 +2087,6 @@ name|Qualifiers
 name|Quals
 decl_stmt|;
 name|unsigned
-name|short
 name|Alignment
 decl_stmt|;
 comment|/// DestructedFlag - This is set to true if some external code is

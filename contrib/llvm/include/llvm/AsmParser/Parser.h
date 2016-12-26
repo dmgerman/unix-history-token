@@ -84,6 +84,9 @@ struct_decl|;
 name|class
 name|SMDiagnostic
 decl_stmt|;
+name|class
+name|Type
+decl_stmt|;
 comment|/// This function is the main interface to the LLVM Assembly Parser. It parses
 comment|/// an ASCII file that (presumably) contains LLVM Assembly code. It returns a
 comment|/// Module (intermediate representation) with the corresponding features. Note
@@ -209,6 +212,70 @@ name|parseConstantValue
 parameter_list|(
 name|StringRef
 name|Asm
+parameter_list|,
+name|SMDiagnostic
+modifier|&
+name|Err
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|,
+specifier|const
+name|SlotMapping
+modifier|*
+name|Slots
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Parse a type in the given string.
+comment|///
+comment|/// \param Slots The optional slot mapping that will restore the parsing state
+comment|/// of the module.
+comment|/// \return null on error.
+name|Type
+modifier|*
+name|parseType
+parameter_list|(
+name|StringRef
+name|Asm
+parameter_list|,
+name|SMDiagnostic
+modifier|&
+name|Err
+parameter_list|,
+specifier|const
+name|Module
+modifier|&
+name|M
+parameter_list|,
+specifier|const
+name|SlotMapping
+modifier|*
+name|Slots
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Parse a string \p Asm that starts with a type.
+comment|/// \p Read[out] gives the number of characters that have been read to parse
+comment|/// the type in \p Asm.
+comment|///
+comment|/// \param Slots The optional slot mapping that will restore the parsing state
+comment|/// of the module.
+comment|/// \return null on error.
+name|Type
+modifier|*
+name|parseTypeAtBeginning
+parameter_list|(
+name|StringRef
+name|Asm
+parameter_list|,
+name|unsigned
+modifier|&
+name|Read
 parameter_list|,
 name|SMDiagnostic
 modifier|&

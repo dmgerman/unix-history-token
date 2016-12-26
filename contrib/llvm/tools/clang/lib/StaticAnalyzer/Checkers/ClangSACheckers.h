@@ -105,7 +105,7 @@ define|\
 value|void register##CLASS(CheckerManager&mgr);
 include|#
 directive|include
-file|"Checkers.inc"
+file|"clang/StaticAnalyzer/Checkers/Checkers.inc"
 undef|#
 directive|undef
 name|CHECKER

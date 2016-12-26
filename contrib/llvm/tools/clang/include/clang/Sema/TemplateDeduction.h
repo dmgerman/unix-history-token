@@ -584,6 +584,11 @@ comment|/// OverloadCandidate.
 struct|struct
 name|TemplateSpecCandidate
 block|{
+comment|/// \brief The declaration that was looked up, together with its access.
+comment|/// Might be a UsingShadowDecl, but usually a FunctionTemplateDecl.
+name|DeclAccessPair
+name|FoundDecl
+decl_stmt|;
 comment|/// Specialization - The actual specialization that this candidate
 comment|/// represents. When NULL, this may be a built-in candidate.
 name|Decl
@@ -597,6 +602,9 @@ decl_stmt|;
 name|void
 name|set
 parameter_list|(
+name|DeclAccessPair
+name|Found
+parameter_list|,
 name|Decl
 modifier|*
 name|Spec
@@ -605,6 +613,10 @@ name|DeductionFailureInfo
 name|Info
 parameter_list|)
 block|{
+name|FoundDecl
+operator|=
+name|Found
+expr_stmt|;
 name|Specialization
 operator|=
 name|Spec

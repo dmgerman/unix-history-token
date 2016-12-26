@@ -147,7 +147,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -218,8 +218,6 @@ name|void
 name|expandLoadStackGuard
 argument_list|(
 argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|Reloc::Model RM
 argument_list|)
 specifier|const
 name|override
@@ -235,7 +233,7 @@ name|getITInstrPredicate
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|unsigned

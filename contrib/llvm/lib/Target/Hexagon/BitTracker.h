@@ -241,7 +241,7 @@ name|visitPHI
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|PI
 parameter_list|)
 function_decl|;
@@ -250,7 +250,7 @@ name|visitNonBranch
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|MI
 parameter_list|)
 function_decl|;
@@ -259,7 +259,7 @@ name|visitBranchesFrom
 parameter_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+modifier|&
 name|BI
 parameter_list|)
 function_decl|;
@@ -2358,7 +2358,7 @@ name|evaluate
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 specifier|const
@@ -2397,7 +2397,7 @@ name|evaluate
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
+operator|&
 name|BI
 argument_list|,
 specifier|const

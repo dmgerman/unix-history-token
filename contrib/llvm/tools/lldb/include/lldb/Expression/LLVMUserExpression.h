@@ -70,6 +70,16 @@ file|<vector>
 end_include
 
 begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/LegacyPassManager.h"
+end_include
+
+begin_comment
 comment|// Project includes
 end_comment
 
@@ -101,6 +111,52 @@ name|UserExpression
 block|{
 name|public
 operator|:
+comment|// The IRPasses struct is filled in by a runtime after an expression is compiled and can be used to to run
+comment|// fixups/analysis passes as required. EarlyPasses are run on the generated module before lldb runs its own IR
+comment|// fixups and inserts instrumentation code/pointer checks. LatePasses are run after the module has been processed by
+comment|// llvm, before the module is assembled and run in the ThreadPlan.
+expr|struct
+name|IRPasses
+block|{
+name|IRPasses
+argument_list|()
+operator|:
+name|EarlyPasses
+argument_list|(
+name|nullptr
+argument_list|)
+block|,
+name|LatePasses
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|legacy
+operator|::
+name|PassManager
+operator|>
+name|EarlyPasses
+block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|legacy
+operator|::
+name|PassManager
+operator|>
+name|LatePasses
+block|;     }
+block|;
 name|LLVMUserExpression
 argument_list|(
 argument|ExecutionContextScope&exe_scope
@@ -121,27 +177,10 @@ name|LLVMUserExpression
 argument_list|()
 name|override
 block|;
-name|lldb
-operator|::
-name|ExpressionResults
-name|Execute
-argument_list|(
-argument|Stream&error_stream
-argument_list|,
-argument|ExecutionContext&exe_ctx
-argument_list|,
-argument|const EvaluateExpressionOptions&options
-argument_list|,
-argument|lldb::UserExpressionSP&shared_ptr_to_me
-argument_list|,
-argument|lldb::ExpressionVariableSP&result
-argument_list|)
-name|override
-block|;
 name|bool
 name|FinalizeJITExecution
 argument_list|(
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|,
 argument|ExecutionContext&exe_ctx
 argument_list|,
@@ -189,6 +228,23 @@ name|override
 block|;
 name|protected
 operator|:
+name|lldb
+operator|::
+name|ExpressionResults
+name|DoExecute
+argument_list|(
+argument|DiagnosticManager&diagnostic_manager
+argument_list|,
+argument|ExecutionContext&exe_ctx
+argument_list|,
+argument|const EvaluateExpressionOptions&options
+argument_list|,
+argument|lldb::UserExpressionSP&shared_ptr_to_me
+argument_list|,
+argument|lldb::ExpressionVariableSP&result
+argument_list|)
+name|override
+block|;
 name|virtual
 name|void
 name|ScanContext
@@ -209,9 +265,9 @@ block|;
 name|bool
 name|PrepareToExecuteJITExpression
 argument_list|(
-name|Stream
+name|DiagnosticManager
 operator|&
-name|error_stream
+name|diagnostic_manager
 argument_list|,
 name|ExecutionContext
 operator|&
@@ -234,7 +290,7 @@ argument|std::vector<lldb::addr_t>&args
 argument_list|,
 argument|lldb::addr_t struct_address
 argument_list|,
-argument|Stream&error_stream
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 operator|=
 literal|0

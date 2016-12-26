@@ -40,11 +40,15 @@ comment|// This file contains utility functions and a wrapper class analogous to
 end_comment
 
 begin_comment
-comment|// CallSite for accessing the fields of gc.statepoint, gc.relocate, and
+comment|// CallSite for accessing the fields of gc.statepoint, gc.relocate,
 end_comment
 
 begin_comment
-comment|// gc.result intrinsics
+comment|// gc.result intrinsics; and some general utilities helpful when dealing with
+end_comment
+
+begin_comment
+comment|// gc.statepoint.
 end_comment
 
 begin_comment
@@ -71,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
@@ -115,12 +125,6 @@ directive|include
 file|"llvm/IR/Intrinsics.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -151,14 +155,15 @@ name|class
 name|GCRelocateInst
 decl_stmt|;
 name|class
+name|GCResultInst
+decl_stmt|;
+name|class
 name|ImmutableStatepoint
 decl_stmt|;
 name|bool
 name|isStatepoint
 parameter_list|(
-specifier|const
 name|ImmutableCallSite
-modifier|&
 name|CS
 parameter_list|)
 function_decl|;
@@ -183,27 +188,14 @@ function_decl|;
 name|bool
 name|isGCRelocate
 parameter_list|(
-specifier|const
 name|ImmutableCallSite
-modifier|&
 name|CS
 parameter_list|)
 function_decl|;
 name|bool
 name|isGCResult
 parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
-name|bool
-name|isGCResult
-parameter_list|(
-specifier|const
 name|ImmutableCallSite
-modifier|&
 name|CS
 parameter_list|)
 function_decl|;
@@ -211,8 +203,8 @@ comment|/// Analogous to CallSiteBase, this provides most of the actual
 comment|/// functionality for Statepoint and ImmutableStatepoint.  It is
 comment|/// templatized to allow easily specializing of const and non-const
 comment|/// concrete subtypes.  This is structured analogous to CallSite
-comment|/// rather than the IntrinsicInst.h helpers since we want to support
-comment|/// invokable statepoints in the near future.
+comment|/// rather than the IntrinsicInst.h helpers since we need to support
+comment|/// invokable statepoints.
 name|template
 operator|<
 name|typename
@@ -1150,7 +1142,8 @@ expr_stmt|;
 comment|/// Get the experimental_gc_result call tied to this statepoint.  Can be
 comment|/// nullptr if there isn't a gc_result tied to this statepoint.  Guaranteed to
 comment|/// be a CallInst if non-null.
-name|InstructionTy
+specifier|const
+name|GCResultInst
 operator|*
 name|getGCResult
 argument_list|()
@@ -1170,19 +1163,20 @@ argument_list|()
 control|)
 if|if
 condition|(
-name|isGCResult
-argument_list|(
-name|U
-argument_list|)
-condition|)
-return|return
-name|cast
+name|auto
+operator|*
+name|GRI
+operator|=
+name|dyn_cast
 operator|<
-name|CallInst
+name|GCResultInst
 operator|>
 operator|(
 name|U
 operator|)
+condition|)
+return|return
+name|GRI
 return|;
 return|return
 name|nullptr
@@ -1427,12 +1421,16 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// This represents the gc.relocate intrinsic.
+comment|/// Common base class for representing values projected from a statepoint.
+end_comment
+
+begin_comment
+comment|/// Currently, the only projections available are gc.result and gc.relocate.
 end_comment
 
 begin_decl_stmt
 name|class
-name|GCRelocateInst
+name|GCProjectionInst
 range|:
 name|public
 name|IntrinsicInst
@@ -1456,6 +1454,15 @@ operator|==
 name|Intrinsic
 operator|::
 name|experimental_gc_relocate
+operator|||
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+operator|==
+name|Intrinsic
+operator|::
+name|experimental_gc_result
 return|;
 block|}
 specifier|static
@@ -1554,6 +1561,14 @@ name|Token
 operator|)
 condition|)
 block|{
+name|assert
+argument_list|(
+name|isStatepoint
+argument_list|(
+name|Token
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|cast
 operator|<
@@ -1622,18 +1637,70 @@ block|}
 end_decl_stmt
 
 begin_comment
+unit|};
+comment|/// Represents calls to the gc.relocate intrinsic.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GCRelocateInst
+range|:
+name|public
+name|GCProjectionInst
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const IntrinsicInst *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+operator|==
+name|Intrinsic
+operator|::
+name|experimental_gc_relocate
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
 comment|/// The index into the associate statepoint's argument list
-end_comment
-
-begin_comment
 comment|/// which contains the base pointer of the pointer whose
-end_comment
-
-begin_comment
 comment|/// relocation this gc.relocate describes.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getBasePtrIndex
 argument_list|()
@@ -1655,17 +1722,8 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// The index into the associate statepoint's argument list which
-end_comment
-
-begin_comment
 comment|/// contains the pointer whose relocation this gc.relocate describes.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getDerivedPtrIndex
 argument_list|()
@@ -1687,9 +1745,6 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|Value
 operator|*
 name|getBasePtr
@@ -1716,9 +1771,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|Value
 operator|*
 name|getDerivedPtr
@@ -1745,21 +1797,78 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|};
+expr|}
+block|;
+comment|/// Represents calls to the gc.result intrinsic.
+name|class
+name|GCResultInst
+operator|:
+name|public
+name|GCProjectionInst
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const IntrinsicInst *I
+argument_list|)
+block|{
+return|return
+name|I
+operator|->
+name|getIntrinsicID
+argument_list|()
+operator|==
+name|Intrinsic
+operator|::
+name|experimental_gc_result
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|isa
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+operator|&&
+name|classof
+argument_list|(
+name|cast
+operator|<
+name|IntrinsicInst
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 name|template
 operator|<
 name|typename
 name|FunTy
-operator|,
+block|,
 name|typename
 name|InstructionTy
-operator|,
+block|,
 name|typename
 name|ValueTy
-operator|,
+block|,
 name|typename
 name|CallSiteTy
 operator|>
@@ -1774,11 +1883,11 @@ operator|>
 name|StatepointBase
 operator|<
 name|FunTy
-operator|,
+block|,
 name|InstructionTy
-operator|,
+block|,
 name|ValueTy
-operator|,
+block|,
 name|CallSiteTy
 operator|>
 operator|::
@@ -1839,9 +1948,6 @@ argument_list|(
 name|Relocate
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1853,17 +1959,11 @@ condition|)
 return|return
 name|Result
 return|;
-end_if
-
-begin_comment
 comment|// We need to scan thorough exceptional relocations if it is invoke statepoint
-end_comment
-
-begin_decl_stmt
 name|LandingPadInst
-modifier|*
+operator|*
 name|LandingPad
-init|=
+operator|=
 name|cast
 operator|<
 name|InvokeInst
@@ -1875,14 +1975,8 @@ operator|)
 operator|->
 name|getLandingPadInst
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// Search for gc relocates that are attached to this landingpad.
-end_comment
-
-begin_for
 for|for
 control|(
 specifier|const
@@ -1918,16 +2012,100 @@ name|Relocate
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_return
 return|return
 name|Result
 return|;
-end_return
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Call sites that get wrapped by a gc.statepoint (currently only in
+end_comment
+
+begin_comment
+comment|/// RewriteStatepointsForGC and potentially in other passes in the future) can
+end_comment
+
+begin_comment
+comment|/// have attributes that describe properties of gc.statepoint call they will be
+end_comment
+
+begin_comment
+comment|/// eventually be wrapped in.  This struct is used represent such directives.
+end_comment
+
+begin_struct
+struct|struct
+name|StatepointDirectives
+block|{
+name|Optional
+operator|<
+name|uint32_t
+operator|>
+name|NumPatchBytes
+expr_stmt|;
+name|Optional
+operator|<
+name|uint64_t
+operator|>
+name|StatepointID
+expr_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|DefaultStatepointID
+init|=
+literal|0xABCDEF00
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|DeoptBundleStatepointID
+init|=
+literal|0xABCDEF0F
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Parse out statepoint directives from the function attributes present in \p
+end_comment
+
+begin_comment
+comment|/// AS.
+end_comment
+
+begin_function_decl
+name|StatepointDirectives
+name|parseStatepointDirectivesFromAttrs
+parameter_list|(
+name|AttributeSet
+name|AS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Return \c true if the the \p Attr is an attribute that is a statepoint
+end_comment
+
+begin_comment
+comment|/// directive.
+end_comment
+
+begin_function_decl
+name|bool
+name|isStatepointDirectiveAttr
+parameter_list|(
+name|Attribute
+name|Attr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
-unit|} }
+unit|}
 endif|#
 directive|endif
 end_endif

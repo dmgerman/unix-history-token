@@ -150,9 +150,9 @@ argument_list|)
 name|override
 block|;
 name|void
-name|HandleInlineMethodDefinition
+name|HandleInlineFunctionDefinition
 argument_list|(
-argument|CXXMethodDecl *D
+argument|FunctionDecl *D
 argument_list|)
 name|override
 block|;
@@ -206,32 +206,16 @@ argument_list|)
 name|override
 block|;
 name|void
-name|HandleLinkerOptionPragma
-argument_list|(
-argument|llvm::StringRef Opts
-argument_list|)
-name|override
-block|;
-name|void
-name|HandleDetectMismatch
-argument_list|(
-argument|llvm::StringRef Name
-argument_list|,
-argument|llvm::StringRef Value
-argument_list|)
-name|override
-block|;
-name|void
-name|HandleDependentLibrary
-argument_list|(
-argument|llvm::StringRef Lib
-argument_list|)
-name|override
-block|;
-name|void
 name|CompleteTentativeDefinition
 argument_list|(
 argument|VarDecl *D
+argument_list|)
+name|override
+block|;
+name|void
+name|AssignInheritanceModel
+argument_list|(
+argument|CXXRecordDecl *RD
 argument_list|)
 name|override
 block|;
@@ -257,6 +241,13 @@ block|;
 name|void
 name|PrintStats
 argument_list|()
+name|override
+block|;
+name|bool
+name|shouldSkipFunctionBody
+argument_list|(
+argument|Decl *D
+argument_list|)
 name|override
 block|;
 comment|// SemaConsumer

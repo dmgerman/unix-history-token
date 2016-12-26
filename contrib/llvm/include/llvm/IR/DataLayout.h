@@ -86,12 +86,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -142,12 +136,6 @@ name|llvm
 block|{
 name|class
 name|Value
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|class
-name|IntegerType
 decl_stmt|;
 name|class
 name|StructType
@@ -786,7 +774,7 @@ comment|/// The width is specified in bits.
 name|bool
 name|isLegalInteger
 argument_list|(
-name|unsigned
+name|uint64_t
 name|Width
 argument_list|)
 decl|const
@@ -814,7 +802,7 @@ block|}
 name|bool
 name|isIllegalInteger
 argument_list|(
-name|unsigned
+name|uint64_t
 name|Width
 argument_list|)
 decl|const
@@ -1221,7 +1209,7 @@ decl|const
 block|{
 comment|// Round up to the next alignment boundary.
 return|return
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|getTypeStoreSize
 argument_list|(
@@ -1361,7 +1349,7 @@ block|{
 name|unsigned
 name|LargestSize
 init|=
-name|getLargestLegalIntTypeSize
+name|getLargestLegalIntTypeSizeInBits
 argument_list|()
 decl_stmt|;
 return|return
@@ -1386,20 +1374,21 @@ block|}
 comment|/// \brief Returns the size of largest legal integer type size, or 0 if none
 comment|/// are set.
 name|unsigned
-name|getLargestLegalIntTypeSize
+name|getLargestLegalIntTypeSizeInBits
 argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Returns the offset from the beginning of the type for the specified
 comment|/// indices.
 comment|///
+comment|/// Note that this takes the element type, not the pointer type.
 comment|/// This is used to implement getelementptr.
-name|uint64_t
-name|getIndexedOffset
+name|int64_t
+name|getIndexedOffsetInType
 argument_list|(
 name|Type
 operator|*
-name|Ty
+name|ElemTy
 argument_list|,
 name|ArrayRef
 operator|<
@@ -1530,7 +1519,7 @@ decl_stmt|;
 name|unsigned
 name|StructAlignment
 decl_stmt|;
-name|bool
+name|unsigned
 name|IsPadded
 range|:
 literal|1

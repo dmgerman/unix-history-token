@@ -129,32 +129,25 @@ block|{
 name|public
 label|:
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|bool
 argument_list|(
-argument|*MonitorChildProcessCallback
-argument_list|)
-operator|(
-name|void
-operator|*
-name|callback_baton
-operator|,
-name|lldb
-operator|::
-name|pid_t
-name|pid
-operator|,
-name|bool
-name|exited
-operator|,
-name|int
-name|signal
-operator|,
+argument|lldb::pid_t pid
+argument_list|,
+argument|bool exited
+argument_list|,
+argument|int signal
+argument_list|,
 comment|// Zero for no signal
-name|int
-name|status
-operator|)
-expr_stmt|;
+argument|int status
+argument_list|)
+operator|>
 comment|// Exit value of process if signal is zero
+name|MonitorChildProcessCallback
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Start monitoring a child process.
 comment|///
@@ -175,10 +168,6 @@ comment|/// @param[in] callback
 comment|///     A function callback to call when a child receives a signal
 comment|///     (if \a monitor_signals is true) or a child exits.
 comment|///
-comment|/// @param[in] callback_baton
-comment|///     A void * of user data that will be pass back when
-comment|///     \a callback is called.
-comment|///
 comment|/// @param[in] pid
 comment|///     The process ID of a child process to monitor, -1 for all
 comment|///     processes.
@@ -198,12 +187,10 @@ specifier|static
 name|HostThread
 name|StartMonitoringChildProcess
 argument_list|(
+specifier|const
 name|MonitorChildProcessCallback
+operator|&
 name|callback
-argument_list|,
-name|void
-operator|*
-name|callback_baton
 argument_list|,
 name|lldb
 operator|::

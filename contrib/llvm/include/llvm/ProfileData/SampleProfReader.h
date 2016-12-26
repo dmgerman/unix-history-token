@@ -524,6 +524,102 @@ comment|//
 end_comment
 
 begin_comment
+comment|// SUMMARY
+end_comment
+
+begin_comment
+comment|//    TOTAL_COUNT (uint64_t)
+end_comment
+
+begin_comment
+comment|//        Total number of samples in the profile.
+end_comment
+
+begin_comment
+comment|//    MAX_COUNT (uint64_t)
+end_comment
+
+begin_comment
+comment|//        Maximum value of samples on a line.
+end_comment
+
+begin_comment
+comment|//    MAX_FUNCTION_COUNT (uint64_t)
+end_comment
+
+begin_comment
+comment|//        Maximum number of samples at function entry (head samples).
+end_comment
+
+begin_comment
+comment|//    NUM_COUNTS (uint64_t)
+end_comment
+
+begin_comment
+comment|//        Number of lines with samples.
+end_comment
+
+begin_comment
+comment|//    NUM_FUNCTIONS (uint64_t)
+end_comment
+
+begin_comment
+comment|//        Number of functions with samples.
+end_comment
+
+begin_comment
+comment|//    NUM_DETAILED_SUMMARY_ENTRIES (size_t)
+end_comment
+
+begin_comment
+comment|//        Number of entries in detailed summary
+end_comment
+
+begin_comment
+comment|//    DETAILED_SUMMARY
+end_comment
+
+begin_comment
+comment|//        A list of detailed summary entry. Each entry consists of
+end_comment
+
+begin_comment
+comment|//        CUTOFF (uint32_t)
+end_comment
+
+begin_comment
+comment|//            Required percentile of total sample count expressed as a fraction
+end_comment
+
+begin_comment
+comment|//            multiplied by 1000000.
+end_comment
+
+begin_comment
+comment|//        MIN_COUNT (uint64_t)
+end_comment
+
+begin_comment
+comment|//            The minimum number of samples required to reach the target
+end_comment
+
+begin_comment
+comment|//            CUTOFF.
+end_comment
+
+begin_comment
+comment|//        NUM_COUNTS (uint64_t)
+end_comment
+
+begin_comment
+comment|//            Number of samples to get to the desrired percentile.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// NAME TABLE
 end_comment
 
@@ -782,6 +878,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ProfileData/ProfileCommon.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ProfileData/SampleProf.h"
 end_include
 
@@ -1019,9 +1121,14 @@ name|SampleProfileReader
 operator|>>
 name|create
 argument_list|(
-argument|StringRef Filename
+specifier|const
+name|Twine
+operator|&
+name|Filename
 argument_list|,
-argument|LLVMContext&C
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
 expr_stmt|;
 comment|/// \brief Create a sample profile reader from the supplied memory buffer.
@@ -1050,6 +1157,22 @@ operator|&
 name|C
 argument_list|)
 expr_stmt|;
+comment|/// \brief Return the profile summary.
+name|ProfileSummary
+modifier|&
+name|getSummary
+parameter_list|()
+block|{
+return|return
+operator|*
+operator|(
+name|Summary
+operator|.
+name|get
+argument_list|()
+operator|)
+return|;
+block|}
 name|protected
 label|:
 comment|/// \brief Map every function to its associated profile.
@@ -1077,6 +1200,20 @@ name|MemoryBuffer
 operator|>
 name|Buffer
 expr_stmt|;
+comment|/// \brief Profile summary information.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ProfileSummary
+operator|>
+name|Summary
+expr_stmt|;
+comment|/// \brief Compute summary for this profile.
+name|void
+name|computeSummary
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -1299,6 +1436,30 @@ operator|<
 name|StringRef
 operator|>
 name|NameTable
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|error_code
+name|readSummaryEntry
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|ProfileSummaryEntry
+operator|>
+operator|&
+name|Entries
+argument_list|)
+block|;
+comment|/// \brief Read profile summary.
+name|std
+operator|::
+name|error_code
+name|readSummary
+argument_list|()
 block|; }
 decl_stmt|;
 typedef|typedef

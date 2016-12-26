@@ -73,6 +73,7 @@ end_define
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -99,6 +100,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -125,6 +127,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -151,6 +154,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -176,6 +180,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -202,6 +207,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -228,6 +234,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -251,6 +258,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -276,6 +284,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -302,6 +311,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -328,6 +338,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -357,6 +368,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -385,6 +397,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -414,6 +427,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -443,6 +457,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -471,6 +486,7 @@ end_endif
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -517,6 +533,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -543,6 +560,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -569,6 +587,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -609,6 +628,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -642,6 +662,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -652,6 +673,17 @@ name|float
 name|__a
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__VSX__
+return|return
+name|__builtin_vsx_xvabssp
+argument_list|(
+name|__a
+argument_list|)
+return|;
+else|#
+directive|else
 name|vector
 name|unsigned
 name|int
@@ -680,6 +712,8 @@ name|float
 operator|)
 name|__res
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -699,6 +733,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -709,33 +744,11 @@ name|double
 name|__a
 parameter_list|)
 block|{
-name|vector
-name|unsigned
-name|long
-name|long
-name|__res
-init|=
-block|{
-literal|0x7FFFFFFFFFFFFFFF
-block|,
-literal|0x7FFFFFFFFFFFFFFF
-block|}
-decl_stmt|;
-name|__res
-operator|&=
-operator|(
-name|vector
-name|unsigned
-name|int
-operator|)
-name|__a
-expr_stmt|;
 return|return
-operator|(
-name|vector
-name|double
-operator|)
-name|__res
+name|__builtin_vsx_xvabsdp
+argument_list|(
+name|__a
+argument_list|)
 return|;
 block|}
 end_function
@@ -772,6 +785,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -809,6 +823,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -846,6 +861,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -887,6 +903,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -914,6 +931,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -946,6 +964,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -978,6 +997,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -1005,6 +1025,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -1037,6 +1058,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -1069,6 +1091,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -1093,6 +1116,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -1122,6 +1146,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -1151,6 +1176,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -1178,6 +1204,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -1210,6 +1237,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -1242,6 +1270,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -1266,6 +1295,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -1295,6 +1325,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -1324,6 +1355,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -1351,6 +1383,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -1383,6 +1416,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -1429,6 +1463,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -1459,6 +1494,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -1489,6 +1525,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -1516,6 +1553,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -1552,6 +1590,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -1582,6 +1621,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -1633,6 +1673,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -1670,6 +1711,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -1730,6 +1772,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -1767,6 +1810,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -1820,6 +1864,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -1847,6 +1892,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -1879,6 +1925,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -1911,6 +1958,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -1938,6 +1986,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -1970,6 +2019,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -2013,6 +2063,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2037,6 +2088,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2066,6 +2118,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2095,6 +2148,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -2122,6 +2176,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -2154,6 +2209,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -2197,6 +2253,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -2221,6 +2278,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -2250,6 +2308,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -2279,6 +2338,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -2306,6 +2366,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -2338,6 +2399,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -2381,6 +2443,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -2414,6 +2477,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -2459,6 +2523,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -2503,6 +2568,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -2548,6 +2614,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -2591,6 +2658,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -2630,6 +2698,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -2660,6 +2729,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -2695,6 +2765,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -2730,6 +2801,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -2760,6 +2832,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -2795,6 +2868,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -2830,6 +2904,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2857,6 +2932,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2889,6 +2965,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -2921,6 +2998,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -2951,6 +3029,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -2986,6 +3065,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -3021,6 +3101,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3048,6 +3129,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3080,6 +3162,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3112,6 +3195,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3142,6 +3226,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3177,6 +3262,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3216,6 +3302,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -3246,6 +3333,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -3281,6 +3369,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -3320,6 +3409,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -3350,6 +3440,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -3385,6 +3476,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -3424,6 +3516,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -3451,6 +3544,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -3483,6 +3577,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -3519,6 +3614,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -3549,6 +3645,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -3584,6 +3681,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -3623,6 +3721,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3650,6 +3749,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3682,6 +3782,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -3718,6 +3819,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3748,6 +3850,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3783,6 +3886,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -3836,6 +3940,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -3863,6 +3968,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -3894,6 +4000,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -3931,6 +4038,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -3972,6 +4080,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -4002,6 +4111,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -4036,6 +4146,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -4073,6 +4184,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -4130,6 +4242,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -4157,6 +4270,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -4189,6 +4303,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -4221,6 +4336,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -4248,6 +4364,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -4280,6 +4397,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -4312,6 +4430,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -4339,6 +4458,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -4363,6 +4483,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -4392,6 +4513,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -4421,6 +4543,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -4448,6 +4571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -4480,6 +4604,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -4512,6 +4637,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -4539,6 +4665,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -4563,6 +4690,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -4592,6 +4720,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -4621,6 +4750,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -4648,6 +4778,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -4680,6 +4811,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -4712,6 +4844,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -4739,6 +4872,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -4784,6 +4918,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -4830,6 +4965,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -4882,6 +5018,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -4932,6 +5069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -4982,6 +5120,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -5030,6 +5169,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -5060,6 +5200,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -5096,6 +5237,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -5132,6 +5274,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -5162,6 +5305,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -5198,6 +5342,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -5234,6 +5379,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -5273,6 +5419,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -5300,6 +5447,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -5332,6 +5480,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -5364,6 +5513,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -5391,6 +5541,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -5423,6 +5574,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -5455,6 +5607,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -5482,6 +5635,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -5506,6 +5660,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -5535,6 +5690,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -5564,6 +5720,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -5591,6 +5748,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -5623,6 +5781,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -5655,6 +5814,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -5682,6 +5842,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -5706,6 +5867,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -5735,6 +5897,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -5764,6 +5927,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -5791,6 +5955,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -5823,6 +5988,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -5855,6 +6021,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -5882,6 +6049,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -5927,6 +6095,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -5973,6 +6142,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -6025,6 +6195,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -6055,6 +6226,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -6091,6 +6263,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -6127,6 +6300,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -6157,6 +6331,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -6193,6 +6368,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -6229,6 +6405,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -6275,6 +6452,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -6303,6 +6481,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -6336,6 +6515,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -6369,6 +6549,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -6397,6 +6578,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -6430,6 +6612,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -6463,6 +6646,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -6491,6 +6675,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -6516,6 +6701,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -6546,6 +6732,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -6576,6 +6763,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -6604,6 +6792,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -6637,6 +6826,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -6670,6 +6860,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -6698,6 +6889,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -6723,6 +6915,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -6753,6 +6946,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -6783,6 +6977,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -6811,6 +7006,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -6844,6 +7040,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -6877,6 +7074,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -6905,6 +7103,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -6951,6 +7150,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -6998,6 +7198,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -7051,6 +7252,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -7102,6 +7304,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -7153,6 +7356,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -7202,6 +7406,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -7233,6 +7438,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -7270,6 +7476,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -7307,6 +7514,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -7338,6 +7546,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -7375,6 +7584,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -7412,6 +7622,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -7452,6 +7663,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -7480,6 +7692,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -7513,6 +7726,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -7546,6 +7760,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -7574,6 +7789,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -7607,6 +7823,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -7640,6 +7857,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -7668,6 +7886,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -7693,6 +7912,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -7723,6 +7943,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -7753,6 +7974,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -7781,6 +8003,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -7814,6 +8037,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -7847,6 +8071,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -7875,6 +8100,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -7900,6 +8126,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -7930,6 +8157,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -7960,6 +8188,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -7988,6 +8217,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -8021,6 +8251,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -8054,6 +8285,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -8082,6 +8314,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -8128,6 +8361,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -8175,6 +8409,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -8228,6 +8463,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -8259,6 +8495,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -8296,6 +8533,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -8333,6 +8571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -8364,6 +8603,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -8401,6 +8641,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -8438,6 +8679,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -8478,6 +8720,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -8508,6 +8751,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -8538,6 +8782,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -8565,6 +8810,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -8595,6 +8841,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -8622,6 +8869,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -8656,6 +8904,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -8695,6 +8944,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -8734,6 +8984,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__attribute__
@@ -8770,6 +9021,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -8809,6 +9061,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -8845,6 +9098,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -8884,6 +9138,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -8924,6 +9179,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -8954,6 +9210,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -8984,6 +9241,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -9020,6 +9278,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -9056,6 +9315,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9099,6 +9359,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9142,6 +9403,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -9175,6 +9437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -9218,6 +9481,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9251,6 +9515,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9300,6 +9565,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9339,6 +9605,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9393,6 +9660,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9452,6 +9720,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9496,6 +9765,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9531,6 +9801,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9566,6 +9837,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -9599,6 +9871,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -9634,6 +9907,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9667,6 +9941,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9708,6 +9983,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9747,6 +10023,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9791,6 +10068,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -9850,6 +10128,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -9894,6 +10173,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9927,6 +10207,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -9960,6 +10241,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -9993,6 +10275,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -10026,6 +10309,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10059,6 +10343,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10092,6 +10377,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10151,6 +10437,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10197,6 +10484,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10233,6 +10521,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10278,6 +10567,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10320,6 +10610,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -10364,6 +10655,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -10408,6 +10700,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -10450,6 +10743,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -10494,6 +10788,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10536,6 +10831,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10580,6 +10876,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10622,6 +10919,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -10652,6 +10950,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -10682,6 +10981,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -10712,6 +11012,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -10742,6 +11043,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10772,6 +11074,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10802,6 +11105,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -10836,6 +11140,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10876,6 +11181,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10909,6 +11215,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -10951,6 +11258,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -10981,6 +11289,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -11011,6 +11320,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -11039,6 +11349,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -11069,6 +11380,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -11097,6 +11409,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -11127,6 +11440,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -11161,6 +11475,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -11201,6 +11516,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -11234,6 +11550,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -11271,6 +11588,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -11294,6 +11612,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -11317,6 +11636,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -11340,6 +11660,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -11363,6 +11684,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -11386,6 +11708,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -11409,6 +11732,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -11434,6 +11758,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -11474,6 +11799,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -11501,6 +11827,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -11537,6 +11864,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -11563,6 +11891,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -11600,6 +11929,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -11656,6 +11986,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -11721,6 +12052,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -11756,6 +12088,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -11796,6 +12129,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -11828,6 +12162,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -11887,6 +12222,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -11922,6 +12258,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -11955,6 +12292,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -12014,6 +12352,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -12056,6 +12395,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -12092,6 +12432,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -12141,6 +12482,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -12168,6 +12510,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -12195,6 +12538,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -12222,6 +12566,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -12249,6 +12594,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -12276,6 +12622,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -12309,6 +12656,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -12339,6 +12687,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -12369,6 +12718,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -12393,6 +12743,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -12426,6 +12777,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -12453,6 +12805,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -12475,157 +12828,77 @@ begin_comment
 comment|/* vec_dst */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|vec_dst
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|__a
-argument_list|,
-name|int
-name|__b
-argument_list|,
-name|int
-name|__c
-argument_list|)
-block|{
-name|__builtin_altivec_dst
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|__PTR
+parameter_list|,
+name|__CW
+parameter_list|,
+name|__STR
+parameter_list|)
+define|\
+value|__extension__(                    \       { __builtin_altivec_dst((const void *)(__PTR), (__CW), (__STR)); })
+end_define
 
 begin_comment
 comment|/* vec_dstst */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|vec_dstst
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|__a
-argument_list|,
-name|int
-name|__b
-argument_list|,
-name|int
-name|__c
-argument_list|)
-block|{
-name|__builtin_altivec_dstst
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|__PTR
+parameter_list|,
+name|__CW
+parameter_list|,
+name|__STR
+parameter_list|)
+define|\
+value|__extension__(                      \       { __builtin_altivec_dstst((const void *)(__PTR), (__CW), (__STR)); })
+end_define
 
 begin_comment
 comment|/* vec_dststt */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|vec_dststt
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|__a
-argument_list|,
-name|int
-name|__b
-argument_list|,
-name|int
-name|__c
-argument_list|)
-block|{
-name|__builtin_altivec_dststt
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|__PTR
+parameter_list|,
+name|__CW
+parameter_list|,
+name|__STR
+parameter_list|)
+define|\
+value|__extension__(                       \       { __builtin_altivec_dststt((const void *)(__PTR), (__CW), (__STR)); })
+end_define
 
 begin_comment
 comment|/* vec_dstt */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__always_inline__
-operator|)
-argument_list|)
+begin_define
+define|#
+directive|define
 name|vec_dstt
-argument_list|(
-specifier|const
-name|void
-operator|*
-name|__a
-argument_list|,
-name|int
-name|__b
-argument_list|,
-name|int
-name|__c
-argument_list|)
-block|{
-name|__builtin_altivec_dstt
-argument_list|(
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
+parameter_list|(
+name|__PTR
+parameter_list|,
+name|__CW
+parameter_list|,
+name|__STR
+parameter_list|)
+define|\
+value|__extension__(                     \       { __builtin_altivec_dstt((const void *)(__PTR), (__CW), (__STR)); })
+end_define
 
 begin_comment
 comment|/* vec_eqv */
@@ -12639,6 +12912,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -12684,6 +12958,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -12729,6 +13004,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -12774,6 +13050,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -12819,6 +13096,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -12864,6 +13142,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -12909,6 +13188,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -12954,6 +13234,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -12984,6 +13265,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -13029,6 +13311,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -13078,6 +13361,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -13127,6 +13411,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -13176,6 +13461,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -13217,6 +13503,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -13267,6 +13554,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -13297,6 +13585,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -13327,6 +13616,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -13367,6 +13657,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -13397,6 +13688,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -13427,6 +13719,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -13462,6 +13755,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -13496,6 +13790,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -13531,6 +13826,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -13565,6 +13861,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -13600,6 +13897,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -13632,6 +13930,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -13663,6 +13962,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -13698,6 +13998,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -13732,6 +14033,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -13767,6 +14069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -13799,6 +14102,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -13831,6 +14135,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -13862,6 +14167,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -13897,6 +14203,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -13931,6 +14238,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -13966,6 +14274,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -13998,6 +14307,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -14033,6 +14343,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -14068,6 +14379,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -14102,6 +14414,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -14137,6 +14450,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -14171,6 +14485,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -14206,6 +14521,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -14238,6 +14554,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -14269,6 +14586,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -14304,6 +14622,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -14338,6 +14657,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -14373,6 +14693,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -14405,6 +14726,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -14437,6 +14759,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -14468,6 +14791,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -14503,6 +14827,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -14537,6 +14862,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -14572,6 +14898,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -14604,6 +14931,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -14639,6 +14967,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -14673,6 +15002,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -14707,6 +15037,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -14738,6 +15069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -14772,6 +15104,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -14803,6 +15136,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -14837,6 +15171,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -14872,6 +15207,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -14906,6 +15242,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -14944,6 +15281,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -14975,6 +15313,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -15013,6 +15352,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -15044,6 +15384,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -15078,6 +15419,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -15113,6 +15455,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -15148,6 +15491,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -15182,6 +15526,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -15217,6 +15562,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -15251,6 +15597,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -15286,6 +15633,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -15318,6 +15666,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -15349,6 +15698,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -15384,6 +15734,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -15418,6 +15769,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -15453,6 +15805,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -15486,6 +15839,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -15518,6 +15872,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -15549,6 +15904,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -15584,6 +15940,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -15618,6 +15975,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -15653,6 +16011,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -15685,6 +16044,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -15720,6 +16080,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -15755,6 +16116,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -15789,6 +16151,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -15824,6 +16187,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -15858,6 +16222,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -15893,6 +16258,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -15925,6 +16291,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -15956,6 +16323,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -15991,6 +16359,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -16025,6 +16394,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -16060,6 +16430,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -16092,6 +16463,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -16124,6 +16496,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -16155,6 +16528,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -16190,6 +16564,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -16224,6 +16599,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -16259,6 +16635,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -16291,6 +16668,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -16326,6 +16704,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -16356,6 +16735,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -16392,6 +16772,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16493,6 +16874,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16538,6 +16920,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16639,6 +17022,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16684,6 +17068,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16784,6 +17169,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16828,6 +17214,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16929,6 +17316,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -16974,6 +17362,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17074,6 +17463,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17118,6 +17508,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17219,6 +17610,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17264,6 +17656,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17364,6 +17757,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17412,6 +17806,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17513,6 +17908,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17558,6 +17954,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17659,6 +18056,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17704,6 +18102,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17804,6 +18203,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17848,6 +18248,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17949,6 +18350,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -17994,6 +18396,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18094,6 +18497,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18138,6 +18542,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18239,6 +18644,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18284,6 +18690,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18384,6 +18791,7 @@ end_else
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -18426,6 +18834,7 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18449,6 +18858,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18472,6 +18882,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18495,6 +18906,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -18518,6 +18930,7 @@ end_function_decl
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18555,6 +18968,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18592,6 +19006,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18629,6 +19044,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -18666,6 +19082,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -18722,6 +19139,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -18764,6 +19182,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -18806,6 +19225,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18852,6 +19272,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -18904,6 +19325,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -18937,6 +19359,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -18979,6 +19402,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19009,6 +19433,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19044,6 +19469,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19079,6 +19505,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -19109,6 +19536,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -19144,6 +19572,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -19179,6 +19608,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -19206,6 +19636,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -19238,6 +19669,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -19270,6 +19702,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -19300,6 +19733,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -19335,6 +19769,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -19370,6 +19805,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -19397,6 +19833,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -19429,6 +19866,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -19461,6 +19899,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -19491,6 +19930,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -19526,6 +19966,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -19567,6 +20008,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -19600,6 +20042,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -19639,6 +20082,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -19678,6 +20122,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -19711,6 +20156,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -19750,6 +20196,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -19794,6 +20241,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -19842,6 +20290,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -19878,6 +20327,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19908,6 +20358,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19943,6 +20394,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -19982,6 +20434,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -20012,6 +20465,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -20047,6 +20501,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -20086,6 +20541,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -20113,6 +20569,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -20145,6 +20602,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -20181,6 +20639,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -20211,6 +20670,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -20246,6 +20706,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -20285,6 +20746,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -20312,6 +20774,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -20344,6 +20807,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -20380,6 +20844,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -20410,6 +20875,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -20445,6 +20911,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -20484,6 +20951,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -20535,6 +21003,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -20604,6 +21073,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -20673,6 +21143,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -20742,6 +21213,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -20808,6 +21280,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -20877,6 +21350,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -20946,6 +21420,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -21012,6 +21487,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -21078,6 +21554,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -21147,6 +21624,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -21216,6 +21694,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -21288,6 +21767,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -21360,6 +21840,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -21438,6 +21919,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -21516,6 +21998,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -21588,6 +22071,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -21666,6 +22150,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -21744,6 +22229,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -21816,6 +22302,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -21882,6 +22369,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -21954,6 +22442,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -22042,6 +22531,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -22111,6 +22601,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -22180,6 +22671,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -22260,6 +22752,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -22326,6 +22819,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -22395,6 +22889,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -22464,6 +22959,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -22541,6 +23037,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -22607,6 +23104,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -22676,6 +23174,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -22745,6 +23244,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -22815,6 +23315,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -22884,6 +23385,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -22953,6 +23455,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -23022,6 +23525,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -23088,6 +23592,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -23157,6 +23662,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -23226,6 +23732,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -23292,6 +23799,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -23358,6 +23866,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -23427,6 +23936,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -23496,6 +24006,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -23568,6 +24079,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -23640,6 +24152,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -23718,6 +24231,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -23796,6 +24310,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -23868,6 +24383,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -23946,6 +24462,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -24024,6 +24541,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -24096,6 +24614,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -24162,6 +24681,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -24234,6 +24754,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -24322,6 +24843,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -24391,6 +24913,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -24460,6 +24983,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -24540,6 +25064,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -24606,6 +25131,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -24675,6 +25201,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -24744,6 +25271,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -24821,6 +25349,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -24887,6 +25416,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -24956,6 +25486,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -25025,6 +25556,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -25101,6 +25633,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -25170,6 +25703,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -25239,6 +25773,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -25312,6 +25847,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -25381,6 +25917,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -25450,6 +25987,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -25528,6 +26066,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -25555,6 +26094,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -25585,6 +26125,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -25620,6 +26161,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -25655,6 +26197,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -25685,6 +26228,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -25720,6 +26264,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -25755,6 +26300,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -25782,6 +26328,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -25814,6 +26361,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -25846,6 +26394,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -25876,6 +26425,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -25911,6 +26461,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -25946,6 +26497,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -25973,6 +26525,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -26005,6 +26558,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -26037,6 +26591,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -26067,6 +26622,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -26102,6 +26658,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -26143,6 +26700,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -26176,6 +26734,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -26215,6 +26774,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -26254,6 +26814,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -26287,6 +26848,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -26326,6 +26888,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -26370,6 +26933,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -26418,6 +26982,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -26454,6 +27019,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -26484,6 +27050,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -26519,6 +27086,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -26558,6 +27126,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -26588,6 +27157,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -26623,6 +27193,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -26662,6 +27233,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -26689,6 +27261,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -26721,6 +27294,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -26757,6 +27331,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -26787,6 +27362,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -26822,6 +27398,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -26861,6 +27438,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -26888,6 +27466,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -26920,6 +27499,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -26956,6 +27536,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -26986,6 +27567,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27021,6 +27603,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27060,6 +27643,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -27118,6 +27702,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27148,6 +27733,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27188,6 +27774,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27223,6 +27810,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -27261,6 +27849,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27291,6 +27880,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27331,6 +27921,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -27366,6 +27957,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -27404,6 +27996,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__attribute__
@@ -27446,6 +28039,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__attribute__
@@ -27488,6 +28082,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -27523,6 +28118,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27560,6 +28156,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -27593,6 +28190,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27634,6 +28232,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -27678,6 +28277,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27724,6 +28324,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -27766,6 +28367,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27812,6 +28414,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -27845,6 +28448,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27886,6 +28490,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -27928,6 +28533,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -27974,6 +28580,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -27998,6 +28605,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28022,6 +28630,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28046,6 +28655,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28069,6 +28679,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28093,6 +28704,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28117,6 +28729,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28140,6 +28753,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28163,6 +28777,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28187,6 +28802,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28211,6 +28827,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_mtvscr
@@ -28242,6 +28859,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -28269,6 +28887,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -28296,6 +28915,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -28323,6 +28943,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -28350,6 +28971,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -28377,6 +28999,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -28410,6 +29033,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -28440,6 +29064,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -28475,6 +29100,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -28505,6 +29131,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -28542,6 +29169,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -28586,6 +29214,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -28631,6 +29260,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -28673,6 +29303,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -28724,6 +29355,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -28770,6 +29402,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -28825,6 +29458,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__attribute__
@@ -28878,6 +29512,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -28932,6 +29567,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -28983,6 +29619,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -29037,6 +29674,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -29081,6 +29719,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -29126,6 +29765,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -29168,6 +29808,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -29219,6 +29860,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -29265,6 +29907,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -29320,6 +29963,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__attribute__
@@ -29373,6 +30017,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -29427,6 +30072,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -29478,6 +30124,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -29538,6 +30185,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -29568,6 +30216,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -29598,6 +30247,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -29628,6 +30278,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -29658,6 +30309,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -29688,6 +30340,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -29718,6 +30371,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -29748,6 +30402,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -29778,6 +30433,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -29808,6 +30464,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -29838,6 +30495,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -29868,6 +30526,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -29898,6 +30557,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -29928,6 +30588,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -29958,6 +30619,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -29988,6 +30650,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -30018,6 +30681,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -30048,6 +30712,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -30078,6 +30743,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -30108,6 +30774,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -30138,6 +30805,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -30171,6 +30839,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -30204,6 +30873,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -30237,6 +30907,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -30270,6 +30941,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -30303,6 +30975,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -30336,6 +31009,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -30384,6 +31058,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -30417,6 +31092,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -30459,6 +31135,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -30515,6 +31192,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -30557,6 +31235,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -30606,6 +31285,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -30636,6 +31316,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -30666,6 +31347,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -30696,6 +31378,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -30723,6 +31406,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -30753,6 +31437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -30783,6 +31468,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -30810,6 +31496,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -30840,6 +31527,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -30870,6 +31558,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -30924,6 +31613,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -30984,6 +31674,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -31014,6 +31705,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -31044,6 +31736,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -31074,6 +31767,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -31101,6 +31795,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -31131,6 +31826,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -31161,6 +31857,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -31188,6 +31885,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -31218,6 +31916,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -31248,6 +31947,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -31302,6 +32002,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -31335,6 +32036,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -31368,6 +32070,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -31417,6 +32120,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -31444,6 +32148,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -31476,6 +32181,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -31508,6 +32214,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -31535,6 +32242,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -31567,6 +32275,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -31599,6 +32308,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -31626,6 +32336,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -31650,6 +32361,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -31679,6 +32391,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -31708,6 +32421,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -31735,6 +32449,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -31767,6 +32482,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -31799,6 +32515,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -31826,6 +32543,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -31850,6 +32568,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -31879,6 +32598,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -31908,6 +32628,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -31935,6 +32656,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -31967,6 +32689,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -31999,6 +32722,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -32026,6 +32750,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -32071,6 +32796,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -32117,6 +32843,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -32169,6 +32896,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -32207,6 +32935,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -32245,6 +32974,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -32293,6 +33023,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -32323,6 +33054,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -32359,6 +33091,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -32395,6 +33128,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -32425,6 +33159,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -32461,6 +33196,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -32497,6 +33233,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -32538,6 +33275,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -32566,6 +33304,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -32594,6 +33333,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -32622,6 +33362,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -32650,6 +33391,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -32678,6 +33420,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -32706,6 +33449,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -32734,6 +33478,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -32762,6 +33507,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -32790,6 +33536,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -32818,6 +33565,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -32846,6 +33594,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -32874,6 +33623,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -32902,6 +33652,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -32930,6 +33681,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -32958,6 +33710,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -32986,6 +33739,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -33014,6 +33768,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33042,6 +33797,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33070,6 +33826,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33098,6 +33855,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -33126,6 +33884,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -33157,6 +33916,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -33188,6 +33948,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -33219,6 +33980,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -33250,6 +34012,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -33281,6 +34044,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -33312,6 +34076,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -33352,6 +34117,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -33379,6 +34145,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -33411,6 +34178,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -33443,6 +34211,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -33470,6 +34239,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -33502,6 +34272,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -33534,6 +34305,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -33561,6 +34333,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -33585,6 +34358,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -33614,6 +34388,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -33643,6 +34418,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -33670,6 +34446,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -33702,6 +34479,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -33734,6 +34512,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -33761,6 +34540,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -33785,6 +34565,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -33814,6 +34595,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -33843,6 +34625,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33870,6 +34653,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33902,6 +34686,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -33934,6 +34719,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -33961,6 +34747,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -34006,6 +34793,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -34052,6 +34840,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -34104,6 +34893,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -34134,6 +34924,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -34170,6 +34961,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -34206,6 +34998,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -34236,6 +35029,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -34272,6 +35066,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -34308,6 +35103,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -34351,6 +35147,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -34484,6 +35281,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -34617,6 +35415,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -34750,6 +35549,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -34878,6 +35678,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -35011,6 +35812,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -35150,6 +35952,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -35285,6 +36088,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -35420,6 +36224,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -35571,6 +36376,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -35704,6 +36510,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -35837,6 +36644,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -35981,6 +36789,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -36109,6 +36918,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -36242,6 +37052,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -36392,6 +37203,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -36522,6 +37334,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -36657,6 +37470,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -36821,6 +37635,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__attribute__
@@ -36882,6 +37697,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__attribute__
@@ -36943,6 +37759,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -36986,6 +37803,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37031,6 +37849,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -37074,6 +37893,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -37125,6 +37945,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -37169,6 +37990,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -37225,6 +38047,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -37283,6 +38106,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -37336,6 +38160,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37396,6 +38221,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -37457,6 +38283,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -37509,6 +38336,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -37563,6 +38391,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37606,6 +38435,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37651,6 +38481,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -37694,6 +38525,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -37745,6 +38577,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -37790,6 +38623,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -37846,6 +38680,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37889,6 +38724,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -37938,6 +38774,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -37981,6 +38818,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -38036,6 +38874,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -38118,6 +38957,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -38246,6 +39086,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -38374,6 +39215,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -38502,6 +39344,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -38629,6 +39472,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -38757,6 +39601,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -38885,6 +39730,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -39008,6 +39854,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -39119,6 +39966,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -39247,6 +40095,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -39375,6 +40224,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -39504,6 +40354,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -39636,6 +40487,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -39769,6 +40621,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -39902,6 +40755,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -40034,6 +40888,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -40071,6 +40926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -40108,6 +40964,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -40145,6 +41002,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -40179,6 +41037,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -40216,6 +41075,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -40253,6 +41113,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -40287,6 +41148,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -40321,6 +41183,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -40358,6 +41221,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -40395,6 +41259,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -40435,6 +41300,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -40472,6 +41338,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -40512,6 +41379,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -40555,6 +41423,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -40595,6 +41464,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -40625,6 +41495,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -40655,6 +41526,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -40694,6 +41566,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -40733,6 +41606,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -40761,6 +41635,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -40800,6 +41675,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -40828,6 +41704,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -40873,6 +41750,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -40906,6 +41784,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -40948,6 +41827,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -40987,6 +41867,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -41030,6 +41911,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -41058,6 +41940,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -41101,6 +41984,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -41129,6 +42013,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -41172,6 +42057,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -41212,6 +42098,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -41237,6 +42124,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -41258,6 +42146,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -41283,6 +42172,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -41304,6 +42194,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -41334,6 +42225,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -41370,6 +42262,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -41391,6 +42284,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -41421,6 +42315,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -41461,6 +42356,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -41491,6 +42387,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|__vector
 name|float
 name|__attribute__
@@ -41528,6 +42425,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -41579,6 +42477,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -41630,6 +42529,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -41671,6 +42571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -41722,6 +42623,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -41773,6 +42675,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -41814,6 +42717,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -41860,6 +42764,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -41906,6 +42811,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -41947,6 +42853,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -41998,6 +42905,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -42049,6 +42957,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -42090,6 +42999,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -42136,6 +43046,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -42182,6 +43093,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -42223,6 +43135,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -42274,6 +43187,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -42325,6 +43239,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -42366,6 +43281,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -42430,6 +43346,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -42500,6 +43417,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -42570,6 +43488,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -42649,6 +43568,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -42700,6 +43620,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -42751,6 +43672,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -42792,6 +43714,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -42843,6 +43766,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -42894,6 +43818,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -42935,6 +43860,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -42981,6 +43907,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -43027,6 +43954,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -43068,6 +43996,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -43119,6 +44048,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -43170,6 +44100,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -43211,6 +44142,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -43257,6 +44189,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -43303,6 +44236,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -43344,6 +44278,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -43395,6 +44330,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -43446,6 +44382,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -43487,6 +44424,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -43551,6 +44489,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -43619,6 +44558,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -43651,6 +44591,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -43678,6 +44619,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -43707,6 +44649,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -43734,6 +44677,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -43763,6 +44707,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -43796,6 +44741,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -43831,6 +44777,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -43877,6 +44824,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -43907,6 +44855,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -43948,6 +44897,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -43976,6 +44926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -44017,6 +44968,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -44045,6 +44997,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -44086,6 +45039,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -44284,6 +45238,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -44482,6 +45437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -44680,6 +45636,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -44878,6 +45835,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -45076,6 +46034,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -45274,6 +46233,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -45469,6 +46429,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -45667,6 +46628,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -45865,6 +46827,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -46063,6 +47026,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -46262,6 +47226,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -46459,6 +47424,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -46656,6 +47622,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -46850,6 +47817,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -47047,6 +48015,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -47241,6 +48210,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -47435,6 +48405,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -47632,6 +48603,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -47830,6 +48802,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -47873,6 +48846,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -47916,6 +48890,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -47959,6 +48934,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -48002,6 +48978,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -48045,6 +49022,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -48088,6 +49066,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -48131,6 +49110,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -48174,6 +49154,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -48217,6 +49198,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -48257,6 +49239,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -48297,6 +49280,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -48337,6 +49321,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -48380,6 +49365,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -48423,6 +49409,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -48466,6 +49453,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -48509,6 +49497,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -48552,6 +49541,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -48595,6 +49585,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -48635,6 +49626,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -48675,6 +49667,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -48715,6 +49708,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -48751,6 +49745,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -48787,6 +49782,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -48823,6 +49819,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -48866,6 +49863,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -48909,6 +49907,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -48952,6 +49951,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -48995,6 +49995,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -49038,6 +50039,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -49085,6 +50087,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -49128,6 +50131,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -49171,6 +50175,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -49214,6 +50219,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -49257,6 +50263,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -49300,6 +50307,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -49343,6 +50351,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -49386,6 +50395,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -49429,6 +50439,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -49472,6 +50483,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -49512,6 +50524,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -49552,6 +50565,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -49592,6 +50606,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -49635,6 +50650,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -49678,6 +50694,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -49721,6 +50738,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -49764,6 +50782,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -49807,6 +50826,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -49850,6 +50870,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -49890,6 +50911,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -49930,6 +50952,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -49970,6 +50993,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -50006,6 +51030,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -50042,6 +51067,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -50078,6 +51104,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -50121,6 +51148,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -50164,6 +51192,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -50207,6 +51236,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -50250,6 +51280,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -50293,6 +51324,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -50340,6 +51372,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -50383,6 +51416,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -50426,6 +51460,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -50469,6 +51504,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -50512,6 +51548,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -50552,6 +51589,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -50592,6 +51630,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -50635,6 +51674,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -50678,6 +51718,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -50718,6 +51759,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -50758,6 +51800,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -50794,6 +51837,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -50830,6 +51874,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -50873,6 +51918,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -50916,6 +51962,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -50956,6 +52003,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -51000,6 +52048,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -51043,6 +52092,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -51086,6 +52136,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -51129,6 +52180,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -51172,6 +52224,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -51212,6 +52265,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -51252,6 +52306,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -51295,6 +52350,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -51338,6 +52394,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -51378,6 +52435,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -51418,6 +52476,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -51454,6 +52513,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -51490,6 +52550,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -51533,6 +52594,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -51576,6 +52638,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -51616,6 +52679,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -51660,6 +52724,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -51701,6 +52766,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -51742,6 +52808,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -51783,6 +52850,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -51872,6 +52940,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -51961,6 +53030,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -52050,6 +53120,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -52137,6 +53208,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -52238,6 +53310,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -52339,6 +53412,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -52440,6 +53514,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -52545,6 +53620,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -52668,6 +53744,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -52795,6 +53872,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -52922,6 +54000,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -53065,6 +54144,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -53103,6 +54183,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -53141,6 +54222,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -53190,6 +54272,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -53268,6 +54351,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -53348,6 +54432,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -53428,6 +54513,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -53517,6 +54603,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -53607,6 +54694,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -53699,6 +54787,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -53791,6 +54880,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -53896,6 +54986,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -53930,6 +55021,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -53971,6 +55063,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -54003,6 +55096,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -54042,6 +55136,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -54074,6 +55169,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -54106,6 +55202,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -54140,6 +55237,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -54174,6 +55272,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -54204,6 +55303,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -54248,6 +55348,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -54275,6 +55376,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -54319,6 +55421,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -54346,6 +55449,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -54390,6 +55494,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -54423,6 +55528,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -54473,6 +55579,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -54519,6 +55626,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -54551,6 +55659,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -54589,6 +55698,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -54618,6 +55728,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -54656,6 +55767,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -54685,6 +55797,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -54716,6 +55829,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -54755,6 +55869,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -54794,6 +55909,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -54827,6 +55943,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -54866,6 +55983,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -54894,6 +56012,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -54939,6 +56058,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -54969,6 +56089,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -55022,6 +56143,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -55061,6 +56183,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -55104,6 +56227,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -55137,6 +56261,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -55180,6 +56305,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -55208,6 +56334,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -55251,6 +56378,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -55294,6 +56422,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -55337,6 +56466,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -55380,6 +56510,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -55423,6 +56554,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -55466,6 +56598,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -55509,6 +56642,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -55552,6 +56686,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -55595,6 +56730,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -55638,6 +56774,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -55678,6 +56815,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -55718,6 +56856,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -55758,6 +56897,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -55801,6 +56941,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -55844,6 +56985,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -55887,6 +57029,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -55930,6 +57073,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -55973,6 +57117,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -56016,6 +57161,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -56056,6 +57202,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -56096,6 +57243,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -56136,6 +57284,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -56172,6 +57321,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -56208,6 +57358,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -56244,6 +57395,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -56287,6 +57439,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -56330,6 +57483,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -56373,6 +57527,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -56416,6 +57571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -56459,6 +57615,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -56506,6 +57663,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -56549,6 +57707,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -56592,6 +57751,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -56635,6 +57795,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -56678,6 +57839,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -56721,6 +57883,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -56764,6 +57927,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -56807,6 +57971,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -56850,6 +58015,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -56893,6 +58059,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -56933,6 +58100,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -56973,6 +58141,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -57013,6 +58182,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -57056,6 +58226,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -57099,6 +58270,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -57142,6 +58314,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -57185,6 +58358,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -57228,6 +58402,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -57271,6 +58446,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -57311,6 +58487,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -57351,6 +58528,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -57391,6 +58569,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -57427,6 +58606,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -57463,6 +58643,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -57499,6 +58680,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -57542,6 +58724,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -57585,6 +58768,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -57628,6 +58812,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -57671,6 +58856,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -57714,6 +58900,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -57761,6 +58948,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -57804,6 +58992,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -57847,6 +59036,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -57890,6 +59080,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -57933,6 +59124,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -57973,6 +59165,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -58013,6 +59206,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -58056,6 +59250,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -58099,6 +59294,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -58139,6 +59335,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -58179,6 +59376,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -58215,6 +59413,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -58251,6 +59450,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -58294,6 +59494,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -58337,6 +59538,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -58377,6 +59579,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -58421,6 +59624,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -58464,6 +59668,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -58507,6 +59712,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -58550,6 +59756,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -58593,6 +59800,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -58633,6 +59841,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -58673,6 +59882,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -58716,6 +59926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -58759,6 +59970,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -58799,6 +60011,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -58839,6 +60052,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -58875,6 +60089,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -58911,6 +60126,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -58954,6 +60170,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -58997,6 +60214,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -59037,6 +60255,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -59081,6 +60300,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59118,6 +60338,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59154,6 +60375,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59191,6 +60413,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59227,6 +60450,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59263,6 +60487,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59299,6 +60524,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59336,6 +60562,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59371,6 +60598,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59405,6 +60633,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59442,6 +60671,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59478,6 +60708,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59513,6 +60744,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59549,6 +60781,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59586,6 +60819,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59620,6 +60854,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59655,6 +60890,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59690,6 +60926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59721,6 +60958,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59751,6 +60989,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59764,42 +61003,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-name|__builtin_altivec_stvx
-argument_list|(
-operator|(
-name|vector
-name|int
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_st
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
 name|unsigned
 name|int
 modifier|*
@@ -59824,6 +61027,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_st
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_altivec_stvx
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59859,6 +61100,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59895,6 +61137,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59932,6 +61175,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -59967,6 +61211,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_st
@@ -60005,6 +61250,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60042,6 +61288,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60078,6 +61325,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60115,6 +61363,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60151,6 +61400,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60187,6 +61437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60223,6 +61474,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60260,6 +61512,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60295,6 +61548,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60329,6 +61583,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60366,6 +61621,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60402,6 +61658,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60437,6 +61694,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60473,6 +61731,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60510,6 +61769,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60544,6 +61804,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60579,6 +61840,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60614,6 +61876,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60645,6 +61908,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60675,6 +61939,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60688,42 +61953,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-name|__builtin_altivec_stvx
-argument_list|(
-operator|(
-name|vector
-name|int
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvx
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
 name|unsigned
 name|int
 modifier|*
@@ -60748,6 +61977,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvx
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_altivec_stvx
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60783,6 +62050,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60819,6 +62087,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60856,6 +62125,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60891,6 +62161,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvx
@@ -60929,6 +62200,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -60965,6 +62237,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61001,6 +62274,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61037,6 +62311,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61073,6 +62348,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61103,6 +62379,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61139,6 +62416,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61174,6 +62452,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61210,6 +62489,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61244,6 +62524,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61279,6 +62560,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61309,6 +62591,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61345,6 +62628,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61380,6 +62664,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61416,6 +62701,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_ste
@@ -61454,6 +62740,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvebx
@@ -61490,6 +62777,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvebx
@@ -61526,6 +62814,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvebx
@@ -61562,6 +62851,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvebx
@@ -61602,6 +62892,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61632,6 +62923,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61668,6 +62960,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61703,6 +62996,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61739,6 +63033,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61773,6 +63068,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvehx
@@ -61812,6 +63108,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvewx
@@ -61842,6 +63139,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvewx
@@ -61878,6 +63176,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvewx
@@ -61913,6 +63212,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvewx
@@ -61949,6 +63249,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvewx
@@ -61987,6 +63288,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62024,6 +63326,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62060,6 +63363,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62097,6 +63401,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62133,6 +63438,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62169,6 +63475,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62205,6 +63512,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62242,6 +63550,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62277,6 +63586,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62311,6 +63621,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62348,6 +63659,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62384,6 +63696,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62419,6 +63732,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62455,6 +63769,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62492,6 +63807,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62526,6 +63842,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62561,6 +63878,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62596,6 +63914,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62627,6 +63946,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62657,6 +63977,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62670,42 +63991,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-name|__builtin_altivec_stvxl
-argument_list|(
-operator|(
-name|vector
-name|int
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
 name|unsigned
 name|int
 modifier|*
@@ -62730,6 +64015,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_altivec_stvxl
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62765,6 +64088,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62801,6 +64125,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62838,6 +64163,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62873,6 +64199,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stl
@@ -62911,6 +64238,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -62948,6 +64276,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -62984,6 +64313,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63021,6 +64351,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63057,6 +64388,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63093,6 +64425,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63129,6 +64462,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63166,6 +64500,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63201,6 +64536,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63235,6 +64571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63272,6 +64609,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63308,6 +64646,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63343,6 +64682,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63379,6 +64719,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63416,6 +64757,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63450,6 +64792,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63485,6 +64828,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63520,6 +64864,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63551,6 +64896,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63581,6 +64927,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63594,42 +64941,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-name|__builtin_altivec_stvxl
-argument_list|(
-operator|(
-name|vector
-name|int
-operator|)
-name|__a
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvxl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
 name|unsigned
 name|int
 modifier|*
@@ -63654,6 +64965,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvxl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_altivec_stvxl
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63689,6 +65038,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63725,6 +65075,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63762,6 +65113,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63797,6 +65149,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvxl
@@ -63835,6 +65188,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -63862,6 +65216,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -63894,6 +65249,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -63926,6 +65282,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -63953,6 +65310,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -63985,6 +65343,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -64017,6 +65376,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64041,6 +65401,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64070,6 +65431,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64099,6 +65461,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64126,6 +65489,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64158,6 +65522,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64190,6 +65555,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -64214,6 +65580,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -64243,6 +65610,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -64272,6 +65640,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -64299,6 +65668,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -64331,6 +65701,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -64377,6 +65748,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -64404,6 +65776,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -64446,6 +65819,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -64476,6 +65850,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -64506,6 +65881,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -64535,6 +65911,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -64570,6 +65947,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -64597,6 +65975,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -64629,6 +66008,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -64661,6 +66041,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -64688,6 +66069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -64720,6 +66102,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -64763,6 +66146,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64787,6 +66171,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64816,6 +66201,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -64845,6 +66231,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64872,6 +66259,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64904,6 +66292,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -64947,6 +66336,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -64971,6 +66361,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -65000,6 +66391,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -65029,6 +66421,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65056,6 +66449,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65088,6 +66482,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65131,6 +66526,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -65164,6 +66560,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65208,6 +66605,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -65238,6 +66636,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -65281,6 +66680,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65320,6 +66720,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -65350,6 +66751,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -65385,6 +66787,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -65420,6 +66823,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -65450,6 +66854,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -65485,6 +66890,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -65520,6 +66926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -65547,6 +66954,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -65579,6 +66987,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -65611,6 +67020,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -65641,6 +67051,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -65676,6 +67087,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -65711,6 +67123,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -65738,6 +67151,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -65770,6 +67184,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -65802,6 +67217,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65832,6 +67248,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65867,6 +67284,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -65906,6 +67324,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -65936,6 +67355,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -65971,6 +67391,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -66010,6 +67431,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -66040,6 +67462,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -66075,6 +67498,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -66114,6 +67538,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -66141,6 +67566,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -66173,6 +67599,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -66209,6 +67636,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -66239,6 +67667,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -66274,6 +67703,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -66313,6 +67743,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -66340,6 +67771,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -66372,6 +67804,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -66408,6 +67841,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -66438,6 +67872,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -66473,6 +67908,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -66526,6 +67962,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -66553,6 +67990,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -66584,6 +68022,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -66621,6 +68060,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -66662,6 +68102,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -66692,6 +68133,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -66726,6 +68168,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -66763,6 +68206,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -66813,6 +68257,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -66841,6 +68286,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -66871,6 +68317,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -66903,6 +68350,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -66940,6 +68388,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -66979,6 +68428,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__attribute__
@@ -67020,6 +68470,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -67180,6 +68631,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -67344,6 +68796,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -67432,6 +68885,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -67520,6 +68974,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -67560,6 +69015,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -67590,6 +69046,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__attribute__
@@ -67624,6 +69081,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -67667,6 +69125,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -67721,6 +69180,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -67755,6 +69215,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -67809,6 +69270,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -67868,6 +69330,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -67903,6 +69366,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -67969,6 +69433,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -68012,6 +69477,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -68070,6 +69536,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -68104,6 +69571,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -68158,6 +69626,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -68221,6 +69690,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -68256,6 +69726,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -68322,6 +69793,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -68365,6 +69837,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -68419,6 +69892,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -68453,6 +69927,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -68507,6 +69982,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -68566,6 +70042,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -68601,6 +70078,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -68667,6 +70145,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -68710,6 +70189,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -68768,6 +70248,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -68802,6 +70283,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -68856,6 +70338,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -68919,6 +70402,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -68954,6 +70438,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -69026,6 +70511,43 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
+name|vector
+name|bool
+name|int
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|bool
+name|int
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|bool
+name|int
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -69061,6 +70583,42 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|vector
+name|signed
+name|int
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|signed
+name|int
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|int
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -69096,6 +70654,42 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|vector
+name|unsigned
+name|int
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|int
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -69128,6 +70722,39 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|vector
+name|float
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|float
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|float
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -69166,6 +70793,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -69204,6 +70832,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -69225,6 +70854,394 @@ name|vector
 name|double
 operator|)
 name|__builtin_vsx_lxvd2x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|double
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|double
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|double
+operator|)
+name|__builtin_vsx_lxvd2x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|bool
+name|short
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|bool
+name|short
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|bool
+name|short
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|signed
+name|short
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|signed
+name|short
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|short
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|signed
+name|short
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|signed
+name|short
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|short
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|unsigned
+name|short
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|short
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|unsigned
+name|short
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|unsigned
+name|short
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|short
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|bool
+name|char
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|bool
+name|char
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|bool
+name|char
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|signed
+name|char
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|signed
+name|char
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|signed
+name|char
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|signed
+name|char
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|signed
+name|char
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|unsigned
+name|char
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__builtin_vsx_lxvw4x
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|vector
+name|unsigned
+name|char
+name|__ATTRS_o_ai
+name|vec_vsx_ld
+parameter_list|(
+name|int
+name|__a
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|__b
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vector
+name|unsigned
+name|char
+operator|)
+name|__builtin_vsx_lxvw4x
 argument_list|(
 name|__a
 argument_list|,
@@ -69251,6 +71268,119 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|bool
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69288,6 +71418,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|signed
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69325,6 +71493,44 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69360,6 +71566,42 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|float
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|float
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69399,6 +71641,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69438,6 +71681,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_vsx_st
@@ -69460,6 +71704,565 @@ argument_list|(
 operator|(
 name|vector
 name|double
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|double
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|double
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvd2x
+argument_list|(
+operator|(
+name|vector
+name|double
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|bool
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|signed
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|signed
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|bool
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|bool
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|signed
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|signed
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|signed
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
+operator|)
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_vsx_st
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+name|__builtin_vsx_stxvw4x
+argument_list|(
+operator|(
+name|vector
+name|int
 operator|)
 name|__a
 argument_list|,
@@ -69489,6 +72292,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -69516,6 +72320,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -69548,6 +72353,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -69580,6 +72386,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -69607,6 +72414,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -69639,6 +72447,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -69671,6 +72480,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -69698,6 +72508,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -69722,6 +72533,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -69751,6 +72563,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -69780,6 +72593,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -69807,6 +72621,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -69839,6 +72654,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -69871,6 +72687,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -69898,6 +72715,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -69922,6 +72740,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -69951,6 +72770,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -69980,6 +72800,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -70007,6 +72828,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -70039,6 +72861,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -70071,6 +72894,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -70098,6 +72922,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -70143,6 +72968,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -70189,6 +73015,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -70241,6 +73068,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -70271,6 +73099,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -70307,6 +73136,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -70343,6 +73173,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -70373,6 +73204,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -70409,6 +73241,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -70445,6 +73278,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -70475,6 +73309,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -70517,6 +73352,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -70561,6 +73397,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -70614,6 +73451,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -70641,6 +73479,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -70673,6 +73512,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -70705,6 +73545,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -70732,6 +73573,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -70764,6 +73606,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -70796,6 +73639,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -70823,6 +73667,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -70847,6 +73692,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -70876,6 +73722,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -70905,6 +73752,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -70932,6 +73780,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -70964,6 +73813,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -70996,6 +73846,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -71023,6 +73874,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -71047,6 +73899,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -71076,6 +73929,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -71105,6 +73959,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -71132,6 +73987,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -71164,6 +74020,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -71196,6 +74053,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -71223,6 +74081,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -71268,6 +74127,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -71314,6 +74174,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -71366,6 +74227,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -71396,6 +74258,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -71432,6 +74295,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -71468,6 +74332,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -71498,6 +74363,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -71534,6 +74400,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -71570,6 +74437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -71613,6 +74481,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|signed
 name|char
 name|__ATTRS_o_ai
@@ -71638,6 +74507,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|char
 name|__ATTRS_o_ai
@@ -71663,6 +74533,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|char
 name|__ATTRS_o_ai
@@ -71688,6 +74559,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|signed
 name|short
 name|__ATTRS_o_ai
@@ -71713,6 +74585,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|short
 name|__ATTRS_o_ai
@@ -71738,6 +74611,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|short
 name|__ATTRS_o_ai
@@ -71763,6 +74637,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|signed
 name|int
 name|__ATTRS_o_ai
@@ -71788,6 +74663,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|int
 name|__ATTRS_o_ai
@@ -71813,6 +74689,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|int
 name|__ATTRS_o_ai
@@ -71844,6 +74721,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|signed
 name|long
 name|long
@@ -71871,6 +74749,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|long
 name|long
@@ -71898,6 +74777,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|unsigned
 name|long
 name|long
@@ -71925,6 +74805,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|double
 name|__ATTRS_o_ai
 name|vec_extract
@@ -71953,6 +74834,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|float
 name|__ATTRS_o_ai
 name|vec_extract
@@ -71980,6 +74862,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -72014,6 +74897,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -72048,6 +74932,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -72082,6 +74967,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|short
@@ -72116,6 +75002,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -72150,6 +75037,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -72184,6 +75072,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|int
@@ -72218,6 +75107,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -72252,6 +75142,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -72292,6 +75183,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -72329,6 +75221,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -72366,6 +75259,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|long
@@ -72403,6 +75297,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -72439,6 +75334,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -72474,6 +75370,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -72522,6 +75419,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -72576,6 +75474,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -72624,6 +75523,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -72678,6 +75578,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -72732,6 +75633,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -72777,6 +75679,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -72828,6 +75731,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -72876,6 +75780,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -72930,6 +75835,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -72984,6 +75890,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -73035,6 +75942,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -73080,6 +75988,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -73131,6 +76040,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -73179,6 +76089,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -73233,6 +76144,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -73287,6 +76199,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -73332,6 +76245,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -73387,6 +76301,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -73435,6 +76350,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -73489,6 +76405,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -73537,6 +76454,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -73591,6 +76509,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -73645,6 +76564,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -73690,6 +76610,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -73741,6 +76662,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -73789,6 +76711,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -73843,6 +76766,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -73897,6 +76821,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -73948,6 +76873,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -73993,6 +76919,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -74044,6 +76971,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -74092,6 +77020,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -74146,6 +77075,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -74200,6 +77130,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -74245,6 +77176,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -74299,6 +77231,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -74347,6 +77280,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -74401,6 +77335,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -74449,6 +77384,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -74503,6 +77439,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -74557,6 +77494,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -74602,6 +77540,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -74653,6 +77592,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -74701,6 +77641,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -74755,6 +77696,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -74809,6 +77751,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -74860,6 +77803,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -74905,6 +77849,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -74956,6 +77901,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -75004,6 +77950,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -75058,6 +78005,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -75112,6 +78060,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -75157,6 +78106,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -75212,6 +78162,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -75260,6 +78211,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -75314,6 +78266,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -75362,6 +78315,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -75416,6 +78370,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|char
@@ -75470,6 +78425,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -75515,6 +78471,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -75566,6 +78523,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -75614,6 +78572,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -75668,6 +78627,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|short
@@ -75722,6 +78682,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|pixel
 name|__ATTRS_o_ai
@@ -75773,6 +78734,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -75818,6 +78780,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -75869,6 +78832,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -75917,6 +78881,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -75971,6 +78936,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|bool
 name|int
@@ -76025,6 +78991,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -76070,6 +79037,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -76125,6 +79093,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76175,6 +79144,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76189,112 +79159,6 @@ name|__b
 parameter_list|,
 name|vector
 name|signed
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 modifier|*
 name|__c
@@ -76337,6 +79201,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76393,6 +79366,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76441,6 +79415,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76453,112 +79428,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 modifier|*
 name|__c
@@ -76601,6 +79470,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76657,6 +79635,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76711,6 +79690,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76759,6 +79739,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76771,112 +79752,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlx
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|int
 modifier|*
 name|__c
@@ -76919,6 +79794,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlx
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -76975,6 +79959,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlx
@@ -77033,6 +80018,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77083,6 +80069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77097,112 +80084,6 @@ name|__b
 parameter_list|,
 name|vector
 name|signed
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 modifier|*
 name|__c
@@ -77245,6 +80126,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77301,6 +80291,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77349,6 +80340,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77361,112 +80353,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 modifier|*
 name|__c
@@ -77509,6 +80395,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77565,6 +80560,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77619,6 +80615,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77667,6 +80664,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77679,112 +80677,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|vec_lvrx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|__a
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvlxl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|int
 modifier|*
 name|__c
@@ -77827,6 +80719,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvlxl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|vec_lvrx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|__a
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77883,6 +80884,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvlxl
@@ -77941,6 +80943,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -77991,6 +80994,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78005,112 +81009,6 @@ name|__b
 parameter_list|,
 name|vector
 name|signed
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 modifier|*
 name|__c
@@ -78153,6 +81051,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78209,6 +81216,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78257,6 +81265,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78269,112 +81278,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 modifier|*
 name|__c
@@ -78417,6 +81320,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78473,6 +81485,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78527,6 +81540,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78575,6 +81589,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78587,112 +81602,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_st
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrx
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|int
 modifier|*
 name|__c
@@ -78735,6 +81644,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrx
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_st
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78791,6 +81809,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrx
@@ -78849,6 +81868,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -78899,6 +81919,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -78913,112 +81934,6 @@ name|__b
 parameter_list|,
 name|vector
 name|signed
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|char
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|char
 modifier|*
 name|__c
@@ -79061,6 +81976,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|char
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|char
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79117,6 +82141,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79165,6 +82190,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79177,112 +82203,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|short
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|short
 modifier|*
 name|__c
@@ -79325,6 +82245,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|short
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|short
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79381,6 +82410,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79435,6 +82465,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79483,6 +82514,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79495,112 +82527,6 @@ name|int
 name|__b
 parameter_list|,
 name|vector
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|unsigned
-name|int
-modifier|*
-name|__c
-parameter_list|)
-block|{
-return|return
-name|vec_stl
-argument_list|(
-name|vec_perm
-argument_list|(
-name|__a
-argument_list|,
-name|vec_lvlx
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|,
-name|vec_lvsr
-argument_list|(
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-argument_list|)
-argument_list|,
-name|__b
-argument_list|,
-name|__c
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|__ATTRS_o_ai
-name|vec_stvrxl
-parameter_list|(
-name|vector
-name|unsigned
-name|int
-name|__a
-parameter_list|,
-name|int
-name|__b
-parameter_list|,
-name|vector
-name|unsigned
 name|int
 modifier|*
 name|__c
@@ -79643,6 +82569,115 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|__ATTRS_o_ai
+name|vec_stvrxl
+parameter_list|(
+name|vector
+name|unsigned
+name|int
+name|__a
+parameter_list|,
+name|int
+name|__b
+parameter_list|,
+name|vector
+name|unsigned
+name|int
+modifier|*
+name|__c
+parameter_list|)
+block|{
+return|return
+name|vec_stl
+argument_list|(
+name|vec_perm
+argument_list|(
+name|__a
+argument_list|,
+name|vec_lvlx
+argument_list|(
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+argument_list|,
+name|vec_lvsr
+argument_list|(
+name|__b
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|__c
+argument_list|)
+argument_list|)
+argument_list|,
+name|__b
+argument_list|,
+name|__c
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79699,6 +82734,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|void
 name|__ATTRS_o_ai
 name|vec_stvrxl
@@ -79757,6 +82793,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -79800,6 +82837,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -79843,6 +82881,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -79882,6 +82921,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -79925,6 +82965,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -79964,6 +83005,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -80007,6 +83049,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -80050,6 +83093,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -80076,6 +83120,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -80102,6 +83147,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|short
 name|__ATTRS_o_ai
@@ -80125,6 +83171,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -80151,6 +83198,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|int
 name|__ATTRS_o_ai
@@ -80174,6 +83222,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -80206,6 +83255,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|long
@@ -80235,6 +83285,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -80278,6 +83329,7 @@ end_if
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|__int128
@@ -80304,6 +83356,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|__int128
@@ -80335,6 +83388,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|double
 name|__ATTRS_o_ai
@@ -80363,6 +83417,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|float
 name|__ATTRS_o_ai
@@ -80394,6 +83449,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80432,6 +83488,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80470,6 +83527,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80508,6 +83566,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80546,6 +83605,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80584,6 +83644,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80622,6 +83683,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80660,6 +83722,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80688,6 +83751,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80721,6 +83785,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80759,6 +83824,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80797,6 +83863,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80834,6 +83901,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80872,6 +83940,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80910,6 +83979,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80946,6 +84016,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -80974,6 +84045,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81007,6 +84079,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81045,6 +84118,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81083,6 +84157,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81120,6 +84195,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81158,6 +84234,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81202,6 +84279,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81234,6 +84312,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81270,6 +84349,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81312,6 +84392,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81354,6 +84435,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81395,6 +84477,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81437,6 +84520,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81484,6 +84568,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81535,6 +84620,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_eq
@@ -81572,6 +84658,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81602,6 +84689,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81637,6 +84725,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81667,6 +84756,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81702,6 +84792,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81742,6 +84833,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81777,6 +84869,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81817,6 +84910,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81845,6 +84939,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81878,6 +84973,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81908,6 +85004,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81943,6 +85040,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -81982,6 +85080,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82017,6 +85116,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82057,6 +85157,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82085,6 +85186,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82118,6 +85220,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82148,6 +85251,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82183,6 +85287,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82222,6 +85327,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82257,6 +85363,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82303,6 +85410,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82335,6 +85443,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82373,6 +85482,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82405,6 +85515,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82443,6 +85554,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82487,6 +85599,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82525,6 +85638,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82574,6 +85688,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82625,6 +85740,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ge
@@ -82662,6 +85778,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82692,6 +85809,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82727,6 +85845,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82757,6 +85876,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82792,6 +85912,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82832,6 +85953,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82867,6 +85989,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82907,6 +86030,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82935,6 +86059,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82968,6 +86093,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -82998,6 +86124,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83033,6 +86160,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83072,6 +86200,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83107,6 +86236,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83147,6 +86277,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83175,6 +86306,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83208,6 +86340,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83238,6 +86371,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83273,6 +86407,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83312,6 +86447,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83347,6 +86483,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83393,6 +86530,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83425,6 +86563,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83463,6 +86602,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83495,6 +86635,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83533,6 +86674,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83577,6 +86719,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83615,6 +86758,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83664,6 +86808,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83715,6 +86860,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_gt
@@ -83752,6 +86898,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -83789,6 +86936,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83819,6 +86967,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83854,6 +87003,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83884,6 +87034,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83919,6 +87070,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83959,6 +87111,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -83994,6 +87147,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84034,6 +87188,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84062,6 +87217,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84095,6 +87251,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84125,6 +87282,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84160,6 +87318,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84199,6 +87358,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84234,6 +87394,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84274,6 +87435,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84302,6 +87464,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84335,6 +87498,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84365,6 +87529,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84400,6 +87565,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84439,6 +87605,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84474,6 +87641,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84520,6 +87688,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84552,6 +87721,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84584,6 +87754,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84622,6 +87793,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84660,6 +87832,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84704,6 +87877,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84742,6 +87916,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84791,6 +87966,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84842,6 +88018,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_le
@@ -84879,6 +88056,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -84909,6 +88087,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -84944,6 +88123,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -84974,6 +88154,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85009,6 +88190,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85049,6 +88231,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85084,6 +88267,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85124,6 +88308,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85152,6 +88337,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85185,6 +88371,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85215,6 +88402,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85250,6 +88438,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85289,6 +88478,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85324,6 +88514,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85364,6 +88555,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85392,6 +88584,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85425,6 +88618,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85455,6 +88649,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85490,6 +88685,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85529,6 +88725,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85564,6 +88761,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85610,6 +88808,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85642,6 +88841,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85674,6 +88874,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85712,6 +88913,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85750,6 +88952,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85794,6 +88997,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85832,6 +89036,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85881,6 +89086,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85932,6 +89138,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_lt
@@ -85969,6 +89176,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_nan
@@ -86016,6 +89224,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_nan
@@ -86049,6 +89258,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86087,6 +89297,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86125,6 +89336,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86163,6 +89375,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86201,6 +89414,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86239,6 +89453,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86277,6 +89492,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86315,6 +89531,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86343,6 +89560,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86376,6 +89594,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86414,6 +89633,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86452,6 +89672,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86489,6 +89710,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86527,6 +89749,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86565,6 +89788,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86601,6 +89825,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86629,6 +89854,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86662,6 +89888,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86700,6 +89927,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86738,6 +89966,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86775,6 +90004,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86813,6 +90043,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86857,6 +90088,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86889,6 +90121,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86931,6 +90164,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -86969,6 +90203,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87013,6 +90248,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87057,6 +90293,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87101,6 +90338,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87150,6 +90388,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87201,6 +90440,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ne
@@ -87238,6 +90478,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_nge
@@ -87289,6 +90530,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_nge
@@ -87326,6 +90568,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ngt
@@ -87377,6 +90620,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_all_ngt
@@ -87414,6 +90658,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -87451,6 +90696,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -87488,6 +90734,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -87521,6 +90768,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87559,6 +90807,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87597,6 +90846,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87635,6 +90885,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87673,6 +90924,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87711,6 +90963,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87749,6 +91002,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87787,6 +91041,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87815,6 +91070,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87848,6 +91104,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87886,6 +91143,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87924,6 +91182,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87961,6 +91220,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -87999,6 +91259,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88037,6 +91298,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88073,6 +91335,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88101,6 +91364,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88134,6 +91398,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88172,6 +91437,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88210,6 +91476,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88247,6 +91514,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88285,6 +91553,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88329,6 +91598,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88361,6 +91631,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88403,6 +91674,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88441,6 +91713,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88485,6 +91758,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88529,6 +91803,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88573,6 +91848,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88622,6 +91898,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88673,6 +91950,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_eq
@@ -88710,6 +91988,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88740,6 +92019,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88775,6 +92055,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88805,6 +92086,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88840,6 +92122,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88880,6 +92163,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88915,6 +92199,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88955,6 +92240,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -88983,6 +92269,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89016,6 +92303,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89046,6 +92334,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89081,6 +92370,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89120,6 +92410,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89155,6 +92446,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89195,6 +92487,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89223,6 +92516,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89256,6 +92550,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89286,6 +92581,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89321,6 +92617,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89360,6 +92657,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89395,6 +92693,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89441,6 +92740,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89473,6 +92773,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89505,6 +92806,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89543,6 +92845,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89581,6 +92884,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89625,6 +92929,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89663,6 +92968,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89712,6 +93018,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89763,6 +93070,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ge
@@ -89800,6 +93108,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -89830,6 +93139,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -89865,6 +93175,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -89895,6 +93206,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -89930,6 +93242,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -89970,6 +93283,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90005,6 +93319,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90045,6 +93360,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90073,6 +93389,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90106,6 +93423,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90136,6 +93454,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90171,6 +93490,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90210,6 +93530,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90245,6 +93566,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90285,6 +93607,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90313,6 +93636,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90346,6 +93670,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90376,6 +93701,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90411,6 +93737,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90450,6 +93777,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90485,6 +93813,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90531,6 +93860,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90563,6 +93893,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90595,6 +93926,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90633,6 +93965,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90671,6 +94004,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90715,6 +94049,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90753,6 +94088,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90802,6 +94138,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90853,6 +94190,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_gt
@@ -90890,6 +94228,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -90920,6 +94259,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -90955,6 +94295,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -90985,6 +94326,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91020,6 +94362,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91060,6 +94403,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91095,6 +94439,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91135,6 +94480,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91163,6 +94509,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91196,6 +94543,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91226,6 +94574,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91261,6 +94610,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91300,6 +94650,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91335,6 +94686,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91375,6 +94727,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91403,6 +94756,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91436,6 +94790,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91466,6 +94821,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91501,6 +94857,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91540,6 +94897,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91575,6 +94933,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91621,6 +94980,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91653,6 +95013,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91685,6 +95046,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91723,6 +95085,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91761,6 +95124,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91805,6 +95169,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91843,6 +95208,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91892,6 +95258,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91943,6 +95310,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_le
@@ -91980,6 +95348,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92010,6 +95379,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92045,6 +95415,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92075,6 +95446,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92110,6 +95482,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92150,6 +95523,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92185,6 +95559,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92225,6 +95600,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92253,6 +95629,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92286,6 +95663,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92316,6 +95694,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92351,6 +95730,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92390,6 +95770,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92425,6 +95806,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92465,6 +95847,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92493,6 +95876,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92526,6 +95910,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92556,6 +95941,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92591,6 +95977,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92630,6 +96017,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92665,6 +96053,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92711,6 +96100,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92743,6 +96133,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92775,6 +96166,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92813,6 +96205,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92851,6 +96244,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92895,6 +96289,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92933,6 +96328,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -92982,6 +96378,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -93033,6 +96430,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_lt
@@ -93070,6 +96468,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -93103,6 +96502,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93141,6 +96541,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93179,6 +96580,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93217,6 +96619,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93255,6 +96658,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93293,6 +96697,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93331,6 +96736,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93369,6 +96775,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93397,6 +96804,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93430,6 +96838,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93468,6 +96877,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93506,6 +96916,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93543,6 +96954,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93581,6 +96993,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93619,6 +97032,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93655,6 +97069,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93683,6 +97098,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93716,6 +97132,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93754,6 +97171,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93792,6 +97210,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93829,6 +97248,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93867,6 +97287,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93911,6 +97332,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93943,6 +97365,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -93985,6 +97408,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94023,6 +97447,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94067,6 +97492,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94111,6 +97537,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94155,6 +97582,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94204,6 +97632,7 @@ end_endif
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94255,6 +97684,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|int
 name|__ATTRS_o_ai
 name|vec_any_ne
@@ -94292,6 +97722,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94329,6 +97760,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94366,6 +97798,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94403,6 +97836,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94440,6 +97874,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94473,6 +97908,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -94551,6 +97987,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94581,6 +98018,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94619,6 +98057,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94657,6 +98096,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94695,6 +98135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94757,7 +98198,7 @@ parameter_list|,
 name|Z
 parameter_list|)
 define|\
-value|_Generic((X), vector unsigned int: __builtin_crypto_vshasigmaw, \                 vector unsigned long long: __builtin_crypto_vshasigmad) \ ((X), (Y), (Z))
+value|_Generic((X), vector unsigned int                                            \            : __builtin_crypto_vshasigmaw, vector unsigned long long            \            : __builtin_crypto_vshasigmad)((X), (Y), (Z))
 end_define
 
 begin_endif
@@ -94773,6 +98214,7 @@ end_ifdef
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -94810,6 +98252,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -94867,6 +98310,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -94924,6 +98368,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -94986,6 +98431,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -95016,6 +98462,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|short
@@ -95046,6 +98493,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|int
@@ -95076,6 +98524,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long
@@ -95109,6 +98558,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|signed
 name|char
@@ -95151,6 +98601,7 @@ end_define
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|char
@@ -95174,6 +98625,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -95214,6 +98666,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline__
 name|vector
 name|long
 name|long
@@ -95250,6 +98703,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|__inline__
 name|vector
 name|unsigned
 name|long

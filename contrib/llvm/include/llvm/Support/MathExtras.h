@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<type_traits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits>
 end_include
 
 begin_ifdef
@@ -1684,6 +1696,26 @@ argument_list|(
 argument|int64_t x
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|N
+operator|>
+literal|0
+argument_list|,
+literal|"isShiftedInt<0> doesn't make sense (refers to a 0-bit number."
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|N
+operator|+
+name|S
+operator|<=
+literal|64
+argument_list|,
+literal|"isShiftedInt<N, S> with N + S> 64 is too wide."
+argument_list|)
+block|;
 return|return
 name|isInt
 operator|<
@@ -1699,7 +1731,10 @@ operator|(
 name|x
 operator|%
 operator|(
+name|UINT64_C
+argument_list|(
 literal|1
+argument_list|)
 operator|<<
 name|S
 operator|)
@@ -1727,6 +1762,15 @@ argument_list|(
 argument|uint64_t x
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|N
+operator|>
+literal|0
+argument_list|,
+literal|"isUInt<0> doesn't make sense."
+argument_list|)
+block|;
 return|return
 name|N
 operator|>=
@@ -1840,11 +1884,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isShiftedUInt<N,S> - Checks if a unsigned integer is an N bit number shifted
-end_comment
-
-begin_comment
-comment|///                     left by S.
+comment|/// Checks if a unsigned integer is an N bit number shifted left by S.
 end_comment
 
 begin_expr_stmt
@@ -1863,6 +1903,28 @@ argument_list|(
 argument|uint64_t x
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|N
+operator|>
+literal|0
+argument_list|,
+literal|"isShiftedUInt<0> doesn't make sense (refers to a 0-bit number)"
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|N
+operator|+
+name|S
+operator|<=
+literal|64
+argument_list|,
+literal|"isShiftedUInt<N, S> with N + S> 64 is too wide."
+argument_list|)
+block|;
+comment|// Per the two static_asserts above, S must be strictly less than 64.  So
+comment|// 1<< S is not undefined behavior.
 return|return
 name|isUInt
 operator|<
@@ -1878,7 +1940,10 @@ operator|(
 name|x
 operator|%
 operator|(
+name|UINT64_C
+argument_list|(
 literal|1
+argument_list|)
 operator|<<
 name|S
 operator|)
@@ -1888,6 +1953,139 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Gets the maximum value for a N-bit unsigned integer.
+end_comment
+
+begin_function
+specifier|inline
+name|uint64_t
+name|maxUIntN
+parameter_list|(
+name|uint64_t
+name|N
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|>
+literal|0
+operator|&&
+name|N
+operator|<=
+literal|64
+operator|&&
+literal|"integer width out of range"
+argument_list|)
+expr_stmt|;
+comment|// uint64_t(1)<< 64 is undefined behavior, so we can't do
+comment|//   (uint64_t(1)<< N) - 1
+comment|// without checking first that N != 64.  But this works and doesn't have a
+comment|// branch.
+return|return
+name|UINT64_MAX
+operator|>>
+operator|(
+literal|64
+operator|-
+name|N
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Gets the minimum value for a N-bit signed integer.
+end_comment
+
+begin_function
+specifier|inline
+name|int64_t
+name|minIntN
+parameter_list|(
+name|int64_t
+name|N
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|>
+literal|0
+operator|&&
+name|N
+operator|<=
+literal|64
+operator|&&
+literal|"integer width out of range"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+operator|(
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+operator|(
+name|N
+operator|-
+literal|1
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Gets the maximum value for a N-bit signed integer.
+end_comment
+
+begin_function
+specifier|inline
+name|int64_t
+name|maxIntN
+parameter_list|(
+name|int64_t
+name|N
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|>
+literal|0
+operator|&&
+name|N
+operator|<=
+literal|64
+operator|&&
+literal|"integer width out of range"
+argument_list|)
+expr_stmt|;
+comment|// This relies on two's complement wraparound when N == 64, so we convert to
+comment|// int64_t only at the very end to avoid UB.
+return|return
+operator|(
+name|UINT64_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+operator|(
+name|N
+operator|-
+literal|1
+operator|)
+operator|)
+operator|-
+literal|1
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// isUIntN - Checks if an unsigned integer fits into the given (dynamic)
@@ -1915,17 +2113,11 @@ operator|>=
 literal|64
 operator|||
 name|x
-operator|<
-operator|(
-name|UINT64_C
+operator|<=
+name|maxUIntN
 argument_list|(
-literal|1
-argument_list|)
-operator|<<
-operator|(
 name|N
-operator|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -1956,36 +2148,19 @@ operator|>=
 literal|64
 operator|||
 operator|(
-operator|-
-operator|(
-name|INT64_C
+name|minIntN
 argument_list|(
-literal|1
-argument_list|)
-operator|<<
-operator|(
 name|N
-operator|-
-literal|1
-operator|)
-operator|)
+argument_list|)
 operator|<=
 name|x
 operator|&&
 name|x
-operator|<
-operator|(
-name|INT64_C
+operator|<=
+name|maxIntN
 argument_list|(
-literal|1
-argument_list|)
-operator|<<
-operator|(
 name|N
-operator|-
-literal|1
-operator|)
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3488,19 +3663,19 @@ comment|/// \code
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(5, 8) = 8
+comment|///   alignTo(5, 8) = 8
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(17, 8) = 24
+comment|///   alignTo(17, 8) = 24
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(~0LL, 8) = 0
+comment|///   alignTo(~0LL, 8) = 0
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(321, 255) = 510
+comment|///   alignTo(321, 255) = 510
 end_comment
 
 begin_comment
@@ -3508,19 +3683,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(5, 8, 7) = 7
+comment|///   alignTo(5, 8, 7) = 7
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(17, 8, 1) = 17
+comment|///   alignTo(17, 8, 1) = 17
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(~0LL, 8, 3) = 3
+comment|///   alignTo(~0LL, 8, 3) = 3
 end_comment
 
 begin_comment
-comment|///   RoundUpToAlignment(321, 255, 42) = 552
+comment|///   alignTo(321, 255, 42) = 552
 end_comment
 
 begin_comment
@@ -3530,7 +3705,7 @@ end_comment
 begin_function
 specifier|inline
 name|uint64_t
-name|RoundUpToAlignment
+name|alignTo
 parameter_list|(
 name|uint64_t
 name|Value
@@ -3569,6 +3744,51 @@ block|}
 end_function
 
 begin_comment
+comment|/// Returns the largest uint64_t less than or equal to \p Value and is
+end_comment
+
+begin_comment
+comment|/// \p Skew mod \p Align. \p Align must be non-zero
+end_comment
+
+begin_function
+specifier|inline
+name|uint64_t
+name|alignDown
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|,
+name|uint64_t
+name|Align
+parameter_list|,
+name|uint64_t
+name|Skew
+init|=
+literal|0
+parameter_list|)
+block|{
+name|Skew
+operator|%=
+name|Align
+expr_stmt|;
+return|return
+operator|(
+name|Value
+operator|-
+name|Skew
+operator|)
+operator|/
+name|Align
+operator|*
+name|Align
+operator|+
+name|Skew
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// Returns the offset to the next integer (mod 2**64) that is greater than
 end_comment
 
@@ -3593,7 +3813,7 @@ name|Align
 parameter_list|)
 block|{
 return|return
-name|RoundUpToAlignment
+name|alignTo
 argument_list|(
 name|Value
 argument_list|,
@@ -3606,11 +3826,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// SignExtend32 - Sign extend B-bit number x to 32-bit int.
+comment|/// Sign-extend the number in the bottom B bits of X to a 32-bit integer.
 end_comment
 
 begin_comment
-comment|/// Usage int32_t r = SignExtend32<5>(x);
+comment|/// Requires 0< B<= 32.
 end_comment
 
 begin_expr_stmt
@@ -3623,13 +3843,31 @@ specifier|inline
 name|int32_t
 name|SignExtend32
 argument_list|(
-argument|uint32_t x
+argument|uint32_t X
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|B
+operator|>
+literal|0
+argument_list|,
+literal|"Bit width can't be 0."
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|B
+operator|<=
+literal|32
+argument_list|,
+literal|"Bit width out of range."
+argument_list|)
+block|;
 return|return
 name|int32_t
 argument_list|(
-name|x
+name|X
 operator|<<
 operator|(
 literal|32
@@ -3648,11 +3886,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Sign extend number in the bottom B bits of X to a 32-bit int.
+comment|/// Sign-extend the number in the bottom B bits of X to a 32-bit integer.
 end_comment
 
 begin_comment
-comment|/// Requires 0< B<= 32.
+comment|/// Requires 0< B< 32.
 end_comment
 
 begin_function
@@ -3667,6 +3905,24 @@ name|unsigned
 name|B
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|B
+operator|>
+literal|0
+operator|&&
+literal|"Bit width can't be 0."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|B
+operator|<=
+literal|32
+operator|&&
+literal|"Bit width out of range."
+argument_list|)
+expr_stmt|;
 return|return
 name|int32_t
 argument_list|(
@@ -3689,11 +3945,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// SignExtend64 - Sign extend B-bit number x to 64-bit int.
+comment|/// Sign-extend the number in the bottom B bits of X to a 64-bit integer.
 end_comment
 
 begin_comment
-comment|/// Usage int64_t r = SignExtend64<5>(x);
+comment|/// Requires 0< B< 64.
 end_comment
 
 begin_expr_stmt
@@ -3709,6 +3965,24 @@ argument_list|(
 argument|uint64_t x
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+name|B
+operator|>
+literal|0
+argument_list|,
+literal|"Bit width can't be 0."
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+name|B
+operator|<=
+literal|64
+argument_list|,
+literal|"Bit width out of range."
+argument_list|)
+block|;
 return|return
 name|int64_t
 argument_list|(
@@ -3731,11 +4005,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Sign extend number in the bottom B bits of X to a 64-bit int.
+comment|/// Sign-extend the number in the bottom B bits of X to a 64-bit integer.
 end_comment
 
 begin_comment
-comment|/// Requires 0< B<= 64.
+comment|/// Requires 0< B< 64.
 end_comment
 
 begin_function
@@ -3750,6 +4024,24 @@ name|unsigned
 name|B
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|B
+operator|>
+literal|0
+operator|&&
+literal|"Bit width can't be 0."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|B
+operator|<=
+literal|64
+operator|&&
+literal|"Bit width out of range."
+argument_list|)
+expr_stmt|;
 return|return
 name|int64_t
 argument_list|(
@@ -3772,19 +4064,76 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Add two unsigned integers, X and Y, of type T.
+comment|/// Subtract two unsigned integers, X and Y, of type T and return the absolute
 end_comment
 
 begin_comment
-comment|/// Clamp the result to the maximum representable value of T on overflow.
+comment|/// value of the result.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|std
+operator|::
+name|enable_if
+operator|<
+name|std
+operator|::
+name|is_unsigned
+operator|<
+name|T
+operator|>
+operator|::
+name|value
+operator|,
+name|T
+operator|>
+operator|::
+name|type
+name|AbsoluteDifference
+argument_list|(
+argument|T X
+argument_list|,
+argument|T Y
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|max
+argument_list|(
+name|X
+argument_list|,
+name|Y
+argument_list|)
+operator|-
+name|std
+operator|::
+name|min
+argument_list|(
+name|X
+argument_list|,
+name|Y
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Add two unsigned integers, X and Y, of type T.  Clamp the result to the
 end_comment
 
 begin_comment
-comment|/// ResultOverflowed indicates if the result is larger than the maximum
+comment|/// maximum representable value of T on overflow.  ResultOverflowed indicates if
 end_comment
 
 begin_comment
-comment|/// representable value of type T.
+comment|/// the result is larger than the maximum representable value of type T.
 end_comment
 
 begin_expr_stmt
@@ -3877,19 +4226,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Multiply two unsigned integers, X and Y, of type T.
+comment|/// Multiply two unsigned integers, X and Y, of type T.  Clamp the result to the
 end_comment
 
 begin_comment
-comment|/// Clamp the result to the maximum representable value of T on overflow.
+comment|/// maximum representable value of T on overflow.  ResultOverflowed indicates if
 end_comment
 
 begin_comment
-comment|/// ResultOverflowed indicates if the result is larger than the maximum
-end_comment
-
-begin_comment
-comment|/// representable value of type T.
+comment|/// the result is larger than the maximum representable value of type T.
 end_comment
 
 begin_expr_stmt
@@ -4101,27 +4446,19 @@ end_return
 
 begin_comment
 unit|}
-comment|/// \brief Multiply two unsigned integers, X and Y, and add the unsigned
+comment|/// Multiply two unsigned integers, X and Y, and add the unsigned integer, A to
 end_comment
 
 begin_comment
-comment|/// integer, A to the product. Clamp the result to the maximum representable
+comment|/// the product. Clamp the result to the maximum representable value of T on
 end_comment
 
 begin_comment
-comment|/// value of T on overflow. ResultOverflowed indicates if the result is larger
+comment|/// overflow. ResultOverflowed indicates if the result is larger than the
 end_comment
 
 begin_comment
-comment|/// than the maximum representable value of type T.
-end_comment
-
-begin_comment
-comment|/// Note that this is purely a convenience function as there is no distinction
-end_comment
-
-begin_comment
-comment|/// where overflow occurred in a 'fused' multiply-add for unsigned numbers.
+comment|/// maximum representable value of type T.
 end_comment
 
 begin_expr_stmt
@@ -4209,8 +4546,13 @@ argument_list|)
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// Use this rather than HUGE_VALF; the latter causes warnings on MSVC.
+end_comment
+
 begin_decl_stmt
-unit|}  extern
+unit|extern
 specifier|const
 name|float
 name|huge_valf

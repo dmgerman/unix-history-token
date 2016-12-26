@@ -11,10 +11,6 @@ begin_comment
 comment|/* Please leave this file C-compatible. */
 end_comment
 
-begin_comment
-comment|/* Please keep this file in sync with DataTypes.h.in */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -86,6 +82,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cinttypes>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_INTTYPES_H
 end_ifdef
 
@@ -99,6 +112,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstdint>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifdef
 ifdef|#
@@ -128,15 +163,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_MSC_VER
 end_ifndef
-
-begin_comment
-comment|/* Note that this header's correct operation depends on __STDC_LIMIT_MACROS    being defined.  We would define it here, but in order to prevent Bad Things    happening when system headers or C++ STL headers include stdint.h before we    define it here, we define it on the g++ command line (in Makefile.rules). */
-end_comment
 
 begin_if
 if|#
@@ -144,14 +180,16 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__STDC_LIMIT_MACROS
+name|UINT32_MAX
 argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"Must #define __STDC_LIMIT_MACROS before #including Support/DataTypes.h"
+literal|"The standard header<cstdint> is not C++11 compliant. Must #define "
+error|\
+literal|"__STDC_LIMIT_MACROS before #including Support/DataTypes.h"
 end_error
 
 begin_endif
@@ -165,16 +203,16 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__STDC_CONSTANT_MACROS
+name|UINT32_C
 argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"Must #define __STDC_CONSTANT_MACROS before "
+literal|"The standard header<cstdint> is not C++11 compliant. Must #define "
 error|\
-literal|"#including Support/DataTypes.h"
+literal|"__STDC_CONSTANT_MACROS before #including Support/DataTypes.h"
 end_error
 
 begin_endif
@@ -198,11 +236,21 @@ directive|ifdef
 name|_AIX
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/AIXDataTypesFix.h"
-end_include
+begin_comment
+comment|// GCC is strict about defining large constants: they must have LL modifier.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INT64_MAX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|INT64_MIN
+end_undef
 
 begin_endif
 endif|#
@@ -262,6 +310,29 @@ begin_comment
 comment|/* _MSC_VER */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -274,39 +345,16 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__cplusplus
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<cmath>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

@@ -201,7 +201,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF

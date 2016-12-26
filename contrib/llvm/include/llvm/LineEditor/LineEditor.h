@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utility>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -485,7 +491,7 @@ argument_list|)
 operator|:
 name|Value
 argument_list|(
-argument|Value
+argument|std::move(Value)
 argument_list|)
 block|{}
 name|std

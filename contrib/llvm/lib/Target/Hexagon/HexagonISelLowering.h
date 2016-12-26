@@ -250,9 +250,9 @@ block|;
 name|void
 name|promoteLdStType
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|,
-argument|EVT PromotedLdStVT
+argument|MVT PromotedLdStVT
 argument_list|)
 block|;
 specifier|const
@@ -423,6 +423,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerPREFETCH
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerEH_LABEL
 argument_list|(
 argument|SDValue Op
@@ -451,7 +460,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -475,6 +484,61 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalTLSAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerToTLSGeneralDynamicModel
+argument_list|(
+argument|GlobalAddressSDNode *GA
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerToTLSInitialExecModel
+argument_list|(
+argument|GlobalAddressSDNode *GA
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerToTLSLocalExecModel
+argument_list|(
+argument|GlobalAddressSDNode *GA
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|GetDynamicTLSAddr
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|GlobalAddressSDNode *GA
+argument_list|,
+argument|SDValue *InFlag
+argument_list|,
+argument|EVT PtrVT
+argument_list|,
+argument|unsigned ReturnReg
+argument_list|,
+argument|unsigned char OperandFlags
 argument_list|)
 specifier|const
 block|;
@@ -510,7 +574,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -598,7 +662,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|SDLoc dl
+argument|const SDLoc&dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -617,7 +681,7 @@ name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
@@ -745,6 +809,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|ConstraintType
+name|getConstraintType
+argument_list|(
+argument|StringRef Constraint
+argument_list|)
+specifier|const
+name|override
+block|;
 name|std
 operator|::
 name|pair
@@ -785,18 +857,6 @@ name|InlineAsm
 operator|::
 name|Constraint_o
 return|;
-elseif|else
-if|if
-condition|(
-name|ConstraintCode
-operator|==
-literal|"v"
-condition|)
-return|return
-name|InlineAsm
-operator|::
-name|Constraint_v
-return|;
 return|return
 name|TargetLowering
 operator|::
@@ -809,6 +869,18 @@ block|}
 comment|// Intrinsics
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerINTRINSIC_VOID
 argument_list|(
 name|SDValue
 name|Op
@@ -883,6 +955,25 @@ name|isLegalICmpImmediate
 argument_list|(
 name|int64_t
 name|Imm
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+name|unsigned
+name|AddrSpace
+argument_list|,
+name|unsigned
+name|Align
+argument_list|,
+name|bool
+operator|*
+name|Fast
 argument_list|)
 decl|const
 name|override
@@ -962,6 +1053,16 @@ argument_list|(
 name|StoreInst
 operator|*
 name|SI
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|shouldExpandAtomicCmpXchgInIR
+argument_list|(
+name|AtomicCmpXchgInst
+operator|*
+name|AI
 argument_list|)
 decl|const
 name|override

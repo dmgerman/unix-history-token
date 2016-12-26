@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -147,6 +153,10 @@ operator|::
 name|QueueSP
 operator|,
 name|vector_adapter
+operator|,
+name|std
+operator|::
+name|mutex
 operator|>
 name|QueueIterable
 expr_stmt|;
@@ -231,9 +241,9 @@ argument_list|(
 argument|uint32_t index_id
 argument_list|)
 expr_stmt|;
-name|lldb_private
+name|std
 operator|::
-name|Mutex
+name|mutex
 operator|&
 name|GetMutex
 argument_list|()
@@ -256,9 +266,11 @@ name|collection
 name|m_queues
 decl_stmt|;
 comment|///< The queues for this process.
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|private
 label|:
 name|QueueList

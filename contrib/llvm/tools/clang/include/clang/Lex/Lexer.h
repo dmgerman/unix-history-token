@@ -1000,6 +1000,34 @@ argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|)
 block|;
+comment|/// \brief Retrieve the name of the immediate macro expansion.
+comment|///
+comment|/// This routine starts from a source location, and finds the name of the
+comment|/// macro responsible for its immediate expansion. It looks through any
+comment|/// intervening macro argument expansions to compute this. It returns a
+comment|/// StringRef which refers to the SourceManager-owned buffer of the source
+comment|/// where that macro name is spelled. Thus, the result shouldn't out-live
+comment|/// that SourceManager.
+comment|///
+comment|/// This differs from Lexer::getImmediateMacroName in that any macro argument
+comment|/// location will result in the topmost function macro that accepted it.
+comment|/// e.g.
+comment|/// \code
+comment|///   MAC1( MAC2(foo) )
+comment|/// \endcode
+comment|/// for location of 'foo' token, this function will return "MAC1" while
+comment|/// Lexer::getImmediateMacroName will return "MAC2".
+specifier|static
+name|StringRef
+name|getImmediateMacroNameForDiagnostics
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
 comment|/// \brief Compute the preamble of the given file.
 comment|///
 comment|/// The preamble of a file contains the initial comments, include directives,

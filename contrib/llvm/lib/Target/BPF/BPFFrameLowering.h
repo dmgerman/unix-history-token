@@ -138,7 +138,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|eliminateCallFramePseudoInstr
 argument_list|(
 argument|MachineFunction&MF
@@ -150,16 +152,17 @@ argument_list|)
 specifier|const
 name|override
 block|{
+return|return
 name|MBB
 operator|.
 name|erase
 argument_list|(
 name|MI
 argument_list|)
-block|;   }
+return|;
 block|}
-decl_stmt|;
-block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

@@ -1083,6 +1083,21 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+name|ValueT
+name|pop_back_val
+parameter_list|()
+block|{
+comment|// Sparse does not need to be cleared, see find().
+return|return
+name|Dense
+operator|.
+name|pop_back_val
+argument_list|()
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/// erase - Erases an existing element identified by a valid iterator.
 end_comment

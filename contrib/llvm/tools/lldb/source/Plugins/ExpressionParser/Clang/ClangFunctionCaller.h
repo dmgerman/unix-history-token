@@ -300,8 +300,13 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Compile the wrapper function
 comment|///
-comment|/// @param[in] errors
-comment|///     The stream to print parser errors to.
+comment|/// @param[in] thread_to_use_sp
+comment|///     Compilation might end up calling functions.  Pass in the thread you
+comment|///     want the compilation to use.  If you pass in an empty ThreadSP it will
+comment|///     use the currently selected thread.
+comment|///
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager to report parser errors to.
 comment|///
 comment|/// @return
 comment|///     The number of errors.
@@ -309,7 +314,9 @@ comment|//------------------------------------------------------------------
 name|unsigned
 name|CompileFunction
 argument_list|(
-argument|Stream&errors
+argument|lldb::ThreadSP thread_to_use_sp
+argument_list|,
+argument|DiagnosticManager&diagnostic_manager
 argument_list|)
 name|override
 block|;

@@ -125,6 +125,12 @@ name|AsmVerbose
 range|:
 literal|1
 decl_stmt|;
+comment|/// Preserve Comments in Assembly.
+name|bool
+name|PreserveAsmComments
+range|:
+literal|1
+decl_stmt|;
 name|int
 name|DwarfVersion
 decl_stmt|;

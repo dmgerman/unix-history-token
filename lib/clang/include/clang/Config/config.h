@@ -42,6 +42,17 @@ value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment
+comment|/* Default C++ stdlib to use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_DEFAULT_CXX_STDLIB
+value|""
+end_define
+
+begin_comment
 comment|/* Default OpenMP runtime used by -fopenmp. */
 end_comment
 
@@ -120,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|BACKEND_PACKAGE_STRING
-value|"LLVM 3.8.0"
+value|"LLVM 3.9.1"
 end_define
 
 begin_comment
@@ -130,6 +141,25 @@ end_comment
 begin_comment
 comment|/* #undef HOST_LINK_VERSION */
 end_comment
+
+begin_comment
+comment|/* pass --build-id to ld */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_LINKER_BUILD_ID */
+end_comment
+
+begin_comment
+comment|/* enable x86 relax relocations by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_X86_RELAX_RELOCATIONS
+value|0
+end_define
 
 begin_endif
 endif|#

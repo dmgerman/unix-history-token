@@ -187,6 +187,11 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|virtual
+name|void
+name|CommitPersistentDecls
+argument_list|()
+block|{     }
 name|protected
 operator|:
 block|}

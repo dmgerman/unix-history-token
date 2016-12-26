@@ -66,13 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<set>
+file|"MCTargetDesc/HexagonMCShuffler.h"
 end_include
 
 begin_include
@@ -84,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/HexagonMCShuffler.h"
+file|<set>
 end_include
 
 begin_decl_stmt

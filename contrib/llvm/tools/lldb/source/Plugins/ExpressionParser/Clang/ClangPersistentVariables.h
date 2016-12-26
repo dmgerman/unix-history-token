@@ -179,21 +179,8 @@ argument|lldb::ExpressionVariableSP variable
 argument_list|)
 name|override
 block|;
-name|lldb
-operator|::
-name|addr_t
-name|LookupSymbol
-argument_list|(
-argument|const ConstString&name
-argument_list|)
-name|override
-block|{
-return|return
-name|LLDB_INVALID_ADDRESS
-return|;
-block|}
 name|void
-name|RegisterPersistentType
+name|RegisterPersistentDecl
 argument_list|(
 specifier|const
 name|ConstString
@@ -202,16 +189,16 @@ name|name
 argument_list|,
 name|clang
 operator|::
-name|TypeDecl
+name|NamedDecl
 operator|*
-name|tag_decl
+name|decl
 argument_list|)
 block|;
 name|clang
 operator|::
-name|TypeDecl
+name|NamedDecl
 operator|*
-name|GetPersistentType
+name|GetPersistentDecl
 argument_list|(
 specifier|const
 name|ConstString
@@ -261,15 +248,15 @@ operator|*
 operator|,
 name|clang
 operator|::
-name|TypeDecl
+name|NamedDecl
 operator|*
 operator|>
-name|PersistentTypeMap
+name|PersistentDeclMap
 expr_stmt|;
-name|PersistentTypeMap
-name|m_persistent_types
+name|PersistentDeclMap
+name|m_persistent_decls
 decl_stmt|;
-comment|///< The persistent types declared by the user.
+comment|///< Persistent entities declared by the user.
 name|ClangModulesDeclVendor
 operator|::
 name|ModuleVector

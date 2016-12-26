@@ -269,6 +269,9 @@ name|uptr
 name|addr
 parameter_list|,
 name|uptr
+name|alloc_size
+parameter_list|,
+name|uptr
 name|delete_size
 parameter_list|,
 name|BufferedStackTrace

@@ -98,6 +98,20 @@ block|;
 name|SparcSubtarget
 name|Subtarget
 block|;
+name|bool
+name|is64Bit
+block|;
+name|mutable
+name|StringMap
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SparcSubtarget
+operator|>>
+name|SubtargetMap
+block|;
 name|public
 operator|:
 name|SparcTargetMachine
@@ -112,7 +126,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -130,17 +144,24 @@ specifier|const
 name|SparcSubtarget
 operator|*
 name|getSubtargetImpl
-argument_list|(
-argument|const Function&
-argument_list|)
+argument_list|()
 specifier|const
-name|override
 block|{
 return|return
 operator|&
 name|Subtarget
 return|;
 block|}
+specifier|const
+name|SparcSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|(
+argument|const Function&
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|// Pass Pipeline Configuration
 name|TargetPassConfig
 operator|*
@@ -166,7 +187,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// SparcV8TargetMachine - Sparc 32-bit target machine
+comment|/// Sparc 32-bit target machine
 comment|///
 name|class
 name|SparcV8TargetMachine
@@ -193,7 +214,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -201,7 +222,7 @@ argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
 block|;
-comment|/// SparcV9TargetMachine - Sparc 64-bit target machine
+comment|/// Sparc 64-bit target machine
 comment|///
 name|class
 name|SparcV9TargetMachine
@@ -228,7 +249,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,
@@ -261,7 +282,7 @@ argument|StringRef FS
 argument_list|,
 argument|const TargetOptions&Options
 argument_list|,
-argument|Reloc::Model RM
+argument|Optional<Reloc::Model> RM
 argument_list|,
 argument|CodeModel::Model CM
 argument_list|,

@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines two classes: AliasSetTracker and AliasSet.  These interface
+comment|// This file defines two classes: AliasSetTracker and AliasSet. These interfaces
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// are used to classify a collection of pointer references into a maxima
 end_comment
 
 begin_comment
-comment|// of disjoint sets.  Each AliasSet object constructed by the AliasSetTracker
+comment|// of disjoint sets. Each AliasSet object constructed by the AliasSetTracker
 end_comment
 
 begin_comment
@@ -125,6 +125,9 @@ name|StoreInst
 decl_stmt|;
 name|class
 name|VAArgInst
+decl_stmt|;
+name|class
+name|MemSetInst
 decl_stmt|;
 name|class
 name|AliasSetTracker
@@ -258,7 +261,7 @@ operator|&
 name|NextInList
 return|;
 block|}
-name|void
+name|bool
 name|updateSizeAndAAInfo
 argument_list|(
 argument|uint64_t NewSize
@@ -266,16 +269,27 @@ argument_list|,
 argument|const AAMDNodes&NewAAInfo
 argument_list|)
 block|{
+name|bool
+name|SizeChanged
+operator|=
+name|false
+block|;
 if|if
 condition|(
 name|NewSize
 operator|>
 name|Size
 condition|)
+block|{
 name|Size
 operator|=
 name|NewSize
 expr_stmt|;
+name|SizeChanged
+operator|=
+name|true
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|AAInfo
@@ -311,6 +325,9 @@ operator|::
 name|getTombstoneKey
 argument_list|()
 expr_stmt|;
+return|return
+name|SizeChanged
+return|;
 block|}
 name|uint64_t
 name|getSize
@@ -321,8 +338,8 @@ return|return
 name|Size
 return|;
 block|}
-comment|/// getAAInfo - Return the AAInfo, or null if there is no
-comment|/// information or conflicting information.
+comment|/// Return the AAInfo, or null if there is no information or conflicting
+comment|/// information.
 name|AAMDNodes
 name|getAAInfo
 argument_list|()
@@ -521,7 +538,7 @@ comment|// Forwarding pointer.
 end_comment
 
 begin_comment
-comment|// All instructions without a specific address in this alias set.
+comment|/// All instructions without a specific address in this alias set.
 end_comment
 
 begin_expr_stmt
@@ -539,11 +556,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// RefCount - Number of nodes pointing to this AliasSet plus the number of
+comment|/// Number of nodes pointing to this AliasSet plus the number of AliasSets
 end_comment
 
 begin_comment
-comment|// AliasSets forwarding to it.
+comment|/// forwarding to it.
 end_comment
 
 begin_decl_stmt
@@ -659,11 +676,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Volatile - True if this alias set contains volatile loads or stores.
+comment|/// True if this alias set contains volatile loads or stores.
 end_comment
 
 begin_decl_stmt
-name|bool
+name|unsigned
 name|Volatile
 range|:
 literal|1
@@ -809,11 +826,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// isVolatile - Return true if this alias set contains volatile loads or
-end_comment
-
-begin_comment
-comment|// stores.
+comment|/// Return true if this alias set contains volatile loads or stores.
 end_comment
 
 begin_expr_stmt
@@ -829,11 +842,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isForwardingAliasSet - Return true if this alias set should be ignored as
+comment|/// Return true if this alias set should be ignored as part of the
 end_comment
 
 begin_comment
-comment|/// part of the AliasSetTracker object.
+comment|/// AliasSetTracker object.
 end_comment
 
 begin_expr_stmt
@@ -849,11 +862,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// mergeSetIn - Merge the specified alias set into this alias set...
-end_comment
-
-begin_comment
-comment|///
+comment|/// Merge the specified alias set into this alias set.
 end_comment
 
 begin_function_decl
@@ -872,11 +881,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Alias Set iteration - Allow access to all of the pointer which are part of
+comment|// Alias Set iteration - Allow access to all of the pointers which are part of
 end_comment
 
 begin_comment
-comment|// this alias set...
+comment|// this alias set.
 end_comment
 
 begin_decl_stmt
@@ -1276,15 +1285,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getForwardedTarget - Return the real alias set this represents.  If this
+comment|/// Return the real alias set this represents. If this has been merged with
 end_comment
 
 begin_comment
-comment|/// has been merged with another set and is forwarding, return the ultimate
+comment|/// another set and is forwarding, return the ultimate destination set. This
 end_comment
 
 begin_comment
-comment|/// destination set.  This also implements the union-find collapsing as well.
+comment|/// also implements the union-find collapsing as well.
 end_comment
 
 begin_function
@@ -1511,15 +1520,11 @@ label|:
 end_label
 
 begin_comment
-comment|/// aliasesPointer - Return true if the specified pointer "may" (or must)
+comment|/// Return true if the specified pointer "may" (or must) alias one of the
 end_comment
 
 begin_comment
-comment|/// alias one of the members in the set.
-end_comment
-
-begin_comment
-comment|///
+comment|/// members in the set.
 end_comment
 
 begin_decl_stmt
@@ -1599,8 +1604,8 @@ begin_decl_stmt
 name|class
 name|AliasSetTracker
 block|{
-comment|/// CallbackVH - A CallbackVH to arrange for AliasSetTracker to be
-comment|/// notified whenever a Value is deleted.
+comment|/// A CallbackVH to arrange for AliasSetTracker to be notified whenever a
+comment|/// Value is deleted.
 name|class
 name|ASTCallbackVH
 name|final
@@ -1650,8 +1655,8 @@ name|V
 operator|)
 block|;   }
 decl_stmt|;
-comment|/// ASTCallbackVHDenseMapInfo - Traits to tell DenseMap that tell us how to
-comment|/// compare and hash the value handle.
+comment|/// Traits to tell DenseMap that tell us how to compare and hash the value
+comment|/// handle.
 name|struct
 name|ASTCallbackVHDenseMapInfo
 range|:
@@ -1693,9 +1698,8 @@ name|PointerMap
 decl_stmt|;
 name|public
 label|:
-comment|/// AliasSetTracker ctor - Create an empty collection of AliasSets, and use
-comment|/// the specified alias analysis object to disambiguate load and store
-comment|/// addresses.
+comment|/// Create an empty collection of AliasSets, and use the specified alias
+comment|/// analysis object to disambiguate load and store addresses.
 name|explicit
 name|AliasSetTracker
 argument_list|(
@@ -1716,9 +1720,9 @@ block|{
 name|clear
 argument_list|()
 block|; }
-comment|/// add methods - These methods are used to add different types of
-comment|/// instructions to the alias sets.  Adding a new instruction can result in
-comment|/// one of three actions happening:
+comment|/// These methods are used to add different types of instructions to the alias
+comment|/// sets. Adding a new instruction can result in one of three actions
+comment|/// happening:
 comment|///
 comment|///   1. If the instruction doesn't alias any other sets, create a new set.
 comment|///   2. If the instruction aliases exactly one set, add it to the set
@@ -1766,6 +1770,14 @@ function_decl|;
 name|bool
 name|add
 parameter_list|(
+name|MemSetInst
+modifier|*
+name|MSI
+parameter_list|)
+function_decl|;
+name|bool
+name|add
+parameter_list|(
 name|Instruction
 modifier|*
 name|I
@@ -1799,10 +1811,9 @@ modifier|*
 name|I
 parameter_list|)
 function_decl|;
-comment|/// remove methods - These methods are used to remove all entries that might
-comment|/// be aliased by the specified instruction.  These methods return true if any
-comment|/// alias sets were eliminated.
-comment|// Remove a location
+comment|/// These methods are used to remove all entries that might be aliased by the
+comment|/// specified instruction. These methods return true if any alias sets were
+comment|/// eliminated.
 name|bool
 name|remove
 parameter_list|(
@@ -1846,6 +1857,14 @@ function_decl|;
 name|bool
 name|remove
 parameter_list|(
+name|MemSetInst
+modifier|*
+name|MSI
+parameter_list|)
+function_decl|;
+name|bool
+name|remove
+parameter_list|(
 name|Instruction
 modifier|*
 name|I
@@ -1871,8 +1890,7 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
-comment|/// getAliasSets - Return the alias sets that are active.
-comment|///
+comment|/// Return the alias sets that are active.
 specifier|const
 name|ilist
 operator|<
@@ -1887,10 +1905,10 @@ return|return
 name|AliasSets
 return|;
 block|}
-comment|/// getAliasSetForPointer - Return the alias set that the specified pointer
-comment|/// lives in.  If the New argument is non-null, this method sets the value to
-comment|/// true if a new alias set is created to contain the pointer (because the
-comment|/// pointer didn't alias anything).
+comment|/// Return the alias set that the specified pointer lives in. If the New
+comment|/// argument is non-null, this method sets the value to true if a new alias
+comment|/// set is created to contain the pointer (because the pointer didn't alias
+comment|/// anything).
 name|AliasSet
 modifier|&
 name|getAliasSetForPointer
@@ -1914,8 +1932,8 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// getAliasSetForPointerIfExists - Return the alias set containing the
-comment|/// location specified if one exists, otherwise return null.
+comment|/// Return the alias set containing the location specified if one exists,
+comment|/// otherwise return null.
 name|AliasSet
 modifier|*
 name|getAliasSetForPointerIfExists
@@ -1935,7 +1953,7 @@ name|AAInfo
 parameter_list|)
 block|{
 return|return
-name|findAliasSetForPointer
+name|mergeAliasSetsForPointer
 argument_list|(
 name|P
 argument_list|,
@@ -1945,9 +1963,8 @@ name|AAInfo
 argument_list|)
 return|;
 block|}
-comment|/// containsPointer - Return true if the specified location is represented by
-comment|/// this alias set, false otherwise.  This does not modify the AST object or
-comment|/// alias sets.
+comment|/// Return true if the specified location is represented by this alias set,
+comment|/// false otherwise. This does not modify the AST object or alias sets.
 name|bool
 name|containsPointer
 argument_list|(
@@ -1978,8 +1995,7 @@ name|I
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getAliasAnalysis - Return the underlying alias analysis object used by
-comment|/// this tracker.
+comment|/// Return the underlying alias analysis object used by this tracker.
 name|AliasAnalysis
 operator|&
 name|getAliasAnalysis
@@ -1990,11 +2006,10 @@ return|return
 name|AA
 return|;
 block|}
-comment|/// deleteValue method - This method is used to remove a pointer value from
-comment|/// the AliasSetTracker entirely.  It should be used when an instruction is
-comment|/// deleted from the program to update the AST.  If you don't use this, you
-comment|/// would have dangling pointers to deleted instructions.
-comment|///
+comment|/// This method is used to remove a pointer value from the AliasSetTracker
+comment|/// entirely. It should be used when an instruction is deleted from the
+comment|/// program to update the AST. If you don't use this, you would have dangling
+comment|/// pointers to deleted instructions.
 name|void
 name|deleteValue
 parameter_list|(
@@ -2003,12 +2018,10 @@ modifier|*
 name|PtrVal
 parameter_list|)
 function_decl|;
-comment|/// copyValue - This method should be used whenever a preexisting value in the
-comment|/// program is copied or cloned, introducing a new value.  Note that it is ok
-comment|/// for clients that use this method to introduce the same value multiple
-comment|/// times: if the tracker already knows about a value, it will ignore the
-comment|/// request.
-comment|///
+comment|/// This method should be used whenever a preexisting value in the program is
+comment|/// copied or cloned, introducing a new value.  Note that it is ok for clients
+comment|/// that use this method to introduce the same value multiple times: if the
+comment|/// tracker already knows about a value, it will ignore the request.
 name|void
 name|copyValue
 parameter_list|(
@@ -2113,8 +2126,8 @@ modifier|*
 name|AS
 parameter_list|)
 function_decl|;
-comment|// getEntryFor - Just like operator[] on the map, except that it creates an
-comment|// entry for the pointer if it doesn't already exist.
+comment|/// Just like operator[] on the map, except that it creates an entry for the
+comment|/// pointer if it doesn't already exist.
 name|AliasSet
 operator|::
 name|PointerRec
@@ -2225,7 +2238,7 @@ end_decl_stmt
 begin_function_decl
 name|AliasSet
 modifier|*
-name|findAliasSetForPointer
+name|mergeAliasSetsForPointer
 parameter_list|(
 specifier|const
 name|Value

@@ -46,6 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/DebugInfo/CodeView/TypeIndex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Endian.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cinttypes>
 end_include
 
@@ -56,57 +68,54 @@ block|{
 name|namespace
 name|codeview
 block|{
+name|using
+name|llvm
+operator|::
+name|support
+operator|::
+name|ulittle32_t
+expr_stmt|;
 name|class
 name|LineInfo
 block|{
 name|public
 label|:
-specifier|static
-specifier|const
+enum_decl|enum :
 name|uint32_t
+block|{
 name|AlwaysStepIntoLineNumber
 init|=
 literal|0xfeefee
-decl_stmt|;
-specifier|static
-specifier|const
-name|uint32_t
+block|,
 name|NeverStepIntoLineNumber
 init|=
 literal|0xf00f00
-decl_stmt|;
-name|private
-label|:
-specifier|static
-specifier|const
-name|uint32_t
-name|StartLineMask
-init|=
-literal|0x00ffffff
-decl_stmt|;
-specifier|static
-specifier|const
-name|uint32_t
-name|EndLineDeltaMask
-init|=
-literal|0x7f000000
-decl_stmt|;
-specifier|static
-specifier|const
+block|}
+enum_decl|;
+enum_decl|enum :
 name|int
+block|{
 name|EndLineDeltaShift
 init|=
 literal|24
-decl_stmt|;
-specifier|static
-specifier|const
+block|}
+enum_decl|;
+enum_decl|enum :
 name|uint32_t
+block|{
+name|StartLineMask
+init|=
+literal|0x00ffffff
+block|,
+name|EndLineDeltaMask
+init|=
+literal|0x7f000000
+block|,
 name|StatementFlag
 init|=
 literal|0x80000000u
-decl_stmt|;
-name|public
-label|:
+block|}
+enum_decl|;
 name|LineInfo
 argument_list|(
 argument|uint32_t StartLine
@@ -116,6 +125,16 @@ argument_list|,
 argument|bool IsStatement
 argument_list|)
 empty_stmt|;
+name|LineInfo
+argument_list|(
+argument|uint32_t LineData
+argument_list|)
+block|:
+name|LineData
+argument_list|(
+argument|LineData
+argument_list|)
+block|{}
 name|uint32_t
 name|getStartLine
 argument_list|()
@@ -531,9 +550,65 @@ return|;
 block|}
 block|}
 empty_stmt|;
+name|enum
+name|class
+name|InlineeLinesSignature
+range|:
+name|uint32_t
+block|{
+name|Normal
+block|,
+comment|// CV_INLINEE_SOURCE_LINE_SIGNATURE
+name|ExtraFiles
+comment|// CV_INLINEE_SOURCE_LINE_SIGNATURE_EX
 block|}
+decl_stmt|;
+struct|struct
+name|InlineeSourceLine
+block|{
+name|TypeIndex
+name|Inlinee
+decl_stmt|;
+comment|// ID of the function that was inlined.
+name|ulittle32_t
+name|FileID
+decl_stmt|;
+comment|// Offset into FileChecksums subsection.
+name|ulittle32_t
+name|SourceLineNum
+decl_stmt|;
+comment|// First line of inlined code.
+comment|// If extra files present:
+comment|//   ulittle32_t ExtraFileCount;
+comment|//   ulittle32_t Files[];
+block|}
+struct|;
+struct|struct
+name|FileChecksum
+block|{
+name|ulittle32_t
+name|FileNameOffset
+decl_stmt|;
+comment|// Byte offset of filename in global string table.
+name|uint8_t
+name|ChecksumSize
+decl_stmt|;
+comment|// Number of bytes of checksum.
+name|uint8_t
+name|ChecksumKind
+decl_stmt|;
+comment|// FileChecksumKind
+comment|// Checksum bytes follow.
+block|}
+struct|;
+block|}
+comment|// namespace codeview
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

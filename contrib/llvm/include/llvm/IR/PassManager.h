@@ -194,13 +194,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Debug.h"
+file|"llvm/Support/TypeName.h"
 end_include
 
 begin_include
@@ -237,12 +237,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|Function
-decl_stmt|;
 comment|/// \brief An abstract set of preserved analyses following a transformation pass
 comment|/// run.
 comment|///
@@ -592,6 +586,50 @@ name|PassID
 argument_list|)
 return|;
 block|}
+comment|/// \brief Query whether all of the analyses in the set are preserved.
+name|bool
+name|preserved
+parameter_list|(
+name|PreservedAnalyses
+name|Arg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Arg
+operator|.
+name|areAllPreserved
+argument_list|()
+condition|)
+return|return
+name|areAllPreserved
+argument_list|()
+return|;
+for|for
+control|(
+name|void
+modifier|*
+name|P
+range|:
+name|Arg
+operator|.
+name|PreservedPassIDs
+control|)
+if|if
+condition|(
+operator|!
+name|preserved
+argument_list|(
+name|P
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
 comment|/// \brief Test whether all passes are preserved.
 comment|///
 comment|/// This is used primarily to optimize for the case of no changes which will
@@ -651,17 +689,182 @@ operator|>
 name|class
 name|AnalysisManager
 expr_stmt|;
+comment|/// A CRTP mix-in to automatically provide informational APIs needed for
+comment|/// passes.
+comment|///
+comment|/// This provides some boiler plate for types that are passes.
+name|template
+operator|<
+name|typename
+name|DerivedT
+operator|>
+expr|struct
+name|PassInfoMixin
+block|{
+comment|/// Returns the name of the derived pass type.
+specifier|static
+name|StringRef
+name|name
+argument_list|()
+block|{
+name|StringRef
+name|Name
+operator|=
+name|getTypeName
+operator|<
+name|DerivedT
+operator|>
+operator|(
+operator|)
+block|;
+if|if
+condition|(
+name|Name
+operator|.
+name|startswith
+argument_list|(
+literal|"llvm::"
+argument_list|)
+condition|)
+name|Name
+operator|=
+name|Name
+operator|.
+name|drop_front
+argument_list|(
+name|strlen
+argument_list|(
+literal|"llvm::"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|Name
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// A CRTP mix-in to automatically provide informational APIs needed for
+end_comment
+
+begin_comment
+comment|/// analysis passes.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This provides some boiler plate for types that are analysis passes. It
+end_comment
+
+begin_comment
+comment|/// automatically mixes in \c PassInfoMixin and adds informational APIs
+end_comment
+
+begin_comment
+comment|/// specifically used for analyses.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|DerivedT
+operator|>
+expr|struct
+name|AnalysisInfoMixin
+operator|:
+name|PassInfoMixin
+operator|<
+name|DerivedT
+operator|>
+block|{
+comment|/// Returns an opaque, unique ID for this pass type.
+comment|///
+comment|/// Note that this requires the derived type provide a static member whose
+comment|/// address can be converted to a void pointer.
+comment|///
+comment|/// FIXME: The only reason the derived type needs to provide this rather than
+comment|/// this mixin providing it is due to broken implementations which cannot
+comment|/// correctly unique a templated static so that they have the same addresses
+comment|/// for each instantiation and are definitively emitted once for each
+comment|/// instantiation. The only currently known platform with this limitation are
+comment|/// Windows DLL builds, specifically building each part of LLVM as a DLL. If
+comment|/// we ever remove that build configuration, this mixin can provide the
+comment|/// static PassID as well.
+specifier|static
+name|void
+operator|*
+name|ID
+argument_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|DerivedT
+operator|::
+name|PassID
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|/// \brief Manages a sequence of passes over units of IR.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A pass manager contains a sequence of passes to run over units of IR. It is
+end_comment
+
+begin_comment
 comment|/// itself a valid pass over that unit of IR, and when over some given IR will
+end_comment
+
+begin_comment
 comment|/// run each pass in sequence. This is the primary and most basic building
+end_comment
+
+begin_comment
 comment|/// block of a pass pipeline.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If it is run with an \c AnalysisManager<IRUnitT> argument, it will propagate
+end_comment
+
+begin_comment
 comment|/// that analysis manager to each pass it runs, as well as calling the analysis
+end_comment
+
+begin_comment
 comment|/// manager's invalidation routine with the PreservedAnalyses of each pass it
+end_comment
+
+begin_comment
 comment|/// runs.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -669,6 +872,14 @@ name|IRUnitT
 operator|>
 name|class
 name|PassManager
+operator|:
+name|public
+name|PassInfoMixin
+operator|<
+name|PassManager
+operator|<
+name|IRUnitT
+operator|>>
 block|{
 name|public
 operator|:
@@ -754,7 +965,7 @@ name|run
 argument_list|(
 argument|IRUnitT&IR
 argument_list|,
-argument|AnalysisManager<IRUnitT> *AM = nullptr
+argument|AnalysisManager<IRUnitT>&AM
 argument_list|)
 block|{
 name|PreservedAnalyses
@@ -772,8 +983,20 @@ condition|)
 name|dbgs
 argument_list|()
 operator|<<
-literal|"Starting pass manager run.\n"
+literal|"Starting "
+operator|<<
+name|getTypeName
+operator|<
+name|IRUnitT
+operator|>
+operator|(
+operator|)
+operator|<<
+literal|" pass manager run.\n"
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|unsigned
@@ -837,19 +1060,14 @@ argument_list|,
 name|AM
 argument_list|)
 decl_stmt|;
-comment|// If we have an active analysis manager at this level we want to ensure
-comment|// we update it as each pass runs and potentially invalidates analyses.
-comment|// We also update the preserved set of analyses based on what analyses we
-comment|// have already handled the invalidation for here and don't need to
-comment|// invalidate when finished.
-if|if
-condition|(
-name|AM
-condition|)
+comment|// Update the analysis manager as each pass runs and potentially
+comment|// invalidates analyses. We also update the preserved set of analyses
+comment|// based on what analyses we have already handled the invalidation for
+comment|// here and don't need to invalidate when finished.
 name|PassPA
 operator|=
 name|AM
-operator|->
+operator|.
 name|invalidate
 argument_list|(
 name|IR
@@ -882,6 +1100,9 @@ comment|// context and it isn't yet clear what the right pattern is for yielding
 comment|// in the new pass manager so it is currently omitted.
 comment|//IR.getContext().yield();
 block|}
+end_for
+
+begin_if
 if|if
 condition|(
 name|DebugLogging
@@ -889,16 +1110,27 @@ condition|)
 name|dbgs
 argument_list|()
 operator|<<
-literal|"Finished pass manager run.\n"
+literal|"Finished "
+operator|<<
+name|getTypeName
+operator|<
+name|IRUnitT
+operator|>
+operator|(
+operator|)
+operator|<<
+literal|" pass manager run.\n"
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 name|PA
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_expr_stmt
-name|template
+unit|}    template
 operator|<
 name|typename
 name|PassT
@@ -929,24 +1161,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-unit|}    static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"PassManager"
-return|;
-block|}
-end_function
-
-begin_label
-name|private
-label|:
-end_label
-
 begin_typedef
+unit|}  private:
 typedef|typedef
 name|detail
 operator|::
@@ -1010,8 +1226,12 @@ name|DebugLogging
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
+begin_extern
 unit|};
+extern|extern template class PassManager<Module>;
+end_extern
+
+begin_comment
 comment|/// \brief Convenience typedef for a pass manager over modules.
 end_comment
 
@@ -1024,6 +1244,10 @@ operator|>
 name|ModulePassManager
 expr_stmt|;
 end_typedef
+
+begin_extern
+extern|extern template class PassManager<Function>;
+end_extern
 
 begin_comment
 comment|/// \brief Convenience typedef for a pass manager over functions.
@@ -1400,45 +1624,91 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This provides an initialized and set-up analysis pass to the analysis
+comment|/// The argument is a callable whose result is a pass. This allows passing in
 end_comment
 
 begin_comment
-comment|/// manager. Whomever is setting up analysis passes must use this to populate
+comment|/// a lambda to construct the pass.
 end_comment
 
 begin_comment
-comment|/// the manager with all of the analysis passes available.
+comment|///
+end_comment
+
+begin_comment
+comment|/// The pass type registered is the result type of calling the argument. If
+end_comment
+
+begin_comment
+comment|/// that pass has already been registered, then the argument will not be
+end_comment
+
+begin_comment
+comment|/// called and this function will return false. Otherwise, the pass type
+end_comment
+
+begin_comment
+comment|/// becomes registered, with the instance provided by calling the argument
+end_comment
+
+begin_comment
+comment|/// once, and this function returns true.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// While this returns whether or not the pass type was already registered,
+end_comment
+
+begin_comment
+comment|/// there in't an independent way to query that as that would be prone to
+end_comment
+
+begin_comment
+comment|/// risky use when *querying* the analysis manager. Instead, the only
+end_comment
+
+begin_comment
+comment|/// supported use case is avoiding duplicate registry of an analysis. This
+end_comment
+
+begin_comment
+comment|/// interface also lends itself to minimizing the number of times we have to
+end_comment
+
+begin_comment
+comment|/// do lookups for analyses or construct complex passes only to throw them
+end_comment
+
+begin_comment
+comment|/// away.
 end_comment
 
 begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|PassT
+name|PassBuilderT
 operator|>
-name|void
+name|bool
 name|registerPass
 argument_list|(
-argument|PassT Pass
+argument|PassBuilderT PassBuilder
 argument_list|)
 block|{
-name|assert
+typedef|typedef
+name|decltype
 argument_list|(
-operator|!
-name|AnalysisPasses
-operator|.
-name|count
-argument_list|(
+argument|PassBuilder()
+argument_list|)
 name|PassT
-operator|::
-name|ID
-argument_list|()
-argument_list|)
-operator|&&
-literal|"Registered the same analysis pass twice!"
-argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|detail
 operator|::
@@ -1450,6 +1720,13 @@ name|PassT
 operator|>
 name|PassModelT
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|auto
+operator|&
+name|PassPtr
+operator|=
 name|AnalysisPasses
 index|[
 name|PassT
@@ -1457,13 +1734,42 @@ operator|::
 name|ID
 argument_list|()
 index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|PassPtr
+condition|)
+comment|// Already registered this pass type!
+return|return
+name|false
+return|;
+end_if
+
+begin_comment
+comment|// Construct a new model around the instance returned by the builder.
+end_comment
+
+begin_macro
+name|PassPtr
+end_macro
+
+begin_expr_stmt
 operator|.
 name|reset
 argument_list|(
-argument|new PassModelT(std::move(Pass))
+argument|new PassModelT(PassBuilder())
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_return
+return|return
+name|true
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -2160,6 +2466,7 @@ name|run
 argument_list|(
 name|IR
 argument_list|,
+operator|*
 name|this
 argument_list|)
 argument_list|)
@@ -2736,8 +3043,12 @@ name|DebugLogging
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
+begin_extern
 unit|};
+extern|extern template class AnalysisManager<Module>;
+end_extern
+
+begin_comment
 comment|/// \brief Convenience typedef for the Module analysis manager.
 end_comment
 
@@ -2750,6 +3061,10 @@ operator|>
 name|ModuleAnalysisManager
 expr_stmt|;
 end_typedef
+
+begin_extern
+extern|extern template class AnalysisManager<Function>;
+end_extern
 
 begin_comment
 comment|/// \brief Convenience typedef for the Function analysis manager.
@@ -2797,158 +3112,47 @@ begin_comment
 comment|/// object for it.
 end_comment
 
-begin_decl_stmt
-name|class
-name|FunctionAnalysisManagerModuleProxy
-block|{
-name|public
-label|:
-name|class
-name|Result
-decl_stmt|;
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"FunctionAnalysisManagerModuleProxy"
-return|;
-block|}
-name|explicit
-name|FunctionAnalysisManagerModuleProxy
-argument_list|(
-name|FunctionAnalysisManager
-operator|&
-name|FAM
-argument_list|)
-operator|:
-name|FAM
-argument_list|(
-argument|&FAM
-argument_list|)
-block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|FunctionAnalysisManagerModuleProxy
-argument_list|(
-specifier|const
-name|FunctionAnalysisManagerModuleProxy
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|FAM
-argument_list|(
-argument|Arg.FAM
-argument_list|)
-block|{}
-name|FunctionAnalysisManagerModuleProxy
-argument_list|(
-name|FunctionAnalysisManagerModuleProxy
-operator|&&
-name|Arg
-argument_list|)
-operator|:
-name|FAM
-argument_list|(
-argument|std::move(Arg.FAM)
-argument_list|)
-block|{}
-name|FunctionAnalysisManagerModuleProxy
-operator|&
-name|operator
-operator|=
-operator|(
-name|FunctionAnalysisManagerModuleProxy
-name|RHS
-operator|)
-block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|FAM
-argument_list|,
-name|RHS
-operator|.
-name|FAM
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-comment|/// \brief Run the analysis pass and create our proxy result object.
-comment|///
-comment|/// This doesn't do any interesting work, it is primarily used to insert our
-comment|/// proxy result object into the module analysis cache so that we can proxy
-comment|/// invalidation to the function analysis manager.
-comment|///
-comment|/// In debug builds, it will also assert that the analysis manager is empty
-comment|/// as no queries should arrive at the function analysis manager prior to
-comment|/// this analysis being requested.
-name|Result
-name|run
-parameter_list|(
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
-name|private
-label|:
-specifier|static
-name|char
-name|PassID
-decl_stmt|;
-name|FunctionAnalysisManager
-modifier|*
-name|FAM
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief The result proxy object for the
-end_comment
-
-begin_comment
-comment|/// \c FunctionAnalysisManagerModuleProxy.
-end_comment
-
 begin_comment
 comment|///
 end_comment
 
 begin_comment
-comment|/// See its documentation for more information.
+comment|/// Note that the proxy's result is a move-only object and represents ownership
+end_comment
+
+begin_comment
+comment|/// of the validity of the analyses in the \c FunctionAnalysisManager it
+end_comment
+
+begin_comment
+comment|/// provides.
 end_comment
 
 begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+name|IRUnitT
+operator|>
 name|class
-name|FunctionAnalysisManagerModuleProxy
-operator|::
+name|InnerAnalysisManagerProxy
+operator|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|InnerAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>>
+block|{
+name|public
+operator|:
+name|class
 name|Result
 block|{
 name|public
@@ -2956,29 +3160,14 @@ operator|:
 name|explicit
 name|Result
 argument_list|(
-name|FunctionAnalysisManager
+name|AnalysisManagerT
 operator|&
-name|FAM
+name|AM
 argument_list|)
 operator|:
-name|FAM
+name|AM
 argument_list|(
-argument|&FAM
-argument_list|)
-block|{}
-comment|// We have to explicitly define all the special member functions because MSVC
-comment|// refuses to generate them.
-name|Result
-argument_list|(
-specifier|const
-name|Result
-operator|&
-name|Arg
-argument_list|)
-operator|:
-name|FAM
-argument_list|(
-argument|Arg.FAM
+argument|&AM
 argument_list|)
 block|{}
 name|Result
@@ -2988,30 +3177,44 @@ operator|&&
 name|Arg
 argument_list|)
 operator|:
-name|FAM
+name|AM
 argument_list|(
-argument|std::move(Arg.FAM)
+argument|std::move(Arg.AM)
 argument_list|)
-block|{}
+block|{
+comment|// We have to null out the analysis manager in the moved-from state
+comment|// because we are taking ownership of the responsibilty to clear the
+comment|// analysis state.
+name|Arg
+operator|.
+name|AM
+operator|=
+name|nullptr
+block|;     }
 name|Result
 operator|&
 name|operator
 operator|=
 operator|(
 name|Result
+operator|&&
 name|RHS
 operator|)
 block|{
-name|std
-operator|::
-name|swap
-argument_list|(
-name|FAM
-argument_list|,
+name|AM
+operator|=
 name|RHS
 operator|.
-name|FAM
-argument_list|)
+name|AM
+block|;
+comment|// We have to null out the analysis manager in the moved-from state
+comment|// because we are taking ownership of the responsibilty to clear the
+comment|// analysis state.
+name|RHS
+operator|.
+name|AM
+operator|=
+name|nullptr
 block|;
 return|return
 operator|*
@@ -3021,25 +3224,33 @@ block|}
 operator|~
 name|Result
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Accessor for the \c FunctionAnalysisManager.
-end_comment
-
-begin_function
-name|FunctionAnalysisManager
-modifier|&
+block|{
+comment|// AM is cleared in a moved from state where there is nothing to do.
+if|if
+condition|(
+operator|!
+name|AM
+condition|)
+return|return;
+comment|// Clear out the analysis manager if we're being destroyed -- it means we
+comment|// didn't even see an invalidate call when we got invalidated.
+name|AM
+operator|->
+name|clear
+argument_list|()
+block|;     }
+comment|/// \brief Accessor for the analysis manager.
+name|AnalysisManagerT
+operator|&
 name|getManager
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|*
-name|FAM
+name|AM
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Handler for invalidation of the module.
@@ -3081,21 +3292,48 @@ begin_comment
 comment|/// based on the set of preserved analyses.
 end_comment
 
-begin_function_decl
+begin_function
 name|bool
 name|invalidate
 parameter_list|(
-name|Module
+name|IRUnitT
 modifier|&
-name|M
+name|IR
 parameter_list|,
 specifier|const
 name|PreservedAnalyses
 modifier|&
 name|PA
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+comment|// If this proxy isn't marked as preserved, then we can't even invalidate
+comment|// individual function analyses, there may be an invalid set of Function
+comment|// objects in the cache making it impossible to incrementally preserve
+comment|// them. Just clear the entire manager.
+if|if
+condition|(
+operator|!
+name|PA
+operator|.
+name|preserved
+argument_list|(
+name|InnerAnalysisManagerProxy
+operator|::
+name|ID
+argument_list|()
+argument_list|)
+condition|)
+name|AM
+operator|->
+name|clear
+argument_list|()
+expr_stmt|;
+comment|// Return false to indicate that this result is still a valid proxy.
+return|return
+name|false
+return|;
+block|}
+end_function
 
 begin_label
 name|private
@@ -3103,14 +3341,222 @@ label|:
 end_label
 
 begin_decl_stmt
-name|FunctionAnalysisManager
+name|AnalysisManagerT
 modifier|*
-name|FAM
+name|AM
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
+begin_macro
 unit|};
+name|explicit
+end_macro
+
+begin_expr_stmt
+name|InnerAnalysisManagerProxy
+argument_list|(
+name|AnalysisManagerT
+operator|&
+name|AM
+argument_list|)
+operator|:
+name|AM
+argument_list|(
+argument|&AM
+argument_list|)
+block|{}
+comment|// We have to explicitly define all the special member functions because MSVC
+comment|// refuses to generate them.
+name|InnerAnalysisManagerProxy
+argument_list|(
+specifier|const
+name|InnerAnalysisManagerProxy
+operator|&
+name|Arg
+argument_list|)
+operator|:
+name|AM
+argument_list|(
+argument|Arg.AM
+argument_list|)
+block|{}
+name|InnerAnalysisManagerProxy
+argument_list|(
+name|InnerAnalysisManagerProxy
+operator|&&
+name|Arg
+argument_list|)
+operator|:
+name|AM
+argument_list|(
+argument|std::move(Arg.AM)
+argument_list|)
+block|{}
+name|InnerAnalysisManagerProxy
+operator|&
+name|operator
+operator|=
+operator|(
+name|InnerAnalysisManagerProxy
+name|RHS
+operator|)
+block|{
+name|std
+operator|::
+name|swap
+argument_list|(
+name|AM
+argument_list|,
+name|RHS
+operator|.
+name|AM
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Run the analysis pass and create our proxy result object.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This doesn't do any interesting work, it is primarily used to insert our
+end_comment
+
+begin_comment
+comment|/// proxy result object into the module analysis cache so that we can proxy
+end_comment
+
+begin_comment
+comment|/// invalidation to the function analysis manager.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// In debug builds, it will also assert that the analysis manager is empty
+end_comment
+
+begin_comment
+comment|/// as no queries should arrive at the function analysis manager prior to
+end_comment
+
+begin_comment
+comment|/// this analysis being requested.
+end_comment
+
+begin_decl_stmt
+name|Result
+name|run
+argument_list|(
+name|IRUnitT
+operator|&
+name|IR
+argument_list|,
+name|AnalysisManager
+operator|<
+name|IRUnitT
+operator|>
+operator|&
+argument_list|)
+block|{
+return|return
+name|Result
+argument_list|(
+operator|*
+name|AM
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_expr_stmt
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|InnerAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>>
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|PassID
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|AnalysisManagerT
+modifier|*
+name|AM
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+name|IRUnitT
+operator|>
+name|char
+name|InnerAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>
+operator|::
+name|PassID
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern template class InnerAnalysisManagerProxy<FunctionAnalysisManager
+operator|,
+extern|Module>;
+end_extern
+
+begin_comment
+comment|/// Provide the \c FunctionAnalysisManager to \c Module proxy.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|InnerAnalysisManagerProxy
+operator|<
+name|FunctionAnalysisManager
+operator|,
+name|Module
+operator|>
+name|FunctionAnalysisManagerModuleProxy
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// \brief A function analysis which acts as a proxy for a module analysis
 end_comment
 
@@ -3158,30 +3604,48 @@ begin_comment
 comment|/// returned PreservedAnalysis set.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+name|IRUnitT
+operator|>
 name|class
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
+operator|:
+name|public
+name|AnalysisInfoMixin
+operator|<
+name|OuterAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>>
 block|{
 name|public
-label|:
-comment|/// \brief Result proxy object for \c ModuleAnalysisManagerFunctionProxy.
+operator|:
+comment|/// \brief Result proxy object for \c OuterAnalysisManagerProxy.
 name|class
 name|Result
 block|{
 name|public
-label|:
+operator|:
 name|explicit
 name|Result
 argument_list|(
 specifier|const
-name|ModuleAnalysisManager
+name|AnalysisManagerT
 operator|&
-name|MAM
+name|AM
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|&MAM
+argument|&AM
 argument_list|)
 block|{}
 comment|// We have to explicitly define all the special member functions because
@@ -3194,9 +3658,9 @@ operator|&
 name|Arg
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|Arg.MAM
+argument|Arg.AM
 argument_list|)
 block|{}
 name|Result
@@ -3206,9 +3670,9 @@ operator|&&
 name|Arg
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|std::move(Arg.MAM)
+argument|std::move(Arg.AM)
 argument_list|)
 block|{}
 name|Result
@@ -3224,11 +3688,11 @@ name|std
 operator|::
 name|swap
 argument_list|(
-name|MAM
+name|AM
 argument_list|,
 name|RHS
 operator|.
-name|MAM
+name|AM
 argument_list|)
 block|;
 return|return
@@ -3237,7 +3701,7 @@ name|this
 return|;
 block|}
 specifier|const
-name|ModuleAnalysisManager
+name|AnalysisManagerT
 operator|&
 name|getManager
 argument_list|()
@@ -3245,100 +3709,83 @@ specifier|const
 block|{
 return|return
 operator|*
-name|MAM
+name|AM
 return|;
 block|}
 comment|/// \brief Handle invalidation by ignoring it, this pass is immutable.
 name|bool
 name|invalidate
-parameter_list|(
-name|Function
-modifier|&
-parameter_list|)
+argument_list|(
+argument|IRUnitT&
+argument_list|)
 block|{
 return|return
 name|false
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_decl_stmt
 specifier|const
-name|ModuleAnalysisManager
+name|AnalysisManagerT
 modifier|*
-name|MAM
+name|AM
 decl_stmt|;
-block|}
-empty_stmt|;
-specifier|static
-name|void
-modifier|*
-name|ID
-parameter_list|()
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|PassID
-return|;
-block|}
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"ModuleAnalysisManagerFunctionProxy"
-return|;
-block|}
-name|ModuleAnalysisManagerFunctionProxy
+end_decl_stmt
+
+begin_expr_stmt
+unit|};
+name|OuterAnalysisManagerProxy
 argument_list|(
 specifier|const
-name|ModuleAnalysisManager
+name|AnalysisManagerT
 operator|&
-name|MAM
+name|AM
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|&MAM
+argument|&AM
 argument_list|)
 block|{}
 comment|// We have to explicitly define all the special member functions because MSVC
 comment|// refuses to generate them.
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 argument_list|(
 specifier|const
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 operator|&
 name|Arg
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|Arg.MAM
+argument|Arg.AM
 argument_list|)
 block|{}
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 argument_list|(
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 operator|&&
 name|Arg
 argument_list|)
 operator|:
-name|MAM
+name|AM
 argument_list|(
-argument|std::move(Arg.MAM)
+argument|std::move(Arg.AM)
 argument_list|)
 block|{}
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 operator|&
 name|operator
 operator|=
 operator|(
-name|ModuleAnalysisManagerFunctionProxy
+name|OuterAnalysisManagerProxy
 name|RHS
 operator|)
 block|{
@@ -3346,11 +3793,11 @@ name|std
 operator|::
 name|swap
 argument_list|(
-name|MAM
+name|AM
 argument_list|,
 name|RHS
 operator|.
-name|MAM
+name|AM
 argument_list|)
 block|;
 return|return
@@ -3358,41 +3805,120 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Run the analysis pass and create our proxy result object.
-comment|/// Nothing to see here, it just forwards the \c MAM reference into the
+end_comment
+
+begin_comment
+comment|/// Nothing to see here, it just forwards the \c AM reference into the
+end_comment
+
+begin_comment
 comment|/// result.
+end_comment
+
+begin_decl_stmt
 name|Result
 name|run
-parameter_list|(
-name|Function
-modifier|&
-parameter_list|)
+argument_list|(
+name|IRUnitT
+operator|&
+argument_list|,
+name|AnalysisManager
+operator|<
+name|IRUnitT
+operator|>
+operator|&
+argument_list|)
 block|{
 return|return
 name|Result
 argument_list|(
 operator|*
-name|MAM
+name|AM
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
+name|friend
+name|AnalysisInfoMixin
+operator|<
+name|OuterAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>>
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 name|PassID
 decl_stmt|;
-specifier|const
-name|ModuleAnalysisManager
-modifier|*
-name|MAM
-decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|const
+name|AnalysisManagerT
+modifier|*
+name|AM
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|AnalysisManagerT
+operator|,
+name|typename
+name|IRUnitT
+operator|>
+name|char
+name|OuterAnalysisManagerProxy
+operator|<
+name|AnalysisManagerT
+operator|,
+name|IRUnitT
+operator|>
+operator|::
+name|PassID
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern template class OuterAnalysisManagerProxy<ModuleAnalysisManager
+operator|,
+extern|Function>;
+end_extern
+
+begin_comment
+comment|/// Provide the \c ModuleAnalysisManager to \c Fucntion proxy.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|OuterAnalysisManagerProxy
+operator|<
+name|ModuleAnalysisManager
+operator|,
+name|Function
+operator|>
+name|ModuleAnalysisManagerFunctionProxy
+expr_stmt|;
+end_typedef
 
 begin_comment
 comment|/// \brief Trivial adaptor that maps from a module to its functions.
@@ -3490,6 +4016,14 @@ name|FunctionPassT
 operator|>
 name|class
 name|ModuleToFunctionPassAdaptor
+operator|:
+name|public
+name|PassInfoMixin
+operator|<
+name|ModuleToFunctionPassAdaptor
+operator|<
+name|FunctionPassT
+operator|>>
 block|{
 name|public
 operator|:
@@ -3584,25 +4118,16 @@ name|run
 argument_list|(
 argument|Module&M
 argument_list|,
-argument|ModuleAnalysisManager *AM
+argument|ModuleAnalysisManager&AM
 argument_list|)
 block|{
-name|FunctionAnalysisManager
-operator|*
-name|FAM
-operator|=
-name|nullptr
-block|;
-if|if
-condition|(
-name|AM
-condition|)
 comment|// Setup the function analysis manager from its proxy.
+name|FunctionAnalysisManager
+operator|&
 name|FAM
 operator|=
-operator|&
 name|AM
-operator|->
+operator|.
 name|getResult
 operator|<
 name|FunctionAnalysisManagerModuleProxy
@@ -3613,7 +4138,7 @@ operator|)
 operator|.
 name|getManager
 argument_list|()
-expr_stmt|;
+block|;
 name|PreservedAnalyses
 name|PA
 operator|=
@@ -3621,10 +4146,7 @@ name|PreservedAnalyses
 operator|::
 name|all
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_for
+block|;
 for|for
 control|(
 name|Function
@@ -3659,14 +4181,10 @@ comment|// function's analyses (that's the contract of a function pass), so
 comment|// directly handle the function analysis manager's invalidation here and
 comment|// update our preserved set to reflect that these have already been
 comment|// handled.
-if|if
-condition|(
-name|FAM
-condition|)
 name|PassPA
 operator|=
 name|FAM
-operator|->
+operator|.
 name|invalidate
 argument_list|(
 name|F
@@ -3694,25 +4212,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|// By definition we preserve the proxy. This precludes *any* invalidation
-end_comment
-
-begin_comment
 comment|// of function analyses by the proxy, but that's OK because we've taken
-end_comment
-
-begin_comment
 comment|// care to invalidate analyses in the function analysis manager
-end_comment
-
-begin_comment
 comment|// incrementally above.
-end_comment
-
-begin_expr_stmt
 name|PA
 operator|.
 name|preserve
@@ -3730,24 +4233,8 @@ name|PA
 return|;
 end_return
 
-begin_function
-unit|}    static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"ModuleToFunctionPassAdaptor"
-return|;
-block|}
-end_function
-
-begin_label
-name|private
-label|:
-end_label
-
 begin_decl_stmt
+unit|}  private:
 name|FunctionPassT
 name|Pass
 decl_stmt|;
@@ -3818,6 +4305,13 @@ name|AnalysisT
 operator|>
 expr|struct
 name|RequireAnalysisPass
+operator|:
+name|PassInfoMixin
+operator|<
+name|RequireAnalysisPass
+operator|<
+name|AnalysisT
+operator|>>
 block|{
 comment|/// \brief Run this pass over some unit of IR.
 comment|///
@@ -3835,18 +4329,14 @@ name|run
 argument_list|(
 argument|IRUnitT&Arg
 argument_list|,
-argument|AnalysisManager<IRUnitT> *AM
+argument|AnalysisManager<IRUnitT>&AM
 argument_list|)
 block|{
-if|if
-condition|(
-name|AM
-condition|)
 operator|(
 name|void
 operator|)
 name|AM
-operator|->
+operator|.
 name|template
 name|getResult
 operator|<
@@ -3855,7 +4345,7 @@ operator|>
 operator|(
 name|Arg
 operator|)
-expr_stmt|;
+block|;
 return|return
 name|PreservedAnalyses
 operator|::
@@ -3864,18 +4354,6 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"RequireAnalysisPass"
-return|;
-block|}
-end_function
 
 begin_comment
 unit|};
@@ -3906,6 +4384,13 @@ name|AnalysisT
 operator|>
 expr|struct
 name|InvalidateAnalysisPass
+operator|:
+name|PassInfoMixin
+operator|<
+name|InvalidateAnalysisPass
+operator|<
+name|AnalysisT
+operator|>>
 block|{
 comment|/// \brief Run this pass over some unit of IR.
 comment|///
@@ -3923,20 +4408,13 @@ name|run
 argument_list|(
 argument|IRUnitT&Arg
 argument_list|,
-argument|AnalysisManager<IRUnitT> *AM
+argument|AnalysisManager<IRUnitT>&AM
 argument_list|)
 block|{
-if|if
-condition|(
-name|AM
-condition|)
 comment|// We have to directly invalidate the analysis result as we can't
 comment|// enumerate all other analyses and use the preserved set to control it.
-operator|(
-name|void
-operator|)
 name|AM
-operator|->
+operator|.
 name|template
 name|invalidate
 operator|<
@@ -3945,7 +4423,7 @@ operator|>
 operator|(
 name|Arg
 operator|)
-expr_stmt|;
+block|;
 return|return
 name|PreservedAnalyses
 operator|::
@@ -3954,18 +4432,6 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"InvalidateAnalysisPass"
-return|;
-block|}
-end_function
 
 begin_comment
 unit|};
@@ -3984,9 +4450,14 @@ begin_comment
 comment|/// analysis passes to be re-run to produce fresh results if any are needed.
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|InvalidateAllAnalysesPass
+range|:
+name|PassInfoMixin
+operator|<
+name|InvalidateAllAnalysesPass
+operator|>
 block|{
 comment|/// \brief Run this pass over some unit of IR.
 name|template
@@ -3997,7 +4468,9 @@ operator|>
 name|PreservedAnalyses
 name|run
 argument_list|(
-argument|IRUnitT&Arg
+argument|IRUnitT&
+argument_list|,
+argument|AnalysisManager<IRUnitT>&
 argument_list|)
 block|{
 return|return
@@ -4007,21 +4480,11 @@ name|none
 argument_list|()
 return|;
 block|}
-specifier|static
-name|StringRef
-name|name
-parameter_list|()
-block|{
-return|return
-literal|"InvalidateAllAnalysesPass"
-return|;
-block|}
-block|}
-struct|;
-end_struct
+expr|}
+block|;  }
+end_decl_stmt
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

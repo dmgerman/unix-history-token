@@ -58,7 +58,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDisassembler.h"
+file|"llvm/MC/MCDisassembler/MCDisassembler.h"
 end_include
 
 begin_decl_stmt

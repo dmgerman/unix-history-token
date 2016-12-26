@@ -108,7 +108,7 @@ name|ASTConsumer
 operator|>
 name|CreateASTPrinter
 argument_list|(
-argument|raw_ostream *OS
+argument|std::unique_ptr<raw_ostream> OS
 argument_list|,
 argument|StringRef FilterString
 argument_list|)

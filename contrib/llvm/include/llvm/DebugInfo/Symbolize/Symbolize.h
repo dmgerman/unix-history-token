@@ -95,6 +95,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -190,7 +196,7 @@ argument_list|)
 operator|,
 name|DefaultArch
 argument_list|(
-argument|DefaultArch
+argument|std::move(DefaultArch)
 argument_list|)
 block|{}
 block|}
@@ -218,7 +224,7 @@ block|{
 name|flush
 argument_list|()
 block|;   }
-name|ErrorOr
+name|Expected
 operator|<
 name|DILineInfo
 operator|>
@@ -229,7 +235,7 @@ argument_list|,
 argument|uint64_t ModuleOffset
 argument_list|)
 expr_stmt|;
-name|ErrorOr
+name|Expected
 operator|<
 name|DIInliningInfo
 operator|>
@@ -240,7 +246,7 @@ argument_list|,
 argument|uint64_t ModuleOffset
 argument_list|)
 expr_stmt|;
-name|ErrorOr
+name|Expected
 operator|<
 name|DIGlobal
 operator|>
@@ -291,7 +297,11 @@ operator|*
 operator|>
 name|ObjectPair
 expr_stmt|;
-name|ErrorOr
+comment|/// Returns a SymbolizableModule or an error if loading debug info failed.
+comment|/// Only one attempt is made to load a module, and errors during loading are
+comment|/// only reported once. Subsequent calls to get module info for a module that
+comment|/// failed to load will return nullptr.
+name|Expected
 operator|<
 name|SymbolizableModule
 operator|*
@@ -355,7 +365,7 @@ name|ArchName
 argument_list|)
 decl_stmt|;
 comment|/// \brief Returns pair of pointers to object and debug object.
-name|ErrorOr
+name|Expected
 operator|<
 name|ObjectPair
 operator|>
@@ -379,7 +389,7 @@ expr_stmt|;
 comment|/// \brief Return a pointer to object file at specified path, for a specified
 comment|/// architecture (e.g. if path refers to a Mach-O universal binary, only one
 comment|/// object file from it will be returned).
-name|ErrorOr
+name|Expected
 operator|<
 name|ObjectFile
 operator|*
@@ -409,14 +419,12 @@ name|std
 operator|::
 name|string
 operator|,
-name|ErrorOr
-operator|<
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|SymbolizableModule
-operator|>>>
+operator|>>
 name|Modules
 expr_stmt|;
 comment|/// \brief Contains cached results of getOrCreateObjectPair().
@@ -437,10 +445,8 @@ operator|::
 name|string
 operator|>
 operator|,
-name|ErrorOr
-operator|<
 name|ObjectPair
-operator|>>
+operator|>
 name|ObjectPairForPathArch
 expr_stmt|;
 comment|/// \brief Contains parsed binary for each path, or parsing error.
@@ -452,12 +458,10 @@ name|std
 operator|::
 name|string
 operator|,
-name|ErrorOr
-operator|<
 name|OwningBinary
 operator|<
 name|Binary
-operator|>>>
+operator|>>
 name|BinaryForPath
 expr_stmt|;
 comment|/// \brief Parsed object file for path/architecture pair, where "path" refers
@@ -479,14 +483,12 @@ operator|::
 name|string
 operator|>
 operator|,
-name|ErrorOr
-operator|<
 name|std
 operator|::
 name|unique_ptr
 operator|<
 name|ObjectFile
-operator|>>>
+operator|>>
 name|ObjectForUBPathAndArch
 expr_stmt|;
 name|Options

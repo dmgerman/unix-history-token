@@ -106,6 +106,11 @@ name|void
 name|Initialize
 argument_list|()
 expr_stmt|;
+specifier|static
+name|void
+name|Terminate
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Returns the number of CPUs on this current host.
 comment|///

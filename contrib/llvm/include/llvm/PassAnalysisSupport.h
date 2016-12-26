@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -107,6 +101,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// Represent the analysis usage information of a pass.  This tracks analyses
 comment|/// that the pass REQUIRES (must be available when the pass runs), REQUIRES
@@ -544,28 +541,17 @@ name|nullptr
 decl_stmt|;
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
+specifier|const
+specifier|auto
+modifier|&
+name|AnalysisImpl
+range|:
 name|AnalysisImpls
-operator|.
-name|size
-argument_list|()
-condition|;
-operator|++
-name|i
 control|)
 block|{
 if|if
 condition|(
-name|AnalysisImpls
-index|[
-name|i
-index|]
+name|AnalysisImpl
 operator|.
 name|first
 operator|==
@@ -574,10 +560,7 @@ condition|)
 block|{
 name|ResultPass
 operator|=
-name|AnalysisImpls
-index|[
-name|i
-index|]
+name|AnalysisImpl
 operator|.
 name|second
 expr_stmt|;

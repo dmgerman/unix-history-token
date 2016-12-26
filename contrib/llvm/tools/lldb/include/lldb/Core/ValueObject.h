@@ -1834,6 +1834,8 @@ argument_list|,
 argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
+argument_list|,
+argument|ConstString name_const_str = ConstString()
 argument_list|)
 block|;
 name|virtual
@@ -1847,6 +1849,8 @@ argument_list|,
 argument|const CompilerType& type
 argument_list|,
 argument|bool can_create
+argument_list|,
+argument|ConstString name_const_str = ConstString()
 argument_list|)
 block|;
 name|virtual
@@ -2056,10 +2060,12 @@ return|return
 name|false
 return|;
 block|}
+name|virtual
 name|bool
 name|IsSyntheticChildrenGenerated
 argument_list|()
 block|;
+name|virtual
 name|void
 name|SetSyntheticChildrenGenerated
 argument_list|(
@@ -2607,11 +2613,7 @@ name|ChildrenManager
 argument_list|()
 operator|:
 name|m_mutex
-argument_list|(
-name|Mutex
-operator|::
-name|eMutexTypeRecursive
-argument_list|)
+argument_list|()
 operator|,
 name|m_children
 argument_list|()
@@ -2627,10 +2629,15 @@ argument_list|(
 argument|size_t idx
 argument_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -2659,10 +2666,15 @@ name|size_t
 name|idx
 parameter_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -2708,6 +2720,7 @@ modifier|*
 name|valobj
 parameter_list|)
 block|{
+comment|// we do not need to be mutex-protected to make a pair
 name|ChildrenPair
 name|pair
 argument_list|(
@@ -2716,11 +2729,15 @@ argument_list|,
 name|valobj
 argument_list|)
 decl_stmt|;
-comment|// we do not need to be mutex-protected to make a pair
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -2763,10 +2780,15 @@ init|=
 literal|0
 parameter_list|)
 block|{
-name|Mutex
+name|std
 operator|::
-name|Locker
-name|locker
+name|lock_guard
+operator|<
+name|std
+operator|::
+name|recursive_mutex
+operator|>
+name|guard
 argument_list|(
 name|m_mutex
 argument_list|)
@@ -2807,9 +2829,11 @@ operator|::
 name|value_type
 name|ChildrenPair
 expr_stmt|;
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_mutex
-decl_stmt|;
+expr_stmt|;
 name|ChildrenMap
 name|m_children
 decl_stmt|;

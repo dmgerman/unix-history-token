@@ -71,12 +71,6 @@ directive|include
 file|"llvm/IR/GlobalValue.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -94,6 +88,9 @@ name|SmallVectorImpl
 expr_stmt|;
 name|class
 name|Twine
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 name|class
 name|Mangler

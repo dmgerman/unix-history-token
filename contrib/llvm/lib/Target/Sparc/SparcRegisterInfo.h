@@ -156,15 +156,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = nullptr
-argument_list|)
-specifier|const
-block|;
 name|unsigned
 name|getFrameRegister
 argument_list|(

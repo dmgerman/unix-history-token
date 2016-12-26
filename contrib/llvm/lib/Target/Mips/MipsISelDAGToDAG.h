@@ -126,14 +126,16 @@ operator|:
 name|explicit
 name|MipsDAGToDAGISel
 argument_list|(
-name|MipsTargetMachine
-operator|&
-name|TM
+argument|MipsTargetMachine&TM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 operator|:
 name|SelectionDAGISel
 argument_list|(
 name|TM
+argument_list|,
+name|OL
 argument_list|)
 block|,
 name|Subtarget
@@ -195,20 +197,6 @@ argument|SDValue&Offset
 argument_list|)
 specifier|const
 block|;
-comment|// Complex Pattern.
-comment|/// (reg + reg).
-name|virtual
-name|bool
-name|selectAddrRegReg
-argument_list|(
-argument|SDValue Addr
-argument_list|,
-argument|SDValue&Base
-argument_list|,
-argument|SDValue&Offset
-argument_list|)
-specifier|const
-block|;
 comment|/// Fall back on this function if all else fails.
 name|virtual
 name|bool
@@ -237,7 +225,31 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|selectIntAddrMM
+name|selectIntAddr11MM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddr12MM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddr16MM
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -276,15 +288,22 @@ name|virtual
 name|bool
 name|selectAddr16
 argument_list|(
-argument|SDNode *Parent
-argument_list|,
-argument|SDValue N
+argument|SDValue Addr
 argument_list|,
 argument|SDValue&Base
 argument_list|,
 argument|SDValue&Offset
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|selectAddr16SP
+argument_list|(
+argument|SDValue Addr
 argument_list|,
-argument|SDValue&Alias
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
 argument_list|)
 block|;
 comment|/// \brief Select constant vector splats.
@@ -435,8 +454,7 @@ argument|SDValue&Imm
 argument_list|)
 specifier|const
 block|;
-name|SDNode
-operator|*
+name|void
 name|Select
 argument_list|(
 argument|SDNode *N
@@ -444,16 +462,8 @@ argument_list|)
 name|override
 block|;
 name|virtual
-name|std
-operator|::
-name|pair
-operator|<
 name|bool
-block|,
-name|SDNode
-operator|*
-operator|>
-name|selectNode
+name|trySelect
 argument_list|(
 name|SDNode
 operator|*

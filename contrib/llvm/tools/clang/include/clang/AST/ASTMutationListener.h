@@ -73,6 +73,9 @@ name|class
 name|ClassTemplateSpecializationDecl
 decl_stmt|;
 name|class
+name|ConstructorUsingShadowDecl
+decl_stmt|;
+name|class
 name|CXXDestructorDecl
 decl_stmt|;
 name|class
@@ -363,6 +366,26 @@ specifier|const
 name|Decl
 modifier|*
 name|D
+parameter_list|)
+block|{}
+comment|/// \brief A declaration is marked as OpenMP declaretarget which was not
+comment|/// previously marked as declaretarget.
+comment|///
+comment|/// \param D the declaration marked OpenMP declaretarget.
+comment|/// \param Attr the added attribute.
+name|virtual
+name|void
+name|DeclarationMarkedOpenMPDeclareTarget
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|,
+specifier|const
+name|Attr
+modifier|*
+name|Attr
 parameter_list|)
 block|{}
 comment|/// \brief A definition has been made visible by being redefined locally.

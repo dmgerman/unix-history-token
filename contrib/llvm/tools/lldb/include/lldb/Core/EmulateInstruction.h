@@ -867,6 +867,19 @@ modifier|&
 name|reg_value
 parameter_list|)
 function_decl|;
+comment|// Type to represent the condition of an instruction. The UINT32 value is reserved for the
+comment|// unconditional case and all other value can be used in an architecture dependent way.
+typedef|typedef
+name|uint32_t
+name|InstructionCondition
+typedef|;
+specifier|static
+specifier|const
+name|InstructionCondition
+name|UnconditionalCondition
+init|=
+name|UINT32_MAX
+decl_stmt|;
 name|EmulateInstruction
 argument_list|(
 specifier|const
@@ -925,12 +938,12 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|bool
-name|IsInstructionConditional
+name|InstructionCondition
+name|GetInstructionCondition
 parameter_list|()
 block|{
 return|return
-name|false
+name|UnconditionalCondition
 return|;
 block|}
 name|virtual

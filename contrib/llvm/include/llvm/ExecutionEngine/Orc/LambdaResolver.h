@@ -81,12 +81,6 @@ directive|include
 file|<memory>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,10 +91,10 @@ block|{
 name|template
 operator|<
 name|typename
-name|ExternalLookupFtorT
+name|DylibLookupFtorT
 operator|,
 name|typename
-name|DylibLookupFtorT
+name|ExternalLookupFtorT
 operator|>
 name|class
 name|LambdaResolver
@@ -114,37 +108,21 @@ name|public
 operator|:
 name|LambdaResolver
 argument_list|(
-argument|ExternalLookupFtorT ExternalLookupFtor
-argument_list|,
 argument|DylibLookupFtorT DylibLookupFtor
+argument_list|,
+argument|ExternalLookupFtorT ExternalLookupFtor
 argument_list|)
 operator|:
-name|ExternalLookupFtor
-argument_list|(
-name|ExternalLookupFtor
-argument_list|)
-block|,
 name|DylibLookupFtor
 argument_list|(
-argument|DylibLookupFtor
+name|DylibLookupFtor
 argument_list|)
-block|{}
-name|RuntimeDyld
-operator|::
-name|SymbolInfo
-name|findSymbol
-argument_list|(
-argument|const std::string&Name
-argument_list|)
-name|final
-block|{
-return|return
+block|,
 name|ExternalLookupFtor
 argument_list|(
-name|Name
+argument|ExternalLookupFtor
 argument_list|)
-return|;
-block|}
+block|{}
 name|RuntimeDyld
 operator|::
 name|SymbolInfo
@@ -161,22 +139,38 @@ name|Name
 argument_list|)
 return|;
 block|}
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbol
+argument_list|(
+argument|const std::string&Name
+argument_list|)
+name|final
+block|{
+return|return
+name|ExternalLookupFtor
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 name|private
 operator|:
-name|ExternalLookupFtorT
-name|ExternalLookupFtor
-block|;
 name|DylibLookupFtorT
 name|DylibLookupFtor
+block|;
+name|ExternalLookupFtorT
+name|ExternalLookupFtor
 block|; }
 expr_stmt|;
 name|template
 operator|<
 name|typename
-name|ExternalLookupFtorT
+name|DylibLookupFtorT
 operator|,
 name|typename
-name|DylibLookupFtorT
+name|ExternalLookupFtorT
 operator|>
 name|std
 operator|::
@@ -184,23 +178,23 @@ name|unique_ptr
 operator|<
 name|LambdaResolver
 operator|<
-name|ExternalLookupFtorT
-operator|,
 name|DylibLookupFtorT
+operator|,
+name|ExternalLookupFtorT
 operator|>>
 name|createLambdaResolver
 argument_list|(
-argument|ExternalLookupFtorT ExternalLookupFtor
-argument_list|,
 argument|DylibLookupFtorT DylibLookupFtor
+argument_list|,
+argument|ExternalLookupFtorT ExternalLookupFtor
 argument_list|)
 block|{
 typedef|typedef
 name|LambdaResolver
 operator|<
-name|ExternalLookupFtorT
-operator|,
 name|DylibLookupFtorT
+operator|,
+name|ExternalLookupFtorT
 operator|>
 name|LR
 expr_stmt|;
@@ -214,14 +208,14 @@ name|std
 operator|::
 name|move
 argument_list|(
-name|ExternalLookupFtor
+name|DylibLookupFtor
 argument_list|)
 operator|,
 name|std
 operator|::
 name|move
 argument_list|(
-name|DylibLookupFtor
+name|ExternalLookupFtor
 argument_list|)
 operator|)
 return|;

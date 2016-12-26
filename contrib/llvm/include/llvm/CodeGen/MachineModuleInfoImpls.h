@@ -84,17 +84,6 @@ range|:
 name|public
 name|MachineModuleInfoImpl
 block|{
-comment|/// FnStubs - Darwin '$stub' stubs.  The key is something like "Lfoo$stub",
-comment|/// the value is something like "_foo".
-name|DenseMap
-operator|<
-name|MCSymbol
-operator|*
-block|,
-name|StubValueTy
-operator|>
-name|FnStubs
-block|;
 comment|/// GVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something like
 comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo". The extra bit
 comment|/// is true if this GV is external.
@@ -107,10 +96,9 @@ name|StubValueTy
 operator|>
 name|GVStubs
 block|;
-comment|/// HiddenGVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something like
-comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo".  Unlike GVStubs
-comment|/// these are for things with hidden visibility. The extra bit is true if
-comment|/// this GV is external.
+comment|/// ThreadLocalGVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something
+comment|/// like "Lfoo$non_lazy_ptr", the value is something like "_foo". The extra
+comment|/// bit is true if this GV is external.
 name|DenseMap
 operator|<
 name|MCSymbol
@@ -118,7 +106,7 @@ operator|*
 block|,
 name|StubValueTy
 operator|>
-name|HiddenGVStubs
+name|ThreadLocalGVStubs
 block|;
 name|virtual
 name|void
@@ -133,27 +121,6 @@ argument_list|(
 argument|const MachineModuleInfo&
 argument_list|)
 block|{}
-name|StubValueTy
-operator|&
-name|getFnStubEntry
-argument_list|(
-argument|MCSymbol *Sym
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Sym
-operator|&&
-literal|"Key cannot be null"
-argument_list|)
-block|;
-return|return
-name|FnStubs
-index|[
-name|Sym
-index|]
-return|;
-block|}
 name|StubValueTy
 operator|&
 name|getGVStubEntry
@@ -177,7 +144,7 @@ return|;
 block|}
 name|StubValueTy
 operator|&
-name|getHiddenGVStubEntry
+name|getThreadLocalGVStubEntry
 argument_list|(
 argument|MCSymbol *Sym
 argument_list|)
@@ -190,24 +157,13 @@ literal|"Key cannot be null"
 argument_list|)
 block|;
 return|return
-name|HiddenGVStubs
+name|ThreadLocalGVStubs
 index|[
 name|Sym
 index|]
 return|;
 block|}
 comment|/// Accessor methods to return the set of stubs in sorted order.
-name|SymbolListTy
-name|GetFnStubList
-argument_list|()
-block|{
-return|return
-name|getSortedStubs
-argument_list|(
-name|FnStubs
-argument_list|)
-return|;
-block|}
 name|SymbolListTy
 name|GetGVStubList
 argument_list|()
@@ -220,13 +176,13 @@ argument_list|)
 return|;
 block|}
 name|SymbolListTy
-name|GetHiddenGVStubList
+name|GetThreadLocalGVStubList
 argument_list|()
 block|{
 return|return
 name|getSortedStubs
 argument_list|(
-name|HiddenGVStubs
+name|ThreadLocalGVStubs
 argument_list|)
 return|;
 block|}

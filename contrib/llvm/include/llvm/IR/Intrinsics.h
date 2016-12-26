@@ -76,6 +76,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -220,6 +232,25 @@ operator|>
 name|Tys
 operator|=
 name|None
+argument_list|)
+decl_stmt|;
+comment|/// Looks up Name in NameTable via binary search. NameTable must be sorted
+comment|/// and all entries must start with "llvm.".  If NameTable contains an exact
+comment|/// match for Name or a prefix of Name followed by a dot, its index in
+comment|/// NameTable is returned. Otherwise, -1 is returned.
+name|int
+name|lookupLLVMIntrinsicByName
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|NameTable
+argument_list|,
+name|StringRef
+name|Name
 argument_list|)
 decl_stmt|;
 comment|/// Map a GCC builtin name to an intrinsic ID.
@@ -469,6 +500,69 @@ operator|&
 name|T
 argument_list|)
 decl_stmt|;
+comment|/// Match the specified type (which comes from an intrinsic argument or return
+comment|/// value) with the type constraints specified by the .td file. If the given
+comment|/// type is an overloaded type it is pushed to the ArgTys vector.
+comment|///
+comment|/// Returns false if the given type matches with the constraints, true
+comment|/// otherwise.
+name|bool
+name|matchIntrinsicType
+argument_list|(
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|ArrayRef
+operator|<
+name|IITDescriptor
+operator|>
+operator|&
+name|Infos
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Type
+operator|*
+operator|>
+operator|&
+name|ArgTys
+argument_list|)
+decl_stmt|;
+comment|/// Verify if the intrinsic has variable arguments. This method is intended to
+comment|/// be called after all the fixed arguments have been matched first.
+comment|///
+comment|/// This method returns true on error.
+name|bool
+name|matchIntrinsicVarArg
+argument_list|(
+name|bool
+name|isVarArg
+argument_list|,
+name|ArrayRef
+operator|<
+name|IITDescriptor
+operator|>
+operator|&
+name|Infos
+argument_list|)
+decl_stmt|;
+comment|// Checks if the intrinsic name matches with its signature and if not
+comment|// returns the declaration with the same signature and remangled name.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|Function
+operator|*
+operator|>
+name|remangleIntrinsicFunction
+argument_list|(
+name|Function
+operator|*
+name|F
+argument_list|)
+expr_stmt|;
 block|}
 comment|// End Intrinsic namespace
 block|}

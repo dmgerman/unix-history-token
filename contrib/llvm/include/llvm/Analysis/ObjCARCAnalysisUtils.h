@@ -234,6 +234,13 @@ name|M
 operator|.
 name|getNamedValue
 argument_list|(
+literal|"objc_unsafeClaimAutoreleasedReturnValue"
+argument_list|)
+operator|||
+name|M
+operator|.
+name|getNamedValue
+argument_list|(
 literal|"objc_retainBlock"
 argument_list|)
 operator|||

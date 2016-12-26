@@ -77,12 +77,6 @@ directive|include
 file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -231,6 +225,18 @@ comment|/// True if this function has a subset of CSRs that is handled explicitl
 comment|/// copies.
 name|bool
 name|IsSplitCSR
+operator|=
+name|false
+block|;
+comment|/// True if this function uses the red zone.
+name|bool
+name|UsesRedZone
+operator|=
+name|false
+block|;
+comment|/// True if this function has WIN_ALLOCA instructions.
+name|bool
+name|HasWinAlloca
 operator|=
 name|false
 block|;
@@ -638,6 +644,44 @@ block|{
 name|IsSplitCSR
 operator|=
 name|s
+block|; }
+name|bool
+name|getUsesRedZone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesRedZone
+return|;
+block|}
+name|void
+name|setUsesRedZone
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|UsesRedZone
+operator|=
+name|V
+block|; }
+name|bool
+name|hasWinAlloca
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasWinAlloca
+return|;
+block|}
+name|void
+name|setHasWinAlloca
+argument_list|(
+argument|bool v
+argument_list|)
+block|{
+name|HasWinAlloca
+operator|=
+name|v
 block|; }
 expr|}
 block|;  }

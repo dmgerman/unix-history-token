@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- HexagonTargetAsmInfo.h - Hexagon asm properties --------*- C++ -*--===//
+comment|//===-- HexagonTargetObjectFile.h -----------------------------------------===//
 end_comment
 
 begin_comment
@@ -65,14 +65,6 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-name|MCSectionELF
-operator|*
-name|SmallDataSection
-block|;
-name|MCSectionELF
-operator|*
-name|SmallBSSSection
-block|;
 name|public
 operator|:
 name|void
@@ -83,33 +75,6 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 name|override
-block|;
-comment|/// IsGlobalInSmallSection - Return true if this global address should be
-comment|/// placed into small data/bss section.
-name|bool
-name|IsGlobalInSmallSection
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
-argument|SectionKind Kind
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsGlobalInSmallSection
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|const TargetMachine&TM
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|IsSmallDataEnabled
-argument_list|()
-specifier|const
 block|;
 name|MCSection
 operator|*
@@ -125,6 +90,75 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 name|override
+block|;
+name|MCSection
+operator|*
+name|getExplicitSectionGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isGlobalInSmallSection
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isSmallDataEnabled
+argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getSmallDataSize
+argument_list|()
+specifier|const
+block|;
+name|private
+operator|:
+name|MCSectionELF
+operator|*
+name|SmallDataSection
+block|;
+name|MCSectionELF
+operator|*
+name|SmallBSSSection
+block|;
+name|unsigned
+name|getSmallestAddressableSize
+argument_list|(
+argument|const Type *Ty
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
+name|MCSection
+operator|*
+name|selectSmallSectionForGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|SectionKind Kind
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

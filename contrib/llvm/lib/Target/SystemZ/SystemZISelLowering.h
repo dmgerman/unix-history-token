@@ -238,6 +238,9 @@ block|,
 comment|// Perform a serialization operation.  (BCR 15,0 or BCR 14,0.)
 name|SERIALIZE
 block|,
+comment|// Compiler barrier only; generate a no-op.
+name|MEMBARRIER
+block|,
 comment|// Transaction begin.  The first operand is the chain, the second
 comment|// the TDB pointer, and the third the immediate control field.
 comment|// Returns chain and glue.
@@ -389,6 +392,12 @@ name|VSTRC_CC
 block|,
 name|VSTRCZ_CC
 block|,
+comment|// Test Data Class.
+comment|//
+comment|// Operand 0: the value to test
+comment|// Operand 1: the bit mask
+name|TDC
+block|,
 comment|// Wrappers around the inner loop of an 8- or 16-bit ATOMIC_SWAP or
 comment|// ATOMIC_LOAD_<op>.
 comment|//
@@ -435,6 +444,19 @@ comment|//            operand into the high bits
 comment|// Operand 4: the negative of operand 2, for rotating the other way
 comment|// Operand 5: the width of the field in bits (8 or 16)
 name|ATOMIC_CMP_SWAPW
+block|,
+comment|// Byte swapping load.
+comment|//
+comment|// Operand 0: the address to load from
+comment|// Operand 1: the type of load (i16, i32, i64)
+name|LRV
+block|,
+comment|// Byte swapping store.
+comment|//
+comment|// Operand 0: the value to store
+comment|// Operand 1: the address to store to
+comment|// Operand 2: the type of store (i16, i32, i64)
+name|STRV
 block|,
 comment|// Prefetch from the second operand using the 4-bit control code in
 comment|// the first operand.  The code is 1 for a load prefetch and 2 for
@@ -900,12 +922,33 @@ operator|::
 name|R7D
 return|;
 block|}
+comment|/// Override to support customized stack guard loading.
+name|bool
+name|useLoadStackGuardNode
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|insertSSPDeclarations
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+decl|const
+name|override
+block|{   }
 name|MachineBasicBlock
 modifier|*
 name|EmitInstrWithCustomInserter
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -974,7 +1017,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|SelectionDAG
@@ -1072,7 +1117,9 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|SelectionDAG
@@ -1088,7 +1135,9 @@ argument_list|(
 name|SDValue
 name|Chain
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|SelectionDAG
@@ -1112,6 +1161,30 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|ISD
+operator|::
+name|NodeType
+name|getExtendForAtomicOps
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|ISD
+operator|::
+name|ANY_EXTEND
+return|;
+block|}
+name|bool
+name|supportSwiftError
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|private
 label|:
 specifier|const
@@ -1189,6 +1262,20 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|lowerThreadPointer
+argument_list|(
+specifier|const
+name|SDLoc
+operator|&
+name|DL
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|lowerGlobalTLSAddress
 argument_list|(
 name|GlobalAddressSDNode
@@ -1241,6 +1328,30 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|lowerFRAMEADDR
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|lowerRETURNADDR
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|lowerVASTART
 argument_list|(
 name|SDValue
@@ -1266,6 +1377,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|lowerDYNAMIC_STACKALLOC
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|lowerGET_DYNAMIC_AREA_OFFSET
 argument_list|(
 name|SDValue
 name|Op
@@ -1350,6 +1473,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|lowerCTPOP
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|lowerATOMIC_FENCE
 argument_list|(
 name|SDValue
 name|Op
@@ -1588,7 +1723,9 @@ decl_stmt|;
 name|SDValue
 name|combineExtract
 argument_list|(
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -1615,7 +1752,9 @@ decl_stmt|;
 name|SDValue
 name|combineTruncateExtract
 argument_list|(
+specifier|const
 name|SDLoc
+operator|&
 name|DL
 argument_list|,
 name|EVT
@@ -1623,6 +1762,110 @@ name|TruncVT
 argument_list|,
 name|SDValue
 name|Op
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineSIGN_EXTEND
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineMERGE
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineSTORE
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineEXTRACT_VECTOR_ELT
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineJOIN_DWORDS
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineFP_ROUND
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineBSWAP
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|,
+name|DAGCombinerInfo
+operator|&
+name|DCI
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|combineSHIFTROT
+argument_list|(
+name|SDNode
+operator|*
+name|N
 argument_list|,
 name|DAGCombinerInfo
 operator|&
@@ -1661,7 +1904,7 @@ modifier|*
 name|emitSelect
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1675,7 +1918,7 @@ modifier|*
 name|emitCondStore
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1698,7 +1941,7 @@ modifier|*
 name|emitExt128
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1718,7 +1961,7 @@ modifier|*
 name|emitAtomicLoadBinary
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1743,7 +1986,7 @@ modifier|*
 name|emitAtomicLoadMinMax
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1766,7 +2009,7 @@ modifier|*
 name|emitAtomicCmpSwapW
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1780,7 +2023,7 @@ modifier|*
 name|emitMemMemWrapper
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1797,7 +2040,7 @@ modifier|*
 name|emitStringWrapper
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1814,7 +2057,7 @@ modifier|*
 name|emitTransactionBegin
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock
@@ -1834,7 +2077,7 @@ modifier|*
 name|emitLoadAndTestCmp0
 argument_list|(
 name|MachineInstr
-operator|*
+operator|&
 name|MI
 argument_list|,
 name|MachineBasicBlock

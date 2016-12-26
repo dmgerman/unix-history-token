@@ -32,6 +32,62 @@ name|__DEFAULT_FN_ATTRS
 value|__attribute__((__always_inline__, __nodebug__, __target__("aes")))
 end_define
 
+begin_comment
+comment|/// \brief Performs a single round of AES encryption using the Equivalent
+end_comment
+
+begin_comment
+comment|///    Inverse Cipher, transforming the state value from the first source
+end_comment
+
+begin_comment
+comment|///    operand using a 128-bit round key value contained in the second source
+end_comment
+
+begin_comment
+comment|///    operand, and writes the result to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VAESENC instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __V
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the state value.
+end_comment
+
+begin_comment
+comment|/// \param __R
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the round key value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the encrypted value.
+end_comment
+
 begin_function
 specifier|static
 name|__inline__
@@ -52,13 +108,75 @@ name|__m128i
 operator|)
 name|__builtin_ia32_aesenc128
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__V
 argument_list|,
+operator|(
+name|__v2di
+operator|)
 name|__R
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs the final round of AES encryption using the Equivalent
+end_comment
+
+begin_comment
+comment|///    Inverse Cipher, transforming the state value from the first source
+end_comment
+
+begin_comment
+comment|///    operand using a 128-bit round key value contained in the second source
+end_comment
+
+begin_comment
+comment|///    operand, and writes the result to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VAESENCLAST instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __V
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the state value.
+end_comment
+
+begin_comment
+comment|/// \param __R
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the round key value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the encrypted value.
+end_comment
 
 begin_function
 specifier|static
@@ -80,13 +198,75 @@ name|__m128i
 operator|)
 name|__builtin_ia32_aesenclast128
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__V
 argument_list|,
+operator|(
+name|__v2di
+operator|)
 name|__R
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs a single round of AES decryption using the Equivalent
+end_comment
+
+begin_comment
+comment|///    Inverse Cipher, transforming the state value from the first source
+end_comment
+
+begin_comment
+comment|///    operand using a 128-bit round key value contained in the second source
+end_comment
+
+begin_comment
+comment|///    operand, and writes the result to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VAESDEC instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __V
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the state value.
+end_comment
+
+begin_comment
+comment|/// \param __R
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the round key value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the decrypted value.
+end_comment
 
 begin_function
 specifier|static
@@ -108,13 +288,75 @@ name|__m128i
 operator|)
 name|__builtin_ia32_aesdec128
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__V
 argument_list|,
+operator|(
+name|__v2di
+operator|)
 name|__R
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Performs the final round of AES decryption using the Equivalent
+end_comment
+
+begin_comment
+comment|///    Inverse Cipher, transforming the state value from the first source
+end_comment
+
+begin_comment
+comment|///    operand using a 128-bit round key value contained in the second source
+end_comment
+
+begin_comment
+comment|///    operand, and writes the result to the destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VAESDECLAST instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __V
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the state value.
+end_comment
+
+begin_comment
+comment|/// \param __R
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the round key value.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the decrypted value.
+end_comment
 
 begin_function
 specifier|static
@@ -136,13 +378,63 @@ name|__m128i
 operator|)
 name|__builtin_ia32_aesdeclast128
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__V
 argument_list|,
+operator|(
+name|__v2di
+operator|)
 name|__R
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Applies the AES InvMixColumns() transformation to an expanded key
+end_comment
+
+begin_comment
+comment|///    contained in the source operand, and writes the result to the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c VAESIMC instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param __V
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector containing the expanded key.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit integer vector containing the transformed value.
+end_comment
 
 begin_function
 specifier|static
@@ -161,11 +453,86 @@ name|__m128i
 operator|)
 name|__builtin_ia32_aesimc128
 argument_list|(
+operator|(
+name|__v2di
+operator|)
 name|__V
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Generates a round key for AES encyption, operating on 128-bit data
+end_comment
+
+begin_comment
+comment|///    specified in the first source operand and using an 8-bit round constant
+end_comment
+
+begin_comment
+comment|///    specified by the second source operand, and writes the result to the
+end_comment
+
+begin_comment
+comment|///    destination.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \headerfile<x86intrin.h>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// __m128i _mm_aeskeygenassist_si128(__m128i C, const int R);
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This intrinsic corresponds to the \c AESKEYGENASSIST instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param C
+end_comment
+
+begin_comment
+comment|///    A 128-bit integer vector that is used to generate the AES encryption key.
+end_comment
+
+begin_comment
+comment|/// \param R
+end_comment
+
+begin_comment
+comment|///    An 8-bit round constant used to generate the AES encryption key.
+end_comment
+
+begin_comment
+comment|/// \returns A 128-bit round key for AES encryption.
+end_comment
 
 begin_define
 define|#

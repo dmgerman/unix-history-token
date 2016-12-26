@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mutex>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/HostThread.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/Mutex.h"
 end_include
 
 begin_include
@@ -712,17 +712,23 @@ name|string
 name|m_bytes
 expr_stmt|;
 comment|///< A buffer to cache bytes read in the ReadThread function.
-name|Mutex
+name|std
+operator|::
+name|recursive_mutex
 name|m_bytes_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< A mutex to protect multi-threaded access to the cached bytes.
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_write_mutex
-decl_stmt|;
+expr_stmt|;
 comment|///< Don't let multiple threads write at the same time...
-name|Mutex
+name|std
+operator|::
+name|mutex
 name|m_synchronize_mutex
-decl_stmt|;
+expr_stmt|;
 name|ReadThreadBytesReceived
 name|m_callback
 decl_stmt|;

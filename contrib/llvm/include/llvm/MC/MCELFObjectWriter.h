@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -73,6 +85,9 @@ name|llvm
 block|{
 name|class
 name|MCAssembler
+decl_stmt|;
+name|class
+name|MCContext
 decl_stmt|;
 name|class
 name|MCFixup
@@ -116,6 +131,16 @@ name|uint64_t
 name|Addend
 decl_stmt|;
 comment|// The addend to use.
+specifier|const
+name|MCSymbolELF
+modifier|*
+name|OriginalSymbol
+decl_stmt|;
+comment|// The original value of Symbol if we changed it.
+name|uint64_t
+name|OriginalAddend
+decl_stmt|;
+comment|// The original value of addend.
 name|ELFRelocationEntry
 argument_list|(
 argument|uint64_t Offset
@@ -125,6 +150,10 @@ argument_list|,
 argument|unsigned Type
 argument_list|,
 argument|uint64_t Addend
+argument_list|,
+argument|const MCSymbolELF *OriginalSymbol
+argument_list|,
+argument|uint64_t OriginalAddend
 argument_list|)
 block|:
 name|Offset
@@ -144,9 +173,63 @@ argument_list|)
 operator|,
 name|Addend
 argument_list|(
-argument|Addend
+name|Addend
+argument_list|)
+operator|,
+name|OriginalSymbol
+argument_list|(
+name|OriginalSymbol
+argument_list|)
+operator|,
+name|OriginalAddend
+argument_list|(
+argument|OriginalAddend
 argument_list|)
 block|{}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&Out
+argument_list|)
+specifier|const
+block|{
+name|Out
+operator|<<
+literal|"Off="
+operator|<<
+name|Offset
+operator|<<
+literal|", Sym="
+operator|<<
+name|Symbol
+operator|<<
+literal|", Type="
+operator|<<
+name|Type
+operator|<<
+literal|", Addend="
+operator|<<
+name|Addend
+operator|<<
+literal|", OriginalSymbol="
+operator|<<
+name|OriginalSymbol
+operator|<<
+literal|", OriginalAddend="
+operator|<<
+name|OriginalAddend
+block|;   }
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|{
+name|print
+argument_list|(
+name|errs
+argument_list|()
+argument_list|)
+block|; }
 block|}
 struct|;
 name|class
@@ -250,8 +333,10 @@ argument_list|()
 block|{}
 name|virtual
 name|unsigned
-name|GetRelocType
+name|getRelocType
 argument_list|(
+argument|MCContext&Ctx
+argument_list|,
 argument|const MCValue&Target
 argument_list|,
 argument|const MCFixup&Fixup

@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
@@ -196,6 +190,18 @@ name|TotalPackets
 decl_stmt|;
 name|public
 label|:
+comment|/// Save the last formed packet.
+name|std
+operator|::
+name|vector
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|OldPacket
+expr_stmt|;
+name|public
+label|:
 name|VLIWResourceModel
 argument_list|(
 specifier|const
@@ -251,6 +257,21 @@ argument_list|()
 argument_list|)
 block|;
 name|Packet
+operator|.
+name|clear
+argument_list|()
+block|;
+name|OldPacket
+operator|.
+name|resize
+argument_list|(
+name|SchedModel
+operator|->
+name|getIssueWidth
+argument_list|()
+argument_list|)
+block|;
+name|OldPacket
 operator|.
 name|clear
 argument_list|()
@@ -315,6 +336,10 @@ modifier|*
 name|SU
 parameter_list|)
 function_decl|;
+name|void
+name|savePacket
+parameter_list|()
+function_decl|;
 name|unsigned
 name|getTotalPackets
 argument_list|()
@@ -322,6 +347,39 @@ specifier|const
 block|{
 return|return
 name|TotalPackets
+return|;
+block|}
+name|bool
+name|isInPacket
+argument_list|(
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+decl|const
+block|{
+return|return
+name|std
+operator|::
+name|find
+argument_list|(
+name|Packet
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Packet
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|SU
+argument_list|)
+operator|!=
+name|Packet
+operator|.
+name|end
+argument_list|()
 return|;
 block|}
 block|}
@@ -364,11 +422,6 @@ name|void
 name|schedule
 argument_list|()
 name|override
-block|;
-comment|/// Perform platform-specific DAG postprocessing.
-name|void
-name|postprocessDAG
-argument_list|()
 block|; }
 decl_stmt|;
 comment|/// ConvergingVLIWScheduler shrinks the unscheduled zone using heuristics
@@ -578,6 +631,10 @@ block|;
 name|SchedModel
 operator|=
 name|smodel
+block|;
+name|IssueCount
+operator|=
+literal|0
 block|;     }
 name|bool
 name|isTop
@@ -814,7 +871,26 @@ argument|const ReadyQueue&Q
 argument_list|,
 argument|SUnit *SU
 argument_list|,
+argument|int Cost
+argument_list|,
 argument|PressureChange P = PressureChange()
+argument_list|)
+block|;
+name|void
+name|readyQueueVerboseDump
+argument_list|(
+specifier|const
+name|RegPressureTracker
+operator|&
+name|RPTracker
+argument_list|,
+name|SchedCandidate
+operator|&
+name|Candidate
+argument_list|,
+name|ReadyQueue
+operator|&
+name|Q
 argument_list|)
 block|;
 endif|#

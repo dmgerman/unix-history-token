@@ -82,10 +82,28 @@ decl_stmt|;
 name|class
 name|TargetLibraryInfo
 decl_stmt|;
-comment|/// CastToCStr - Return V if it is an i8*, otherwise cast it to i8*.
+comment|/// Analyze the name and prototype of the given function and set any
+comment|/// applicable attributes.
+comment|/// If the library function is unavailable, this doesn't modify it.
+comment|///
+comment|/// Returns true if any attributes were set and false otherwise.
+name|bool
+name|inferLibFuncAttributes
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|&
+name|TLI
+parameter_list|)
+function_decl|;
+comment|/// Return V if it is an i8*, otherwise cast it to i8*.
 name|Value
 modifier|*
-name|CastToCStr
+name|castToCStr
 argument_list|(
 name|Value
 operator|*
@@ -98,12 +116,12 @@ operator|&
 name|B
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrLen - Emit a call to the strlen function to the builder, for the
-comment|/// specified pointer.  Ptr is required to be some pointer type, and the
-comment|/// return value has 'intptr_t' type.
+comment|/// Emit a call to the strlen function to the builder, for the specified
+comment|/// pointer. Ptr is required to be some pointer type, and the return value has
+comment|/// 'intptr_t' type.
 name|Value
 modifier|*
-name|EmitStrLen
+name|emitStrLen
 argument_list|(
 name|Value
 operator|*
@@ -126,12 +144,12 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrNLen - Emit a call to the strnlen function to the builder, for the
-comment|/// specified pointer.  Ptr is required to be some pointer type, MaxLen must
-comment|/// be of size_t type, and the return value has 'intptr_t' type.
+comment|/// Emit a call to the strnlen function to the builder, for the specified
+comment|/// pointer. Ptr is required to be some pointer type, MaxLen must be of size_t
+comment|/// type, and the return value has 'intptr_t' type.
 name|Value
 modifier|*
-name|EmitStrNLen
+name|emitStrNLen
 argument_list|(
 name|Value
 operator|*
@@ -158,12 +176,12 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrChr - Emit a call to the strchr function to the builder, for the
-comment|/// specified pointer and character.  Ptr is required to be some pointer type,
-comment|/// and the return value has 'i8*' type.
+comment|/// Emit a call to the strchr function to the builder, for the specified
+comment|/// pointer and character. Ptr is required to be some pointer type, and the
+comment|/// return value has 'i8*' type.
 name|Value
 modifier|*
-name|EmitStrChr
+name|emitStrChr
 argument_list|(
 name|Value
 operator|*
@@ -184,10 +202,10 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrNCmp - Emit a call to the strncmp function to the builder.
+comment|/// Emit a call to the strncmp function to the builder.
 name|Value
 modifier|*
-name|EmitStrNCmp
+name|emitStrNCmp
 argument_list|(
 name|Value
 operator|*
@@ -218,11 +236,11 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrCpy - Emit a call to the strcpy function to the builder, for the
-comment|/// specified pointer arguments.
+comment|/// Emit a call to the strcpy function to the builder, for the specified
+comment|/// pointer arguments.
 name|Value
 modifier|*
-name|EmitStrCpy
+name|emitStrCpy
 argument_list|(
 name|Value
 operator|*
@@ -249,11 +267,11 @@ operator|=
 literal|"strcpy"
 argument_list|)
 decl_stmt|;
-comment|/// EmitStrNCpy - Emit a call to the strncpy function to the builder, for the
-comment|/// specified pointer arguments and length.
+comment|/// Emit a call to the strncpy function to the builder, for the specified
+comment|/// pointer arguments and length.
 name|Value
 modifier|*
-name|EmitStrNCpy
+name|emitStrNCpy
 argument_list|(
 name|Value
 operator|*
@@ -284,12 +302,11 @@ operator|=
 literal|"strncpy"
 argument_list|)
 decl_stmt|;
-comment|/// EmitMemCpyChk - Emit a call to the __memcpy_chk function to the builder.
-comment|/// This expects that the Len and ObjSize have type 'intptr_t' and Dst/Src
-comment|/// are pointers.
+comment|/// Emit a call to the __memcpy_chk function to the builder. This expects that
+comment|/// the Len and ObjSize have type 'intptr_t' and Dst/Src are pointers.
 name|Value
 modifier|*
-name|EmitMemCpyChk
+name|emitMemCpyChk
 argument_list|(
 name|Value
 operator|*
@@ -324,11 +341,11 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitMemChr - Emit a call to the memchr function.  This assumes that Ptr is
-comment|/// a pointer, Val is an i32 value, and Len is an 'intptr_t' value.
+comment|/// Emit a call to the memchr function. This assumes that Ptr is a pointer,
+comment|/// Val is an i32 value, and Len is an 'intptr_t' value.
 name|Value
 modifier|*
-name|EmitMemChr
+name|emitMemChr
 argument_list|(
 name|Value
 operator|*
@@ -359,10 +376,10 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitMemCmp - Emit a call to the memcmp function.
+comment|/// Emit a call to the memcmp function.
 name|Value
 modifier|*
-name|EmitMemCmp
+name|emitMemCmp
 argument_list|(
 name|Value
 operator|*
@@ -393,14 +410,13 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitUnaryFloatFnCall - Emit a call to the unary function named 'Name'
-comment|/// (e.g.  'floor').  This function is known to take a single of type matching
-comment|/// 'Op' and returns one value with the same type.  If 'Op' is a long double,
-comment|/// 'l' is added as the suffix of name, if 'Op' is a float, we add a 'f'
-comment|/// suffix.
+comment|/// Emit a call to the unary function named 'Name' (e.g.  'floor'). This
+comment|/// function is known to take a single of type matching 'Op' and returns one
+comment|/// value with the same type. If 'Op' is a long double, 'l' is added as the
+comment|/// suffix of name, if 'Op' is a float, we add a 'f' suffix.
 name|Value
 modifier|*
-name|EmitUnaryFloatFnCall
+name|emitUnaryFloatFnCall
 argument_list|(
 name|Value
 operator|*
@@ -421,14 +437,13 @@ operator|&
 name|Attrs
 argument_list|)
 decl_stmt|;
-comment|/// EmitUnaryFloatFnCall - Emit a call to the binary function named 'Name'
-comment|/// (e.g. 'fmin').  This function is known to take type matching 'Op1' and
-comment|/// 'Op2' and return one value with the same type.  If 'Op1/Op2' are long
-comment|/// double, 'l' is added as the suffix of name, if 'Op1/Op2' are float, we
-comment|/// add a 'f' suffix.
+comment|/// Emit a call to the binary function named 'Name' (e.g. 'fmin'). This
+comment|/// function is known to take type matching 'Op1' and 'Op2' and return one
+comment|/// value with the same type. If 'Op1/Op2' are long double, 'l' is added as
+comment|/// the suffix of name, if 'Op1/Op2' are float, we add a 'f' suffix.
 name|Value
 modifier|*
-name|EmitBinaryFloatFnCall
+name|emitBinaryFloatFnCall
 argument_list|(
 name|Value
 operator|*
@@ -453,11 +468,10 @@ operator|&
 name|Attrs
 argument_list|)
 decl_stmt|;
-comment|/// EmitPutChar - Emit a call to the putchar function.  This assumes that Char
-comment|/// is an integer.
+comment|/// Emit a call to the putchar function. This assumes that Char is an integer.
 name|Value
 modifier|*
-name|EmitPutChar
+name|emitPutChar
 argument_list|(
 name|Value
 operator|*
@@ -475,11 +489,10 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitPutS - Emit a call to the puts function.  This assumes that Str is
-comment|/// some pointer.
+comment|/// Emit a call to the puts function. This assumes that Str is some pointer.
 name|Value
 modifier|*
-name|EmitPutS
+name|emitPutS
 argument_list|(
 name|Value
 operator|*
@@ -497,11 +510,11 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitFPutC - Emit a call to the fputc function.  This assumes that Char is
-comment|/// an i32, and File is a pointer to FILE.
+comment|/// Emit a call to the fputc function. This assumes that Char is an i32, and
+comment|/// File is a pointer to FILE.
 name|Value
 modifier|*
-name|EmitFPutC
+name|emitFPutC
 argument_list|(
 name|Value
 operator|*
@@ -523,11 +536,11 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitFPutS - Emit a call to the puts function.  Str is required to be a
-comment|/// pointer and File is a pointer to FILE.
+comment|/// Emit a call to the puts function. Str is required to be a pointer and
+comment|/// File is a pointer to FILE.
 name|Value
 modifier|*
-name|EmitFPutS
+name|emitFPutS
 argument_list|(
 name|Value
 operator|*
@@ -549,11 +562,11 @@ operator|*
 name|TLI
 argument_list|)
 decl_stmt|;
-comment|/// EmitFWrite - Emit a call to the fwrite function.  This assumes that Ptr is
-comment|/// a pointer, Size is an 'intptr_t', and File is a pointer to FILE.
+comment|/// Emit a call to the fwrite function. This assumes that Ptr is a pointer,
+comment|/// Size is an 'intptr_t', and File is a pointer to FILE.
 name|Value
 modifier|*
-name|EmitFWrite
+name|emitFWrite
 argument_list|(
 name|Value
 operator|*

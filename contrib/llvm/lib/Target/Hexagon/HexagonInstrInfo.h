@@ -146,7 +146,7 @@ comment|/// any side effects other than loading from the stack slot.
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -161,7 +161,7 @@ comment|/// any side effects other than storing to the stack slot.
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|int&FrameIndex
 argument_list|)
@@ -194,7 +194,7 @@ comment|/// If AllowModify is true, then this routine is allowed to modify the b
 comment|/// block (e.g. delete instructions after the unconditional branch).
 comment|///
 name|bool
-name|AnalyzeBranch
+name|analyzeBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -241,7 +241,7 @@ argument|MachineBasicBlock *FBB
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|)
 specifier|const
 name|override
@@ -324,7 +324,7 @@ argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|DebugLoc DL
+argument|const DebugLoc&DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -389,7 +389,7 @@ comment|/// anything was changed.
 name|bool
 name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock::iterator MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -419,7 +419,7 @@ comment|/// Returns true if the instruction is already predicated.
 name|bool
 name|isPredicated
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -429,7 +429,7 @@ comment|/// It returns true if the operation was successful.
 name|bool
 name|PredicateInstruction
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|ArrayRef<MachineOperand> Cond
 argument_list|)
@@ -454,7 +454,7 @@ comment|/// as the definition predicate(s) by reference.
 name|bool
 name|DefinesPredicate
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
@@ -467,7 +467,7 @@ comment|/// PredicateOperand.
 name|bool
 name|isPredicable
 argument_list|(
-argument|MachineInstr *MI
+argument|MachineInstr&MI
 argument_list|)
 specifier|const
 name|override
@@ -477,7 +477,7 @@ comment|/// This primarily includes labels and terminators.
 name|bool
 name|isSchedulingBoundary
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|const MachineBasicBlock *MBB
 argument_list|,
@@ -518,7 +518,7 @@ comment|/// can be analyzed.
 name|bool
 name|analyzeCompare
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
@@ -539,7 +539,7 @@ name|getInstrLatency
 argument_list|(
 argument|const InstrItineraryData *ItinData
 argument_list|,
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|,
 argument|unsigned *PredCost =
 literal|0
@@ -564,9 +564,9 @@ comment|// memory addresses and false otherwise.
 name|bool
 name|areMemAccessesTriviallyDisjoint
 argument_list|(
-argument|MachineInstr *MIa
+argument|MachineInstr&MIa
 argument_list|,
-argument|MachineInstr *MIb
+argument|MachineInstr&MIb
 argument_list|,
 argument|AliasAnalysis *AA = nullptr
 argument_list|)
@@ -890,7 +890,7 @@ block|;
 name|bool
 name|isPredicatedNew
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -904,7 +904,7 @@ block|;
 name|bool
 name|isPredicatedTrue
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -944,6 +944,13 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|isSignExtendingLoad
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|isSolo
 argument_list|(
 argument|const MachineInstr* MI
@@ -952,6 +959,13 @@ specifier|const
 block|;
 name|bool
 name|isSpillPredRegOp
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTailCall
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
@@ -982,6 +996,15 @@ name|bool
 name|isTC4x
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isToBeScheduledASAP
+argument_list|(
+argument|const MachineInstr *MI1
+argument_list|,
+argument|const MachineInstr *MI2
 argument_list|)
 specifier|const
 block|;
@@ -1032,6 +1055,22 @@ argument_list|(
 argument|const MachineInstr *ProdMI
 argument_list|,
 argument|const MachineInstr *ConsMI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isZeroExtendingLoad
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|addLatencyToSchedule
+argument_list|(
+argument|const MachineInstr *MI1
+argument_list|,
+argument|const MachineInstr *MI2
 argument_list|)
 specifier|const
 block|;
@@ -1127,6 +1166,13 @@ argument|ArrayRef<MachineOperand> Cond
 argument_list|)
 specifier|const
 block|;
+name|short
+name|getAbsoluteForm
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|getAddrMode
 argument_list|(
@@ -1153,6 +1199,27 @@ argument_list|,
 argument|unsigned&BasePos
 argument_list|,
 argument|unsigned&OffsetPos
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getBaseWithLongOffset
+argument_list|(
+argument|short Opcode
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getBaseWithLongOffset
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|short
+name|getBaseWithRegOffset
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
@@ -1429,6 +1496,13 @@ name|bool
 name|validateBranchCond
 argument_list|(
 argument|const ArrayRef<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|short
+name|xformRegToImmOffset
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|; }

@@ -118,8 +118,8 @@ comment|//------------------------------------------------------------------
 comment|/// Parse a single expression and convert it to IR using Clang.  Don't
 comment|/// wrap the expression in anything at all.
 comment|///
-comment|/// @param[in] stream
-comment|///     The stream to print errors to.
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager in which to store the errors and warnings.
 comment|///
 comment|/// @return
 comment|///     The number of errors encountered during parsing.  0 means
@@ -129,13 +129,37 @@ name|virtual
 name|unsigned
 name|Parse
 parameter_list|(
-name|Stream
+name|DiagnosticManager
 modifier|&
-name|stream
+name|diagnostic_manager
 parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Try to use the FixIts in the diagnostic_manager to rewrite the
+comment|/// expression.  If successful, the rewritten expression is stored
+comment|/// in the diagnostic_manager, get it out with GetFixedExpression.
+comment|///
+comment|/// @param[in] diagnostic_manager
+comment|///     The diagnostic manager containing fixit's to apply.
+comment|///
+comment|/// @return
+comment|///     \b true if the rewrite was successful, \b false otherwise.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|RewriteExpression
+parameter_list|(
+name|DiagnosticManager
+modifier|&
+name|diagnostic_manager
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Ready an already-parsed expression for execution, possibly
 comment|/// evaluating it statically.

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"CGValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -86,13 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -110,9 +122,6 @@ name|ArrayType
 decl_stmt|;
 name|class
 name|Constant
-decl_stmt|;
-name|class
-name|Function
 decl_stmt|;
 name|class
 name|FunctionType
@@ -147,10 +156,22 @@ name|class
 name|GlobalDecl
 decl_stmt|;
 name|class
+name|OMPDependClause
+decl_stmt|;
+name|class
 name|OMPExecutableDirective
 decl_stmt|;
 name|class
+name|OMPLoopDirective
+decl_stmt|;
+name|class
 name|VarDecl
+decl_stmt|;
+name|class
+name|OMPDeclareReductionDecl
+decl_stmt|;
+name|class
+name|IdentifierInfo
 decl_stmt|;
 name|namespace
 name|CodeGen
@@ -164,240 +185,419 @@ decl_stmt|;
 name|class
 name|CodeGenModule
 decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|function_ref
-operator|<
+comment|/// A basic class for pre|post-action for advanced codegen sequence for OpenMP
+comment|/// region.
+name|class
+name|PrePostActionTy
+block|{
+name|public
+label|:
+name|explicit
+name|PrePostActionTy
+parameter_list|()
+block|{}
+name|virtual
 name|void
-argument_list|(
+name|Enter
+parameter_list|(
 name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+block|{}
+name|virtual
+name|void
+name|Exit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+block|{}
+name|virtual
+operator|~
+name|PrePostActionTy
+argument_list|()
+block|{}
+block|}
+empty_stmt|;
+comment|/// Class provides a way to call simple version of codegen for OpenMP region, or
+comment|/// an advanced with possible pre|post-actions in codegen.
+name|class
+name|RegionCodeGenTy
+name|final
+block|{
+name|intptr_t
+name|CodeGen
+decl_stmt|;
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|CodeGenTy
+function_decl|)
+parameter_list|(
+name|intptr_t
+parameter_list|,
+name|CodeGenFunction
+modifier|&
+parameter_list|,
+name|PrePostActionTy
+modifier|&
+parameter_list|)
+function_decl|;
+name|CodeGenTy
+name|Callback
+decl_stmt|;
+name|mutable
+name|PrePostActionTy
+modifier|*
+name|PrePostAction
+decl_stmt|;
+name|RegionCodeGenTy
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
+name|RegionCodeGenTy
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|RegionCodeGenTy
 operator|&
+operator|)
+operator|=
+name|delete
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|Callable
+operator|>
+specifier|static
+name|void
+name|CallbackFn
+argument_list|(
+argument|intptr_t CodeGen
+argument_list|,
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|PrePostActionTy&Action
 argument_list|)
+block|{
+return|return
+operator|(
+operator|*
+name|reinterpret_cast
+operator|<
+name|Callable
+operator|*
+operator|>
+operator|(
+name|CodeGen
+operator|)
+operator|)
+operator|(
+name|CGF
+operator|,
+name|Action
+operator|)
+return|;
+block|}
+name|public
+label|:
+name|template
+operator|<
+name|typename
+name|Callable
 operator|>
 name|RegionCodeGenTy
+argument_list|(
+argument|Callable&&CodeGen
+argument_list|,
+argument|typename std::enable_if<           !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|RegionCodeGenTy>::value>::type * = nullptr
+argument_list|)
+operator|:
+name|CodeGen
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+operator|&
+name|CodeGen
+operator|)
+argument_list|)
+operator|,
+name|Callback
+argument_list|(
+argument|CallbackFn<typename std::remove_reference<Callable>::type>
+argument_list|)
+operator|,
+name|PrePostAction
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|void
+name|setAction
+argument_list|(
+argument|PrePostActionTy&Action
+argument_list|)
+specifier|const
+block|{
+name|PrePostAction
+operator|=
+operator|&
+name|Action
+block|; }
+name|void
+name|operator
+argument_list|()
+operator|(
+name|CodeGenFunction
+operator|&
+name|CGF
+operator|)
+specifier|const
 expr_stmt|;
+block|}
+empty_stmt|;
+struct|struct
+name|OMPTaskDataTy
+name|final
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|PrivateVars
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|PrivateCopies
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|FirstprivateVars
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|FirstprivateCopies
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|FirstprivateInits
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|LastprivateVars
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|,
+literal|4
+operator|>
+name|LastprivateCopies
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|OpenMPDependClauseKind
+operator|,
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|,
+literal|4
+operator|>
+name|Dependences
+expr_stmt|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Final
+expr_stmt|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Schedule
+expr_stmt|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Priority
+expr_stmt|;
+name|unsigned
+name|NumberOfParts
+init|=
+literal|0
+decl_stmt|;
+name|bool
+name|Tied
+init|=
+name|true
+decl_stmt|;
+name|bool
+name|Nogroup
+init|=
+name|false
+decl_stmt|;
+block|}
+struct|;
 name|class
 name|CGOpenMPRuntime
 block|{
-name|private
+name|protected
 label|:
-enum|enum
-name|OpenMPRTLFunction
-block|{
-comment|/// \brief Call to void __kmpc_fork_call(ident_t *loc, kmp_int32 argc,
-comment|/// kmpc_micro microtask, ...);
-name|OMPRTL__kmpc_fork_call
-block|,
-comment|/// \brief Call to void *__kmpc_threadprivate_cached(ident_t *loc,
-comment|/// kmp_int32 global_tid, void *data, size_t size, void ***cache);
-name|OMPRTL__kmpc_threadprivate_cached
-block|,
-comment|/// \brief Call to void __kmpc_threadprivate_register( ident_t *,
-comment|/// void *data, kmpc_ctor ctor, kmpc_cctor cctor, kmpc_dtor dtor);
-name|OMPRTL__kmpc_threadprivate_register
-block|,
-comment|// Call to __kmpc_int32 kmpc_global_thread_num(ident_t *loc);
-name|OMPRTL__kmpc_global_thread_num
-block|,
-comment|// Call to void __kmpc_critical(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_critical_name *crit);
-name|OMPRTL__kmpc_critical
-block|,
-comment|// Call to void __kmpc_critical_with_hint(ident_t *loc, kmp_int32
-comment|// global_tid, kmp_critical_name *crit, uintptr_t hint);
-name|OMPRTL__kmpc_critical_with_hint
-block|,
-comment|// Call to void __kmpc_end_critical(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_critical_name *crit);
-name|OMPRTL__kmpc_end_critical
-block|,
-comment|// Call to kmp_int32 __kmpc_cancel_barrier(ident_t *loc, kmp_int32
-comment|// global_tid);
-name|OMPRTL__kmpc_cancel_barrier
-block|,
-comment|// Call to void __kmpc_barrier(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_barrier
-block|,
-comment|// Call to void __kmpc_for_static_fini(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_for_static_fini
-block|,
-comment|// Call to void __kmpc_serialized_parallel(ident_t *loc, kmp_int32
-comment|// global_tid);
-name|OMPRTL__kmpc_serialized_parallel
-block|,
-comment|// Call to void __kmpc_end_serialized_parallel(ident_t *loc, kmp_int32
-comment|// global_tid);
-name|OMPRTL__kmpc_end_serialized_parallel
-block|,
-comment|// Call to void __kmpc_push_num_threads(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_int32 num_threads);
-name|OMPRTL__kmpc_push_num_threads
-block|,
-comment|// Call to void __kmpc_flush(ident_t *loc);
-name|OMPRTL__kmpc_flush
-block|,
-comment|// Call to kmp_int32 __kmpc_master(ident_t *, kmp_int32 global_tid);
-name|OMPRTL__kmpc_master
-block|,
-comment|// Call to void __kmpc_end_master(ident_t *, kmp_int32 global_tid);
-name|OMPRTL__kmpc_end_master
-block|,
-comment|// Call to kmp_int32 __kmpc_omp_taskyield(ident_t *, kmp_int32 global_tid,
-comment|// int end_part);
-name|OMPRTL__kmpc_omp_taskyield
-block|,
-comment|// Call to kmp_int32 __kmpc_single(ident_t *, kmp_int32 global_tid);
-name|OMPRTL__kmpc_single
-block|,
-comment|// Call to void __kmpc_end_single(ident_t *, kmp_int32 global_tid);
-name|OMPRTL__kmpc_end_single
-block|,
-comment|// Call to kmp_task_t * __kmpc_omp_task_alloc(ident_t *, kmp_int32 gtid,
-comment|// kmp_int32 flags, size_t sizeof_kmp_task_t, size_t sizeof_shareds,
-comment|// kmp_routine_entry_t *task_entry);
-name|OMPRTL__kmpc_omp_task_alloc
-block|,
-comment|// Call to kmp_int32 __kmpc_omp_task(ident_t *, kmp_int32 gtid, kmp_task_t *
-comment|// new_task);
-name|OMPRTL__kmpc_omp_task
-block|,
-comment|// Call to void __kmpc_copyprivate(ident_t *loc, kmp_int32 global_tid,
-comment|// size_t cpy_size, void *cpy_data, void(*cpy_func)(void *, void *),
-comment|// kmp_int32 didit);
-name|OMPRTL__kmpc_copyprivate
-block|,
-comment|// Call to kmp_int32 __kmpc_reduce(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_int32 num_vars, size_t reduce_size, void *reduce_data, void
-comment|// (*reduce_func)(void *lhs_data, void *rhs_data), kmp_critical_name *lck);
-name|OMPRTL__kmpc_reduce
-block|,
-comment|// Call to kmp_int32 __kmpc_reduce_nowait(ident_t *loc, kmp_int32
-comment|// global_tid, kmp_int32 num_vars, size_t reduce_size, void *reduce_data,
-comment|// void (*reduce_func)(void *lhs_data, void *rhs_data), kmp_critical_name
-comment|// *lck);
-name|OMPRTL__kmpc_reduce_nowait
-block|,
-comment|// Call to void __kmpc_end_reduce(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_critical_name *lck);
-name|OMPRTL__kmpc_end_reduce
-block|,
-comment|// Call to void __kmpc_end_reduce_nowait(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_critical_name *lck);
-name|OMPRTL__kmpc_end_reduce_nowait
-block|,
-comment|// Call to void __kmpc_omp_task_begin_if0(ident_t *, kmp_int32 gtid,
-comment|// kmp_task_t * new_task);
-name|OMPRTL__kmpc_omp_task_begin_if0
-block|,
-comment|// Call to void __kmpc_omp_task_complete_if0(ident_t *, kmp_int32 gtid,
-comment|// kmp_task_t * new_task);
-name|OMPRTL__kmpc_omp_task_complete_if0
-block|,
-comment|// Call to void __kmpc_ordered(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_ordered
-block|,
-comment|// Call to void __kmpc_end_ordered(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_end_ordered
-block|,
-comment|// Call to kmp_int32 __kmpc_omp_taskwait(ident_t *loc, kmp_int32
-comment|// global_tid);
-name|OMPRTL__kmpc_omp_taskwait
-block|,
-comment|// Call to void __kmpc_taskgroup(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_taskgroup
-block|,
-comment|// Call to void __kmpc_end_taskgroup(ident_t *loc, kmp_int32 global_tid);
-name|OMPRTL__kmpc_end_taskgroup
-block|,
-comment|// Call to void __kmpc_push_proc_bind(ident_t *loc, kmp_int32 global_tid,
-comment|// int proc_bind);
-name|OMPRTL__kmpc_push_proc_bind
-block|,
-comment|// Call to kmp_int32 __kmpc_omp_task_with_deps(ident_t *loc_ref, kmp_int32
-comment|// gtid, kmp_task_t * new_task, kmp_int32 ndeps, kmp_depend_info_t
-comment|// *dep_list, kmp_int32 ndeps_noalias, kmp_depend_info_t *noalias_dep_list);
-name|OMPRTL__kmpc_omp_task_with_deps
-block|,
-comment|// Call to void __kmpc_omp_wait_deps(ident_t *loc_ref, kmp_int32
-comment|// gtid, kmp_int32 ndeps, kmp_depend_info_t *dep_list, kmp_int32
-comment|// ndeps_noalias, kmp_depend_info_t *noalias_dep_list);
-name|OMPRTL__kmpc_omp_wait_deps
-block|,
-comment|// Call to kmp_int32 __kmpc_cancellationpoint(ident_t *loc, kmp_int32
-comment|// global_tid, kmp_int32 cncl_kind);
-name|OMPRTL__kmpc_cancellationpoint
-block|,
-comment|// Call to kmp_int32 __kmpc_cancel(ident_t *loc, kmp_int32 global_tid,
-comment|// kmp_int32 cncl_kind);
-name|OMPRTL__kmpc_cancel
-block|,
-comment|//
-comment|// Offloading related calls
-comment|//
-comment|// Call to int32_t __tgt_target(int32_t device_id, void *host_ptr, int32_t
-comment|// arg_num, void** args_base, void **args, size_t *arg_sizes, int32_t
-comment|// *arg_types);
-name|OMPRTL__tgt_target
-block|,
-comment|// Call to void __tgt_register_lib(__tgt_bin_desc *desc);
-name|OMPRTL__tgt_register_lib
-block|,
-comment|// Call to void __tgt_unregister_lib(__tgt_bin_desc *desc);
-name|OMPRTL__tgt_unregister_lib
-block|,   }
-enum|;
-comment|/// \brief Values for bit flags used in the ident_t to describe the fields.
-comment|/// All enumeric elements are named and described in accordance with the code
-comment|/// from http://llvm.org/svn/llvm-project/openmp/trunk/runtime/src/kmp.h
-enum|enum
-name|OpenMPLocationFlags
-block|{
-comment|/// \brief Use trampoline for internal microtask.
-name|OMP_IDENT_IMD
-init|=
-literal|0x01
-block|,
-comment|/// \brief Use c-style ident structure.
-name|OMP_IDENT_KMPC
-init|=
-literal|0x02
-block|,
-comment|/// \brief Atomic reduction option for kmpc_reduce.
-name|OMP_ATOMIC_REDUCE
-init|=
-literal|0x10
-block|,
-comment|/// \brief Explicit 'barrier' directive.
-name|OMP_IDENT_BARRIER_EXPL
-init|=
-literal|0x20
-block|,
-comment|/// \brief Implicit barrier in code.
-name|OMP_IDENT_BARRIER_IMPL
-init|=
-literal|0x40
-block|,
-comment|/// \brief Implicit barrier in 'for' directive.
-name|OMP_IDENT_BARRIER_IMPL_FOR
-init|=
-literal|0x40
-block|,
-comment|/// \brief Implicit barrier in 'sections' directive.
-name|OMP_IDENT_BARRIER_IMPL_SECTIONS
-init|=
-literal|0xC0
-block|,
-comment|/// \brief Implicit barrier in 'single' directive.
-name|OMP_IDENT_BARRIER_IMPL_SINGLE
-init|=
-literal|0x140
-block|}
-enum|;
 name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
+comment|/// \brief Creates offloading entry for the provided entry ID \a ID,
+comment|/// address \a Addr and size \a Size.
+name|virtual
+name|void
+name|createOffloadEntry
+argument_list|(
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|ID
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Addr
+argument_list|,
+name|uint64_t
+name|Size
+argument_list|)
+decl_stmt|;
+comment|/// \brief Helper to emit outlined function for 'target' directive.
+comment|/// \param D Directive to emit.
+comment|/// \param ParentName Name of the function that encloses the target region.
+comment|/// \param OutlinedFn Outlined function value to be defined by this call.
+comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
+comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// \param CodeGen Lambda codegen specific to an accelerator device.
+comment|/// An oulined function may not be an entry if, e.g. the if clause always
+comment|/// evaluates to false.
+name|virtual
+name|void
+name|emitTargetOutlinedFunctionHelper
+argument_list|(
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|StringRef
+name|ParentName
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|&
+name|OutlinedFn
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|&
+name|OutlinedFnID
+argument_list|,
+name|bool
+name|IsOffloadEntry
+argument_list|,
+specifier|const
+name|RegionCodeGenTy
+operator|&
+name|CodeGen
+argument_list|)
+decl_stmt|;
+name|private
+label|:
 comment|/// \brief Default const ident_t object used for initialization of all other
 comment|/// ident_t objects.
 name|llvm
@@ -405,6 +605,8 @@ operator|::
 name|Constant
 operator|*
 name|DefaultOpenMPPSource
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// \brief Map of flags and corresponding default locations.
 typedef|typedef
@@ -427,66 +629,17 @@ decl_stmt|;
 name|Address
 name|getOrCreateDefaultLocation
 parameter_list|(
-name|OpenMPLocationFlags
+name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
-name|public
-label|:
-comment|/// \brief Describes ident structure that describes a source location.
-comment|/// All descriptions are taken from
-comment|/// http://llvm.org/svn/llvm-project/openmp/trunk/runtime/src/kmp.h
-comment|/// Original structure:
-comment|/// typedef struct ident {
-comment|///    kmp_int32 reserved_1;   /**<  might be used in Fortran;
-comment|///                                  see above  */
-comment|///    kmp_int32 flags;        /**<  also f.flags; KMP_IDENT_xxx flags;
-comment|///                                  KMP_IDENT_KMPC identifies this union
-comment|///                                  member  */
-comment|///    kmp_int32 reserved_2;   /**<  not really used in Fortran any more;
-comment|///                                  see above */
-comment|///#if USE_ITT_BUILD
-comment|///                            /*  but currently used for storing
-comment|///                                region-specific ITT */
-comment|///                            /*  contextual information. */
-comment|///#endif /* USE_ITT_BUILD */
-comment|///    kmp_int32 reserved_3;   /**< source[4] in Fortran, do not use for
-comment|///                                 C++  */
-comment|///    char const *psource;    /**< String describing the source location.
-comment|///                            The string is composed of semi-colon separated
-comment|//                             fields which describe the source file,
-comment|///                            the function and a pair of line numbers that
-comment|///                            delimit the construct.
-comment|///                             */
-comment|/// } ident_t;
-enum|enum
-name|IdentFieldIndex
-block|{
-comment|/// \brief might be used in Fortran
-name|IdentField_Reserved_1
-block|,
-comment|/// \brief OMP_IDENT_xxx flags; OMP_IDENT_KMPC identifies this union member.
-name|IdentField_Flags
-block|,
-comment|/// \brief Not really used in Fortran any more
-name|IdentField_Reserved_2
-block|,
-comment|/// \brief Source[4] in Fortran, do not use for C++
-name|IdentField_Reserved_3
-block|,
-comment|/// \brief String describing the source location. The string is composed of
-comment|/// semi-colon separated fields which describe the source file, the function
-comment|/// and a pair of line numbers that delimit the construct.
-name|IdentField_PSource
-block|}
-enum|;
-name|private
-label|:
 name|llvm
 operator|::
 name|StructType
 operator|*
 name|IdentTy
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// \brief Map for SourceLocation and OpenMP runtime library debug locations.
 typedef|typedef
@@ -514,6 +667,8 @@ operator|::
 name|FunctionType
 operator|*
 name|Kmpc_MicroTy
+operator|=
+name|nullptr
 expr_stmt|;
 comment|/// \brief Stores debug location and ThreadID for the function.
 struct|struct
@@ -550,6 +705,83 @@ name|OpenMPLocThreadIDMapTy
 expr_stmt|;
 name|OpenMPLocThreadIDMapTy
 name|OpenMPLocThreadIDMap
+decl_stmt|;
+comment|/// Map of UDRs and corresponding combiner/initializer.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|OMPDeclareReductionDecl
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|>>
+name|UDRMapTy
+expr_stmt|;
+name|UDRMapTy
+name|UDRMap
+decl_stmt|;
+comment|/// Map of functions and locally defined UDRs.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|,
+name|SmallVector
+operator|<
+specifier|const
+name|OMPDeclareReductionDecl
+operator|*
+operator|,
+literal|4
+operator|>>
+name|FunctionUDRMapTy
+expr_stmt|;
+name|FunctionUDRMapTy
+name|FunctionUDRMap
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|In
+init|=
+name|nullptr
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|Out
+init|=
+name|nullptr
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|Priv
+init|=
+name|nullptr
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|Orig
+init|=
+name|nullptr
 decl_stmt|;
 comment|/// \brief Type kmp_critical_name, originally defined as typedef kmp_int32
 comment|/// kmp_critical_name[8];
@@ -589,6 +821,8 @@ operator|::
 name|Type
 operator|*
 name|KmpRoutineEntryPtrTy
+operator|=
+name|nullptr
 expr_stmt|;
 name|QualType
 name|KmpRoutineEntryPtrQTy
@@ -615,6 +849,14 @@ comment|///    } flags;
 comment|/// } kmp_depend_info_t;
 name|QualType
 name|KmpDependInfoTy
+decl_stmt|;
+comment|/// struct kmp_dim {  // loop bounds info casted to kmp_int64
+comment|///  kmp_int64 lo; // lower
+comment|///  kmp_int64 up; // upper
+comment|///  kmp_int64 st; // stride
+comment|/// };
+name|QualType
+name|KmpDimTy
 decl_stmt|;
 comment|/// \brief Type struct __tgt_offload_entry{
 comment|///   void      *addr;       // Pointer to the offload entry info.
@@ -974,8 +1216,6 @@ argument|StringRef ParentName
 argument_list|,
 argument|unsigned LineNum
 argument_list|,
-argument|unsigned ColNum
-argument_list|,
 argument|unsigned Order
 argument_list|)
 block|;
@@ -990,8 +1230,6 @@ argument_list|,
 argument|StringRef ParentName
 argument_list|,
 argument|unsigned LineNum
-argument_list|,
-argument|unsigned ColNum
 argument_list|,
 argument|llvm::Constant *Addr
 argument_list|,
@@ -1010,8 +1248,6 @@ argument_list|,
 argument|StringRef ParentName
 argument_list|,
 argument|unsigned LineNum
-argument_list|,
-argument|unsigned ColNum
 argument_list|)
 specifier|const
 block|;
@@ -1028,8 +1264,6 @@ argument_list|,
 name|unsigned
 argument_list|,
 name|StringRef
-argument_list|,
-name|unsigned
 argument_list|,
 name|unsigned
 argument_list|,
@@ -1051,7 +1285,7 @@ expr_stmt|;
 name|private
 label|:
 comment|// Storage for target region entries kind. The storage is to be indexed by
-comment|// file ID, device ID, parent function name, lane number, and column number.
+comment|// file ID, device ID, parent function name and line number.
 typedef|typedef
 name|llvm
 operator|::
@@ -1060,17 +1294,6 @@ operator|<
 name|unsigned
 operator|,
 name|OffloadEntryInfoTargetRegion
-operator|>
-name|OffloadEntriesTargetRegionPerColumn
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|OffloadEntriesTargetRegionPerColumn
 operator|>
 name|OffloadEntriesTargetRegionPerLine
 expr_stmt|;
@@ -1126,24 +1349,6 @@ operator|*
 name|createOffloadingBinaryDescriptorRegistration
 argument_list|()
 expr_stmt|;
-comment|/// \brief Creates offloading entry for the provided address \a Addr,
-comment|/// name \a Name and size \a Size.
-name|void
-name|createOffloadEntry
-argument_list|(
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|Addr
-argument_list|,
-name|StringRef
-name|Name
-argument_list|,
-name|uint64_t
-name|Size
-argument_list|)
-decl_stmt|;
 comment|/// \brief Creates all the offload entries in the current compilation unit
 comment|/// along with the associated metadata.
 name|void
@@ -1208,7 +1413,8 @@ argument|CodeGenFunction&CGF
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|OpenMPLocationFlags Flags = OMP_IDENT_KMPC
+argument|unsigned Flags =
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns pointer to ident_t type.
@@ -1236,7 +1442,7 @@ name|Constant
 operator|*
 name|createRuntimeFunction
 argument_list|(
-argument|OpenMPRTLFunction Function
+argument|unsigned Function
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns __kmpc_for_static_init_* runtime function for the specified
@@ -1364,11 +1570,13 @@ expr_stmt|;
 comment|/// \brief Set of threadprivate variables with the generated initializer.
 name|llvm
 operator|::
-name|DenseSet
+name|SmallPtrSet
 operator|<
 specifier|const
 name|VarDecl
 operator|*
+operator|,
+literal|4
 operator|>
 name|ThreadPrivateWithDefinition
 expr_stmt|;
@@ -1424,6 +1632,107 @@ argument_list|(
 argument|StringRef CriticalName
 argument_list|)
 expr_stmt|;
+struct|struct
+name|TaskResultTy
+block|{
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NewTask
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|TaskEntry
+operator|=
+name|nullptr
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NewTaskNewTaskTTy
+operator|=
+name|nullptr
+expr_stmt|;
+name|LValue
+name|TDBase
+decl_stmt|;
+name|RecordDecl
+modifier|*
+name|KmpTaskTQTyRD
+init|=
+name|nullptr
+decl_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|TaskDupFn
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+struct|;
+comment|/// Emit task region for the task directive. The task region is emitted in
+comment|/// several steps:
+comment|/// 1. Emit a call to kmp_task_t *__kmpc_omp_task_alloc(ident_t *, kmp_int32
+comment|/// gtid, kmp_int32 flags, size_t sizeof_kmp_task_t, size_t sizeof_shareds,
+comment|/// kmp_routine_entry_t *task_entry). Here task_entry is a pointer to the
+comment|/// function:
+comment|/// kmp_int32 .omp_task_entry.(kmp_int32 gtid, kmp_task_t *tt) {
+comment|///   TaskFunction(gtid, tt->part_id, tt->shareds);
+comment|///   return 0;
+comment|/// }
+comment|/// 2. Copy a list of shared variables to field shareds of the resulting
+comment|/// structure kmp_task_t returned by the previous call (if any).
+comment|/// 3. Copy a pointer to destructions function to field destructions of the
+comment|/// resulting structure kmp_task_t.
+comment|/// \param D Current task directive.
+comment|/// \param TaskFunction An LLVM function with type void (*)(i32 /*gtid*/, i32
+comment|/// /*part_id*/, captured_struct */*__context*/);
+comment|/// \param SharedsTy A type which contains references the shared variables.
+comment|/// \param Shareds Context with the list of shared variables from the \p
+comment|/// TaskFunction.
+comment|/// \param Data Additional data for task generation like tiednsee, final
+comment|/// state, list of privates etc.
+name|TaskResultTy
+name|emitTaskInit
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|TaskFunction
+argument_list|,
+name|QualType
+name|SharedsTy
+argument_list|,
+name|Address
+name|Shareds
+argument_list|,
+specifier|const
+name|OMPTaskDataTy
+operator|&
+name|Data
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1444,6 +1753,45 @@ name|void
 name|clear
 argument_list|()
 expr_stmt|;
+comment|/// Emit code for the specified user defined reduction construct.
+name|virtual
+name|void
+name|emitUserDefinedReduction
+parameter_list|(
+name|CodeGenFunction
+modifier|*
+name|CGF
+parameter_list|,
+specifier|const
+name|OMPDeclareReductionDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+comment|/// Get combiner/initializer for the specified user-defined reduction, if any.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|>
+name|getUserDefinedReduction
+argument_list|(
+specifier|const
+name|OMPDeclareReductionDecl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
 comment|/// \brief Emits outlined function for the specified OpenMP parallel directive
 comment|/// \a D. This outlined function has type void(*)(kmp_int32 *ThreadID,
 comment|/// kmp_int32 BoundID, struct context_vars*).
@@ -1457,7 +1805,7 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|emitParallelOutlinedFunction
+name|emitParallelOrTeamsOutlinedFunction
 argument_list|(
 argument|const OMPExecutableDirective&D
 argument_list|,
@@ -1469,13 +1817,19 @@ argument|const RegionCodeGenTy&CodeGen
 argument_list|)
 expr_stmt|;
 comment|/// \brief Emits outlined function for the OpenMP task directive \a D. This
-comment|/// outlined function has type void(*)(kmp_int32 ThreadID, kmp_int32
-comment|/// PartID, struct context_vars*).
+comment|/// outlined function has type void(*)(kmp_int32 ThreadID, struct task_t*
+comment|/// TaskT).
 comment|/// \param D OpenMP directive.
 comment|/// \param ThreadIDVar Variable for thread id in the current OpenMP region.
+comment|/// \param PartIDVar Variable for partition id in the current OpenMP untied
+comment|/// task region.
+comment|/// \param TaskTVar Variable for task_t argument.
 comment|/// \param InnermostKind Kind of innermost directive (for simple directives it
 comment|/// is a directive itself, for combined - its innermost directive).
 comment|/// \param CodeGen Code generation sequence for the \a D directive.
+comment|/// \param Tied true if task is generated for tied task, false otherwise.
+comment|/// \param NumberOfParts Number of parts in untied task. Ignored for tied
+comment|/// tasks.
 comment|///
 name|virtual
 name|llvm
@@ -1488,9 +1842,17 @@ argument|const OMPExecutableDirective&D
 argument_list|,
 argument|const VarDecl *ThreadIDVar
 argument_list|,
+argument|const VarDecl *PartIDVar
+argument_list|,
+argument|const VarDecl *TaskTVar
+argument_list|,
 argument|OpenMPDirectiveKind InnermostKind
 argument_list|,
 argument|const RegionCodeGenTy&CodeGen
+argument_list|,
+argument|bool Tied
+argument_list|,
+argument|unsigned&NumberOfParts
 argument_list|)
 expr_stmt|;
 comment|/// \brief Cleans up references to the objects in finished function.
@@ -1755,6 +2117,23 @@ name|Chunked
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Check if the specified \a ScheduleKind is static non-chunked.
+comment|/// This kind of distribute directive is emitted without outer loop.
+comment|/// \param ScheduleKind Schedule kind specified in the 'dist_schedule' clause.
+comment|/// \param Chunked True if chunk is specified in the clause.
+comment|///
+name|virtual
+name|bool
+name|isStaticNonchunked
+argument_list|(
+name|OpenMPDistScheduleClauseKind
+name|ScheduleKind
+argument_list|,
+name|bool
+name|Chunked
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Check if the specified \a ScheduleKind is dynamic.
 comment|/// This kind of worksharing directive is emitted without outer loop.
 comment|/// \param ScheduleKind Schedule Kind specified in the 'schedule' clause.
@@ -1779,8 +2158,10 @@ argument_list|,
 name|SourceLocation
 name|Loc
 argument_list|,
-name|OpenMPScheduleClauseKind
-name|SchedKind
+specifier|const
+name|OpenMPScheduleTy
+operator|&
+name|ScheduleKind
 argument_list|,
 name|unsigned
 name|IVSize
@@ -1815,7 +2196,7 @@ comment|/// bounds \a LB and \a UB and stride \a ST.
 comment|///
 comment|/// \param CGF Reference to current CodeGenFunction.
 comment|/// \param Loc Clang source location.
-comment|/// \param SchedKind Schedule kind, specified by the 'schedule' clause.
+comment|/// \param ScheduleKind Schedule kind, specified by the 'schedule' clause.
 comment|/// \param IVSize Size of the iteration variable in bits.
 comment|/// \param IVSigned Sign of the interation variable.
 comment|/// \param Ordered true if loop is ordered, false otherwise.
@@ -1841,7 +2222,71 @@ argument_list|,
 name|SourceLocation
 name|Loc
 argument_list|,
-name|OpenMPScheduleClauseKind
+specifier|const
+name|OpenMPScheduleTy
+operator|&
+name|ScheduleKind
+argument_list|,
+name|unsigned
+name|IVSize
+argument_list|,
+name|bool
+name|IVSigned
+argument_list|,
+name|bool
+name|Ordered
+argument_list|,
+name|Address
+name|IL
+argument_list|,
+name|Address
+name|LB
+argument_list|,
+name|Address
+name|UB
+argument_list|,
+name|Address
+name|ST
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Chunk
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|///
+comment|/// \param CGF Reference to current CodeGenFunction.
+comment|/// \param Loc Clang source location.
+comment|/// \param SchedKind Schedule kind, specified by the 'dist_schedule' clause.
+comment|/// \param IVSize Size of the iteration variable in bits.
+comment|/// \param IVSigned Sign of the interation variable.
+comment|/// \param Ordered true if loop is ordered, false otherwise.
+comment|/// \param IL Address of the output variable in which the flag of the
+comment|/// last iteration is returned.
+comment|/// \param LB Address of the output variable in which the lower iteration
+comment|/// number is returned.
+comment|/// \param UB Address of the output variable in which the upper iteration
+comment|/// number is returned.
+comment|/// \param ST Address of the output variable in which the stride value is
+comment|/// returned nesessary to generated the static_chunked scheduled loop.
+comment|/// \param Chunk Value of the chunk for the static_chunked scheduled loop.
+comment|/// For the default (nullptr) value, the chunk 1 will be used.
+comment|///
+name|virtual
+name|void
+name|emitDistributeStaticInit
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|OpenMPDistScheduleClauseKind
 name|SchedKind
 argument_list|,
 name|unsigned
@@ -2087,12 +2532,6 @@ comment|/// 4. Emit a call to kmp_int32 __kmpc_omp_task(ident_t *, kmp_int32 gti
 comment|/// kmp_task_t *new_task), where new_task is a resulting structure from
 comment|/// previous items.
 comment|/// \param D Current task directive.
-comment|/// \param Tied true if the task is tied (the task is tied to the thread that
-comment|/// can suspend its task region), false - untied (the task is not tied to any
-comment|/// thread).
-comment|/// \param Final Contains either constant bool value, or llvm::Value * of i1
-comment|/// type for final clause. If the value is true, the task forces all of its
-comment|/// child tasks to become final and included tasks.
 comment|/// \param TaskFunction An LLVM function with type void (*)(i32 /*gtid*/, i32
 comment|/// /*part_id*/, captured_struct */*__context*/);
 comment|/// \param SharedsTy A type which contains references the shared variables.
@@ -2100,19 +2539,8 @@ comment|/// \param Shareds Context with the list of shared variables from the \p
 comment|/// TaskFunction.
 comment|/// \param IfCond Not a nullptr if 'if' clause was specified, nullptr
 comment|/// otherwise.
-comment|/// \param PrivateVars List of references to private variables for the task
-comment|/// directive.
-comment|/// \param PrivateCopies List of private copies for each private variable in
-comment|/// \p PrivateVars.
-comment|/// \param FirstprivateVars List of references to private variables for the
-comment|/// task directive.
-comment|/// \param FirstprivateCopies List of private copies for each private variable
-comment|/// in \p FirstprivateVars.
-comment|/// \param FirstprivateInits List of references to auto generated variables
-comment|/// used for initialization of a single array element. Used if firstprivate
-comment|/// variable is of array type.
-comment|/// \param Dependences List of dependences for the 'task' construct, including
-comment|/// original expression and dependency type.
+comment|/// \param Data Additional data for task generation like tiednsee, final
+comment|/// state, list of privates etc.
 name|virtual
 name|void
 name|emitTaskCall
@@ -2128,24 +2556,6 @@ specifier|const
 name|OMPExecutableDirective
 operator|&
 name|D
-argument_list|,
-name|bool
-name|Tied
-argument_list|,
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-argument_list|,
-literal|1
-argument_list|,
-name|bool
-operator|>
-name|Final
 argument_list|,
 name|llvm
 operator|::
@@ -2164,59 +2574,78 @@ name|Expr
 operator|*
 name|IfCond
 argument_list|,
-name|ArrayRef
-operator|<
 specifier|const
-name|Expr
-operator|*
-operator|>
-name|PrivateVars
+name|OMPTaskDataTy
+operator|&
+name|Data
+argument_list|)
+decl_stmt|;
+comment|/// Emit task region for the taskloop directive. The taskloop region is
+comment|/// emitted in several steps:
+comment|/// 1. Emit a call to kmp_task_t *__kmpc_omp_task_alloc(ident_t *, kmp_int32
+comment|/// gtid, kmp_int32 flags, size_t sizeof_kmp_task_t, size_t sizeof_shareds,
+comment|/// kmp_routine_entry_t *task_entry). Here task_entry is a pointer to the
+comment|/// function:
+comment|/// kmp_int32 .omp_task_entry.(kmp_int32 gtid, kmp_task_t *tt) {
+comment|///   TaskFunction(gtid, tt->part_id, tt->shareds);
+comment|///   return 0;
+comment|/// }
+comment|/// 2. Copy a list of shared variables to field shareds of the resulting
+comment|/// structure kmp_task_t returned by the previous call (if any).
+comment|/// 3. Copy a pointer to destructions function to field destructions of the
+comment|/// resulting structure kmp_task_t.
+comment|/// 4. Emit a call to void __kmpc_taskloop(ident_t *loc, int gtid, kmp_task_t
+comment|/// *task, int if_val, kmp_uint64 *lb, kmp_uint64 *ub, kmp_int64 st, int
+comment|/// nogroup, int sched, kmp_uint64 grainsize, void *task_dup ), where new_task
+comment|/// is a resulting structure from
+comment|/// previous items.
+comment|/// \param D Current task directive.
+comment|/// \param TaskFunction An LLVM function with type void (*)(i32 /*gtid*/, i32
+comment|/// /*part_id*/, captured_struct */*__context*/);
+comment|/// \param SharedsTy A type which contains references the shared variables.
+comment|/// \param Shareds Context with the list of shared variables from the \p
+comment|/// TaskFunction.
+comment|/// \param IfCond Not a nullptr if 'if' clause was specified, nullptr
+comment|/// otherwise.
+comment|/// \param Data Additional data for task generation like tiednsee, final
+comment|/// state, list of privates etc.
+name|virtual
+name|void
+name|emitTaskLoopCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
 argument_list|,
-name|ArrayRef
-operator|<
+name|SourceLocation
+name|Loc
+argument_list|,
 specifier|const
-name|Expr
-operator|*
-operator|>
-name|PrivateCopies
+name|OMPLoopDirective
+operator|&
+name|D
 argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|FirstprivateVars
-argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|FirstprivateCopies
-argument_list|,
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-name|FirstprivateInits
-argument_list|,
-name|ArrayRef
-operator|<
-name|std
+name|llvm
 operator|::
-name|pair
-operator|<
-name|OpenMPDependClauseKind
+name|Value
+operator|*
+name|TaskFunction
+argument_list|,
+name|QualType
+name|SharedsTy
+argument_list|,
+name|Address
+name|Shareds
 argument_list|,
 specifier|const
 name|Expr
 operator|*
-operator|>>
-name|Dependences
+name|IfCond
+argument_list|,
+specifier|const
+name|OMPTaskDataTy
+operator|&
+name|Data
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit code for the directive that does not require outlining.
@@ -2399,6 +2828,7 @@ comment|/// \param ParentName Name of the function that encloses the target regi
 comment|/// \param OutlinedFn Outlined function value to be defined by this call.
 comment|/// \param OutlinedFnID Outlined function ID value to be defined by this call.
 comment|/// \param IsOffloadEntry True if the outlined function is an offload entry.
+comment|/// \param CodeGen Code generation sequence for the \a D directive.
 comment|/// An oulined function may not be an entry if, e.g. the if clause always
 comment|/// evaluates to false.
 name|virtual
@@ -2429,6 +2859,11 @@ name|OutlinedFnID
 argument_list|,
 name|bool
 name|IsOffloadEntry
+argument_list|,
+specifier|const
+name|RegionCodeGenTy
+operator|&
+name|CodeGen
 argument_list|)
 decl_stmt|;
 comment|/// \brief Emit the target offloading code associated with \a D. The emitted
@@ -2532,6 +2967,192 @@ operator|*
 name|emitRegistrationFunction
 argument_list|()
 expr_stmt|;
+comment|/// \brief Emits code for teams call of the \a OutlinedFn with
+comment|/// variables captured in a record which address is stored in \a
+comment|/// CapturedStruct.
+comment|/// \param OutlinedFn Outlined function to be run by team masters. Type of
+comment|/// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
+comment|/// \param CapturedVars A pointer to the record with the references to
+comment|/// variables used in \a OutlinedFn function.
+comment|///
+name|virtual
+name|void
+name|emitTeamsCall
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|OMPExecutableDirective
+operator|&
+name|D
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OutlinedFn
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|CapturedVars
+argument_list|)
+decl_stmt|;
+comment|/// \brief Emits call to void __kmpc_push_num_teams(ident_t *loc, kmp_int32
+comment|/// global_tid, kmp_int32 num_teams, kmp_int32 thread_limit) to generate code
+comment|/// for num_teams clause.
+comment|/// \param NumTeams An integer expression of teams.
+comment|/// \param ThreadLimit An integer expression of threads.
+name|virtual
+name|void
+name|emitNumTeamsClause
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|NumTeams
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|ThreadLimit
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the target data mapping code associated with \a D.
+comment|/// \param D Directive to emit.
+comment|/// \param IfCond Expression evaluated in if clause associated with the target
+comment|/// directive, or null if no if clause is used.
+comment|/// \param Device Expression evaluated in device clause associated with the
+comment|/// target directive, or null if no device clause is used.
+comment|/// \param CodeGen Function that emits the enclosed region.
+name|virtual
+name|void
+name|emitTargetDataCalls
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|IfCond
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Device
+parameter_list|,
+specifier|const
+name|RegionCodeGenTy
+modifier|&
+name|CodeGen
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the data mapping/movement code associated with the directive
+comment|/// \a D that should be of the form 'target [{enter|exit} data | update]'.
+comment|/// \param D Directive to emit.
+comment|/// \param IfCond Expression evaluated in if clause associated with the target
+comment|/// directive, or null if no if clause is used.
+comment|/// \param Device Expression evaluated in device clause associated with the
+comment|/// target directive, or null if no device clause is used.
+name|virtual
+name|void
+name|emitTargetDataStandAloneCall
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OMPExecutableDirective
+modifier|&
+name|D
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|IfCond
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|Device
+parameter_list|)
+function_decl|;
+comment|/// Marks function \a Fn with properly mangled versions of vector functions.
+comment|/// \param FD Function marked as 'declare simd'.
+comment|/// \param Fn LLVM function that must be marked with 'declare simd'
+comment|/// attributes.
+name|virtual
+name|void
+name|emitDeclareSimdFunction
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|Fn
+argument_list|)
+decl_stmt|;
+comment|/// Emit initialization for doacross loop nesting support.
+comment|/// \param D Loop-based construct used in doacross nesting construct.
+name|virtual
+name|void
+name|emitDoacrossInit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OMPLoopDirective
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+comment|/// Emit code for doacross ordered directive with 'depend' clause.
+comment|/// \param C 'depend' clause with 'sink|source' dependency kind.
+name|virtual
+name|void
+name|emitDoacrossOrdered
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OMPDependClause
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

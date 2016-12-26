@@ -232,6 +232,13 @@ name|lldb_private
 operator|::
 name|ArchSpec
 operator|::
+name|eCore_s390x_generic
+case|:
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
 name|eCore_x86_64_x86_64
 case|:
 return|return
@@ -334,6 +341,13 @@ name|GetCore
 argument_list|()
 condition|)
 block|{
+case|case
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|::
+name|eCore_s390x_generic
+case|:
 case|case
 name|lldb_private
 operator|::

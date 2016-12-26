@@ -120,7 +120,11 @@ name|DeclareScalarRet
 block|,
 name|PrintCall
 block|,
+name|PrintConvergentCall
+block|,
 name|PrintCallUni
+block|,
+name|PrintConvergentCallUni
 block|,
 name|CallArgBegin
 block|,
@@ -1114,7 +1118,9 @@ operator|>
 operator|&
 name|Ins
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG
@@ -1199,7 +1205,9 @@ operator|>
 operator|&
 name|OutVals
 argument_list|,
+specifier|const
 name|SDLoc
+operator|&
 name|dl
 argument_list|,
 name|SelectionDAG

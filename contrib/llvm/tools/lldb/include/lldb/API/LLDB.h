@@ -236,6 +236,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/API/SBMemoryRegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/API/SBMemoryRegionInfoList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBModule.h"
 end_include
 

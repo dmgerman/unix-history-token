@@ -135,7 +135,7 @@ operator|>
 name|ObjSetHandleT
 name|addObjectSet
 argument_list|(
-argument|ObjSetT&Objects
+argument|ObjSetT Objects
 argument_list|,
 argument|MemoryManagerPtrT MemMgr
 argument_list|,
@@ -185,7 +185,12 @@ name|BaseLayer
 operator|.
 name|addObjectSet
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Objects
+argument_list|)
 argument_list|,
 name|std
 operator|::

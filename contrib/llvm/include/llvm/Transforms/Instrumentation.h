@@ -260,12 +260,12 @@ function_decl|;
 comment|// PGO Instrumention
 name|ModulePass
 modifier|*
-name|createPGOInstrumentationGenPass
+name|createPGOInstrumentationGenLegacyPass
 parameter_list|()
 function_decl|;
 name|ModulePass
 modifier|*
-name|createPGOInstrumentationUsePass
+name|createPGOInstrumentationUseLegacyPass
 parameter_list|(
 name|StringRef
 name|Filename
@@ -274,6 +274,16 @@ name|StringRef
 argument_list|(
 literal|""
 argument_list|)
+parameter_list|)
+function_decl|;
+name|ModulePass
+modifier|*
+name|createPGOIndirectCallPromotionLegacyPass
+parameter_list|(
+name|bool
+name|InLTO
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// Options for the frontend instrumentation based profiling pass.
@@ -303,7 +313,7 @@ struct|;
 comment|/// Insert frontend instrumentation based profiling.
 name|ModulePass
 modifier|*
-name|createInstrProfilingPass
+name|createInstrProfilingLegacyPass
 parameter_list|(
 specifier|const
 name|InstrProfOptions
@@ -326,6 +336,11 @@ name|false
 parameter_list|,
 name|bool
 name|Recover
+init|=
+name|false
+parameter_list|,
+name|bool
+name|UseAfterScope
 init|=
 name|false
 parameter_list|)
@@ -411,6 +426,47 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
+comment|// Options for EfficiencySanitizer sub-tools.
+struct|struct
+name|EfficiencySanitizerOptions
+block|{
+name|EfficiencySanitizerOptions
+argument_list|()
+operator|:
+name|ToolType
+argument_list|(
+argument|ESAN_None
+argument_list|)
+block|{}
+expr|enum
+name|Type
+block|{
+name|ESAN_None
+operator|=
+literal|0
+block|,
+name|ESAN_CacheFrag
+block|,
+name|ESAN_WorkingSet
+block|,   }
+name|ToolType
+expr_stmt|;
+block|}
+struct|;
+comment|// Insert EfficiencySanitizer instrumentation.
+name|ModulePass
+modifier|*
+name|createEfficiencySanitizerPass
+parameter_list|(
+specifier|const
+name|EfficiencySanitizerOptions
+modifier|&
+name|Options
+init|=
+name|EfficiencySanitizerOptions
+argument_list|()
+parameter_list|)
+function_decl|;
 comment|// Options for sanitizer coverage instrumentation.
 struct|struct
 name|SanitizerCoverageOptions
@@ -439,6 +495,11 @@ name|false
 argument_list|)
 operator|,
 name|Use8bitCounters
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|TracePC
 argument_list|(
 argument|false
 argument_list|)
@@ -469,6 +530,9 @@ name|TraceCmp
 decl_stmt|;
 name|bool
 name|Use8bitCounters
+decl_stmt|;
+name|bool
+name|TracePC
 decl_stmt|;
 block|}
 struct|;
@@ -551,20 +615,6 @@ name|FunctionPass
 modifier|*
 name|createBoundsCheckingPass
 parameter_list|()
-function_decl|;
-comment|/// \brief This pass splits the stack into a safe stack and an unsafe stack to
-comment|/// protect against stack-based overflow vulnerabilities.
-name|FunctionPass
-modifier|*
-name|createSafeStackPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-init|=
-name|nullptr
-parameter_list|)
 function_decl|;
 comment|/// \brief Calculate what to divide by to scale counts.
 comment|///

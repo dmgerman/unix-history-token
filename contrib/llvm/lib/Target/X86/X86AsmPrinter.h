@@ -117,6 +117,14 @@ block|;
 name|FaultMaps
 name|FM
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCCodeEmitter
+operator|>
+name|CodeEmitter
+block|;
 comment|// This utility class tracks the length of a stackmap instruction's 'shadow'.
 comment|// It is used by the X86AsmPrinter to ensure that the stackmap shadow
 comment|// invariants (i.e. no other stackmaps, patchpoints, or control flow within
@@ -130,25 +138,19 @@ name|StackMapShadowTracker
 block|{
 name|public
 operator|:
-name|StackMapShadowTracker
-argument_list|(
-name|TargetMachine
-operator|&
-name|TM
-argument_list|)
-block|;
-operator|~
-name|StackMapShadowTracker
-argument_list|()
-block|;
 name|void
 name|startFunction
 argument_list|(
-name|MachineFunction
+argument|MachineFunction&MF
+argument_list|)
+block|{
+name|this
+operator|->
+name|MF
+operator|=
 operator|&
 name|MF
-argument_list|)
-block|;
+block|;     }
 name|void
 name|count
 argument_list|(
@@ -160,6 +162,10 @@ specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
+argument_list|,
+name|MCCodeEmitter
+operator|*
+name|CodeEmitter
 argument_list|)
 block|;
 comment|// Called to signal the start of a shadow of RequiredSize bytes.
@@ -198,25 +204,15 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|TargetMachine
-operator|&
-name|TM
-block|;
 specifier|const
 name|MachineFunction
 operator|*
 name|MF
 block|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MCCodeEmitter
-operator|>
-name|CodeEmitter
-block|;
 name|bool
 name|InShadow
+operator|=
+name|false
 block|;
 comment|// RequiredShadowSize holds the length of the shadow specified in the most
 comment|// recently encountered STACKMAP instruction.
@@ -225,12 +221,74 @@ comment|// recently encountered STACKMAP, stopping when that number is greater t
 comment|// or equal to RequiredShadowSize.
 name|unsigned
 name|RequiredShadowSize
+operator|=
+literal|0
 block|,
 name|CurrentShadowSize
+operator|=
+literal|0
 block|;   }
 block|;
 name|StackMapShadowTracker
 name|SMShadowTracker
+block|;
+comment|// This describes the kind of sled we're storing in the XRay table.
+block|enum
+name|class
+name|SledKind
+operator|:
+name|uint8_t
+block|{
+name|FUNCTION_ENTER
+operator|=
+literal|0
+block|,
+name|FUNCTION_EXIT
+operator|=
+literal|1
+block|,
+name|TAIL_CALL
+operator|=
+literal|2
+block|,   }
+block|;
+comment|// The table will contain these structs that point to the sled, the function
+comment|// containing the sled, and what kind of sled (and whether they should always
+comment|// be instrumented).
+block|struct
+name|XRayFunctionEntry
+block|{
+specifier|const
+name|MCSymbol
+operator|*
+name|Sled
+block|;
+specifier|const
+name|MCSymbol
+operator|*
+name|Function
+block|;
+name|SledKind
+name|Kind
+block|;
+name|bool
+name|AlwaysInstrument
+block|;
+specifier|const
+name|class
+name|Function
+operator|*
+name|Fn
+block|;   }
+block|;
+comment|// All the sleds to be emitted.
+name|std
+operator|::
+name|vector
+operator|<
+name|XRayFunctionEntry
+operator|>
+name|Sleds
 block|;
 comment|// All instructions emitted by the X86AsmPrinter should use this helper
 comment|// method.
@@ -295,6 +353,19 @@ name|MCIL
 argument_list|)
 block|;
 name|void
+name|LowerPATCHABLE_OP
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
 name|LowerTlsAddr
 argument_list|(
 name|X86MCInstLower
@@ -305,6 +376,63 @@ specifier|const
 name|MachineInstr
 operator|&
 name|MI
+argument_list|)
+block|;
+comment|// XRay-specific lowering for X86.
+name|void
+name|LowerPATCHABLE_FUNCTION_ENTER
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_RET
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+name|void
+name|LowerPATCHABLE_TAIL_CALL
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|,
+name|X86MCInstLower
+operator|&
+name|MCIL
+argument_list|)
+block|;
+comment|// Helper function that emits the XRay sleds we've collected for a particular
+comment|// function.
+name|void
+name|EmitXRayTable
+argument_list|()
+block|;
+comment|// Helper function to record a given XRay sled.
+name|void
+name|recordSled
+argument_list|(
+argument|MCSymbol *Sled
+argument_list|,
+argument|const MachineInstr&MI
+argument_list|,
+argument|SledKind Kind
 argument_list|)
 block|;
 name|public
@@ -345,13 +473,7 @@ argument_list|)
 block|,
 name|FM
 argument_list|(
-operator|*
-name|this
-argument_list|)
-block|,
-name|SMShadowTracker
-argument_list|(
-argument|TM
+argument|*this
 argument_list|)
 block|{}
 specifier|const
