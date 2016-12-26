@@ -7079,6 +7079,30 @@ value|(DRM_HZ& 1)
 end_define
 
 begin_comment
+comment|/* Platform section */
+end_comment
+
+begin_function_decl
+name|int
+name|drm_get_platform_dev
+parameter_list|(
+name|device_t
+name|kdev
+parameter_list|,
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|drm_driver
+modifier|*
+name|driver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* FreeBSD specific -- should be moved to drm_os_freebsd.h */
 end_comment
 
