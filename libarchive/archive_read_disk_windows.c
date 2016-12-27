@@ -4091,7 +4091,7 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
-comment|/* Save the times to be restored. This must be in before 	 * calling archive_read_disk_descend() or any chance of it, 	 * especially, invokng a callback. */
+comment|/* Save the times to be restored. This must be in before 	 * calling archive_read_disk_descend() or any chance of it, 	 * especially, invoking a callback. */
 name|t
 operator|->
 name|restore_time

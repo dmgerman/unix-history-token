@@ -1316,7 +1316,7 @@ comment|/* The creation time of ISO image. */
 name|time_t
 name|birth_time
 decl_stmt|;
-comment|/* A file stream of a temporary file, which file contents 	 * save to until ISO iamge can be created. */
+comment|/* A file stream of a temporary file, which file contents 	 * save to until ISO image can be created. */
 name|int
 name|temp_fd
 decl_stmt|;
@@ -8681,7 +8681,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Write an ISO 9660 image. 	 */
-comment|/* Switc to start using wbuff as file buffer. */
+comment|/* Switch to start using wbuff as file buffer. */
 name|iso9660
 operator|->
 name|wbuff_remaining
@@ -22526,7 +22526,7 @@ name|cur_content
 operator|->
 name|blocks
 expr_stmt|;
-comment|/* Next fragument */
+comment|/* Next fragment */
 name|file
 operator|->
 name|cur_content
@@ -23449,7 +23449,7 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
-comment|/* 		 * Converte a filename to UTF-16BE. 		 */
+comment|/* 		 * Convert a filename to UTF-16BE. 		 */
 if|if
 condition|(
 literal|0
@@ -27508,7 +27508,7 @@ name|cur_content
 operator|->
 name|blocks
 expr_stmt|;
-comment|/* Next fragument */
+comment|/* Next fragment */
 name|file
 operator|->
 name|cur_content
@@ -31023,7 +31023,7 @@ name|np
 operator|->
 name|ext_len
 expr_stmt|;
-comment|/* Make an offset of the number which is used to be set 		 * hexadecimal number to avoid duplicate identififier. */
+comment|/* Make an offset of the number which is used to be set 		 * hexadecimal number to avoid duplicate identifier. */
 if|if
 condition|(
 name|iso9660
@@ -34311,7 +34311,7 @@ literal|1
 index|]
 operator|)
 expr_stmt|;
-comment|/* Theare aren't level 8 directories reaching a deepr level. */
+comment|/* There aren't level 8 directories reaching a deeper level. */
 if|if
 condition|(
 name|pt
@@ -34610,7 +34610,7 @@ operator|(
 name|cmp
 operator|)
 return|;
-comment|/* Compare indetifier */
+comment|/* Compare identifier */
 name|s1
 operator|=
 name|p1
@@ -34887,7 +34887,7 @@ operator|(
 name|cmp
 operator|)
 return|;
-comment|/* Compare indetifier */
+comment|/* Compare identifier */
 name|s1
 operator|=
 operator|(
