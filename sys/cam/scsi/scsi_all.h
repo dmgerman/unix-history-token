@@ -699,6 +699,10 @@ name|SMS_SP
 value|0x01
 define|#
 directive|define
+name|SMS_RTD
+value|0x02
+define|#
+directive|define
 name|SMS_PF
 value|0x10
 name|u_int8_t
