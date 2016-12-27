@@ -5678,7 +5678,12 @@ literal|0
 init|;
 name|index
 operator|<
-name|SFXGE_RX_SCALE_MAX
+name|nitems
+argument_list|(
+name|sc
+operator|->
+name|rx_indir_table
+argument_list|)
 condition|;
 name|index
 operator|++
@@ -5734,7 +5739,12 @@ name|sc
 operator|->
 name|rx_indir_table
 argument_list|,
-name|SFXGE_RX_SCALE_MAX
+name|nitems
+argument_list|(
+name|sc
+operator|->
+name|rx_indir_table
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
