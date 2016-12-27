@@ -1298,7 +1298,7 @@ comment|/*  * RFC4188 specifics.  */
 end_comment
 
 begin_comment
-comment|/*  * Construct the SNMP index from the address DST Mac.   */
+comment|/*  * Construct the SNMP index from the address DST Mac.  */
 end_comment
 
 begin_function
@@ -1883,7 +1883,7 @@ comment|/*  * Private BEGEMOT-BRIDGE-MIB specifics.  */
 end_comment
 
 begin_comment
-comment|/*  * Construct the SNMP index from the bridge interface name  * and the address DST Mac.   */
+comment|/*  * Construct the SNMP index from the bridge interface name  * and the address DST Mac.  */
 end_comment
 
 begin_function
@@ -2046,7 +2046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a bridge address entry by the bridge interface name  * and the address DST Mac.   */
+comment|/*  * Find a bridge address entry by the bridge interface name  * and the address DST Mac.  */
 end_comment
 
 begin_function
@@ -2232,7 +2232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the next bridge address entry by the bridge interface name  * and the address DST Mac.   */
+comment|/*  * Find the next bridge address entry by the bridge interface name  * and the address DST Mac.  */
 end_comment
 
 begin_function

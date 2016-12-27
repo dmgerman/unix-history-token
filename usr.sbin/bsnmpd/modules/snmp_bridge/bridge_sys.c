@@ -1234,7 +1234,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Re-fetching the data from the driver after that might be a good 	 * idea, since changing our bridge's priority should invoke  	 * recalculation of the active spanning tree topology in the network. 	 */
+comment|/* 	 * Re-fetching the data from the driver after that might be a good 	 * idea, since changing our bridge's priority should invoke 	 * recalculation of the active spanning tree topology in the network. 	 */
 name|bif
 operator|->
 name|priority

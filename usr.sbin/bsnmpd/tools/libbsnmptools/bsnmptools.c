@@ -406,7 +406,7 @@ literal|"Unknown"
 block|,
 name|SNMP_SYNTAX_UNKNOWN
 block|}
-block|,  }
+block|, }
 struct|;
 end_struct
 
@@ -891,7 +891,7 @@ value|o->info->table_idx->index_list
 end_define
 
 begin_comment
-comment|/*   * Walk through the file list and import string<->oid mappings from each file.  */
+comment|/*  * Walk through the file list and import string<->oid mappings from each file.  */
 end_comment
 
 begin_function

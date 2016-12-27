@@ -4579,7 +4579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Now the module is started. Select on the sockets, so that we can get   * unsolicited input.  */
+comment|/*  * Now the module is started. Select on the sockets, so that we can get  * unsolicited input.  */
 end_comment
 
 begin_function
