@@ -90,7 +90,7 @@ modifier|*
 name|mntbufp
 parameter_list|,
 name|int
-name|flags
+name|mode
 parameter_list|)
 block|{
 specifier|static
@@ -148,7 +148,7 @@ name|mntbuf
 argument_list|,
 name|bufsize
 argument_list|,
-name|flags
+name|mode
 argument_list|)
 operator|)
 operator|<
@@ -224,7 +224,7 @@ name|mntbuf
 argument_list|,
 name|bufsize
 argument_list|,
-name|flags
+name|mode
 argument_list|)
 operator|)
 operator|<

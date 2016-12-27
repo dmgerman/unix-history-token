@@ -1922,7 +1922,7 @@ name|long
 name|bufsize
 decl_stmt|;
 name|int
-name|flags
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -1949,7 +1949,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getfsstat_args
-comment|/* { 		struct statfs *buf; 		long bufsize; 		int flags; 	} */
+comment|/* { 		struct statfs *buf; 		long bufsize; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2001,7 +2001,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -2058,7 +2058,7 @@ name|uio_seg
 name|bufseg
 parameter_list|,
 name|int
-name|flags
+name|mode
 parameter_list|)
 block|{
 name|struct
@@ -2090,6 +2090,25 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|MNT_WAIT
+case|:
+case|case
+name|MNT_NOWAIT
+case|:
+break|break;
+default|default:
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|restart
 label|:
 name|maxcount
@@ -2287,7 +2306,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|flags
+name|mode
 operator|==
 name|MNT_WAIT
 condition|)
@@ -2390,14 +2409,10 @@ name|mnt_flag
 operator|&
 name|MNT_VISFLAGMASK
 expr_stmt|;
-comment|/* 			 * If MNT_NOWAIT or MNT_LAZY is specified, do not 			 * refresh the fsstat cache. 			 */
+comment|/* 			 * If MNT_NOWAIT is specified, do not refresh 			 * the fsstat cache. 			 */
 if|if
 condition|(
-name|flags
-operator|!=
-name|MNT_LAZY
-operator|&&
-name|flags
+name|mode
 operator|!=
 name|MNT_NOWAIT
 condition|)
@@ -2901,7 +2916,7 @@ name|long
 name|bufsize
 decl_stmt|;
 name|int
-name|flags
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -2928,7 +2943,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|freebsd4_getfsstat_args
-comment|/* { 		struct ostatfs *buf; 		long bufsize; 		int flags; 	} */
+comment|/* { 		struct ostatfs *buf; 		long bufsize; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -3023,7 +3038,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|mode
 argument_list|)
 expr_stmt|;
 name|td

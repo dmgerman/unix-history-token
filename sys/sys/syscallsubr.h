@@ -946,7 +946,7 @@ name|uio_seg
 name|bufseg
 parameter_list|,
 name|int
-name|flags
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
