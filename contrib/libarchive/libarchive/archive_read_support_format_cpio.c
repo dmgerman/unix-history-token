@@ -1836,7 +1836,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Handle filnames as libarchive 2.x */
+comment|/* Handle filenames as libarchive 2.x */
 name|cpio
 operator|->
 name|init_default_conversion

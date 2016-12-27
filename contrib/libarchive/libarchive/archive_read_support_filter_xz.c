@@ -1068,7 +1068,7 @@ name|bits_checked
 operator|+=
 literal|64
 expr_stmt|;
-comment|/* Second through fifth bytes are dictionary size, stored in 	 * little-endian order. The minimum dictionary size is 	 * 1<< 12(4KiB) which the lzma of LZMA SDK uses with option 	 * -d12 and the maxinam dictionary size is 1<< 27(128MiB) 	 * which the one uses with option -d27. 	 * NOTE: A comment of LZMA SDK source code says this dictionary 	 * range is from 1<< 12 to 1<< 30. */
+comment|/* Second through fifth bytes are dictionary size, stored in 	 * little-endian order. The minimum dictionary size is 	 * 1<< 12(4KiB) which the lzma of LZMA SDK uses with option 	 * -d12 and the maximum dictionary size is 1<< 27(128MiB) 	 * which the one uses with option -d27. 	 * NOTE: A comment of LZMA SDK source code says this dictionary 	 * range is from 1<< 12 to 1<< 30. */
 name|dicsize
 operator|=
 name|archive_le32dec
@@ -2219,11 +2219,6 @@ argument_list|,
 name|filters
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|LZMA_VERSION
-operator|<
-literal|50010000
 name|free
 argument_list|(
 name|filters
@@ -2234,8 +2229,6 @@ operator|.
 name|options
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ret
