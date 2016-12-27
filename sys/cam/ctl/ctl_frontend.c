@@ -1496,7 +1496,9 @@ literal|0
 init|;
 name|l
 operator|<
-name|CTL_MAX_LUNS
+name|port
+operator|->
+name|lun_map_size
 condition|;
 name|l
 operator|++
@@ -1768,7 +1770,9 @@ literal|0
 init|;
 name|l
 operator|<
-name|CTL_MAX_LUNS
+name|port
+operator|->
+name|lun_map_size
 condition|;
 name|l
 operator|++
