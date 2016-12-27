@@ -23,13 +23,6 @@ directive|define
 name|_SYS_DTRACE_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
