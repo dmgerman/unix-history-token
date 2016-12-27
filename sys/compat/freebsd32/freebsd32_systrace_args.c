@@ -10352,7 +10352,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|mode
 expr_stmt|;
 comment|/* int */
 operator|*
