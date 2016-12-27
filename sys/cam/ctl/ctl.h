@@ -148,10 +148,10 @@ decl_stmt|;
 name|uint8_t
 name|subpage
 decl_stmt|;
-name|int32_t
+name|uint16_t
 name|len_used
 decl_stmt|;
-name|int32_t
+name|uint16_t
 name|len_left
 decl_stmt|;
 block|}
