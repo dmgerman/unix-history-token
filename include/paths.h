@@ -441,6 +441,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_DEVVMM
+value|"/dev/vmm/"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_YP
 value|"/var/yp/"
 end_define
