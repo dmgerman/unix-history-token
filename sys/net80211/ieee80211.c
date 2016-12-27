@@ -2118,6 +2118,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Default for updating the VAP default TX key index.  *  * Drivers that support TX offload as well as hardware encryption offload  * may need to be informed of key index changes separate from the key  * update.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|default_update_deftxkey
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|ieee80211_keyix
+name|kid
+parameter_list|)
+block|{
+comment|/* XXX assert validity */
+comment|/* XXX assert we're in a key update block */
+name|vap
+operator|->
+name|iv_def_txkey
+operator|=
+name|kid
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Add underlying device errors to vap errors.  */
 end_comment
 
@@ -2647,6 +2676,13 @@ operator|->
 name|iv_reset
 operator|=
 name|default_reset
+expr_stmt|;
+comment|/* 	 * Install a default crypto key update method, the driver 	 * can override this. 	 */
+name|vap
+operator|->
+name|iv_update_deftxkey
+operator|=
+name|default_update_deftxkey
 expr_stmt|;
 name|ieee80211_sysctl_vattach
 argument_list|(

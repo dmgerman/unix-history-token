@@ -4916,7 +4916,7 @@ break|break;
 case|case
 name|IEEE80211_IOC_TXPOWER
 case|:
-comment|/* 		 * Tx power limit is the min of max regulatory 		 * power, any user-set limit, and the max the 		 * radio can do. 		 */
+comment|/* 		 * Tx power limit is the min of max regulatory 		 * power, any user-set limit, and the max the 		 * radio can do. 		 * 		 * TODO: methodize this 		 */
 name|ireq
 operator|->
 name|i_val
@@ -5700,6 +5700,7 @@ break|break;
 case|case
 name|IEEE80211_IOC_AMPDU_LIMIT
 case|:
+comment|/* XXX TODO: make this a per-node thing; and leave this as global */
 if|if
 condition|(
 name|vap
@@ -5760,6 +5761,7 @@ break|break;
 case|case
 name|IEEE80211_IOC_AMPDU_DENSITY
 case|:
+comment|/* XXX TODO: make this a per-node thing; and leave this as global */
 if|if
 condition|(
 name|vap
@@ -6748,11 +6750,13 @@ operator|&
 name|IEEE80211_KEY_DEFAULT
 operator|)
 condition|)
+comment|/* 			 * Inform the driver that this is the default 			 * transmit key.  Now, ideally we'd just set 			 * a flag in the key update that would 			 * say "yes, we're the default key", but 			 * that currently isn't the way the ioctl -> 			 * key interface works. 			 */
+name|ieee80211_crypto_set_deftxkey
+argument_list|(
 name|vap
-operator|->
-name|iv_def_txkey
-operator|=
+argument_list|,
 name|kid
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -14040,11 +14044,23 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* 		 * Firmware devices may need to be told about an explicit 		 * key index here, versus just inferring it from the 		 * key set / change.  Since we may also need to pause 		 * things like transmit before the key is updated, 		 * give the driver a chance to flush things by tying 		 * into key update begin/end. 		 */
+name|ieee80211_key_update_begin
+argument_list|(
 name|vap
-operator|->
-name|iv_def_txkey
-operator|=
+argument_list|)
+expr_stmt|;
+name|ieee80211_crypto_set_deftxkey
+argument_list|(
+name|vap
+argument_list|,
 name|kid
+argument_list|)
+expr_stmt|;
+name|ieee80211_key_update_end
+argument_list|(
+name|vap
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -15881,6 +15897,7 @@ break|break;
 case|case
 name|IEEE80211_IOC_AMPDU_LIMIT
 case|:
+comment|/* XXX TODO: figure out ampdu_limit versus ampdu_rxmax */
 if|if
 condition|(
 operator|!

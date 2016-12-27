@@ -2896,5 +2896,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Set the default key index for WEP, or KEYIX_NONE for no default TX key.  *  * This should be done as part of a key update block (iv_key_update_begin /  * iv_key_update_end.)  */
+end_comment
+
+begin_function
+name|void
+name|ieee80211_crypto_set_deftxkey
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|ieee80211_keyix
+name|kid
+parameter_list|)
+block|{
+comment|/* XXX TODO: assert we're in a key update block */
+name|vap
+operator|->
+name|iv_update_deftxkey
+argument_list|(
+name|vap
+argument_list|,
+name|kid
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

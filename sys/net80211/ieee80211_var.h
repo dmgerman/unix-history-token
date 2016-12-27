@@ -2019,6 +2019,7 @@ name|uint8_t
 modifier|*
 name|iv_rsn_ie
 decl_stmt|;
+comment|/* Key management */
 name|uint16_t
 name|iv_max_keyix
 decl_stmt|;
@@ -2107,6 +2108,20 @@ parameter_list|(
 name|struct
 name|ieee80211vap
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|iv_update_deftxkey
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|ieee80211_keyix
+name|deftxkey
 parameter_list|)
 function_decl|;
 specifier|const
