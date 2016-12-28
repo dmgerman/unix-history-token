@@ -893,9 +893,22 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|rc
+operator|!=
+name|EACCES
+condition|)
 goto|goto
 name|fail11
 goto|;
+comment|/* Assume largest tail padding size supported by hardware */
+name|end_padding
+operator|=
+literal|256
+expr_stmt|;
+block|}
 name|encp
 operator|->
 name|enc_rx_buf_align_end
