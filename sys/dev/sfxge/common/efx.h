@@ -1054,7 +1054,7 @@ name|EFX_MAC_ADDR_IS_MULTICAST
 parameter_list|(
 name|_address
 parameter_list|)
-value|(((uint8_t*)_address)[0]& 0x01)
+value|(((uint8_t *)_address)[0]& 0x01)
 define|#
 directive|define
 name|EFX_MAC_MULTICAST_LIST_MAX
