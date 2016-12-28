@@ -3895,6 +3895,7 @@ name|depth_required
 parameter_list|)
 block|{
 name|unsigned
+name|int
 name|hash
 decl_stmt|,
 name|incr
