@@ -3541,9 +3541,6 @@ name|chan
 init|=
 name|xchan
 decl_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|chan
 operator|->
 name|ch_vmbus
@@ -3556,9 +3553,6 @@ name|ch_id
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -5878,18 +5872,7 @@ name|ch_poll_flags
 operator|=
 name|poll_flags
 expr_stmt|;
-comment|/* 	 * Disable interrupt from the RX bufring (TX bufring does not 	 * generate interrupt to VM), and disconnect this channel from 	 * the channel map to make sure that ISR can not enqueue this 	 * channel task anymore. 	 */
-name|critical_enter
-argument_list|()
-expr_stmt|;
-name|vmbus_rxbr_intr_mask
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|ch_rxbr
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Disconnect this channel from the channel map to make sure that 	 * the RX bufring interrupt enabling bit can not be touched, and 	 * ISR can not enqueue this channel task anymore.  THEN, disable 	 * interrupt from the RX bufring (TX bufring does not generate 	 * interrupt to VM). 	 * 	 * NOTE: order is critical. 	 */
 name|chan
 operator|->
 name|ch_vmbus
@@ -5903,8 +5886,16 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|critical_exit
+name|__compiler_membar
 argument_list|()
+expr_stmt|;
+name|vmbus_rxbr_intr_mask
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|ch_rxbr
+argument_list|)
 expr_stmt|;
 comment|/* 	 * NOTE: 	 * At this point, this channel task will not be enqueued by 	 * the ISR anymore, time to cancel the pending one. 	 */
 name|taskqueue_cancel
@@ -6038,9 +6029,6 @@ comment|/* Already disabled; done. */
 return|return;
 block|}
 comment|/* 	 * Plug this channel back to the channel map and unmask 	 * the RX bufring interrupt. 	 */
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|chan
 operator|->
 name|ch_vmbus
@@ -6064,9 +6052,6 @@ name|chan
 operator|->
 name|ch_rxbr
 argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Kick start the interrupt task, just in case unmasking 	 * interrupt races ISR. 	 */
 name|taskqueue_enqueue
