@@ -361,11 +361,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__powerpc64__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -890,9 +898,17 @@ operator|=
 name|TRAP_TRACE
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__powerpc64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
 case|case
 name|EXC_ISE
 case|:
@@ -1458,9 +1474,17 @@ block|}
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__powerpc64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
 case|case
 name|EXC_DSE
 case|:
@@ -2719,9 +2743,17 @@ name|td_frame
 operator|=
 name|frame
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__powerpc64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
 comment|/* 	 * Speculatively restore last user SLB segment, which we know is 	 * invalid already, since we are likely to do copyin()/copyout(). 	 */
 asm|__asm __volatile ("slbmte %0, %1; isync" ::
 literal|"r"
@@ -2776,12 +2808,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
+begin_if
 unit|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__powerpc64__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AIM
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Handle kernel SLB faults -- runs in real mode, all seat belts off */
