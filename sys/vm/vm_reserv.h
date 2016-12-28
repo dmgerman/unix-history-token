@@ -61,6 +61,9 @@ name|alignment
 parameter_list|,
 name|vm_paddr_t
 name|boundary
+parameter_list|,
+name|vm_page_t
+name|mpred
 parameter_list|)
 function_decl|;
 end_function_decl

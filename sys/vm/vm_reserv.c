@@ -1452,7 +1452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a contiguous set of physical pages of the given size "npages"  * from existing or newly created reservations.  All of the physical pages  * must be at or above the given physical address "low" and below the given  * physical address "high".  The given value "alignment" determines the  * alignment of the first physical page in the set.  If the given value  * "boundary" is non-zero, then the set of physical pages cannot cross any  * physical address boundary that is a multiple of that value.  Both  * "alignment" and "boundary" must be a power of two.  *  * The object and free page queue must be locked.  */
+comment|/*  * Allocates a contiguous set of physical pages of the given size "npages"  * from existing or newly created reservations.  All of the physical pages  * must be at or above the given physical address "low" and below the given  * physical address "high".  The given value "alignment" determines the  * alignment of the first physical page in the set.  If the given value  * "boundary" is non-zero, then the set of physical pages cannot cross any  * physical address boundary that is a multiple of that value.  Both  * "alignment" and "boundary" must be a power of two.  *  * The page "mpred" must immediately precede the offset "pindex" within the  * specified object.  *  * The object and free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -1479,6 +1479,9 @@ name|alignment
 parameter_list|,
 name|vm_paddr_t
 name|boundary
+parameter_list|,
+name|vm_page_t
+name|mpred
 parameter_list|)
 block|{
 name|vm_paddr_t
@@ -1490,8 +1493,6 @@ name|vm_page_t
 name|m
 decl_stmt|,
 name|m_ret
-decl_stmt|,
-name|mpred
 decl_stmt|,
 name|msucc
 decl_stmt|;
@@ -1636,18 +1637,6 @@ name|NULL
 operator|)
 return|;
 comment|/* 	 * Look for an existing reservation. 	 */
-name|mpred
-operator|=
-name|vm_radix_lookup_le
-argument_list|(
-operator|&
-name|object
-operator|->
-name|rtree
-argument_list|,
-name|pindex
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mpred
@@ -1659,12 +1648,25 @@ name|KASSERT
 argument_list|(
 name|mpred
 operator|->
+name|object
+operator|==
+name|object
+argument_list|,
+operator|(
+literal|"vm_reserv_alloc_contig: object doesn't contain mpred"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mpred
+operator|->
 name|pindex
 operator|<
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_reserv_alloc_contig: pindex already allocated"
+literal|"vm_reserv_alloc_contig: mpred doesn't precede pindex"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1730,7 +1732,7 @@ operator|>
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_reserv_alloc_contig: pindex already allocated"
+literal|"vm_reserv_alloc_contig: msucc doesn't succeed pindex"
 operator|)
 argument_list|)
 expr_stmt|;
