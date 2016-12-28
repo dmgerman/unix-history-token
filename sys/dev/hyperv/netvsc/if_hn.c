@@ -1742,7 +1742,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 parameter_list|(
 name|struct
 name|hn_softc
@@ -4000,7 +4000,7 @@ end_comment
 begin_function
 unit|static
 name|int
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 parameter_list|(
 name|struct
 name|hn_softc
@@ -11633,7 +11633,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 argument_list|(
 name|sc
 argument_list|)
@@ -11952,7 +11952,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 argument_list|(
 name|sc
 argument_list|)
@@ -12170,7 +12170,7 @@ name|IFF_DRV_RUNNING
 condition|)
 return|return;
 comment|/* Configure RX filter */
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 argument_list|(
 name|sc
 argument_list|)
@@ -23323,7 +23323,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Re-enable RX. 	 */
-name|hn_set_rxfilter
+name|hn_rxfilter_config
 argument_list|(
 name|sc
 argument_list|)
