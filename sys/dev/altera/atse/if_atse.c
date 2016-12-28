@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012,2013 Bjoern A. Zeeb  * Copyright (c) 2014 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-11-C-0249)  * ("MRC2"), as part of the DARPA MRC research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012, 2013 Bjoern A. Zeeb  * Copyright (c) 2014 Robert N. M. Watson  * All rights reserved.  *  * This software was developed by SRI International and the University of  * Cambridge Computer Laboratory under DARPA/AFRL contract (FA8750-11-C-0249)  * ("MRC2"), as part of the DARPA MRC research programme.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1280,6 +1280,9 @@ decl_stmt|,
 name|fill_level
 decl_stmt|;
 name|int
+name|leftm
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|ATSE_LOCK_ASSERT
@@ -1520,12 +1523,6 @@ operator|<
 name|AVALON_FIFO_TX_BASIC_OPTS_DEPTH
 condition|)
 block|{
-name|int
-name|leftm
-decl_stmt|;
-name|uint32_t
-name|x
-decl_stmt|;
 comment|/* Set EndOfPacket. */
 name|val4
 operator|=
@@ -1553,10 +1550,6 @@ operator|)
 operator|<<
 name|A_ONCHIP_FIFO_MEM_CORE_EMPTY_SHIFT
 operator|)
-expr_stmt|;
-name|x
-operator|=
-name|val4
 expr_stmt|;
 name|ATSE_TX_META_WRITE
 argument_list|(
@@ -1708,7 +1701,7 @@ return|return;
 if|#
 directive|if
 literal|1
-comment|/*  	 * Disable the watchdog while sending, we are batching packets. 	 * Though we should never reach 5 seconds, and are holding the lock, 	 * but who knows. 	 */
+comment|/* 	 * Disable the watchdog while sending, we are batching packets. 	 * Though we should never reach 5 seconds, and are holding the lock, 	 * but who knows. 	 */
 name|sc
 operator|->
 name|atse_watchdog_timer
@@ -1877,15 +1870,15 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|uint32_t
 name|mask
 decl_stmt|,
 name|val4
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|int
 name|i
@@ -2070,15 +2063,15 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|uint8_t
 name|x
 decl_stmt|,
 name|y
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|x
 operator|=
@@ -2162,14 +2155,14 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|ifmultiaddr
 modifier|*
 name|ifma
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 name|uint32_t
 name|val4
@@ -2273,7 +2266,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * Can hold MHASH_LEN entries. 		 * XXX-BZ bitstring.h would be more general. 		 */
+comment|/* 		 * Can hold MHASH_LEN entries. 		 * XXX-BZ bitstring.h would be more general. 		 */
 name|uint64_t
 name|h
 decl_stmt|;
@@ -3458,9 +3451,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|uint32_t
 name|val4
 decl_stmt|,
@@ -3468,6 +3458,9 @@ name|mask
 decl_stmt|;
 name|uint16_t
 name|val
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 1. External PHY Initialization using MDIO. */
 comment|/* 	 * We select the right MDIO space in atse_attach() and let MII do 	 * anything else. 	 */
@@ -3874,7 +3867,7 @@ argument_list|,
 name|BASE_CFG_COMMAND_CONFIG
 argument_list|)
 expr_stmt|;
-comment|/*	 	 * If 1000BASE-X/SGMII PCS is initialized, set the ETH_SPEED (bit 3) 	 * and ENA_10 (bit 25) in command_config register to 0.  If half duplex 	 * is reported in the PHY/PCS status register, set the HD_ENA (bit 10) 	 * to 1 in command_config register. 	 * BZ: We shoot for 1000 instead. 	 */
+comment|/* 	 * If 1000BASE-X/SGMII PCS is initialized, set the ETH_SPEED (bit 3) 	 * and ENA_10 (bit 25) in command_config register to 0.  If half duplex 	 * is reported in the PHY/PCS status register, set the HD_ENA (bit 10) 	 * to 1 in command_config register. 	 * BZ: We shoot for 1000 instead. 	 */
 if|#
 directive|if
 literal|0
@@ -5316,16 +5309,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|uint32_t
 name|fill
 decl_stmt|,
@@ -5338,10 +5321,18 @@ name|data
 decl_stmt|,
 name|meta
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|int
 name|rx_npkts
-init|=
-literal|0
 decl_stmt|;
 name|ATSE_LOCK_ASSERT
 argument_list|(
@@ -5353,6 +5344,10 @@ operator|=
 name|sc
 operator|->
 name|atse_ifp
+expr_stmt|;
+name|rx_npkts
+operator|=
+literal|0
 expr_stmt|;
 name|j
 operator|=
