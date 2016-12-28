@@ -1806,6 +1806,11 @@ operator|)
 name|tp
 decl_stmt|;
 name|struct
+name|cmsghdr
+modifier|*
+name|cmsgp
+decl_stmt|;
+name|struct
 name|in_addr
 modifier|*
 name|laddr
@@ -1826,11 +1831,6 @@ name|in_addr
 argument_list|)
 argument_list|)
 index|]
-decl_stmt|;
-name|struct
-name|cmsghdr
-modifier|*
-name|cmsgp
 decl_stmt|;
 name|ssize_t
 name|ret
