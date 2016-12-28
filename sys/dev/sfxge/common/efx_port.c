@@ -639,6 +639,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|__efx_loopback_type_name
 index|[]
 init|=
