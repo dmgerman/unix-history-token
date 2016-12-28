@@ -44,7 +44,7 @@ end_if
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_enable_offline
+name|ef10_bist_enable_offline
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -98,7 +98,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_start
+name|ef10_bist_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -158,7 +158,7 @@ end_function
 begin_decl_stmt
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_poll
+name|ef10_bist_poll
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -672,7 +672,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|hunt_bist_stop
+name|ef10_bist_stop
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -684,7 +684,7 @@ name|efx_bist_type_t
 name|type
 parameter_list|)
 block|{
-comment|/* There is no way to stop BIST on Huntinton. */
+comment|/* There is no way to stop BIST on EF10. */
 name|_NOTE
 argument_list|(
 argument|ARGUNUSED(enp, type)

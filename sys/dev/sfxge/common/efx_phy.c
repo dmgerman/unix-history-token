@@ -139,17 +139,16 @@ comment|/* EFSYS_OPT_PHY_STATS */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
-comment|/* FIXME: Are these BIST methods appropriate for Medford? */
-name|hunt_bist_enable_offline
+name|ef10_bist_enable_offline
 block|,
 comment|/* epo_bist_enable_offline */
-name|hunt_bist_start
+name|ef10_bist_start
 block|,
 comment|/* epo_bist_start */
-name|hunt_bist_poll
+name|ef10_bist_poll
 block|,
 comment|/* epo_bist_poll */
-name|hunt_bist_stop
+name|ef10_bist_stop
 block|,
 comment|/* epo_bist_stop */
 endif|#
