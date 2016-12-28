@@ -13425,6 +13425,13 @@ name|hdaa_allowed_stripes
 argument_list|(
 name|fmt
 argument_list|)
+operator|&
+name|hda_get_stripes_mask
+argument_list|(
+name|devinfo
+operator|->
+name|dev
+argument_list|)
 argument_list|)
 operator|-
 literal|1

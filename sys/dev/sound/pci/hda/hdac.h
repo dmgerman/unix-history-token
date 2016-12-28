@@ -3964,6 +3964,8 @@ block|,
 name|HDA_IVAR_NODE_TYPE
 block|,
 name|HDA_IVAR_DMA_NOCACHE
+block|,
+name|HDA_IVAR_STRIPES_MASK
 block|, }
 enum|;
 end_enum
@@ -4109,6 +4111,18 @@ argument_list|(
 name|dma_nocache
 argument_list|,
 name|DMA_NOCACHE
+argument_list|,
+name|uint8_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|HDA_ACCESSOR
+argument_list|(
+name|stripes_mask
+argument_list|,
+name|STRIPES_MASK
 argument_list|,
 name|uint8_t
 argument_list|)
