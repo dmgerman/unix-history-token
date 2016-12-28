@@ -42,6 +42,11 @@ name|defined
 argument_list|(
 name|__aarch64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 end_if
 
 begin_define
@@ -104,36 +109,6 @@ define|#
 directive|define
 name|ELFW_R_TYPE
 value|ELF32_R_TYPE
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|ElfW_Rel
-value|Elf64_Rel
-end_define
-
-begin_define
-define|#
-directive|define
-name|ElfW_Dyn
-value|Elf64_Dyn
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELFW_R_TYPE
-value|ELF64_R_TYPE
 end_define
 
 begin_else
@@ -385,7 +360,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* 	 * Perform the actual relocation. 	 */
+comment|/* 	 * Perform the actual relocation. We rely on the object having been 	 * linked at 0, so that the difference between the load and link 	 * address is the same as the load address. 	 */
 for|for
 control|(
 init|;
@@ -416,7 +391,6 @@ break|break;
 case|case
 name|RELOC_TYPE_RELATIVE
 case|:
-comment|/* Address relative to the base address. */
 name|newaddr
 operator|=
 operator|(
@@ -431,21 +405,26 @@ operator|+
 name|baseaddr
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ELF_RELA
+comment|/* Addend relative to the base address. */
+operator|*
+name|newaddr
+operator|=
+name|baseaddr
+operator|+
+name|rel
+operator|->
+name|r_addend
+expr_stmt|;
+else|#
+directive|else
+comment|/* Address relative to the base address. */
 operator|*
 name|newaddr
 operator|+=
 name|baseaddr
-expr_stmt|;
-comment|/* Add the addend when the ABI uses them */
-ifdef|#
-directive|ifdef
-name|ELF_RELA
-operator|*
-name|newaddr
-operator|+=
-name|rel
-operator|->
-name|r_addend
 expr_stmt|;
 endif|#
 directive|endif
