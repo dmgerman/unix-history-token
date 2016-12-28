@@ -2522,6 +2522,14 @@ return|;
 endif|#
 directive|endif
 case|case
+name|MC_CMD_ERR_ERANGE
+case|:
+return|return
+operator|(
+name|ERANGE
+operator|)
+return|;
+case|case
 name|MC_CMD_ERR_ALLOC_FAIL
 case|:
 return|return
