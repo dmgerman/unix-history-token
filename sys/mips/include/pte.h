@@ -413,6 +413,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTE_C_MASK
+value|(PTE_C(0x07))
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTE_C_UNCACHED
 value|(PTE_C(MIPS_CCA_UNCACHED))
 end_define
@@ -422,6 +429,13 @@ define|#
 directive|define
 name|PTE_C_CACHE
 value|(PTE_C(MIPS_CCA_CACHED))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_C_WC
+value|(PTE_C(MIPS_CCA_WC))
 end_define
 
 begin_define
@@ -508,6 +522,16 @@ parameter_list|,
 name|bit
 parameter_list|)
 value|((*(pte)& (bit)) == (bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pte_cache_bits
+parameter_list|(
+name|pte
+parameter_list|)
+value|((*(pte)>> 3)& 0x07)
 end_define
 
 begin_comment

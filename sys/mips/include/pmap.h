@@ -155,7 +155,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PV_MEMATTR_UNCACHEABLE
+name|PV_MEMATTR_MASK
+value|0xf0
+end_define
+
+begin_comment
+comment|/* store vm_memattr_t here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PV_MEMATTR_SHIFT
 value|0x04
 end_define
 
@@ -566,7 +577,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|VM_MEMATTR_DEFAULT
+value|(((m)->md.pv_flags& PV_MEMATTR_MASK)>> PV_MEMATTR_SHIFT)
 end_define
 
 begin_define
@@ -606,6 +617,20 @@ parameter_list|(
 name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|pmap_mapdev_attr
+parameter_list|(
+name|vm_paddr_t
+parameter_list|,
+name|vm_size_t
+parameter_list|,
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -654,7 +679,7 @@ parameter_list|,
 name|vm_paddr_t
 name|pa
 parameter_list|,
-name|int
+name|vm_memattr_t
 name|attr
 parameter_list|)
 function_decl|;
@@ -722,6 +747,19 @@ name|void
 name|pmap_page_set_memattr
 parameter_list|(
 name|vm_page_t
+parameter_list|,
+name|vm_memattr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmap_change_attr
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|,
 name|vm_memattr_t
 parameter_list|)
