@@ -178,6 +178,7 @@ index|]
 decl_stmt|;
 comment|/* key sort hint */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -362,6 +363,23 @@ name|size_t
 name|keys_array_size
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|key_value
+modifier|*
+name|get_key_from_keys_array
+parameter_list|(
+name|struct
+name|keys_array
+modifier|*
+name|ka
+parameter_list|,
+name|size_t
+name|ind
 parameter_list|)
 function_decl|;
 end_function_decl
