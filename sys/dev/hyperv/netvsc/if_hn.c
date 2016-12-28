@@ -11453,14 +11453,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Disable polling. */
-name|hn_polling
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Suspend this interface before the synthetic parts 		 * are ripped. 		 */
 name|hn_suspend
 argument_list|(
@@ -11581,32 +11573,6 @@ comment|/* 		 * All done!  Resume the interface now. 		 */
 name|hn_resume
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Re-enable polling if this interface is running and 		 * the polling is requested. 		 */
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|&&
-name|sc
-operator|->
-name|hn_pollhz
-operator|>
-literal|0
-condition|)
-name|hn_polling
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|hn_pollhz
 argument_list|)
 expr_stmt|;
 name|HN_UNLOCK
@@ -23221,6 +23187,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* Disable polling. */
+name|hn_polling
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -23523,6 +23497,34 @@ expr_stmt|;
 name|hn_resume_mgmt
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Re-enable polling if this interface is running and 	 * the polling is requested. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|hn_ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|&&
+name|sc
+operator|->
+name|hn_pollhz
+operator|>
+literal|0
+condition|)
+name|hn_polling
+argument_list|(
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|hn_pollhz
 argument_list|)
 expr_stmt|;
 block|}
