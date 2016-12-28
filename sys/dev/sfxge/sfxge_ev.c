@@ -3106,6 +3106,8 @@ name|sc
 operator|->
 name|ev_moderation
 argument_list|,
+name|EFX_EVQ_FLAGS_TYPE_AUTO
+argument_list|,
 operator|&
 name|evq
 operator|->

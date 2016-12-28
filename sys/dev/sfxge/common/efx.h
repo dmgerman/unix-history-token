@@ -4182,6 +4182,22 @@ parameter_list|(
 name|_nevs
 parameter_list|)
 value|(EFX_EVQ_SIZE(_nevs) / EFX_BUF_SIZE)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_TYPE_MASK
+value|(0x3)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_TYPE_AUTO
+value|(0x0)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_TYPE_THROUGHPUT
+value|(0x1)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_TYPE_LOW_LATENCY
+value|(0x2)
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
@@ -4213,6 +4229,10 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|us
+parameter_list|,
+name|__in
+name|uint32_t
+name|flags
 parameter_list|,
 name|__deref_out
 name|efx_evq_t
