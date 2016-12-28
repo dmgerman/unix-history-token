@@ -470,6 +470,13 @@ name|MIPS_CCA_UA
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_WC
+value|MIPS_CCA_UA
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -526,39 +533,6 @@ define|#
 directive|define
 name|MIPS_CCA_CACHED
 value|MIPS_CCA_C
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Use uncached-accelerated mode for write-combining maps, if one is defined,  * otherwise fall back to uncached  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIPS_CCA_WC
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MIPS_CCA_UA
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MIPS_CCA_WC
-value|MIPS_CCA_UA
 end_define
 
 begin_endif
