@@ -3378,7 +3378,7 @@ operator|*
 name|startp
 argument_list|)
 block|{
-comment|// Read past partition header to find start address of the first key
+comment|/* Read past partition header to find start address of the first key */
 name|tlv_cursor_t
 name|cursor
 decl_stmt|;
@@ -3561,7 +3561,7 @@ operator|*
 name|endp
 argument_list|)
 block|{
-comment|// Read to end of partition
+comment|/* Read to end of partition */
 name|tlv_cursor_t
 name|cursor
 decl_stmt|;
@@ -3755,7 +3755,7 @@ operator|*
 name|lengthp
 argument_list|)
 block|{
-comment|// Find TLV at offset and return key start and length
+comment|/* Find TLV at offset and return key start and length */
 name|tlv_cursor_t
 name|cursor
 decl_stmt|;
