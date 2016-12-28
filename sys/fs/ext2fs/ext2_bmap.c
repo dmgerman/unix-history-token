@@ -704,13 +704,11 @@ if|if
 condition|(
 name|runb
 condition|)
-block|{
 operator|*
 name|runb
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ap
 operator|=
 name|a

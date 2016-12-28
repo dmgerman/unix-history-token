@@ -38,7 +38,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.   */
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
 end_comment
 
 begin_define
@@ -60,7 +60,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Grigoriy Orlov<gluk@ptci.ru> has done some extensive work to fine  * tune the layout preferences for directories within a filesystem.  * His algorithm can be tuned by adjusting the following parameters  * which tell the system the average file size and the average number  * of files per directory. These defaults are well selected for typical  * filesystems, but may need to be tuned for odd cases like filesystems  * being used for squid caches or news spools.  * AVFPDIR is the expected number of files per directory. AVGDIRSIZE is   * obtained by multiplying AVFPDIR and AVFILESIZ which is assumed to be   * 16384.  */
+comment|/*  * Grigoriy Orlov<gluk@ptci.ru> has done some extensive work to fine  * tune the layout preferences for directories within a filesystem.  * His algorithm can be tuned by adjusting the following parameters  * which tell the system the average file size and the average number  * of files per directory. These defaults are well selected for typical  * filesystems, but may need to be tuned for odd cases like filesystems  * being used for squid caches or news spools.  * AVFPDIR is the expected number of files per directory. AVGDIRSIZE is  * obtained by multiplying AVFPDIR and AVFILESIZ which is assumed to be  * 16384.  */
 end_comment
 
 begin_define

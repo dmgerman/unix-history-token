@@ -1485,7 +1485,7 @@ operator|->
 name|cn_namelen
 argument_list|)
 expr_stmt|;
-comment|/* was 		ss.slotneeded = (sizeof(struct direct) - MAXNAMLEN + 			cnp->cn_namelen + 3)&~ 3; */
+comment|/* 		 * was ss.slotneeded = (sizeof(struct direct) - MAXNAMLEN + 		 * cnp->cn_namelen + 3)&~ 3; 		 */
 block|}
 comment|/* 	 * Try to lookup dir entry using htree directory index. 	 * 	 * If we got an error or we want to find '.' or '..' entry, 	 * we will fall back to linear search. 	 */
 if|if

@@ -1337,7 +1337,7 @@ operator|=
 name|blkno
 expr_stmt|;
 block|}
-comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * For strict correctness, the writes should be synchronous since 	 * the old block values may have been written to disk. In practise 	 * they are almost never written, but if we are concerned about  	 * strict correctness, the `doasyncfree' flag should be set to zero. 	 * 	 * The test on `doasyncfree' should be changed to test a flag 	 * that shows whether the associated buffers and inodes have 	 * been written. The flag should be set when the cluster is 	 * started and cleared whenever the buffer or inode is flushed. 	 * We can then check below to see if it is set, and do the 	 * synchronous write only when it has been cleared. 	 */
+comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * For strict correctness, the writes should be synchronous since 	 * the old block values may have been written to disk. In practise 	 * they are almost never written, but if we are concerned about 	 * strict correctness, the `doasyncfree' flag should be set to zero. 	 * 	 * The test on `doasyncfree' should be changed to test a flag 	 * that shows whether the associated buffers and inodes have 	 * been written. The flag should be set when the cluster is 	 * started and cleared whenever the buffer or inode is flushed. 	 * We can then check below to see if it is set, and do the 	 * synchronous write only when it has been cleared. 	 */
 if|if
 condition|(
 name|sbap
@@ -1557,7 +1557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an inode in the filesystem.  *   */
+comment|/*  * Allocate an inode in the filesystem.  *  */
 end_comment
 
 begin_function
@@ -2399,7 +2399,7 @@ name|maxcontigdirs
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Limit number of dirs in one cg and reserve space for  	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 */
+comment|/* 	 * Limit number of dirs in one cg and reserve space for 	 * regular files, but only if we have no deficit in 	 * inodes or space. 	 */
 name|prefcg
 operator|=
 name|ino_to_cg
@@ -2615,7 +2615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select the desired position for the next block in a file.    *  * we try to mimic what Remy does in inode_getblk/block_getblk  *  * we note: blocknr == 0 means that we're about to allocate either  * a direct block or a pointer block at the first level of indirection  * (In other words, stuff that will go in i_db[] or i_ib[])  *  * blocknr != 0 means that we're allocating a block that is none  * of the above. Then, blocknr tells us the number of the block  * that will hold the pointer  */
+comment|/*  * Select the desired position for the next block in a file.  *  * we try to mimic what Remy does in inode_getblk/block_getblk  *  * we note: blocknr == 0 means that we're about to allocate either  * a direct block or a pointer block at the first level of indirection  * (In other words, stuff that will go in i_db[] or i_ib[])  *  * blocknr != 0 means that we're allocating a block that is none  * of the above. Then, blocknr tells us the number of the block  * that will hold the pointer  */
 end_comment
 
 begin_function
@@ -2656,7 +2656,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* if the next block is actually what we thought it is, 	   then set the goal to what we thought it should be 	*/
+comment|/* 	 * If the next block is actually what we thought it is, then set the 	 * goal to what we thought it should be. 	 */
 if|if
 condition|(
 name|ip
@@ -2676,7 +2676,7 @@ name|ip
 operator|->
 name|i_next_alloc_goal
 return|;
-comment|/* now check whether we were provided with an array that basically 	   tells us previous blocks to which we want to stay closeby 	*/
+comment|/* 	 * Now check whether we were provided with an array that basically 	 * tells us previous blocks to which we want to stay close. 	 */
 if|if
 condition|(
 name|bap
@@ -2709,7 +2709,7 @@ index|[
 name|tmp
 index|]
 return|;
-comment|/* else let's fall back to the blocknr, or, if there is none, 	   follow the rule that a block should be allocated near its inode 	*/
+comment|/* 	 * Else lets fall back to the blocknr or, if there is none, follow 	 * the rule that a block should be allocated near its inode. 	 */
 return|return
 name|blocknr
 condition|?
@@ -5367,7 +5367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
+comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *  * The form of the error message is:  *	fs: error message  */
 end_comment
 
 begin_function
