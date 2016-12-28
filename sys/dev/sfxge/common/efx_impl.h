@@ -3707,7 +3707,7 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		EFX_CHECK_REG((_enp), (_reg));				\ 		EFSYS_PROBE4(efx_bar_tbl_writed, const char *, #_reg,	\ 		    uint32_t, (_index),					\ 		    uint32_t, _reg ## _OFST,				\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 		EFSYS_BAR_WRITED((_enp)->en_esbp,			\ 		    (_reg ## _OFST +					\ 		    (2 * sizeof (efx_dword_t)) + 			\ 		    ((_index) * _reg ## _STEP)),			\ 		    (_edp), (_lock));					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		EFX_CHECK_REG((_enp), (_reg));				\ 		EFSYS_PROBE4(efx_bar_tbl_writed, const char *, #_reg,	\ 		    uint32_t, (_index),					\ 		    uint32_t, _reg ## _OFST,				\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 		EFSYS_BAR_WRITED((_enp)->en_esbp,			\ 		    (_reg ## _OFST +					\ 		    (2 * sizeof (efx_dword_t)) +			\ 		    ((_index) * _reg ## _STEP)),			\ 		    (_edp), (_lock));					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_BAR_TBL_WRITED3
@@ -3723,7 +3723,7 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		EFX_CHECK_REG((_enp), (_reg));				\ 		EFSYS_PROBE4(efx_bar_tbl_writed, const char *, #_reg,	\ 		    uint32_t, (_index),					\ 		    uint32_t, _reg ## _OFST,				\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 		EFSYS_BAR_WRITED((_enp)->en_esbp,			\ 		    (_reg ## _OFST +					\ 		    (3 * sizeof (efx_dword_t)) + 			\ 		    ((_index) * _reg ## _STEP)),			\ 		    (_edp), (_lock));					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		EFX_CHECK_REG((_enp), (_reg));				\ 		EFSYS_PROBE4(efx_bar_tbl_writed, const char *, #_reg,	\ 		    uint32_t, (_index),					\ 		    uint32_t, _reg ## _OFST,				\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 		EFSYS_BAR_WRITED((_enp)->en_esbp,			\ 		    (_reg ## _OFST +					\ 		    (3 * sizeof (efx_dword_t)) +			\ 		    ((_index) * _reg ## _STEP)),			\ 		    (_edp), (_lock));					\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFX_BAR_TBL_READQ
