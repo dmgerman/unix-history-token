@@ -2339,7 +2339,7 @@ parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
-name|void
+name|efx_rc_t
 function_decl|(
 modifier|*
 name|envo_partn_rw_finish
@@ -2784,6 +2784,11 @@ parameter_list|,
 name|__in
 name|boolean_t
 name|reboot
+parameter_list|,
+name|__out_opt
+name|uint32_t
+modifier|*
+name|resultp
 parameter_list|)
 function_decl|;
 if|#
