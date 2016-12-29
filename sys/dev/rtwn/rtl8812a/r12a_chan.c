@@ -1982,6 +1982,8 @@ control|)
 block|{
 name|uint16_t
 name|val
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
