@@ -968,21 +968,6 @@ name|ncneg_shrink_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|vfscache_shrink_neg
-argument_list|,
-operator|&
-name|ncneg_shrink_lock
-argument_list|,
-literal|"Name Cache shrink neg"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|neglist
@@ -9408,6 +9393,18 @@ operator|&
 name|ncneg_hot
 operator|.
 name|nl_list
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ncneg_shrink_lock
+argument_list|,
+literal|"ncnegs"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|numcalls
