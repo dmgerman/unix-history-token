@@ -2098,7 +2098,7 @@ end_function
 begin_function
 name|__checkReturn
 name|efx_rc_t
-name|efx_psuedo_hdr_pkt_length_get
+name|efx_pseudo_hdr_pkt_length_get
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -2170,7 +2170,7 @@ end_if
 begin_function
 name|__checkReturn
 name|uint32_t
-name|efx_psuedo_hdr_hash_get
+name|efx_pseudo_hdr_hash_get
 parameter_list|(
 name|__in
 name|efx_rxq_t
@@ -3659,7 +3659,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Falcon/Siena psuedo-header  * --------------------------  *  * Receive packets are prefixed by an optional 16 byte pseudo-header.  * The psuedo-header is a byte array of one of the forms:  *  *  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15  * xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.TT.TT.TT.TT  * xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.LL.LL  *  * where:  *   TT.TT.TT.TT   Toeplitz hash (32-bit big-endian)  *   LL.LL         LFSR hash     (16-bit big-endian)  */
+comment|/*  * Falcon/Siena pseudo-header  * --------------------------  *  * Receive packets are prefixed by an optional 16 byte pseudo-header.  * The pseudo-header is a byte array of one of the forms:  *  *  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15  * xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.TT.TT.TT.TT  * xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.xx.LL.LL  *  * where:  *   TT.TT.TT.TT   Toeplitz hash (32-bit big-endian)  *   LL.LL         LFSR hash     (16-bit big-endian)  */
 end_comment
 
 begin_if

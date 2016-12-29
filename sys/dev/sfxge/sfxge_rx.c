@@ -1643,7 +1643,7 @@ name|m_pkthdr
 operator|.
 name|flowid
 operator|=
-name|efx_psuedo_hdr_hash_get
+name|efx_pseudo_hdr_hash_get
 argument_list|(
 name|rxq
 operator|->
@@ -3549,7 +3549,7 @@ decl_stmt|;
 comment|/* Get the hardware hash */
 name|conn_hash
 operator|=
-name|efx_psuedo_hdr_hash_get
+name|efx_pseudo_hdr_hash_get
 argument_list|(
 name|rxq
 operator|->
@@ -4475,7 +4475,7 @@ name|rc
 decl_stmt|;
 name|rc
 operator|=
-name|efx_psuedo_hdr_pkt_length_get
+name|efx_pseudo_hdr_pkt_length_get
 argument_list|(
 name|rxq
 operator|->
