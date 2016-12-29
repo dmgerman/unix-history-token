@@ -224,6 +224,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|void
+modifier|*
+name|vmbus_xact_poll
+parameter_list|(
+name|struct
+name|vmbus_xact
+modifier|*
+name|xact
+parameter_list|,
+name|size_t
+modifier|*
+name|resp_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vmbus_xact_wakeup
 parameter_list|(
