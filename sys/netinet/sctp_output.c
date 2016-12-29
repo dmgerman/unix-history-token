@@ -10988,7 +10988,7 @@ operator|>=
 literal|2
 condition|)
 block|{
-comment|/* two from each 							 * address */
+comment|/* 							 * two from each 							 * address 							 */
 break|break;
 block|}
 if|if
@@ -13814,7 +13814,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-comment|/* link-local<-> link-local must belong to the same 			 * scope. */
+comment|/* 			 * link-local<-> link-local must belong to the same 			 * scope. 			 */
 name|memcpy
 argument_list|(
 operator|&
@@ -21276,7 +21276,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* PMTU check versus smallest asoc MTU goes 				 * here */
+comment|/* 				 * PMTU check versus smallest asoc MTU goes 				 * here 				 */
 if|if
 condition|(
 operator|(
@@ -22848,7 +22848,7 @@ name|ro
 operator|.
 name|_l_addr
 expr_stmt|;
-comment|/* preserve the port and scope for link 				 * local send */
+comment|/* 				 * preserve the port and scope for link 				 * local send 				 */
 name|prev_scope
 operator|=
 name|sin6
@@ -23252,7 +23252,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* PMTU check versus smallest asoc MTU goes 				 * here */
+comment|/* 				 * PMTU check versus smallest asoc MTU goes 				 * here 				 */
 if|if
 condition|(
 name|ro
@@ -28927,7 +28927,7 @@ name|cnt_inits_to
 operator|=
 literal|1
 expr_stmt|;
-comment|/* pull out the scope_id from 					 * incoming pkt */
+comment|/* 					 * pull out the scope_id from 					 * incoming pkt 					 */
 block|}
 elseif|else
 if|if
@@ -33042,7 +33042,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We really should not get a NULL 					 * in endofchain */
+comment|/* 					 * We really should not get a NULL 					 * in endofchain 					 */
 comment|/* find end */
 name|m
 operator|=
@@ -33087,7 +33087,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* huh, TSNH XXX maybe we 						 * should panic */
+comment|/* 						 * huh, TSNH XXX maybe we 						 * should panic 						 */
 name|sctp_m_freem
 argument_list|(
 name|outchain
@@ -34043,7 +34043,7 @@ goto|goto
 name|abort_anyway
 goto|;
 block|}
-comment|/* there is nothing queued to send, so I'm 				 * done... */
+comment|/* 				 * there is nothing queued to send, so I'm 				 * done... 				 */
 if|if
 condition|(
 operator|(
@@ -34074,7 +34074,7 @@ name|SCTP_STATE_SHUTDOWN_ACK_SENT
 operator|)
 condition|)
 block|{
-comment|/* only send SHUTDOWN the first time 					 * through */
+comment|/* 					 * only send SHUTDOWN the first time 					 * through 					 */
 if|if
 condition|(
 name|SCTP_GET_STATE
@@ -37301,7 +37301,7 @@ operator|->
 name|msg_is_complete
 condition|)
 block|{
-comment|/* the sender finished the 						 * msg */
+comment|/* 						 * the sender finished the 						 * msg 						 */
 goto|goto
 name|re_look
 goto|;
@@ -41798,7 +41798,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* error, we could not 						 * output */
+comment|/* 						 * error, we could not 						 * output 						 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT3
@@ -42029,7 +42029,7 @@ operator|==
 name|net
 condition|)
 block|{
-comment|/* Don't transmit it to where its 					 * going (current net) */
+comment|/* 					 * Don't transmit it to where its 					 * going (current net) 					 */
 continue|continue;
 block|}
 elseif|else
@@ -42040,7 +42040,7 @@ operator|==
 name|net
 condition|)
 block|{
-comment|/* But do transmit it to this 					 * address */
+comment|/* 					 * But do transmit it to this 					 * address 					 */
 goto|goto
 name|skip_net_check
 goto|;
@@ -42872,7 +42872,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* error, we could not 						 * output */
+comment|/* 						 * error, we could not 						 * output 						 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_OUTPUT3
@@ -43651,7 +43651,7 @@ condition|(
 name|override_ok
 condition|)
 block|{
-comment|/* use this data's 							 * keyid */
+comment|/* 							 * use this data's 							 * keyid 							 */
 name|auth_keyid
 operator|=
 name|chk
@@ -43673,7 +43673,7 @@ operator|->
 name|auth_keyid
 condition|)
 block|{
-comment|/* different keyid, 							 * so done bundling */
+comment|/* 							 * different keyid, 							 * so done bundling 							 */
 break|break;
 block|}
 block|}
@@ -48789,7 +48789,7 @@ operator|!=
 name|auth_keyid
 condition|)
 block|{
-comment|/* different keyid, 							 * so done bundling */
+comment|/* 							 * different keyid, 							 * so done bundling 							 */
 break|break;
 block|}
 block|}
@@ -50390,7 +50390,7 @@ operator|->
 name|cwnd
 condition|)
 block|{
-comment|/* JRS - Use the congestion 						 * control given in the 						 * congestion control module */
+comment|/* 						 * JRS - Use the congestion 						 * control given in the 						 * congestion control module 						 */
 name|asoc
 operator|->
 name|cc_functions
@@ -50456,7 +50456,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Should be decaying the 						 * cwnd here */
+comment|/* 						 * Should be decaying the 						 * cwnd here 						 */
 empty_stmt|;
 block|}
 block|}
@@ -58520,7 +58520,7 @@ name|whoTo
 operator|)
 condition|)
 block|{
-comment|/* found a previous CWR queued to same destination 			 * update it if needed */
+comment|/* 			 * found a previous CWR queued to same destination 			 * update it if needed 			 */
 name|uint32_t
 name|ctsn
 decl_stmt|;
@@ -62150,7 +62150,7 @@ operator|.
 name|state
 expr_stmt|;
 comment|/* FIX ME FIX ME */
-comment|/* This should be a SS_COPY operation FIX ME STREAM 			 * SCHEDULER EXPERT */
+comment|/* 			 * This should be a SS_COPY operation FIX ME STREAM 			 * SCHEDULER EXPERT 			 */
 name|stcb
 operator|->
 name|asoc
@@ -65096,7 +65096,7 @@ name|sctp_flags
 operator||=
 name|SCTP_PCB_FLAGS_CONNECTED
 expr_stmt|;
-comment|/* Set the connected flag so we can queue 				 * data */
+comment|/* 				 * Set the connected flag so we can queue 				 * data 				 */
 name|soisconnecting
 argument_list|(
 name|so
@@ -65130,7 +65130,7 @@ literal|"Huh-3? create lock should have been on??\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Turn on queue only flag to prevent data from 			 * being sent */
+comment|/* 			 * Turn on queue only flag to prevent data from 			 * being sent 			 */
 name|queue_only
 operator|=
 literal|1
@@ -67741,7 +67741,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* This is ugly but we must assure locking 				 * order */
+comment|/* 				 * This is ugly but we must assure locking 				 * order 				 */
 if|if
 condition|(
 name|hold_tcblock
@@ -69077,7 +69077,7 @@ argument_list|,
 name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
-comment|/* now relock the stcb so everything 					 * is sane */
+comment|/* 					 * now relock the stcb so everything 					 * is sane 					 */
 name|hold_tcblock
 operator|=
 literal|0
@@ -69512,7 +69512,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If there is activity recv'ing sacks no need to 			 * send */
+comment|/* 			 * If there is activity recv'ing sacks no need to 			 * send 			 */
 if|if
 condition|(
 name|SCTP_TCB_TRYLOCK

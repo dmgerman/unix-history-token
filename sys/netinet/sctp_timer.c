@@ -817,7 +817,7 @@ argument_list|,
 argument|sctp_next
 argument_list|)
 block|{
-comment|/* JRS 5/14/07 - If the destination is unreachable 			 * or unconfirmed, skip it. */
+comment|/* 			 * JRS 5/14/07 - If the destination is unreachable 			 * or unconfirmed, skip it. 			 */
 if|if
 condition|(
 operator|(
@@ -1215,7 +1215,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* JRS 5/14/07 - If mode is set to 1, use the 	  * CMT policy for choosing an alternate net. */
+comment|/* JRS 5/14/07 - If mode is set to 1, use the 				 * CMT policy for choosing an alternate net. */
 elseif|else
 if|if
 condition|(

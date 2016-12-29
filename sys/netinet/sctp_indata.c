@@ -1681,7 +1681,7 @@ name|q
 argument_list|)
 condition|)
 block|{
-comment|/* Only one stream can be here in old style 				 * -- abort */
+comment|/* 				 * Only one stream can be here in old style 				 * -- abort 				 */
 return|return
 operator|(
 operator|-
@@ -4063,7 +4063,7 @@ name|reasm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now lets add it to the queue 					 * after removing control */
+comment|/* 					 * Now lets add it to the queue 					 * after removing control 					 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4225,7 +4225,7 @@ name|reasm
 argument_list|)
 condition|)
 block|{
-comment|/* Switch to the new guy and 					 * continue */
+comment|/* 					 * Switch to the new guy and 					 * continue 					 */
 name|control
 operator|=
 name|nc
@@ -4464,7 +4464,7 @@ name|fsn_included
 argument_list|)
 condition|)
 block|{
-comment|/* Easy way the start of a new guy beyond 				 * the lowest */
+comment|/* 				 * Easy way the start of a new guy beyond 				 * the lowest 				 */
 goto|goto
 name|place_chunk
 goto|;
@@ -5486,7 +5486,7 @@ operator|->
 name|pd_api_started
 condition|)
 block|{
-comment|/* Can't add more must have gotten an un-ordered above being 		 * partially delivered. */
+comment|/* 		 * Can't add more must have gotten an un-ordered above being 		 * partially delivered. 		 */
 return|return
 operator|(
 literal|0
@@ -5656,7 +5656,7 @@ operator|==
 name|SCTP_DATA_NOT_FRAG
 condition|)
 block|{
-comment|/* A singleton now slipping through - mark 				 * it non-revokable too */
+comment|/* 				 * A singleton now slipping through - mark 				 * it non-revokable too 				 */
 name|sctp_mark_non_revokable
 argument_list|(
 name|asoc
@@ -5677,7 +5677,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Check if we can defer adding until its 				 * all there */
+comment|/* 				 * Check if we can defer adding until its 				 * all there 				 */
 if|if
 condition|(
 operator|(
@@ -5695,7 +5695,7 @@ name|pd_api_started
 operator|)
 condition|)
 block|{
-comment|/* Don't need it or cannot add more 					 * (one being delivered that way) */
+comment|/* 					 * Don't need it or cannot add more 					 * (one being delivered that way) 					 */
 goto|goto
 name|out
 goto|;
@@ -6662,7 +6662,7 @@ name|fsn
 argument_list|)
 condition|)
 block|{
-comment|/* We have already delivered up to 					 * this so its a dup */
+comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
 name|sctp_abort_in_reasm
 argument_list|(
 name|stcb
@@ -6764,7 +6764,7 @@ name|fsn
 argument_list|)
 condition|)
 block|{
-comment|/* We have already delivered up to 					 * this so its a dup */
+comment|/* 					 * We have already delivered up to 					 * this so its a dup 					 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_XXX
@@ -6802,7 +6802,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* validate not beyond top FSN if we have seen last 			 * one */
+comment|/* 			 * validate not beyond top FSN if we have seen last 			 * one 			 */
 if|if
 condition|(
 name|SCTP_TSN_GT
@@ -6971,7 +6971,7 @@ operator|.
 name|fsn
 condition|)
 block|{
-comment|/* Gak, He sent me a duplicate str seq 				 * number */
+comment|/* 				 * Gak, He sent me a duplicate str seq 				 * number 				 */
 comment|/* 				 * foo bar, I guess I will just free this 				 * new guy, should we abort too? FIX ME 				 * MAYBE? Or it COULD be that the SSN's have 				 * wrapped. Maybe I should compare to TSN 				 * somehow... sigh for now just blow away 				 * the chunk! 				 */
 name|SCTPDBG
 argument_list|(
@@ -8544,7 +8544,7 @@ name|SCTP_DATA_UNORDERED
 operator|)
 condition|)
 block|{
-comment|/* We can't have a switched order with an 				 * unordered chunk */
+comment|/* 				 * We can't have a switched order with an 				 * unordered chunk 				 */
 name|snprintf
 argument_list|(
 name|msg
@@ -8585,7 +8585,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* We can't have a switched unordered with a 				 * ordered chunk */
+comment|/* 				 * We can't have a switched unordered with a 				 * ordered chunk 				 */
 name|snprintf
 argument_list|(
 name|msg
@@ -13726,7 +13726,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* else skip this bad chunk and 				  * continue... */
+comment|/* else skip this bad chunk and 					 * continue... */
 break|break;
 block|}
 comment|/* switch of chunk type */
@@ -14998,7 +14998,7 @@ operator|->
 name|data
 condition|)
 block|{
-comment|/* sa_ignore 							 * NO_NULL_CHK */
+comment|/* 							 * sa_ignore 							 * NO_NULL_CHK 							 */
 name|sctp_free_bufspace
 argument_list|(
 name|stcb
@@ -16843,7 +16843,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* Has it been retransmitted tv_sec times? - 				 * we store the retran count there. */
+comment|/* 				 * Has it been retransmitted tv_sec times? - 				 * we store the retran count there. 				 */
 if|if
 condition|(
 name|tp1
@@ -16897,7 +16897,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); */
+comment|/* 			 * SCTP_PRINTF("OK, we are now ready to FR this 			 * guy\n"); 			 */
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -16981,7 +16981,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() */
+comment|/* 					 * JRS 5/18/07 - If CMT PF is on, 					 * use the PF version of 					 * find_alt_net() 					 */
 name|alt
 operator|=
 name|sctp_find_alternate_net
@@ -16996,7 +16996,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() */
+comment|/* 					 * JRS 5/18/07 - If only CMT is on, 					 * use the CMT version of 					 * find_alt_net() 					 */
 comment|/* sa_ignore NO_NULL_CHK */
 name|alt
 operator|=
@@ -19431,7 +19431,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* release the alternate, 						 * primary is good */
+comment|/* 						 * release the alternate, 						 * primary is good 						 */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -19876,7 +19876,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* In window probes we must assure a timer 				 * is still running there */
+comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
 name|net
 operator|->
 name|window_probe
@@ -23033,7 +23033,7 @@ operator|.
 name|alternate
 condition|)
 block|{
-comment|/* release the alternate, 						 * primary is good */
+comment|/* 						 * release the alternate, 						 * primary is good 						 */
 name|sctp_free_remote_addr
 argument_list|(
 name|stcb
@@ -24083,7 +24083,7 @@ operator|->
 name|window_probe
 condition|)
 block|{
-comment|/* In window probes we must assure a timer 				 * is still running there */
+comment|/* 				 * In window probes we must assure a timer 				 * is still running there 				 */
 if|if
 condition|(
 operator|!
@@ -24817,7 +24817,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* Make it so this is next to 					 * deliver, we restore later */
+comment|/* 					 * Make it so this is next to 					 * deliver, we restore later 					 */
 name|strmin
 operator|->
 name|last_mid_delivered
@@ -25124,7 +25124,7 @@ operator|->
 name|first_frag_seen
 condition|)
 block|{
-comment|/* Make it so this is next to 					 * deliver */
+comment|/* 					 * Make it so this is next to 					 * deliver 					 */
 name|strmin
 operator|->
 name|last_mid_delivered
