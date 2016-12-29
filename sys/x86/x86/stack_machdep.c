@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_stack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -189,6 +195,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STACK
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -236,6 +248,11 @@ name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -370,6 +387,9 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|STACK
 comment|/* Don't consume an NMI that wasn't meant for us. */
 if|if
 condition|(
@@ -436,6 +456,15 @@ operator|(
 literal|1
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -510,6 +539,9 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|STACK
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -616,6 +648,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* !SMP */
 name|KASSERT
 argument_list|(
 literal|0
@@ -627,11 +660,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SMP */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !STACK */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* STACK */
 block|}
 end_function
 
