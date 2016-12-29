@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/extres/clk/clk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/ingenic/jz4780_common.h>
 end_include
 
@@ -163,6 +169,9 @@ name|bst
 decl_stmt|;
 name|bus_space_handle_t
 name|bsh
+decl_stmt|;
+name|clk_t
+name|clk
 decl_stmt|;
 block|}
 struct|;
@@ -259,6 +268,13 @@ block|{
 name|uint32_t
 name|tmp
 decl_stmt|;
+name|clk_enable
+argument_list|(
+name|sc
+operator|->
+name|clk
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 operator|(
@@ -300,6 +316,13 @@ operator|&
 name|RGADW_RGWR
 condition|)
 empty_stmt|;
+name|clk_disable
+argument_list|(
+name|sc
+operator|->
+name|clk
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -325,6 +348,13 @@ block|{
 name|uint32_t
 name|tmp
 decl_stmt|;
+name|clk_enable
+argument_list|(
+name|sc
+operator|->
+name|clk
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 operator|(
@@ -349,6 +379,13 @@ argument_list|(
 name|sc
 argument_list|,
 name|CODEC_RGDATA
+argument_list|)
+expr_stmt|;
+name|clk_disable
+argument_list|(
+name|sc
+operator|->
+name|clk
 argument_list|)
 expr_stmt|;
 return|return
@@ -1168,6 +1205,49 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|clk_get_by_ofw_name
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+literal|"i2s"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|clk
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not get i2s clock\n"
+argument_list|)
+expr_stmt|;
+name|bus_release_resources
+argument_list|(
+name|dev
+argument_list|,
+name|codec_spec
+argument_list|,
+name|sc
+operator|->
+name|res
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* Initialize codec. */
 name|reg
 operator|=
@@ -1233,7 +1313,7 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-comment|/* I2S, 16-bit, 96 kHz. */
+comment|/* I2S, 16-bit, 48 kHz. */
 name|reg
 operator|=
 name|codec_read
@@ -1283,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|reg
 operator|=
-name|FCR_DAC_96
+name|FCR_DAC_48
 expr_stmt|;
 name|codec_write
 argument_list|(

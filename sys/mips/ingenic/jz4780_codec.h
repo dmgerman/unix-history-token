@@ -455,6 +455,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FCR_DAC_48
+value|8
+end_define
+
+begin_comment
+comment|/* 48 kHz. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FCR_DAC_96
 value|10
 end_define
