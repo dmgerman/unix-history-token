@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/videomode/edidvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hdmi/dwc_hdmi.h>
 end_include
 

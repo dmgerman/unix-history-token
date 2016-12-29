@@ -57,6 +57,13 @@ name|struct
 name|videomode
 name|sc_mode
 decl_stmt|;
+name|struct
+name|edid_info
+name|sc_edid_info
+decl_stmt|;
+name|int
+name|sc_has_audio
+decl_stmt|;
 block|}
 struct|;
 end_struct

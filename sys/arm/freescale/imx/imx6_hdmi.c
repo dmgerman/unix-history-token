@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/videomode/edidvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx_ccmvar.h>
 end_include
 
