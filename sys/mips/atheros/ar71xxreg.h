@@ -2790,7 +2790,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((reg))) = (val)
+value|do { \       *((volatile uint32_t *)MIPS_PHYS_TO_KSEG1((reg))) = (val); \       (void) ATH_READ_REG(reg); \     } while (0)
 end_define
 
 begin_function
