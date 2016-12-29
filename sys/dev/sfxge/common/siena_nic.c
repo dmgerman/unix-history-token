@@ -324,6 +324,13 @@ name|enc_board_type
 operator|=
 name|board_type
 expr_stmt|;
+comment|/* 	 * There is no possibility to determine the number of PFs on Siena 	 * by issuing MCDI request, and it is not an easy task to find the 	 * value based on the board type, so 'enc_hw_pf_count' is set to 1 	 */
+name|encp
+operator|->
+name|enc_hw_pf_count
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Additional capabilities */
 name|encp
 operator|->
