@@ -1030,10 +1030,17 @@ name|shrink_list_turn
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|numneglists
+value|(ncneghash + 1)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numneglists
+name|ncneghash
 decl_stmt|;
 end_decl_stmt
 
@@ -1067,8 +1074,8 @@ argument_list|)
 operator|>>
 literal|8
 operator|)
-operator|%
-name|numneglists
+operator|&
+name|ncneghash
 operator|)
 index|]
 operator|)
@@ -1076,10 +1083,17 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|numbucketlocks
+value|(ncbuckethash + 1)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numbucketlocks
+name|ncbuckethash
 decl_stmt|;
 end_decl_stmt
 
@@ -1100,13 +1114,20 @@ parameter_list|(
 name|hash
 parameter_list|)
 define|\
-value|((struct rwlock *)(&bucketlocks[((hash) % numbucketlocks)]))
+value|((struct rwlock *)(&bucketlocks[((hash)& ncbuckethash)]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|numvnodelocks
+value|(ncvnodehash + 1)
 end_define
 
 begin_decl_stmt
 specifier|static
 name|u_int
-name|numvnodelocks
+name|ncvnodehash
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,8 +1170,8 @@ argument_list|)
 operator|>>
 literal|8
 operator|)
-operator|%
-name|numvnodelocks
+operator|&
+name|ncvnodehash
 operator|)
 index|]
 operator|)
@@ -9169,7 +9190,7 @@ operator|&
 name|nchash
 argument_list|)
 expr_stmt|;
-name|numbucketlocks
+name|ncbuckethash
 operator|=
 name|cache_roundup_2
 argument_list|(
@@ -9177,20 +9198,18 @@ name|mp_ncpus
 operator|*
 literal|64
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
-name|numbucketlocks
+name|ncbuckethash
 operator|>
 name|nchash
-operator|+
-literal|1
 condition|)
-name|numbucketlocks
+name|ncbuckethash
 operator|=
 name|nchash
-operator|+
-literal|1
 expr_stmt|;
 name|bucketlocks
 operator|=
@@ -9239,7 +9258,7 @@ operator||
 name|RW_RECURSE
 argument_list|)
 expr_stmt|;
-name|numvnodelocks
+name|ncvnodehash
 operator|=
 name|cache_roundup_2
 argument_list|(
@@ -9247,6 +9266,8 @@ name|mp_ncpus
 operator|*
 literal|64
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|vnodelocks
 operator|=
@@ -9301,9 +9322,9 @@ name|ncpurgeminvnodes
 operator|=
 name|numbucketlocks
 expr_stmt|;
-name|numneglists
+name|ncneghash
 operator|=
-literal|4
+literal|3
 expr_stmt|;
 name|neglists
 operator|=
