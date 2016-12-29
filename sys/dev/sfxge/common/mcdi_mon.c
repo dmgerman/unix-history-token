@@ -109,6 +109,20 @@ value|(0xFFFF)
 end_define
 
 begin_comment
+comment|/* Get port mask from one-based MCDI port number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCDI_MON_PORT_MASK
+parameter_list|(
+name|_emip
+parameter_list|)
+value|(1U<< ((_emip)->emi_port - 1))
+end_define
+
+begin_comment
 comment|/* Entry for MCDI sensor in sensor map */
 end_comment
 
@@ -820,7 +834,7 @@ name|efx_nic_t
 operator|*
 name|enp
 argument_list|,
-name|__in_ecount
+name|__in_bcount
 argument_list|(
 argument|sensor_mask_size
 argument_list|)
@@ -837,7 +851,7 @@ name|efsys_mem_t
 operator|*
 name|esmp
 argument_list|,
-name|__out_ecount_opt
+name|__out_bcount_opt
 argument_list|(
 argument|sensor_mask_size
 argument_list|)
@@ -958,13 +972,22 @@ name|mcdi_sensor_map
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|port_mask
-operator|=
-literal|1U
-operator|<<
+name|EFSYS_ASSERT
+argument_list|(
 name|emip
 operator|->
 name|emi_port
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* MCDI port number is one-based */
+name|port_mask
+operator|=
+name|MCDI_MON_PORT_MASK
+argument_list|(
+name|emip
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -1254,19 +1277,22 @@ decl_stmt|;
 name|efx_rc_t
 name|rc
 decl_stmt|;
-name|port_mask
-operator|=
-operator|(
+name|EFSYS_ASSERT
+argument_list|(
 name|emip
 operator|->
 name|emi_port
-operator|==
-literal|1
-operator|)
-condition|?
-name|MCDI_MON_PORT_P1
-else|:
-name|MCDI_MON_PORT_P2
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* MCDI port number is one-based */
+name|port_mask
+operator|=
+name|MCDI_MON_PORT_MASK
+argument_list|(
+name|emip
+argument_list|)
 expr_stmt|;
 name|sensor
 operator|=
