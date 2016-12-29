@@ -3793,7 +3793,7 @@ operator|*
 name|addr
 argument_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|filter_flags
 argument_list|)
 block|{
@@ -3919,7 +3919,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|filter_flags
 parameter_list|)
 block|{
@@ -4063,7 +4063,7 @@ name|uint32_t
 name|count
 argument_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|filter_flags
 argument_list|,
 name|__in
@@ -4408,7 +4408,7 @@ modifier|*
 name|enp
 parameter_list|,
 name|__in
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|filter_flags
 parameter_list|)
 block|{
@@ -4779,7 +4779,7 @@ name|en_filter
 operator|.
 name|ef_ef10_filter_table
 decl_stmt|;
-name|efx_filter_flag_t
+name|efx_filter_flags_t
 name|filter_flags
 decl_stmt|;
 name|unsigned
