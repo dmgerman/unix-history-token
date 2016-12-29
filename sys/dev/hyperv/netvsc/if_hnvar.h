@@ -262,7 +262,14 @@ begin_define
 define|#
 directive|define
 name|HN_RX_FLAG_ATTACHED
-value|0x1
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_RX_FLAG_BR_REF
+value|0x0002
 end_define
 
 begin_struct
@@ -486,14 +493,14 @@ begin_define
 define|#
 directive|define
 name|HN_TX_FLAG_ATTACHED
-value|0x1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|HN_TX_FLAG_HASHVAL
-value|0x2
+value|0x0002
 end_define
 
 begin_comment
@@ -739,6 +746,27 @@ define|#
 directive|define
 name|HN_FLAG_NO_SLEEPING
 value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_RXBUF_REF
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_CHIM_REF
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|HN_FLAG_ERRORS
+value|(HN_FLAG_RXBUF_REF | HN_FLAG_CHIM_REF)
 end_define
 
 begin_define
