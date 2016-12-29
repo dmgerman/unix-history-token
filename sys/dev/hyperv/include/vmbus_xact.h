@@ -79,6 +79,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|vmbus_xact_ctx_orphan
+parameter_list|(
+name|struct
+name|vmbus_xact_ctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|vmbus_xact
 modifier|*
