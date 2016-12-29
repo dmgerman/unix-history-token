@@ -5162,9 +5162,9 @@ name|uint32_t
 name|efx_psuedo_hdr_hash_get
 parameter_list|(
 name|__in
-name|efx_nic_t
+name|efx_rxq_t
 modifier|*
-name|enp
+name|erp
 parameter_list|,
 name|__in
 name|efx_rx_hash_alg_t
@@ -5185,9 +5185,9 @@ name|efx_rc_t
 name|efx_psuedo_hdr_pkt_length_get
 parameter_list|(
 name|__in
-name|efx_nic_t
+name|efx_rxq_t
 modifier|*
-name|enp
+name|erp
 parameter_list|,
 name|__in
 name|uint8_t
