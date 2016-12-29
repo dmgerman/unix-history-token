@@ -1794,23 +1794,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* We must have at least one SACK hole in scoreboard. */
-name|KASSERT
-argument_list|(
-operator|!
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|snd_holes
-argument_list|)
-argument_list|,
-operator|(
-literal|"SACK scoreboard must not be empty"
-operator|)
-argument_list|)
-expr_stmt|;
 name|cur
 operator|=
 name|TAILQ_LAST
