@@ -6060,12 +6060,16 @@ init|=
 literal|0x0200
 block|,
 comment|/* Match by IP transport 						 * protocol */
-name|EFX_FILTER_MATCH_LOC_MAC_IG
+comment|/* Match otherwise-unmatched multicast and broadcast packets */
+name|EFX_FILTER_MATCH_UNKNOWN_MCAST_DST
 init|=
-literal|0x0400
+literal|0x40000000
 block|,
-comment|/* Match by local MAC address 						 * I/G bit. Used for RX default 						 * unicast and multicast/ 						 * broadcast filters. */
-block|}
+comment|/* Match otherwise-unmatched unicast packets */
+name|EFX_FILTER_MATCH_UNKNOWN_UCAST_DST
+init|=
+literal|0x80000000
+block|, }
 name|efx_filter_match_flags_t
 typedef|;
 typedef|typedef
@@ -6096,8 +6100,6 @@ name|efx_filter_spec_s
 block|{
 name|uint32_t
 name|efs_match_flags
-range|:
-literal|12
 decl_stmt|;
 name|uint32_t
 name|efs_priority
