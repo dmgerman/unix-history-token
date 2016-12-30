@@ -1420,29 +1420,17 @@ begin_comment
 comment|/* Support Wake on LAN */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EFSYS_OPT_WOL
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EFSYS_OPT_SIENA
-end_if
+end_ifdef
 
 begin_error
 error|#
 directive|error
-literal|"WOL requires SIENA"
+literal|"WOL is obsolete and is not supported"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
