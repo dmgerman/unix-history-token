@@ -984,7 +984,7 @@ name|unsigned
 name|int
 name|rx_indir_table
 index|[
-name|SFXGE_RX_SCALE_MAX
+name|EFX_RSS_TBL_SIZE
 index|]
 decl_stmt|;
 name|struct
