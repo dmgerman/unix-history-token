@@ -447,7 +447,7 @@ block|,
 comment|/* calibration progress */
 name|RUN_DEBUG_CMD
 init|=
-literal|0x00010000
+literal|0x00020000
 block|,
 comment|/* command queue */
 name|RUN_DEBUG_ANY
