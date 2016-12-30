@@ -571,8 +571,6 @@ name|STRIPCR_OPT
 block|,
 name|HORIZ_OPT
 block|,
-name|LEFTC_OPT
-block|,
 name|SUPCL_OPT
 block|,
 name|LF_OPT
@@ -615,16 +613,6 @@ index|[]
 init|=
 block|{
 comment|/* options only processed in sdiff */
-block|{
-literal|"left-column"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|LEFTC_OPT
-block|}
-block|,
 block|{
 literal|"suppress-common-lines"
 block|,
@@ -784,6 +772,16 @@ block|,
 name|NULL
 block|,
 literal|'i'
+block|}
+block|,
+block|{
+literal|"left-column"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'l'
 block|}
 block|,
 block|{
