@@ -2277,6 +2277,86 @@ file|"archive_entry.h"
 end_include
 
 begin_comment
+comment|/* ACL structure */
+end_comment
+
+begin_struct
+struct|struct
+name|archive_test_acl_t
+block|{
+name|int
+name|type
+decl_stmt|;
+comment|/* Type of ACL */
+name|int
+name|permset
+decl_stmt|;
+comment|/* Permissions for this class of users. */
+name|int
+name|tag
+decl_stmt|;
+comment|/* Owner, User, Owning group, group, other, etc. */
+name|int
+name|qual
+decl_stmt|;
+comment|/* GID or UID of user/group, depending on tag. */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* Name of user/group, depending on tag. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Set ACLs */
+end_comment
+
+begin_function_decl
+name|void
+name|archive_test_set_acls
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|struct
+name|archive_test_acl_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Compare ACLs */
+end_comment
+
+begin_function_decl
+name|void
+name|archive_test_compare_acls
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|struct
+name|archive_test_acl_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Special customized read-from-memory interface. */
 end_comment
 
