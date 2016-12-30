@@ -94,6 +94,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Non-interrupting event queue requires interrrupting event queue to  * refer to for wake-up events even if wake ups are never used.  * It could be even non-allocated event queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFX_EF10_ALWAYS_INTERRUPTING_EVQ_INDEX
+value|(0)
+end_define
+
 begin_function_decl
 specifier|static
 name|__checkReturn
@@ -516,6 +527,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|boolean_t
+name|interrupting
+decl_stmt|;
 name|int
 name|ev_cut_through
 decl_stmt|;
@@ -622,6 +636,18 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+name|interrupting
+operator|=
+operator|(
+operator|(
+name|flags
+operator|&
+name|EFX_EVQ_FLAGS_NOTIFY_MASK
+operator|)
+operator|==
+name|EFX_EVQ_FLAGS_NOTIFY_INTERRUPT
+operator|)
+expr_stmt|;
 comment|/* 	 * On Huntington RX and TX event batching can only be requested together 	 * (even if the datapath firmware doesn't actually support RX 	 * batching). If event cut through is enabled no RX batching will occur. 	 * 	 * So always enable RX and TX event batching, and enable event cut 	 * through if we want low latency operation. 	 */
 switch|switch
 condition|(
@@ -675,7 +701,7 @@ name|INIT_EVQ_IN_FLAGS
 argument_list|,
 name|INIT_EVQ_IN_FLAG_INTERRUPTING
 argument_list|,
-literal|1
+name|interrupting
 argument_list|,
 name|INIT_EVQ_IN_FLAG_RPTR_DOS
 argument_list|,
@@ -1030,6 +1056,9 @@ name|MC_CMD_INIT_EVQ_V2_OUT_LEN
 argument_list|)
 index|]
 decl_stmt|;
+name|boolean_t
+name|interrupting
+decl_stmt|;
 name|unsigned
 name|int
 name|evq_type
@@ -1150,6 +1179,18 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+name|interrupting
+operator|=
+operator|(
+operator|(
+name|flags
+operator|&
+name|EFX_EVQ_FLAGS_NOTIFY_MASK
+operator|)
+operator|==
+name|EFX_EVQ_FLAGS_NOTIFY_INTERRUPT
+operator|)
+expr_stmt|;
 switch|switch
 condition|(
 name|flags
@@ -1198,7 +1239,7 @@ name|INIT_EVQ_V2_IN_FLAGS
 argument_list|,
 name|INIT_EVQ_V2_IN_FLAG_INTERRUPTING
 argument_list|,
-literal|1
+name|interrupting
 argument_list|,
 name|INIT_EVQ_V2_IN_FLAG_RPTR_DOS
 argument_list|,
@@ -1854,11 +1895,54 @@ operator|=
 name|ef10_ev_mcdi
 expr_stmt|;
 comment|/* Set up the event queue */
+comment|/* INIT_EVQ expects function-relative vector number */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|EFX_EVQ_FLAGS_NOTIFY_MASK
+operator|)
+operator|==
+name|EFX_EVQ_FLAGS_NOTIFY_INTERRUPT
+condition|)
+block|{
 name|irq
 operator|=
 name|index
 expr_stmt|;
-comment|/* INIT_EVQ expects function-relative vector number */
+block|}
+elseif|else
+if|if
+condition|(
+name|index
+operator|==
+name|EFX_EF10_ALWAYS_INTERRUPTING_EVQ_INDEX
+condition|)
+block|{
+name|irq
+operator|=
+name|index
+expr_stmt|;
+name|flags
+operator|=
+operator|(
+name|flags
+operator|&
+operator|~
+name|EFX_EVQ_FLAGS_NOTIFY_MASK
+operator|)
+operator||
+name|EFX_EVQ_FLAGS_NOTIFY_INTERRUPT
+expr_stmt|;
+block|}
+else|else
+block|{
+name|irq
+operator|=
+name|EFX_EF10_ALWAYS_INTERRUPTING_EVQ_INDEX
+expr_stmt|;
+block|}
 comment|/* 	 * Interrupts may be raised for events immediately after the queue is 	 * created. See bug58606. 	 */
 if|if
 condition|(

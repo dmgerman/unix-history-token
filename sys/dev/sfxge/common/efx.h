@@ -4235,6 +4235,20 @@ define|#
 directive|define
 name|EFX_EVQ_FLAGS_TYPE_LOW_LATENCY
 value|(0x2)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_NOTIFY_MASK
+value|(0xC)
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_NOTIFY_INTERRUPT
+value|(0x0)
+comment|/* Interrupting (default) */
+define|#
+directive|define
+name|EFX_EVQ_FLAGS_NOTIFY_DISABLED
+value|(0x4)
+comment|/* Non-interrupting */
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
