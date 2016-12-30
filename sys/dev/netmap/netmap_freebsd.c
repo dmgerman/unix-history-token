@@ -416,7 +416,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|IFNET_WLOCK
+name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -4484,7 +4484,7 @@ name|run
 condition|)
 block|{
 comment|/* wait on event with one second timeout */
-name|msleep_spin
+name|msleep
 argument_list|(
 operator|(
 name|void
@@ -4503,6 +4503,8 @@ operator|&
 name|nmk
 operator|->
 name|worker_lock
+argument_list|,
+literal|0
 argument_list|,
 literal|"nmk_ev"
 argument_list|,
@@ -4634,7 +4636,7 @@ literal|"nm_kthread lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|nmk
