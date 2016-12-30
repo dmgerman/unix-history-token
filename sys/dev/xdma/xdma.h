@@ -144,10 +144,10 @@ begin_struct
 struct|struct
 name|xdma_descriptor
 block|{
-name|uintptr_t
+name|bus_addr_t
 name|ds_addr
 decl_stmt|;
-name|uint32_t
+name|bus_size_t
 name|ds_len
 decl_stmt|;
 block|}

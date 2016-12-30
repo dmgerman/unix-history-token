@@ -1674,8 +1674,10 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|XDMA_UNLOCK
-argument_list|()
+name|XCHAN_UNLOCK
+argument_list|(
+name|xchan
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1879,8 +1881,10 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|XDMA_UNLOCK
-argument_list|()
+name|XCHAN_UNLOCK
+argument_list|(
+name|xchan
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
