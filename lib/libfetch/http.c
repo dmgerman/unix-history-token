@@ -6790,7 +6790,7 @@ block|}
 do|while
 condition|(
 name|h
-operator|<
+operator|>
 name|hdr_end
 condition|)
 do|;
