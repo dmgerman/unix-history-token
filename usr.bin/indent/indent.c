@@ -2368,12 +2368,42 @@ case|case
 name|lparen
 case|:
 comment|/* got a '(' or '[' */
+comment|/* count parens to make Healy happy */
+if|if
+condition|(
 operator|++
 name|ps
 operator|.
 name|p_l_follow
+operator|==
+name|nitems
+argument_list|(
+name|ps
+operator|.
+name|paren_indents
+argument_list|)
+condition|)
+block|{
+name|diag3
+argument_list|(
+literal|0
+argument_list|,
+literal|"Reached internal limit of %d unclosed parens"
+argument_list|,
+name|nitems
+argument_list|(
+name|ps
+operator|.
+name|paren_indents
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* count parens to make Healy happy */
+name|ps
+operator|.
+name|p_l_follow
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ps
