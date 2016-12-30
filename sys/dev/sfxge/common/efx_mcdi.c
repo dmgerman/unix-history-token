@@ -535,7 +535,7 @@ operator|.
 name|em_emip
 operator|)
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 comment|/* Start a new epoch (allow fresh MCDI requests to succeed) */
@@ -831,7 +831,7 @@ decl_stmt|;
 name|boolean_t
 name|new_epoch
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -1980,7 +1980,7 @@ name|efx_mcdi_req_t
 modifier|*
 name|emrp
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|efx_rc_t
@@ -2272,7 +2272,7 @@ decl_stmt|;
 name|boolean_t
 name|aborted
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -2964,7 +2964,7 @@ name|efx_mcdi_req_t
 modifier|*
 name|emrp
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 name|EFSYS_ASSERT3U
@@ -3439,7 +3439,7 @@ decl_stmt|;
 name|boolean_t
 name|ev_cpl
 decl_stmt|;
-name|int
+name|efsys_lock_state_t
 name|state
 decl_stmt|;
 comment|/* 	 * The MCDI request (if there is one) has been terminated, either 	 * by a BADASSERT or REBOOT event. 	 * 	 * If there is an outstanding event-completed MCDI operation, then we 	 * will never receive the completion event (because both MCDI 	 * completions and BADASSERT events are sent to the same evq). So 	 * complete this MCDI op. 	 * 	 * This function might run in parallel with efx_mcdi_request_poll() 	 * for poll completed mcdi requests, and also with 	 * efx_mcdi_request_start() for post-watchdog completions. 	 */
