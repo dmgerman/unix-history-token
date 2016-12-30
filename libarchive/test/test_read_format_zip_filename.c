@@ -5898,7 +5898,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * The sample zip file was made in LANG=KOI8-R and it contains two  * files the charset of which are different.  * - the filename of first file is stored in KOI8-R.  * - the filename of second file is stored in UTF-8.  *  * Whenever hdrcharset option is specified, we will correctly read the  * filename of sencod file, which is stored in UTF-8.  */
+comment|/*  * The sample zip file was made in LANG=KOI8-R and it contains two  * files the charset of which are different.  * - the filename of first file is stored in KOI8-R.  * - the filename of second file is stored in UTF-8.  *  * Whenever hdrcharset option is specified, we will correctly read the  * filename of second file, which is stored in UTF-8.  */
 end_comment
 
 begin_macro

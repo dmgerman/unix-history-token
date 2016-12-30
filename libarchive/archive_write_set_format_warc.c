@@ -196,7 +196,7 @@ block|,
 comment|/* conversion, unsupported */
 name|WT_CONV
 block|,
-comment|/* continutation, unsupported at the moment */
+comment|/* continuation, unsupported at the moment */
 name|WT_CONT
 block|,
 comment|/* invalid type */
