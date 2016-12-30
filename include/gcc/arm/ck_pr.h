@@ -549,6 +549,12 @@ literal|64
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_DOUBLE_LOAD
 argument_list|(
@@ -557,6 +563,11 @@ argument_list|,
 argument|double
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -742,6 +753,12 @@ literal|64
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_DOUBLE_STORE
 argument_list|(
@@ -750,6 +767,11 @@ argument_list|,
 argument|double
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -779,6 +801,12 @@ literal|64
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_DOUBLE_CAS_VALUE
 argument_list|(
@@ -787,6 +815,11 @@ argument_list|,
 argument|double
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -942,6 +975,12 @@ literal|64
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_DOUBLE_CAS
 argument_list|(
@@ -950,6 +989,11 @@ argument_list|,
 argument|double
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|CK_CC_INLINE
