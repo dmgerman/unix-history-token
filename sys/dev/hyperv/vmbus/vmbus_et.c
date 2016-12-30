@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/hyperv/include/hyperv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hyperv/vmbus/hyperv_reg.h>
 end_include
 
