@@ -186,6 +186,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/ti/ti_scm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/ti/am335x/am335x_scm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mii/mii.h>
 end_include
 
@@ -223,12 +235,6 @@ begin_include
 include|#
 directive|include
 file|"if_cpswvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/ti/ti_scm.h>
 end_include
 
 begin_include
@@ -5114,7 +5120,7 @@ expr_stmt|;
 comment|/* Get high part of MAC address from control module (mac_id[0|1]_hi) */
 name|ti_scm_reg_read_4
 argument_list|(
-literal|0x634
+name|SCM_MAC_ID0_HI
 operator|+
 name|sc
 operator|->
@@ -5177,7 +5183,7 @@ expr_stmt|;
 comment|/* Get low part of MAC address from control module (mac_id[0|1]_lo) */
 name|ti_scm_reg_read_4
 argument_list|(
-literal|0x630
+name|SCM_MAC_ID0_LO
 operator|+
 name|sc
 operator|->
