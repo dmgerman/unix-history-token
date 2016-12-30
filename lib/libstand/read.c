@@ -129,8 +129,6 @@ operator|->
 name|f_offset
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 name|bcount
 argument_list|,
 name|dest

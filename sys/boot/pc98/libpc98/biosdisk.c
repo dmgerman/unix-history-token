@@ -458,9 +458,6 @@ name|daddr_t
 name|dblk
 parameter_list|,
 name|size_t
-name|offset
-parameter_list|,
-name|size_t
 name|size
 parameter_list|,
 name|char
@@ -488,9 +485,6 @@ name|flag
 parameter_list|,
 name|daddr_t
 name|dblk
-parameter_list|,
-name|size_t
-name|offset
 parameter_list|,
 name|size_t
 name|size
@@ -3671,9 +3665,6 @@ name|daddr_t
 name|dblk
 parameter_list|,
 name|size_t
-name|offset
-parameter_list|,
-name|size_t
 name|size
 parameter_list|,
 name|char
@@ -3754,8 +3745,6 @@ name|od
 operator|->
 name|od_boff
 argument_list|,
-name|offset
-argument_list|,
 name|size
 argument_list|,
 name|buf
@@ -3781,9 +3770,6 @@ name|rw
 parameter_list|,
 name|daddr_t
 name|dblk
-parameter_list|,
-name|size_t
-name|offset
 parameter_list|,
 name|size_t
 name|size

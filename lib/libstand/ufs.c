@@ -519,8 +519,6 @@ name|inumber
 argument_list|)
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 name|fs
 operator|->
 name|fs_bsize
@@ -928,8 +926,6 @@ name|f_fs
 argument_list|,
 name|ind_block_num
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|fs
 operator|->
@@ -1353,8 +1349,6 @@ argument_list|,
 name|disk_block
 argument_list|)
 argument_list|,
-literal|0
-argument_list|,
 name|block_size
 argument_list|,
 name|fp
@@ -1426,8 +1420,6 @@ name|fs
 argument_list|,
 name|disk_block
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|block_size
 argument_list|,
@@ -1662,8 +1654,6 @@ name|fs
 argument_list|,
 name|disk_block
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|block_size
 argument_list|,
@@ -2194,8 +2184,6 @@ name|i
 index|]
 operator|/
 name|DEV_BSIZE
-argument_list|,
-literal|0
 argument_list|,
 name|SBLOCKSIZE
 argument_list|,
@@ -2743,8 +2731,6 @@ name|fs
 argument_list|,
 name|disk_block
 argument_list|)
-argument_list|,
-literal|0
 argument_list|,
 name|fs
 operator|->
