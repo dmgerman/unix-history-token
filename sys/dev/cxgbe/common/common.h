@@ -155,6 +155,30 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+block|{
+name|FEC_RS
+init|=
+literal|1
+operator|<<
+literal|0
+block|,
+name|FEC_BASER_RS
+init|=
+literal|1
+operator|<<
+literal|1
+block|,
+name|FEC_RESERVED
+init|=
+literal|1
+operator|<<
+literal|2
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|port_stats
@@ -1344,6 +1368,11 @@ name|advertising
 decl_stmt|;
 comment|/* advertised capabilities */
 name|unsigned
+name|short
+name|lp_advertising
+decl_stmt|;
+comment|/* peer advertised capabilities */
+name|unsigned
 name|int
 name|requested_speed
 decl_stmt|;
@@ -1365,6 +1394,16 @@ decl_stmt|;
 comment|/* actual link flow control */
 name|unsigned
 name|char
+name|requested_fec
+decl_stmt|;
+comment|/* FEC user has requested */
+name|unsigned
+name|char
+name|fec
+decl_stmt|;
+comment|/* actual FEC */
+name|unsigned
+name|char
 name|autoneg
 decl_stmt|;
 comment|/* autonegotiating? */
@@ -1373,6 +1412,11 @@ name|char
 name|link_ok
 decl_stmt|;
 comment|/* link up? */
+name|unsigned
+name|char
+name|link_down_rc
+decl_stmt|;
+comment|/* link down reason */
 block|}
 struct|;
 end_struct
