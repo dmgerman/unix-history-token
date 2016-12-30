@@ -56,7 +56,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Typical usage:  *  * writers:  * 	lock_exclusive(&obj->lock);  * 	seq_write_begin(&obj->seq);  * 	.....  * 	seq_write_end(&obj->seq);  * 	unlock_exclusive(&obj->unlock);  *  * readers:  * 	obj_t lobj;  * 	seq_t seq;  *  * 	for (;;) {  * 		seq = seq_read(&gobj->seq);  * 		lobj = gobj;  * 		if (seq_consistent(&gobj->seq, seq))  * 			break;  * 		cpu_spinwait();  * 	}  * 	foo(lobj);  */
+comment|/*  * Typical usage:  *  * writers:  * 	lock_exclusive(&obj->lock);  * 	seq_write_begin(&obj->seq);  * 	.....  * 	seq_write_end(&obj->seq);  * 	unlock_exclusive(&obj->unlock);  *  * readers:  * 	obj_t lobj;  * 	seq_t seq;  *  * 	for (;;) {  * 		seq = seq_read(&gobj->seq);  * 		lobj = gobj;  * 		if (seq_consistent(&gobj->seq, seq))  * 			break;  * 	}  * 	foo(lobj);  */
 end_comment
 
 begin_comment
