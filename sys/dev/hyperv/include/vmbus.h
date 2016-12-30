@@ -85,6 +85,28 @@ parameter_list|)
 value|(((uint32_t)(ver))& 0xffff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_POLLHZ_MIN
+value|100
+end_define
+
+begin_comment
+comment|/* 10ms interval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMBUS_CHAN_POLLHZ_MAX
+value|1000000
+end_define
+
+begin_comment
+comment|/* 1us interval */
+end_comment
+
 begin_comment
 comment|/*  * GPA stuffs.  */
 end_comment
@@ -940,6 +962,33 @@ modifier|*
 name|vmbus_chan_mgmt_tq
 parameter_list|(
 specifier|const
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_chan_poll_enable
+parameter_list|(
+name|struct
+name|vmbus_channel
+modifier|*
+name|chan
+parameter_list|,
+name|u_int
+name|pollhz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmbus_chan_poll_disable
+parameter_list|(
 name|struct
 name|vmbus_channel
 modifier|*

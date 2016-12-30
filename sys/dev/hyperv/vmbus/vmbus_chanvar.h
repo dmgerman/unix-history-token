@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -90,6 +96,10 @@ name|uint32_t
 name|ch_flags
 decl_stmt|;
 comment|/* VMBUS_CHAN_FLAG_ */
+name|int
+name|ch_poll_flags
+decl_stmt|;
+comment|/* callout flags */
 comment|/* 	 * RX bufring; immediately following ch_txbr. 	 */
 name|struct
 name|vmbus_rxbr
@@ -103,6 +113,17 @@ decl_stmt|;
 name|struct
 name|task
 name|ch_task
+decl_stmt|;
+name|struct
+name|task
+name|ch_poll_task
+decl_stmt|;
+name|sbintime_t
+name|ch_poll_intvl
+decl_stmt|;
+name|struct
+name|callout
+name|ch_poll_timeo
 decl_stmt|;
 name|vmbus_chan_callback_t
 name|ch_cb

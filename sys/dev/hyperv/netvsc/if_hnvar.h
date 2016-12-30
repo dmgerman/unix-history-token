@@ -653,6 +653,9 @@ name|uint32_t
 name|hn_flags
 decl_stmt|;
 comment|/* HN_FLAG_ */
+name|u_int
+name|hn_pollhz
+decl_stmt|;
 name|void
 modifier|*
 name|hn_rxbuf
