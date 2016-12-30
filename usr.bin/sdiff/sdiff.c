@@ -561,45 +561,11 @@ name|FCASE_SENSITIVE_OPT
 block|,
 name|FCASE_IGNORE_OPT
 block|,
-name|FROMFILE_OPT
-block|,
-name|TOFILE_OPT
-block|,
-name|UNIDIR_OPT
-block|,
 name|STRIPCR_OPT
 block|,
-name|HORIZ_OPT
-block|,
-name|SUPCL_OPT
-block|,
-name|LF_OPT
-block|,
-comment|/* the following groupings must be in sequence */
-name|OLDGF_OPT
-block|,
-name|NEWGF_OPT
-block|,
-name|UNCGF_OPT
-block|,
-name|CHGF_OPT
-block|,
-name|OLDLF_OPT
-block|,
-name|NEWLF_OPT
-block|,
-name|UNCLF_OPT
-block|,
-comment|/* end order-sensitive enums */
 name|TSIZE_OPT
 block|,
-name|HLINES_OPT
-block|,
-name|LFILES_OPT
-block|,
 name|DIFFPROG_OPT
-block|,
-name|NOOP_OPT
 block|, }
 enum|;
 end_enum
