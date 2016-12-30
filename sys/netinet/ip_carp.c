@@ -2982,6 +2982,9 @@ name|sa_family_t
 name|af
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ip
 modifier|*
@@ -2991,6 +2994,11 @@ name|struct
 name|in_addr
 name|in4
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|ip6_hdr
 modifier|*
@@ -3000,11 +3008,16 @@ name|struct
 name|in6_addr
 name|in6
 decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|af
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_INET
 case|:
@@ -3043,6 +3056,11 @@ operator|.
 name|s_addr
 operator|)
 return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -3089,8 +3107,9 @@ operator|==
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 default|default:
-comment|/* how did this happen? */
 break|break;
 block|}
 return|return
