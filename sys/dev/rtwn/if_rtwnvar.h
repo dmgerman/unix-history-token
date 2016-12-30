@@ -339,6 +339,10 @@ modifier|*
 name|bcn_mbuf
 decl_stmt|;
 name|struct
+name|timeout_task
+name|tx_beacon_csa
+decl_stmt|;
+name|struct
 name|callout
 name|tsf_sync_adhoc
 decl_stmt|;

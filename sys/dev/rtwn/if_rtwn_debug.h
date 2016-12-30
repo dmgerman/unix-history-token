@@ -119,6 +119,11 @@ init|=
 literal|0x00010000
 block|,
 comment|/* calibration progress */
+name|RTWN_DEBUG_RADAR
+init|=
+literal|0x00020000
+block|,
+comment|/* radar detection status */
 name|RTWN_DEBUG_ANY
 init|=
 literal|0xffffffff

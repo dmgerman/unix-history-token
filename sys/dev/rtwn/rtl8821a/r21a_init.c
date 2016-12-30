@@ -1145,7 +1145,11 @@ operator|->
 name|rs_flags
 operator|&=
 operator|~
+operator|(
 name|R12A_IQK_RUNNING
+operator||
+name|R12A_RADAR_ENABLED
+operator|)
 expr_stmt|;
 block|}
 end_function

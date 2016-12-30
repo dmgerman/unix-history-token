@@ -57,6 +57,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|rtwn_tx_beacon_csa
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|rtwn_tx_beacon_check
 parameter_list|(
