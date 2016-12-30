@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2008 Tim Kientzle  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD: head/lib/libarchive/archive_entry.h 201096 2009-12-28 02:41:27Z kientzle $  */
+comment|/*-  * Copyright (c) 2003-2008 Tim Kientzle  * Copyright (c) 2016 Martin Matuska  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD: head/lib/libarchive/archive_entry.h 201096 2009-12-28 02:41:27Z kientzle $  */
 end_comment
 
 begin_ifndef
@@ -1989,6 +1989,10 @@ value|(ARCHIVE_ENTRY_ACL_EXECUTE			\ 	    | ARCHIVE_ENTRY_ACL_READ_DATA		\ 	    
 comment|/*  * Inheritance values (NFS4 ACLs only); included in permset.  */
 define|#
 directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_INHERITED
+value|0x01000000
+define|#
+directive|define
 name|ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT
 value|0x02000000
 define|#
@@ -2015,37 +2019,37 @@ define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_INHERITANCE_NFS4
 define|\
-value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS)
+value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERITED)
 comment|/* We need to be able to specify combinations of these. */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
-value|256
+value|0x00000100
 comment|/* POSIX.1e only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
-value|512
+value|0x00000200
 comment|/* POSIX.1e only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ALLOW
-value|1024
+value|0x00000400
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DENY
-value|2048
+value|0x00000800
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_AUDIT
-value|4096
+value|0x00001000
 comment|/* NFS4 only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ALARM
-value|8192
+value|0x00002000
 comment|/* NFS4 only */
 define|#
 directive|define
@@ -2234,15 +2238,101 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
-comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_TYPE_NFS4 - Include NFS4 entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  ('star' introduced this for POSIX.1e, this flag  *    also applies to NFS4.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry, as used in old Solaris ACLs.  */
+comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * Flags only for archive entries with POSIX.1e ACL:  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SOLARIS - Output only one colon after "other" and  *    "mask" entries.  *  * Flags for for archive entries with POSIX.1e ACL or NFSv4 ACL:  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  * ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA - Separate entries with comma  *    instead of newline.  */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
-value|1024
+value|0x00000001
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
+value|0x00000002
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_SOLARIS
+value|0x00000004
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_SEPARATOR_COMMA
+value|0x00000008
+name|__LA_DECL
+name|wchar_t
+modifier|*
+name|archive_entry_acl_to_text_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|ssize_t
+modifier|*
+comment|/* len */
+parameter_list|,
+name|int
+comment|/* flags */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|char
+modifier|*
+name|archive_entry_acl_to_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|ssize_t
+modifier|*
+comment|/* len */
+parameter_list|,
+name|int
+comment|/* flags */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_acl_from_text_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+comment|/* wtext */
+parameter_list|,
+name|int
+comment|/* type */
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_acl_from_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* text */
+parameter_list|,
+name|int
+comment|/* type */
+parameter_list|)
+function_decl|;
+comment|/* Deprecated constants */
+define|#
+directive|define
+name|OLD_ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
+value|1024
+define|#
+directive|define
+name|OLD_ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
 value|2048
+comment|/* Deprecated functions */
 name|__LA_DECL
 specifier|const
 name|wchar_t
@@ -2256,7 +2346,18 @@ parameter_list|,
 name|int
 comment|/* flags */
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(deprecated
+block|)
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|__LA_DECL
 specifier|const
 name|char
@@ -2270,8 +2371,21 @@ parameter_list|,
 name|int
 comment|/* flags */
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(deprecated
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/* Return bitmask of ACL types in an archive entry */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_acl_types
@@ -2281,7 +2395,13 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return a count of entries matching 'want_type' */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_acl_count
@@ -2294,11 +2414,23 @@ name|int
 comment|/* want_type */
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return an opaque ACL object. */
+end_comment
+
+begin_comment
 comment|/* There's not yet anything clients can actually do with this... */
+end_comment
+
+begin_struct_decl
 struct_decl|struct
 name|archive_acl
 struct_decl|;
+end_struct_decl
+
+begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_acl
@@ -2310,7 +2442,13 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * extended attributes  */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_xattr_clear
@@ -2320,6 +2458,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_xattr_add_entry
@@ -2342,7 +2483,13 @@ name|size_t
 comment|/* size */
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_count
@@ -2352,6 +2499,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_reset
@@ -2361,6 +2511,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_next
@@ -2385,7 +2538,13 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * sparse  */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_sparse_clear
@@ -2395,6 +2554,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_sparse_add_entry
@@ -2410,7 +2572,13 @@ name|la_int64_t
 comment|/* length */
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_count
@@ -2420,6 +2588,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_reset
@@ -2429,6 +2600,9 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_next
@@ -2446,11 +2620,23 @@ modifier|*
 comment|/* length */
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_linkresolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
+end_comment
+
+begin_struct_decl
 struct_decl|struct
 name|archive_entry_linkresolver
 struct_decl|;
+end_struct_decl
+
+begin_comment
 comment|/*  * There are three different strategies for marking hardlinks.  * The descriptions below name them after the best-known  * formats that rely on each strategy:  *  * "Old cpio" is the simplest, it always returns any entry unmodified.  *    As far as I know, only cpio formats use this.  Old cpio archives  *    store every link with the full body; the onus is on the dearchiver  *    to detect and properly link the files as they are restored.  * "tar" is also pretty simple; it caches a copy the first time it sees  *    any link.  Subsequent appearances are modified to be hardlink  *    references to the first one without any body.  Used by all tar  *    formats, although the newest tar formats permit the "old cpio" strategy  *    as well.  This strategy is very simple for the dearchiver,  *    and reasonably straightforward for the archiver.  * "new cpio" is trickier.  It stores the body only with the last  *    occurrence.  The complication is that we might not  *    see every link to a particular file in a single session, so  *    there's no easy way to know when we've seen the last occurrence.  *    The solution here is to queue one link until we see the next.  *    At the end of the session, you can enumerate any remaining  *    entries by calling archive_entry_linkify(NULL) and store those  *    bodies.  If you have a file with three links l1, l2, and l3,  *    you'll get the following behavior if you see all three links:  *           linkify(l1) => NULL   (the resolver stores l1 internally)  *           linkify(l2) => l1     (resolver stores l2, you write l1)  *           linkify(l3) => l2, l3 (all links seen, you can write both).  *    If you only see l1 and l2, you'll get this behavior:  *           linkify(l1) => NULL  *           linkify(l2) => l1  *           linkify(NULL) => l2   (at end, you retrieve remaining links)  *    As the name suggests, this strategy is used by newer cpio variants.  *    It's noticeably more complex for the archiver, slightly more complex  *    for the dearchiver than the tar strategy, but makes it straightforward  *    to restore a file using any link by simply continuing to scan until  *    you see a link that is stored with a body.  In contrast, the tar  *    strategy requires you to rescan the archive from the beginning to  *    correctly extract an arbitrary link.  */
+end_comment
+
+begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_entry_linkresolver
@@ -2460,6 +2646,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkresolver_set_strategy
@@ -2472,6 +2661,9 @@ name|int
 comment|/* format_code */
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkresolver_free
@@ -2481,6 +2673,9 @@ name|archive_entry_linkresolver
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkify
@@ -2500,6 +2695,9 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_entry
@@ -2517,13 +2715,16 @@ modifier|*
 name|links
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__cplusplus
-block|}
-end_extern
+end_ifdef
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

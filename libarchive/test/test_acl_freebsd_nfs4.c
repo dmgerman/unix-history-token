@@ -1597,7 +1597,7 @@ block|{
 name|failure
 argument_list|(
 literal|" ACL entry %d missing from %s: "
-literal|"type=%d,permset=%x,tag=%d,qual=%d,name=``%s''\n"
+literal|"type=%#010x,permset=%#010x,tag=%d,qual=%d,name=``%s''\n"
 argument_list|,
 name|marker
 index|[
@@ -1930,7 +1930,7 @@ block|}
 name|failure
 argument_list|(
 literal|"ACL entry on file that shouldn't be there: "
-literal|"type=%d,permset=%x,tag=%d,qual=%d"
+literal|"type=%#010x,permset=%#010x,tag=%d,qual=%d"
 argument_list|,
 name|type
 argument_list|,
@@ -1967,7 +1967,7 @@ block|{
 name|failure
 argument_list|(
 literal|" ACL entry %d missing from %s: "
-literal|"type=%d,permset=%x,tag=%d,qual=%d,name=``%s''\n"
+literal|"type=%#010x,permset=%#010x,tag=%d,qual=%d,name=``%s''\n"
 argument_list|,
 name|marker
 index|[
