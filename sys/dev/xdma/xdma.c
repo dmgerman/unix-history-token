@@ -213,7 +213,7 @@ name|XCHAN_LOCK
 parameter_list|(
 name|xchan
 parameter_list|)
-value|mtx_lock(&xchan->mtx_lock)
+value|mtx_lock(&(xchan)->mtx_lock)
 end_define
 
 begin_define
@@ -223,7 +223,7 @@ name|XCHAN_UNLOCK
 parameter_list|(
 name|xchan
 parameter_list|)
-value|mtx_unlock(&xchan->mtx_lock)
+value|mtx_unlock(&(xchan)->mtx_lock)
 end_define
 
 begin_define
@@ -233,7 +233,7 @@ name|XCHAN_ASSERT_LOCKED
 parameter_list|(
 name|xchan
 parameter_list|)
-value|mtx_assert(&xchan->mtx_lock, MA_OWNED)
+value|mtx_assert(&(xchan)->mtx_lock, MA_OWNED)
 end_define
 
 begin_comment
