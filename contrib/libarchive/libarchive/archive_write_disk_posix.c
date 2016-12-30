@@ -1161,7 +1161,7 @@ value|0775
 end_define
 
 begin_comment
-comment|/*  * Maxinum uncompressed size of a decmpfs block.  */
+comment|/*  * Maximum uncompressed size of a decmpfs block.  */
 end_comment
 
 begin_define
@@ -1235,7 +1235,7 @@ value|(64 * 1024)
 end_define
 
 begin_comment
-comment|/* decmpfs difinitions. */
+comment|/* decmpfs definitions. */
 end_comment
 
 begin_define
@@ -2978,7 +2978,7 @@ operator||
 name|TODO_HFS_COMPRESSION
 condition|)
 block|{
-comment|/* 		 * NOTE: UF_COMPRESSED is ignored even if the filesystem 		 * supports HFS+ Compression because the file should 		 * have at least an extended attriute "com.apple.decmpfs" 		 * before the flag is set to indicate that the file have 		 * been compressed. If hte filesystem does not support 		 * HFS+ Compression the system call will fail. 		 */
+comment|/* 		 * NOTE: UF_COMPRESSED is ignored even if the filesystem 		 * supports HFS+ Compression because the file should 		 * have at least an extended attribute "com.apple.decmpfs" 		 * before the flag is set to indicate that the file have 		 * been compressed. If the filesystem does not support 		 * HFS+ Compression the system call will fail. 		 */
 if|if
 condition|(
 name|a
@@ -5717,7 +5717,7 @@ name|a
 operator|->
 name|compressed_buffer_size
 expr_stmt|;
-comment|/* If the compressed size is not enouph smaller than 		 * the uncompressed size. cancel HFS+ compression. 		 * TODO: study a behavior of ditto utility and improve 		 * the condition to fall back into no HFS+ compression. */
+comment|/* If the compressed size is not enough smaller than 		 * the uncompressed size. cancel HFS+ compression. 		 * TODO: study a behavior of ditto utility and improve 		 * the condition to fall back into no HFS+ compression. */
 name|bk
 operator|=
 name|HFS_BLOCKS
@@ -6156,7 +6156,7 @@ argument_list|,
 name|block_count
 argument_list|)
 expr_stmt|;
-comment|/* Get the position where we are goint to set compressed 		 * data. */
+comment|/* Get the position where we are going to set compressed 		 * data. */
 name|a
 operator|->
 name|compressed_rsrc_position
@@ -6501,7 +6501,7 @@ operator|->
 name|fd_offset
 condition|)
 block|{
-comment|/* Can't support backword move. */
+comment|/* Can't support backward move. */
 name|archive_set_error
 argument_list|(
 operator|&

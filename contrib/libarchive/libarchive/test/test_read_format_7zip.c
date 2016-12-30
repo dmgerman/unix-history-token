@@ -4638,7 +4638,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/* Verify symbolic-linke symlinkfile. */
+comment|/* Verify symbolic-link symlinkfile. */
 name|assertEqualIntA
 argument_list|(
 name|a

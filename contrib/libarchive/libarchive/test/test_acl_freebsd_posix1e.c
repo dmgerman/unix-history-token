@@ -1132,7 +1132,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Verify ACL reaed-from-disk.  This test is FreeBSD-specific.  */
+comment|/*  * Verify ACL read-from-disk.  This test is FreeBSD-specific.  */
 end_comment
 
 begin_macro

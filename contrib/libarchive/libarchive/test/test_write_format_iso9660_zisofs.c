@@ -10,7 +10,7 @@ file|"test.h"
 end_include
 
 begin_comment
-comment|/*  * Check that a "zisofs" ISO 9660 imaeg is correctly created.  */
+comment|/*  * Check that a "zisofs" ISO 9660 image is correctly created.  */
 end_comment
 
 begin_decl_stmt
