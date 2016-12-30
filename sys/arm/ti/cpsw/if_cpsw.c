@@ -30,31 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -66,7 +42,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -78,7 +78,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_include
@@ -102,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -121,66 +139,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_vlan_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
 end_include
 
 begin_include
@@ -1337,16 +1295,6 @@ begin_comment
 comment|/*  * Basic debug support.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IF_DEBUG
-parameter_list|(
-name|_sc
-parameter_list|)
-value|if ((_sc)->if_flags& IFF_DEBUG)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -1406,12 +1354,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|<machine/stdarg.h>
-end_include
-
 begin_function
 specifier|static
 name|void
@@ -1464,19 +1406,7 @@ name|_sc
 parameter_list|,
 name|a
 parameter_list|)
-value|do {					\ 	if (sc->debug) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSWP_DEBUGF
-parameter_list|(
-name|_sc
-parameter_list|,
-name|a
-parameter_list|)
-value|do {					\ 	IF_DEBUG((_sc)) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
+value|do {					\ 	if ((_sc)->debug) {						\ 		cpsw_debugf_head(__func__);				\ 		cpsw_debugf a;						\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1541,36 +1471,6 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->rx.lock, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSW_GLOBAL_LOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {					\ 		if ((mtx_owned(&(sc)->tx.lock) ? 1 : 0) !=		\ 		    (mtx_owned(&(sc)->rx.lock) ? 1 : 0)) {		\ 			panic("cpsw deadlock possibility detection!");	\ 		}							\ 		mtx_lock(&(sc)->tx.lock);				\ 		mtx_lock(&(sc)->rx.lock);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSW_GLOBAL_UNLOCK
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {					\ 		CPSW_RX_UNLOCK(sc);					\ 		CPSW_TX_UNLOCK(sc);					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPSW_GLOBAL_LOCK_ASSERT
-parameter_list|(
-name|sc
-parameter_list|)
-value|do {				\ 		CPSW_TX_LOCK_ASSERT(sc);				\ 		CPSW_RX_LOCK_ASSERT(sc);				\ } while (0)
 end_define
 
 begin_define
@@ -5377,9 +5277,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -5585,9 +5487,11 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -5637,9 +5541,11 @@ decl_stmt|;
 name|uint32_t
 name|reg
 decl_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -6135,7 +6041,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_RX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6193,7 +6099,7 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|CPSW_GLOBAL_LOCK
+name|CPSW_RX_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6377,9 +6283,11 @@ name|sc
 operator|->
 name|ifp
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -6438,7 +6346,7 @@ name|swsc
 argument_list|)
 condition|)
 block|{
-name|CPSW_GLOBAL_LOCK
+name|CPSW_RX_LOCK
 argument_list|(
 name|sc
 operator|->
@@ -6452,6 +6360,20 @@ operator|->
 name|swsc
 argument_list|)
 expr_stmt|;
+name|CPSW_RX_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|swsc
+argument_list|)
+expr_stmt|;
+name|CPSW_TX_LOCK
+argument_list|(
+name|sc
+operator|->
+name|swsc
+argument_list|)
+expr_stmt|;
 name|cpsw_tx_teardown_locked
 argument_list|(
 name|sc
@@ -6459,7 +6381,7 @@ operator|->
 name|swsc
 argument_list|)
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_TX_UNLOCK
 argument_list|(
 name|sc
 operator|->
@@ -6868,9 +6790,11 @@ name|sc
 operator|->
 name|if_flags
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: UP& RUNNING (changed=0x%x)"
@@ -6916,9 +6840,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: UP but not RUNNING; starting up"
@@ -6942,9 +6868,11 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"SIOCSIFFLAGS: not UP but RUNNING; shutting down"
@@ -7468,9 +7396,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -9091,9 +9021,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"Requeueing defragmented packet"
@@ -9184,9 +9116,11 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|"Queueing TX packet: %d segments + %d pad bytes"
@@ -10138,7 +10072,7 @@ operator|)
 operator|)
 operator|==
 operator|(
-name|CPDMA_BD_EOP
+name|CPDMA_BD_SOP
 operator||
 name|CPDMA_BD_TDOWNCMPLT
 operator|)
@@ -11055,9 +10989,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -11126,9 +11062,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|CPSWP_DEBUGF
+name|CPSW_DEBUGF
 argument_list|(
 name|sc
+operator|->
+name|swsc
 argument_list|,
 operator|(
 literal|""
@@ -11285,7 +11223,7 @@ name|sc
 operator|=
 name|msc
 expr_stmt|;
-name|CPSW_GLOBAL_LOCK
+name|CPSW_TX_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -11420,7 +11358,7 @@ name|tx
 operator|.
 name|queue_removes
 expr_stmt|;
-name|CPSW_GLOBAL_UNLOCK
+name|CPSW_TX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
