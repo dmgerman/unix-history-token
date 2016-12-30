@@ -343,9 +343,18 @@ name|ti_scm_sc
 operator|=
 name|sc
 expr_stmt|;
+comment|/* Attach platform extensions, if any. */
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}
