@@ -117,6 +117,27 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CK_PR_DISABLE_DOUBLE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CK_PR_DISABLE_DOUBLE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CK_MD_RMO
 end_ifndef
 

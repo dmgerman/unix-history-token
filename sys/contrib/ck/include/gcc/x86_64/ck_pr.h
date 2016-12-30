@@ -390,6 +390,12 @@ parameter_list|)
 value|CK_PR_FAS(S, T, T, T, I)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_FAS_S
 argument_list|(
@@ -400,6 +406,11 @@ argument_list|,
 literal|"xchgq"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_FAS_S
@@ -575,6 +586,12 @@ literal|"movl"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_LOAD_S
 argument_list|(
@@ -585,6 +602,11 @@ argument_list|,
 literal|"movq"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_LOAD_S
@@ -857,6 +879,12 @@ argument|CK_CC_IMM_U32
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_STORE
 argument_list|(
@@ -871,6 +899,11 @@ argument_list|,
 literal|"movq"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1505,6 +1538,12 @@ literal|"cmpxchgl"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_CAS_S
 argument_list|(
@@ -1515,6 +1554,11 @@ argument_list|,
 literal|"cmpxchgq"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_CAS_S
@@ -1670,6 +1714,12 @@ literal|"eax"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_CAS_O_S
 argument_list|(
@@ -1682,6 +1732,11 @@ argument_list|,
 literal|"rax"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_CAS_O_S
@@ -1958,6 +2013,12 @@ define|\
 value|CK_CC_INLINE static bool					\ ck_pr_cas_##S##_##W(T t[W], T c[W], T s[W])			\ {								\ 	return ck_pr_cas_64_2((uint64_t *)(void *)t,		\ 			      (uint64_t *)(void *)c,		\ 			      (uint64_t *)(void *)s);		\ }								\ CK_CC_INLINE static bool					\ ck_pr_cas_##S##_##W##_value(T *t, T c[W], T s[W], T *v)		\ {								\ 	return ck_pr_cas_64_2_value((uint64_t *)(void *)t,	\ 				    (uint64_t *)(void *)c,	\ 				    (uint64_t *)(void *)s,	\ 				    (uint64_t *)(void *)v);	\ }
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_CAS_V
 argument_list|(
@@ -1968,6 +2029,11 @@ argument_list|,
 argument|double
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_CAS_V

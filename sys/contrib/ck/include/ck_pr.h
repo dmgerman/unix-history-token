@@ -741,6 +741,12 @@ parameter_list|)
 value|CK_PR_STORE_SAFE((DST), (VAL), char)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -752,6 +758,11 @@ name|VAL
 parameter_list|)
 value|CK_PR_STORE_SAFE((DST), (VAL), double)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -894,6 +905,12 @@ parameter_list|)
 value|CK_PR_LOAD_SAFE((SRC), char)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -903,6 +920,11 @@ name|SRC
 parameter_list|)
 value|CK_PR_LOAD_SAFE((SRC), double)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1414,6 +1436,13 @@ name|defined
 argument_list|(
 name|CK_F_PR_CAS_DOUBLE_VALUE
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|CK_PR_DISABLE_DOUBLE
+argument_list|)
 end_if
 
 begin_ifndef
@@ -1490,7 +1519,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE */
+comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE&& !CK_PR_DISABLE_DOUBLE */
 end_comment
 
 begin_if
@@ -3926,6 +3955,13 @@ name|defined
 argument_list|(
 name|CK_F_PR_CAS_DOUBLE_VALUE
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|CK_PR_DISABLE_DOUBLE
+argument_list|)
 end_if
 
 begin_ifndef
@@ -4002,7 +4038,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE */
+comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE&& !CK_PR_DISABLE_DOUBLE */
 end_comment
 
 begin_if
@@ -5339,6 +5375,13 @@ name|defined
 argument_list|(
 name|CK_F_PR_CAS_DOUBLE_VALUE
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|CK_PR_DISABLE_DOUBLE
+argument_list|)
 end_if
 
 begin_ifndef
@@ -5381,7 +5424,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE */
+comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE&& !CK_PR_DISABLE_DOUBLE */
 end_comment
 
 begin_if
@@ -6380,6 +6423,13 @@ name|defined
 argument_list|(
 name|CK_F_PR_CAS_DOUBLE_VALUE
 argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|CK_PR_DISABLE_DOUBLE
+argument_list|)
 end_if
 
 begin_ifndef
@@ -6448,7 +6498,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE */
+comment|/* CK_F_PR_LOAD_DOUBLE&& CK_F_PR_CAS_DOUBLE_VALUE&& !CK_PR_DISABLE_DOUBLE */
 end_comment
 
 begin_if

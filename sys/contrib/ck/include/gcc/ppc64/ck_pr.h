@@ -378,6 +378,12 @@ literal|"lbz"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_LOAD_S
 argument_list|(
@@ -388,6 +394,11 @@ argument_list|,
 literal|"ld"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -537,6 +548,12 @@ literal|"stb"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_STORE_S
 argument_list|(
@@ -547,6 +564,11 @@ argument_list|,
 literal|"std"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -807,6 +829,12 @@ literal|"w"
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CK_PR_DISABLE_DOUBLE
+end_ifndef
+
 begin_macro
 name|CK_PR_FAS
 argument_list|(
@@ -819,6 +847,11 @@ argument_list|,
 literal|"d"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|CK_PR_FAS
