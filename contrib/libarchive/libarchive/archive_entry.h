@@ -427,6 +427,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|3
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_DEPRECATED
+value|__attribute__((deprecated))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_DEPRECATED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2338,54 +2378,32 @@ specifier|const
 name|wchar_t
 modifier|*
 name|archive_entry_acl_text_w
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|archive_entry
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
 comment|/* flags */
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(deprecated
-block|)
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+argument_list|)
+name|__LA_DEPRECATED
+decl_stmt|;
 name|__LA_DECL
 specifier|const
 name|char
 modifier|*
 name|archive_entry_acl_text
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|archive_entry
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
 comment|/* flags */
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(deprecated
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+argument_list|)
+name|__LA_DEPRECATED
+decl_stmt|;
 comment|/* Return bitmask of ACL types in an archive entry */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_acl_types
@@ -2395,13 +2413,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return a count of entries matching 'want_type' */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_acl_count
@@ -2414,23 +2426,11 @@ name|int
 comment|/* want_type */
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return an opaque ACL object. */
-end_comment
-
-begin_comment
 comment|/* There's not yet anything clients can actually do with this... */
-end_comment
-
-begin_struct_decl
 struct_decl|struct
 name|archive_acl
 struct_decl|;
-end_struct_decl
-
-begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_acl
@@ -2442,13 +2442,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * extended attributes  */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_xattr_clear
@@ -2458,9 +2452,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_xattr_add_entry
@@ -2483,13 +2474,7 @@ name|size_t
 comment|/* size */
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_count
@@ -2499,9 +2484,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_reset
@@ -2511,9 +2493,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_xattr_next
@@ -2538,13 +2517,7 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * sparse  */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_sparse_clear
@@ -2554,9 +2527,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_sparse_add_entry
@@ -2572,13 +2542,7 @@ name|la_int64_t
 comment|/* length */
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_count
@@ -2588,9 +2552,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_reset
@@ -2600,9 +2561,6 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_entry_sparse_next
@@ -2620,23 +2578,11 @@ modifier|*
 comment|/* length */
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_linkresolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
-end_comment
-
-begin_struct_decl
 struct_decl|struct
 name|archive_entry_linkresolver
 struct_decl|;
-end_struct_decl
-
-begin_comment
 comment|/*  * There are three different strategies for marking hardlinks.  * The descriptions below name them after the best-known  * formats that rely on each strategy:  *  * "Old cpio" is the simplest, it always returns any entry unmodified.  *    As far as I know, only cpio formats use this.  Old cpio archives  *    store every link with the full body; the onus is on the dearchiver  *    to detect and properly link the files as they are restored.  * "tar" is also pretty simple; it caches a copy the first time it sees  *    any link.  Subsequent appearances are modified to be hardlink  *    references to the first one without any body.  Used by all tar  *    formats, although the newest tar formats permit the "old cpio" strategy  *    as well.  This strategy is very simple for the dearchiver,  *    and reasonably straightforward for the archiver.  * "new cpio" is trickier.  It stores the body only with the last  *    occurrence.  The complication is that we might not  *    see every link to a particular file in a single session, so  *    there's no easy way to know when we've seen the last occurrence.  *    The solution here is to queue one link until we see the next.  *    At the end of the session, you can enumerate any remaining  *    entries by calling archive_entry_linkify(NULL) and store those  *    bodies.  If you have a file with three links l1, l2, and l3,  *    you'll get the following behavior if you see all three links:  *           linkify(l1) => NULL   (the resolver stores l1 internally)  *           linkify(l2) => l1     (resolver stores l2, you write l1)  *           linkify(l3) => l2, l3 (all links seen, you can write both).  *    If you only see l1 and l2, you'll get this behavior:  *           linkify(l1) => NULL  *           linkify(l2) => l1  *           linkify(NULL) => l2   (at end, you retrieve remaining links)  *    As the name suggests, this strategy is used by newer cpio variants.  *    It's noticeably more complex for the archiver, slightly more complex  *    for the dearchiver than the tar strategy, but makes it straightforward  *    to restore a file using any link by simply continuing to scan until  *    you see a link that is stored with a body.  In contrast, the tar  *    strategy requires you to rescan the archive from the beginning to  *    correctly extract an arbitrary link.  */
-end_comment
-
-begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_entry_linkresolver
@@ -2646,9 +2592,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkresolver_set_strategy
@@ -2661,9 +2604,6 @@ name|int
 comment|/* format_code */
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkresolver_free
@@ -2673,9 +2613,6 @@ name|archive_entry_linkresolver
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_entry_linkify
@@ -2695,9 +2632,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|__LA_DECL
 name|struct
 name|archive_entry
@@ -2715,16 +2649,13 @@ modifier|*
 name|links
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__cplusplus
-end_ifdef
+block|}
+end_extern
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
