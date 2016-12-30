@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -7315,6 +7321,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HN_USE_TXDESC_BUFRING */
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -7325,6 +7335,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|buf_ring_enqueue
 argument_list|(
 name|txr
@@ -7336,6 +7348,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !HN_USE_TXDESC_BUFRING */
 return|return
 literal|1
 return|;
@@ -7461,6 +7474,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|HN_USE_TXDESC_BUFRING
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -7473,6 +7489,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* HN_USE_TXDESC_BUFRING */
 name|KASSERT
 argument_list|(
 name|txd
@@ -9684,15 +9703,32 @@ decl_stmt|,
 name|send_failed
 init|=
 literal|0
+decl_stmt|,
+name|has_bpf
 decl_stmt|;
 name|again
 label|:
-comment|/* 	 * Make sure that this txd and any aggregated txds are not freed 	 * before ETHER_BPF_MTAP. 	 */
+name|has_bpf
+operator|=
+name|bpf_peers_present
+argument_list|(
+name|ifp
+operator|->
+name|if_bpf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|has_bpf
+condition|)
+block|{
+comment|/* 		 * Make sure that this txd and any aggregated txds are not 		 * freed before ETHER_BPF_MTAP. 		 */
 name|hn_txdesc_hold
 argument_list|(
 name|txd
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|txr
@@ -9712,12 +9748,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|bpf_peers_present
-argument_list|(
-name|ifp
-operator|->
-name|if_bpf
-argument_list|)
+name|has_bpf
 condition|)
 block|{
 specifier|const
@@ -9822,6 +9853,10 @@ name|hn_sends
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|has_bpf
+condition|)
 name|hn_txdesc_put
 argument_list|(
 name|txr
@@ -16825,6 +16860,9 @@ operator|->
 name|hn_tx_sysctl_tree
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HN_DEBUG
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -16847,6 +16885,8 @@ argument_list|,
 literal|"# of available TX descs"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HN_IFSTART_SUPPORT
