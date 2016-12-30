@@ -267,6 +267,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_CPDMA_RX_INT_THRESH
+parameter_list|(
+name|_ch
+parameter_list|)
+value|(1<< (8 + ((_ch)& 7)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_CPDMA_RX_INT
+parameter_list|(
+name|_ch
+parameter_list|)
+value|(1<< (0 + ((_ch)& 7)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_CPDMA_DMA_INTSTAT_RAW
 value|(CPSW_CPDMA_OFFSET + 0xB0)
 end_define
@@ -290,6 +310,16 @@ define|#
 directive|define
 name|CPSW_CPDMA_DMA_INTMASK_CLEAR
 value|(CPSW_CPDMA_OFFSET + 0xBC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_CPDMA_RX_PENDTHRESH
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_CPDMA_OFFSET + 0x0c0 + ((p) * 0x04))
 end_define
 
 begin_define
