@@ -1537,7 +1537,7 @@ begin_define
 define|#
 directive|define
 name|EFX_LICENSE_V1V2_HEADER_LENGTH
-value|(2*sizeof(uint16_t))
+value|(2 * sizeof(uint16_t))
 end_define
 
 begin_decl_stmt
