@@ -6709,7 +6709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update arp table  * */
+comment|/*  * Update arp table  */
 end_comment
 
 begin_function
@@ -6895,7 +6895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Intput on the routing socket.  */
+comment|/*  * Input on the routing socket.  */
 end_comment
 
 begin_function
