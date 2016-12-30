@@ -796,6 +796,63 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_WR_INT_C0_RX_PULSE
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_C0_TX_PULSE
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_C1_RX_PULSE
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_C1_TX_PULSE
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_C2_RX_PULSE
+value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_C2_TX_PULSE
+value|(1<< 21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_PACE_EN
+define|\
+value|(CPSW_WR_INT_C0_RX_PULSE | CPSW_WR_INT_C0_TX_PULSE |		\ 	 CPSW_WR_INT_C1_RX_PULSE | CPSW_WR_INT_C1_TX_PULSE |		\ 	 CPSW_WR_INT_C2_RX_PULSE | CPSW_WR_INT_C2_TX_PULSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_INT_PRESCALE_MASK
+value|0xfff
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPSW_WR_C_RX_THRESH_EN
 parameter_list|(
 name|p
@@ -906,6 +963,61 @@ define|#
 directive|define
 name|CPSW_WR_C_MISC_MDIOUSER
 value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_RX_IMAX
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_WR_OFFSET + (0x08 * (p)) + 0x70)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_TX_IMAX
+parameter_list|(
+name|p
+parameter_list|)
+value|(CPSW_WR_OFFSET + (0x08 * (p)) + 0x74)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_IMAX_MASK
+value|0x3f
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_IMAX_MAX
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_IMAX_MIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_IMAX_US_MAX
+value|500
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPSW_WR_C_IMAX_US_MIN
+value|16
 end_define
 
 begin_define
