@@ -827,6 +827,26 @@ modifier|*
 name|supportedp
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|ef10_mcdi_get_timeout
+parameter_list|(
+name|__in
+name|efx_nic_t
+modifier|*
+name|enp
+parameter_list|,
+name|__in
+name|efx_mcdi_req_t
+modifier|*
+name|emrp
+parameter_list|,
+name|__out
+name|uint32_t
+modifier|*
+name|timeoutp
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MCDI */
