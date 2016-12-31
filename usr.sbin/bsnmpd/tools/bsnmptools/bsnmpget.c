@@ -1769,6 +1769,12 @@ block|}
 name|snmp_pdu_free
 argument_list|(
 operator|&
+name|req
+argument_list|)
+expr_stmt|;
+name|snmp_pdu_free
+argument_list|(
+operator|&
 name|resp
 argument_list|)
 expr_stmt|;
@@ -2200,6 +2206,12 @@ name|snmptoolctx
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|snmp_pdu_free
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Just in case our root was a leaf. */
 if|if
@@ -2268,6 +2280,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|snmp_pdu_free
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|warn
@@ -2299,7 +2317,7 @@ block|}
 name|snmp_pdu_free
 argument_list|(
 operator|&
-name|resp
+name|req
 argument_list|)
 expr_stmt|;
 name|snmp_pdu_create
@@ -2311,6 +2329,18 @@ name|op
 argument_list|)
 expr_stmt|;
 block|}
+name|snmp_pdu_free
+argument_list|(
+operator|&
+name|req
+argument_list|)
+expr_stmt|;
+name|snmp_pdu_free
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rc
