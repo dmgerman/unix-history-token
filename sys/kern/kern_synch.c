@@ -1374,7 +1374,14 @@ name|tick_sbt
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cold
+operator|&&
+name|curthread
+operator|==
+operator|&
+name|thread0
+operator|)
 operator|||
 name|kdb_active
 operator|||
