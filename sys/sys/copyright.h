@@ -28,7 +28,7 @@ define|#
 directive|define
 name|COPYRIGHT_FreeBSD
 define|\
-value|"Copyright (c) 1992-2016 The FreeBSD Project.\n"
+value|"Copyright (c) 1992-2017 The FreeBSD Project.\n"
 end_define
 
 begin_comment
