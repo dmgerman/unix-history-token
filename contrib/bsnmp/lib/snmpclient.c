@@ -10375,10 +10375,7 @@ name|chost
 operator|=
 name|strdup
 argument_list|(
-name|strlen
-argument_list|(
 name|s
-argument_list|)
 argument_list|)
 operator|)
 operator|==
