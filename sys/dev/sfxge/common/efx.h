@@ -2777,7 +2777,7 @@ directive|endif
 comment|/* EFSYS_OPT_PHY_STATS */
 if|#
 directive|if
-name|EFSYS_OPT_SIENA
+name|EFSYS_OPT_MCDI
 name|uint8_t
 name|enc_mcdi_mdio_channel
 decl_stmt|;
@@ -2790,18 +2790,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_PHY_STATS */
-endif|#
-directive|endif
-comment|/* EFSYS_OPT_SIENA */
-if|#
-directive|if
-operator|(
-name|EFSYS_OPT_SIENA
-operator|||
-name|EFSYS_OPT_HUNTINGTON
-operator|||
-name|EFSYS_OPT_MEDFORD
-operator|)
 if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
@@ -2817,7 +2805,7 @@ directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
 endif|#
 directive|endif
-comment|/* (EFSYS_OPT_SIENA || EFSYS_OPT_HUNTINGTON || EFSYS_OPT_MEDFORD) */
+comment|/* EFSYS_OPT_MCDI */
 if|#
 directive|if
 name|EFSYS_OPT_BIST
