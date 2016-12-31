@@ -2358,7 +2358,7 @@ name|p2
 operator|->
 name|p_textvp
 condition|)
-name|vref
+name|vrefact
 argument_list|(
 name|p2
 operator|->

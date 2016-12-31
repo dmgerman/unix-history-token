@@ -900,7 +900,7 @@ name|ndp
 operator|->
 name|ni_rootdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 operator|*
 name|dpp
@@ -1370,7 +1370,7 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|ndp
 operator|->
@@ -1505,7 +1505,7 @@ name|fdp
 operator|->
 name|fd_cdir
 expr_stmt|;
-name|VREF
+name|vrefact
 argument_list|(
 name|dp
 argument_list|)
@@ -4018,7 +4018,7 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vref
+name|vrefact
 argument_list|(
 name|vp_crossmp
 argument_list|)
