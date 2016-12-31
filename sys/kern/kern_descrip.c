@@ -4401,6 +4401,14 @@ name|sigio
 modifier|*
 name|sigio
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|sigiop
+operator|==
+name|NULL
+condition|)
+return|return;
 name|SIGIO_LOCK
 argument_list|()
 expr_stmt|;
