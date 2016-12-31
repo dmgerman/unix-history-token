@@ -2954,6 +2954,7 @@ name|tlv_partition_trailer
 name|trailer
 decl_stmt|;
 name|unsigned
+name|int
 name|min_buf_size
 init|=
 sizeof|sizeof

@@ -3748,6 +3748,7 @@ operator|->
 name|ee_enp
 decl_stmt|;
 name|unsigned
+name|int
 name|code
 decl_stmt|;
 name|boolean_t
