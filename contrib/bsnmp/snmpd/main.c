@@ -1163,6 +1163,10 @@ name|struct
 name|asn_buf
 name|resp_b
 decl_stmt|;
+name|enum
+name|snmp_code
+name|code
+decl_stmt|;
 name|resp_b
 operator|.
 name|asn_ptr
@@ -1179,6 +1183,9 @@ name|txbuf
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|code
+operator|=
 name|snmp_pdu_encode
 argument_list|(
 name|pdu
@@ -1186,15 +1193,18 @@ argument_list|,
 operator|&
 name|resp_b
 argument_list|)
+operator|)
 operator|!=
-literal|0
+name|SNMP_CODE_OK
 condition|)
 block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot encode message"
+literal|"cannot encode message (code=%d)"
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 name|abort
