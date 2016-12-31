@@ -119,7 +119,7 @@ name|EFSYS_OPT_BIST
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_enable_offline
+name|ef10_bist_enable_offline
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -130,7 +130,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_start
+name|ef10_bist_start
 parameter_list|(
 name|__in
 name|efx_nic_t
@@ -145,7 +145,7 @@ function_decl|;
 specifier|extern
 name|__checkReturn
 name|efx_rc_t
-name|hunt_bist_poll
+name|ef10_bist_poll
 argument_list|(
 name|__in
 name|efx_nic_t
@@ -196,7 +196,7 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|void
-name|hunt_bist_stop
+name|ef10_bist_stop
 parameter_list|(
 name|__in
 name|efx_nic_t
