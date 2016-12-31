@@ -1764,7 +1764,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_ACTION_VHT
+name|IEEE80211_ACTION_CAT_VHT
 value|21
 end_define
 
