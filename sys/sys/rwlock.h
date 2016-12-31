@@ -239,7 +239,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 						                        \ 	if (!_rw_write_lock((rw), _tid))				\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_RW_WLOCK_ACQUIRE, \ 		    rw, 0, 0, (file), (line));				\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 						                        \ 	if ((rw)->rw_lock != RW_UNLOCKED || !_rw_write_lock((rw), _tid))\ 		_rw_wlock_hard((rw), _tid, (file), (line));		\ 	else 								\ 		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_RW_WLOCK_ACQUIRE, \ 		    rw, 0, 0, (file), (line));				\ } while (0)
 end_define
 
 begin_comment
@@ -259,7 +259,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_recurse)						\ 		(rw)->rw_recurse--;					\ 	else if (!_rw_write_unlock((rw), _tid))				\ 		_rw_wunlock_hard((rw), _tid, (file), (line));		\ } while (0)
+value|do {				\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((rw)->rw_recurse)						\ 		(rw)->rw_recurse--;					\ 	else if ((rw)->rw_lock != _tid || !_rw_write_unlock((rw), _tid))\ 		_rw_wunlock_hard((rw), _tid, (file), (line));		\ } while (0)
 end_define
 
 begin_comment

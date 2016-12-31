@@ -910,7 +910,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_mtx_obtain_lock((mp), _tid))				\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	else								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (((mp)->mtx_lock != MTX_UNOWNED || !_mtx_obtain_lock((mp), _tid)))\ 		_mtx_lock_sleep((mp), _tid, (opts), (file), (line));	\ 	else								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
 end_define
 
 begin_comment
@@ -938,7 +938,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (!_mtx_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	} else 								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	spinlock_enter();						\ 	if (((mp)->mtx_lock != MTX_UNOWNED || !_mtx_obtain_lock((mp), _tid))) {\ 		if ((mp)->mtx_lock == _tid)				\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	} else 								\               	LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_MTX_SPIN_LOCK_ACQUIRE, \ 		    mp, 0, 0, (file), (line));				\ } while (0)
 end_define
 
 begin_define
@@ -1032,7 +1032,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_mtx_release_lock((mp), _tid))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((mp)->mtx_lock != _tid || !_mtx_release_lock((mp), _tid))	\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_comment

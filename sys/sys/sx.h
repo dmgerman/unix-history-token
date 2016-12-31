@@ -660,6 +660,12 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|sx
+operator|->
+name|sx_lock
+operator|!=
+name|SX_LOCK_UNLOCKED
+operator|||
 operator|!
 name|atomic_cmpset_acq_ptr
 argument_list|(
@@ -751,6 +757,12 @@ name|td
 decl_stmt|;
 if|if
 condition|(
+name|sx
+operator|->
+name|sx_lock
+operator|!=
+name|tid
+operator|||
 operator|!
 name|atomic_cmpset_rel_ptr
 argument_list|(
