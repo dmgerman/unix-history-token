@@ -6687,6 +6687,8 @@ expr_stmt|;
 name|cache_purgevfs
 argument_list|(
 name|mp
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* remove cache entries for this file sys */

@@ -2843,6 +2843,41 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * VFS namecache 	 */
+block|{
+literal|"ncvn"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"ncbuc"
+block|,
+operator|&
+name|lock_class_rw
+block|}
+block|,
+block|{
+literal|"vnode interlock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"ncneg"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * ZFS locking 	 */
 block|{
 literal|"dn->dn_mtx"

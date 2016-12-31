@@ -1211,6 +1211,8 @@ expr_stmt|;
 name|cache_purgevfs
 argument_list|(
 name|mporoot
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -1222,6 +1224,8 @@ condition|)
 name|cache_purgevfs
 argument_list|(
 name|mpdevfs
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|VFS_ROOT
@@ -1290,6 +1294,8 @@ argument_list|(
 name|rootvnode
 operator|->
 name|v_mount
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if

@@ -8393,6 +8393,8 @@ operator|->
 name|z_parent
 operator|->
 name|z_vfs
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 endif|#
