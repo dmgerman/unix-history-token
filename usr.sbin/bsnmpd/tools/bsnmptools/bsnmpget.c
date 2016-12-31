@@ -3461,7 +3461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a command line argument of type OID=syntax:value and fill in whatever   * fields can be derived from the input into snmp_value structure. Reads numeric  * OIDs.  */
+comment|/*  * Parse a command line argument of type OID=syntax:value and fill in whatever  * fields can be derived from the input into snmp_value structure. Reads numeric  * OIDs.  */
 end_comment
 
 begin_function

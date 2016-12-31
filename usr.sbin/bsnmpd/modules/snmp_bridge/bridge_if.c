@@ -1669,7 +1669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update all bridge interfaces' ports only -   * make sure each bridge interface exists first.  */
+comment|/*  * Update all bridge interfaces' ports only -  * make sure each bridge interface exists first.  */
 end_comment
 
 begin_function
