@@ -164,6 +164,10 @@ name|uint32_t
 name|us
 parameter_list|,
 name|__in
+name|uint32_t
+name|flags
+parameter_list|,
+name|__in
 name|efx_evq_t
 modifier|*
 name|eep
@@ -773,6 +777,10 @@ name|__in
 name|uint32_t
 name|us
 parameter_list|,
+name|__in
+name|uint32_t
+name|flags
+parameter_list|,
 name|__deref_out
 name|efx_evq_t
 modifier|*
@@ -937,6 +945,8 @@ argument_list|,
 name|id
 argument_list|,
 name|us
+argument_list|,
+name|flags
 argument_list|,
 name|eep
 argument_list|)
@@ -5138,6 +5148,10 @@ parameter_list|,
 name|__in
 name|uint32_t
 name|us
+parameter_list|,
+name|__in
+name|uint32_t
+name|flags
 parameter_list|,
 name|__in
 name|efx_evq_t
