@@ -3074,7 +3074,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Hardware parse failed, due to malformed headers 		 * or headers that are too long for the parser. 		 * Headers and checksums must be validated by the host. 		 */
-comment|// TODO: EFX_EV_QSTAT_INCR(eep, EV_RX_PARSE_INCOMPLETE);
+comment|/* TODO: EFX_EV_QSTAT_INCR(eep, EV_RX_PARSE_INCOMPLETE); */
 goto|goto
 name|deliver
 goto|;
