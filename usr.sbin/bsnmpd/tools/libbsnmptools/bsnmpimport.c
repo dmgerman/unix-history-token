@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2006 The FreeBSD Project  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Read file containing table description - reuse magic from gensnmptree.c.  * Hopefully one day most of the code here will be part of libbsnmp and  * this duplication won't be necessary.  *  * Syntax is:  * ---------  * file := top | top file  *  * top := tree | typedef | include  *  * tree := head elements ')'  *  * entry := head ':' index STRING elements ')'  *  * leaf := head type STRING ACCESS ')'  *  * column := head type ACCESS ')'  *  * type := BASETYPE | BASETYPE '|' subtype | enum | bits  *  * subtype := STRING  *  * enum := ENUM '(' value ')'  *   * bits := BITS '(' value ')'  *  * value := INT STRING | INT STRING value  *  * head := '(' INT STRING  *  * elements := EMPTY | elements element  *  * element := tree | leaf | column  *  * index := type | index type  *  * typedef := 'typedef' STRING type  *  * include := 'include' filespec  *  * filespec := '"' STRING '"' | '<' STRING '>'  */
+comment|/*  * Read file containing table description - reuse magic from gensnmptree.c.  * Hopefully one day most of the code here will be part of libbsnmp and  * this duplication won't be necessary.  *  * Syntax is:  * ---------  * file := top | top file  *  * top := tree | typedef | include  *  * tree := head elements ')'  *  * entry := head ':' index STRING elements ')'  *  * leaf := head type STRING ACCESS ')'  *  * column := head type ACCESS ')'  *  * type := BASETYPE | BASETYPE '|' subtype | enum | bits  *  * subtype := STRING  *  * enum := ENUM '(' value ')'  *  * bits := BITS '(' value ')'  *  * value := INT STRING | INT STRING value  *  * head := '(' INT STRING  *  * elements := EMPTY | elements element  *  * element := tree | leaf | column  *  * index := type | index type  *  * typedef := 'typedef' STRING type  *  * include := 'include' filespec  *  * filespec := '"' STRING '"' | '<' STRING '>'  */
 end_comment
 
 begin_include
@@ -3480,7 +3480,7 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/*  		 * Ignore the error for nodes since the .def files currently 		 * contain different strings for 1.3.6.1.2.1 - mibII. Only make 		 * sure the memory is freed and don't complain. 		 */
+comment|/* 		 * Ignore the error for nodes since the .def files currently 		 * contain different strings for 1.3.6.1.2.1 - mibII. Only make 		 * sure the memory is freed and don't complain. 		 */
 if|if
 condition|(
 operator|(
