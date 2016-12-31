@@ -9986,8 +9986,9 @@ modifier|*
 name|root
 parameter_list|)
 block|{
-name|int32_t
-name|error
+name|struct
+name|snmp_object
+name|object
 decl_stmt|;
 name|char
 name|p
@@ -9995,12 +9996,11 @@ index|[
 name|ASN_OIDSTRLEN
 index|]
 decl_stmt|;
+name|int32_t
+name|error
+decl_stmt|;
 name|uint32_t
 name|i
-decl_stmt|;
-name|struct
-name|snmp_object
-name|object
 decl_stmt|;
 name|i
 operator|=
